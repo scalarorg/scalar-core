@@ -1,0 +1,118 @@
+syntax = "proto3";
+package scalar.scalarnet.v1beta1;
+
+option go_package = "github.com/scalarorg/scalar-core/x/scalarnet/types";
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "scalar/scalarnet/v1beta1/tx.proto";
+import "scalar/scalarnet/v1beta1/query.proto";
+
+option (gogoproto.goproto_registration) = true;
+
+// Msg defines the scalarnet Msg service.
+service MsgService {
+  rpc Link(LinkRequest) returns (LinkResponse) {
+    option (google.api.http) = {
+      post : "/scalar/scalarnet/link"
+      body : "*"
+    };
+  }
+
+  rpc ConfirmDeposit(ConfirmDepositRequest) returns (ConfirmDepositResponse) {
+    option (google.api.http) = {
+      post : "/scalar/scalarnet/confirm_deposit"
+      body : "*"
+    };
+  }
+
+  rpc ExecutePendingTransfers(ExecutePendingTransfersRequest)
+      returns (ExecutePendingTransfersResponse) {
+    option (google.api.http) = {
+      post : "/scalar/scalarnet/execute_pending_transfers"
+      body : "*"
+    };
+  }
+
+  rpc AddCosmosBasedChain(AddCosmosBasedChainRequest)
+      returns (AddCosmosBasedChainResponse) {
+    option (google.api.http) = {
+      post : "/scalar/scalarnet/add_cosmos_based_chain"
+      body : "*"
+    };
+  }
+
+  rpc RegisterAsset(RegisterAssetRequest) returns (RegisterAssetResponse) {
+    option (google.api.http) = {
+      post : "/scalar/scalarnet/register_asset"
+      body : "*"
+    };
+  }
+
+  rpc RouteIBCTransfers(RouteIBCTransfersRequest)
+      returns (RouteIBCTransfersResponse) {
+    option (google.api.http) = {
+      post : "/scalar/scalarnet/route_ibc_transfers"
+      body : "*"
+    };
+  }
+
+  rpc RegisterFeeCollector(RegisterFeeCollectorRequest)
+      returns (RegisterFeeCollectorResponse) {
+    option (google.api.http) = {
+      post : "/scalar/scalarnet/register_fee_collector"
+      body : "*"
+    };
+  }
+
+  rpc RetryIBCTransfer(RetryIBCTransferRequest)
+      returns (RetryIBCTransferResponse) {
+    option (google.api.http) = {
+      post : "/scalar/scalarnet/retry_ibc_transfer"
+      body : "*"
+    };
+  }
+
+  rpc RouteMessage(RouteMessageRequest) returns (RouteMessageResponse) {
+    option (google.api.http) = {
+      post : "/scalar/scalarnet/route_message"
+      body : "*"
+    };
+  }
+
+  rpc CallContract(CallContractRequest) returns (CallContractResponse) {
+    option (google.api.http) = {
+      post : "/scalar/scalarnet/call_contract"
+      body : "*"
+    };
+  }
+}
+
+// QueryService defines the gRPC querier service.
+service QueryService {
+
+  // PendingIBCTransferCount queries the pending ibc transfers for all chains
+  rpc PendingIBCTransferCount(PendingIBCTransferCountRequest)
+      returns (PendingIBCTransferCountResponse) {
+    option (google.api.http).get =
+        "/scalar/scalarnet/v1beta1/ibc_transfer_count";
+  }
+
+  rpc Params(ParamsRequest) returns (ParamsResponse) {
+    option (google.api.http) = {
+      get : "/scalar/scalarnet/v1beta1/params"
+    };
+  }
+
+  rpc IBCPath(IBCPathRequest) returns (IBCPathResponse) {
+    option (google.api.http) = {
+      get : "/scalar/scalarnet/v1beta1/ibc_path/{chain}"
+    };
+  }
+
+  rpc ChainByIBCPath(ChainByIBCPathRequest) returns (ChainByIBCPathResponse) {
+    option (google.api.http) = {
+      get : "/scalar/scalarnet/v1beta1/chain_by_ibc_path/{ibc_path}"
+    };
+  }
+}
