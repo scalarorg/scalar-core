@@ -960,9 +960,10 @@ func (app *ScalarApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) ab
 	if err := tmjson.Unmarshal(req.AppStateBytes, &genesisState); err != nil {
 		panic(err)
 	}
-
+	for _, validator := range req.Validators {
+		fmt.Printf("Validator: %v\n", validator)
+	}
 	GetKeeper[upgradekeeper.Keeper](app.Keepers).SetModuleVersionMap(ctx, app.mm.GetVersionMap())
-
 	return app.mm.InitGenesis(ctx, app.appCodec, genesisState)
 }
 

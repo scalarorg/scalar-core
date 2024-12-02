@@ -2,11 +2,13 @@ package cmd
 
 import (
 	"bufio"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"net"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -30,15 +32,12 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
-	"github.com/tendermint/tendermint/privval"
 
 	permexported "github.com/axelarnetwork/axelar-core/x/permission/exported"
 	permtypes "github.com/axelarnetwork/axelar-core/x/permission/types"
 	scalartypes "github.com/scalarorg/scalar-core/types"
 	"github.com/spf13/cobra"
 	tmconfig "github.com/tendermint/tendermint/config"
-	tmed25519 "github.com/tendermint/tendermint/crypto/ed25519"
-	tmos "github.com/tendermint/tendermint/libs/os"
 	tmrand "github.com/tendermint/tendermint/libs/rand"
 	tmtypes "github.com/tendermint/tendermint/types"
 	tmtime "github.com/tendermint/tendermint/types/time"
@@ -50,7 +49,7 @@ const (
 )
 
 var (
-	flagScalarMnemonic      = "SCALAR_MNEMONIC"
+	flagNodeMnemonic        = "NODE_MNEMONIC"
 	flagBroadcasterMnemonic = "BROADCASTER_MNEMONIC"
 	flagGovernanceMnemonic  = "GOV_MNEMONIC"
 	flagValidatorMnemonic   = "VALIDATOR_MNEMONIC"
@@ -102,7 +101,7 @@ type startArgs struct {
 }
 
 type EnvMnemonic struct {
-	ScalarMnemonic      string
+	NodeMnemonic        string
 	ValidatorMnemonic   string
 	BroadcasterMnemonic string
 	GovernanceMnemonic  string
@@ -219,7 +218,7 @@ const nodeDirPerm = 0o755
 
 func readEnvMnemonic(i int) EnvMnemonic {
 	envMnemonic := EnvMnemonic{}
-	envMnemonic.ScalarMnemonic = os.Getenv(flagScalarMnemonic)
+	envMnemonic.NodeMnemonic = os.Getenv(flagNodeMnemonic)
 	envMnemonic.ValidatorMnemonic = os.Getenv(flagValidatorMnemonic + strconv.Itoa(i))
 	if envMnemonic.ValidatorMnemonic == "" {
 		envMnemonic.ValidatorMnemonic = os.Getenv(flagValidatorMnemonic)
@@ -261,7 +260,7 @@ func initTestnetFiles(
 		}
 		// Validator index starts from 1
 		envMnemonic := readEnvMnemonic(i + 1)
-		validatorInfo, err := initValidatorConfig(clientCtx, cmd, nodeConfig, host, nodeDirName, args, envMnemonic, int64((i+1)*(i+1)*1e6))
+		validatorInfo, err := initValidatorConfig(clientCtx, cmd, nodeConfig, host, nodeDirName, args, envMnemonic, int64((i+1)*(i+1)*1e3))
 		if err != nil {
 			_ = os.RemoveAll(args.outputDir)
 			cmd.PrintErrf("failed to initialize validator config: %s", err.Error())
@@ -291,21 +290,21 @@ func initTestnetFiles(
 	return nil
 }
 
-func extractPubkeyFromMnemonic(config *tmconfig.Config, pvKeyFile string, mnemonic string) (cryptotypes.PubKey, error) {
-	privKey := tmed25519.GenPrivKeyFromSecret([]byte(mnemonic))
-	pvStateFile := config.PrivValidatorStateFile()
-	if err := tmos.EnsureDir(filepath.Dir(pvStateFile), 0o777); err != nil {
-		return nil, err
-	}
-	pvKeyFilePath := filepath.Join(config.RootDir, "config", pvKeyFile)
-	filePV := privval.NewFilePV(privKey, pvKeyFilePath, pvStateFile)
-	filePV.Save()
-	valPubKey, err := cryptocodec.FromTmPubKeyInterface(privKey.PubKey())
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert tmtypes.Pubkey to cryptotypes.PubKey: %w", err)
-	}
-	return valPubKey, nil
-}
+//	func extractPubkeyFromMnemonic(config *tmconfig.Config, pvKeyFile string, mnemonic string) (cryptotypes.PubKey, error) {
+//		privKey := tmed25519.GenPrivKeyFromSecret([]byte(mnemonic))
+//		pvStateFile := config.PrivValidatorStateFile()
+//		if err := tmos.EnsureDir(filepath.Dir(pvStateFile), 0o777); err != nil {
+//			return nil, err
+//		}
+//		pvKeyFilePath := filepath.Join(config.RootDir, "config", pvKeyFile)
+//		filePV := privval.NewFilePV(privKey, pvKeyFilePath, pvStateFile)
+//		filePV.Save()
+//		valPubKey, err := cryptocodec.FromTmPubKeyInterface(privKey.PubKey())
+//		if err != nil {
+//			return nil, fmt.Errorf("failed to convert tmtypes.Pubkey to cryptotypes.PubKey: %w", err)
+//		}
+//		return valPubKey, nil
+//	}
 func createKeyFromMnemonic(keybase keyring.Keyring, keyName string, mnemonic string, algo keyring.SignatureAlgo) (cryptotypes.PubKey, string, error) {
 	info, secret, err := keybase.NewMnemonic(
 		keyName,
@@ -358,7 +357,6 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		PubKey:  tmPubKey,
 		Power:   power,
 	}
-	fmt.Printf("validatorInfo.GenesisValidator: %v\n", validatorInfo.GenesisValidator)
 	// validatorInfo.nodeID, validatorInfo.valPubKey, err = genutil.InitializeNodeValidatorFiles(nodeConfig)
 	// if err != nil {
 	// 	return nil, err
@@ -398,31 +396,38 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 			Role:    permexported.ROLE_CHAIN_MANAGEMENT,
 		}
 	}
-	valAddr, secret, err := testutil.GenerateSaveCoinKey(kb, nodeDirName, envMnemonic.ValidatorMnemonic, true, algo)
+	//Generate node key
+	nodeAddr, secret, err := testutil.GenerateSaveCoinKey(kb, nodeDirName, envMnemonic.NodeMnemonic, true, algo)
 	if err != nil {
 		_ = os.RemoveAll(args.outputDir)
 		return nil, err
 	}
-
+	key, err := kb.Key(nodeDirName)
+	if err != nil {
+		return nil, err
+	}
 	info := map[string]string{
 		"secret":  secret,
-		"address": sdk.ValAddress(valAddr).String(),
+		"address": sdk.ValAddress(nodeAddr).String(),
+		"pubkey":  key.GetPubKey().String(),
 	}
 
 	cliPrint, err := json.Marshal(info)
 	if err != nil {
 		return nil, err
 	}
-	accStakingTokens := sdk.TokensFromConsensusPower(power, scalartypes.PowerReduction)
+	accStakingTokens := sdk.TokensFromConsensusPower(1e9, scalartypes.PowerReduction)
 	coins := sdk.Coins{
 		sdk.NewCoin(scalartypes.BaseDenom, accStakingTokens),
 	}
 
 	validatorInfo.Balances = []banktypes.Balance{
-		{Address: valAddr.String(), Coins: coins.Sort()},
+		{Address: nodeAddr.String(), Coins: coins.Sort()},
+		{Address: sdk.AccAddress(validatorInfo.Broadcaster.Address()).String(), Coins: coins.Sort()},
 	}
 	validatorInfo.Accounts = []*authtypes.BaseAccount{
-		authtypes.NewBaseAccount(valAddr, validatorInfo.ValPubKey, 0, 0),
+		authtypes.NewBaseAccount(nodeAddr, nil, 0, 0),
+		authtypes.NewBaseAccount(sdk.AccAddress(validatorInfo.Broadcaster.Address()), validatorInfo.Broadcaster, 0, 0),
 	}
 
 	// save private key seed words
@@ -432,7 +437,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 
 	valTokens := sdk.TokensFromConsensusPower(power, scalartypes.PowerReduction)
 	createValMsg, err := stakingtypes.NewMsgCreateValidator(
-		sdk.ValAddress(valAddr),
+		sdk.ValAddress(nodeAddr),
 		validatorInfo.ValPubKey,
 		sdk.NewCoin(scalartypes.BaseDenom, valTokens),
 		stakingtypes.NewDescription(nodeDirName, "", "", "", ""),
@@ -466,14 +471,6 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 
 	if err := tx.Sign(txFactory, nodeDirName, txBuilder, true); err != nil {
 		return nil, err
-	}
-	//Check signatute type
-	sigs, err := txBuilder.GetTx().GetSignaturesV2()
-	if err != nil {
-		return nil, err
-	}
-	for _, sig := range sigs {
-		fmt.Printf("pubkey type: %T\n", sig.PubKey)
 	}
 
 	txBz, err := clientCtx.TxConfig.TxJSONEncoder()(txBuilder.GetTx())
@@ -616,6 +613,12 @@ func initGenFiles(
 	for i, validatorInfo := range validatorInfos {
 		validators[i] = validatorInfo.GenesisValidator
 	}
+	sort.Slice(validators, func(i, j int) bool {
+		return validators[i].Power < validators[j].Power
+	})
+	for _, validator := range validators {
+		fmt.Printf("Validator: %v\n", hex.EncodeToString(validator.PubKey.Bytes()))
+	}
 	genDoc := tmtypes.GenesisDoc{
 		ChainID:    chainID,
 		AppState:   appGenStateJSON,
@@ -654,6 +657,13 @@ func collectGenFiles(
 ) error {
 	var appState json.RawMessage
 	genTime := tmtime.Now()
+	validators := make([]tmtypes.GenesisValidator, len(validatorInfos))
+	for i, validatorInfo := range validatorInfos {
+		validators[i] = validatorInfo.GenesisValidator
+	}
+	sort.Slice(validators, func(i, j int) bool {
+		return validators[i].Power < validators[j].Power
+	})
 	for _, validatorInfo := range validatorInfos {
 		gentxsDir := filepath.Join(outputDir, "gentxs")
 		initCfg := genutiltypes.NewInitConfig(chainID, gentxsDir, validatorInfo.NodeID, validatorInfo.ValPubKey)
@@ -674,10 +684,6 @@ func collectGenFiles(
 		if appState == nil {
 			// set the canonical application state (they should not differ)
 			appState = nodeAppState
-		}
-		validators := make([]tmtypes.GenesisValidator, len(validatorInfos))
-		for i, validatorInfo := range validatorInfos {
-			validators[i] = validatorInfo.GenesisValidator
 		}
 		// overwrite each validator's genesis file to have a canonical genesis time
 		if err := genutil.ExportGenesisFileWithTime(validatorInfo.GenFile, chainID, validators, appState, genTime); err != nil {

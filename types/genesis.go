@@ -86,9 +86,13 @@ func GenerateGenesis(clientCtx client.Context,
 	appGenState := mbm.DefaultGenesis(clientCtx.Codec)
 	genAccounts := []authtypes.GenesisAccount{}
 	genBalances := []banktypes.Balance{}
+	totalSupply := sdk.NewCoins()
 	for _, info := range validatorInfo {
 		for _, account := range info.Accounts {
 			genAccounts = append(genAccounts, account)
+		}
+		for _, balance := range info.Balances {
+			totalSupply = totalSupply.Add(balance.Coins...)
 		}
 		genBalances = append(genBalances, info.Balances...)
 	}
@@ -106,6 +110,7 @@ func GenerateGenesis(clientCtx client.Context,
 	// set the balances in the genesis state
 	bankGenState := banktypes.DefaultGenesisState()
 	bankGenState.Balances = genBalances
+	bankGenState.Supply = totalSupply
 	appGenState[banktypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(bankGenState)
 
 	//set crisis constant fee coin denom
@@ -188,12 +193,20 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 		evmGenState := evmtypes.DefaultGenesisState()
 		for _, evmConfig := range evmConfigs {
 			//Todo: get token code and burnable
+			tokenCode, err := utils.HexDecode(evmtypes.Token)
+			if err != nil {
+				return err
+			}
+			bzToken, err := utils.HexDecode(evmtypes.Burnable)
+			if err != nil {
+				return err
+			}
 			params := evmtypes.Params{
 				Chain:               nexus.ChainName(evmConfig.ID),
 				ConfirmationHeight:  1,
 				Network:             evmConfig.ID,
-				TokenCode:           []byte{},
-				Burnable:            []byte{},
+				TokenCode:           tokenCode,
+				Burnable:            bzToken,
 				RevoteLockingPeriod: 50,
 				Networks: []evmtypes.NetworkInfo{
 					{
