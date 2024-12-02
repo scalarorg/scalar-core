@@ -34,7 +34,7 @@ func DefaultGenesisState() *GenesisState {
 		CollectorAddress: nil,
 		Chains: []CosmosChain{{
 			Name:       exported.Scalarnet.Name,
-			AddrPrefix: "axelar",
+			AddrPrefix: "scalar",
 		}},
 		TransferQueue: utils.QueueState{},
 		IBCTransfers:  nil,

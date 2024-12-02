@@ -2,6 +2,7 @@ package types
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/ethereum/go-ethereum/params"
 )
 
 const (
@@ -16,4 +17,4 @@ const (
 	DefaultGasPrice = 20
 )
 
-var PowerReduction = sdk.NewInt(1000000)
+var PowerReduction = sdk.NewInt(1e0 * params.InitialBaseFee)
