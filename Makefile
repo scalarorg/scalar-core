@@ -63,6 +63,10 @@ build: go.sum
 
 .PHONY: run
 run:
+	@HOME=$(PWD) ./entrypoint.sh
+
+.PHONY: debug
+debug:
 	@HOME=$(PWD) ./entrypoint.debug.sh
 
 .PHONY: start

@@ -11,14 +11,14 @@ stop_gracefully() {
 }
 
 HOME_DIR="$PWD"
-echo "HOME_DIR=$HOME_DIR"
-CONFIG_PATH="$PWD/config"
-echo "CONFIG_PATH=$CONFIG_PATH"
-
+CONFIG_PATH="$HOME_DIR/config"
 D_HOME_DIR="$HOME_DIR/.scalar"
-echo "D_HOME_DIR=$D_HOME_DIR"
-
 HOME=${HOME:-$HOME_DIR}
+
+echo "--- ℹ️ Environment variables set ---  ℹ️"
+echo "HOME_DIR=$HOME_DIR"
+echo "CONFIG_PATH=$CONFIG_PATH"
+echo "D_HOME_DIR=$D_HOME_DIR"
 echo "HOME=$HOME"
 
 fileCount() {
@@ -28,14 +28,6 @@ fileCount() {
 addPeers() {
   sed "s/^seeds =.*/seeds = \"$1\"/g" "$D_HOME_DIR/config/config.toml" >"$D_HOME_DIR/config/config.toml.tmp" &&
     mv "$D_HOME_DIR/config/config.toml.tmp" "$D_HOME_DIR/config/config.toml"
-}
-
-genSeeds() {
-  echo "Generating seeds"
-}
-
-genGenesis() {
-  echo "Generating genesis"
 }
 
 cont() {
@@ -68,15 +60,14 @@ startNodeProc() {
   ./bin/scalard start
 }
 
-genSeeds
-genGenesis
-
 if [ -n "$PRESTART_SCRIPT" ] && [ -f "$PRESTART_SCRIPT" ]; then
   echo "Running pre-start script at $PRESTART_SCRIPT"
   source "$PRESTART_SCRIPT"
 fi
 
 if [ -n "$CONFIG_PATH" ] && [ -d "$CONFIG_PATH" ]; then
+  mkdir -p "$D_HOME_DIR/config"
+  echo "Copying config files from $CONFIG_PATH to $D_HOME_DIR/config"
   if [ -f "$CONFIG_PATH/config.toml" ]; then
     cp "$CONFIG_PATH/config.toml" "$D_HOME_DIR/config/config.toml"
   fi
