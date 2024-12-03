@@ -8,7 +8,6 @@ import (
 	"net"
 	"os"
 	"path/filepath"
-	"sort"
 	"strconv"
 	"strings"
 
@@ -260,7 +259,7 @@ func initTestnetFiles(
 		}
 		// Validator index starts from 1
 		envMnemonic := readEnvMnemonic(i + 1)
-		validatorInfo, err := initValidatorConfig(clientCtx, cmd, nodeConfig, host, nodeDirName, args, envMnemonic, int64((i+1)*(i+1)*1e3))
+		validatorInfo, err := initValidatorConfig(clientCtx, cmd, nodeConfig, host, nodeDirName, args, envMnemonic, int64((i+1)*(i+1)*1e6))
 		if err != nil {
 			_ = os.RemoveAll(args.outputDir)
 			cmd.PrintErrf("failed to initialize validator config: %s", err.Error())
@@ -612,12 +611,7 @@ func initGenFiles(
 	validators := make([]tmtypes.GenesisValidator, len(validatorInfos))
 	for i, validatorInfo := range validatorInfos {
 		validators[i] = validatorInfo.GenesisValidator
-	}
-	sort.Slice(validators, func(i, j int) bool {
-		return validators[i].Power < validators[j].Power
-	})
-	for _, validator := range validators {
-		fmt.Printf("Validator: %v\n", hex.EncodeToString(validator.PubKey.Bytes()))
+		fmt.Printf("Validator: power: %d; pubkey: %v\n", validators[i].Power, hex.EncodeToString(validators[i].PubKey.Bytes()))
 	}
 	genDoc := tmtypes.GenesisDoc{
 		ChainID:    chainID,
@@ -661,9 +655,6 @@ func collectGenFiles(
 	for i, validatorInfo := range validatorInfos {
 		validators[i] = validatorInfo.GenesisValidator
 	}
-	sort.Slice(validators, func(i, j int) bool {
-		return validators[i].Power < validators[j].Power
-	})
 	for _, validatorInfo := range validatorInfos {
 		gentxsDir := filepath.Join(outputDir, "gentxs")
 		initCfg := genutiltypes.NewInitConfig(chainID, gentxsDir, validatorInfo.NodeID, validatorInfo.ValPubKey)
