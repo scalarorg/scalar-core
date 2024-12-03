@@ -542,3 +542,4 @@ type IsChainRegisteredRequest struct {
 type WasmQueryIsChainRegisteredResponse struct {
 	IsRegistered bool `json:"is_registered"`
 }
+

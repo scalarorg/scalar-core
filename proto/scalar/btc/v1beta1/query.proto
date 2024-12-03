@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package scalar.btc.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "scalar/btc/v1beta1/tx.proto";
+import "scalar/btc/v1beta1/types.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
+
+option (gogoproto.goproto_getters_all) = false;
+
+message BatchedCommandsRequest {
+  string chain = 1;
+  // id defines an optional id for the commandsbatch. If not specified the
+  // latest will be returned
+  string id = 2;
+}
+
+message BatchedCommandsResponse {
+  string id = 1 [ (gogoproto.customname) = "ID" ];
+  string data = 2;
+  BatchedCommandsStatus status = 3;
+  string key_id = 4 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/axelarnetwork/axelar-core/x/multisig/exported.KeyID"
+  ];
+  reserved 5; // signature was removed in v0.20.0
+  string execute_data = 6;
+  string prev_batched_commands_id = 7
+      [ (gogoproto.customname) = "PrevBatchedCommandsID" ];
+  repeated string command_ids = 8 [ (gogoproto.customname) = "CommandIDs" ];
+  Proof proof = 9;
+}

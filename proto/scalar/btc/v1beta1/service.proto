@@ -1,0 +1,35 @@
+syntax = "proto3";
+package scalar.btc.v1beta1;
+
+option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "scalar/btc/v1beta1/tx.proto";
+import "scalar/btc/v1beta1/query.proto";
+
+option (gogoproto.goproto_registration) = true;
+
+// Msg defines the evm Msg service.
+service MsgService {
+  rpc ConfirmGatewayTxs(ConfirmGatewayTxsRequest)
+      returns (ConfirmGatewayTxsResponse) {
+    option (google.api.http) = {
+      post : "/scalar/btc/confirm_gateway_txs"
+      body : "*"
+    };
+  }
+}
+
+// QueryService defines the gRPC querier service.
+service QueryService {
+
+  // BatchedCommands queries the batched commands for a specified chain and
+  // BatchedCommandsID if no BatchedCommandsID is specified, then it returns the
+  // latest batched commands
+  rpc BatchedCommands(BatchedCommandsRequest)
+      returns (BatchedCommandsResponse) {
+    option (google.api.http).get =
+        "/scalar/btc/v1beta1/batched_commands/{chain}/{id}";
+  }
+}

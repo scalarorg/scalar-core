@@ -1,0 +1,25 @@
+syntax = "proto3";
+package scalar.btc.v1beta1;
+
+import "gogoproto/gogo.proto";
+
+import "scalar/btc/v1beta1/params.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
+
+option (gogoproto.goproto_getters_all) = false;
+
+message GenesisState {
+  message Chain {
+    string chain = 1
+        [ (gogoproto.casttype) =
+              "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+    Params params = 2 [ (gogoproto.nullable) = false ];
+  }
+
+  repeated Chain chains = 1 [ (gogoproto.nullable) = false ];
+
+  bytes vault_tag = 2 [ (gogoproto.customtype) = "VaultTag" ];
+
+  bytes vault_version = 3 [ (gogoproto.customtype) = "VaultVersion" ];
+}

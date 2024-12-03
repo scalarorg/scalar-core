@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package scalar.btc.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "axelar/permission/exported/v1beta1/types.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
+
+option (gogoproto.goproto_getters_all) = false;
+
+message ConfirmGatewayTxsRequest {
+  option (axelar.permission.exported.v1beta1.permission_role) =
+      ROLE_UNRESTRICTED;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+  repeated bytes tx_ids = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "TxHash",
+    (gogoproto.customname) = "TxIDs"
+  ];
+}
+
+message ConfirmGatewayTxsResponse {}
