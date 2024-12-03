@@ -52,6 +52,7 @@ var (
 	flagBroadcasterMnemonic = "BROADCASTER_MNEMONIC"
 	flagGovernanceMnemonic  = "GOV_MNEMONIC"
 	flagValidatorMnemonic   = "VALIDATOR_MNEMONIC"
+	flagBtcPubkey           = "BTC_PUBKEY"
 	flagNodeDirPrefix       = "node-dir-prefix"
 	flagNumValidators       = "v"
 	flagSupportedChains     = "supported-chains"
@@ -99,11 +100,12 @@ type startArgs struct {
 	printMnemonic  bool
 }
 
-type EnvMnemonic struct {
+type EnvKeys struct {
 	NodeMnemonic        string
 	ValidatorMnemonic   string
 	BroadcasterMnemonic string
 	GovernanceMnemonic  string
+	BtcPubkey           string
 }
 
 func defaultOption(options *keyring.Options) {
@@ -215,22 +217,23 @@ Example:
 
 const nodeDirPerm = 0o755
 
-func readEnvMnemonic(i int) EnvMnemonic {
-	envMnemonic := EnvMnemonic{}
-	envMnemonic.NodeMnemonic = os.Getenv(flagNodeMnemonic)
-	envMnemonic.ValidatorMnemonic = os.Getenv(flagValidatorMnemonic + strconv.Itoa(i))
-	if envMnemonic.ValidatorMnemonic == "" {
-		envMnemonic.ValidatorMnemonic = os.Getenv(flagValidatorMnemonic)
+func readEnvMnemonic(i int) EnvKeys {
+	envKeys := EnvKeys{}
+	envKeys.NodeMnemonic = os.Getenv(flagNodeMnemonic)
+	envKeys.ValidatorMnemonic = os.Getenv(flagValidatorMnemonic + strconv.Itoa(i))
+	if envKeys.ValidatorMnemonic == "" {
+		envKeys.ValidatorMnemonic = os.Getenv(flagValidatorMnemonic)
 	}
-	envMnemonic.BroadcasterMnemonic = os.Getenv(flagBroadcasterMnemonic + strconv.Itoa(i))
-	if envMnemonic.BroadcasterMnemonic == "" {
-		envMnemonic.BroadcasterMnemonic = os.Getenv(flagBroadcasterMnemonic)
+	envKeys.BroadcasterMnemonic = os.Getenv(flagBroadcasterMnemonic + strconv.Itoa(i))
+	if envKeys.BroadcasterMnemonic == "" {
+		envKeys.BroadcasterMnemonic = os.Getenv(flagBroadcasterMnemonic)
 	}
-	envMnemonic.GovernanceMnemonic = os.Getenv(flagGovernanceMnemonic + strconv.Itoa(i))
-	if envMnemonic.GovernanceMnemonic == "" {
-		envMnemonic.GovernanceMnemonic = os.Getenv(flagGovernanceMnemonic)
+	envKeys.GovernanceMnemonic = os.Getenv(flagGovernanceMnemonic + strconv.Itoa(i))
+	if envKeys.GovernanceMnemonic == "" {
+		envKeys.GovernanceMnemonic = os.Getenv(flagGovernanceMnemonic)
 	}
-	return envMnemonic
+	envKeys.BtcPubkey = os.Getenv(flagBtcPubkey + strconv.Itoa((i)))
+	return envKeys
 }
 
 // initTestnetFiles initializes testnet files for a testnet to be run in a separate process
@@ -322,7 +325,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	host string,
 	nodeDirName string,
 	args initArgs,
-	envMnemonic EnvMnemonic,
+	envKeys EnvKeys,
 	power int64,
 ) (*scalartypes.ValidatorInfo, error) {
 	var err error
@@ -334,13 +337,11 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	fmt.Printf("Create validator config in dir %s\n", nodeDir)
 	nodeConfig.Moniker = nodeDirName
 	validatorInfo := scalartypes.ValidatorInfo{
-		NodeDir: filepath.Join(nodeDir, "config"),
-		GenFile: nodeConfig.GenesisFile(),
-		// Broadcaster: broadcaster,
-		// GovPubKey:   govPubKey,
-		// MngAccount:  mngAccount,
+		NodeDir:   filepath.Join(nodeDir, "config"),
+		GenFile:   nodeConfig.GenesisFile(),
+		BtcPubkey: envKeys.BtcPubkey,
 	}
-	validatorInfo.NodeID, validatorInfo.ValPubKey, err = genutil.InitializeNodeValidatorFilesFromMnemonic(nodeConfig, envMnemonic.ValidatorMnemonic)
+	validatorInfo.NodeID, validatorInfo.ValPubKey, err = genutil.InitializeNodeValidatorFilesFromMnemonic(nodeConfig, envKeys.ValidatorMnemonic)
 	if err != nil {
 		return nil, err
 	}
@@ -376,16 +377,16 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	if err != nil {
 		return nil, err
 	}
-	if envMnemonic.BroadcasterMnemonic != "" {
-		broadcasterPubKey, _, err := createKeyFromMnemonic(kb, "broadcaster", envMnemonic.BroadcasterMnemonic, algo)
+	if envKeys.BroadcasterMnemonic != "" {
+		broadcasterPubKey, _, err := createKeyFromMnemonic(kb, "broadcaster", envKeys.BroadcasterMnemonic, algo)
 		if err != nil {
 			fmt.Printf("ExtractBroadcaster Err: %s\n", err.Error())
 			return nil, err
 		}
 		validatorInfo.Broadcaster = broadcasterPubKey
 	}
-	if envMnemonic.GovernanceMnemonic != "" {
-		validatorInfo.GovPubKey, _, err = createKeyFromMnemonic(kb, "govenance", envMnemonic.GovernanceMnemonic, algo)
+	if envKeys.GovernanceMnemonic != "" {
+		validatorInfo.GovPubKey, _, err = createKeyFromMnemonic(kb, "govenance", envKeys.GovernanceMnemonic, algo)
 		if err != nil {
 			fmt.Printf("ExtractGovernance Err: %s\n", err.Error())
 			return nil, err
@@ -396,7 +397,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		}
 	}
 	//Generate node key
-	nodeAddr, secret, err := testutil.GenerateSaveCoinKey(kb, nodeDirName, envMnemonic.NodeMnemonic, true, algo)
+	nodeAddr, secret, err := testutil.GenerateSaveCoinKey(kb, nodeDirName, envKeys.NodeMnemonic, true, algo)
 	if err != nil {
 		_ = os.RemoveAll(args.outputDir)
 		return nil, err
@@ -494,9 +495,8 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	appConfig.Telemetry.GlobalLabels = [][]string{{"chain_id", args.chainID}}
 	sdkconfig.WriteConfigFile(filepath.Join(nodeDir, "config/app.toml"), appConfig)
 	// Generate tendermint default config
-	config := tmconfig.DefaultConfig()
 	configPath := filepath.Join(nodeDir, "config", "config.toml")
-	tmconfig.WriteConfigFile(configPath, config)
+	tmconfig.WriteConfigFile(configPath, nodeConfig)
 	err = appendBridgeConfig(configPath, args.supportedChains)
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to append bridge config")

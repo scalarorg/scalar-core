@@ -8,7 +8,6 @@ option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 message Covenant {
   string btcpubkey = 1;
   string name = 2;
-  string meta = 3;
 }
 
 message CovenantGroup {

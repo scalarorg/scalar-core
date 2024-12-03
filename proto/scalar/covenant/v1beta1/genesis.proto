@@ -11,6 +11,6 @@ option (gogoproto.goproto_getters_all) = false;
 message GenesisState {
   option (gogoproto.stable_marshaler) = true;
 
-  repeated Covenant covenant = 1 [(gogoproto.nullable) = false];
-  repeated CovenantGroup covenant_group = 2 [(gogoproto.nullable) = false];
+  repeated Covenant covenants = 1 [(gogoproto.nullable) = false];
+  repeated CovenantGroup groups = 2 [(gogoproto.nullable) = false];
 }

@@ -8,6 +8,7 @@ import (
 
 	//btctypes "github.com/scalarorg/scalar-core/x/btc/types"
 	"github.com/axelarnetwork/axelar-core/utils"
+	"github.com/axelarnetwork/axelar-core/x/evm/types"
 	evmtypes "github.com/axelarnetwork/axelar-core/x/evm/types"
 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	permissionexported "github.com/axelarnetwork/axelar-core/x/permission/exported"
@@ -25,6 +26,8 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
+	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
+	protocoltypes "github.com/scalarorg/scalar-core/x/protocol/types"
 	tmtypes "github.com/tendermint/tendermint/types"
 )
 
@@ -74,9 +77,33 @@ type ValidatorInfo struct {
 	GovPubKey        cryptotypes.PubKey
 	Broadcaster      cryptotypes.PubKey
 	GenesisValidator tmtypes.GenesisValidator
+	BtcPubkey        string
 	GenFile          string
 }
 
+// DefaultProtocol returns the default chains for a genesis state
+func DefaultProtocol() protocoltypes.Protocol {
+	token := types.ERC20TokenMetadata{
+		Asset:        "pBtc",
+		ChainID:      sdk.NewInt(1115511),
+		TokenAddress: evmtypes.Address(common.HexToAddress("0x5f214989a5f49ab3c56fd5003c2858e24959c018")),
+		Status:       evmtypes.Confirmed,
+		Details: evmtypes.TokenDetails{
+			TokenName: "pBtc",
+			Symbol:    "pBtc",
+			Decimals:  8,
+			Capacity:  sdk.NewInt(100000000),
+		},
+	}
+	protocol := protocoltypes.Protocol{
+		Name:          protocoltypes.DefaultProtocolName,
+		CovenantGroup: covenanttypes.DefaultCovenantGroupName,
+		Tokens: []evmtypes.ERC20TokenMetadata{
+			token,
+		},
+	}
+	return protocol
+}
 func GenerateGenesis(clientCtx client.Context,
 	mbm module.BasicManager,
 	coinDenom string,
@@ -163,10 +190,27 @@ func GenerateGenesis(clientCtx client.Context,
 	stakingGenState := stakingtypes.DefaultGenesisState()
 	stakingGenState.Params.BondDenom = coinDenom
 	appGenState[stakingtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(stakingGenState)
-
+	// supported chains
 	if err := GenerateSupportedChains(clientCtx, supportedChainsPath, appGenState); err != nil {
 		log.Error().Err(err).Msg("Failed to generate supported chains")
 	}
+	//Covenant
+	covenants := make([]covenanttypes.Covenant, len(validatorInfo))
+	covenantGroup := covenanttypes.CovenantGroup{
+		Name:      "scalar",
+		Covenants: covenants,
+	}
+	for i, validator := range validatorInfo {
+		covenants[i] = covenanttypes.Covenant{
+			Name:      validator.NodeDir,
+			Btcpubkey: validator.BtcPubkey,
+		}
+	}
+	covnantGenState := covenanttypes.NewGenesisState(covenants, covenantGroup)
+	appGenState[covenanttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(covnantGenState)
+	//Protocol
+	protocolGenState := protocoltypes.NewGenesisState(DefaultProtocol())
+	appGenState[protocoltypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(protocolGenState)
 	// //evm chains
 	// var evmGenState evmtypes.GenesisState
 	// clientCtx.Codec.MustUnmarshalJSON(appGenState[evmtypes.ModuleName], &evmGenState)
