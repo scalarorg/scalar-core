@@ -125,9 +125,11 @@ func deleteLineBreakCmds(cmd *cobra.Command) {
 	}
 }
 
+// Todo: Set enable to true then investigate error
+// "duplicate metrics collector registration attempted"
 func setupMetrics() error {
 	_, err := telemetry.New(telemetry.Config{
-		Enabled:        true,
+		Enabled:        false,
 		EnableHostname: false,
 		ServiceName:    "scalar",
 		// 1<<62, https://play.golang.org/p/szrQPRHxE0O
