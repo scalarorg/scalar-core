@@ -2,16 +2,19 @@ package cmd
 
 import (
 	"bufio"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"net"
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	hd "github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
@@ -26,8 +29,11 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
-	"github.com/scalarorg/scalar-core/types"
+
+	permexported "github.com/axelarnetwork/axelar-core/x/permission/exported"
+	permtypes "github.com/axelarnetwork/axelar-core/x/permission/types"
 	scalartypes "github.com/scalarorg/scalar-core/types"
 	"github.com/spf13/cobra"
 	tmconfig "github.com/tendermint/tendermint/config"
@@ -42,35 +48,41 @@ const (
 )
 
 var (
-	flagNodeDirPrefix   = "node-dir-prefix"
-	flagNumValidators   = "v"
-	flagOutputDir       = "output-dir"
-	flagNodeDaemonHome  = "node-daemon-home"
-	flagNodeDomain      = "node-domain"
-	flagEnableLogging   = "enable-logging"
-	flagRPCAddress      = "rpc.address"
-	flagAPIAddress      = "api.address"
-	flagPrintMnemonic   = "print-mnemonic"
-	flagBaseFee         = "base-fee"
-	flagMinGasPrice     = "min-gas-price"
-	flagGRPCAddress     = "grpc.address"
-	flagJSONRPCAddress  = "json-rpc.address"
-	flagKeyType         = "key-type"
-	moduleNameFeemarket = "feemarket"
+	flagNodeMnemonic        = "NODE_MNEMONIC"
+	flagBroadcasterMnemonic = "BROADCASTER_MNEMONIC"
+	flagGovernanceMnemonic  = "GOV_MNEMONIC"
+	flagValidatorMnemonic   = "VALIDATOR_MNEMONIC"
+	flagNodeDirPrefix       = "node-dir-prefix"
+	flagNumValidators       = "v"
+	flagSupportedChains     = "supported-chains"
+	flagOutputDir           = "output-dir"
+	flagNodeDaemonHome      = "node-daemon-home"
+	flagNodeDomain          = "node-domain"
+	flagEnableLogging       = "enable-logging"
+	flagRPCAddress          = "rpc.address"
+	flagAPIAddress          = "api.address"
+	flagPrintMnemonic       = "print-mnemonic"
+	flagBaseFee             = "base-fee"
+	flagMinGasPrice         = "min-gas-price"
+	flagGRPCAddress         = "grpc.address"
+	flagJSONRPCAddress      = "json-rpc.address"
+	flagKeyType             = "key-type"
+	moduleNameFeemarket     = "feemarket"
 )
 
 type initArgs struct {
-	algo           string
-	chainID        string
-	keyringBackend string
-	minGasPrices   string
-	nodeDaemonHome string
-	nodeDirPrefix  string
-	numValidators  int
-	outputDir      string
-	nodeDomain     string
-	baseFee        sdk.Int
-	minGasPrice    sdk.Dec
+	algo            string
+	chainID         string
+	keyringBackend  string
+	minGasPrices    string
+	nodeDaemonHome  string
+	supportedChains string
+	nodeDirPrefix   string
+	numValidators   int
+	outputDir       string
+	nodeDomain      string
+	baseFee         sdk.Int
+	minGasPrice     sdk.Dec
 }
 
 type startArgs struct {
@@ -85,6 +97,13 @@ type startArgs struct {
 	numValidators  int
 	enableLogging  bool
 	printMnemonic  bool
+}
+
+type EnvMnemonic struct {
+	NodeMnemonic        string
+	ValidatorMnemonic   string
+	BroadcasterMnemonic string
+	GovernanceMnemonic  string
 }
 
 func defaultOption(options *keyring.Options) {
@@ -136,7 +155,7 @@ or a similar setup where each node has a manually configurable IP address.
 Note, strict routability for addresses is turned off in the config file.
 
 Example:
-	scalard testnet init-files --v 4 --output-dir ./.testnets --node-domain scalarnode
+	scalard testnet init-files --v 4 --output-dir ./.testnets --node-domain scalarnode --supported-chains=./chains
 	`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -155,6 +174,7 @@ Example:
 			args.nodeDaemonHome, _ = cmd.Flags().GetString(flagNodeDaemonHome)
 			args.nodeDomain, _ = cmd.Flags().GetString(flagNodeDomain)
 			args.numValidators, _ = cmd.Flags().GetInt(flagNumValidators)
+			args.supportedChains, _ = cmd.Flags().GetString(flagSupportedChains)
 			args.algo, _ = cmd.Flags().GetString(flagKeyType)
 			baseFee, _ := cmd.Flags().GetString(flagBaseFee)
 			minGasPrice, _ := cmd.Flags().GetString(flagMinGasPrice)
@@ -184,13 +204,34 @@ Example:
 		*scalarnode* results in persistent peers list ID0@scalarnode1:46656, ID1@scalarnode2:46656, ...
 		*192.168.0.1* results in persistent peers list ID0@192.168.0.11:46656, ID1@192.168.0.12:46656, ...
 		`)
-
+	cmd.Flags().String(flagSupportedChains, "./chains", `Supported chains directory, each chain family is config in a seperated json file under this directory: 
+		*./chains/evm.json* stores all evm chain configs ...
+		*./chains/btc.json* stores all btc chain configs ...
+		`)
 	cmd.Flags().String(flags.FlagKeyringBackend, flags.DefaultKeyringBackend, "Select keyring's backend (os|file|test)")
 
 	return cmd
 }
 
 const nodeDirPerm = 0o755
+
+func readEnvMnemonic(i int) EnvMnemonic {
+	envMnemonic := EnvMnemonic{}
+	envMnemonic.NodeMnemonic = os.Getenv(flagNodeMnemonic)
+	envMnemonic.ValidatorMnemonic = os.Getenv(flagValidatorMnemonic + strconv.Itoa(i))
+	if envMnemonic.ValidatorMnemonic == "" {
+		envMnemonic.ValidatorMnemonic = os.Getenv(flagValidatorMnemonic)
+	}
+	envMnemonic.BroadcasterMnemonic = os.Getenv(flagBroadcasterMnemonic + strconv.Itoa(i))
+	if envMnemonic.BroadcasterMnemonic == "" {
+		envMnemonic.BroadcasterMnemonic = os.Getenv(flagBroadcasterMnemonic)
+	}
+	envMnemonic.GovernanceMnemonic = os.Getenv(flagGovernanceMnemonic + strconv.Itoa(i))
+	if envMnemonic.GovernanceMnemonic == "" {
+		envMnemonic.GovernanceMnemonic = os.Getenv(flagGovernanceMnemonic)
+	}
+	return envMnemonic
+}
 
 // initTestnetFiles initializes testnet files for a testnet to be run in a separate process
 func initTestnetFiles(
@@ -205,161 +246,341 @@ func initTestnetFiles(
 		args.chainID = fmt.Sprintf("scalar_%d-1", tmrand.Int63n(9999999999999)+1)
 	}
 
-	nodeIDs := make([]string, args.numValidators)
-	valPubKeys := make([]cryptotypes.PubKey, args.numValidators)
-
 	var (
-		genAccounts []authtypes.GenesisAccount
-		genBalances []banktypes.Balance
-		genFiles    []string
+		validatorInfos []scalartypes.ValidatorInfo
 	)
-
-	inBuf := bufio.NewReader(cmd.InOrStdin())
 	// generate private keys, node IDs, and initial transactions
 	for i := 0; i < args.numValidators; i++ {
 		nodeDirName := getNodeDirName(i, args.nodeDirPrefix)
-		nodeDir := filepath.Join(args.outputDir, nodeDirName, args.nodeDaemonHome)
-		gentxsDir := filepath.Join(args.outputDir, "gentxs")
-
-		nodeConfig.SetRoot(nodeDir)
-		nodeConfig.RPC.ListenAddress = "tcp://0.0.0.0:26657"
-
-		if err := os.MkdirAll(filepath.Join(nodeDir, "config"), nodeDirPerm); err != nil {
-			_ = os.RemoveAll(args.outputDir)
-			return err
-		}
-
-		nodeConfig.Moniker = nodeDirName
-
 		host, err := getHost(i, args.nodeDomain)
 		if err != nil {
 			_ = os.RemoveAll(args.outputDir)
 			return err
 		}
-
-		nodeIDs[i], valPubKeys[i], err = genutil.InitializeNodeValidatorFiles(nodeConfig)
+		// Validator index starts from 1
+		envMnemonic := readEnvMnemonic(i + 1)
+		validatorInfo, err := initValidatorConfig(clientCtx, cmd, nodeConfig, host, nodeDirName, args, envMnemonic, int64((i+1)*(i+1)*1e6))
 		if err != nil {
 			_ = os.RemoveAll(args.outputDir)
+			cmd.PrintErrf("failed to initialize validator config: %s", err.Error())
 			return err
 		}
-
-		memo := fmt.Sprintf("%s@%s:26656", nodeIDs[i], host)
-		genFiles = append(genFiles, nodeConfig.GenesisFile())
-		// TODO: add ledger support
-		kb, err := keyring.New(sdk.KeyringServiceName(), args.keyringBackend, nodeDir, inBuf, defaultOption)
-		if err != nil {
-			return err
-		}
-
-		keyringAlgos, _ := kb.SupportedAlgorithms()
-		algo, err := keyring.NewSigningAlgoFromString(args.algo, keyringAlgos)
-		if err != nil {
-			return err
-		}
-
-		addr, secret, err := testutil.GenerateSaveCoinKey(kb, nodeDirName, "", true, algo)
-		if err != nil {
-			_ = os.RemoveAll(args.outputDir)
-			return err
-		}
-
-		info := map[string]string{"secret": secret}
-
-		cliPrint, err := json.Marshal(info)
-		if err != nil {
-			return err
-		}
-
-		// save private key seed words
-		if err := utils.WriteFile(fmt.Sprintf("%v.json", "key_seed"), nodeDir, cliPrint); err != nil {
-			return err
-		}
-		accStakingTokens := sdk.TokensFromConsensusPower(5000, scalartypes.PowerReduction)
-		coins := sdk.Coins{
-			sdk.NewCoin(scalartypes.BaseDenom, accStakingTokens),
-		}
-
-		genBalances = append(genBalances, banktypes.Balance{Address: addr.String(), Coins: coins.Sort()})
-		genAccounts = append(genAccounts, authtypes.NewBaseAccount(addr, nil, 0, 0))
-
-		valTokens := sdk.TokensFromConsensusPower(100, scalartypes.PowerReduction)
-		createValMsg, err := stakingtypes.NewMsgCreateValidator(
-			sdk.ValAddress(addr),
-			valPubKeys[i],
-			sdk.NewCoin(scalartypes.BaseDenom, valTokens),
-			stakingtypes.NewDescription(nodeDirName, "", "", "", ""),
-			stakingtypes.NewCommissionRates(sdk.OneDec(), sdk.OneDec(), sdk.OneDec()),
-			sdk.OneInt(),
-		)
-		if err != nil {
-			return err
-		}
-
-		txBuilder := clientCtx.TxConfig.NewTxBuilder()
-		if err := txBuilder.SetMsgs(createValMsg); err != nil {
-			return err
-		}
-
-		minGasPrice := args.minGasPrice
-		if sdk.NewDecFromInt(args.baseFee).GT(args.minGasPrice) {
-			minGasPrice = sdk.NewDecFromInt(args.baseFee)
-		}
-
-		txBuilder.SetMemo(memo)
-		txBuilder.SetGasLimit(createValidatorMsgGasLimit)
-		txBuilder.SetFeeAmount(sdk.NewCoins(sdk.NewCoin(scalartypes.BaseDenom, minGasPrice.MulInt64(createValidatorMsgGasLimit).Ceil().TruncateInt())))
-
-		txFactory := tx.Factory{}
-		txFactory = txFactory.
-			WithChainID(args.chainID).
-			WithMemo(memo).
-			WithKeybase(kb).
-			WithTxConfig(clientCtx.TxConfig)
-
-		if err := tx.Sign(txFactory, nodeDirName, txBuilder, true); err != nil {
-			return err
-		}
-
-		txBz, err := clientCtx.TxConfig.TxJSONEncoder()(txBuilder.GetTx())
-		if err != nil {
-			return err
-		}
-
-		if err := utils.WriteFile(fmt.Sprintf("%v.json", nodeDirName), gentxsDir, txBz); err != nil {
-			return err
-		}
-		// Add custom app config
-		if err := setCustomAppConfig(cmd); err != nil {
-			return err
-		}
-		//Generate default app config
-		appConfig := sdkconfig.DefaultConfig()
-		appConfig.MinGasPrices = args.minGasPrices
-		appConfig.API.Enable = true
-		appConfig.Telemetry.Enabled = true
-		appConfig.Telemetry.PrometheusRetentionTime = 60
-		appConfig.Telemetry.EnableHostnameLabel = false
-		appConfig.Telemetry.GlobalLabels = [][]string{{"chain_id", args.chainID}}
-		sdkconfig.WriteConfigFile(filepath.Join(nodeDir, "config/app.toml"), appConfig)
+		validatorInfos = append(validatorInfos, *validatorInfo)
 	}
-
-	if err := initGenFiles(clientCtx, mbm, args.chainID, scalartypes.BaseDenom, genAccounts, genBalances, genFiles, args.numValidators, args.baseFee, args.minGasPrice); err != nil {
+	if err := initGenFiles(clientCtx, mbm,
+		args.chainID,
+		scalartypes.BaseDenom,
+		args.supportedChains,
+		validatorInfos,
+		args.baseFee,
+		args.minGasPrice,
+	); err != nil {
+		cmd.PrintErrf("failed to initGenFiles: %s", err.Error())
 		return err
 	}
 
-	err := collectGenFiles(
-		clientCtx, nodeConfig, args.chainID, nodeIDs, valPubKeys, args.numValidators,
-		args.outputDir, args.nodeDirPrefix, args.nodeDaemonHome, genBalIterator,
-	)
+	err := collectGenFiles(clientCtx, nodeConfig, args.chainID, validatorInfos, args.outputDir, genBalIterator)
 	if err != nil {
+		cmd.PrintErrf("failed to collect genesis files: %s", err.Error())
 		return err
 	}
 
 	cmd.PrintErrf("Successfully initialized %d node directories\n", args.numValidators)
 	return nil
 }
+
+//	func extractPubkeyFromMnemonic(config *tmconfig.Config, pvKeyFile string, mnemonic string) (cryptotypes.PubKey, error) {
+//		privKey := tmed25519.GenPrivKeyFromSecret([]byte(mnemonic))
+//		pvStateFile := config.PrivValidatorStateFile()
+//		if err := tmos.EnsureDir(filepath.Dir(pvStateFile), 0o777); err != nil {
+//			return nil, err
+//		}
+//		pvKeyFilePath := filepath.Join(config.RootDir, "config", pvKeyFile)
+//		filePV := privval.NewFilePV(privKey, pvKeyFilePath, pvStateFile)
+//		filePV.Save()
+//		valPubKey, err := cryptocodec.FromTmPubKeyInterface(privKey.PubKey())
+//		if err != nil {
+//			return nil, fmt.Errorf("failed to convert tmtypes.Pubkey to cryptotypes.PubKey: %w", err)
+//		}
+//		return valPubKey, nil
+//	}
+func createKeyFromMnemonic(keybase keyring.Keyring, keyName string, mnemonic string, algo keyring.SignatureAlgo) (cryptotypes.PubKey, string, error) {
+	info, secret, err := keybase.NewMnemonic(
+		keyName,
+		keyring.English,
+		sdk.GetConfig().GetFullBIP44Path(),
+		keyring.DefaultBIP39Passphrase,
+		algo,
+	)
+	if err != nil {
+		return nil, secret, err
+	}
+	return info.GetPubKey(), secret, nil
+}
+func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
+	nodeConfig *tmconfig.Config,
+	host string,
+	nodeDirName string,
+	args initArgs,
+	envMnemonic EnvMnemonic,
+	power int64,
+) (*scalartypes.ValidatorInfo, error) {
+	var err error
+	nodeDir := filepath.Join(args.outputDir, nodeDirName, args.nodeDaemonHome)
+	nodeConfig.SetRoot(nodeDir)
+	if err := os.MkdirAll(filepath.Join(nodeDir, "config"), nodeDirPerm); err != nil {
+		return nil, err
+	}
+	fmt.Printf("Create validator config in dir %s\n", nodeDir)
+	nodeConfig.Moniker = nodeDirName
+	validatorInfo := scalartypes.ValidatorInfo{
+		NodeDir: filepath.Join(nodeDir, "config"),
+		GenFile: nodeConfig.GenesisFile(),
+		// Broadcaster: broadcaster,
+		// GovPubKey:   govPubKey,
+		// MngAccount:  mngAccount,
+	}
+	validatorInfo.NodeID, validatorInfo.ValPubKey, err = genutil.InitializeNodeValidatorFilesFromMnemonic(nodeConfig, envMnemonic.ValidatorMnemonic)
+	if err != nil {
+		return nil, err
+	}
+	validatorInfo.SeedAddress = fmt.Sprintf("%s@%s:26656", validatorInfo.NodeID, host)
+	tmPubKey, err := cryptocodec.ToTmPubKeyInterface(validatorInfo.ValPubKey)
+	if err != nil {
+		fmt.Printf("ToTmPubKeyInterface Err: %s\n", err.Error())
+		return nil, err
+	}
+	validatorInfo.GenesisValidator = tmtypes.GenesisValidator{
+		Name:    nodeDirName,
+		Address: tmPubKey.Address(),
+		PubKey:  tmPubKey,
+		Power:   power,
+	}
+	// validatorInfo.nodeID, validatorInfo.valPubKey, err = genutil.InitializeNodeValidatorFiles(nodeConfig)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	inBuf := bufio.NewReader(cmd.InOrStdin())
+	gentxsDir := filepath.Join(args.outputDir, "gentxs")
+	nodeConfig.RPC.ListenAddress = "tcp://0.0.0.0:26657"
+
+	// TODO: add ledger support
+	kb, err := keyring.New(sdk.KeyringServiceName(), args.keyringBackend, nodeDir, inBuf, defaultOption)
+	if err != nil {
+		return nil, err
+	}
+
+	keyringAlgos, _ := kb.SupportedAlgorithms()
+	algo, err := keyring.NewSigningAlgoFromString(args.algo, keyringAlgos)
+	if err != nil {
+		return nil, err
+	}
+	if envMnemonic.BroadcasterMnemonic != "" {
+		broadcasterPubKey, _, err := createKeyFromMnemonic(kb, "broadcaster", envMnemonic.BroadcasterMnemonic, algo)
+		if err != nil {
+			fmt.Printf("ExtractBroadcaster Err: %s\n", err.Error())
+			return nil, err
+		}
+		validatorInfo.Broadcaster = broadcasterPubKey
+	}
+	if envMnemonic.GovernanceMnemonic != "" {
+		validatorInfo.GovPubKey, _, err = createKeyFromMnemonic(kb, "govenance", envMnemonic.GovernanceMnemonic, algo)
+		if err != nil {
+			fmt.Printf("ExtractGovernance Err: %s\n", err.Error())
+			return nil, err
+		}
+		validatorInfo.MngAccount = permtypes.GovAccount{
+			Address: sdk.AccAddress(validatorInfo.GovPubKey.Address()),
+			Role:    permexported.ROLE_CHAIN_MANAGEMENT,
+		}
+	}
+	//Generate node key
+	nodeAddr, secret, err := testutil.GenerateSaveCoinKey(kb, nodeDirName, envMnemonic.NodeMnemonic, true, algo)
+	if err != nil {
+		_ = os.RemoveAll(args.outputDir)
+		return nil, err
+	}
+	key, err := kb.Key(nodeDirName)
+	if err != nil {
+		return nil, err
+	}
+	info := map[string]string{
+		"secret":  secret,
+		"address": sdk.ValAddress(nodeAddr).String(),
+		"pubkey":  key.GetPubKey().String(),
+	}
+
+	cliPrint, err := json.Marshal(info)
+	if err != nil {
+		return nil, err
+	}
+	accStakingTokens := sdk.TokensFromConsensusPower(1e9, scalartypes.PowerReduction)
+	coins := sdk.Coins{
+		sdk.NewCoin(scalartypes.BaseDenom, accStakingTokens),
+	}
+
+	validatorInfo.Balances = []banktypes.Balance{
+		{Address: nodeAddr.String(), Coins: coins.Sort()},
+		{Address: sdk.AccAddress(validatorInfo.Broadcaster.Address()).String(), Coins: coins.Sort()},
+	}
+	validatorInfo.Accounts = []*authtypes.BaseAccount{
+		authtypes.NewBaseAccount(nodeAddr, nil, 0, 0),
+		authtypes.NewBaseAccount(sdk.AccAddress(validatorInfo.Broadcaster.Address()), validatorInfo.Broadcaster, 0, 0),
+	}
+
+	// save private key seed words
+	if err := utils.WriteFile(fmt.Sprintf("%v.json", "key_seed"), nodeDir, cliPrint); err != nil {
+		return nil, err
+	}
+
+	valTokens := sdk.TokensFromConsensusPower(power, scalartypes.PowerReduction)
+	createValMsg, err := stakingtypes.NewMsgCreateValidator(
+		sdk.ValAddress(nodeAddr),
+		validatorInfo.ValPubKey,
+		sdk.NewCoin(scalartypes.BaseDenom, valTokens),
+		stakingtypes.NewDescription(nodeDirName, "", "", "", ""),
+		stakingtypes.NewCommissionRates(sdk.OneDec(), sdk.OneDec(), sdk.OneDec()),
+		sdk.OneInt(),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	txBuilder := clientCtx.TxConfig.NewTxBuilder()
+	if err := txBuilder.SetMsgs(createValMsg); err != nil {
+		return nil, err
+	}
+
+	minGasPrice := args.minGasPrice
+	if sdk.NewDecFromInt(args.baseFee).GT(args.minGasPrice) {
+		minGasPrice = sdk.NewDecFromInt(args.baseFee)
+	}
+
+	txBuilder.SetMemo(validatorInfo.SeedAddress)
+	txBuilder.SetGasLimit(createValidatorMsgGasLimit)
+	txBuilder.SetFeeAmount(sdk.NewCoins(sdk.NewCoin(scalartypes.BaseDenom, minGasPrice.MulInt64(createValidatorMsgGasLimit).Ceil().TruncateInt())))
+
+	txFactory := tx.Factory{}
+	txFactory = txFactory.
+		WithChainID(args.chainID).
+		WithMemo(validatorInfo.SeedAddress).
+		WithKeybase(kb).
+		WithTxConfig(clientCtx.TxConfig)
+
+	if err := tx.Sign(txFactory, nodeDirName, txBuilder, true); err != nil {
+		return nil, err
+	}
+
+	txBz, err := clientCtx.TxConfig.TxJSONEncoder()(txBuilder.GetTx())
+	if err != nil {
+		return nil, err
+	}
+
+	if err := utils.WriteFile(fmt.Sprintf("%v.json", nodeDirName), gentxsDir, txBz); err != nil {
+		return nil, err
+	}
+	// Add custom app config
+	if err := setCustomAppConfig(cmd); err != nil {
+		return nil, err
+	}
+	//Generate cosmos default app config
+	appConfig := sdkconfig.DefaultConfig()
+	appConfig.MinGasPrices = args.minGasPrices
+	appConfig.API.Enable = true
+	appConfig.Telemetry.Enabled = true
+	appConfig.Telemetry.PrometheusRetentionTime = 60
+	appConfig.Telemetry.EnableHostnameLabel = false
+	appConfig.Telemetry.GlobalLabels = [][]string{{"chain_id", args.chainID}}
+	sdkconfig.WriteConfigFile(filepath.Join(nodeDir, "config/app.toml"), appConfig)
+	// Generate tendermint default config
+	config := tmconfig.DefaultConfig()
+	configPath := filepath.Join(nodeDir, "config", "config.toml")
+	tmconfig.WriteConfigFile(configPath, config)
+	err = appendBridgeConfig(configPath, args.supportedChains)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to append bridge config")
+		return nil, err
+	}
+	// ReadFile(configPath)
+	return &validatorInfo, nil
+}
+
+func appendBridgeConfig(configPath string, supportedChainsPath string) error {
+	//log.Info().Str("configPath", configPath).Str("supportedChainsPath", supportedChainsPath).Msg("Appending bridge config")
+	file, err := os.OpenFile(configPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+
+	if err != nil {
+		log.Error().Err(err).Str("configPath", configPath).Msg("Could not open config file")
+		return err
+	}
+
+	defer file.Close()
+
+	_, err = file.WriteString(`
+#######################################################
+###         Bridge Configuration Options            ###
+#######################################################
+	`)
+
+	if err != nil {
+		log.Error().Err(err).Str("configPath", configPath).Msg("Could not write text to config file")
+		return err
+	}
+
+	if supportedChainsPath != "" {
+		// Add evm bridge config
+		evmConfigs, err := scalartypes.ParseJsonArrayConfig[scalartypes.EvmNetworkConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to parse evm config")
+		}
+		for _, evmConfig := range evmConfigs {
+			//Todo: change bridge config to scalar_bridge_evm if rewrite vald module
+			//https://github.com/axelarnetwork/axelar-core/blob/main/vald/config/config.go#L24
+			_, err = file.WriteString(fmt.Sprintf(`
+[[axelar_bridge_evm]]
+id = "%s"
+chain_id = %d
+rpc_addr = "%s"
+start-with-bridge = true
+finality_override = "confirmation"
+# When using new chains (not Ethereum Mainnet), you may need to set the finality override to "confirmation" to avoid issues with the bridge
+# With finality override, scalar will create evm client using ethereum.go, not ethereum_2.go
+			`, evmConfig.ID, evmConfig.ChainID, evmConfig.RpcUrl))
+		}
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to write evm bridge config")
+		}
+		// btcConfigs, err := scalartypes.ParseJsonArrayConfig[scalartypes.BtcNetworkConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
+		// if err != nil {
+		// 	log.Error().Err(err).Msg("Failed to parse btc config")
+		// }
+		//Add btc bridge config after implement btc module
+		// 		for _, btcConfig := range btcConfigs {
+		// 			_, err = file.WriteString(fmt.Sprintf(`
+		// [[scalar_bridge_btc]]
+		// id = "%s"
+		// chain_id = %d
+		// name = "%s"
+		// Host = "%s"
+		// Port = %d
+		// User = "%s"
+		// Pass = "%s"
+		// DisableTLS = true
+		// DisableConnectOnNew = true
+		// DisableAutoReconnect = false
+		// HTTPPostMode = true
+		// 			`, btcConfig.ID, btcConfig.ChainID, btcConfig.Name, btcConfig.RpcHost, btcConfig.RpcPort, btcConfig.RpcUser, btcConfig.RpcPass))
+		// 		}
+		// 		if err != nil {
+		// 			log.Error().Err(err).Msg("Failed to write btc bridge config")
+		// 		}
+	}
+	return nil
+}
+
 func setCustomAppConfig(cmd *cobra.Command) error {
-	//T odo: add custom app config if needed
+	// Todo: add custom app config if needed
 	// customAppTemplate, customAppConfig := createCustomAppConfig(scalartypes.BaseDenom)
 	customAppTemplate, customAppConfig := sdkconfig.DefaultConfigTemplate, sdkconfig.DefaultConfig()
 	sdkconfig.SetConfigTemplate(customAppTemplate)
@@ -371,59 +592,76 @@ func initGenFiles(
 	mbm module.BasicManager,
 	chainID,
 	coinDenom string,
-	genAccounts []authtypes.GenesisAccount,
-	genBalances []banktypes.Balance,
-	genFiles []string,
-	numValidators int,
+	supportedChainsPath string,
+	validatorInfos []scalartypes.ValidatorInfo,
 	baseFee sdk.Int,
 	minGasPrice sdk.Dec,
 ) error {
-	appGenState, err := types.GenerateGenesis(clientCtx, mbm, coinDenom, genAccounts, genBalances)
+	appGenState, err := scalartypes.GenerateGenesis(clientCtx, mbm, coinDenom, validatorInfos, supportedChainsPath)
 	if err != nil {
+		fmt.Printf("GenerateGenesis err: %s\n", err.Error())
 		return err
 	}
 
 	appGenStateJSON, err := json.MarshalIndent(appGenState, "", "  ")
 	if err != nil {
+		fmt.Printf("MarshalIndent err: %s\n", err.Error())
 		return err
 	}
-
+	validators := make([]tmtypes.GenesisValidator, len(validatorInfos))
+	for i, validatorInfo := range validatorInfos {
+		validators[i] = validatorInfo.GenesisValidator
+		fmt.Printf("Validator: power: %d; pubkey: %v\n", validators[i].Power, hex.EncodeToString(validators[i].PubKey.Bytes()))
+	}
 	genDoc := tmtypes.GenesisDoc{
 		ChainID:    chainID,
 		AppState:   appGenStateJSON,
-		Validators: nil,
+		Validators: validators,
 	}
 
 	// generate empty genesis files for each validator and save
-	for i := 0; i < numValidators; i++ {
-		if err := genDoc.SaveAs(genFiles[i]); err != nil {
+	for i := 0; i < len(validatorInfos); i++ {
+		if err := genDoc.SaveAs(validatorInfos[i].GenFile); err != nil {
+			fmt.Printf("Save genDoc Err: %s\n", err.Error())
 			return err
+		} else {
+			fmt.Printf("genDoc successfully generated to %s\n", validatorInfos[i].GenFile)
 		}
+		//Write seed file
+		seeds := []string{}
+		for index, validatorInfo := range validatorInfos {
+			if validatorInfo.NodeID != validatorInfos[i].NodeID {
+				seed := fmt.Sprintf(`[[seed]]
+name = "validator%d"
+address = "%s"
+`, index+1, validatorInfo.SeedAddress)
+				seeds = append(seeds, seed)
+			}
+		}
+		utils.WriteFile("seed.toml", validatorInfos[i].NodeDir, []byte(strings.Join(seeds, "\n")))
+
 	}
 	return nil
 }
 
 func collectGenFiles(
 	clientCtx client.Context, nodeConfig *tmconfig.Config, chainID string,
-	nodeIDs []string, valPubKeys []cryptotypes.PubKey, numValidators int,
-	outputDir, nodeDirPrefix, nodeDaemonHome string, genBalIterator banktypes.GenesisBalancesIterator,
+	validatorInfos []scalartypes.ValidatorInfo,
+	outputDir string, genBalIterator banktypes.GenesisBalancesIterator,
 ) error {
 	var appState json.RawMessage
 	genTime := tmtime.Now()
-
-	for i := 0; i < numValidators; i++ {
-		nodeDirName := getNodeDirName(i, nodeDirPrefix)
-		nodeDir := filepath.Join(outputDir, nodeDirName, nodeDaemonHome)
+	validators := make([]tmtypes.GenesisValidator, len(validatorInfos))
+	for i, validatorInfo := range validatorInfos {
+		validators[i] = validatorInfo.GenesisValidator
+	}
+	for _, validatorInfo := range validatorInfos {
 		gentxsDir := filepath.Join(outputDir, "gentxs")
-		nodeConfig.Moniker = nodeDirName
+		initCfg := genutiltypes.NewInitConfig(chainID, gentxsDir, validatorInfo.NodeID, validatorInfo.ValPubKey)
 
-		nodeConfig.SetRoot(nodeDir)
-
-		nodeID, valPubKey := nodeIDs[i], valPubKeys[i]
-		initCfg := genutiltypes.NewInitConfig(chainID, gentxsDir, nodeID, valPubKey)
-
-		genDoc, err := tmtypes.GenesisDocFromFile(nodeConfig.GenesisFile())
+		genDoc, err := tmtypes.GenesisDocFromFile(validatorInfo.GenFile)
 		if err != nil {
+			fmt.Printf("GenesisDocFromFile Err: %s\n", err.Error())
 			return err
 		}
 
@@ -438,17 +676,15 @@ func collectGenFiles(
 			// set the canonical application state (they should not differ)
 			appState = nodeAppState
 		}
-
-		genFile := nodeConfig.GenesisFile()
-
 		// overwrite each validator's genesis file to have a canonical genesis time
-		if err := genutil.ExportGenesisFileWithTime(genFile, chainID, nil, appState, genTime); err != nil {
+		if err := genutil.ExportGenesisFileWithTime(validatorInfo.GenFile, chainID, validators, appState, genTime); err != nil {
 			return err
 		}
 	}
 
 	return nil
 }
+
 func getNodeDirName(i int, nodeDirPrefix string) string {
 	return fmt.Sprintf("%s%d", nodeDirPrefix, i+1)
 }
@@ -484,6 +720,16 @@ func calculateIP(ip string, i int) (string, error) {
 	}
 
 	return ipv4.String(), nil
+}
+
+func ReadFile(path string) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		log.Error().Err(err).Msg("failed reading data from file")
+	}
+	fmt.Printf("\nLength: %d bytes", len(data))
+	fmt.Printf("\nData: %s", data)
+	fmt.Printf("\nError: %v", err)
 }
 
 // // get cmd to start multi validator in-process testnet

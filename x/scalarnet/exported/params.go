@@ -12,7 +12,7 @@ const (
 
 var (
 	// NativeAsset is the native asset on ScalarNet
-	NativeAsset = "sclr"
+	NativeAsset = "scal"
 
 	Scalarnet = common.Chain{
 		Name:                  "ScalarNet",

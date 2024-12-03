@@ -38,7 +38,11 @@ ifeq ($(shell uname -m), arm64)
 ARCH := aarch64
 endif
 
-DENOM := sclr
+ifndef $(VERSION)
+VERSION := v0.0.1
+endif
+
+DENOM := scal
 
 GO_MOD_PATH := github.com/scalarorg/scalar-core
 
