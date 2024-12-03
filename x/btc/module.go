@@ -73,17 +73,17 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 
 type AppModule struct {
 	AppModuleBasic
-	keeper keeper.BaseKeeper
+	keeper *keeper.BaseKeeper
 }
 
-func NewAppModule(keeper keeper.BaseKeeper) AppModule {
+func NewAppModule(keeper *keeper.BaseKeeper) AppModule {
 	return AppModule{
 		keeper: keeper,
 	}
 }
 
 func (am AppModule) ConsensusVersion() uint64 {
-	return 1
+	return 6
 }
 
 func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {

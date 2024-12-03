@@ -11,7 +11,7 @@ import (
 func BeginBlocker(ctx sdk.Context, _ abci.RequestBeginBlock, _ types.BaseKeeper) {}
 
 // EndBlocker called every block, process inflation, update validator set.
-func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, _ types.BaseKeeper, _ types.NexusKeeper, _ types.MultisigKeeper) ([]abci.ValidatorUpdate, error) {
+func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, _ types.BaseKeeper, _ types.Nexus, _ types.MultisigKeeper) ([]abci.ValidatorUpdate, error) {
 	// handleConfirmedEvents(ctx, bk, n, m)
 	// handleMessages(ctx, bk, n, m)
 

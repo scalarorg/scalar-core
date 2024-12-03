@@ -4,6 +4,9 @@
 
 ## Table of Contents
 
+- [scalar/btc/v1beta1/events.proto](#scalar/btc/v1beta1/events.proto)
+    - [Event](#scalar.btc.v1beta1.Event)
+  
 - [scalar/btc/v1beta1/types.proto](#scalar/btc/v1beta1/types.proto)
     - [Proof](#scalar.btc.v1beta1.Proof)
   
@@ -115,6 +118,32 @@
     - [QueryService](#scalar.scalarnet.v1beta1.QueryService)
   
 - [Scalar Value Types](#scalar-value-types)
+
+
+
+<a name="scalar/btc/v1beta1/events.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/btc/v1beta1/events.proto
+
+
+
+<a name="scalar.btc.v1beta1.Event"></a>
+
+### Event
+
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
 
 
 

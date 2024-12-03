@@ -72,6 +72,9 @@ import (
 	scalarParams "github.com/scalarorg/scalar-core/app/params"
 	scalarnetKeeper "github.com/scalarorg/scalar-core/x/scalarnet/keeper"
 	scalarnetTypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
+
+	btcKeeper "github.com/scalarorg/scalar-core/x/btc/keeper"
+	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 )
 
 type KeeperCache struct {
@@ -254,6 +257,16 @@ func initVoteKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepe
 		),
 	)
 
+	voteRouter.AddHandler(
+		btcTypes.ModuleName,
+		btcKeeper.NewVoteHandler(
+			appCodec,
+			GetKeeper[btcKeeper.BaseKeeper](keepers),
+			GetKeeper[nexusKeeper.Keeper](keepers),
+			GetKeeper[rewardKeeper.Keeper](keepers),
+		),
+	)
+
 	voteK := voteKeeper.NewKeeper(
 		appCodec,
 		keys[voteTypes.StoreKey],
@@ -286,6 +299,9 @@ func initTssKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keeper
 func initMultisigKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *multisigKeeper.Keeper {
 	multisigRouter := multisigTypes.NewSigRouter()
 	multisigRouter.AddHandler(evmTypes.ModuleName, evmKeeper.NewSigHandler(appCodec, GetKeeper[evmKeeper.BaseKeeper](keepers)))
+
+	// TODO: Add btc handler
+	// multisigRouter.AddHandler(btcTypes.ModuleName, btcKeeper.NewSigHandler(appCodec, GetKeeper[btcKeeper.BaseKeeper](keepers)))
 
 	multisigK := multisigKeeper.NewKeeper(appCodec, keys[multisigTypes.StoreKey], keepers.getSubspace(multisigTypes.ModuleName))
 	multisigK.SetSigRouter(multisigRouter)
@@ -352,12 +368,19 @@ func initEvmKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keeper
 	return evmKeeper.NewKeeper(appCodec, keys[evmTypes.StoreKey], GetKeeper[paramskeeper.Keeper](keepers))
 }
 
+func initBtcKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *btcKeeper.BaseKeeper {
+	return btcKeeper.NewKeeper(appCodec, keys[btcTypes.StoreKey], GetKeeper[paramskeeper.Keeper](keepers))
+}
+
 func initNexusKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *nexusKeeper.Keeper {
 	// setting validator will finalize all by sealing it
 	// no more validators can be added
 	addressValidators := nexusTypes.NewAddressValidators().
 		AddAddressValidator(evmTypes.ModuleName, evmKeeper.NewAddressValidator()).
 		AddAddressValidator(scalarnetTypes.ModuleName, scalarnetKeeper.NewAddressValidator(GetKeeper[scalarnetKeeper.Keeper](keepers)))
+
+	// TODO: Add btc validator
+
 	addressValidators.Seal()
 
 	nexusK := nexusKeeper.NewKeeper(appCodec, keys[nexusTypes.StoreKey], keepers.getSubspace(nexusTypes.ModuleName))

@@ -5,7 +5,7 @@ import "github.com/btcsuite/btcd/chaincfg/chainhash"
 type VaultTag [6]byte
 
 func (VaultTag) Size() int {
-	return 6
+	return 6 
 }
 
 func (v VaultTag) MarshalTo(data []byte) (int, error) {

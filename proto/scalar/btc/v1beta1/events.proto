@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package scalar.btc.v1beta1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
+
+option (gogoproto.goproto_getters_all) = false;
+
+message Event {}

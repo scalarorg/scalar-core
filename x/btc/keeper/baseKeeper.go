@@ -20,6 +20,8 @@ var (
 	subspacePrefix = "subspace"
 )
 
+// TODO: Implement this keeper
+
 var _ types.BaseKeeper = &BaseKeeper{}
 
 // BaseKeeper implements the base Keeper
@@ -45,7 +47,7 @@ func NewKeeper(cdc codec.BinaryCodec, storeKey sdk.StoreKey, paramsKeeper types.
 	}
 }
 
-// InitChains initializes all existing EVM chains and their respective param subspaces
+// InitChains initializes all existing BTC chains and their respective param subspaces
 func (k *BaseKeeper) InitChains(ctx sdk.Context) {
 	if k.initialized {
 		panic("chains are already initialized")
@@ -61,10 +63,10 @@ func (k *BaseKeeper) InitChains(ctx sdk.Context) {
 	k.initialized = true
 }
 
-// CreateChain creates the subspace for a new EVM chain. Returns an error if the chain already exists
+// CreateChain creates the subspace for a new BTC chain. Returns an error if the chain already exists
 func (k BaseKeeper) CreateChain(ctx sdk.Context, params types.Params) (err error) {
 	defer func() {
-		err = sdkerrors.Wrap(err, "cannot create new EVM chain")
+		err = sdkerrors.Wrap(err, "cannot create new BTC chain")
 	}()
 
 	if !k.initialized {
