@@ -1,2 +1,3 @@
 node_modules
-docs/static/openapi/*
+docs/static/openapi/*.html
+docs/static/openapi/*.js
