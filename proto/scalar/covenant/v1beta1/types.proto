@@ -1,0 +1,18 @@
+syntax = "proto3";
+package scalar.covenant.v1beta1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
+
+message Covenant {
+  string btcpubkey = 1;
+  string name = 2;
+  string meta = 3;
+}
+
+message CovenantGroup {
+  string group_hash = 1;
+  string name = 2;
+  repeated Covenant covenants = 3 [(gogoproto.nullable) = false];
+}

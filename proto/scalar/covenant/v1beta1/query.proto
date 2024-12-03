@@ -1,0 +1,7 @@
+syntax = "proto3";
+package scalar.covenant.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "scalar/covenant/v1beta1/types.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";

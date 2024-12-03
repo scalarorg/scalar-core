@@ -1,0 +1,13 @@
+syntax = "proto3";
+package scalar.protocol.v1beta1;
+
+import "axelar/evm/v1beta1/types.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
+
+message Protocol {
+  string name = 1;
+  string covenant_group = 2;
+  repeated axelar.evm.v1beta1.ERC20TokenMetadata tokens = 3 [(gogoproto.nullable) = false];
+}
