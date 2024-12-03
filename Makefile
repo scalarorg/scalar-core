@@ -60,22 +60,29 @@ ldflags = "-X github.com/cosmos/cosmos-sdk/version.Name=scalar \
 
 BUILD_FLAGS := -tags $(BUILD_TAGS) -ldflags $(ldflags) -trimpath
 
+BIN_NAME=scalard
+BIN_PATH=./bin/${BIN_NAME}
+
 # Build the project with release flags
 .PHONY: build
 build: go.sum
-		go build -o ./bin/scalard -mod=readonly $(BUILD_FLAGS) ./cmd/scalard
+	go build -o ${BIN_PATH} -mod=readonly $(BUILD_FLAGS) ./cmd/${BIN_NAME}
 
 .PHONY: run
 run:
 	@HOME=$(PWD) ./entrypoint.sh
 
-.PHONY: debug
-debug:
-	@HOME=$(PWD) ./entrypoint.debug.sh
-
 .PHONY: start
 start: build
 	@make run
+
+.PHONY: dev-init
+dev-init:
+	./scripts/mock-init.sh
+
+.PHONY: dev
+dev:
+	@HOME_DIR=$(PWD) ./scripts/entrypoint.debug.sh
 
 # Build a release image
 .PHONY: docker-image
