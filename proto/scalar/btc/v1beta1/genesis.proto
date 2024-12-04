@@ -11,9 +11,10 @@ option (gogoproto.goproto_getters_all) = false;
 
 message GenesisState {
   message Chain {
-    string chain = 1
-        [ (gogoproto.casttype) =
-              "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+    string chain = 1 [
+      (gogoproto.casttype) =
+          "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName"
+    ];
     Params params = 2 [ (gogoproto.nullable) = false ];
   }
 

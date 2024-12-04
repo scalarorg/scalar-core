@@ -16,7 +16,7 @@ message ConfirmGatewayTxsRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   repeated bytes tx_ids = 3 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "TxHash",

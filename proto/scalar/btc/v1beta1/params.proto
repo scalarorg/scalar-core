@@ -12,7 +12,7 @@ option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
 message Params {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   uint64 confirmation_height = 2;
   NetworkKind network_kind = 3;
   int64 revote_locking_period = 4;

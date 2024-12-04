@@ -25,7 +25,9 @@ message ParamsResponse { Params params = 1 [ (gogoproto.nullable) = false ]; }
 // a given chain
 message IBCPathRequest { string chain = 1; }
 
-message IBCPathResponse { string ibc_path = 1 [ (gogoproto.customname) = "IBCPath" ]; }
+message IBCPathResponse {
+  string ibc_path = 1 [ (gogoproto.customname) = "IBCPath" ];
+}
 
 // ChainByIBCPathRequest represents a message that queries the chain that an IBC
 // path is registered to
@@ -34,5 +36,5 @@ message ChainByIBCPathRequest { string ibc_path = 1; }
 message ChainByIBCPathResponse {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
 }

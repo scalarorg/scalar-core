@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 )
 
 // NewLinkRequest creates a message of type LinkRequest
@@ -13,7 +13,7 @@ func NewLinkRequest(sender sdk.AccAddress, recipientChain, recipientAddr, asset 
 	return &LinkRequest{
 		Sender:         sender,
 		RecipientAddr:  utils.NormalizeString(recipientAddr),
-		RecipientChain: common.ChainName(utils.NormalizeString(recipientChain)),
+		RecipientChain: nexus.ChainName(utils.NormalizeString(recipientChain)),
 		Asset:          utils.NormalizeString(asset),
 	}
 }

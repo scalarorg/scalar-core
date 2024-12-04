@@ -23,7 +23,7 @@ package scalarnet_test
 // 	"github.com/axelarnetwork/utils/slices"
 // 	. "github.com/axelarnetwork/utils/test"
 // 	appParams "github.com/scalarorg/scalar-core/app/params"
-// 	common "github.com/scalarorg/scalar-core/x/common/exported"
+// 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet/keeper"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
@@ -74,7 +74,7 @@ package scalarnet_test
 // 			GetIBCTransferQueueFunc:   func(ctx sdk.Context) utils.KVQueue { return transferQueue },
 // 			GetRouteTimeoutWindowFunc: func(ctx sdk.Context) uint64 { return 10 },
 // 			GetEndBlockerLimitFunc:    func(ctx sdk.Context) uint64 { return 1000 },
-// 			SetTransferFailedFunc: func(sdk.Context, common.TransferID) error {
+// 			SetTransferFailedFunc: func(sdk.Context, nexus.TransferID) error {
 // 				return nil
 // 			},
 // 		}

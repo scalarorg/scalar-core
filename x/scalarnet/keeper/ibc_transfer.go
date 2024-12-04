@@ -13,7 +13,6 @@ import (
 	"google.golang.org/grpc/status"
 
 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
 )
 
@@ -66,7 +65,7 @@ func (i IBCKeeper) ParseIBCDenom(ctx sdk.Context, ibcDenom string) (ibctypes.Den
 func (i IBCKeeper) SendMessage(c context.Context, recipient nexus.CrossChainAddress, asset sdk.Coin, payload string, id string) error {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	portID, channelID, err := i.getPortAndChannel(ctx, common.ChainNameFromNexus(recipient.Chain.Name))
+	portID, channelID, err := i.getPortAndChannel(ctx, recipient.Chain.Name)
 	if err != nil {
 		return err
 	}
@@ -76,7 +75,7 @@ func (i IBCKeeper) SendMessage(c context.Context, recipient nexus.CrossChainAddr
 		return err
 	}
 
-	msg := ibctypes.NewMsgTransfer(portID, channelID, asset, types.AxelarIBCAccount.String(), recipient.Address, height, 0)
+	msg := ibctypes.NewMsgTransfer(portID, channelID, asset, types.ScalarIBCAccount.String(), recipient.Address, height, 0)
 	msg.Memo = payload
 
 	res, err := i.ibcTransferK.Transfer(c, msg)
@@ -96,7 +95,7 @@ func (i IBCKeeper) getPacketTimeoutHeight(ctx sdk.Context, portID, channelID str
 	return clienttypes.NewHeight(state.GetLatestHeight().GetRevisionNumber(), state.GetLatestHeight().GetRevisionHeight()+i.GetRouteTimeoutWindow(ctx)), nil
 }
 
-func (i IBCKeeper) getPortAndChannel(ctx sdk.Context, chain common.ChainName) (string, string, error) {
+func (i IBCKeeper) getPortAndChannel(ctx sdk.Context, chain nexus.ChainName) (string, string, error) {
 	path, ok := i.GetIBCPath2(ctx, chain)
 	if !ok {
 		return "", "", fmt.Errorf("%s does not have a valid IBC path", chain.String())

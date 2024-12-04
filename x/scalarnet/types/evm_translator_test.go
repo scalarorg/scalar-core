@@ -368,7 +368,7 @@ package types_test
 // method,
 // []string{"source_chain", "source_address"},
 // []abi.Type{stringType, addressType},
-// []interface{}{args.SourceChain, common.HexToAddress(args.SourceAddress)},
+// []interface{}{args.SourceChain, nexus.HexToAddress(args.SourceAddress)},
 // ))
 //
 // translatedMsg, err := types.TranslateMessage(msg, payload)

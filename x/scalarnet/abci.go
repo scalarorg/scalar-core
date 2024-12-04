@@ -60,7 +60,7 @@ func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.BaseKeeper, ib
 
 	// set transfer as failed
 	for _, f := range failed {
-		funcs.MustNoErr(bk.SetTransferFailed(ctx, f.ID.ToNexus()))
+		funcs.MustNoErr(bk.SetTransferFailed(ctx, f.ID))
 
 		events.Emit(ctx,
 			&types.IBCTransferFailed{

@@ -18,7 +18,7 @@ message RegisterChainMaintainerRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   repeated string chains = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
 }
 
 message RegisterChainMaintainerResponse {}
@@ -29,7 +29,7 @@ message DeregisterChainMaintainerRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   repeated string chains = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
 }
 
 message DeregisterChainMaintainerResponse {}
@@ -41,7 +41,7 @@ message ActivateChainRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   repeated string chains = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
 }
 
 message ActivateChainResponse {}
@@ -53,7 +53,7 @@ message DeactivateChainRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   repeated string chains = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
 }
 
 message DeactivateChainResponse {}
@@ -78,7 +78,7 @@ message SetTransferRateLimitRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   cosmos.base.v1beta1.Coin limit = 3 [ (gogoproto.nullable) = false ];
   google.protobuf.Duration window = 4
       [ (gogoproto.stdduration) = true, (gogoproto.nullable) = false ];

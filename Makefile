@@ -99,12 +99,17 @@ docker-run:
 
 proto-all: proto-update-deps proto-format proto-lint proto-gen
 
+PROTO_GEN_IMAGE := scalar/proto-gen
+
 proto-gen:
 	@echo "Generating Protobuf files"
-	@DOCKER_BUILDKIT=1 docker build -t scalar/proto-gen -f ./Dockerfile.protocgen .
-	@$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace scalar/proto-gen sh ./scripts/protocgen.sh
+	@if ! docker images $(PROTO_GEN_IMAGE) | grep -q $(PROTO_GEN_IMAGE); then \
+		DOCKER_BUILDKIT=1 docker build -t $(PROTO_GEN_IMAGE) -f ./Dockerfile.protocgen .; \
+	fi
+
+	@$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(PROTO_GEN_IMAGE) sh ./scripts/protocgen.sh
 	@echo "Generating Protobuf Swagger endpoint"
-	@$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace scalar/proto-gen sh ./scripts/protoc-swagger-gen.sh
+	@$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(PROTO_GEN_IMAGE) sh ./scripts/protoc-swagger-gen.sh
 	@statik -src=./client/docs/static -dest=./client/docs -f -m
 
 proto-format:
@@ -124,7 +129,10 @@ proto-update-deps:
 	@echo "Updating Protobuf deps"
 	@$(DOCKER_BUF) mod update
 
-.PHONY: proto-all proto-gen proto-gen-any proto-format proto-lint proto-check-breaking proto-update-deps
+proto-clean:
+	find x -type f \( -name "*.pb.go" -o -name "*.pb.gw.go" \) -delete
+
+.PHONY: proto-all proto-gen proto-gen-any proto-format proto-lint proto-check-breaking proto-update-deps proto-clean
 
 
 # Install all generate prerequisites

@@ -23,7 +23,7 @@ message ContractCall {
 
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string contract_address = 2;
   bytes payload = 3;
 }

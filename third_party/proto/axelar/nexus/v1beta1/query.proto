@@ -85,7 +85,7 @@ message ChainsRequest { ChainStatus status = 1; }
 message ChainsResponse {
   repeated string chains = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
 }
 
 // AssetsRequest represents a message that queries the registered assets of a
@@ -109,7 +109,7 @@ message ChainsByAssetRequest { string asset = 1; }
 message ChainsByAssetResponse {
   repeated string chains = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
 }
 
 // RecipientAddressRequest represents a message that queries the registered

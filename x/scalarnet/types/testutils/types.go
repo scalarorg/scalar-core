@@ -16,7 +16,6 @@ import (
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
 	nexustestutils "github.com/axelarnetwork/axelar-core/x/nexus/exported/testutils"
 	"github.com/axelarnetwork/utils/funcs"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
 )
 
@@ -29,7 +28,7 @@ func RandomIBCTransfer() types.IBCTransfer {
 		sdk.NewCoin(rand.Denom(5, 20), sdk.NewInt(rand.PosI64())),
 		ibctransfertypes.PortID,
 		channel,
-		common.TransferID(rand.PosI64()),
+		nexus.TransferID(rand.PosI64()),
 	)
 
 	return transfer
@@ -65,7 +64,7 @@ func RandomIBCPath() string {
 // RandomCosmosChain creates a types.CosmosChain
 func RandomCosmosChain() types.CosmosChain {
 	return types.CosmosChain{
-		Name:       common.ChainNameFromNexus(nexustestutils.RandomChainName()),
+		Name:       nexus.ChainNameFromNexus(nexustestutils.RandomChainName()),
 		IBCPath:    RandomIBCPath(),
 		Assets:     nil,
 		AddrPrefix: rand.StrBetween(1, 10),
