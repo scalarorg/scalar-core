@@ -18,3 +18,8 @@ const (
 
 // var PowerReduction = sdk.NewInt(1e0 * params.InitialBaseFee)
 var PowerReduction = sdk.NewInt(1e6)
+
+var NodeTokens = sdk.NewInt(1e15)
+var ValidatorTokens = sdk.NewInt(1e12)
+var BroadcasterTokens = sdk.NewInt(1e9)
+var DelegatorTokens = sdk.NewInt(1e6)

@@ -7,12 +7,14 @@ import (
 	"time"
 
 	//btctypes "github.com/scalarorg/scalar-core/x/btc/types"
+
 	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/axelar-core/x/evm/types"
 	evmtypes "github.com/axelarnetwork/axelar-core/x/evm/types"
 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
+	nexustypes "github.com/axelarnetwork/axelar-core/x/nexus/types"
 	permissionexported "github.com/axelarnetwork/axelar-core/x/permission/exported"
 	permissiontypes "github.com/axelarnetwork/axelar-core/x/permission/types"
+	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/multisig"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
@@ -67,12 +69,20 @@ type BtcNetworkConfig struct {
 }
 
 type ValidatorInfo struct {
-	NodeID           string
-	NodeDir          string
-	SeedAddress      string
-	ValPubKey        cryptotypes.PubKey
-	Balances         []banktypes.Balance
-	Accounts         []*authtypes.BaseAccount
+	Host        string
+	Moniker     string
+	NodeID      string
+	NodeDir     string
+	SeedAddress string
+	ValPubKey   cryptotypes.PubKey
+	//Balance of validator
+	ValBalance banktypes.Balance
+	//Balance of broadcaster
+	BroadcasterBalance banktypes.Balance
+	//Balance of node
+	NodeBalance banktypes.Balance
+	//NodeAccount        *authtypes.BaseAccount
+	//BroadcasterAccount *authtypes.BaseAccount
 	MngAccount       permissiontypes.GovAccount
 	GovPubKey        cryptotypes.PubKey
 	Broadcaster      cryptotypes.PubKey
@@ -83,7 +93,7 @@ type ValidatorInfo struct {
 
 // DefaultProtocol returns the default chains for a genesis state
 func DefaultProtocol() protocoltypes.Protocol {
-	token := types.ERC20TokenMetadata{
+	token := evmtypes.ERC20TokenMetadata{
 		Asset:        "pBtc",
 		ChainID:      sdk.NewInt(1115511),
 		TokenAddress: evmtypes.Address(common.HexToAddress("0x5f214989a5f49ab3c56fd5003c2858e24959c018")),
@@ -107,22 +117,37 @@ func DefaultProtocol() protocoltypes.Protocol {
 func GenerateGenesis(clientCtx client.Context,
 	mbm module.BasicManager,
 	coinDenom string,
-	validatorInfo []ValidatorInfo,
+	validatorInfos []ValidatorInfo,
 	supportedChainsPath string,
 ) (GenesisState, error) {
 	appGenState := mbm.DefaultGenesis(clientCtx.Codec)
 	genAccounts := []authtypes.GenesisAccount{}
 	genBalances := []banktypes.Balance{}
-	totalSupply := sdk.NewCoins()
-	for _, info := range validatorInfo {
-		for _, account := range info.Accounts {
-			genAccounts = append(genAccounts, account)
-		}
-		for _, balance := range info.Balances {
-			totalSupply = totalSupply.Add(balance.Coins...)
-		}
-		genBalances = append(genBalances, info.Balances...)
+	unbondedPoolAmount := sdk.NewCoins()
+	for _, info := range validatorInfos {
+		//Validator balance must be set and greater than deligation amount
+		genBalances = append(genBalances, banktypes.Balance{
+			Address: sdk.AccAddress(info.ValPubKey.Address()).String(),
+			Coins:   info.ValBalance.Coins,
+		})
+		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(info.ValPubKey.Address()), info.ValPubKey, 0, 0))
+
+		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(info.Broadcaster.Address()), info.Broadcaster, 0, 0))
+		genBalances = append(genBalances, info.BroadcasterBalance)
+
+		genBalances = append(genBalances, info.NodeBalance)
+		genAccounts = append(genAccounts, authtypes.NewBaseAccount(info.NodeBalance.GetAddress(), nil, 0, 0))
+		unbondedPoolAmount = unbondedPoolAmount.Add(info.ValBalance.Coins...)
 	}
+	//Not bonded module accounts
+	// macc := authtypes.NewEmptyModuleAccount(stakingtypes.NotBondedPoolName)
+	// unbondedPoolBalance := banktypes.Balance{
+	// 	Address: macc.GetAddress().String(),
+	// 	Coins:   unbondedPoolAmount,
+	// }
+	// genAccounts = append(genAccounts, macc)
+	// // fmt.Printf("unbondedPoolBalance %v, totalSupply %v", unbondedPoolBalance, totalSupply)
+	// genBalances = append(genBalances, unbondedPoolBalance)
 	// set the accounts in the genesis state
 	var authGenState authtypes.GenesisState
 	clientCtx.Codec.MustUnmarshalJSON(appGenState[authtypes.ModuleName], &authGenState)
@@ -133,7 +158,10 @@ func GenerateGenesis(clientCtx client.Context,
 
 	authGenState.Accounts = accounts
 	appGenState[authtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&authGenState)
-
+	totalSupply := sdk.NewCoins()
+	for _, balance := range genBalances {
+		totalSupply = totalSupply.Add(balance.Coins...)
+	}
 	// set the balances in the genesis state
 	bankGenState := banktypes.DefaultGenesisState()
 	bankGenState.Balances = genBalances
@@ -165,12 +193,15 @@ func GenerateGenesis(clientCtx client.Context,
 	mintGenState := minttypes.DefaultGenesisState()
 	mintGenState.Params.MintDenom = coinDenom
 	appGenState[minttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(mintGenState)
+	//axelar nexus
+	nexusGenState := generateNexusGenesis(supportedChainsPath, validatorInfos, coinDenom)
+	appGenState[nexustypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(nexusGenState)
 	//pemission module
 	permissionGenState := permissiontypes.DefaultGenesisState()
-	govMngAccounts := make([]permissiontypes.GovAccount, len(validatorInfo))
-	govControlAccounts := make([]permissiontypes.GovAccount, len(validatorInfo))
-	govPubKeys := make([]cryptotypes.PubKey, len(validatorInfo))
-	for i, info := range validatorInfo {
+	govMngAccounts := make([]permissiontypes.GovAccount, len(validatorInfos))
+	govControlAccounts := make([]permissiontypes.GovAccount, len(validatorInfos))
+	govPubKeys := make([]cryptotypes.PubKey, len(validatorInfos))
+	for i, info := range validatorInfos {
 		govPubKeys[i] = info.GovPubKey
 		if info.GovPubKey == nil {
 			return appGenState, fmt.Errorf("gov pubkey is nil")
@@ -187,22 +218,21 @@ func GenerateGenesis(clientCtx client.Context,
 	permissionGenState.GovernanceKey = multisig.NewLegacyAminoPubKey(1, govPubKeys)
 	appGenState[permissiontypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(permissionGenState)
 	//set staking params
-	stakingGenState := stakingtypes.DefaultGenesisState()
-	stakingGenState.Params.BondDenom = coinDenom
+	stakingGenState := generateStakingGenesis(coinDenom, validatorInfos)
 	appGenState[stakingtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(stakingGenState)
 	// supported chains
 	if err := GenerateSupportedChains(clientCtx, supportedChainsPath, appGenState); err != nil {
 		log.Error().Err(err).Msg("Failed to generate supported chains")
 	}
 	//Covenant
-	covenants := make([]covenanttypes.Covenant, len(validatorInfo))
+	covenants := make([]covenanttypes.Covenant, len(validatorInfos))
 	covenantGroup := covenanttypes.CovenantGroup{
 		Name:      "scalar",
 		Covenants: covenants,
 	}
-	for i, validator := range validatorInfo {
+	for i, validator := range validatorInfos {
 		covenants[i] = covenanttypes.Covenant{
-			Name:      validator.NodeDir,
+			Name:      validator.Host,
 			Btcpubkey: validator.BtcPubkey,
 		}
 	}
@@ -227,7 +257,114 @@ func GenerateGenesis(clientCtx client.Context,
 
 	return appGenState, nil
 }
+func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *stakingtypes.GenesisState {
+	stakingGenState := stakingtypes.DefaultGenesisState()
+	stakingGenState.Params.BondDenom = coinDenom
+	// Create call create_validator from client
+	// This is set by execute CreateValidator txs
+	// for _, validatorInfo := range validatorInfos {
+	// 	validator, err := stakingtypes.NewValidator(
+	// 		sdk.ValAddress(validatorInfo.ValPubKey.Address()),
+	// 		validatorInfo.ValPubKey,
+	// 		stakingtypes.Description{
+	// 			Identity: validatorInfo.NodeID,
+	// 			Moniker:  validatorInfo.Host,
+	// 		},
+	// 	)
+	// 	validator.Tokens = validatorInfo.ValBalance.Coins[0].Amount
+	// 	validator.Status = stakingtypes.Unbonded
+	// 	validator.MinSelfDelegation = sdk.OneInt()
+	// 	validator.DelegatorShares = sdk.NewDecFromInt(DelegatorTokens)
+	// 	if err != nil {
+	// 		log.Error().Err(err).Msg("Failed to generate staking validator")
+	// 	}
+	// 	rate, _ := sdk.NewDecFromStr("0.1")
+	// 	maxRate, _ := sdk.NewDecFromStr("0.2")
+	// 	maxChangeRate, _ := sdk.NewDecFromStr("0.01")
+	// 	commission := types.NewCommissionWithTime(rate, maxRate, maxChangeRate, time.Now())
+	// 	validator, err = validator.SetInitialCommission(commission)
 
+	// 	if err != nil {
+	// 		continue
+	// 	}
+	// 	stakingGenState.Validators = append(stakingGenState.Validators, validator)
+	// 	delegation := stakingtypes.Delegation{
+	// 		DelegatorAddress: sdk.AccAddress(validatorInfo.ValPubKey.Address()).String(),
+	// 		ValidatorAddress: sdk.ValAddress(validatorInfo.ValPubKey.Address()).String(),
+	// 		Shares:           validator.DelegatorShares,
+	// 	}
+	// 	fmt.Printf("delegation %v, validator %v", delegation, validator)
+	// 	stakingGenState.Delegations = append(stakingGenState.Delegations, delegation)
+	// }
+	return stakingGenState
+}
+func generateNexusGenesis(supportedChainsPath string, validatorInfos []ValidatorInfo, coinDenom string) *nexustypes.GenesisState {
+	nexusGenState := nexustypes.DefaultGenesisState()
+	if supportedChainsPath != "" {
+		evmConfigs, err := ParseJsonArrayConfig[EvmNetworkConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to parse evm config")
+		}
+		for _, evmConfig := range evmConfigs {
+			nexusGenState.Chains = append(nexusGenState.Chains, nexus.Chain{
+				Name:                  nexus.ChainName(evmConfig.Name),
+				SupportsForeignAssets: true,
+				KeyType:               tss.Multisig,
+				Module:                evmtypes.ModuleName,
+			})
+			chainState := nexustypes.ChainState{
+				Chain: nexus.Chain{
+					Name:                  nexus.ChainName(evmConfig.Name),
+					SupportsForeignAssets: true,
+					KeyType:               tss.Multisig,
+					Module:                evmtypes.ModuleName,
+				},
+				Activated:        true,
+				Assets:           []nexus.Asset{nexus.NewAsset(coinDenom, true)},
+				MaintainerStates: make([]nexustypes.MaintainerState, len(validatorInfos)),
+			}
+			for i, validator := range validatorInfos {
+				chainState.MaintainerStates[i] = nexustypes.MaintainerState{
+					Address: sdk.ValAddress(validator.ValPubKey.Bytes()),
+					Chain:   nexus.ChainName(evmConfig.Name),
+				}
+			}
+			nexusGenState.ChainStates = append(nexusGenState.ChainStates, chainState)
+		}
+		btcConfigs, err := ParseJsonArrayConfig[BtcNetworkConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to parse btc config")
+		}
+		for _, btcConfig := range btcConfigs {
+			fmt.Printf("btcConfig %v\n", btcConfig)
+			// nexusGenState.Chains = append(nexusGenState.Chains, nexus.Chain{
+			// 	Name:                  nexus.ChainName(btcConfig.Name),
+			// 	SupportsForeignAssets: true,
+			// 	KeyType:               tss.Multisig,
+			// 	Module:                btctypes.ModuleName,
+			// })
+			// chainState := nexustypes.ChainState{
+			// 	Chain: nexus.Chain{
+			// 		Name:                  nexus.ChainName(btcConfig.Name),
+			// 		SupportsForeignAssets: true,
+			// 		KeyType:               tss.Multisig,
+			// 		Module:                btctypes.ModuleName,
+			// 	},
+			// 	Activated:        true,
+			// 	Assets:           []nexus.Asset{nexus.NewAsset(coinDenom, true)},
+			// 	MaintainerStates: make([]nexustypes.MaintainerState, len(validatorInfos)),
+			// }
+			// for i, validator := range validatorInfos {
+			// 	chainState.MaintainerStates[i] = nexustypes.MaintainerState{
+			// 		Address: sdk.ValAddress(validator.ValPubKey.Bytes()),
+			// 		Chain:   nexus.ChainName(btcConfig.Name),
+			// 	}
+			// }
+			// nexusGenState.ChainStates = append(nexusGenState.ChainStates, chainState)
+		}
+	}
+	return nexusGenState
+}
 func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath string, genesisState map[string]json.RawMessage) error {
 	if supportedChainsPath != "" {
 		evmConfigs, err := ParseJsonArrayConfig[EvmNetworkConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
