@@ -66,7 +66,7 @@ BIN_PATH=./bin/${BIN_NAME}
 # Build the project with release flags
 .PHONY: build
 build: go.sum
-	go build -o ${BIN_PATH} -mod=readonly $(BUILD_FLAGS) ./cmd/${BIN_NAME}
+	@go build -o ${BIN_PATH} -mod=readonly $(BUILD_FLAGS) ./cmd/${BIN_NAME}
 
 .PHONY: run
 run:
@@ -83,6 +83,11 @@ dev-init:
 .PHONY: dev
 dev:
 	@HOME_DIR=$(PWD) ./scripts/entrypoint.debug.sh
+
+.PHONY: dbg
+dbg: build
+	make dev
+
 
 # Build a release image
 .PHONY: docker-image
@@ -150,3 +155,22 @@ prereqs:
 	go install github.com/matryer/moq@latest
 	go install github.com/rakyll/statik@latest
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
+
+
+###############################
+######## 	Commands	#######
+###############################
+
+KEYRING_BACKEND := test
+HOME := ./.scalar
+CHAIN_ID := demo
+FROM := alice
+
+cfgwtx:
+	@if [ -z "$(ARGS)" ]; then \
+		echo "ARGS is required"; \
+		exit 1; \
+	fi
+	@$(BIN_PATH) tx btc confirm-gateway-txs $(ARGS) --from $(FROM) --keyring-backend $(KEYRING_BACKEND) --home $(HOME) --chain-id $(CHAIN_ID)
+
+

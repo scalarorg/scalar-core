@@ -208,11 +208,11 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
+| `chain_name` | [string](#string) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
 | `network_kind` | [NetworkKind](#scalar.btc.v1beta1.NetworkKind) |  |  |
 | `revote_locking_period` | [int64](#int64) |  |  |
-| `chain_id` | [bytes](#bytes) |  |  |
+| `chain_id` | [uint64](#uint64) |  |  |
 | `voting_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
 | `min_voter_count` | [int64](#int64) |  |  |
 | `voting_grace_period` | [int64](#int64) |  |  |
@@ -265,7 +265,6 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
 | `params` | [Params](#scalar.btc.v1beta1.Params) |  |  |
 
 

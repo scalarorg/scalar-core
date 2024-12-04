@@ -1,12 +1,17 @@
 package types
 
+import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/tendermint/tendermint/libs/log"
+)
+
 //go:generate moq -out ./mock/expected_keepers.go -pkg mock . Voter Nexus Snapshotter BaseKeeper ChainKeeper Rewarder StakingKeeper SlashingKeeper MultisigKeeper
 
 // BaseKeeper is implemented by this module's base keeper
 type BaseKeeper interface {
-	// Logger(ctx sdk.Context) log.Logger
+	Logger(ctx sdk.Context) log.Logger
 
-	// CreateChain(ctx sdk.Context, params Params) error
+	CreateChain(ctx sdk.Context, params Params) error
 	// ForChain(ctx sdk.Context, chain nexus.ChainName) (ChainKeeper, error)
 }
 

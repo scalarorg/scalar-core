@@ -5,14 +5,13 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/axelarnetwork/axelar-core/utils"
 	"github.com/axelarnetwork/axelar-core/utils/key"
-	"github.com/axelarnetwork/axelar-core/x/evm/types"
 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
+	"github.com/scalarorg/scalar-core/x/btc/types"
 )
 
 var (
@@ -65,25 +64,25 @@ func (k *BaseKeeper) InitChains(ctx sdk.Context) {
 
 // CreateChain creates the subspace for a new BTC chain. Returns an error if the chain already exists
 func (k BaseKeeper) CreateChain(ctx sdk.Context, params types.Params) (err error) {
-	defer func() {
-		err = sdkerrors.Wrap(err, "cannot create new BTC chain")
-	}()
+	// defer func() {
+	// 	err = sdkerrors.Wrap(err, "cannot create new BTC chain")
+	// }()
 
-	if !k.initialized {
-		panic("InitChain must be called before chain keepers can be used")
-	}
+	// if !k.initialized {
+	// 	panic("InitChain must be called before chain keepers can be used")
+	// }
 
-	if err := params.Validate(); err != nil {
-		return err
-	}
-	chainKey := key.FromStr(subspacePrefix).Append(key.FromStr(params.Chain.String()))
-	if k.getBaseStore(ctx).HasNew(chainKey) {
-		return fmt.Errorf("chain %s already exists", params.Chain)
-	}
+	// if err := params.Validate(); err != nil {
+	// 	return err
+	// }
+	// chainKey := key.FromStr(subspacePrefix).Append(key.FromStr(params.Chain.String()))
+	// if k.getBaseStore(ctx).HasNew(chainKey) {
+	// 	return fmt.Errorf("chain %s already exists", params.Chain)
+	// }
 
-	k.getBaseStore(ctx).SetRawNew(chainKey, []byte(params.Chain))
+	// k.getBaseStore(ctx).SetRawNew(chainKey, []byte(params.Chain))
 
-	k.createSubspace(ctx, params.Chain).SetParamSet(ctx, &params)
+	// k.createSubspace(ctx, params.Chain).SetParamSet(ctx, &params)
 	return nil
 }
 

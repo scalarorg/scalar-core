@@ -11,6 +11,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/scalarorg/scalar-core/x/btc/client/cli"
 	"github.com/scalarorg/scalar-core/x/btc/keeper"
 	"github.com/scalarorg/scalar-core/x/btc/types"
 	"github.com/spf13/cobra"
@@ -30,12 +31,8 @@ func (AppModuleBasic) Name() string {
 	return types.ModuleName
 }
 
-func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	// types.RegisterLegacyAminoCodec(cdc)
-}
-
 func (AppModuleBasic) RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
-	// types.RegisterInterfaces(registry)
+	types.RegisterInterfaces(registry)
 }
 
 func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
@@ -50,11 +47,7 @@ func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, _ client.TxEncodingCo
 	return state.Validate()
 }
 
-func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Router) {
-	// rest.RegisterRoutes(clientCtx, rtr)
-}
-
-// RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the module.
+// RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the module. Just maps handlers to the client.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
 	if err := types.RegisterQueryServiceHandlerClient(context.Background(), mux, types.NewQueryServiceClient(clientCtx)); err != nil {
 		panic(err)
@@ -62,13 +55,11 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 }
 
 func (AppModuleBasic) GetTxCmd() *cobra.Command {
-	// return cli.GetTxCmd()
-	return nil
+	return cli.GetTxCmd()
 }
 
 func (AppModuleBasic) GetQueryCmd() *cobra.Command {
-	// return cli.GetQueryCmd(types.QuerierRoute)
-	return nil
+	return cli.GetQueryCmd(types.QuerierRoute)
 }
 
 type AppModule struct {
@@ -82,12 +73,32 @@ func NewAppModule(keeper *keeper.BaseKeeper) AppModule {
 	}
 }
 
-func (am AppModule) ConsensusVersion() uint64 {
-	return 6
+// RegisterServices registers a GRPC query service to respond to the
+// module-specific GRPC queries.
+func (am AppModule) RegisterServices(cfg module.Configurator) {
+	msgServer := keeper.NewMsgServerImpl(am.keeper)
+	types.RegisterMsgServiceServer(cfg.MsgServer(), msgServer)
+
+	queryServer := keeper.NewGRPCQuerier(am.keeper)
+	types.RegisterQueryServiceServer(cfg.QueryServer(), queryServer)
+
+	// TODO: add migration
 }
 
-func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
-	return cdc.MustMarshalJSON(types.DefaultGenesisState())
+func (am AppModule) BeginBlock(ctx sdk.Context) error {
+	return nil
+}
+
+func (am AppModule) EndBlock(ctx sdk.Context) error {
+	return nil
+}
+
+func (am AppModule) ConsensusVersion() uint64 {
+	return 1
+}
+
+func (AppModule) QuerierRoute() string {
+	return types.QuerierRoute
 }
 
 func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.RawMessage) []abci.ValidatorUpdate {
@@ -98,18 +109,8 @@ func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.Ra
 	return []abci.ValidatorUpdate{}
 }
 
-func (am AppModule) LegacyQuerierHandler(legacyQuerierRouter *codec.LegacyAmino) sdk.Querier {
-	return keeper.NewQuerier(am.keeper)
-}
-
-func (AppModule) QuerierRoute() string {
-	return types.QuerierRoute
-}
-
-// RegisterServices registers a GRPC query service to respond to the
-// module-specific GRPC queries.
-func (am AppModule) RegisterServices(cfg module.Configurator) {
-	// TODO: implement
+func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
+	return cdc.MustMarshalJSON(types.DefaultGenesisState())
 }
 
 func (AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {
@@ -118,15 +119,22 @@ func (AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {
 	// TODO: implement
 }
 
+/**
+
+Deprecated methods
+
+**/
+
+func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Router) {
+}
+
 func (am AppModule) Route() sdk.Route {
-	// return sdk.NewRoute(types.RouterKey, NewHandler(am.keeper))
 	return sdk.Route{}
 }
 
-func (am AppModule) BeginBlock(ctx sdk.Context) error {
-	return nil
+func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 }
 
-func (am AppModule) EndBlock(ctx sdk.Context) error {
+func (am AppModule) LegacyQuerierHandler(legacyQuerierRouter *codec.LegacyAmino) sdk.Querier {
 	return nil
 }

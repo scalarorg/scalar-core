@@ -10,13 +10,7 @@ option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
 option (gogoproto.goproto_getters_all) = false;
 
 message GenesisState {
-  message Chain {
-    string chain = 1 [
-      (gogoproto.casttype) =
-          "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName"
-    ];
-    Params params = 2 [ (gogoproto.nullable) = false ];
-  }
+  message Chain { Params params = 2 [ (gogoproto.nullable) = false ]; }
 
   repeated Chain chains = 1 [ (gogoproto.nullable) = false ];
 
