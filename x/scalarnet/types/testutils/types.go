@@ -14,6 +14,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	nexustestutils "github.com/axelarnetwork/axelar-core/x/nexus/exported/testutils"
 	"github.com/axelarnetwork/utils/funcs"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
@@ -64,7 +65,7 @@ func RandomIBCPath() string {
 // RandomCosmosChain creates a types.CosmosChain
 func RandomCosmosChain() types.CosmosChain {
 	return types.CosmosChain{
-		Name:       nexus.ChainNameFromNexus(nexustestutils.RandomChainName()),
+		Name:       nexus.ChainName(nexustestutils.RandomChainName()),
 		IBCPath:    RandomIBCPath(),
 		Assets:     nil,
 		AddrPrefix: rand.StrBetween(1, 10),

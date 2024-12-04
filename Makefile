@@ -155,6 +155,7 @@ prereqs:
 	go install github.com/matryer/moq@latest
 	go install github.com/rakyll/statik@latest
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
+	go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
 
 
 ###############################
@@ -166,6 +167,7 @@ HOME := ./.scalar
 CHAIN_ID := demo
 FROM := alice
 
+.PHONY: cfgwtx
 cfgwtx:
 	@if [ -z "$(ARGS)" ]; then \
 		echo "ARGS is required"; \
@@ -173,4 +175,11 @@ cfgwtx:
 	fi
 	@$(BIN_PATH) tx btc confirm-gateway-txs $(ARGS) --from $(FROM) --keyring-backend $(KEYRING_BACKEND) --home $(HOME) --chain-id $(CHAIN_ID)
 
+.PHONY: docs
+docs:
+	open client/docs/static/openapi/index.html
 
+.PHONY: mnemonic
+mnemonic:
+	$(eval user := $(filter-out $@,$(MAKECMDGOALS)))
+	$(BIN_PATH) keys export $(user) --keyring-backend $(KEYRING_BACKEND) --unsafe --unarmored-hex --home $(HOME)
