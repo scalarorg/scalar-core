@@ -3,20 +3,17 @@ module github.com/scalarorg/scalar-core/client/rpc
 go 1.23.3
 
 require (
-	github.com/axelarnetwork/axelar-core v1.0.4
 	github.com/cosmos/cosmos-sdk v0.45.16
-	github.com/cosmos/go-bip39 v1.0.0
-	github.com/ethereum/go-ethereum v1.10.26
 	github.com/rs/zerolog v1.33.0
-	github.com/scalarorg/relayers v0.0.0-20241128084603-3d7630c53c77
+	github.com/scalarorg/relayers v0.0.0-20241205033129-aa614e1d10c6
+	github.com/scalarorg/scalar-core v0.0.0-00010101000000-000000000000
 	github.com/stretchr/testify v1.9.0
-	github.com/tendermint/tendermint v0.34.27
 	google.golang.org/grpc v1.67.1
 )
 
 require (
 	github.com/cosmos/gogoproto v1.7.0 // indirect
-	github.com/gogo/protobuf v1.3.3 // indirect
+	github.com/gogo/protobuf v1.3.3
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
@@ -37,10 +34,12 @@ require (
 	github.com/DataDog/zstd v1.5.5 // indirect
 	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect
+	github.com/axelarnetwork/axelar-core v1.1.2 // indirect
 	github.com/axelarnetwork/utils v0.0.0-20230706045331-b7aacc1f4a2f // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/speakeasy v0.1.1-0.20220910012023-760eaf8b6816 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.3.4 // indirect
+	github.com/btcsuite/btcd/chaincfg/chainhash v1.1.0 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cockroachdb/errors v1.11.3 // indirect
@@ -53,6 +52,7 @@ require (
 	github.com/cosmos/btcutil v1.0.5 // indirect
 	github.com/cosmos/cosmos-db v1.0.2 // indirect
 	github.com/cosmos/cosmos-proto v1.0.0-beta.5 // indirect
+	github.com/cosmos/go-bip39 v1.0.0 // indirect
 	github.com/cosmos/gorocksdb v1.2.0 // indirect
 	github.com/cosmos/iavl v0.19.5 // indirect
 	github.com/cosmos/ibc-go/v4 v4.6.0 // indirect
@@ -60,15 +60,16 @@ require (
 	github.com/danieljoos/wincred v1.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/deckarep/golang-set v1.8.0 // indirect
-	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
+	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.3.0 // indirect
 	github.com/dgraph-io/badger/v3 v3.2103.2 // indirect
 	github.com/dgraph-io/ristretto v0.1.1 // indirect
 	github.com/docker/distribution v2.8.2+incompatible // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/dvsekhvalnov/jose2go v1.6.0 // indirect
+	github.com/ethereum/go-ethereum v1.10.26 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/getsentry/sentry-go v0.27.0 // indirect
-	github.com/go-errors/errors v1.4.2 // indirect
+	github.com/go-errors/errors v1.5.1 // indirect
 	github.com/go-kit/kit v0.12.0 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
@@ -82,7 +83,7 @@ require (
 	github.com/google/btree v1.1.2 // indirect
 	github.com/google/flatbuffers v2.0.8+incompatible // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/gorilla/mux v1.8.0 // indirect
+	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/gsterjov/go-libsecret v0.0.0-20161001094733-a6f4afe4910c // indirect
@@ -124,12 +125,13 @@ require (
 	github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
-	github.com/spf13/cast v1.6.0 // indirect
+	github.com/spf13/cast v1.7.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stoewer/go-strcase v1.3.0 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/syndtr/goleveldb v1.0.1-0.20220721030215-126854af5e6d // indirect
 	github.com/tendermint/go-amino v0.16.0 // indirect
+	github.com/tendermint/tendermint v0.34.27 // indirect
 	github.com/tendermint/tm-db v0.6.8-0.20220506192307-f628bb5dc95b // indirect
 	github.com/tidwall/btree v1.5.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.12 // indirect
@@ -156,11 +158,6 @@ require (
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
 
-// ---- Scalar ----
-//replace github.com/scalarorg/go-electrum => ../go-electrum
-
-// replace github.com/scalarorg/bitcoin-vault/go-utils => ../bitcoin-vault/go-utils
-
 // Temporary replacement for rosetta support
 replace github.com/cosmos/cosmos-sdk => github.com/axelarnetwork/cosmos-sdk v0.45.17-0.20240321205000-47c0c80e20ca
 
@@ -183,3 +180,6 @@ replace github.com/prometheus/procfs => github.com/prometheus/procfs v0.9.0
 
 // ---- BTC Suite ----
 replace github.com/btcsuite/btcd/btcec/v2 => github.com/btcsuite/btcd/btcec/v2 v2.3.2
+
+// ---- Scalar Core ----
+replace github.com/scalarorg/scalar-core => ../..

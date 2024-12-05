@@ -1,30 +1,38 @@
 package rpc
 
 import (
-	"github.com/cosmos/cosmos-sdk/crypto/hd"
+	"context"
+	"encoding/hex"
+	"fmt"
+
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	"github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/go-bip39"
 	"github.com/rs/zerolog/log"
+	"github.com/scalarorg/relayers/pkg/clients/cosmos"
+	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 )
 
-func CreateAccountFromMnemonic(mnemonic string) (*secp256k1.PrivKey, types.AccAddress, error) {
-	// Derive the seed from mnemonic
-	seed := bip39.NewSeed(mnemonic, "")
+const (
+	AccountAddressPrefix   = "scalar"
+	ValidatorAddressPrefix = AccountAddressPrefix + types.PrefixValidator + types.PrefixOperator
+)
 
-	// Create master key and derive the private key
-	// Using "m/44'/118'/0'/0/0" for Cosmos
-	master, ch := hd.ComputeMastersFromSeed(seed)
-	privKeyBytes, err := hd.DerivePrivateKeyForPath(master, ch, "m/44'/118'/0'/0/0")
+func CreateAccountFromKey(key string) (*secp256k1.PrivKey, types.AccAddress, error) {
+	privKeyBytes, err := hex.DecodeString(key)
 	if err != nil {
 		return nil, nil, err
 	}
-
-	// Create private key and get address
 	privKey := &secp256k1.PrivKey{Key: privKeyBytes}
 	config := types.GetConfig()
-	config.SetBech32PrefixForAccount("axelar", "axelarvaloper")
+	config.SetBech32PrefixForAccount(AccountAddressPrefix, ValidatorAddressPrefix)
 	addr := types.AccAddress(privKey.PubKey().Address())
-	log.Debug().Msgf("Created account with address: %s from mnemonic: %s", addr.String(), mnemonic)
+	log.Debug().Msgf("Created account with address: %s from key: %s", addr.String(), key)
 	return privKey, addr, nil
+}
+
+func ConfirmBtcTx(ctx context.Context, client *cosmos.NetworkClient, msg *btcTypes.ConfirmGatewayTxsRequest) (*types.TxResponse, error) {
+	if client == nil {
+		return nil, fmt.Errorf("client is not initialized")
+	}
+	return client.SignAndBroadcastMsgs(ctx, msg)
 }

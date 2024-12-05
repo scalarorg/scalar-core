@@ -23,6 +23,7 @@ var interfaceRegistry types.InterfaceRegistry
 // The fix has been extracted into its own module in order to minimize the number of dependencies
 // that get imported before this init() function is called.
 func init() {
+	fmt.Println("protoCodec", protoCodec)
 	interfaceRegistry = types.NewInterfaceRegistry()
 	authtypes.RegisterInterfaces(interfaceRegistry)
 	//Register the secp256k1 pubkey type
