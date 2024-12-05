@@ -64,7 +64,9 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 
 type AppModule struct {
 	AppModuleBasic
-	keeper *keeper.BaseKeeper
+	keeper      *keeper.BaseKeeper
+	nexus       types.Nexus
+	snapshotter types.Snapshotter
 }
 
 func NewAppModule(keeper *keeper.BaseKeeper) AppModule {
@@ -76,7 +78,12 @@ func NewAppModule(keeper *keeper.BaseKeeper) AppModule {
 // RegisterServices registers a GRPC query service to respond to the
 // module-specific GRPC queries.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
-	msgServer := keeper.NewMsgServerImpl(am.keeper)
+	params := keeper.MsgServerConstructArgs{
+		BaseKeeper:  am.keeper,
+		Nexus:       am.nexus,
+		Snapshotter: am.snapshotter,
+	}
+	msgServer := keeper.NewMsgServerImpl(params)
 	types.RegisterMsgServiceServer(cfg.MsgServer(), msgServer)
 
 	queryServer := keeper.NewGRPCQuerier(am.keeper)

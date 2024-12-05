@@ -115,3 +115,10 @@ func TxHashFromHexStr(hexStr string) (*TxHash, error) {
 func (h TxHash) HexStr() string {
 	return (*chainhash.Hash)(&h).String()
 }
+
+func (nk NetworkKind) Validate() error {
+	if nk != Mainnet && nk != Testnet {
+		return fmt.Errorf("invalid network kind: %d", nk)
+	}
+	return nil
+}

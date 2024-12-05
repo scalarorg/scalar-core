@@ -5,6 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/tendermint/tendermint/libs/log"
 
@@ -30,18 +31,18 @@ type BaseKeeper struct {
 }
 
 type internalKeeper struct {
-	cdc      codec.BinaryCodec
-	storeKey sdk.StoreKey
-	// paramsKeeper types.ParamsKeeper
+	cdc          codec.BinaryCodec
+	storeKey     sdk.StoreKey
+	paramsKeeper types.ParamsKeeper
 }
 
 // NewKeeper returns a new EVM base keeper
 func NewKeeper(cdc codec.BinaryCodec, storeKey sdk.StoreKey, paramsKeeper types.ParamsKeeper) *BaseKeeper {
 	return &BaseKeeper{
 		internalKeeper: internalKeeper{
-			cdc:      cdc,
-			storeKey: storeKey,
-			// paramsKeeper: paramsKeeper,
+			cdc:          cdc,
+			storeKey:     storeKey,
+			paramsKeeper: paramsKeeper,
 		},
 	}
 }
@@ -64,25 +65,26 @@ func (k *BaseKeeper) InitChains(ctx sdk.Context) {
 
 // CreateChain creates the subspace for a new BTC chain. Returns an error if the chain already exists
 func (k BaseKeeper) CreateChain(ctx sdk.Context, params types.Params) (err error) {
-	// defer func() {
-	// 	err = sdkerrors.Wrap(err, "cannot create new BTC chain")
-	// }()
+	defer func() {
+		err = sdkerrors.Wrap(err, "cannot create new BTC chain")
+	}()
 
-	// if !k.initialized {
-	// 	panic("InitChain must be called before chain keepers can be used")
-	// }
+	if !k.initialized {
+		panic("InitChain must be called before chain keepers can be used")
+	}
 
-	// if err := params.Validate(); err != nil {
-	// 	return err
-	// }
-	// chainKey := key.FromStr(subspacePrefix).Append(key.FromStr(params.Chain.String()))
-	// if k.getBaseStore(ctx).HasNew(chainKey) {
-	// 	return fmt.Errorf("chain %s already exists", params.Chain)
-	// }
+	if err := params.Validate(); err != nil {
+		return err
+	}
+	chainKey := key.FromStr(subspacePrefix).Append(key.FromStr(params.ChainName.String()))
+	if k.getBaseStore(ctx).HasNew(chainKey) {
+		return fmt.Errorf("chain %s already exists", params.ChainName)
+	}
 
-	// k.getBaseStore(ctx).SetRawNew(chainKey, []byte(params.Chain))
+	k.getBaseStore(ctx).SetRawNew(chainKey, []byte(params.ChainName.String()))
 
-	// k.createSubspace(ctx, params.Chain).SetParamSet(ctx, &params)
+	k.createSubspace(ctx, params.ChainName).SetParamSet(ctx, &params)
+
 	return nil
 }
 
@@ -92,27 +94,25 @@ func (k BaseKeeper) ForChain(ctx sdk.Context, chain nexus.ChainName) (types.Chai
 		panic("InitChain must be called before chain keepers can be used")
 	}
 
-	// return k.forChain(ctx, chain)
-	return nil, nil
+	return k.forChain(ctx, chain)
 }
 
-// func (k BaseKeeper) forChain(ctx sdk.Context, chain nexus.ChainName) (chainKeeper, error) {
-// 	chainKey := key.FromStr(subspacePrefix).Append(key.From(chain))
-// 	if !k.getBaseStore(ctx).HasNew(chainKey) {
-// 		return chainKeeper{}, fmt.Errorf("unknown chain %s", chain)
-// 	}
+func (k BaseKeeper) forChain(ctx sdk.Context, chain nexus.ChainName) (chainKeeper, error) {
+	chainKey := key.FromStr(subspacePrefix).Append(key.From(chain))
+	if !k.getBaseStore(ctx).HasNew(chainKey) {
+		return chainKeeper{}, fmt.Errorf("unknown chain %s", chain)
+	}
 
-// 	return chainKeeper{
-// 		internalKeeper: k.internalKeeper,
-// 		chain:          chain,
-// 	}, nil
-// }
+	return chainKeeper{
+		internalKeeper: k.internalKeeper,
+		chain:          chain,
+	}, nil
+}
 
 func (k BaseKeeper) createSubspace(ctx sdk.Context, chain nexus.ChainName) params.Subspace {
-	// chainKey := key.FromStr(types.ModuleName).Append(key.From(chain))
-	// k.Logger(ctx).Debug(fmt.Sprintf("initialized evm subspace %s", chain))
-	// return k.paramsKeeper.Subspace(chainKey.String()).WithKeyTable(types.KeyTable())
-	return params.NewSubspace(k.cdc, nil, k.storeKey, k.storeKey, chain.String())
+	chainKey := key.FromStr(types.ModuleName).Append(key.From(chain))
+	k.Logger(ctx).Debug(fmt.Sprintf("initialized evm subspace %s", chain))
+	return k.paramsKeeper.Subspace(chainKey.String()).WithKeyTable(types.KeyTable())
 }
 
 // Logger returns a module-specific logger.

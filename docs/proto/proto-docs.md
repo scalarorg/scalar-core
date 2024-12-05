@@ -4,14 +4,17 @@
 
 ## Table of Contents
 
-- [scalar/btc/v1beta1/events.proto](#scalar/btc/v1beta1/events.proto)
-    - [Event](#scalar.btc.v1beta1.Event)
-  
 - [scalar/btc/v1beta1/types.proto](#scalar/btc/v1beta1/types.proto)
+    - [PollMapping](#scalar.btc.v1beta1.PollMapping)
+    - [PollMetadata](#scalar.btc.v1beta1.PollMetadata)
     - [Proof](#scalar.btc.v1beta1.Proof)
   
     - [BatchedCommandsStatus](#scalar.btc.v1beta1.BatchedCommandsStatus)
     - [NetworkKind](#scalar.btc.v1beta1.NetworkKind)
+  
+- [scalar/btc/v1beta1/events.proto](#scalar/btc/v1beta1/events.proto)
+    - [ConfirmGatewayTxsStarted](#scalar.btc.v1beta1.ConfirmGatewayTxsStarted)
+    - [Event](#scalar.btc.v1beta1.Event)
   
 - [scalar/btc/v1beta1/params.proto](#scalar/btc/v1beta1/params.proto)
     - [Params](#scalar.btc.v1beta1.Params)
@@ -107,36 +110,42 @@
 
 
 
-<a name="scalar/btc/v1beta1/events.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/btc/v1beta1/events.proto
-
-
-
-<a name="scalar.btc.v1beta1.Event"></a>
-
-### Event
-
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
 <a name="scalar/btc/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/btc/v1beta1/types.proto
+
+
+
+<a name="scalar.btc.v1beta1.PollMapping"></a>
+
+### PollMapping
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.PollMetadata"></a>
+
+### PollMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+
+
+
 
 
 
@@ -184,6 +193,50 @@
 | NETWORK_KIND_MAINNET | 0 |  |
 | NETWORK_KIND_TESTNET | 1 |  |
 
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/btc/v1beta1/events.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/btc/v1beta1/events.proto
+
+
+
+<a name="scalar.btc.v1beta1.ConfirmGatewayTxsStarted"></a>
+
+### ConfirmGatewayTxsStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `poll_mappings` | [PollMapping](#scalar.btc.v1beta1.PollMapping) | repeated |  |
+| `chain` | [string](#string) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `participants` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.Event"></a>
+
+### Event
+
+
+
+
+
+
+ <!-- end messages -->
 
  <!-- end enums -->
 

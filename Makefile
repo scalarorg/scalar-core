@@ -155,7 +155,6 @@ prereqs:
 	go install github.com/matryer/moq@latest
 	go install github.com/rakyll/statik@latest
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
-	go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
 
 
 ###############################

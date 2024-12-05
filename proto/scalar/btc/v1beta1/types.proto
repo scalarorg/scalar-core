@@ -32,3 +32,28 @@ message Proof {
   string threshold = 3;
   repeated string signatures = 4;
 }
+
+message PollMapping {
+  bytes tx_id = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "TxHash",
+    (gogoproto.customname) = "TxID"
+  ];
+  uint64 poll_id = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "PollID",
+    (gogoproto.customtype) =
+        "github.com/axelarnetwork/axelar-core/x/vote/exported.PollID"
+  ];
+}
+
+message PollMetadata {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+  bytes tx_id = 2 [
+    (gogoproto.customname) = "TxID",
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "TxHash"
+  ];
+}
