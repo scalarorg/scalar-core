@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"net"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -72,6 +71,7 @@ var (
 	flagGRPCAddress         = "grpc.address"
 	flagJSONRPCAddress      = "json-rpc.address"
 	flagKeyType             = "key-type"
+	flagEnvFile             = "env-file"
 	moduleNameFeemarket     = "feemarket"
 )
 
@@ -161,9 +161,16 @@ or a similar setup where each node has a manually configurable IP address.
 Note, strict routability for addresses is turned off in the config file.
 
 Example:
-	scalard testnet init-files --v 4 --output-dir ./.testnets --node-domain scalarnode --supported-chains=./chains
+	scalard testnet init-files --v 4 --output-dir ./.testnets --node-domain scalarnode --supported-chains=./chains --env-file=.env.local
 	`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			// Get the env file flag
+			if envFile, _ := cmd.Flags().GetString(flagEnvFile); envFile != "" {
+				if err := loadEnvFile(envFile); err != nil {
+					return err
+				}
+			}
+
 			clientCtx, err := client.GetClientQueryContext(cmd)
 			if err != nil {
 				return err
@@ -215,6 +222,7 @@ Example:
 		*./chains/btc.json* stores all btc chain configs ...
 		`)
 	cmd.Flags().String(flags.FlagKeyringBackend, flags.DefaultKeyringBackend, "Select keyring's backend (os|file|test)")
+	cmd.Flags().String(flagEnvFile, "", "Path to environment file to load (optional)")
 
 	return cmd
 }
@@ -665,8 +673,8 @@ func initGenFiles(
 	coinDenom string,
 	supportedChainsPath string,
 	validatorInfos []scalartypes.ValidatorInfo,
-	baseFee sdk.Int,
-	minGasPrice sdk.Dec,
+	_ sdk.Int, // baseFee
+	_ sdk.Dec, // minGasPrice
 ) error {
 	appGenState, err := scalartypes.GenerateGenesis(clientCtx, mbm, coinDenom, validatorInfos, supportedChainsPath)
 	if err != nil {
@@ -769,29 +777,30 @@ func getHost(i int, nodeDomain string) (host string, err error) {
 	}
 	return fmt.Sprintf("%s%d", nodeDomain, i+1), nil
 }
-func getIP(i int, startingIPAddr string) (ip string, err error) {
-	if len(startingIPAddr) == 0 {
-		ip, err = sdkserver.ExternalIP()
-		if err != nil {
-			return "", err
-		}
-		return ip, nil
-	}
-	return calculateIP(startingIPAddr, i)
-}
 
-func calculateIP(ip string, i int) (string, error) {
-	ipv4 := net.ParseIP(ip).To4()
-	if ipv4 == nil {
-		return "", fmt.Errorf("%v: non ipv4 address", ip)
-	}
+// func getIP(i int, startingIPAddr string) (ip string, err error) {
+// 	if len(startingIPAddr) == 0 {
+// 		ip, err = sdkserver.ExternalIP()
+// 		if err != nil {
+// 			return "", err
+// 		}
+// 		return ip, nil
+// 	}
+// 	return calculateIP(startingIPAddr, i)
+// }
 
-	for j := 0; j < i; j++ {
-		ipv4[3]++
-	}
+// func calculateIP(ip string, i int) (string, error) {
+// 	ipv4 := net.ParseIP(ip).To4()
+// 	if ipv4 == nil {
+// 		return "", fmt.Errorf("%v: non ipv4 address", ip)
+// 	}
 
-	return ipv4.String(), nil
-}
+// 	for j := 0; j < i; j++ {
+// 		ipv4[3]++
+// 	}
+
+// 	return ipv4.String(), nil
+// }
 
 func ReadFile(path string) {
 	data, err := os.ReadFile(path)
@@ -889,3 +898,38 @@ func ReadFile(path string) {
 
 // 	return nil
 // }
+
+func loadEnvFile(envFile string) error {
+	if envFile == "" {
+		return nil // No env file specified, skip loading
+	}
+
+	data, err := os.ReadFile(envFile)
+	if err != nil {
+		return fmt.Errorf("failed to read env file %s: %w", envFile, err)
+	}
+
+	lines := strings.Split(string(data), "\n")
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+
+		key := strings.TrimSpace(parts[0])
+		value := strings.TrimSpace(parts[1])
+		// Remove quotes if present
+		value = strings.Trim(value, `"'`)
+
+		if err := os.Setenv(key, value); err != nil {
+			return fmt.Errorf("failed to set env variable %s: %w", key, err)
+		}
+	}
+
+	return nil
+}

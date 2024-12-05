@@ -13,10 +13,21 @@ IBC_WASM_HOOKS := false
 # Export env var to go build so Cosmos SDK can see it
 export CGO_ENABLED := 1
 
+# Include .env file
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
 $(info $$WASM is [${WASM}])
 $(info $$IBC_WASM_HOOKS is [${IBC_WASM_HOOKS}])
 $(info $$MAX_WASM_SIZE is [${MAX_WASM_SIZE}])
 $(info $$CGO_ENABLED is [${CGO_ENABLED}])
+$(info $$SCALAR_BIN_PATH is [${SCALAR_BIN_PATH}])
+$(info $$SCALAR_HOME_DIR is [${SCALAR_HOME_DIR}])
+$(info $$SCALAR_BIN_NAME is [${SCALAR_BIN_NAME}])
+$(info $$SCALAR_CHAIN_ID is [${SCALAR_CHAIN_ID}])
+$(info $$SCALAR_KEYRING_BACKEND is [${SCALAR_KEYRING_BACKEND}])
 
 ifndef $(WASM_CAPABILITIES)
 # Wasm capabilities: https://github.com/CosmWasm/cosmwasm/blob/main/docs/CAPABILITIES-BUILT-IN.md
@@ -60,13 +71,12 @@ ldflags = "-X github.com/cosmos/cosmos-sdk/version.Name=scalar \
 
 BUILD_FLAGS := -tags $(BUILD_TAGS) -ldflags $(ldflags) -trimpath
 
-BIN_NAME=scalard
-BIN_PATH=./bin/${BIN_NAME}
+
 
 # Build the project with release flags
 .PHONY: build
 build: go.sum
-	@go build -o ${BIN_PATH} -mod=readonly $(BUILD_FLAGS) ./cmd/${BIN_NAME}
+	@go build -o ${SCALAR_BIN_PATH} -mod=readonly $(BUILD_FLAGS) ./cmd/${SCALAR_BIN_NAME}
 
 .PHONY: run
 run:
@@ -78,11 +88,11 @@ start: build
 
 .PHONY: dev-init
 dev-init:
-	./scripts/mock-init.sh
+	./scripts/init.sh
 
 .PHONY: dev
 dev:
-	@HOME_DIR=$(PWD) ./scripts/entrypoint.debug.sh
+	HOME_DIR=${SCALAR_NODE1} ./scripts/entrypoint.debug.sh
 
 .PHONY: dbg
 dbg: build
@@ -161,18 +171,22 @@ prereqs:
 ######## 	Commands	#######
 ##############################
 
-SCALAR_KEYRING_BACKEND=test
-SCALAR_DIR=./.scalar
-SCALAR_CHAIN_ID=demo
-SCALAR_FROM=alice
 
-.PHONY: cfgwtx
-cfgwtx:
+######
+# Usage: make cfst WALLET=alice ARGS="bitcoin-testnet4 07b50c84f889e2f1315da875fc91734e2bac8d0153ff9a98d9da14caa4fc7d57"
+######
+.PHONY: cfst
+cfst:
 	@if [ -z "$(ARGS)" ]; then \
 		echo "ARGS is required"; \
 		exit 1; \
 	fi
-	@$(BIN_PATH) tx btc confirm-gateway-txs $(ARGS) --from $(SCALAR_FROM) --keyring-backend $(SCALAR_KEYRING_BACKEND) --home $(SCALAR_DIR) --chain-id $(SCALAR_CHAIN_ID)
+	@if [ -z "$(WALLET)" ]; then \
+		echo "WALLET is required"; \
+		exit 1; \
+	fi
+
+	@$(SCALAR_BIN_PATH) tx btc confirm-staking-txs $(ARGS) --from $(WALLET) --keyring-backend $(SCALAR_KEYRING_BACKEND) --home $(SCALAR_HOME_DIR) --chain-id $(SCALAR_CHAIN_ID)
 
 .PHONY: docs
 docs:
