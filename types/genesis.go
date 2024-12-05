@@ -33,6 +33,12 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 )
 
+const (
+	ValidatorKeyName   = "priv_validator"
+	BroadcasterKeyName = "broadcaster"
+	GovKeyName         = "govenance"
+)
+
 type GenesisState map[string]json.RawMessage
 
 type EvmNetworkConfig struct {
@@ -79,9 +85,7 @@ type ValidatorInfo struct {
 	ValBalance banktypes.Balance
 	//Balance of broadcaster
 	BroadcasterBalance banktypes.Balance
-	//Balance of node
-	NodeBalance banktypes.Balance
-	//NodeAccount        *authtypes.BaseAccount
+	NodeBalance        banktypes.Balance
 	//BroadcasterAccount *authtypes.BaseAccount
 	MngAccount       permissiontypes.GovAccount
 	GovPubKey        cryptotypes.PubKey

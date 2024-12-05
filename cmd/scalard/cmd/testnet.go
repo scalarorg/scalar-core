@@ -31,6 +31,7 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
+	"github.com/scalarorg/scalar-core/types"
 	"github.com/tendermint/tendermint/privval"
 
 	permexported "github.com/axelarnetwork/axelar-core/x/permission/exported"
@@ -222,20 +223,22 @@ const nodeDirPerm = 0o755
 
 func readEnvMnemonic(i int) EnvKeys {
 	envKeys := EnvKeys{}
-	envKeys.NodeMnemonic = os.Getenv(flagNodeMnemonic)
-	envKeys.ValidatorMnemonic = os.Getenv(flagValidatorMnemonic + strconv.Itoa(i))
-	if envKeys.ValidatorMnemonic == "" {
+	index := strconv.Itoa(i)
+	if envKeys.NodeMnemonic = os.Getenv(flagNodeMnemonic + index); envKeys.NodeMnemonic == "" {
+		envKeys.NodeMnemonic = os.Getenv(flagNodeMnemonic)
+	}
+	if envKeys.ValidatorMnemonic = os.Getenv(flagValidatorMnemonic + index); envKeys.ValidatorMnemonic == "" {
 		envKeys.ValidatorMnemonic = os.Getenv(flagValidatorMnemonic)
 	}
-	envKeys.BroadcasterMnemonic = os.Getenv(flagBroadcasterMnemonic + strconv.Itoa(i))
-	if envKeys.BroadcasterMnemonic == "" {
+	if envKeys.BroadcasterMnemonic = os.Getenv(flagBroadcasterMnemonic + index); envKeys.BroadcasterMnemonic == "" {
 		envKeys.BroadcasterMnemonic = os.Getenv(flagBroadcasterMnemonic)
 	}
-	envKeys.GovernanceMnemonic = os.Getenv(flagGovernanceMnemonic + strconv.Itoa(i))
-	if envKeys.GovernanceMnemonic == "" {
+	if envKeys.GovernanceMnemonic = os.Getenv(flagGovernanceMnemonic + index); envKeys.GovernanceMnemonic == "" {
 		envKeys.GovernanceMnemonic = os.Getenv(flagGovernanceMnemonic)
 	}
-	envKeys.BtcPubkey = os.Getenv(flagBtcPubkey + strconv.Itoa((i)))
+	if envKeys.BtcPubkey = os.Getenv(flagBtcPubkey + index); envKeys.BtcPubkey == "" {
+		envKeys.BtcPubkey = os.Getenv(flagBtcPubkey)
+	}
 	return envKeys
 }
 
@@ -298,7 +301,6 @@ func initTestnetFiles(
 func createPubkeyFromMnemonic(config *tmconfig.Config, mnemonic string, keybase keyring.Keyring, algo keyring.SignatureAlgo, pvKeyName string) (cryptotypes.PubKey, error) {
 	privKey := tmed25519.GenPrivKeyFromSecret([]byte(mnemonic))
 	var pvKeyFile, pvStateFile string
-	pvKeyInfo := pvKeyName
 	if pvKeyName == "" {
 		pvKeyFile = config.PrivValidatorKeyFile()
 		if err := tmos.EnsureDir(filepath.Dir(pvKeyFile), 0o777); err != nil {
@@ -309,14 +311,25 @@ func createPubkeyFromMnemonic(config *tmconfig.Config, mnemonic string, keybase 
 		if err := tmos.EnsureDir(filepath.Dir(pvStateFile), 0o777); err != nil {
 			return nil, err
 		}
-		pvKeyInfo = "priv_validator"
+		pvKeyName = types.ValidatorKeyName
 	} else {
 		pvKeyFile = filepath.Join(config.RootDir, "config", fmt.Sprintf("%s_key.json", pvKeyName))
 		pvStateFile = filepath.Join(config.RootDir, "data", fmt.Sprintf("%s_state.json", pvKeyName))
 	}
-	//Store private key in keybase
+	//Input private key mnemonic
+	// err := keybase.ImportPrivKey(pvKeyName, hex.EncodeToString(privKey), keyring.DefaultBIP39Passphrase)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// info, err := keybase.Key(pvKeyName)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// fmt.Printf("info: %v\n", info)
+	// Store private key in keybase
+	//Todo: clearify the usage of keybase.NewAccount and tmed25519.GenPrivKeyFromSecret
 	keybase.NewAccount(
-		pvKeyInfo,
+		pvKeyName,
 		mnemonic,
 		keyring.DefaultBIP39Passphrase,
 		sdk.GetConfig().GetFullBIP44Path(),
@@ -345,19 +358,19 @@ func createNodeID(config *tmconfig.Config) (string, error) {
 	return nodeID, nil
 }
 
-func createKeyFromMnemonic(keybase keyring.Keyring, keyName string, mnemonic string, algo keyring.SignatureAlgo) (cryptotypes.PubKey, string, error) {
-	info, secret, err := keybase.NewMnemonic(
-		keyName,
-		keyring.English,
-		sdk.GetConfig().GetFullBIP44Path(),
-		keyring.DefaultBIP39Passphrase,
-		algo,
-	)
-	if err != nil {
-		return nil, secret, err
-	}
-	return info.GetPubKey(), secret, nil
-}
+// func createKeyFromMnemonic(keybase keyring.Keyring, keyName string, mnemonic string, algo keyring.SignatureAlgo) (cryptotypes.PubKey, string, error) {
+// 	info, secret, err := keybase.NewMnemonic(
+// 		keyName,
+// 		keyring.English,
+// 		sdk.GetConfig().GetFullBIP44Path(),
+// 		keyring.DefaultBIP39Passphrase,
+// 		algo,
+// 	)
+// 	if err != nil {
+// 		return nil, secret, err
+// 	}
+// 	return info.GetPubKey(), secret, nil
+// }
 
 func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	nodeConfig *tmconfig.Config,
@@ -413,8 +426,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		return nil, err
 	}
 	if envKeys.BroadcasterMnemonic != "" {
-		broadcasterPubKey, err := createPubkeyFromMnemonic(nodeConfig, envKeys.BroadcasterMnemonic, kb, algo, "broadcaster")
-		//broadcasterPubKey, _, err := createKeyFromMnemonic(kb, "broadcaster", envKeys.BroadcasterMnemonic, algo)
+		broadcasterPubKey, err := createPubkeyFromMnemonic(nodeConfig, envKeys.BroadcasterMnemonic, kb, algo, scalartypes.BroadcasterKeyName)
 		if err != nil {
 			fmt.Printf("ExtractBroadcaster Err: %s\n", err.Error())
 			return nil, err
@@ -422,7 +434,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		validatorInfo.Broadcaster = broadcasterPubKey
 	}
 	if envKeys.GovernanceMnemonic != "" {
-		validatorInfo.GovPubKey, err = createPubkeyFromMnemonic(nodeConfig, envKeys.GovernanceMnemonic, kb, algo, "govenance")
+		validatorInfo.GovPubKey, err = createPubkeyFromMnemonic(nodeConfig, envKeys.GovernanceMnemonic, kb, algo, scalartypes.GovKeyName)
 		if err != nil {
 			fmt.Printf("ExtractGovernance Err: %s\n", err.Error())
 			return nil, err
@@ -432,21 +444,21 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 			Role:    permexported.ROLE_CHAIN_MANAGEMENT,
 		}
 	}
-	//Generate node key
-	nodeAddr, secret, err := testutil.GenerateSaveCoinKey(kb, nodeDirName, envKeys.NodeMnemonic, true, algo)
-	fmt.Printf("nodeAddr: %v\n", nodeAddr)
-	//nodeAddr, secret, err := testutil.GenerateSaveCoinKey(kb, nodeDirName, envKeys.ValidatorMnemonic, true, algo)
+	senderKeyName := nodeDirName
+	//Generate node key with name {senderKeyName} inthe keyring
+	senderAddress, secret, err := testutil.GenerateSaveCoinKey(kb, senderKeyName, envKeys.NodeMnemonic, true, algo)
+	fmt.Printf("nodeAddr: %v\n", senderAddress)
 	if err != nil {
 		_ = os.RemoveAll(args.outputDir)
 		return nil, err
 	}
-	key, err := kb.Key(nodeDirName)
+	key, err := kb.Key(senderKeyName)
 	if err != nil {
 		return nil, err
 	}
 	info := map[string]string{
 		"secret":  secret,
-		"address": sdk.ValAddress(nodeAddr).String(),
+		"address": sdk.ValAddress(senderAddress).String(),
 		"pubkey":  key.GetPubKey().String(),
 	}
 
@@ -454,17 +466,24 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	if err != nil {
 		return nil, err
 	}
+	// save private key seed words
+	if err := utils.WriteFile(fmt.Sprintf("%v.json", "key_seed"), nodeDir, cliPrint); err != nil {
+		return nil, err
+	}
+	validatorInfo.NodeBalance = banktypes.Balance{
+		Address: senderAddress.String(),
+		Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, scalartypes.NodeTokens)},
+	}
+	//Use validator address as node address
+	// senderAddress := sdk.AccAddress(validatorInfo.Broadcaster.Address())
+	// senderKeyName = types.BroadcasterKeyName
 	valTokens := sdk.TokensFromConsensusPower(power, scalartypes.ValidatorTokens)
 	valCoin := sdk.NewCoin(scalartypes.BaseDenom, valTokens)
-	nodeCoin := sdk.NewCoin(scalartypes.BaseDenom, scalartypes.NodeTokens)
 	validatorInfo.ValBalance = banktypes.Balance{
 		Address: sdk.AccAddress(validatorInfo.ValPubKey.Address()).String(),
 		Coins:   sdk.Coins{valCoin},
 	}
-	validatorInfo.NodeBalance = banktypes.Balance{
-		Address: nodeAddr.String(),
-		Coins:   sdk.Coins{nodeCoin},
-	}
+
 	validatorInfo.BroadcasterBalance = banktypes.Balance{
 		Address: sdk.AccAddress(validatorInfo.Broadcaster.Address()).String(),
 		Coins: sdk.Coins{
@@ -485,13 +504,9 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	// validatorInfo.NodeAccount = authtypes.NewBaseAccount(nodeAddr, nil, 0, 0)
 	// validatorInfo.BroadcasterAccount = authtypes.NewBaseAccount(sdk.AccAddress(validatorInfo.Broadcaster.Address()), validatorInfo.Broadcaster, 0, 0)
 
-	// save private key seed words
-	if err := utils.WriteFile(fmt.Sprintf("%v.json", "key_seed"), nodeDir, cliPrint); err != nil {
-		return nil, err
-	}
 	//Create a self delegation message for validator
 	createValMsg, err := stakingtypes.NewMsgCreateValidator(
-		sdk.ValAddress(nodeAddr),
+		sdk.ValAddress(senderAddress),
 		validatorInfo.ValPubKey,
 		valCoin,
 		stakingtypes.NewDescription(nodeDirName, "", "", "", ""),
@@ -523,10 +538,12 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		WithKeybase(kb).
 		WithTxConfig(clientCtx.TxConfig)
 
-	if err := tx.Sign(txFactory, nodeDirName, txBuilder, true); err != nil {
+	if err := tx.Sign(txFactory, senderKeyName, txBuilder, true); err != nil {
 		return nil, err
 	}
-
+	// if err := tx.SignWithPrivKey(txFactory, senderKeyName, txBuilder, true); err != nil {
+	// 	return nil, err
+	// }
 	txBz, err := clientCtx.TxConfig.TxJSONEncoder()(txBuilder.GetTx())
 	if err != nil {
 		return nil, err
