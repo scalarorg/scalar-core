@@ -12,8 +12,8 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 
 	"github.com/axelarnetwork/axelar-core/utils/events"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/keeper"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
@@ -107,21 +107,21 @@ func NewProposalHandler(k keeper.Keeper, nexusK types.Nexus, accountK types.Acco
 		switch c := content.(type) {
 		case *types.CallContractsProposal:
 			for _, contractCall := range c.ContractCalls {
-				sender := common.CrossChainAddress{Chain: exported.Scalarnet, Address: accountK.GetModuleAddress(govtypes.ModuleName).String()}
+				sender := nexus.CrossChainAddress{Chain: exported.Scalarnet, Address: accountK.GetModuleAddress(govtypes.ModuleName).String()}
 
-				destChain, ok := nexusK.GetChain(ctx, contractCall.Chain.ToNexus())
+				destChain, ok := nexusK.GetChain(ctx, contractCall.Chain)
 				if !ok {
 					// Try forwarding it to wasm router if destination chain is not registered
 					// Wasm chain names are always lower case, so normalize it for consistency in core
-					destChainName := common.ChainName(strings.ToLower(contractCall.Chain.String()))
-					destChain = common.Chain{Name: destChainName, SupportsForeignAssets: false, KeyType: tss.None, Module: wasm.ModuleName}.ToNexus()
+					destChainName := nexus.ChainName(strings.ToLower(contractCall.Chain.String()))
+					destChain = nexus.Chain{Name: destChainName, SupportsForeignAssets: false, KeyType: tss.None, Module: wasm.ModuleName}
 				}
-				recipient := common.CrossChainAddress{Chain: common.ChainFromNexus(destChain), Address: contractCall.ContractAddress}
+				recipient := nexus.CrossChainAddress{Chain: destChain, Address: contractCall.ContractAddress}
 
 				// axelar gateway expects keccak256 hashes for payloads
 				payloadHash := crypto.Keccak256(contractCall.Payload)
 				msgID, txID, nonce := nexusK.GenerateMessageID(ctx)
-				msg := common.NewGeneralMessage(msgID, sender, recipient, payloadHash, txID, nonce, nil)
+				msg := nexus.NewGeneralMessage(msgID, sender, recipient, payloadHash, txID, nonce, nil)
 
 				events.Emit(ctx, &types.ContractCallSubmitted{
 					MessageID:        msg.ID,
@@ -133,7 +133,7 @@ func NewProposalHandler(k keeper.Keeper, nexusK types.Nexus, accountK types.Acco
 					Payload:          contractCall.Payload,
 				})
 
-				if err := nexusK.SetNewMessage(ctx, msg.ToNexus()); err != nil {
+				if err := nexusK.SetNewMessage(ctx, msg); err != nil {
 					return sdkerrors.Wrap(err, "failed to add general message")
 				}
 

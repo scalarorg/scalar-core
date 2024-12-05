@@ -41,7 +41,7 @@ package keeper_test
 // 	govK := &mock.GovKeeperMock{}
 // 	contractCall := types.ContractCall{
 // 		Chain:           nexus.ChainName(rand.NormalizedStr(5)),
-// 		ContractAddress: common.BytesToAddress(rand.Bytes(common.AddressLength)).Hex(),
+// 		ContractAddress: nexus.BytesToAddress(rand.Bytes(nexus.AddressLength)).Hex(),
 // 		Payload:         rand.Bytes(100),
 // 	}
 // 	minDeposit := sdk.NewCoin("TEST", sdk.NewInt(rand.PosI64()))
@@ -94,7 +94,7 @@ package keeper_test
 // 					When("keeper is setup with params that sets no min deposit for the contract call", func() {
 // 						params := types.DefaultParams()
 // 						params.CallContractsProposalMinDeposits = []types.CallContractProposalMinDeposit{
-// 							{Chain: contractCall.Chain, ContractAddress: common.BytesToAddress(rand.Bytes(common.AddressLength)).Hex(), MinDeposits: sdk.NewCoins(minDeposit)},
+// 							{Chain: contractCall.Chain, ContractAddress: nexus.BytesToAddress(rand.Bytes(nexus.AddressLength)).Hex(), MinDeposits: sdk.NewCoins(minDeposit)},
 // 							{Chain: nexus.ChainName(rand.NormalizedStr(5)), ContractAddress: contractCall.ContractAddress, MinDeposits: sdk.NewCoins(minDeposit)},
 // 						}
 
@@ -195,7 +195,7 @@ package keeper_test
 // 						proposal.Content = funcs.Must(codectypes.NewAnyWithValue(types.NewCallContractsProposal("title", "description", []types.ContractCall{
 // 							{
 // 								Chain:           nonRegisteredChain,
-// 								ContractAddress: common.BytesToAddress(rand.Bytes(common.AddressLength)).Hex(),
+// 								ContractAddress: nexus.BytesToAddress(rand.Bytes(nexus.AddressLength)).Hex(),
 // 								Payload:         rand.Bytes(100),
 // 							},
 // 						}).(proto.Message)))
@@ -225,7 +225,7 @@ package keeper_test
 // 						proposal.Content = funcs.Must(codectypes.NewAnyWithValue(types.NewCallContractsProposal("title", "description", []types.ContractCall{
 // 							{
 // 								Chain:           evm.Ethereum.Name,
-// 								ContractAddress: common.BytesToAddress(rand.Bytes(common.AddressLength)).Hex(),
+// 								ContractAddress: nexus.BytesToAddress(rand.Bytes(nexus.AddressLength)).Hex(),
 // 								Payload:         rand.Bytes(100),
 // 							},
 // 						}).(proto.Message)))

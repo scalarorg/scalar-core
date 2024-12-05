@@ -19,7 +19,6 @@ import (
 	"github.com/axelarnetwork/axelar-core/utils"
 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	nexustypes "github.com/axelarnetwork/axelar-core/x/nexus/types"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
 )
 
 //go:generate moq -out ./mock/expected_keepers.go -pkg mock . BaseKeeper Nexus BankKeeper IBCTransferKeeper ChannelKeeper AccountKeeper PortKeeper GovKeeper StakingKeeper FeegrantKeeper IBCKeeper
@@ -140,7 +139,7 @@ type AccountKeeper interface {
 }
 
 // CosmosChainGetter exposes GetCosmosChainByName
-type CosmosChainGetter func(ctx sdk.Context, chain common.ChainName) (CosmosChain, bool)
+type CosmosChainGetter func(ctx sdk.Context, chain nexus.ChainName) (CosmosChain, bool)
 
 // PortKeeper used in module_test
 type PortKeeper interface {

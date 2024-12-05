@@ -10,7 +10,7 @@ import (
 	"golang.org/x/exp/maps"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
@@ -65,7 +65,7 @@ func (m GenesisState) Validate() error {
 	}
 
 	// IBCTransfer ID should be unique
-	transferSeen := make(map[common.TransferID]bool)
+	transferSeen := make(map[nexus.TransferID]bool)
 	for _, t := range m.IBCTransfers {
 		if transferSeen[t.ID] {
 			return getValidateError(fmt.Errorf("duplicate transfer ID %d", t.ID))

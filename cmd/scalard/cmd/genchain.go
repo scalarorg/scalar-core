@@ -14,8 +14,9 @@ import (
 	evmtypes "github.com/axelarnetwork/axelar-core/x/evm/types"
 	nexusTypes "github.com/axelarnetwork/axelar-core/x/nexus/types"
 	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
+
 	//btctypes "github.com/scalar/scalar-core/x/btc/types"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 )
 
 // func AddGenesisBTCChainCmd(defaultNodeHome string) *cobra.Command {
@@ -92,7 +93,7 @@ func AddGenesisEVMChainCmd(defaultNodeHome string) *cobra.Command {
 
 			config.SetRoot(clientCtx.HomeDir)
 
-			name := common.ChainName(args[0])
+			name := nexus.ChainName(args[0])
 			err := name.Validate()
 			if err != nil {
 				return err
@@ -104,7 +105,7 @@ func AddGenesisEVMChainCmd(defaultNodeHome string) *cobra.Command {
 				return fmt.Errorf("failed to unmarshal genesis state: %w", err)
 			}
 
-			chain := common.Chain{
+			chain := nexus.Chain{
 				Name:                  name,
 				SupportsForeignAssets: true,
 				KeyType:               tss.Multisig,
@@ -116,7 +117,7 @@ func AddGenesisEVMChainCmd(defaultNodeHome string) *cobra.Command {
 			}
 
 			genesisState := nexusTypes.GetGenesisStateFromAppState(cdc, appState)
-			genesisState.Chains = append(genesisState.Chains, chain.ToNexus())
+			genesisState.Chains = append(genesisState.Chains, chain)
 
 			genesisStateBz, err := cdc.MarshalJSON(&genesisState)
 			if err != nil {

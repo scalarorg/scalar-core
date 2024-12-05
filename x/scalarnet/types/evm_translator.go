@@ -10,8 +10,8 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
 	evm "github.com/axelarnetwork/axelar-core/x/evm/types"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/axelarnetwork/utils/funcs"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
 )
 
 var (
@@ -60,7 +60,7 @@ type message struct {
 }
 
 // TranslateMessage constructs the message gets passed to a cosmos chain from a versioned payload
-func TranslateMessage(msg common.GeneralMessage, versionedPayload []byte) ([]byte, error) {
+func TranslateMessage(msg nexus.GeneralMessage, versionedPayload []byte) ([]byte, error) {
 	version, payload, err := unpackVersionedPayload(versionedPayload)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "invalid versioned payload")
@@ -109,7 +109,7 @@ func unpackVersionedPayload(versionedPayload []byte) (version, []byte, error) {
 // - argument names ([]string)
 // - argument types ([]string)
 // - argument values (bytes)
-func ConstructWasmMessageV1(gm common.GeneralMessage, payload []byte) ([]byte, error) {
+func ConstructWasmMessageV1(gm nexus.GeneralMessage, payload []byte) ([]byte, error) {
 	args, err := evm.StrictDecode(payloadArguments, payload)
 	if err != nil {
 		return nil, err
@@ -161,7 +161,7 @@ func ConstructWasmMessageV1(gm common.GeneralMessage, payload []byte) ([]byte, e
 
 // ConstructWasmMessageV2 creates a json serialized wasm message from json encoded payload
 // The payload must contain only a single key, the method name, and an arg name val map as value
-func ConstructWasmMessageV2(gm common.GeneralMessage, payload []byte) ([]byte, error) {
+func ConstructWasmMessageV2(gm nexus.GeneralMessage, payload []byte) ([]byte, error) {
 	executeMsg := make(map[string]interface{})
 	err := json.Unmarshal(payload, &executeMsg)
 	if err != nil {
@@ -214,7 +214,7 @@ func ConstructWasmMessageV2(gm common.GeneralMessage, payload []byte) ([]byte, e
 }
 
 // ConstructNativeMessage creates a json serialized cross chain message
-func ConstructNativeMessage(gm common.GeneralMessage, payload []byte) ([]byte, error) {
+func ConstructNativeMessage(gm nexus.GeneralMessage, payload []byte) ([]byte, error) {
 	return json.Marshal(message{
 		SourceChain:   gm.GetSourceChain().String(),
 		SourceAddress: gm.GetSourceAddress(),
@@ -238,7 +238,7 @@ func buildArguments(argTypes []string) (abi.Arguments, error) {
 	return arguments, nil
 }
 
-func checkSourceInfo(sender common.CrossChainAddress, msg map[string]interface{}) error {
+func checkSourceInfo(sender nexus.CrossChainAddress, msg map[string]interface{}) error {
 	chain, ok := msg[sourceChain]
 	if ok {
 		chain, ok := chain.(string)
@@ -246,7 +246,7 @@ func checkSourceInfo(sender common.CrossChainAddress, msg map[string]interface{}
 			return fmt.Errorf("source chain must have type string")
 		}
 
-		if !sender.Chain.Name.Equals(common.ChainName(chain)) {
+		if !sender.Chain.Name.Equals(nexus.ChainName(chain)) {
 			return fmt.Errorf("source chain does not match expected")
 		}
 	}
@@ -254,7 +254,7 @@ func checkSourceInfo(sender common.CrossChainAddress, msg map[string]interface{}
 	addr, ok := msg[sourceAddress]
 	if ok {
 		// Convert interface to string to support the scenario where addrI uses abi.Address type
-		// Note: Avoid using common.HexToAddress without checking if it's a valid address first since it doesn't handle invalid inputs well.
+		// Note: Avoid using nexus.HexToAddress without checking if it's a valid address first since it doesn't handle invalid inputs well.
 		addr := fmt.Sprint(addr)
 		if !strings.EqualFold(sender.Address, addr) {
 			return fmt.Errorf("source address does not match expected")

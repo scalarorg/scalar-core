@@ -75,7 +75,7 @@ message KeyEpoch {
   uint64 epoch = 1;
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string key_id = 3 [
     (gogoproto.customname) = "KeyID",
     (gogoproto.casttype) =

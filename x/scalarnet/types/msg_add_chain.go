@@ -8,16 +8,16 @@ import (
 	host "github.com/cosmos/ibc-go/v4/modules/core/24-host"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 )
 
 // NewAddCosmosBasedChainRequest is the constructor for NewAddCosmosBasedChainRequest
-func NewAddCosmosBasedChainRequest(sender sdk.AccAddress, name, addrPrefix string, assets []common.Asset, ibcPath string) *AddCosmosBasedChainRequest {
+func NewAddCosmosBasedChainRequest(sender sdk.AccAddress, name, addrPrefix string, assets []nexus.Asset, ibcPath string) *AddCosmosBasedChainRequest {
 	return &AddCosmosBasedChainRequest{
 		Sender:       sender,
 		AddrPrefix:   utils.NormalizeString(addrPrefix),
 		NativeAssets: assets,
-		CosmosChain:  common.ChainName(utils.NormalizeString(name)),
+		CosmosChain:  nexus.ChainName(utils.NormalizeString(name)),
 		IBCPath:      ibcPath,
 	}
 }

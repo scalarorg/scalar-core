@@ -65,7 +65,7 @@ func migrateFailedTransfersToAxelarIBCAccount(ctx sdk.Context, k Keeper) error {
 			continue
 		}
 
-		transfer.Sender = types.AxelarIBCAccount
+		transfer.Sender = types.ScalarIBCAccount
 		if err := k.setTransfer(ctx, transfer); err != nil {
 			return err
 		}

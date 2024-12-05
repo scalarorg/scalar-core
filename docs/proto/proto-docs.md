@@ -4,19 +4,36 @@
 
 ## Table of Contents
 
-- [scalar/common/exported/v1beta1/types.proto](#scalar/common/exported/v1beta1/types.proto)
-    - [Asset](#scalar.common.exported.v1beta1.Asset)
-    - [Chain](#scalar.common.exported.v1beta1.Chain)
-    - [CrossChainAddress](#scalar.common.exported.v1beta1.CrossChainAddress)
-    - [CrossChainTransfer](#scalar.common.exported.v1beta1.CrossChainTransfer)
-    - [FeeInfo](#scalar.common.exported.v1beta1.FeeInfo)
-    - [GeneralMessage](#scalar.common.exported.v1beta1.GeneralMessage)
-    - [TransferFee](#scalar.common.exported.v1beta1.TransferFee)
-    - [WasmMessage](#scalar.common.exported.v1beta1.WasmMessage)
+- [scalar/btc/v1beta1/types.proto](#scalar/btc/v1beta1/types.proto)
+    - [PollMapping](#scalar.btc.v1beta1.PollMapping)
+    - [PollMetadata](#scalar.btc.v1beta1.PollMetadata)
+    - [Proof](#scalar.btc.v1beta1.Proof)
   
-    - [GeneralMessage.Status](#scalar.common.exported.v1beta1.GeneralMessage.Status)
-    - [TransferDirection](#scalar.common.exported.v1beta1.TransferDirection)
-    - [TransferState](#scalar.common.exported.v1beta1.TransferState)
+    - [BatchedCommandsStatus](#scalar.btc.v1beta1.BatchedCommandsStatus)
+    - [NetworkKind](#scalar.btc.v1beta1.NetworkKind)
+  
+- [scalar/btc/v1beta1/events.proto](#scalar/btc/v1beta1/events.proto)
+    - [ConfirmGatewayTxsStarted](#scalar.btc.v1beta1.ConfirmGatewayTxsStarted)
+    - [Event](#scalar.btc.v1beta1.Event)
+  
+- [scalar/btc/v1beta1/params.proto](#scalar/btc/v1beta1/params.proto)
+    - [Params](#scalar.btc.v1beta1.Params)
+  
+- [scalar/btc/v1beta1/genesis.proto](#scalar/btc/v1beta1/genesis.proto)
+    - [GenesisState](#scalar.btc.v1beta1.GenesisState)
+    - [GenesisState.Chain](#scalar.btc.v1beta1.GenesisState.Chain)
+  
+- [scalar/btc/v1beta1/tx.proto](#scalar/btc/v1beta1/tx.proto)
+    - [ConfirmGatewayTxsRequest](#scalar.btc.v1beta1.ConfirmGatewayTxsRequest)
+    - [ConfirmGatewayTxsResponse](#scalar.btc.v1beta1.ConfirmGatewayTxsResponse)
+  
+- [scalar/btc/v1beta1/query.proto](#scalar/btc/v1beta1/query.proto)
+    - [BatchedCommandsRequest](#scalar.btc.v1beta1.BatchedCommandsRequest)
+    - [BatchedCommandsResponse](#scalar.btc.v1beta1.BatchedCommandsResponse)
+  
+- [scalar/btc/v1beta1/service.proto](#scalar/btc/v1beta1/service.proto)
+    - [MsgService](#scalar.btc.v1beta1.MsgService)
+    - [QueryService](#scalar.btc.v1beta1.QueryService)
   
 - [scalar/scalarnet/v1beta1/events.proto](#scalar/scalarnet/v1beta1/events.proto)
     - [ContractCallSubmitted](#scalar.scalarnet.v1beta1.ContractCallSubmitted)
@@ -93,155 +110,57 @@
 
 
 
-<a name="scalar/common/exported/v1beta1/types.proto"></a>
+<a name="scalar/btc/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## scalar/common/exported/v1beta1/types.proto
+## scalar/btc/v1beta1/types.proto
 
 
 
-<a name="scalar.common.exported.v1beta1.Asset"></a>
+<a name="scalar.btc.v1beta1.PollMapping"></a>
 
-### Asset
+### PollMapping
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `denom` | [string](#string) |  |  |
-| `is_native_asset` | [bool](#bool) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
 
 
 
 
 
 
-<a name="scalar.common.exported.v1beta1.Chain"></a>
+<a name="scalar.btc.v1beta1.PollMetadata"></a>
 
-### Chain
-Chain represents the properties of a registered blockchain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  |  |
-| `supports_foreign_assets` | [bool](#bool) |  |  |
-| `key_type` | [axelar.tss.exported.v1beta1.KeyType](#axelar.tss.exported.v1beta1.KeyType) |  |  |
-| `module` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.common.exported.v1beta1.CrossChainAddress"></a>
-
-### CrossChainAddress
-CrossChainAddress represents a generalized address on any registered chain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [Chain](#scalar.common.exported.v1beta1.Chain) |  |  |
-| `address` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.common.exported.v1beta1.CrossChainTransfer"></a>
-
-### CrossChainTransfer
-CrossChainTransfer represents a generalized transfer of some asset to a
-registered blockchain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `recipient` | [CrossChainAddress](#scalar.common.exported.v1beta1.CrossChainAddress) |  |  |
-| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `id` | [uint64](#uint64) |  |  |
-| `state` | [TransferState](#scalar.common.exported.v1beta1.TransferState) |  |  |
-
-
-
-
-
-
-<a name="scalar.common.exported.v1beta1.FeeInfo"></a>
-
-### FeeInfo
+### PollMetadata
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
-| `asset` | [string](#string) |  |  |
-| `fee_rate` | [bytes](#bytes) |  |  |
-| `min_fee` | [bytes](#bytes) |  |  |
-| `max_fee` | [bytes](#bytes) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
 
 
 
 
 
 
-<a name="scalar.common.exported.v1beta1.GeneralMessage"></a>
+<a name="scalar.btc.v1beta1.Proof"></a>
 
-### GeneralMessage
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `id` | [string](#string) |  |  |
-| `sender` | [CrossChainAddress](#scalar.common.exported.v1beta1.CrossChainAddress) |  |  |
-| `recipient` | [CrossChainAddress](#scalar.common.exported.v1beta1.CrossChainAddress) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `status` | [GeneralMessage.Status](#scalar.common.exported.v1beta1.GeneralMessage.Status) |  |  |
-| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `source_tx_id` | [bytes](#bytes) |  |  |
-| `source_tx_index` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.common.exported.v1beta1.TransferFee"></a>
-
-### TransferFee
-TransferFee represents accumulated fees generated by the network
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `coins` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.common.exported.v1beta1.WasmMessage"></a>
-
-### WasmMessage
+### Proof
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `source_chain` | [string](#string) |  |  |
-| `source_address` | [string](#string) |  |  |
-| `destination_chain` | [string](#string) |  |  |
-| `destination_address` | [string](#string) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `source_tx_id` | [bytes](#bytes) |  |  |
-| `source_tx_index` | [uint64](#uint64) |  |  |
-| `sender` | [bytes](#bytes) |  |  |
-| `id` | [string](#string) |  |  |
+| `addresses` | [string](#string) | repeated |  |
+| `weights` | [string](#string) | repeated |  |
+| `threshold` | [string](#string) |  |  |
+| `signatures` | [string](#string) | repeated |  |
 
 
 
@@ -250,51 +169,299 @@ TransferFee represents accumulated fees generated by the network
  <!-- end messages -->
 
 
-<a name="scalar.common.exported.v1beta1.GeneralMessage.Status"></a>
+<a name="scalar.btc.v1beta1.BatchedCommandsStatus"></a>
 
-### GeneralMessage.Status
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| STATUS_UNSPECIFIED | 0 |  |
-| STATUS_APPROVED | 1 |  |
-| STATUS_PROCESSING | 2 |  |
-| STATUS_EXECUTED | 3 |  |
-| STATUS_FAILED | 4 |  |
-
-
-
-<a name="scalar.common.exported.v1beta1.TransferDirection"></a>
-
-### TransferDirection
+### BatchedCommandsStatus
 
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| TRANSFER_DIRECTION_UNSPECIFIED | 0 |  |
-| TRANSFER_DIRECTION_FROM | 1 |  |
-| TRANSFER_DIRECTION_TO | 2 |  |
+| BATCHED_COMMANDS_STATUS_UNSPECIFIED | 0 |  |
+| BATCHED_COMMANDS_STATUS_SIGNING | 1 |  |
+| BATCHED_COMMANDS_STATUS_ABORTED | 2 |  |
+| BATCHED_COMMANDS_STATUS_SIGNED | 3 |  |
 
 
 
-<a name="scalar.common.exported.v1beta1.TransferState"></a>
+<a name="scalar.btc.v1beta1.NetworkKind"></a>
 
-### TransferState
+### NetworkKind
 
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| TRANSFER_STATE_UNSPECIFIED | 0 |  |
-| TRANSFER_STATE_PENDING | 1 |  |
-| TRANSFER_STATE_ARCHIVED | 2 |  |
-| TRANSFER_STATE_INSUFFICIENT_AMOUNT | 3 |  |
-| TRANSFER_STATE_FAILED | 4 |  |
+| NETWORK_KIND_MAINNET | 0 |  |
+| NETWORK_KIND_TESTNET | 1 |  |
 
 
  <!-- end enums -->
 
  <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/btc/v1beta1/events.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/btc/v1beta1/events.proto
+
+
+
+<a name="scalar.btc.v1beta1.ConfirmGatewayTxsStarted"></a>
+
+### ConfirmGatewayTxsStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `poll_mappings` | [PollMapping](#scalar.btc.v1beta1.PollMapping) | repeated |  |
+| `chain` | [string](#string) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `participants` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.Event"></a>
+
+### Event
+
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/btc/v1beta1/params.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/btc/v1beta1/params.proto
+
+
+
+<a name="scalar.btc.v1beta1.Params"></a>
+
+### Params
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain_name` | [string](#string) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `network_kind` | [NetworkKind](#scalar.btc.v1beta1.NetworkKind) |  |  |
+| `revote_locking_period` | [int64](#int64) |  |  |
+| `chain_id` | [uint64](#uint64) |  |  |
+| `voting_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `min_voter_count` | [int64](#int64) |  |  |
+| `voting_grace_period` | [int64](#int64) |  |  |
+| `end_blocker_limit` | [int64](#int64) |  |  |
+| `transfer_limit` | [uint64](#uint64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/btc/v1beta1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/btc/v1beta1/genesis.proto
+
+
+
+<a name="scalar.btc.v1beta1.GenesisState"></a>
+
+### GenesisState
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chains` | [GenesisState.Chain](#scalar.btc.v1beta1.GenesisState.Chain) | repeated |  |
+| `vault_tag` | [bytes](#bytes) |  |  |
+| `vault_version` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.GenesisState.Chain"></a>
+
+### GenesisState.Chain
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.btc.v1beta1.Params) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/btc/v1beta1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/btc/v1beta1/tx.proto
+
+
+
+<a name="scalar.btc.v1beta1.ConfirmGatewayTxsRequest"></a>
+
+### ConfirmGatewayTxsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `tx_ids` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.ConfirmGatewayTxsResponse"></a>
+
+### ConfirmGatewayTxsResponse
+
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/btc/v1beta1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/btc/v1beta1/query.proto
+
+
+
+<a name="scalar.btc.v1beta1.BatchedCommandsRequest"></a>
+
+### BatchedCommandsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `id` | [string](#string) |  | id defines an optional id for the commandsbatch. If not specified the latest will be returned |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.BatchedCommandsResponse"></a>
+
+### BatchedCommandsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `data` | [string](#string) |  |  |
+| `status` | [BatchedCommandsStatus](#scalar.btc.v1beta1.BatchedCommandsStatus) |  |  |
+| `key_id` | [string](#string) |  |  |
+| `execute_data` | [string](#string) |  |  |
+| `prev_batched_commands_id` | [string](#string) |  |  |
+| `command_ids` | [string](#string) | repeated |  |
+| `proof` | [Proof](#scalar.btc.v1beta1.Proof) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/btc/v1beta1/service.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/btc/v1beta1/service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="scalar.btc.v1beta1.MsgService"></a>
+
+### MsgService
+Msg defines the evm Msg service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `ConfirmGatewayTxs` | [ConfirmGatewayTxsRequest](#scalar.btc.v1beta1.ConfirmGatewayTxsRequest) | [ConfirmGatewayTxsResponse](#scalar.btc.v1beta1.ConfirmGatewayTxsResponse) |  | POST|/scalar/btc/confirm_gateway_txs|
+
+
+<a name="scalar.btc.v1beta1.QueryService"></a>
+
+### QueryService
+QueryService defines the gRPC querier service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `BatchedCommands` | [BatchedCommandsRequest](#scalar.btc.v1beta1.BatchedCommandsRequest) | [BatchedCommandsResponse](#scalar.btc.v1beta1.BatchedCommandsResponse) | BatchedCommands queries the batched commands for a specified chain and BatchedCommandsID if no BatchedCommandsID is specified, then it returns the latest batched commands | GET|/scalar/btc/v1beta1/batched_commands/{chain}/{id}|
 
  <!-- end services -->
 

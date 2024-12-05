@@ -1,0 +1,59 @@
+syntax = "proto3";
+package scalar.btc.v1beta1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
+
+enum NetworkKind {
+  option (gogoproto.goproto_enum_prefix) = false;
+  option (gogoproto.goproto_enum_stringer) = true;
+
+  NETWORK_KIND_MAINNET = 0 [ (gogoproto.enumvalue_customname) = "Mainnet" ];
+  NETWORK_KIND_TESTNET = 1 [ (gogoproto.enumvalue_customname) = "Testnet" ];
+}
+
+enum BatchedCommandsStatus {
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  BATCHED_COMMANDS_STATUS_UNSPECIFIED = 0
+      [ (gogoproto.enumvalue_customname) = "BatchNonExistent" ];
+  BATCHED_COMMANDS_STATUS_SIGNING = 1
+      [ (gogoproto.enumvalue_customname) = "BatchSigning" ];
+  BATCHED_COMMANDS_STATUS_ABORTED = 2
+      [ (gogoproto.enumvalue_customname) = "BatchAborted" ];
+  BATCHED_COMMANDS_STATUS_SIGNED = 3
+      [ (gogoproto.enumvalue_customname) = "BatchSigned" ];
+}
+
+message Proof {
+  repeated string addresses = 1;
+  repeated string weights = 2;
+  string threshold = 3;
+  repeated string signatures = 4;
+}
+
+message PollMapping {
+  bytes tx_id = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "TxHash",
+    (gogoproto.customname) = "TxID"
+  ];
+  uint64 poll_id = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "PollID",
+    (gogoproto.customtype) =
+        "github.com/axelarnetwork/axelar-core/x/vote/exported.PollID"
+  ];
+}
+
+message PollMetadata {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+  bytes tx_id = 2 [
+    (gogoproto.customname) = "TxID",
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "TxHash"
+  ];
+}

@@ -1,17 +1,16 @@
 package types
 
 import (
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
-	common "github.com/scalarorg/scalar-core/x/common/exported"
 )
 
 // NewRetryIBCTransferRequest creates a message of type RetryIBCTransferRequest
-func NewRetryIBCTransferRequest(sender sdk.AccAddress, id common.TransferID) *RetryIBCTransferRequest {
+func NewRetryIBCTransferRequest(sender sdk.AccAddress, id nexus.TransferID) *RetryIBCTransferRequest {
 	return &RetryIBCTransferRequest{
 		Sender: sender,
-		Chain:  common.ChainName(""),
+		Chain:  nexus.ChainName(""),
 		ID:     id,
 	}
 }

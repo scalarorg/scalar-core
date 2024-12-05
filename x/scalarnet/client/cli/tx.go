@@ -17,8 +17,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 )
 
 const (
@@ -139,9 +139,9 @@ func GetCmdAddCosmosBasedChain() *cobra.Command {
 		}
 
 		// native assets are optional
-		assets := make([]common.Asset, len(args[3:]))
+		assets := make([]nexus.Asset, len(args[3:]))
 		for i, asset := range args[3:] {
-			assets[i] = common.NewAsset(asset, true)
+			assets[i] = nexus.NewAsset(asset, true)
 		}
 
 		name := args[0]
@@ -196,7 +196,7 @@ func GetCmdRegisterAsset() *cobra.Command {
 			return err
 		}
 
-		msg := types.NewRegisterAssetRequest(cliCtx.GetFromAddress(), chain, common.NewAsset(denom, isNativeAsset), limit, window)
+		msg := types.NewRegisterAssetRequest(cliCtx.GetFromAddress(), chain, nexus.NewAsset(denom, isNativeAsset), limit, window)
 
 		return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
 	}
@@ -270,7 +270,7 @@ func getRetryIBCTransfer() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewRetryIBCTransferRequest(cliCtx.GetFromAddress(), common.TransferID(transferID))
+			msg := types.NewRetryIBCTransferRequest(cliCtx.GetFromAddress(), nexus.TransferID(transferID))
 
 			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
 		},

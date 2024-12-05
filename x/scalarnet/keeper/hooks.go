@@ -6,8 +6,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/axelarnetwork/utils/funcs"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
 )
 
@@ -55,13 +55,13 @@ func (h Hooks) AfterProposalSubmission(ctx sdk.Context, proposalID uint64) {
 	case *types.CallContractsProposal:
 		// perform stateful validations of the proposal
 		for _, contractCall := range c.ContractCalls {
-			chain, ok := h.nexus.GetChain(ctx, contractCall.Chain.ToNexus())
+			chain, ok := h.nexus.GetChain(ctx, contractCall.Chain)
 			if !ok {
 				panic(fmt.Errorf("%s is not a registered chain", contractCall.Chain))
 			}
 
-			crossChainAddress := common.CrossChainAddress{Chain: common.ChainFromNexus(chain), Address: contractCall.ContractAddress}
-			if err := h.nexus.ValidateAddress(ctx, crossChainAddress.ToNexus()); err != nil {
+			crossChainAddress := nexus.CrossChainAddress{Chain: chain, Address: contractCall.ContractAddress}
+			if err := h.nexus.ValidateAddress(ctx, crossChainAddress); err != nil {
 				panic(err)
 			}
 		}

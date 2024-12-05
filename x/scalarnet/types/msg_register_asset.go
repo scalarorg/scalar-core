@@ -8,14 +8,14 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 )
 
 // NewRegisterAssetRequest is the constructor for RegisterAssetRequest
-func NewRegisterAssetRequest(sender sdk.AccAddress, chain string, asset common.Asset, limit sdk.Uint, window time.Duration) *RegisterAssetRequest {
+func NewRegisterAssetRequest(sender sdk.AccAddress, chain string, asset nexus.Asset, limit sdk.Uint, window time.Duration) *RegisterAssetRequest {
 	return &RegisterAssetRequest{
 		Sender: sender,
-		Chain:  common.ChainName(utils.NormalizeString(chain)),
+		Chain:  nexus.ChainName(utils.NormalizeString(chain)),
 		Asset:  asset,
 		Limit:  limit,
 		Window: window,

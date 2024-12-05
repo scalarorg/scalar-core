@@ -5,11 +5,11 @@ package types
 
 import (
 	fmt "fmt"
+	github_com_axelarnetwork_axelar_core_x_nexus_exported "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
-	github_com_scalarorg_scalar_core_x_common_exported "github.com/scalarorg/scalar-core/x/common/exported"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -27,13 +27,13 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type IBCTransferSent struct {
-	ID         github_com_scalarorg_scalar_core_x_common_exported.TransferID `protobuf:"varint,1,opt,name=id,proto3,casttype=github.com/scalarorg/scalar-core/x/common/exported.TransferID" json:"id,omitempty"`
-	Receipient string                                                        `protobuf:"bytes,2,opt,name=receipient,proto3" json:"receipient,omitempty"` // Deprecated: Do not use.
-	Asset      types.Coin                                                    `protobuf:"bytes,3,opt,name=asset,proto3" json:"asset"`
-	Sequence   uint64                                                        `protobuf:"varint,4,opt,name=sequence,proto3" json:"sequence,omitempty"`
-	PortID     string                                                        `protobuf:"bytes,5,opt,name=port_id,json=portId,proto3" json:"port_id,omitempty"`
-	ChannelID  string                                                        `protobuf:"bytes,6,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
-	Recipient  string                                                        `protobuf:"bytes,7,opt,name=recipient,proto3" json:"recipient,omitempty"`
+	ID         github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID `protobuf:"varint,1,opt,name=id,proto3,casttype=github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID" json:"id,omitempty"`
+	Receipient string                                                           `protobuf:"bytes,2,opt,name=receipient,proto3" json:"receipient,omitempty"` // Deprecated: Do not use.
+	Asset      types.Coin                                                       `protobuf:"bytes,3,opt,name=asset,proto3" json:"asset"`
+	Sequence   uint64                                                           `protobuf:"varint,4,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	PortID     string                                                           `protobuf:"bytes,5,opt,name=port_id,json=portId,proto3" json:"port_id,omitempty"`
+	ChannelID  string                                                           `protobuf:"bytes,6,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	Recipient  string                                                           `protobuf:"bytes,7,opt,name=recipient,proto3" json:"recipient,omitempty"`
 }
 
 func (m *IBCTransferSent) Reset()         { *m = IBCTransferSent{} }
@@ -69,7 +69,7 @@ func (m *IBCTransferSent) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_IBCTransferSent proto.InternalMessageInfo
 
-func (m *IBCTransferSent) GetID() github_com_scalarorg_scalar_core_x_common_exported.TransferID {
+func (m *IBCTransferSent) GetID() github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID {
 	if m != nil {
 		return m.ID
 	}
@@ -124,10 +124,10 @@ func (*IBCTransferSent) XXX_MessageName() string {
 }
 
 type IBCTransferCompleted struct {
-	ID        github_com_scalarorg_scalar_core_x_common_exported.TransferID `protobuf:"varint,1,opt,name=id,proto3,casttype=github.com/scalarorg/scalar-core/x/common/exported.TransferID" json:"id,omitempty"`
-	Sequence  uint64                                                        `protobuf:"varint,2,opt,name=sequence,proto3" json:"sequence,omitempty"`
-	PortID    string                                                        `protobuf:"bytes,3,opt,name=port_id,json=portId,proto3" json:"port_id,omitempty"`
-	ChannelID string                                                        `protobuf:"bytes,4,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	ID        github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID `protobuf:"varint,1,opt,name=id,proto3,casttype=github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID" json:"id,omitempty"`
+	Sequence  uint64                                                           `protobuf:"varint,2,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	PortID    string                                                           `protobuf:"bytes,3,opt,name=port_id,json=portId,proto3" json:"port_id,omitempty"`
+	ChannelID string                                                           `protobuf:"bytes,4,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
 }
 
 func (m *IBCTransferCompleted) Reset()         { *m = IBCTransferCompleted{} }
@@ -163,7 +163,7 @@ func (m *IBCTransferCompleted) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_IBCTransferCompleted proto.InternalMessageInfo
 
-func (m *IBCTransferCompleted) GetID() github_com_scalarorg_scalar_core_x_common_exported.TransferID {
+func (m *IBCTransferCompleted) GetID() github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID {
 	if m != nil {
 		return m.ID
 	}
@@ -196,10 +196,10 @@ func (*IBCTransferCompleted) XXX_MessageName() string {
 }
 
 type IBCTransferFailed struct {
-	ID        github_com_scalarorg_scalar_core_x_common_exported.TransferID `protobuf:"varint,1,opt,name=id,proto3,casttype=github.com/scalarorg/scalar-core/x/common/exported.TransferID" json:"id,omitempty"`
-	Sequence  uint64                                                        `protobuf:"varint,2,opt,name=sequence,proto3" json:"sequence,omitempty"`
-	PortID    string                                                        `protobuf:"bytes,3,opt,name=port_id,json=portId,proto3" json:"port_id,omitempty"`
-	ChannelID string                                                        `protobuf:"bytes,4,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	ID        github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID `protobuf:"varint,1,opt,name=id,proto3,casttype=github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID" json:"id,omitempty"`
+	Sequence  uint64                                                           `protobuf:"varint,2,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	PortID    string                                                           `protobuf:"bytes,3,opt,name=port_id,json=portId,proto3" json:"port_id,omitempty"`
+	ChannelID string                                                           `protobuf:"bytes,4,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
 }
 
 func (m *IBCTransferFailed) Reset()         { *m = IBCTransferFailed{} }
@@ -235,7 +235,7 @@ func (m *IBCTransferFailed) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_IBCTransferFailed proto.InternalMessageInfo
 
-func (m *IBCTransferFailed) GetID() github_com_scalarorg_scalar_core_x_common_exported.TransferID {
+func (m *IBCTransferFailed) GetID() github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID {
 	if m != nil {
 		return m.ID
 	}
@@ -268,13 +268,13 @@ func (*IBCTransferFailed) XXX_MessageName() string {
 }
 
 type IBCTransferRetried struct {
-	ID         github_com_scalarorg_scalar_core_x_common_exported.TransferID `protobuf:"varint,1,opt,name=id,proto3,casttype=github.com/scalarorg/scalar-core/x/common/exported.TransferID" json:"id,omitempty"`
-	Receipient string                                                        `protobuf:"bytes,2,opt,name=receipient,proto3" json:"receipient,omitempty"` // Deprecated: Do not use.
-	Asset      types.Coin                                                    `protobuf:"bytes,3,opt,name=asset,proto3" json:"asset"`
-	Sequence   uint64                                                        `protobuf:"varint,4,opt,name=sequence,proto3" json:"sequence,omitempty"`
-	PortID     string                                                        `protobuf:"bytes,5,opt,name=port_id,json=portId,proto3" json:"port_id,omitempty"`
-	ChannelID  string                                                        `protobuf:"bytes,6,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
-	Recipient  string                                                        `protobuf:"bytes,7,opt,name=recipient,proto3" json:"recipient,omitempty"`
+	ID         github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID `protobuf:"varint,1,opt,name=id,proto3,casttype=github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID" json:"id,omitempty"`
+	Receipient string                                                           `protobuf:"bytes,2,opt,name=receipient,proto3" json:"receipient,omitempty"` // Deprecated: Do not use.
+	Asset      types.Coin                                                       `protobuf:"bytes,3,opt,name=asset,proto3" json:"asset"`
+	Sequence   uint64                                                           `protobuf:"varint,4,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	PortID     string                                                           `protobuf:"bytes,5,opt,name=port_id,json=portId,proto3" json:"port_id,omitempty"`
+	ChannelID  string                                                           `protobuf:"bytes,6,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	Recipient  string                                                           `protobuf:"bytes,7,opt,name=recipient,proto3" json:"recipient,omitempty"`
 }
 
 func (m *IBCTransferRetried) Reset()         { *m = IBCTransferRetried{} }
@@ -310,7 +310,7 @@ func (m *IBCTransferRetried) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_IBCTransferRetried proto.InternalMessageInfo
 
-func (m *IBCTransferRetried) GetID() github_com_scalarorg_scalar_core_x_common_exported.TransferID {
+func (m *IBCTransferRetried) GetID() github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID {
 	if m != nil {
 		return m.ID
 	}
@@ -365,10 +365,10 @@ func (*IBCTransferRetried) XXX_MessageName() string {
 }
 
 type ScalarTransferCompleted struct {
-	ID         github_com_scalarorg_scalar_core_x_common_exported.TransferID `protobuf:"varint,1,opt,name=id,proto3,casttype=github.com/scalarorg/scalar-core/x/common/exported.TransferID" json:"id,omitempty"`
-	Receipient string                                                        `protobuf:"bytes,2,opt,name=receipient,proto3" json:"receipient,omitempty"` // Deprecated: Do not use.
-	Asset      types.Coin                                                    `protobuf:"bytes,3,opt,name=asset,proto3" json:"asset"`
-	Recipient  string                                                        `protobuf:"bytes,4,opt,name=recipient,proto3" json:"recipient,omitempty"`
+	ID         github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID `protobuf:"varint,1,opt,name=id,proto3,casttype=github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID" json:"id,omitempty"`
+	Receipient string                                                           `protobuf:"bytes,2,opt,name=receipient,proto3" json:"receipient,omitempty"` // Deprecated: Do not use.
+	Asset      types.Coin                                                       `protobuf:"bytes,3,opt,name=asset,proto3" json:"asset"`
+	Recipient  string                                                           `protobuf:"bytes,4,opt,name=recipient,proto3" json:"recipient,omitempty"`
 }
 
 func (m *ScalarTransferCompleted) Reset()         { *m = ScalarTransferCompleted{} }
@@ -404,7 +404,7 @@ func (m *ScalarTransferCompleted) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_ScalarTransferCompleted proto.InternalMessageInfo
 
-func (m *ScalarTransferCompleted) GetID() github_com_scalarorg_scalar_core_x_common_exported.TransferID {
+func (m *ScalarTransferCompleted) GetID() github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID {
 	if m != nil {
 		return m.ID
 	}
@@ -494,13 +494,13 @@ func (*FeeCollected) XXX_MessageName() string {
 }
 
 type FeePaid struct {
-	MessageID        string                                                       `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
-	Recipient        github_com_cosmos_cosmos_sdk_types.AccAddress                `protobuf:"bytes,2,opt,name=recipient,proto3,casttype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"recipient,omitempty"`
-	Fee              types.Coin                                                   `protobuf:"bytes,3,opt,name=fee,proto3" json:"fee"`
-	RefundRecipient  string                                                       `protobuf:"bytes,4,opt,name=refund_recipient,json=refundRecipient,proto3" json:"refund_recipient,omitempty"`
-	Asset            string                                                       `protobuf:"bytes,5,opt,name=asset,proto3" json:"asset,omitempty"`
-	SourceChain      github_com_scalarorg_scalar_core_x_common_exported.ChainName `protobuf:"bytes,6,opt,name=source_chain,json=sourceChain,proto3,casttype=github.com/scalarorg/scalar-core/x/common/exported.ChainName" json:"source_chain,omitempty"`
-	DestinationChain github_com_scalarorg_scalar_core_x_common_exported.ChainName `protobuf:"bytes,7,opt,name=destination_chain,json=destinationChain,proto3,casttype=github.com/scalarorg/scalar-core/x/common/exported.ChainName" json:"destination_chain,omitempty"`
+	MessageID        string                                                          `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	Recipient        github_com_cosmos_cosmos_sdk_types.AccAddress                   `protobuf:"bytes,2,opt,name=recipient,proto3,casttype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"recipient,omitempty"`
+	Fee              types.Coin                                                      `protobuf:"bytes,3,opt,name=fee,proto3" json:"fee"`
+	RefundRecipient  string                                                          `protobuf:"bytes,4,opt,name=refund_recipient,json=refundRecipient,proto3" json:"refund_recipient,omitempty"`
+	Asset            string                                                          `protobuf:"bytes,5,opt,name=asset,proto3" json:"asset,omitempty"`
+	SourceChain      github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName `protobuf:"bytes,6,opt,name=source_chain,json=sourceChain,proto3,casttype=github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" json:"source_chain,omitempty"`
+	DestinationChain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName `protobuf:"bytes,7,opt,name=destination_chain,json=destinationChain,proto3,casttype=github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" json:"destination_chain,omitempty"`
 }
 
 func (m *FeePaid) Reset()         { *m = FeePaid{} }
@@ -571,14 +571,14 @@ func (m *FeePaid) GetAsset() string {
 	return ""
 }
 
-func (m *FeePaid) GetSourceChain() github_com_scalarorg_scalar_core_x_common_exported.ChainName {
+func (m *FeePaid) GetSourceChain() github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName {
 	if m != nil {
 		return m.SourceChain
 	}
 	return ""
 }
 
-func (m *FeePaid) GetDestinationChain() github_com_scalarorg_scalar_core_x_common_exported.ChainName {
+func (m *FeePaid) GetDestinationChain() github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName {
 	if m != nil {
 		return m.DestinationChain
 	}
@@ -590,13 +590,13 @@ func (*FeePaid) XXX_MessageName() string {
 }
 
 type ContractCallSubmitted struct {
-	MessageID        string                                                       `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
-	Sender           string                                                       `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
-	SourceChain      github_com_scalarorg_scalar_core_x_common_exported.ChainName `protobuf:"bytes,3,opt,name=source_chain,json=sourceChain,proto3,casttype=github.com/scalarorg/scalar-core/x/common/exported.ChainName" json:"source_chain,omitempty"`
-	DestinationChain github_com_scalarorg_scalar_core_x_common_exported.ChainName `protobuf:"bytes,4,opt,name=destination_chain,json=destinationChain,proto3,casttype=github.com/scalarorg/scalar-core/x/common/exported.ChainName" json:"destination_chain,omitempty"`
-	ContractAddress  string                                                       `protobuf:"bytes,5,opt,name=contract_address,json=contractAddress,proto3" json:"contract_address,omitempty"`
-	Payload          []byte                                                       `protobuf:"bytes,6,opt,name=payload,proto3" json:"payload,omitempty"`
-	PayloadHash      []byte                                                       `protobuf:"bytes,7,opt,name=payload_hash,json=payloadHash,proto3" json:"payload_hash,omitempty"`
+	MessageID        string                                                          `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	Sender           string                                                          `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
+	SourceChain      github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName `protobuf:"bytes,3,opt,name=source_chain,json=sourceChain,proto3,casttype=github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" json:"source_chain,omitempty"`
+	DestinationChain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName `protobuf:"bytes,4,opt,name=destination_chain,json=destinationChain,proto3,casttype=github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" json:"destination_chain,omitempty"`
+	ContractAddress  string                                                          `protobuf:"bytes,5,opt,name=contract_address,json=contractAddress,proto3" json:"contract_address,omitempty"`
+	Payload          []byte                                                          `protobuf:"bytes,6,opt,name=payload,proto3" json:"payload,omitempty"`
+	PayloadHash      []byte                                                          `protobuf:"bytes,7,opt,name=payload_hash,json=payloadHash,proto3" json:"payload_hash,omitempty"`
 }
 
 func (m *ContractCallSubmitted) Reset()         { *m = ContractCallSubmitted{} }
@@ -646,14 +646,14 @@ func (m *ContractCallSubmitted) GetSender() string {
 	return ""
 }
 
-func (m *ContractCallSubmitted) GetSourceChain() github_com_scalarorg_scalar_core_x_common_exported.ChainName {
+func (m *ContractCallSubmitted) GetSourceChain() github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName {
 	if m != nil {
 		return m.SourceChain
 	}
 	return ""
 }
 
-func (m *ContractCallSubmitted) GetDestinationChain() github_com_scalarorg_scalar_core_x_common_exported.ChainName {
+func (m *ContractCallSubmitted) GetDestinationChain() github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName {
 	if m != nil {
 		return m.DestinationChain
 	}
@@ -686,14 +686,14 @@ func (*ContractCallSubmitted) XXX_MessageName() string {
 }
 
 type ContractCallWithTokenSubmitted struct {
-	MessageID        string                                                       `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
-	Sender           string                                                       `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
-	SourceChain      github_com_scalarorg_scalar_core_x_common_exported.ChainName `protobuf:"bytes,3,opt,name=source_chain,json=sourceChain,proto3,casttype=github.com/scalarorg/scalar-core/x/common/exported.ChainName" json:"source_chain,omitempty"`
-	DestinationChain github_com_scalarorg_scalar_core_x_common_exported.ChainName `protobuf:"bytes,4,opt,name=destination_chain,json=destinationChain,proto3,casttype=github.com/scalarorg/scalar-core/x/common/exported.ChainName" json:"destination_chain,omitempty"`
-	ContractAddress  string                                                       `protobuf:"bytes,5,opt,name=contract_address,json=contractAddress,proto3" json:"contract_address,omitempty"`
-	Payload          []byte                                                       `protobuf:"bytes,6,opt,name=payload,proto3" json:"payload,omitempty"`
-	PayloadHash      []byte                                                       `protobuf:"bytes,7,opt,name=payload_hash,json=payloadHash,proto3" json:"payload_hash,omitempty"`
-	Asset            types.Coin                                                   `protobuf:"bytes,8,opt,name=asset,proto3" json:"asset"`
+	MessageID        string                                                          `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	Sender           string                                                          `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
+	SourceChain      github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName `protobuf:"bytes,3,opt,name=source_chain,json=sourceChain,proto3,casttype=github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" json:"source_chain,omitempty"`
+	DestinationChain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName `protobuf:"bytes,4,opt,name=destination_chain,json=destinationChain,proto3,casttype=github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" json:"destination_chain,omitempty"`
+	ContractAddress  string                                                          `protobuf:"bytes,5,opt,name=contract_address,json=contractAddress,proto3" json:"contract_address,omitempty"`
+	Payload          []byte                                                          `protobuf:"bytes,6,opt,name=payload,proto3" json:"payload,omitempty"`
+	PayloadHash      []byte                                                          `protobuf:"bytes,7,opt,name=payload_hash,json=payloadHash,proto3" json:"payload_hash,omitempty"`
+	Asset            types.Coin                                                      `protobuf:"bytes,8,opt,name=asset,proto3" json:"asset"`
 }
 
 func (m *ContractCallWithTokenSubmitted) Reset()         { *m = ContractCallWithTokenSubmitted{} }
@@ -743,14 +743,14 @@ func (m *ContractCallWithTokenSubmitted) GetSender() string {
 	return ""
 }
 
-func (m *ContractCallWithTokenSubmitted) GetSourceChain() github_com_scalarorg_scalar_core_x_common_exported.ChainName {
+func (m *ContractCallWithTokenSubmitted) GetSourceChain() github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName {
 	if m != nil {
 		return m.SourceChain
 	}
 	return ""
 }
 
-func (m *ContractCallWithTokenSubmitted) GetDestinationChain() github_com_scalarorg_scalar_core_x_common_exported.ChainName {
+func (m *ContractCallWithTokenSubmitted) GetDestinationChain() github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName {
 	if m != nil {
 		return m.DestinationChain
 	}
@@ -790,12 +790,12 @@ func (*ContractCallWithTokenSubmitted) XXX_MessageName() string {
 }
 
 type TokenSent struct {
-	TransferID         github_com_scalarorg_scalar_core_x_common_exported.TransferID `protobuf:"varint,1,opt,name=transfer_id,json=transferId,proto3,casttype=github.com/scalarorg/scalar-core/x/common/exported.TransferID" json:"transfer_id,omitempty"`
-	Sender             string                                                        `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
-	SourceChain        github_com_scalarorg_scalar_core_x_common_exported.ChainName  `protobuf:"bytes,3,opt,name=source_chain,json=sourceChain,proto3,casttype=github.com/scalarorg/scalar-core/x/common/exported.ChainName" json:"source_chain,omitempty"`
-	DestinationChain   github_com_scalarorg_scalar_core_x_common_exported.ChainName  `protobuf:"bytes,4,opt,name=destination_chain,json=destinationChain,proto3,casttype=github.com/scalarorg/scalar-core/x/common/exported.ChainName" json:"destination_chain,omitempty"`
-	DestinationAddress string                                                        `protobuf:"bytes,5,opt,name=destination_address,json=destinationAddress,proto3" json:"destination_address,omitempty"`
-	Asset              types.Coin                                                    `protobuf:"bytes,6,opt,name=asset,proto3" json:"asset"`
+	TransferID         github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID `protobuf:"varint,1,opt,name=transfer_id,json=transferId,proto3,casttype=github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID" json:"transfer_id,omitempty"`
+	Sender             string                                                           `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
+	SourceChain        github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName  `protobuf:"bytes,3,opt,name=source_chain,json=sourceChain,proto3,casttype=github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" json:"source_chain,omitempty"`
+	DestinationChain   github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName  `protobuf:"bytes,4,opt,name=destination_chain,json=destinationChain,proto3,casttype=github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" json:"destination_chain,omitempty"`
+	DestinationAddress string                                                           `protobuf:"bytes,5,opt,name=destination_address,json=destinationAddress,proto3" json:"destination_address,omitempty"`
+	Asset              types.Coin                                                       `protobuf:"bytes,6,opt,name=asset,proto3" json:"asset"`
 }
 
 func (m *TokenSent) Reset()         { *m = TokenSent{} }
@@ -831,7 +831,7 @@ func (m *TokenSent) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_TokenSent proto.InternalMessageInfo
 
-func (m *TokenSent) GetTransferID() github_com_scalarorg_scalar_core_x_common_exported.TransferID {
+func (m *TokenSent) GetTransferID() github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID {
 	if m != nil {
 		return m.TransferID
 	}
@@ -845,14 +845,14 @@ func (m *TokenSent) GetSender() string {
 	return ""
 }
 
-func (m *TokenSent) GetSourceChain() github_com_scalarorg_scalar_core_x_common_exported.ChainName {
+func (m *TokenSent) GetSourceChain() github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName {
 	if m != nil {
 		return m.SourceChain
 	}
 	return ""
 }
 
-func (m *TokenSent) GetDestinationChain() github_com_scalarorg_scalar_core_x_common_exported.ChainName {
+func (m *TokenSent) GetDestinationChain() github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName {
 	if m != nil {
 		return m.DestinationChain
 	}
@@ -894,60 +894,61 @@ func init() {
 }
 
 var fileDescriptor_16b7f000d6e0c70f = []byte{
-	// 838 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x57, 0x41, 0x6f, 0xe3, 0x44,
-	0x14, 0xae, 0xed, 0x6c, 0xb2, 0x79, 0x0d, 0xea, 0xae, 0x29, 0x10, 0x2a, 0xe4, 0x94, 0x20, 0xa4,
-	0x22, 0x51, 0x5b, 0x5d, 0xc4, 0x0d, 0x24, 0x36, 0xa9, 0x0a, 0x3e, 0xc0, 0x56, 0xee, 0x4a, 0x2b,
-	0x71, 0x89, 0x26, 0xe3, 0xd7, 0xc4, 0x5a, 0x7b, 0x26, 0xcc, 0x4c, 0x56, 0xbb, 0xff, 0x02, 0x71,
-	0xe3, 0x1f, 0xf5, 0x58, 0x90, 0x90, 0x40, 0x48, 0x16, 0x4a, 0x8f, 0xfc, 0x83, 0x9e, 0x90, 0x3d,
-	0xe3, 0xc4, 0xbb, 0x08, 0xd4, 0x2e, 0x64, 0x85, 0xd8, 0x3d, 0x79, 0xe6, 0xcd, 0xa7, 0x37, 0xef,
-	0x7b, 0xdf, 0x37, 0x33, 0x32, 0xbc, 0x2f, 0x29, 0x49, 0x89, 0x08, 0xf4, 0x87, 0xa1, 0x0a, 0x1e,
-	0x1d, 0x8c, 0x51, 0x91, 0x83, 0x00, 0x1f, 0x21, 0x53, 0xd2, 0x9f, 0x09, 0xae, 0xb8, 0xdb, 0xd5,
-	0xeb, 0xfe, 0x12, 0xe6, 0x1b, 0xd8, 0xce, 0xf6, 0x84, 0x4f, 0x78, 0x09, 0x0a, 0x8a, 0x91, 0xc6,
-	0xef, 0x78, 0x94, 0xcb, 0x8c, 0xcb, 0x60, 0x4c, 0x24, 0x2e, 0x33, 0x52, 0x9e, 0x30, 0xbd, 0xde,
-	0xff, 0xd1, 0x86, 0xad, 0x70, 0x30, 0xbc, 0x2f, 0x08, 0x93, 0xa7, 0x28, 0x4e, 0x90, 0x29, 0xf7,
-	0x01, 0xd8, 0x49, 0xdc, 0xb5, 0x76, 0xad, 0xbd, 0xc6, 0xe0, 0xf3, 0x45, 0xde, 0xb3, 0xc3, 0xc3,
-	0xcb, 0xbc, 0xf7, 0xe9, 0x24, 0x51, 0xd3, 0xf9, 0xd8, 0xa7, 0x3c, 0x33, 0x45, 0x72, 0x31, 0x31,
-	0xa3, 0x7d, 0xca, 0x05, 0x06, 0x8f, 0x03, 0xca, 0xb3, 0x8c, 0xb3, 0x00, 0x1f, 0xcf, 0xb8, 0x50,
-	0x18, 0xfb, 0x55, 0xda, 0xf0, 0x30, 0xb2, 0x93, 0xd8, 0xed, 0x03, 0x08, 0xa4, 0x98, 0xcc, 0x12,
-	0x64, 0xaa, 0x6b, 0xef, 0x5a, 0x7b, 0xed, 0x81, 0xdd, 0xb5, 0xa2, 0x5a, 0xd4, 0xfd, 0x18, 0x6e,
-	0x10, 0x29, 0x51, 0x75, 0x9d, 0x5d, 0x6b, 0x6f, 0xf3, 0xce, 0xdb, 0xbe, 0x26, 0xe0, 0x17, 0x04,
-	0x2a, 0xae, 0xfe, 0x90, 0x27, 0x6c, 0xd0, 0x38, 0xcb, 0x7b, 0x1b, 0x91, 0x46, 0xbb, 0x3b, 0x70,
-	0x53, 0xe2, 0x37, 0x73, 0x64, 0x14, 0xbb, 0x8d, 0xa2, 0xf2, 0x68, 0x39, 0x77, 0xdf, 0x83, 0x56,
-	0x51, 0xcf, 0x28, 0x89, 0xbb, 0x37, 0xca, 0x3d, 0x61, 0x91, 0xf7, 0x9a, 0xc7, 0x5c, 0xa8, 0xf0,
-	0x30, 0x6a, 0x16, 0x4b, 0x61, 0xec, 0x7e, 0x08, 0x40, 0xa7, 0x84, 0x31, 0x4c, 0x0b, 0x5c, 0xb3,
-	0xc4, 0xbd, 0xb6, 0xc8, 0x7b, 0xed, 0xa1, 0x8e, 0x86, 0x87, 0x51, 0xdb, 0x00, 0xc2, 0xd8, 0x7d,
-	0x07, 0xda, 0x02, 0xa9, 0x21, 0xd2, 0x2a, 0xc0, 0xd1, 0x2a, 0xd0, 0xcf, 0x2d, 0xd8, 0xae, 0x35,
-	0x75, 0xc8, 0xb3, 0x59, 0x8a, 0x0a, 0xe3, 0xf5, 0x75, 0xb6, 0x4e, 0xdf, 0xfe, 0x6b, 0xfa, 0xce,
-	0x15, 0xe9, 0x37, 0xfe, 0x9e, 0x7e, 0xff, 0x57, 0x0b, 0x6e, 0xd7, 0x08, 0x1e, 0x91, 0x24, 0xfd,
-	0x1f, 0xb1, 0xfb, 0xc9, 0x06, 0xb7, 0xc6, 0x2e, 0x42, 0x25, 0x92, 0x75, 0xd2, 0x7b, 0x59, 0x8e,
-	0xc5, 0xef, 0x16, 0xbc, 0x75, 0x52, 0x36, 0xe6, 0x05, 0x9e, 0x8c, 0x35, 0x36, 0xf7, 0x29, 0xb6,
-	0x8d, 0x67, 0xd9, 0x7e, 0x67, 0x41, 0xe7, 0x08, 0x71, 0xc8, 0xd3, 0x14, 0x69, 0x41, 0xf1, 0x1e,
-	0xb4, 0xa9, 0x9e, 0x70, 0x51, 0x32, 0xed, 0x0c, 0x0e, 0x2e, 0xf3, 0xde, 0x7e, 0x8d, 0xa3, 0xb9,
-	0xac, 0xf5, 0x67, 0x5f, 0xc6, 0x0f, 0x03, 0xf5, 0x64, 0x86, 0xd2, 0xbf, 0x4b, 0xe9, 0xdd, 0x38,
-	0x16, 0x28, 0x65, 0xb4, 0xca, 0xe1, 0x1e, 0x80, 0x73, 0x8a, 0xfa, 0x44, 0x5c, 0xa1, 0xe8, 0x02,
-	0xdb, 0x3f, 0x77, 0xa0, 0x75, 0x84, 0x78, 0x4c, 0x92, 0x52, 0xda, 0x0c, 0xa5, 0x24, 0x13, 0x1c,
-	0x99, 0xd6, 0x1b, 0x69, 0xbf, 0xd4, 0xd1, 0x42, 0x5a, 0x03, 0x08, 0xcb, 0xea, 0x57, 0x64, 0xed,
-	0xe7, 0xae, 0x7e, 0x99, 0xa3, 0xaa, 0xde, 0xb9, 0x7a, 0xf5, 0xee, 0x07, 0x70, 0x4b, 0xe0, 0xe9,
-	0x9c, 0xc5, 0xa3, 0x67, 0xfb, 0xbe, 0xa5, 0xe3, 0xd1, 0x32, 0xfb, 0x76, 0x25, 0x69, 0x69, 0xed,
-	0x4a, 0x31, 0x0a, 0x1d, 0xc9, 0xe7, 0x82, 0xe2, 0x88, 0x4e, 0x49, 0xc2, 0x8c, 0x9f, 0x3f, 0xbb,
-	0xcc, 0x7b, 0x9f, 0x3c, 0x87, 0xd3, 0x86, 0x45, 0x8e, 0xaf, 0x48, 0x86, 0xd1, 0xa6, 0xce, 0x5a,
-	0x06, 0xdc, 0x0c, 0x6e, 0xc7, 0x28, 0x55, 0xc2, 0x88, 0x4a, 0x38, 0x33, 0x3b, 0xb5, 0xfe, 0xa5,
-	0x9d, 0x6e, 0xd5, 0x52, 0x97, 0xd1, 0xfe, 0xf7, 0x0e, 0xbc, 0x31, 0xe4, 0x4c, 0x09, 0x42, 0xd5,
-	0x90, 0xa4, 0xe9, 0xc9, 0x7c, 0x9c, 0x25, 0xaa, 0x30, 0xdc, 0xf5, 0x04, 0x7e, 0x13, 0x9a, 0x12,
-	0x59, 0x8c, 0x42, 0x1f, 0x92, 0xc8, 0xcc, 0xfe, 0xd4, 0x33, 0xe7, 0x85, 0xf5, 0xac, 0xb1, 0xae,
-	0x9e, 0x15, 0x46, 0xa2, 0xa6, 0x65, 0x23, 0xa2, 0xad, 0x69, 0x8c, 0xb2, 0x55, 0xc5, 0x8d, 0x63,
-	0xdd, 0x2e, 0xb4, 0x66, 0xe4, 0x49, 0xca, 0x89, 0xbe, 0xfd, 0x3a, 0x51, 0x35, 0x75, 0xdf, 0x85,
-	0x8e, 0x19, 0x8e, 0xa6, 0x44, 0x4e, 0x4b, 0x89, 0x3b, 0xd1, 0xa6, 0x89, 0x7d, 0x41, 0xe4, 0xb4,
-	0xff, 0x8b, 0x03, 0x5e, 0x5d, 0x9b, 0x07, 0x89, 0x9a, 0xde, 0xe7, 0x0f, 0x91, 0xbd, 0x12, 0xe9,
-	0x3f, 0x23, 0xd2, 0xea, 0xf6, 0xbf, 0x79, 0x9d, 0xdb, 0xbf, 0xff, 0x83, 0x03, 0x6d, 0xad, 0x65,
-	0x71, 0xdf, 0xcc, 0x60, 0x53, 0x99, 0x87, 0x67, 0xb4, 0x7c, 0xc8, 0xee, 0x2d, 0xf2, 0x1e, 0xac,
-	0xde, 0xa3, 0x7f, 0xfe, 0xa0, 0x41, 0xb5, 0xc7, 0x4b, 0x66, 0x85, 0x00, 0x5e, 0xaf, 0x6f, 0xf7,
-	0xb4, 0x1b, 0xdc, 0xda, 0x52, 0x65, 0x88, 0xa5, 0xa6, 0xcd, 0xeb, 0x68, 0x3a, 0x38, 0x3e, 0x5b,
-	0x78, 0xd6, 0xf9, 0xc2, 0xb3, 0x7e, 0x5b, 0x78, 0xd6, 0xb7, 0x17, 0xde, 0xc6, 0xd9, 0x85, 0x67,
-	0x9d, 0x5f, 0x78, 0x1b, 0x3f, 0x5f, 0x78, 0x1b, 0x5f, 0xdf, 0xb9, 0x02, 0xab, 0xd5, 0xef, 0x5b,
-	0xf9, 0xf6, 0x8d, 0x9b, 0xe5, 0x6f, 0xd6, 0x47, 0x7f, 0x04, 0x00, 0x00, 0xff, 0xff, 0x1a, 0xe2,
-	0x8f, 0x52, 0xdf, 0x0d, 0x00, 0x00,
+	// 849 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x57, 0x51, 0x6f, 0xe3, 0x44,
+	0x10, 0xae, 0xed, 0x5c, 0x72, 0x99, 0x06, 0xf5, 0xce, 0x14, 0x08, 0x15, 0x72, 0x4a, 0x10, 0x52,
+	0x91, 0xa8, 0xad, 0x1e, 0xe2, 0x19, 0x2e, 0xae, 0x2a, 0x8c, 0x04, 0x54, 0xee, 0x49, 0x48, 0xf7,
+	0x12, 0x6d, 0xd6, 0xd3, 0xc4, 0xaa, 0xb3, 0x1b, 0x76, 0x37, 0x47, 0xef, 0x5f, 0x20, 0xfe, 0x00,
+	0x7f, 0xa7, 0x8f, 0xf7, 0x02, 0x3a, 0xf1, 0x60, 0x20, 0x7d, 0xe7, 0x07, 0xf4, 0x09, 0xd9, 0xbb,
+	0x4e, 0x7c, 0x87, 0x40, 0xed, 0xe9, 0x7a, 0x42, 0xf4, 0x9e, 0xec, 0x9d, 0x1d, 0xcd, 0xcc, 0xf7,
+	0x7d, 0xb3, 0x3b, 0x5a, 0xf8, 0x50, 0x52, 0x92, 0x11, 0x11, 0xe8, 0x0f, 0x43, 0x15, 0x3c, 0xda,
+	0x1b, 0xa1, 0x22, 0x7b, 0x01, 0x3e, 0x42, 0xa6, 0xa4, 0x3f, 0x13, 0x5c, 0x71, 0xb7, 0xab, 0xf7,
+	0xfd, 0xa5, 0x9b, 0x6f, 0xdc, 0xb6, 0x36, 0xc7, 0x7c, 0xcc, 0x4b, 0xa7, 0xa0, 0xf8, 0xd3, 0xfe,
+	0x5b, 0x1e, 0xe5, 0x72, 0xca, 0x65, 0x30, 0x22, 0x12, 0x97, 0x11, 0x29, 0x4f, 0x99, 0xde, 0xef,
+	0xff, 0x6c, 0xc3, 0x46, 0x34, 0x08, 0x1f, 0x08, 0xc2, 0xe4, 0x31, 0x8a, 0x23, 0x64, 0xca, 0x7d,
+	0x08, 0x76, 0x9a, 0x74, 0xad, 0x6d, 0x6b, 0xa7, 0x31, 0xf8, 0x72, 0x91, 0xf7, 0xec, 0x68, 0xff,
+	0x22, 0xef, 0x7d, 0x3e, 0x4e, 0xd5, 0x64, 0x3e, 0xf2, 0x29, 0x9f, 0x06, 0xe4, 0x14, 0x75, 0xf6,
+	0xef, 0xb9, 0x38, 0x31, 0xab, 0x5d, 0xca, 0x05, 0x06, 0xa7, 0x01, 0xc3, 0xd3, 0xb9, 0x0c, 0xf0,
+	0x74, 0xc6, 0x85, 0xc2, 0xc4, 0xaf, 0x22, 0x47, 0xfb, 0xb1, 0x9d, 0x26, 0x6e, 0x1f, 0x40, 0x20,
+	0xc5, 0x74, 0x96, 0x22, 0x53, 0x5d, 0x7b, 0xdb, 0xda, 0x69, 0x0f, 0xec, 0xae, 0x15, 0xd7, 0xac,
+	0xee, 0xa7, 0x70, 0x8b, 0x48, 0x89, 0xaa, 0xeb, 0x6c, 0x5b, 0x3b, 0xeb, 0xf7, 0xde, 0xf5, 0x35,
+	0x06, 0xbf, 0xc0, 0x50, 0xc1, 0xf5, 0x43, 0x9e, 0xb2, 0x41, 0xe3, 0x2c, 0xef, 0xad, 0xc5, 0xda,
+	0xdb, 0xdd, 0x82, 0xdb, 0x12, 0xbf, 0x9b, 0x23, 0xa3, 0xd8, 0x6d, 0x14, 0xc5, 0xc7, 0xcb, 0xb5,
+	0xfb, 0x01, 0xb4, 0x8a, 0x7a, 0x86, 0x69, 0xd2, 0xbd, 0x55, 0xe6, 0x84, 0x45, 0xde, 0x6b, 0x1e,
+	0x72, 0xa1, 0xa2, 0xfd, 0xb8, 0x59, 0x6c, 0x45, 0x89, 0xfb, 0x31, 0x00, 0x9d, 0x10, 0xc6, 0x30,
+	0x2b, 0xfc, 0x9a, 0xa5, 0xdf, 0x1b, 0x8b, 0xbc, 0xd7, 0x0e, 0xb5, 0x35, 0xda, 0x8f, 0xdb, 0xc6,
+	0x21, 0x4a, 0xdc, 0xf7, 0xa0, 0x2d, 0x90, 0x1a, 0x20, 0xad, 0xc2, 0x39, 0x5e, 0x19, 0xfa, 0x7f,
+	0x58, 0xb0, 0x59, 0xe3, 0x35, 0xe4, 0xd3, 0x59, 0x86, 0x0a, 0x93, 0x6b, 0x25, 0xb7, 0xce, 0x80,
+	0xfd, 0xcf, 0x0c, 0x38, 0x97, 0x64, 0xa0, 0xf1, 0xef, 0x0c, 0xf4, 0x73, 0x0b, 0xee, 0xd6, 0x30,
+	0x1e, 0x90, 0x34, 0xfb, 0x7f, 0x01, 0x7c, 0x6a, 0x83, 0x5b, 0x03, 0x18, 0xa3, 0x12, 0xe9, 0x35,
+	0x23, 0xbc, 0x29, 0xe7, 0xe3, 0x4f, 0x0b, 0xde, 0x39, 0x2a, 0xef, 0xb0, 0x57, 0x7b, 0x44, 0xae,
+	0x91, 0xdf, 0x67, 0x00, 0x37, 0x9e, 0x07, 0xfc, 0xa3, 0x05, 0x9d, 0x03, 0xc4, 0x90, 0x67, 0x19,
+	0xd2, 0x02, 0xe5, 0x37, 0xd0, 0xa6, 0x7a, 0xc1, 0x45, 0x09, 0xb6, 0x33, 0xd8, 0xbb, 0xc8, 0x7b,
+	0xbb, 0x35, 0x98, 0xe6, 0xee, 0xd6, 0x9f, 0x5d, 0x99, 0x9c, 0x04, 0xea, 0xf1, 0x0c, 0xa5, 0x7f,
+	0x9f, 0xd2, 0xfb, 0x49, 0x22, 0x50, 0xca, 0x78, 0x15, 0xc3, 0xdd, 0x03, 0xe7, 0x18, 0xf5, 0xb9,
+	0xb8, 0x44, 0xd1, 0x85, 0x6f, 0xff, 0x17, 0x07, 0x5a, 0x07, 0x88, 0x87, 0x24, 0x2d, 0xd5, 0x9d,
+	0xa2, 0x94, 0x64, 0x8c, 0x43, 0xc3, 0xbe, 0x51, 0xf7, 0x2b, 0x6d, 0x2d, 0xd4, 0x35, 0x0e, 0x51,
+	0x59, 0xfd, 0x0a, 0xac, 0xfd, 0xc2, 0xd5, 0x2f, 0x63, 0x54, 0xd5, 0x3b, 0x97, 0xaf, 0xde, 0xfd,
+	0x08, 0xee, 0x08, 0x3c, 0x9e, 0xb3, 0x64, 0xf8, 0x3c, 0xef, 0x1b, 0xda, 0x1e, 0x2f, 0xa3, 0x6f,
+	0x56, 0x92, 0x96, 0xdd, 0x5d, 0x29, 0x76, 0x0c, 0x1d, 0xc9, 0xe7, 0x82, 0xe2, 0x90, 0x4e, 0x48,
+	0xca, 0x4c, 0x4b, 0x87, 0x17, 0x79, 0xef, 0xb3, 0x17, 0x6b, 0xb6, 0xb0, 0x08, 0xf3, 0x35, 0x99,
+	0x62, 0xbc, 0xae, 0x03, 0x97, 0x06, 0x77, 0x06, 0x77, 0x13, 0x94, 0x2a, 0x65, 0x44, 0xa5, 0x9c,
+	0x99, 0x64, 0xad, 0x97, 0x97, 0xec, 0x4e, 0x2d, 0x7a, 0x69, 0xed, 0xff, 0xe4, 0xc0, 0x5b, 0x21,
+	0x67, 0x4a, 0x10, 0xaa, 0x42, 0x92, 0x65, 0x47, 0xf3, 0xd1, 0x34, 0x55, 0x45, 0xdb, 0x5d, 0x4d,
+	0xe6, 0xb7, 0xa1, 0x29, 0x91, 0x25, 0x28, 0xf4, 0x51, 0x89, 0xcd, 0xea, 0x6f, 0xcc, 0x39, 0xaf,
+	0x92, 0xb9, 0xc6, 0x35, 0x32, 0x57, 0x34, 0x15, 0x35, 0xc4, 0x0d, 0x89, 0x6e, 0x53, 0xd3, 0x34,
+	0x1b, 0x95, 0xdd, 0x74, 0xaf, 0xdb, 0x85, 0xd6, 0x8c, 0x3c, 0xce, 0x38, 0xd1, 0x97, 0x61, 0x27,
+	0xae, 0x96, 0xee, 0xfb, 0xd0, 0x31, 0xbf, 0xc3, 0x09, 0x91, 0x93, 0x52, 0xeb, 0x4e, 0xbc, 0x6e,
+	0x6c, 0x5f, 0x10, 0x39, 0xe9, 0xff, 0xe6, 0x80, 0x57, 0x57, 0xe8, 0xdb, 0x54, 0x4d, 0x1e, 0xf0,
+	0x13, 0x64, 0xaf, 0xa5, 0xfa, 0x8f, 0x49, 0xb5, 0x9a, 0x07, 0xb7, 0xaf, 0x32, 0x0f, 0xfa, 0xbf,
+	0x3a, 0xd0, 0xd6, 0x8a, 0x16, 0x37, 0x90, 0x84, 0x75, 0x65, 0x46, 0xd1, 0x70, 0x39, 0xdd, 0xe2,
+	0x45, 0xde, 0x83, 0xd5, 0x84, 0x7a, 0x29, 0x53, 0x0e, 0xaa, 0x34, 0x37, 0xb2, 0x27, 0x02, 0x78,
+	0xb3, 0x9e, 0xf1, 0xd9, 0xb6, 0x70, 0x6b, 0x5b, 0x55, 0x67, 0x2c, 0xc5, 0x6d, 0x5e, 0x45, 0xdc,
+	0xc1, 0xe1, 0xd9, 0xc2, 0xb3, 0x9e, 0x2c, 0x3c, 0xeb, 0xf7, 0x85, 0x67, 0xfd, 0x70, 0xee, 0xad,
+	0x9d, 0x9d, 0x7b, 0xd6, 0x93, 0x73, 0x6f, 0xed, 0xe9, 0xb9, 0xb7, 0xf6, 0xf0, 0x5e, 0x0d, 0x98,
+	0x7e, 0xa9, 0x71, 0x31, 0x36, 0x7f, 0x15, 0xa8, 0xd5, 0x43, 0xaf, 0x1c, 0x8b, 0xa3, 0x66, 0xf9,
+	0x20, 0xfb, 0xe4, 0xaf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x17, 0xc1, 0x6c, 0x4a, 0x09, 0x0e, 0x00,
+	0x00,
 }
 
 func (m *IBCTransferSent) Marshal() (dAtA []byte, err error) {
@@ -1923,7 +1924,7 @@ func (m *IBCTransferSent) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ID |= github_com_scalarorg_scalar_core_x_common_exported.TransferID(b&0x7F) << shift
+				m.ID |= github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -2172,7 +2173,7 @@ func (m *IBCTransferCompleted) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ID |= github_com_scalarorg_scalar_core_x_common_exported.TransferID(b&0x7F) << shift
+				m.ID |= github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -2324,7 +2325,7 @@ func (m *IBCTransferFailed) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ID |= github_com_scalarorg_scalar_core_x_common_exported.TransferID(b&0x7F) << shift
+				m.ID |= github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -2476,7 +2477,7 @@ func (m *IBCTransferRetried) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ID |= github_com_scalarorg_scalar_core_x_common_exported.TransferID(b&0x7F) << shift
+				m.ID |= github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -2725,7 +2726,7 @@ func (m *ScalarTransferCompleted) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ID |= github_com_scalarorg_scalar_core_x_common_exported.TransferID(b&0x7F) << shift
+				m.ID |= github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -3187,7 +3188,7 @@ func (m *FeePaid) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.SourceChain = github_com_scalarorg_scalar_core_x_common_exported.ChainName(dAtA[iNdEx:postIndex])
+			m.SourceChain = github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 7:
 			if wireType != 2 {
@@ -3219,7 +3220,7 @@ func (m *FeePaid) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.DestinationChain = github_com_scalarorg_scalar_core_x_common_exported.ChainName(dAtA[iNdEx:postIndex])
+			m.DestinationChain = github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -3365,7 +3366,7 @@ func (m *ContractCallSubmitted) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.SourceChain = github_com_scalarorg_scalar_core_x_common_exported.ChainName(dAtA[iNdEx:postIndex])
+			m.SourceChain = github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -3397,7 +3398,7 @@ func (m *ContractCallSubmitted) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.DestinationChain = github_com_scalarorg_scalar_core_x_common_exported.ChainName(dAtA[iNdEx:postIndex])
+			m.DestinationChain = github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -3643,7 +3644,7 @@ func (m *ContractCallWithTokenSubmitted) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.SourceChain = github_com_scalarorg_scalar_core_x_common_exported.ChainName(dAtA[iNdEx:postIndex])
+			m.SourceChain = github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -3675,7 +3676,7 @@ func (m *ContractCallWithTokenSubmitted) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.DestinationChain = github_com_scalarorg_scalar_core_x_common_exported.ChainName(dAtA[iNdEx:postIndex])
+			m.DestinationChain = github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -3874,7 +3875,7 @@ func (m *TokenSent) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.TransferID |= github_com_scalarorg_scalar_core_x_common_exported.TransferID(b&0x7F) << shift
+				m.TransferID |= github_com_axelarnetwork_axelar_core_x_nexus_exported.TransferID(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -3941,7 +3942,7 @@ func (m *TokenSent) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.SourceChain = github_com_scalarorg_scalar_core_x_common_exported.ChainName(dAtA[iNdEx:postIndex])
+			m.SourceChain = github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -3973,7 +3974,7 @@ func (m *TokenSent) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.DestinationChain = github_com_scalarorg_scalar_core_x_common_exported.ChainName(dAtA[iNdEx:postIndex])
+			m.DestinationChain = github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {

@@ -17,7 +17,7 @@ message PollFailed {
   ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
@@ -34,7 +34,7 @@ message PollExpired {
   ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
@@ -51,7 +51,7 @@ message PollCompleted {
   ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
@@ -68,7 +68,7 @@ message NoEventsConfirmed {
   ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
@@ -80,7 +80,7 @@ message NoEventsConfirmed {
 message ConfirmKeyTransferStarted {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   bytes tx_id = 2 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "Hash",
@@ -103,7 +103,7 @@ message ConfirmGatewayTxStarted {
   ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   bytes gateway_address = 3
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
   uint64 confirmation_height = 4;
@@ -132,7 +132,7 @@ message ConfirmGatewayTxsStarted {
   ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   bytes gateway_address = 3
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
   uint64 confirmation_height = 4;
@@ -149,7 +149,7 @@ message ConfirmDepositStarted {
   ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   bytes deposit_address = 3
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
   bytes token_address = 4
@@ -168,7 +168,7 @@ message ConfirmTokenStarted {
   ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   bytes gateway_address = 3
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
   bytes token_address = 4
@@ -182,27 +182,27 @@ message ConfirmTokenStarted {
 message ChainAdded {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
 }
 
 message CommandBatchSigned {
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   bytes command_batch_id = 3 [ (gogoproto.customname) = "CommandBatchID" ];
 }
 
 message CommandBatchAborted {
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   bytes command_batch_id = 3 [ (gogoproto.customname) = "CommandBatchID" ];
 }
 
 message EVMEventConfirmed {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string event_id = 2
       [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
   string type = 3;
@@ -211,7 +211,7 @@ message EVMEventConfirmed {
 message EVMEventCompleted {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string event_id = 2
       [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
   string type = 3;
@@ -220,7 +220,7 @@ message EVMEventCompleted {
 message EVMEventFailed {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string event_id = 2
       [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
   string type = 3;
@@ -229,7 +229,7 @@ message EVMEventFailed {
 message EVMEventRetryFailed {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string event_id = 2
       [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
   string type = 3;
@@ -238,7 +238,7 @@ message EVMEventRetryFailed {
 message ContractCallApproved {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string event_id = 2
       [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
   bytes command_id = 3 [
@@ -249,7 +249,7 @@ message ContractCallApproved {
   string sender = 4;
   string destination_chain = 5
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string contract_address = 6;
   bytes payload_hash = 7
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
@@ -258,14 +258,14 @@ message ContractCallApproved {
 message ContractCallFailed {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string msg_id = 2 [ (gogoproto.customname) = "MessageID" ];
 }
 
 message ContractCallWithMintApproved {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string event_id = 2
       [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
   bytes command_id = 3 [
@@ -276,7 +276,7 @@ message ContractCallWithMintApproved {
   string sender = 4;
   string destination_chain = 5
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string contract_address = 6;
   bytes payload_hash = 7
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
@@ -286,18 +286,18 @@ message ContractCallWithMintApproved {
 message TokenSent {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string event_id = 2
       [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
   uint64 transfer_id = 3 [
     (gogoproto.customname) = "TransferID",
     (gogoproto.casttype) =
-        "github.com/scalarorg/scalar-core/x/common/exported.TransferID"
+        "github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID"
   ];
   string sender = 4;
   string destination_chain = 5
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string destination_address = 6;
   cosmos.base.v1beta1.Coin asset = 7 [ (gogoproto.nullable) = false ];
 }
@@ -305,11 +305,11 @@ message TokenSent {
 message MintCommand {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   uint64 transfer_id = 2 [
     (gogoproto.customname) = "TransferID",
     (gogoproto.casttype) =
-        "github.com/scalarorg/scalar-core/x/common/exported.TransferID"
+        "github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID"
   ];
   bytes command_id = 3 [
     (gogoproto.nullable) = false,
@@ -318,7 +318,7 @@ message MintCommand {
   ];
   string destination_chain = 4
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string destination_address = 5;
   cosmos.base.v1beta1.Coin asset = 6 [ (gogoproto.nullable) = false ];
 }
@@ -326,7 +326,7 @@ message MintCommand {
 message BurnCommand {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   bytes command_id = 2 [
     (gogoproto.nullable) = false,
     (gogoproto.customname) = "CommandID",
@@ -334,7 +334,7 @@ message BurnCommand {
   ];
   string destination_chain = 3
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string deposit_address = 4;
   string asset = 5;
 }

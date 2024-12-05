@@ -15,10 +15,10 @@ import (
 	"golang.org/x/exp/maps"
 
 	"github.com/axelarnetwork/axelar-core/x/ante"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	nexusKeeper "github.com/axelarnetwork/axelar-core/x/nexus/keeper"
 	nexustypes "github.com/axelarnetwork/axelar-core/x/nexus/types"
 	"github.com/axelarnetwork/utils/funcs"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
 )
 
 //go:generate moq -pkg mock -out ./mock/ibchooks.go . PacketI
@@ -152,7 +152,7 @@ func (m WasmAppModuleBasicOverride) DefaultGenesis(cdc codec.JSONCodec) json.Raw
 
 // QueryRequest is the custom queries wasm contracts can make for the core modules
 type QueryRequest struct {
-	Nexus *common.WasmQueryRequest
+	Nexus *nexus.WasmQueryRequest
 }
 
 // NewQueryPlugins returns a new instance of the custom query plugins
@@ -167,7 +167,7 @@ func NewQueryPlugins(nexus nexustypes.Nexus) *wasmkeeper.QueryPlugins {
 			}
 
 			if req.Nexus != nil {
-				return nexusWasmQuerier.Query(ctx, req.Nexus.ToNexus())
+				return nexusWasmQuerier.Query(ctx, *req.Nexus)
 			}
 
 			return nil, wasmvmtypes.UnsupportedRequest{Kind: "unknown Custom query request"}

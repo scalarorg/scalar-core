@@ -20,7 +20,7 @@ message MaintainerState {
       [ (gogoproto.nullable) = false ];
   string chain = 4
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
 }
 
 // ChainState represents the state of a registered blockchain
@@ -47,7 +47,7 @@ message LinkedAddresses {
 message RateLimit {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   cosmos.base.v1beta1.Coin limit = 2 [ (gogoproto.nullable) = false ];
   google.protobuf.Duration window = 3
       [ (gogoproto.stdduration) = true, (gogoproto.nullable) = false ];
@@ -56,7 +56,7 @@ message RateLimit {
 message TransferEpoch {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   cosmos.base.v1beta1.Coin amount = 2 [ (gogoproto.nullable) = false ];
   uint64 epoch = 3;
   axelar.nexus.exported.v1beta1.TransferDirection direction =

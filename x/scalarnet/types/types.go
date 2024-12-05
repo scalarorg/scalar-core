@@ -16,7 +16,7 @@ import (
 
 	"github.com/axelarnetwork/axelar-core/utils"
 	evmtypes "github.com/axelarnetwork/axelar-core/x/evm/types"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
@@ -34,7 +34,7 @@ const (
 const ZERO_X_PREFIX = "0x"
 
 // NewLinkedAddress creates a new address to make a deposit which can be transferred to another blockchain
-func NewLinkedAddress(ctx sdk.Context, chain common.ChainName, symbol, recipientAddr string) sdk.AccAddress {
+func NewLinkedAddress(ctx sdk.Context, chain nexus.ChainName, symbol, recipientAddr string) sdk.AccAddress {
 	nonce := utils.GetNonce(ctx.HeaderHash(), ctx.BlockGasMeter())
 	hash := sha256.Sum256([]byte(fmt.Sprintf("%s_%s_%s_%x", chain, symbol, recipientAddr, nonce)))
 	return hash[:address.Len]
@@ -127,7 +127,7 @@ func (m CosmosChain) ValidateBasic() error {
 }
 
 // NewIBCTransfer creates a new pending IBC transfer
-func NewIBCTransfer(sender sdk.AccAddress, receiver string, token sdk.Coin, portID string, channelID string, id common.TransferID) IBCTransfer {
+func NewIBCTransfer(sender sdk.AccAddress, receiver string, token sdk.Coin, portID string, channelID string, id nexus.TransferID) IBCTransfer {
 	return IBCTransfer{
 		Sender:    sender,
 		Receiver:  receiver,
@@ -250,8 +250,8 @@ const (
 )
 
 var (
-	// AxelarIBCAccount account is the canonical general message and IBC transfer sender
-	AxelarIBCAccount = common.GetEscrowAddress(fmt.Sprintf("%s_%s", ModuleName, "gmp"))
+	// ScalarIBCAccount account is the canonical general message and IBC transfer sender
+	ScalarIBCAccount = nexus.GetEscrowAddress(fmt.Sprintf("%s_%s", ModuleName, "gmp"))
 )
 
 // ValidateBasic returns an error if the given Fee is invalid; nil otherwise
@@ -279,7 +279,7 @@ type CallContractProposalMinDeposits []CallContractProposalMinDeposit
 type callContractProposalMinDepositsMap map[string]map[string]sdk.Coins
 
 // Get returns the minimum deposit for the given chain and contract address
-func (m callContractProposalMinDepositsMap) Get(chain common.ChainName, contractAddress string) sdk.Coins {
+func (m callContractProposalMinDepositsMap) Get(chain nexus.ChainName, contractAddress string) sdk.Coins {
 	c := strings.ToLower(chain.String())
 	address := strings.ToLower(contractAddress)
 
@@ -327,7 +327,7 @@ func (minDeposits CallContractProposalMinDeposits) ToMap(ctx sdk.Context, nexus 
 		// show up here and be prefixed with 0x. Like the address validator, we should
 		// also implement chain-specific address deserializer so that we just use the
 		// actual bytes as map keys for this check instead of a string representation.
-		if chain, ok := nexus.GetChain(ctx, minDeposit.Chain.ToNexus()); !ok || !chain.IsFrom(evmtypes.ModuleName) {
+		if chain, ok := nexus.GetChain(ctx, minDeposit.Chain); !ok || !chain.IsFrom(evmtypes.ModuleName) {
 			continue
 		}
 		if strings.HasPrefix(contractAddress, ZERO_X_PREFIX) {
