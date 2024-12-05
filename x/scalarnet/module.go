@@ -24,8 +24,8 @@ import (
 	"github.com/axelarnetwork/axelar-core/utils"
 	"github.com/axelarnetwork/axelar-core/utils/events"
 	"github.com/axelarnetwork/axelar-core/utils/grpc"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/axelarnetwork/utils/funcs"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/client/cli"
 	"github.com/scalarorg/scalar-core/x/scalarnet/client/rest"
 	"github.com/scalarorg/scalar-core/x/scalarnet/keeper"
@@ -260,7 +260,7 @@ func (m AxelarnetIBCModule) OnAcknowledgementPacket(
 	default:
 		// AckError causes a refund of the token (i.e unlock from the escrow address/mint of token depending on whether it's native to chain).
 		// Hence, it's rate limited on the from direction (tokens coming from the source chain).
-		if err := m.rateLimiter.RateLimitPacket(ctx, packet, common.TransferDirectionFrom, types.NewIBCPath(port, channel)); err != nil {
+		if err := m.rateLimiter.RateLimitPacket(ctx, packet, nexus.TransferDirectionFrom, types.NewIBCPath(port, channel)); err != nil {
 			return err
 		}
 
@@ -285,7 +285,7 @@ func (m AxelarnetIBCModule) OnTimeoutPacket(
 
 	// Timeout causes a refund of the token (i.e unlock from the escrow address/mint of token depending on whether it's native to chain).
 	// Hence, it's rate limited on the from direction (tokens coming from source chain).
-	if err := m.rateLimiter.RateLimitPacket(ctx, packet, common.TransferDirectionFrom, types.NewIBCPath(port, channel)); err != nil {
+	if err := m.rateLimiter.RateLimitPacket(ctx, packet, nexus.TransferDirectionFrom, types.NewIBCPath(port, channel)); err != nil {
 		return err
 	}
 
@@ -293,7 +293,7 @@ func (m AxelarnetIBCModule) OnTimeoutPacket(
 }
 
 // returns the transfer id and delete the existing mapping
-func getSeqIDMapping(ctx sdk.Context, k keeper.Keeper, portID, channelID string, seq uint64) (common.TransferID, bool) {
+func getSeqIDMapping(ctx sdk.Context, k keeper.Keeper, portID, channelID string, seq uint64) (nexus.TransferID, bool) {
 	defer k.DeleteSeqIDMapping(ctx, portID, channelID, seq)
 
 	return k.GetSeqIDMapping(ctx, portID, channelID, seq)
@@ -354,7 +354,7 @@ func (m AxelarnetIBCModule) setRoutedPacketFailed(ctx sdk.Context, packet channe
 			return err
 		}
 
-		err = lockableAsset.LockFrom(ctx, types.AxelarIBCAccount)
+		err = lockableAsset.LockFrom(ctx, types.ScalarIBCAccount)
 		if err != nil {
 			return err
 		}
@@ -369,7 +369,7 @@ func (m AxelarnetIBCModule) setRoutedPacketFailed(ctx sdk.Context, packet channe
 		m.keeper.Logger(ctx).Info(fmt.Sprintf("IBC transfer %d failed", transferID),
 			"transferID", transferID, "portID", port, "channelID", channel, "sequence", sequence)
 
-		return m.keeper.SetTransferFailed(ctx, transferID.ToNexus())
+		return m.keeper.SetTransferFailed(ctx, transferID)
 	}
 
 	// check if the packet is Axelar routed general message
@@ -380,7 +380,7 @@ func (m AxelarnetIBCModule) setRoutedPacketFailed(ctx sdk.Context, packet channe
 			return err
 		}
 
-		err = lockableAsset.LockFrom(ctx, types.AxelarIBCAccount)
+		err = lockableAsset.LockFrom(ctx, types.ScalarIBCAccount)
 		if err != nil {
 			return err
 		}
@@ -413,7 +413,7 @@ func refundFromAssetEscrowAddressToIBCAccount(ctx sdk.Context, packet channeltyp
 	data := funcs.Must(types.ToICS20Packet(packet))
 
 	originalSender := funcs.Must(sdk.AccAddressFromBech32(data.Sender))
-	if originalSender.Equals(types.AxelarIBCAccount) {
+	if originalSender.Equals(types.ScalarIBCAccount) {
 		return nil
 	}
 
@@ -421,5 +421,5 @@ func refundFromAssetEscrowAddressToIBCAccount(ctx sdk.Context, packet channeltyp
 	transferAmount := funcs.MustOk(sdk.NewIntFromString(data.Amount))
 
 	token := sdk.NewCoin(denom, transferAmount)
-	return bank.SendCoins(ctx, originalSender, types.AxelarIBCAccount, sdk.NewCoins(token))
+	return bank.SendCoins(ctx, originalSender, types.ScalarIBCAccount, sdk.NewCoins(token))
 }

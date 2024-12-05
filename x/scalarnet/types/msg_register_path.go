@@ -5,14 +5,14 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 )
 
 // NewRegisterIBCPathRequest creates a message of type RegisterIBCPathRequest
 func NewRegisterIBCPathRequest(sender sdk.AccAddress, chain, path string) *RegisterIBCPathRequest {
 	return &RegisterIBCPathRequest{
 		Sender: sender,
-		Chain:  common.ChainName(utils.NormalizeString(chain)),
+		Chain:  nexus.ChainName(utils.NormalizeString(chain)),
 		Path:   utils.NormalizeString(path),
 	}
 }

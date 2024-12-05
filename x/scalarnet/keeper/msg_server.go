@@ -16,7 +16,6 @@ import (
 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
 	"github.com/axelarnetwork/utils/funcs"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
 )
@@ -43,12 +42,12 @@ func NewMsgServerImpl(k Keeper, n types.Nexus, b types.BankKeeper, ibcK IBCKeepe
 func (s msgServer) CallContract(c context.Context, req *types.CallContractRequest) (*types.CallContractResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	chain, ok := s.nexus.GetChain(ctx, req.Chain.ToNexus())
+	chain, ok := s.nexus.GetChain(ctx, req.Chain)
 	if !ok {
 		return nil, fmt.Errorf("%s is not a registered chain", req.Chain)
 	}
 
-	if !s.nexus.IsChainActivated(ctx, exported.Scalarnet.ToNexus()) {
+	if !s.nexus.IsChainActivated(ctx, exported.Scalarnet) {
 		return nil, fmt.Errorf("chain %s is not activated yet", exported.Scalarnet.Name)
 	}
 
@@ -61,13 +60,13 @@ func (s msgServer) CallContract(c context.Context, req *types.CallContractReques
 		return nil, err
 	}
 
-	sender := common.CrossChainAddress{Chain: exported.Scalarnet, Address: req.Sender.String()}
+	sender := nexus.CrossChainAddress{Chain: exported.Scalarnet, Address: req.Sender.String()}
 
 	// axelar gateway expects keccak256 hashes for payloads
 	payloadHash := crypto.Keccak256(req.Payload)
 
 	msgID, txID, nonce := s.nexus.GenerateMessageID(ctx)
-	msg := common.NewGeneralMessage(msgID, sender, common.CrossChainAddressFromNexus(recipient), payloadHash, txID, nonce, nil)
+	msg := nexus.NewGeneralMessage(msgID, sender, recipient, payloadHash, txID, nonce, nil)
 
 	events.Emit(ctx, &types.ContractCallSubmitted{
 		MessageID:        msg.ID,
@@ -104,7 +103,7 @@ func (s msgServer) CallContract(c context.Context, req *types.CallContractReques
 		events.Emit(ctx, &feePaidEvent)
 	}
 
-	if err := s.nexus.SetNewMessage(ctx, msg.ToNexus()); err != nil {
+	if err := s.nexus.SetNewMessage(ctx, msg); err != nil {
 		return nil, sdkerrors.Wrap(err, "failed to add general message")
 	}
 
@@ -123,7 +122,7 @@ func (s msgServer) CallContract(c context.Context, req *types.CallContractReques
 func (s msgServer) Link(c context.Context, req *types.LinkRequest) (*types.LinkResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	recipientChain, ok := s.nexus.GetChain(ctx, req.RecipientChain.ToNexus())
+	recipientChain, ok := s.nexus.GetChain(ctx, req.RecipientChain)
 	if !ok {
 		return nil, fmt.Errorf("unknown recipient chain")
 	}
@@ -134,9 +133,9 @@ func (s msgServer) Link(c context.Context, req *types.LinkRequest) (*types.LinkR
 	}
 
 	recipient := nexus.CrossChainAddress{Chain: recipientChain, Address: req.RecipientAddr}
-	depositAddress := types.NewLinkedAddress(ctx, common.ChainNameFromNexus(recipientChain.Name), req.Asset, req.RecipientAddr)
+	depositAddress := types.NewLinkedAddress(ctx, recipientChain.Name, req.Asset, req.RecipientAddr)
 	if err := s.nexus.LinkAddresses(ctx,
-		nexus.CrossChainAddress{Chain: exported.Scalarnet.ToNexus(), Address: depositAddress.String()},
+		nexus.CrossChainAddress{Chain: exported.Scalarnet, Address: depositAddress.String()},
 		recipient,
 	); err != nil {
 		return nil, fmt.Errorf("could not link addresses: %s", err.Error())
@@ -169,18 +168,18 @@ func (s msgServer) Link(c context.Context, req *types.LinkRequest) (*types.LinkR
 func (s msgServer) ConfirmDeposit(c context.Context, req *types.ConfirmDepositRequest) (*types.ConfirmDepositResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	depositAddr := common.CrossChainAddress{Address: req.DepositAddress.String(), Chain: exported.Scalarnet}
+	depositAddr := nexus.CrossChainAddress{Address: req.DepositAddress.String(), Chain: exported.Scalarnet}
 	coin := s.bank.SpendableBalance(ctx, req.DepositAddress, req.Denom)
 	if coin.IsZero() {
 		return nil, fmt.Errorf("deposit address '%s' holds no funds for token %s", req.DepositAddress.String(), req.Denom)
 	}
 
-	recipient, ok := s.nexus.GetRecipient(ctx, depositAddr.ToNexus())
+	recipient, ok := s.nexus.GetRecipient(ctx, depositAddr)
 	if !ok {
 		return nil, fmt.Errorf("no recipient linked to deposit address %s", req.DepositAddress.String())
 	}
 
-	if !s.nexus.IsChainActivated(ctx, exported.Scalarnet.ToNexus()) {
+	if !s.nexus.IsChainActivated(ctx, exported.Scalarnet) {
 		return nil, fmt.Errorf("source chain '%s'  is not activated", exported.Scalarnet.Name)
 	}
 
@@ -197,7 +196,7 @@ func (s msgServer) ConfirmDeposit(c context.Context, req *types.ConfirmDepositRe
 		return nil, err
 	}
 
-	transferID, err := s.nexus.EnqueueForTransfer(ctx, depositAddr.ToNexus(), lockableAsset.GetAsset())
+	transferID, err := s.nexus.EnqueueForTransfer(ctx, depositAddr, lockableAsset.GetAsset())
 	if err != nil {
 		return nil, err
 	}
@@ -245,7 +244,7 @@ func (s msgServer) ExecutePendingTransfers(c context.Context, _ *types.ExecutePe
 		CountTotal: false,
 		Reverse:    false,
 	}
-	pendingTransfers, _, err := s.nexus.GetTransfersForChainPaginated(ctx, chain, common.Pending.ToNexus(), pageRequest)
+	pendingTransfers, _, err := s.nexus.GetTransfersForChainPaginated(ctx, chain, nexus.Pending, pageRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -272,7 +271,7 @@ func (s msgServer) ExecutePendingTransfers(c context.Context, _ *types.ExecutePe
 			s.nexus.ArchivePendingTransfer(ctx, pendingTransfer)
 			events.Emit(ctx,
 				&types.ScalarTransferCompleted{
-					ID:         common.TransferIDFromNexus(pendingTransfer.ID),
+					ID:         pendingTransfer.ID,
 					Receipient: pendingTransfer.Recipient.Address,
 					Asset:      pendingTransfer.Asset,
 					Recipient:  pendingTransfer.Recipient.Address,
@@ -311,7 +310,7 @@ func (s msgServer) ExecutePendingTransfers(c context.Context, _ *types.ExecutePe
 func (s msgServer) AddCosmosBasedChain(c context.Context, req *types.AddCosmosBasedChainRequest) (*types.AddCosmosBasedChainResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	if _, found := s.nexus.GetChain(ctx, req.CosmosChain.ToNexus()); found {
+	if _, found := s.nexus.GetChain(ctx, req.CosmosChain); found {
 		return nil, fmt.Errorf("chain '%s' is already registered", req.CosmosChain)
 	}
 
@@ -319,17 +318,17 @@ func (s msgServer) AddCosmosBasedChain(c context.Context, req *types.AddCosmosBa
 		return nil, fmt.Errorf("ibc path %s is already registered for chain %s", req.IBCPath, chain)
 	}
 
-	chain := common.Chain{
+	chain := nexus.Chain{
 		Name:                  req.CosmosChain,
 		KeyType:               tss.None,
 		SupportsForeignAssets: true,
 		Module:                types.ModuleName,
 	}
-	s.nexus.SetChain(ctx, chain.ToNexus())
+	s.nexus.SetChain(ctx, chain)
 
 	// register asset in chain state
 	for _, asset := range req.NativeAssets {
-		if err := s.nexus.RegisterAsset(ctx, chain.ToNexus(), asset.ToNexus(), utils.MaxUint, types.DefaultRateLimitWindow); err != nil {
+		if err := s.nexus.RegisterAsset(ctx, chain, asset, utils.MaxUint, types.DefaultRateLimitWindow); err != nil {
 			return nil, err
 		}
 	}
@@ -353,17 +352,17 @@ func (s msgServer) AddCosmosBasedChain(c context.Context, req *types.AddCosmosBa
 func (s msgServer) RegisterAsset(c context.Context, req *types.RegisterAssetRequest) (*types.RegisterAssetResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	chain, found := s.nexus.GetChain(ctx, req.Chain.ToNexus())
+	chain, found := s.nexus.GetChain(ctx, req.Chain)
 	if !found {
 		return nil, fmt.Errorf("chain '%s' not found", req.Chain)
 	}
 
-	if _, found := s.GetCosmosChainByName(ctx, req.Chain.ToNexus()); !found {
+	if _, found := s.GetCosmosChainByName(ctx, req.Chain); !found {
 		return nil, fmt.Errorf("chain '%s' is not a cosmos chain", req.Chain)
 	}
 
 	// register asset in chain state
-	err := s.nexus.RegisterAsset(ctx, chain, req.Asset.ToNexus(), req.Limit, req.Window)
+	err := s.nexus.RegisterAsset(ctx, chain, req.Asset, req.Limit, req.Window)
 	if err != nil {
 		return nil, err
 	}
@@ -382,7 +381,7 @@ func (s msgServer) RouteIBCTransfers(c context.Context, _ *types.RouteIBCTransfe
 			continue
 		}
 
-		if chain.Name.Equals(exported.Scalarnet.Name.ToNexus()) {
+		if chain.Name.Equals(exported.Scalarnet.Name) {
 			continue
 		}
 
@@ -408,7 +407,7 @@ func (s msgServer) RouteIBCTransfers(c context.Context, _ *types.RouteIBCTransfe
 			CountTotal: false,
 			Reverse:    false,
 		}
-		pendingTransfers, _, err := s.nexus.GetTransfersForChainPaginated(ctx, chain, common.Pending.ToNexus(), pageRequest)
+		pendingTransfers, _, err := s.nexus.GetTransfersForChainPaginated(ctx, chain, nexus.Pending, pageRequest)
 		if err != nil {
 			return nil, err
 		}
@@ -419,12 +418,12 @@ func (s msgServer) RouteIBCTransfers(c context.Context, _ *types.RouteIBCTransfe
 				continue
 			}
 
-			if err := lockableAsset.UnlockTo(ctx, types.AxelarIBCAccount); err != nil {
+			if err := lockableAsset.UnlockTo(ctx, types.ScalarIBCAccount); err != nil {
 				s.Logger(ctx).Error(fmt.Sprintf("failed to route IBC transfer %s: %s", p.String(), err))
 				continue
 			}
 
-			funcs.MustNoErr(s.EnqueueIBCTransfer(ctx, types.NewIBCTransfer(types.AxelarIBCAccount, p.Recipient.Address, lockableAsset.GetCoin(ctx), portID, channelID, common.TransferIDFromNexus(p.ID))))
+			funcs.MustNoErr(s.EnqueueIBCTransfer(ctx, types.NewIBCTransfer(types.ScalarIBCAccount, p.Recipient.Address, lockableAsset.GetCoin(ctx), portID, channelID, p.ID)))
 			s.nexus.ArchivePendingTransfer(ctx, p)
 		}
 	}
@@ -476,7 +475,7 @@ func (s msgServer) RetryIBCTransfer(c context.Context, req *types.RetryIBCTransf
 		return nil, err
 	}
 
-	err = lockableAsset.UnlockTo(ctx, types.AxelarIBCAccount)
+	err = lockableAsset.UnlockTo(ctx, types.ScalarIBCAccount)
 	if err != nil {
 		return nil, err
 	}
@@ -486,7 +485,7 @@ func (s msgServer) RetryIBCTransfer(c context.Context, req *types.RetryIBCTransf
 	//
 	// This is a temporary measure to prevent pending transfers that would fail during the upgrade process.
 	// It can be removed if no such cases exists during upgrade, or the migration can be re-run to update senders in version 1.2.
-	t.Sender = types.AxelarIBCAccount
+	t.Sender = types.ScalarIBCAccount
 
 	err = s.ibcK.SendIBCTransfer(ctx, t)
 	if err != nil {
@@ -513,12 +512,12 @@ func (s msgServer) RetryIBCTransfer(c context.Context, req *types.RetryIBCTransf
 func (s msgServer) RouteMessage(c context.Context, req *types.RouteMessageRequest) (*types.RouteMessageResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	routingCtx := common.RoutingContext{
+	routingCtx := nexus.RoutingContext{
 		Sender:     req.Sender,
 		FeeGranter: req.Feegranter,
 		Payload:    req.Payload,
 	}
-	if err := s.nexus.RouteMessage(ctx, req.ID, routingCtx.ToNexus()); err != nil {
+	if err := s.nexus.RouteMessage(ctx, req.ID, routingCtx); err != nil {
 		return nil, err
 	}
 

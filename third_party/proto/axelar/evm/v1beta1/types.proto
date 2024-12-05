@@ -14,7 +14,7 @@ option (gogoproto.goproto_getters_all) = false;
 message VoteEvents {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   repeated Event events = 2 [ (gogoproto.nullable) = false ];
 }
 
@@ -34,7 +34,7 @@ message Event {
 
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   bytes tx_id = 2 [
     (gogoproto.customname) = "TxID",
     (gogoproto.nullable) = false,
@@ -63,7 +63,7 @@ message EventTokenSent {
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
   string destination_chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string destination_address = 3;
   string symbol = 4;
   bytes amount = 5 [
@@ -77,7 +77,7 @@ message EventContractCall {
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
   string destination_chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string contract_address = 3;
   bytes payload_hash = 4
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
@@ -88,7 +88,7 @@ message EventContractCallWithToken {
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
   string destination_chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string contract_address = 3;
   bytes payload_hash = 4
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
@@ -164,7 +164,7 @@ message BurnerInfo {
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
   string destination_chain = 3
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string symbol = 4;
   string asset = 5;
   bytes salt = 6
@@ -185,7 +185,7 @@ message ERC20Deposit {
   string asset = 3;
   string destination_chain = 4
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   bytes burner_address = 5
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
   uint64 log_index = 6;
@@ -299,7 +299,7 @@ message SigMetadata {
   SigType type = 1;
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   bytes command_batch_id = 3 [ (gogoproto.customname) = "CommandBatchID" ];
 }
 
@@ -342,7 +342,7 @@ enum DepositStatus {
 message Asset {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string name = 2;
 }
 
@@ -366,7 +366,7 @@ message Gateway {
 message PollMetadata {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   bytes tx_id = 2 [
     (gogoproto.customname) = "TxID",
     (gogoproto.nullable) = false,

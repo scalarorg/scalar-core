@@ -66,7 +66,7 @@ BIN_PATH=./bin/${BIN_NAME}
 # Build the project with release flags
 .PHONY: build
 build: go.sum
-	go build -o ${BIN_PATH} -mod=readonly $(BUILD_FLAGS) ./cmd/${BIN_NAME}
+	@go build -o ${BIN_PATH} -mod=readonly $(BUILD_FLAGS) ./cmd/${BIN_NAME}
 
 .PHONY: run
 run:
@@ -84,10 +84,15 @@ dev-init:
 dev:
 	@HOME_DIR=$(PWD) ./scripts/entrypoint.debug.sh
 
+.PHONY: dbg
+dbg: build
+	make dev
+
+
 # Build a release image
 .PHONY: docker-image
 docker-image:
-	@DOCKER_BUILDKIT=1 docker build \
+	@docker build \
 		--build-arg WASM="${WASM}" \
 		--build-arg WASMVM_VERSION="${WASMVM_VERSION}" \
 		--build-arg IBC_WASM_HOOKS="${IBC_WASM_HOOKS}" \
@@ -95,16 +100,21 @@ docker-image:
 		-t scalarorg/scalar-core .
 
 docker-run:
-	@docker run -it scalarorg/scalar-core 
+	@DOCKER_BUILDKIT=1 docker run -it scalarorg/scalar-core 
 
 proto-all: proto-update-deps proto-format proto-lint proto-gen
 
+PROTO_GEN_IMAGE := scalar/proto-gen
+
 proto-gen:
 	@echo "Generating Protobuf files"
-	@DOCKER_BUILDKIT=1 docker build -t scalar/proto-gen -f ./Dockerfile.protocgen .
-	@$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace scalar/proto-gen sh ./scripts/protocgen.sh
+	@if ! docker images $(PROTO_GEN_IMAGE) | grep -q $(PROTO_GEN_IMAGE); then \
+		DOCKER_BUILDKIT=1 docker build -t $(PROTO_GEN_IMAGE) -f ./Dockerfile.protocgen .; \
+	fi
+
+	@$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(PROTO_GEN_IMAGE) sh ./scripts/protocgen.sh
 	@echo "Generating Protobuf Swagger endpoint"
-	@$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace scalar/proto-gen sh ./scripts/protoc-swagger-gen.sh
+	@$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(PROTO_GEN_IMAGE) sh ./scripts/protoc-swagger-gen.sh
 	@statik -src=./client/docs/static -dest=./client/docs -f -m
 
 proto-format:
@@ -124,7 +134,10 @@ proto-update-deps:
 	@echo "Updating Protobuf deps"
 	@$(DOCKER_BUF) mod update
 
-.PHONY: proto-all proto-gen proto-gen-any proto-format proto-lint proto-check-breaking proto-update-deps
+proto-clean:
+	find x -type f \( -name "*.pb.go" -o -name "*.pb.gw.go" \) -delete
+
+.PHONY: proto-all proto-gen proto-gen-any proto-format proto-lint proto-check-breaking proto-update-deps proto-clean
 
 
 # Install all generate prerequisites
@@ -142,3 +155,32 @@ prereqs:
 	go install github.com/matryer/moq@latest
 	go install github.com/rakyll/statik@latest
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
+
+
+###############################
+######## 	Commands	#######
+##############################
+
+SCALAR_KEYRING_BACKEND=test
+SCALAR_DIR=./.scalar
+SCALAR_CHAIN_ID=demo
+SCALAR_FROM=alice
+
+.PHONY: cfgwtx
+cfgwtx:
+	@if [ -z "$(ARGS)" ]; then \
+		echo "ARGS is required"; \
+		exit 1; \
+	fi
+	@$(BIN_PATH) tx btc confirm-gateway-txs $(ARGS) --from $(SCALAR_FROM) --keyring-backend $(SCALAR_KEYRING_BACKEND) --home $(SCALAR_DIR) --chain-id $(SCALAR_CHAIN_ID)
+
+.PHONY: docs
+docs:
+	open client/docs/static/openapi/index.html
+
+.PHONY: mnemonic
+mnemonic:
+	$(eval user := $(filter-out $@,$(MAKECMDGOALS)))
+	$(BIN_PATH) keys export $(user) --keyring-backend $(SCALAR_KEYRING_BACKEND) --unsafe --unarmored-hex --home $(SCALAR_DIR)
+
+

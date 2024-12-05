@@ -12,7 +12,7 @@ import (
 
 	"github.com/axelarnetwork/axelar-core/utils"
 	clientUtils "github.com/axelarnetwork/axelar-core/utils"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
 )
 
@@ -56,11 +56,11 @@ type ReqRegisterIBCPath struct {
 
 // ReqAddCosmosBasedChain represents a request to add a cosmos based chain to nexus
 type ReqAddCosmosBasedChain struct {
-	BaseReq      rest.BaseReq   `json:"base_req" yaml:"base_req"`
-	Name         string         `json:"name" yaml:"name"`
-	AddrPrefix   string         `json:"addr_prefix" yaml:"addr_prefix"`
-	NativeAssets []common.Asset `json:"native_assets" yaml:"native_assets"`
-	IBCPath      string         `json:"ibc_path" yaml:"ibc_path"`
+	BaseReq      rest.BaseReq  `json:"base_req" yaml:"base_req"`
+	Name         string        `json:"name" yaml:"name"`
+	AddrPrefix   string        `json:"addr_prefix" yaml:"addr_prefix"`
+	NativeAssets []nexus.Asset `json:"native_assets" yaml:"native_assets"`
+	IBCPath      string        `json:"ibc_path" yaml:"ibc_path"`
 }
 
 // ReqRegisterAsset represents a request to register an asset to a cosmos based chain
@@ -244,7 +244,7 @@ func TxHandlerRegisterAsset(cliCtx client.Context) http.HandlerFunc {
 			}
 		}
 
-		msg := types.NewRegisterAssetRequest(fromAddr, req.Chain, common.NewAsset(req.Denom, req.IsNativeAsset), limit, window)
+		msg := types.NewRegisterAssetRequest(fromAddr, req.Chain, nexus.NewAsset(req.Denom, req.IsNativeAsset), limit, window)
 		if err := msg.ValidateBasic(); err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return

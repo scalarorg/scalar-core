@@ -127,10 +127,14 @@ import (
 	voteKeeper "github.com/axelarnetwork/axelar-core/x/vote/keeper"
 	voteTypes "github.com/axelarnetwork/axelar-core/x/vote/types"
 	appParams "github.com/scalarorg/scalar-core/app/params"
+	"github.com/scalarorg/scalar-core/x/btc"
 	"github.com/scalarorg/scalar-core/x/scalarnet"
 	scalarnetclient "github.com/scalarorg/scalar-core/x/scalarnet/client"
 	scalarnetKeeper "github.com/scalarorg/scalar-core/x/scalarnet/keeper"
 	scalarnetTypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
+
+	btcKeeper "github.com/scalarorg/scalar-core/x/btc/keeper"
+	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 
 	// Override with generated statik docs
 	_ "github.com/axelarnetwork/axelar-core/client/docs/statik"
@@ -240,6 +244,7 @@ func NewScalarApp(
 	// set up custom axelar keepers
 	SetKeeper(keepers, initscalarnetKeeper(appCodec, keys, keepers))
 	SetKeeper(keepers, initEvmKeeper(appCodec, keys, keepers))
+	SetKeeper(keepers, initBtcKeeper(appCodec, keys, keepers))
 	SetKeeper(keepers, initNexusKeeper(appCodec, keys, keepers))
 	SetKeeper(keepers, initRewardKeeper(appCodec, keys, keepers))
 	SetKeeper(keepers, initMultisigKeeper(appCodec, keys, keepers))
@@ -369,7 +374,7 @@ func NewScalarApp(
 	// we need to ensure that all chain subspaces are loaded at start-up to prevent unexpected consensus failures
 	// when the params keeper is used outside the evm module's context
 	GetKeeper[evmKeeper.BaseKeeper](keepers).InitChains(app.NewContext(true, tmproto.Header{}))
-
+	GetKeeper[btcKeeper.BaseKeeper](keepers).InitChains(app.NewContext(true, tmproto.Header{}))
 	return app
 }
 
@@ -439,6 +444,7 @@ func initIBCRouter(keepers *KeeperCache, scalarnetModule porttypes.IBCModule) *p
 func initMessageRouter(keepers *KeeperCache) nexusTypes.MessageRouter {
 	messageRouter := nexusTypes.NewMessageRouter().
 		AddRoute(evmTypes.ModuleName, evmKeeper.NewMessageRoute()).
+		AddRoute(btcTypes.ModuleName, btcKeeper.NewMessageRoute()).
 		AddRoute(scalarnetTypes.ModuleName, scalarnetKeeper.NewMessageRoute(
 			GetKeeper[scalarnetKeeper.IBCKeeper](keepers),
 			GetKeeper[feegrantkeeper.Keeper](keepers),
@@ -605,6 +611,9 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 			GetKeeper[slashingkeeper.Keeper](keepers),
 			GetKeeper[multisigKeeper.Keeper](keepers),
 		),
+		btc.NewAppModule(
+			GetKeeper[btcKeeper.BaseKeeper](keepers),
+		),
 		axelarnetModule,
 		reward.NewAppModule(
 			*GetKeeper[rewardKeeper.Keeper](keepers),
@@ -760,6 +769,7 @@ func orderMigrations() []string {
 		rewardTypes.ModuleName,
 		voteTypes.ModuleName,
 		evmTypes.ModuleName,
+		btcTypes.ModuleName,
 		nexusTypes.ModuleName,
 		permissionTypes.ModuleName,
 		snapTypes.ModuleName,
@@ -812,6 +822,7 @@ func orderBeginBlockers() []string {
 		multisigTypes.ModuleName,
 		tssTypes.ModuleName,
 		evmTypes.ModuleName,
+		btcTypes.ModuleName,
 		snapTypes.ModuleName,
 		scalarnetTypes.ModuleName,
 		voteTypes.ModuleName,
@@ -855,6 +866,7 @@ func orderEndBlockers() []string {
 		multisigTypes.ModuleName,
 		tssTypes.ModuleName,
 		evmTypes.ModuleName,
+		btcTypes.ModuleName,
 		nexusTypes.ModuleName,
 		rewardTypes.ModuleName,
 		snapTypes.ModuleName,
@@ -906,6 +918,7 @@ func orderModulesForGenesis() []string {
 		tssTypes.ModuleName,
 		nexusTypes.ModuleName,
 		evmTypes.ModuleName, // Run evm end blocker after nexus so GMP calls routed to EVM get processed within the same block
+		btcTypes.ModuleName,
 		voteTypes.ModuleName,
 		scalarnetTypes.ModuleName,
 		rewardTypes.ModuleName,
@@ -932,6 +945,7 @@ func CreateStoreKeys() map[string]*sdk.KVStoreKey {
 		feegrant.StoreKey,
 		voteTypes.StoreKey,
 		evmTypes.StoreKey,
+		btcTypes.StoreKey,
 		snapTypes.StoreKey,
 		multisigTypes.StoreKey,
 		tssTypes.StoreKey,
@@ -1074,6 +1088,7 @@ func GetModuleBasics() module.BasicManager {
 		tss.AppModuleBasic{},
 		vote.AppModuleBasic{},
 		evm.AppModuleBasic{},
+		btc.AppModuleBasic{},
 		snapshot.AppModuleBasic{},
 		nexus.AppModuleBasic{},
 		scalarnet.AppModuleBasic{},

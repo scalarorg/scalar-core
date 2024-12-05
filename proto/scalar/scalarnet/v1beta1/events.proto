@@ -12,7 +12,7 @@ message IBCTransferSent {
   uint64 id = 1 [
     (gogoproto.customname) = "ID",
     (gogoproto.casttype) =
-        "github.com/scalarorg/scalar-core/x/common/exported.TransferID"
+        "github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID"
   ];
   string receipient = 2 [ deprecated = true ];
   cosmos.base.v1beta1.Coin asset = 3 [ (gogoproto.nullable) = false ];
@@ -26,7 +26,7 @@ message IBCTransferCompleted {
   uint64 id = 1 [
     (gogoproto.customname) = "ID",
     (gogoproto.casttype) =
-        "github.com/scalarorg/scalar-core/x/common/exported.TransferID"
+        "github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID"
   ];
   uint64 sequence = 2;
   string port_id = 3 [ (gogoproto.customname) = "PortID" ];
@@ -37,7 +37,7 @@ message IBCTransferFailed {
   uint64 id = 1 [
     (gogoproto.customname) = "ID",
     (gogoproto.casttype) =
-        "github.com/scalarorg/scalar-core/x/common/exported.TransferID"
+        "github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID"
   ];
   uint64 sequence = 2;
   string port_id = 3 [ (gogoproto.customname) = "PortID" ];
@@ -48,7 +48,7 @@ message IBCTransferRetried {
   uint64 id = 1 [
     (gogoproto.customname) = "ID",
     (gogoproto.casttype) =
-        "github.com/scalarorg/scalar-core/x/common/exported.TransferID"
+        "github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID"
   ];
   string receipient = 2 [ deprecated = true ];
   cosmos.base.v1beta1.Coin asset = 3 [ (gogoproto.nullable) = false ];
@@ -62,7 +62,7 @@ message ScalarTransferCompleted {
   uint64 id = 1 [
     (gogoproto.customname) = "ID",
     (gogoproto.casttype) =
-        "github.com/scalarorg/scalar-core/x/common/exported.TransferID"
+        "github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID"
   ];
   string receipient = 2 [ deprecated = true ];
   cosmos.base.v1beta1.Coin asset = 3 [ (gogoproto.nullable) = false ];
@@ -84,10 +84,10 @@ message FeePaid {
   string asset = 5; // registered asset name in nexus
   string source_chain = 6
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string destination_chain = 7
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
 }
 
 message ContractCallSubmitted {
@@ -95,10 +95,10 @@ message ContractCallSubmitted {
   string sender = 2;
   string source_chain = 3
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string destination_chain = 4
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string contract_address = 5;
   bytes payload = 6;
   bytes payload_hash = 7;
@@ -109,10 +109,10 @@ message ContractCallWithTokenSubmitted {
   string sender = 2;
   string source_chain = 3
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string destination_chain = 4
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string contract_address = 5;
   bytes payload = 6;
   bytes payload_hash = 7;
@@ -123,15 +123,15 @@ message TokenSent {
   uint64 transfer_id = 1 [
     (gogoproto.customname) = "TransferID",
     (gogoproto.casttype) =
-        "github.com/scalarorg/scalar-core/x/common/exported.TransferID"
+        "github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID"
   ];
   string sender = 2;
   string source_chain = 3
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string destination_chain = 4
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   string destination_address = 5;
   cosmos.base.v1beta1.Coin asset = 6 [ (gogoproto.nullable) = false ];
 }

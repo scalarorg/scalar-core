@@ -1,0 +1,26 @@
+syntax = "proto3";
+package scalar.btc.v1beta1;
+
+import "gogoproto/gogo.proto";
+
+import "scalar/btc/v1beta1/types.proto";
+
+import "axelar/utils/v1beta1/threshold.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
+
+message Params {
+  string chain_name = 1
+      [ (gogoproto.casttype) =
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+  uint64 confirmation_height = 2;
+  NetworkKind network_kind = 3;
+  int64 revote_locking_period = 4;
+  uint64 chain_id = 5 [ (gogoproto.casttype) = "ChainId" ];
+  axelar.utils.v1beta1.Threshold voting_threshold = 6
+      [ (gogoproto.nullable) = false ];
+  int64 min_voter_count = 7;
+  int64 voting_grace_period = 8;
+  int64 end_blocker_limit = 9;
+  uint64 transfer_limit = 10;
+}

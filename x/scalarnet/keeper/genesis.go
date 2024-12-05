@@ -25,7 +25,7 @@ func (k Keeper) InitGenesis(ctx sdk.Context, genState *types.GenesisState) {
 	}
 
 	slices.ForEach(genState.Chains, func(c types.CosmosChain) {
-		if _, ok := k.GetCosmosChainByName(ctx, c.Name.ToNexus()); ok {
+		if _, ok := k.GetCosmosChainByName(ctx, c.Name); ok {
 			panic(fmt.Sprintf("cosmos chain %s already registered", c.Name))
 		}
 

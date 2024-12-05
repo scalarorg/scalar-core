@@ -8,8 +8,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
 
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	nexusTypes "github.com/axelarnetwork/axelar-core/x/nexus/types"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
 )
 
 var _ types.QueryServiceServer = Querier{}
@@ -46,7 +46,7 @@ func (q Querier) PendingIBCTransferCount(c context.Context, _ *types.PendingIBCT
 			CountTotal: true,
 			Reverse:    false,
 		}
-		_, resp, err := q.nexus.GetTransfersForChainPaginated(ctx, chain, common.Pending.ToNexus(), pageRequest)
+		_, resp, err := q.nexus.GetTransfersForChainPaginated(ctx, chain, nexus.Pending, pageRequest)
 		if err != nil {
 			return nil, err
 		}
@@ -71,9 +71,9 @@ func (q Querier) Params(c context.Context, req *types.ParamsRequest) (*types.Par
 func (q Querier) IBCPath(c context.Context, req *types.IBCPathRequest) (*types.IBCPathResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	chainName := common.ChainNameFromString(req.Chain)
+	chainName := nexus.ChainName(req.Chain)
 
-	chain, ok := q.keeper.GetIBCPath(ctx, chainName.ToNexus())
+	chain, ok := q.keeper.GetIBCPath(ctx, chainName)
 	if !ok {
 		return nil, fmt.Errorf("no IBC path registered for chain %s", req.Chain)
 	}
@@ -90,5 +90,5 @@ func (q Querier) ChainByIBCPath(c context.Context, req *types.ChainByIBCPathRequ
 		return nil, fmt.Errorf("no cosmos chain registered for IBC path %s", req.IbcPath)
 	}
 
-	return &types.ChainByIBCPathResponse{Chain: common.ChainNameFromNexus(chain)}, nil
+	return &types.ChainByIBCPathResponse{Chain: chain}, nil
 }

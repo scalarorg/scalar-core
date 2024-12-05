@@ -48,7 +48,7 @@ message KeyRecoveryInfo {
 message ExternalKeys {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/common/exported.ChainName" ];
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   repeated string key_ids = 2 [
     (gogoproto.customname) = "KeyIDs",
     (gogoproto.casttype) =

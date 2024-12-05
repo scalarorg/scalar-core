@@ -13,12 +13,10 @@ import (
 
 	"github.com/axelarnetwork/axelar-core/utils"
 	"github.com/axelarnetwork/axelar-core/utils/key"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/axelarnetwork/utils/funcs"
 	"github.com/axelarnetwork/utils/slices"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
-
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 )
 
 var (
@@ -104,8 +102,8 @@ func (k Keeper) GetIBCPath(ctx sdk.Context, chain nexus.ChainName) (string, bool
 }
 
 // GetIBCPath retrieves the IBC path associated to the specified chain
-func (k Keeper) GetIBCPath2(ctx sdk.Context, chain common.ChainName) (string, bool) {
-	cosmosChain, ok := k.GetCosmosChainByName(ctx, chain.ToNexus())
+func (k Keeper) GetIBCPath2(ctx sdk.Context, chain nexus.ChainName) (string, bool) {
+	cosmosChain, ok := k.GetCosmosChainByName(ctx, chain)
 	if !ok || cosmosChain.IBCPath == "" {
 		return "", false
 	}
@@ -125,7 +123,7 @@ func (k Keeper) GetCosmosChainByName(ctx sdk.Context, chain nexus.ChainName) (co
 }
 
 // SetChainByIBCPath sets the chain name for the given ibc path
-func (k Keeper) SetChainByIBCPath(ctx sdk.Context, ibcPath string, chain common.ChainName) error {
+func (k Keeper) SetChainByIBCPath(ctx sdk.Context, ibcPath string, chain nexus.ChainName) error {
 	if err := types.ValidateIBCPath(ibcPath); err != nil {
 		return err
 	}
@@ -144,7 +142,7 @@ func (k Keeper) GetChainNameByIBCPath(ctx sdk.Context, ibcPath string) (nexus.Ch
 
 // GetCosmosChains retrieves all registered cosmos chain names
 func (k Keeper) GetCosmosChains(ctx sdk.Context) []nexus.ChainName {
-	return slices.Map(k.getCosmosChains(ctx), func(c types.CosmosChain) nexus.ChainName { return c.Name.ToNexus() })
+	return slices.Map(k.getCosmosChains(ctx), func(c types.CosmosChain) nexus.ChainName { return c.Name })
 }
 
 func (k Keeper) getCosmosChains(ctx sdk.Context) (cosmosChains []types.CosmosChain) {
@@ -204,7 +202,7 @@ func (k Keeper) GetIBCTransferQueue(ctx sdk.Context) utils.KVQueue {
 	)
 }
 
-func getTransferKey(id common.TransferID) key.Key {
+func getTransferKey(id nexus.TransferID) key.Key {
 	return transferPrefix.Append(key.From(id))
 }
 
@@ -240,7 +238,7 @@ func (k Keeper) validateIBCTransferQueueState(state utils.QueueState, queueName 
 }
 
 // GetTransfer returns the ibc transfer for the given transfer ID
-func (k Keeper) GetTransfer(ctx sdk.Context, id common.TransferID) (transfer types.IBCTransfer, ok bool) {
+func (k Keeper) GetTransfer(ctx sdk.Context, id nexus.TransferID) (transfer types.IBCTransfer, ok bool) {
 	k.getStore(ctx).GetNew(getTransferKey(id), &transfer)
 	return transfer, transfer.Status != types.TransferNonExistent
 }
@@ -249,7 +247,7 @@ func (k Keeper) setTransfer(ctx sdk.Context, transfer types.IBCTransfer) error {
 	return k.getStore(ctx).SetNewValidated(getTransferKey(transfer.ID), &transfer)
 }
 
-func (k Keeper) setTransferStatus(ctx sdk.Context, transferID common.TransferID, status types.IBCTransfer_Status) error {
+func (k Keeper) setTransferStatus(ctx sdk.Context, transferID nexus.TransferID, status types.IBCTransfer_Status) error {
 	t, ok := k.GetTransfer(ctx, transferID)
 	if !ok {
 		return fmt.Errorf("transfer %s not found", transferID)
@@ -264,17 +262,17 @@ func (k Keeper) setTransferStatus(ctx sdk.Context, transferID common.TransferID,
 }
 
 // SetTransferCompleted sets the transfer as completed
-func (k Keeper) SetTransferCompleted(ctx sdk.Context, transferID common.TransferID) error {
+func (k Keeper) SetTransferCompleted(ctx sdk.Context, transferID nexus.TransferID) error {
 	return k.setTransferStatus(ctx, transferID, types.TransferCompleted)
 }
 
 // SetTransferFailed sets the transfer as failed
 func (k Keeper) SetTransferFailed(ctx sdk.Context, transferID nexus.TransferID) error {
-	return k.setTransferStatus(ctx, common.TransferIDFromNexus(transferID), types.TransferFailed)
+	return k.setTransferStatus(ctx, transferID, types.TransferFailed)
 }
 
 // SetTransferPending sets the transfer as pending
-func (k Keeper) SetTransferPending(ctx sdk.Context, transferID common.TransferID) error {
+func (k Keeper) SetTransferPending(ctx sdk.Context, transferID nexus.TransferID) error {
 	return k.setTransferStatus(ctx, transferID, types.TransferPending)
 }
 
@@ -305,9 +303,9 @@ func (k Keeper) SetSeqIDMapping(ctx sdk.Context, t types.IBCTransfer) error {
 }
 
 // GetSeqIDMapping gets transfer ID by port, channel and packet seq
-func (k Keeper) GetSeqIDMapping(ctx sdk.Context, portID, channelID string, seq uint64) (common.TransferID, bool) {
+func (k Keeper) GetSeqIDMapping(ctx sdk.Context, portID, channelID string, seq uint64) (nexus.TransferID, bool) {
 	var val gogoprototypes.UInt64Value
-	return common.TransferID(val.Value), k.getStore(ctx).GetNew(getSeqIDMappingKey(portID, channelID, seq), &val)
+	return nexus.TransferID(val.Value), k.getStore(ctx).GetNew(getSeqIDMappingKey(portID, channelID, seq), &val)
 }
 
 // DeleteSeqIDMapping deletes (port, channel, packet seq) -> transfer ID mapping

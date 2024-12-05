@@ -5,14 +5,14 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 )
 
 // NewCallContractRequest is the constructor for NewCallContractRequest
 func NewCallContractRequest(sender sdk.AccAddress, chain string, contractAddress string, payload []byte, fee *Fee) *CallContractRequest {
 	return &CallContractRequest{
 		Sender:          sender,
-		Chain:           common.ChainName(utils.NormalizeString(chain)),
+		Chain:           nexus.ChainName(utils.NormalizeString(chain)),
 		ContractAddress: contractAddress,
 		Payload:         payload,
 		Fee:             fee,

@@ -1,318 +1,322 @@
 <!-- This file is auto-generated. Please do not modify it yourself. -->
 # Protobuf Documentation
+
 <a name="top"></a>
 
 ## Table of Contents
 
-- [scalar/common/exported/v1beta1/types.proto](#scalar/common/exported/v1beta1/types.proto)
-    - [Asset](#scalar.common.exported.v1beta1.Asset)
-    - [Chain](#scalar.common.exported.v1beta1.Chain)
-    - [CrossChainAddress](#scalar.common.exported.v1beta1.CrossChainAddress)
-    - [CrossChainTransfer](#scalar.common.exported.v1beta1.CrossChainTransfer)
-    - [FeeInfo](#scalar.common.exported.v1beta1.FeeInfo)
-    - [GeneralMessage](#scalar.common.exported.v1beta1.GeneralMessage)
-    - [TransferFee](#scalar.common.exported.v1beta1.TransferFee)
-    - [WasmMessage](#scalar.common.exported.v1beta1.WasmMessage)
+- [scalar/btc/v1beta1/types.proto](#scalar/btc/v1beta1/types.proto)
+  - [PollMapping](#scalar.btc.v1beta1.PollMapping)
+  - [PollMetadata](#scalar.btc.v1beta1.PollMetadata)
+  - [Proof](#scalar.btc.v1beta1.Proof)
   
-    - [GeneralMessage.Status](#scalar.common.exported.v1beta1.GeneralMessage.Status)
-    - [TransferDirection](#scalar.common.exported.v1beta1.TransferDirection)
-    - [TransferState](#scalar.common.exported.v1beta1.TransferState)
+  - [BatchedCommandsStatus](#scalar.btc.v1beta1.BatchedCommandsStatus)
+  - [NetworkKind](#scalar.btc.v1beta1.NetworkKind)
   
-- [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
-    - [Covenant](#scalar.covenant.v1beta1.Covenant)
-    - [CovenantGroup](#scalar.covenant.v1beta1.CovenantGroup)
+- [scalar/btc/v1beta1/events.proto](#scalar/btc/v1beta1/events.proto)
+  - [ConfirmGatewayTxsStarted](#scalar.btc.v1beta1.ConfirmGatewayTxsStarted)
+  - [Event](#scalar.btc.v1beta1.Event)
   
-- [scalar/covenant/v1beta1/genesis.proto](#scalar/covenant/v1beta1/genesis.proto)
-    - [GenesisState](#scalar.covenant.v1beta1.GenesisState)
+- [scalar/btc/v1beta1/params.proto](#scalar/btc/v1beta1/params.proto)
+  - [Params](#scalar.btc.v1beta1.Params)
   
-- [scalar/covenant/v1beta1/query.proto](#scalar/covenant/v1beta1/query.proto)
-- [scalar/protocol/v1beta1/types.proto](#scalar/protocol/v1beta1/types.proto)
-    - [Protocol](#scalar.protocol.v1beta1.Protocol)
+- [scalar/btc/v1beta1/genesis.proto](#scalar/btc/v1beta1/genesis.proto)
+  - [GenesisState](#scalar.btc.v1beta1.GenesisState)
+  - [GenesisState.Chain](#scalar.btc.v1beta1.GenesisState.Chain)
   
-- [scalar/protocol/v1beta1/genesis.proto](#scalar/protocol/v1beta1/genesis.proto)
-    - [GenesisState](#scalar.protocol.v1beta1.GenesisState)
+- [scalar/btc/v1beta1/tx.proto](#scalar/btc/v1beta1/tx.proto)
+  - [ConfirmGatewayTxsRequest](#scalar.btc.v1beta1.ConfirmGatewayTxsRequest)
+  - [ConfirmGatewayTxsResponse](#scalar.btc.v1beta1.ConfirmGatewayTxsResponse)
   
-- [scalar/protocol/v1beta1/query.proto](#scalar/protocol/v1beta1/query.proto)
-    - [ProtocolRequest](#scalar.protocol.v1beta1.ProtocolRequest)
-    - [ProtocolResponse](#scalar.protocol.v1beta1.ProtocolResponse)
+- [scalar/btc/v1beta1/query.proto](#scalar/btc/v1beta1/query.proto)
+  - [BatchedCommandsRequest](#scalar.btc.v1beta1.BatchedCommandsRequest)
+  - [BatchedCommandsResponse](#scalar.btc.v1beta1.BatchedCommandsResponse)
   
-    - [ProtocolStatus](#scalar.protocol.v1beta1.ProtocolStatus)
+- [scalar/btc/v1beta1/service.proto](#scalar/btc/v1beta1/service.proto)
+  - [MsgService](#scalar.btc.v1beta1.MsgService)
+  - [QueryService](#scalar.btc.v1beta1.QueryService)
   
-- [scalar/protocol/v1beta1/service.proto](#scalar/protocol/v1beta1/service.proto)
-- [scalar/protocol/v1beta1/tx.proto](#scalar/protocol/v1beta1/tx.proto)
 - [scalar/scalarnet/v1beta1/events.proto](#scalar/scalarnet/v1beta1/events.proto)
-    - [ContractCallSubmitted](#scalar.scalarnet.v1beta1.ContractCallSubmitted)
-    - [ContractCallWithTokenSubmitted](#scalar.scalarnet.v1beta1.ContractCallWithTokenSubmitted)
-    - [FeeCollected](#scalar.scalarnet.v1beta1.FeeCollected)
-    - [FeePaid](#scalar.scalarnet.v1beta1.FeePaid)
-    - [IBCTransferCompleted](#scalar.scalarnet.v1beta1.IBCTransferCompleted)
-    - [IBCTransferFailed](#scalar.scalarnet.v1beta1.IBCTransferFailed)
-    - [IBCTransferRetried](#scalar.scalarnet.v1beta1.IBCTransferRetried)
-    - [IBCTransferSent](#scalar.scalarnet.v1beta1.IBCTransferSent)
-    - [ScalarTransferCompleted](#scalar.scalarnet.v1beta1.ScalarTransferCompleted)
-    - [TokenSent](#scalar.scalarnet.v1beta1.TokenSent)
+  - [ContractCallSubmitted](#scalar.scalarnet.v1beta1.ContractCallSubmitted)
+  - [ContractCallWithTokenSubmitted](#scalar.scalarnet.v1beta1.ContractCallWithTokenSubmitted)
+  - [FeeCollected](#scalar.scalarnet.v1beta1.FeeCollected)
+  - [FeePaid](#scalar.scalarnet.v1beta1.FeePaid)
+  - [IBCTransferCompleted](#scalar.scalarnet.v1beta1.IBCTransferCompleted)
+  - [IBCTransferFailed](#scalar.scalarnet.v1beta1.IBCTransferFailed)
+  - [IBCTransferRetried](#scalar.scalarnet.v1beta1.IBCTransferRetried)
+  - [IBCTransferSent](#scalar.scalarnet.v1beta1.IBCTransferSent)
+  - [ScalarTransferCompleted](#scalar.scalarnet.v1beta1.ScalarTransferCompleted)
+  - [TokenSent](#scalar.scalarnet.v1beta1.TokenSent)
   
 - [scalar/scalarnet/v1beta1/params.proto](#scalar/scalarnet/v1beta1/params.proto)
-    - [CallContractProposalMinDeposit](#scalar.scalarnet.v1beta1.CallContractProposalMinDeposit)
-    - [Params](#scalar.scalarnet.v1beta1.Params)
+  - [CallContractProposalMinDeposit](#scalar.scalarnet.v1beta1.CallContractProposalMinDeposit)
+  - [Params](#scalar.scalarnet.v1beta1.Params)
   
 - [scalar/scalarnet/v1beta1/types.proto](#scalar/scalarnet/v1beta1/types.proto)
-    - [Asset](#scalar.scalarnet.v1beta1.Asset)
-    - [CosmosChain](#scalar.scalarnet.v1beta1.CosmosChain)
-    - [Fee](#scalar.scalarnet.v1beta1.Fee)
-    - [IBCTransfer](#scalar.scalarnet.v1beta1.IBCTransfer)
+  - [Asset](#scalar.scalarnet.v1beta1.Asset)
+  - [CosmosChain](#scalar.scalarnet.v1beta1.CosmosChain)
+  - [Fee](#scalar.scalarnet.v1beta1.Fee)
+  - [IBCTransfer](#scalar.scalarnet.v1beta1.IBCTransfer)
   
-    - [IBCTransfer.Status](#scalar.scalarnet.v1beta1.IBCTransfer.Status)
+  - [IBCTransfer.Status](#scalar.scalarnet.v1beta1.IBCTransfer.Status)
   
 - [scalar/scalarnet/v1beta1/genesis.proto](#scalar/scalarnet/v1beta1/genesis.proto)
-    - [GenesisState](#scalar.scalarnet.v1beta1.GenesisState)
-    - [GenesisState.SeqIdMappingEntry](#scalar.scalarnet.v1beta1.GenesisState.SeqIdMappingEntry)
+  - [GenesisState](#scalar.scalarnet.v1beta1.GenesisState)
+  - [GenesisState.SeqIdMappingEntry](#scalar.scalarnet.v1beta1.GenesisState.SeqIdMappingEntry)
   
 - [scalar/scalarnet/v1beta1/proposal.proto](#scalar/scalarnet/v1beta1/proposal.proto)
-    - [CallContractsProposal](#scalar.scalarnet.v1beta1.CallContractsProposal)
-    - [ContractCall](#scalar.scalarnet.v1beta1.ContractCall)
+  - [CallContractsProposal](#scalar.scalarnet.v1beta1.CallContractsProposal)
+  - [ContractCall](#scalar.scalarnet.v1beta1.ContractCall)
   
 - [scalar/scalarnet/v1beta1/query.proto](#scalar/scalarnet/v1beta1/query.proto)
-    - [ChainByIBCPathRequest](#scalar.scalarnet.v1beta1.ChainByIBCPathRequest)
-    - [ChainByIBCPathResponse](#scalar.scalarnet.v1beta1.ChainByIBCPathResponse)
-    - [IBCPathRequest](#scalar.scalarnet.v1beta1.IBCPathRequest)
-    - [IBCPathResponse](#scalar.scalarnet.v1beta1.IBCPathResponse)
-    - [ParamsRequest](#scalar.scalarnet.v1beta1.ParamsRequest)
-    - [ParamsResponse](#scalar.scalarnet.v1beta1.ParamsResponse)
-    - [PendingIBCTransferCountRequest](#scalar.scalarnet.v1beta1.PendingIBCTransferCountRequest)
-    - [PendingIBCTransferCountResponse](#scalar.scalarnet.v1beta1.PendingIBCTransferCountResponse)
-    - [PendingIBCTransferCountResponse.TransfersByChainEntry](#scalar.scalarnet.v1beta1.PendingIBCTransferCountResponse.TransfersByChainEntry)
+  - [ChainByIBCPathRequest](#scalar.scalarnet.v1beta1.ChainByIBCPathRequest)
+  - [ChainByIBCPathResponse](#scalar.scalarnet.v1beta1.ChainByIBCPathResponse)
+  - [IBCPathRequest](#scalar.scalarnet.v1beta1.IBCPathRequest)
+  - [IBCPathResponse](#scalar.scalarnet.v1beta1.IBCPathResponse)
+  - [ParamsRequest](#scalar.scalarnet.v1beta1.ParamsRequest)
+  - [ParamsResponse](#scalar.scalarnet.v1beta1.ParamsResponse)
+  - [PendingIBCTransferCountRequest](#scalar.scalarnet.v1beta1.PendingIBCTransferCountRequest)
+  - [PendingIBCTransferCountResponse](#scalar.scalarnet.v1beta1.PendingIBCTransferCountResponse)
+  - [PendingIBCTransferCountResponse.TransfersByChainEntry](#scalar.scalarnet.v1beta1.PendingIBCTransferCountResponse.TransfersByChainEntry)
   
 - [scalar/scalarnet/v1beta1/tx.proto](#scalar/scalarnet/v1beta1/tx.proto)
-    - [AddCosmosBasedChainRequest](#scalar.scalarnet.v1beta1.AddCosmosBasedChainRequest)
-    - [AddCosmosBasedChainResponse](#scalar.scalarnet.v1beta1.AddCosmosBasedChainResponse)
-    - [CallContractRequest](#scalar.scalarnet.v1beta1.CallContractRequest)
-    - [CallContractResponse](#scalar.scalarnet.v1beta1.CallContractResponse)
-    - [ConfirmDepositRequest](#scalar.scalarnet.v1beta1.ConfirmDepositRequest)
-    - [ConfirmDepositResponse](#scalar.scalarnet.v1beta1.ConfirmDepositResponse)
-    - [ExecutePendingTransfersRequest](#scalar.scalarnet.v1beta1.ExecutePendingTransfersRequest)
-    - [ExecutePendingTransfersResponse](#scalar.scalarnet.v1beta1.ExecutePendingTransfersResponse)
-    - [LinkRequest](#scalar.scalarnet.v1beta1.LinkRequest)
-    - [LinkResponse](#scalar.scalarnet.v1beta1.LinkResponse)
-    - [RegisterAssetRequest](#scalar.scalarnet.v1beta1.RegisterAssetRequest)
-    - [RegisterAssetResponse](#scalar.scalarnet.v1beta1.RegisterAssetResponse)
-    - [RegisterFeeCollectorRequest](#scalar.scalarnet.v1beta1.RegisterFeeCollectorRequest)
-    - [RegisterFeeCollectorResponse](#scalar.scalarnet.v1beta1.RegisterFeeCollectorResponse)
-    - [RegisterIBCPathRequest](#scalar.scalarnet.v1beta1.RegisterIBCPathRequest)
-    - [RegisterIBCPathResponse](#scalar.scalarnet.v1beta1.RegisterIBCPathResponse)
-    - [RetryIBCTransferRequest](#scalar.scalarnet.v1beta1.RetryIBCTransferRequest)
-    - [RetryIBCTransferResponse](#scalar.scalarnet.v1beta1.RetryIBCTransferResponse)
-    - [RouteIBCTransfersRequest](#scalar.scalarnet.v1beta1.RouteIBCTransfersRequest)
-    - [RouteIBCTransfersResponse](#scalar.scalarnet.v1beta1.RouteIBCTransfersResponse)
-    - [RouteMessageRequest](#scalar.scalarnet.v1beta1.RouteMessageRequest)
-    - [RouteMessageResponse](#scalar.scalarnet.v1beta1.RouteMessageResponse)
+  - [AddCosmosBasedChainRequest](#scalar.scalarnet.v1beta1.AddCosmosBasedChainRequest)
+  - [AddCosmosBasedChainResponse](#scalar.scalarnet.v1beta1.AddCosmosBasedChainResponse)
+  - [CallContractRequest](#scalar.scalarnet.v1beta1.CallContractRequest)
+  - [CallContractResponse](#scalar.scalarnet.v1beta1.CallContractResponse)
+  - [ConfirmDepositRequest](#scalar.scalarnet.v1beta1.ConfirmDepositRequest)
+  - [ConfirmDepositResponse](#scalar.scalarnet.v1beta1.ConfirmDepositResponse)
+  - [ExecutePendingTransfersRequest](#scalar.scalarnet.v1beta1.ExecutePendingTransfersRequest)
+  - [ExecutePendingTransfersResponse](#scalar.scalarnet.v1beta1.ExecutePendingTransfersResponse)
+  - [LinkRequest](#scalar.scalarnet.v1beta1.LinkRequest)
+  - [LinkResponse](#scalar.scalarnet.v1beta1.LinkResponse)
+  - [RegisterAssetRequest](#scalar.scalarnet.v1beta1.RegisterAssetRequest)
+  - [RegisterAssetResponse](#scalar.scalarnet.v1beta1.RegisterAssetResponse)
+  - [RegisterFeeCollectorRequest](#scalar.scalarnet.v1beta1.RegisterFeeCollectorRequest)
+  - [RegisterFeeCollectorResponse](#scalar.scalarnet.v1beta1.RegisterFeeCollectorResponse)
+  - [RegisterIBCPathRequest](#scalar.scalarnet.v1beta1.RegisterIBCPathRequest)
+  - [RegisterIBCPathResponse](#scalar.scalarnet.v1beta1.RegisterIBCPathResponse)
+  - [RetryIBCTransferRequest](#scalar.scalarnet.v1beta1.RetryIBCTransferRequest)
+  - [RetryIBCTransferResponse](#scalar.scalarnet.v1beta1.RetryIBCTransferResponse)
+  - [RouteIBCTransfersRequest](#scalar.scalarnet.v1beta1.RouteIBCTransfersRequest)
+  - [RouteIBCTransfersResponse](#scalar.scalarnet.v1beta1.RouteIBCTransfersResponse)
+  - [RouteMessageRequest](#scalar.scalarnet.v1beta1.RouteMessageRequest)
+  - [RouteMessageResponse](#scalar.scalarnet.v1beta1.RouteMessageResponse)
   
 - [scalar/scalarnet/v1beta1/service.proto](#scalar/scalarnet/v1beta1/service.proto)
-    - [MsgService](#scalar.scalarnet.v1beta1.MsgService)
-    - [QueryService](#scalar.scalarnet.v1beta1.QueryService)
+  - [MsgService](#scalar.scalarnet.v1beta1.MsgService)
+  - [QueryService](#scalar.scalarnet.v1beta1.QueryService)
   
 - [Scalar Value Types](#scalar-value-types)
 
-
-
-<a name="scalar/common/exported/v1beta1/types.proto"></a>
+<a name="scalar/btc/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## scalar/common/exported/v1beta1/types.proto
+## scalar/btc/v1beta1/types.proto
 
+<a name="scalar.btc.v1beta1.PollMapping"></a>
 
-
-<a name="scalar.common.exported.v1beta1.Asset"></a>
-
-### Asset
-
-
+### PollMapping
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `denom` | [string](#string) |  |  |
-| `is_native_asset` | [bool](#bool) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
 
+<a name="scalar.btc.v1beta1.PollMetadata"></a>
 
-
-
-
-
-<a name="scalar.common.exported.v1beta1.Chain"></a>
-
-### Chain
-Chain represents the properties of a registered blockchain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  |  |
-| `supports_foreign_assets` | [bool](#bool) |  |  |
-| `key_type` | [axelar.tss.exported.v1beta1.KeyType](#axelar.tss.exported.v1beta1.KeyType) |  |  |
-| `module` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.common.exported.v1beta1.CrossChainAddress"></a>
-
-### CrossChainAddress
-CrossChainAddress represents a generalized address on any registered chain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [Chain](#scalar.common.exported.v1beta1.Chain) |  |  |
-| `address` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.common.exported.v1beta1.CrossChainTransfer"></a>
-
-### CrossChainTransfer
-CrossChainTransfer represents a generalized transfer of some asset to a
-registered blockchain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `recipient` | [CrossChainAddress](#scalar.common.exported.v1beta1.CrossChainAddress) |  |  |
-| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `id` | [uint64](#uint64) |  |  |
-| `state` | [TransferState](#scalar.common.exported.v1beta1.TransferState) |  |  |
-
-
-
-
-
-
-<a name="scalar.common.exported.v1beta1.FeeInfo"></a>
-
-### FeeInfo
-
-
+### PollMetadata
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
-| `asset` | [string](#string) |  |  |
-| `fee_rate` | [bytes](#bytes) |  |  |
-| `min_fee` | [bytes](#bytes) |  |  |
-| `max_fee` | [bytes](#bytes) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
 
+<a name="scalar.btc.v1beta1.Proof"></a>
 
-
-
-
-
-<a name="scalar.common.exported.v1beta1.GeneralMessage"></a>
-
-### GeneralMessage
-
-
+### Proof
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `id` | [string](#string) |  |  |
-| `sender` | [CrossChainAddress](#scalar.common.exported.v1beta1.CrossChainAddress) |  |  |
-| `recipient` | [CrossChainAddress](#scalar.common.exported.v1beta1.CrossChainAddress) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `status` | [GeneralMessage.Status](#scalar.common.exported.v1beta1.GeneralMessage.Status) |  |  |
-| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `source_tx_id` | [bytes](#bytes) |  |  |
-| `source_tx_index` | [uint64](#uint64) |  |  |
+| `addresses` | [string](#string) | repeated |  |
+| `weights` | [string](#string) | repeated |  |
+| `threshold` | [string](#string) |  |  |
+| `signatures` | [string](#string) | repeated |  |
 
+ <!-- end messages -->
 
+<a name="scalar.btc.v1beta1.BatchedCommandsStatus"></a>
 
+### BatchedCommandsStatus
 
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| BATCHED_COMMANDS_STATUS_UNSPECIFIED | 0 |  |
+| BATCHED_COMMANDS_STATUS_SIGNING | 1 |  |
+| BATCHED_COMMANDS_STATUS_ABORTED | 2 |  |
+| BATCHED_COMMANDS_STATUS_SIGNED | 3 |  |
 
+<a name="scalar.btc.v1beta1.NetworkKind"></a>
 
-<a name="scalar.common.exported.v1beta1.TransferFee"></a>
+### NetworkKind
 
-### TransferFee
-TransferFee represents accumulated fees generated by the network
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| NETWORK_KIND_MAINNET | 0 |  |
+| NETWORK_KIND_TESTNET | 1 |  |
 
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+<a name="scalar/btc/v1beta1/events.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/btc/v1beta1/events.proto
+
+<a name="scalar.btc.v1beta1.ConfirmGatewayTxsStarted"></a>
+
+### ConfirmGatewayTxsStarted
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `coins` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
+| `poll_mappings` | [PollMapping](#scalar.btc.v1beta1.PollMapping) | repeated |  |
+| `chain` | [string](#string) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `participants` | [bytes](#bytes) | repeated |  |
 
+<a name="scalar.btc.v1beta1.Event"></a>
 
+### Event
 
+ <!-- end messages -->
 
+ <!-- end enums -->
 
+ <!-- end HasExtensions -->
 
-<a name="scalar.common.exported.v1beta1.WasmMessage"></a>
+ <!-- end services -->
 
-### WasmMessage
+<a name="scalar/btc/v1beta1/params.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
 
+## scalar/btc/v1beta1/params.proto
 
+<a name="scalar.btc.v1beta1.Params"></a>
+
+### Params
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `source_chain` | [string](#string) |  |  |
-| `source_address` | [string](#string) |  |  |
-| `destination_chain` | [string](#string) |  |  |
-| `destination_address` | [string](#string) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `source_tx_id` | [bytes](#bytes) |  |  |
-| `source_tx_index` | [uint64](#uint64) |  |  |
+| `chain_name` | [string](#string) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `network_kind` | [NetworkKind](#scalar.btc.v1beta1.NetworkKind) |  |  |
+| `revote_locking_period` | [int64](#int64) |  |  |
+| `chain_id` | [uint64](#uint64) |  |  |
+| `voting_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `min_voter_count` | [int64](#int64) |  |  |
+| `voting_grace_period` | [int64](#int64) |  |  |
+| `end_blocker_limit` | [int64](#int64) |  |  |
+| `transfer_limit` | [uint64](#uint64) |  |  |
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+<a name="scalar/btc/v1beta1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/btc/v1beta1/genesis.proto
+
+<a name="scalar.btc.v1beta1.GenesisState"></a>
+
+### GenesisState
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chains` | [GenesisState.Chain](#scalar.btc.v1beta1.GenesisState.Chain) | repeated |  |
+| `vault_tag` | [bytes](#bytes) |  |  |
+| `vault_version` | [bytes](#bytes) |  |  |
+
+<a name="scalar.btc.v1beta1.GenesisState.Chain"></a>
+
+### GenesisState.Chain
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.btc.v1beta1.Params) |  |  |
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+<a name="scalar/btc/v1beta1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/btc/v1beta1/tx.proto
+
+<a name="scalar.btc.v1beta1.ConfirmGatewayTxsRequest"></a>
+
+### ConfirmGatewayTxsRequest
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `tx_ids` | [bytes](#bytes) | repeated |  |
+
+<a name="scalar.btc.v1beta1.ConfirmGatewayTxsResponse"></a>
+
+### ConfirmGatewayTxsResponse
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+<a name="scalar/btc/v1beta1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/btc/v1beta1/query.proto
+
+<a name="scalar.btc.v1beta1.BatchedCommandsRequest"></a>
+
+### BatchedCommandsRequest
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `id` | [string](#string) |  | id defines an optional id for the commandsbatch. If not specified the latest will be returned |
+
+<a name="scalar.btc.v1beta1.BatchedCommandsResponse"></a>
+
+### BatchedCommandsResponse
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
 | `id` | [string](#string) |  |  |
-
-
-
-
+| `data` | [string](#string) |  |  |
+| `status` | [BatchedCommandsStatus](#scalar.btc.v1beta1.BatchedCommandsStatus) |  |  |
+| `key_id` | [string](#string) |  |  |
+| `execute_data` | [string](#string) |  |  |
+| `prev_batched_commands_id` | [string](#string) |  |  |
+| `command_ids` | [string](#string) | repeated |  |
+| `proof` | [Proof](#scalar.btc.v1beta1.Proof) |  |  |
 
  <!-- end messages -->
-
-
-<a name="scalar.common.exported.v1beta1.GeneralMessage.Status"></a>
-
-### GeneralMessage.Status
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| STATUS_UNSPECIFIED | 0 |  |
-| STATUS_APPROVED | 1 |  |
-| STATUS_PROCESSING | 2 |  |
-| STATUS_EXECUTED | 3 |  |
-| STATUS_FAILED | 4 |  |
-
-
-
-<a name="scalar.common.exported.v1beta1.TransferDirection"></a>
-
-### TransferDirection
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| TRANSFER_DIRECTION_UNSPECIFIED | 0 |  |
-| TRANSFER_DIRECTION_FROM | 1 |  |
-| TRANSFER_DIRECTION_TO | 2 |  |
-
-
-
-<a name="scalar.common.exported.v1beta1.TransferState"></a>
-
-### TransferState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| TRANSFER_STATE_UNSPECIFIED | 0 |  |
-| TRANSFER_STATE_PENDING | 1 |  |
-| TRANSFER_STATE_ARCHIVED | 2 |  |
-| TRANSFER_STATE_INSUFFICIENT_AMOUNT | 3 |  |
-| TRANSFER_STATE_FAILED | 4 |  |
-
 
  <!-- end enums -->
 
@@ -320,46 +324,10 @@ TransferFee represents accumulated fees generated by the network
 
  <!-- end services -->
 
-
-
-<a name="scalar/covenant/v1beta1/types.proto"></a>
+<a name="scalar/btc/v1beta1/service.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## scalar/covenant/v1beta1/types.proto
-
-
-
-<a name="scalar.covenant.v1beta1.Covenant"></a>
-
-### Covenant
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `btcpubkey` | [string](#string) |  |  |
-| `name` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.CovenantGroup"></a>
-
-### CovenantGroup
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `group_hash` | [string](#string) |  |  |
-| `name` | [string](#string) |  |  |
-| `covenants` | [Covenant](#scalar.covenant.v1beta1.Covenant) | repeated |  |
-
-
-
-
+## scalar/btc/v1beta1/service.proto
 
  <!-- end messages -->
 
@@ -367,225 +335,36 @@ TransferFee represents accumulated fees generated by the network
 
  <!-- end HasExtensions -->
 
- <!-- end services -->
+<a name="scalar.btc.v1beta1.MsgService"></a>
 
+### MsgService
 
+Msg defines the evm Msg service.
 
-<a name="scalar/covenant/v1beta1/genesis.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `ConfirmGatewayTxs` | [ConfirmGatewayTxsRequest](#scalar.btc.v1beta1.ConfirmGatewayTxsRequest) | [ConfirmGatewayTxsResponse](#scalar.btc.v1beta1.ConfirmGatewayTxsResponse) |  | POST|/scalar/btc/confirm_gateway_txs|
 
-## scalar/covenant/v1beta1/genesis.proto
+<a name="scalar.btc.v1beta1.QueryService"></a>
 
+### QueryService
 
+QueryService defines the gRPC querier service.
 
-<a name="scalar.covenant.v1beta1.GenesisState"></a>
-
-### GenesisState
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `covenants` | [Covenant](#scalar.covenant.v1beta1.Covenant) | repeated |  |
-| `groups` | [CovenantGroup](#scalar.covenant.v1beta1.CovenantGroup) | repeated |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `BatchedCommands` | [BatchedCommandsRequest](#scalar.btc.v1beta1.BatchedCommandsRequest) | [BatchedCommandsResponse](#scalar.btc.v1beta1.BatchedCommandsResponse) | BatchedCommands queries the batched commands for a specified chain and BatchedCommandsID if no BatchedCommandsID is specified, then it returns the latest batched commands | GET|/scalar/btc/v1beta1/batched_commands/{chain}/{id}|
 
  <!-- end services -->
-
-
-
-<a name="scalar/covenant/v1beta1/query.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/covenant/v1beta1/query.proto
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/protocol/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/protocol/v1beta1/types.proto
-
-
-
-<a name="scalar.protocol.v1beta1.Protocol"></a>
-
-### Protocol
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  |  |
-| `covenant_group` | [string](#string) |  |  |
-| `tokens` | [axelar.evm.v1beta1.ERC20TokenMetadata](#axelar.evm.v1beta1.ERC20TokenMetadata) | repeated |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/protocol/v1beta1/genesis.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/protocol/v1beta1/genesis.proto
-
-
-
-<a name="scalar.protocol.v1beta1.GenesisState"></a>
-
-### GenesisState
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `protocols` | [Protocol](#scalar.protocol.v1beta1.Protocol) | repeated |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/protocol/v1beta1/query.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/protocol/v1beta1/query.proto
-
-
-
-<a name="scalar.protocol.v1beta1.ProtocolRequest"></a>
-
-### ProtocolRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `status` | [ProtocolStatus](#scalar.protocol.v1beta1.ProtocolStatus) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.ProtocolResponse"></a>
-
-### ProtocolResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `protocols` | [Protocol](#scalar.protocol.v1beta1.Protocol) | repeated |  |
-
-
-
-
-
- <!-- end messages -->
-
-
-<a name="scalar.protocol.v1beta1.ProtocolStatus"></a>
-
-### ProtocolStatus
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| PROTOCOL_STATUS_UNSPECIFIED | 0 |  |
-| PROTOCOL_STATUS_ACTIVATED | 1 |  |
-| PROTOCOL_STATUS_DEACTIVATED | 2 |  |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/protocol/v1beta1/service.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/protocol/v1beta1/service.proto
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/protocol/v1beta1/tx.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/protocol/v1beta1/tx.proto
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
 
 <a name="scalar/scalarnet/v1beta1/events.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/scalarnet/v1beta1/events.proto
 
-
-
 <a name="scalar.scalarnet.v1beta1.ContractCallSubmitted"></a>
 
 ### ContractCallSubmitted
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -597,16 +376,9 @@ TransferFee represents accumulated fees generated by the network
 | `payload` | [bytes](#bytes) |  |  |
 | `payload_hash` | [bytes](#bytes) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.ContractCallWithTokenSubmitted"></a>
 
 ### ContractCallWithTokenSubmitted
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -619,32 +391,18 @@ TransferFee represents accumulated fees generated by the network
 | `payload_hash` | [bytes](#bytes) |  |  |
 | `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.FeeCollected"></a>
 
 ### FeeCollected
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `collector` | [bytes](#bytes) |  |  |
 | `fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.FeePaid"></a>
 
 ### FeePaid
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -656,16 +414,9 @@ TransferFee represents accumulated fees generated by the network
 | `source_chain` | [string](#string) |  |  |
 | `destination_chain` | [string](#string) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.IBCTransferCompleted"></a>
 
 ### IBCTransferCompleted
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -673,36 +424,22 @@ TransferFee represents accumulated fees generated by the network
 | `sequence` | [uint64](#uint64) |  |  |
 | `port_id` | [string](#string) |  |  |
 | `channel_id` | [string](#string) |  |  |
-
-
-
-
-
 
 <a name="scalar.scalarnet.v1beta1.IBCTransferFailed"></a>
 
 ### IBCTransferFailed
 
-
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `id` | [uint64](#uint64) |  |  |
 | `sequence` | [uint64](#uint64) |  |  |
 | `port_id` | [string](#string) |  |  |
 | `channel_id` | [string](#string) |  |  |
-
-
-
-
-
 
 <a name="scalar.scalarnet.v1beta1.IBCTransferRetried"></a>
 
 ### IBCTransferRetried
 
-
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `id` | [uint64](#uint64) |  |  |
@@ -712,18 +449,11 @@ TransferFee represents accumulated fees generated by the network
 | `port_id` | [string](#string) |  |  |
 | `channel_id` | [string](#string) |  |  |
 | `recipient` | [string](#string) |  |  |
-
-
-
-
-
 
 <a name="scalar.scalarnet.v1beta1.IBCTransferSent"></a>
 
 ### IBCTransferSent
 
-
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `id` | [uint64](#uint64) |  |  |
@@ -734,16 +464,9 @@ TransferFee represents accumulated fees generated by the network
 | `channel_id` | [string](#string) |  |  |
 | `recipient` | [string](#string) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.ScalarTransferCompleted"></a>
 
 ### ScalarTransferCompleted
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -752,16 +475,9 @@ TransferFee represents accumulated fees generated by the network
 | `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `recipient` | [string](#string) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.TokenSent"></a>
 
 ### TokenSent
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -772,10 +488,6 @@ TransferFee represents accumulated fees generated by the network
 | `destination_address` | [string](#string) |  |  |
 | `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
-
-
-
-
  <!-- end messages -->
 
  <!-- end enums -->
@@ -784,20 +496,14 @@ TransferFee represents accumulated fees generated by the network
 
  <!-- end services -->
 
-
-
 <a name="scalar/scalarnet/v1beta1/params.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/scalarnet/v1beta1/params.proto
 
-
-
 <a name="scalar.scalarnet.v1beta1.CallContractProposalMinDeposit"></a>
 
 ### CallContractProposalMinDeposit
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -805,16 +511,11 @@ TransferFee represents accumulated fees generated by the network
 | `contract_address` | [string](#string) |  |  |
 | `min_deposits` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.Params"></a>
 
 ### Params
-Params represent the genesis parameters for the module
 
+Params represent the genesis parameters for the module
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -823,10 +524,6 @@ Params represent the genesis parameters for the module
 | `end_blocker_limit` | [uint64](#uint64) |  |  |
 | `call_contracts_proposal_min_deposits` | [CallContractProposalMinDeposit](#scalar.scalarnet.v1beta1.CallContractProposalMinDeposit) | repeated |  |
 
-
-
-
-
  <!-- end messages -->
 
  <!-- end enums -->
@@ -835,36 +532,23 @@ Params represent the genesis parameters for the module
 
  <!-- end services -->
 
-
-
 <a name="scalar/scalarnet/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/scalarnet/v1beta1/types.proto
 
-
-
 <a name="scalar.scalarnet.v1beta1.Asset"></a>
 
 ### Asset
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `denom` | [string](#string) |  |  |
 | `min_amount` | [bytes](#bytes) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.CosmosChain"></a>
 
 ### CosmosChain
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -873,16 +557,9 @@ Params represent the genesis parameters for the module
 | `assets` | [Asset](#scalar.scalarnet.v1beta1.Asset) | repeated | **Deprecated.**  |
 | `addr_prefix` | [string](#string) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.Fee"></a>
 
 ### Fee
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -890,16 +567,9 @@ Params represent the genesis parameters for the module
 | `recipient` | [bytes](#bytes) |  |  |
 | `refund_recipient` | [bytes](#bytes) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.IBCTransfer"></a>
 
 ### IBCTransfer
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -912,17 +582,11 @@ Params represent the genesis parameters for the module
 | `id` | [uint64](#uint64) |  |  |
 | `status` | [IBCTransfer.Status](#scalar.scalarnet.v1beta1.IBCTransfer.Status) |  |  |
 
-
-
-
-
  <!-- end messages -->
-
 
 <a name="scalar.scalarnet.v1beta1.IBCTransfer.Status"></a>
 
 ### IBCTransfer.Status
-
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
@@ -931,27 +595,20 @@ Params represent the genesis parameters for the module
 | STATUS_COMPLETED | 2 |  |
 | STATUS_FAILED | 3 |  |
 
-
  <!-- end enums -->
 
  <!-- end HasExtensions -->
 
  <!-- end services -->
 
-
-
 <a name="scalar/scalarnet/v1beta1/genesis.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/scalarnet/v1beta1/genesis.proto
 
-
-
 <a name="scalar.scalarnet.v1beta1.GenesisState"></a>
 
 ### GenesisState
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -962,25 +619,14 @@ Params represent the genesis parameters for the module
 | `ibc_transfers` | [IBCTransfer](#scalar.scalarnet.v1beta1.IBCTransfer) | repeated |  |
 | `seq_id_mapping` | [GenesisState.SeqIdMappingEntry](#scalar.scalarnet.v1beta1.GenesisState.SeqIdMappingEntry) | repeated |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.GenesisState.SeqIdMappingEntry"></a>
 
 ### GenesisState.SeqIdMappingEntry
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `key` | [string](#string) |  |  |
 | `value` | [uint64](#uint64) |  |  |
-
-
-
-
 
  <!-- end messages -->
 
@@ -990,21 +636,17 @@ Params represent the genesis parameters for the module
 
  <!-- end services -->
 
-
-
 <a name="scalar/scalarnet/v1beta1/proposal.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/scalarnet/v1beta1/proposal.proto
 
-
-
 <a name="scalar.scalarnet.v1beta1.CallContractsProposal"></a>
 
 ### CallContractsProposal
+
 CallContractsProposal is a gov Content type for calling contracts on other
 chains
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -1012,16 +654,9 @@ chains
 | `description` | [string](#string) |  |  |
 | `contract_calls` | [ContractCall](#scalar.scalarnet.v1beta1.ContractCall) | repeated |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.ContractCall"></a>
 
 ### ContractCall
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -1029,10 +664,6 @@ chains
 | `contract_address` | [string](#string) |  |  |
 | `payload` | [bytes](#bytes) |  |  |
 
-
-
-
-
  <!-- end messages -->
 
  <!-- end enums -->
@@ -1040,142 +671,84 @@ chains
  <!-- end HasExtensions -->
 
  <!-- end services -->
-
-
 
 <a name="scalar/scalarnet/v1beta1/query.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/scalarnet/v1beta1/query.proto
 
-
-
 <a name="scalar.scalarnet.v1beta1.ChainByIBCPathRequest"></a>
 
 ### ChainByIBCPathRequest
+
 ChainByIBCPathRequest represents a message that queries the chain that an IBC
 path is registered to
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `ibc_path` | [string](#string) |  |  |
-
-
-
-
-
 
 <a name="scalar.scalarnet.v1beta1.ChainByIBCPathResponse"></a>
 
 ### ChainByIBCPathResponse
 
-
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
-
-
-
-
-
 
 <a name="scalar.scalarnet.v1beta1.IBCPathRequest"></a>
 
 ### IBCPathRequest
+
 IBCPathRequest represents a message that queries the IBC path registered for
 a given chain
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
-
-
-
-
-
 
 <a name="scalar.scalarnet.v1beta1.IBCPathResponse"></a>
 
 ### IBCPathResponse
 
-
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `ibc_path` | [string](#string) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.ParamsRequest"></a>
 
 ### ParamsRequest
+
 ParamsRequest represents a message that queries the params
-
-
-
-
-
 
 <a name="scalar.scalarnet.v1beta1.ParamsResponse"></a>
 
 ### ParamsResponse
 
-
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `params` | [Params](#scalar.scalarnet.v1beta1.Params) |  |  |
-
-
-
-
-
 
 <a name="scalar.scalarnet.v1beta1.PendingIBCTransferCountRequest"></a>
 
 ### PendingIBCTransferCountRequest
 
-
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.PendingIBCTransferCountResponse"></a>
 
 ### PendingIBCTransferCountResponse
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `transfers_by_chain` | [PendingIBCTransferCountResponse.TransfersByChainEntry](#scalar.scalarnet.v1beta1.PendingIBCTransferCountResponse.TransfersByChainEntry) | repeated |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.PendingIBCTransferCountResponse.TransfersByChainEntry"></a>
 
 ### PendingIBCTransferCountResponse.TransfersByChainEntry
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `key` | [string](#string) |  |  |
 | `value` | [uint32](#uint32) |  |  |
-
-
-
-
 
  <!-- end messages -->
 
@@ -1185,21 +758,17 @@ ParamsRequest represents a message that queries the params
 
  <!-- end services -->
 
-
-
 <a name="scalar/scalarnet/v1beta1/tx.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/scalarnet/v1beta1/tx.proto
 
-
-
 <a name="scalar.scalarnet.v1beta1.AddCosmosBasedChainRequest"></a>
 
 ### AddCosmosBasedChainRequest
+
 MsgAddCosmosBasedChain represents a message to register a cosmos based chain
 to nexus
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -1210,26 +779,13 @@ to nexus
 | `cosmos_chain` | [string](#string) |  | TODO: Rename this to `chain` after v1beta1 -> v1 version bump |
 | `ibc_path` | [string](#string) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.AddCosmosBasedChainResponse"></a>
 
 ### AddCosmosBasedChainResponse
 
-
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.CallContractRequest"></a>
 
 ### CallContractRequest
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -1239,26 +795,15 @@ to nexus
 | `payload` | [bytes](#bytes) |  |  |
 | `fee` | [Fee](#scalar.scalarnet.v1beta1.Fee) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.CallContractResponse"></a>
 
 ### CallContractResponse
 
-
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.ConfirmDepositRequest"></a>
 
 ### ConfirmDepositRequest
-MsgConfirmDeposit represents a deposit confirmation message
 
+MsgConfirmDeposit represents a deposit confirmation message
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -1266,53 +811,31 @@ MsgConfirmDeposit represents a deposit confirmation message
 | `deposit_address` | [bytes](#bytes) |  |  |
 | `denom` | [string](#string) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.ConfirmDepositResponse"></a>
 
 ### ConfirmDepositResponse
 
-
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.ExecutePendingTransfersRequest"></a>
 
 ### ExecutePendingTransfersRequest
+
 MsgExecutePendingTransfers represents a message to trigger transfer all
 pending transfers
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.ExecutePendingTransfersResponse"></a>
 
 ### ExecutePendingTransfersResponse
 
-
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.LinkRequest"></a>
 
 ### LinkRequest
+
 MsgLink represents a message to link a cross-chain address to an Scalar
 address
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -1321,32 +844,20 @@ address
 | `recipient_chain` | [string](#string) |  |  |
 | `asset` | [string](#string) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.LinkResponse"></a>
 
 ### LinkResponse
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `deposit_addr` | [string](#string) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.RegisterAssetRequest"></a>
 
 ### RegisterAssetRequest
+
 RegisterAssetRequest represents a message to register an asset to a cosmos
 based chain
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -1356,54 +867,32 @@ based chain
 | `limit` | [bytes](#bytes) |  |  |
 | `window` | [google.protobuf.Duration](#google.protobuf.Duration) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.RegisterAssetResponse"></a>
 
 ### RegisterAssetResponse
 
-
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.RegisterFeeCollectorRequest"></a>
 
 ### RegisterFeeCollectorRequest
+
 RegisterFeeCollectorRequest represents a message to register scalarnet fee
 collector account
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `fee_collector` | [bytes](#bytes) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.RegisterFeeCollectorResponse"></a>
 
 ### RegisterFeeCollectorResponse
 
-
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.RegisterIBCPathRequest"></a>
 
 ### RegisterIBCPathRequest
+
 MSgRegisterIBCPath represents a message to register an IBC tracing path for
 a cosmos chain
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -1411,26 +900,13 @@ a cosmos chain
 | `chain` | [string](#string) |  |  |
 | `path` | [string](#string) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.RegisterIBCPathResponse"></a>
 
 ### RegisterIBCPathResponse
 
-
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.RetryIBCTransferRequest"></a>
 
 ### RetryIBCTransferRequest
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -1438,52 +914,28 @@ a cosmos chain
 | `chain` | [string](#string) |  | **Deprecated.**  |
 | `id` | [uint64](#uint64) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.RetryIBCTransferResponse"></a>
 
 ### RetryIBCTransferResponse
 
-
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.RouteIBCTransfersRequest"></a>
 
 ### RouteIBCTransfersRequest
+
 RouteIBCTransfersRequest represents a message to route pending transfers to
 cosmos based chains
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.RouteIBCTransfersResponse"></a>
 
 ### RouteIBCTransfersResponse
 
-
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.RouteMessageRequest"></a>
 
 ### RouteMessageRequest
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -1492,19 +944,9 @@ cosmos based chains
 | `payload` | [bytes](#bytes) |  |  |
 | `feegranter` | [bytes](#bytes) |  |  |
 
-
-
-
-
-
 <a name="scalar.scalarnet.v1beta1.RouteMessageResponse"></a>
 
 ### RouteMessageResponse
-
-
-
-
-
 
  <!-- end messages -->
 
@@ -1514,13 +956,10 @@ cosmos based chains
 
  <!-- end services -->
 
-
-
 <a name="scalar/scalarnet/v1beta1/service.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/scalarnet/v1beta1/service.proto
-
 
  <!-- end messages -->
 
@@ -1528,10 +967,10 @@ cosmos based chains
 
  <!-- end HasExtensions -->
 
-
 <a name="scalar.scalarnet.v1beta1.MsgService"></a>
 
 ### MsgService
+
 Msg defines the scalarnet Msg service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
@@ -1547,10 +986,10 @@ Msg defines the scalarnet Msg service.
 | `RouteMessage` | [RouteMessageRequest](#scalar.scalarnet.v1beta1.RouteMessageRequest) | [RouteMessageResponse](#scalar.scalarnet.v1beta1.RouteMessageResponse) |  | POST|/scalar/scalarnet/route_message|
 | `CallContract` | [CallContractRequest](#scalar.scalarnet.v1beta1.CallContractRequest) | [CallContractResponse](#scalar.scalarnet.v1beta1.CallContractResponse) |  | POST|/scalar/scalarnet/call_contract|
 
-
 <a name="scalar.scalarnet.v1beta1.QueryService"></a>
 
 ### QueryService
+
 QueryService defines the gRPC querier service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
@@ -1561,8 +1000,6 @@ QueryService defines the gRPC querier service.
 | `ChainByIBCPath` | [ChainByIBCPathRequest](#scalar.scalarnet.v1beta1.ChainByIBCPathRequest) | [ChainByIBCPathResponse](#scalar.scalarnet.v1beta1.ChainByIBCPathResponse) |  | GET|/scalar/scalarnet/v1beta1/chain_by_ibc_path/{ibc_path}|
 
  <!-- end services -->
-
-
 
 ## Scalar Value Types
 
@@ -1583,4 +1020,3 @@ QueryService defines the gRPC querier service.
 | <a name="bool" /> bool |  | bool | boolean | boolean | bool | bool | boolean | TrueClass/FalseClass |
 | <a name="string" /> string | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string | String | str/unicode | string | string | string | String (UTF-8) |
 | <a name="bytes" /> bytes | May contain any arbitrary sequence of bytes. | string | ByteString | str | []byte | ByteString | string | String (ASCII-8BIT) |
-

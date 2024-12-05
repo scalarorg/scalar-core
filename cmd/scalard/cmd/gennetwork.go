@@ -15,7 +15,7 @@ import (
 
 	evm "github.com/axelarnetwork/axelar-core/x/evm/exported"
 	evmTypes "github.com/axelarnetwork/axelar-core/x/evm/types"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 )
 
 const (
@@ -70,7 +70,7 @@ func SetGenesisChainParamsCmd(defaultNodeHome string) *cobra.Command {
 				if len(args) < 2 {
 					return fmt.Errorf("chain name is required for EVM platform")
 				}
-				evmChainName := common.ChainName(args[1])
+				evmChainName := nexus.ChainName(args[1])
 				if err := evmChainName.Validate(); err != nil {
 					return err
 				}
@@ -83,8 +83,8 @@ func SetGenesisChainParamsCmd(defaultNodeHome string) *cobra.Command {
 				_, index := findEVMChain(genesisState.Chains, evmChainName)
 				if index < 0 {
 					defaults := evmTypes.DefaultChains()
-					chain, _ = findEVMChain(defaults, common.ChainNameFromNexus(evm.Ethereum.Name))
-					chain.Params.Chain = evmChainName.ToNexus()
+					chain, _ = findEVMChain(defaults, nexus.ChainName(evm.Ethereum.Name))
+					chain.Params.Chain = evmChainName
 					chain.Params.Network = ""
 					chain.Params.Networks = []evmTypes.NetworkInfo{}
 					genesisState.Chains = append(genesisState.Chains, chain)
@@ -166,9 +166,9 @@ func SetGenesisChainParamsCmd(defaultNodeHome string) *cobra.Command {
 	return cmd
 }
 
-func findEVMChain(chains []evmTypes.GenesisState_Chain, chainName common.ChainName) (chain evmTypes.GenesisState_Chain, index int) {
+func findEVMChain(chains []evmTypes.GenesisState_Chain, chainName nexus.ChainName) (chain evmTypes.GenesisState_Chain, index int) {
 	for index, chain = range chains {
-		if chainName.Equals(common.ChainNameFromNexus(chain.Params.Chain)) {
+		if chainName.Equals(chain.Params.Chain) {
 			return
 		}
 	}

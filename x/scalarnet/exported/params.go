@@ -2,7 +2,7 @@ package exported
 
 import (
 	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
-	common "github.com/scalarorg/scalar-core/x/common/exported"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 )
 
 const (
@@ -14,7 +14,7 @@ var (
 	// NativeAsset is the native asset on ScalarNet
 	NativeAsset = "scal"
 
-	Scalarnet = common.Chain{
+	Scalarnet = nexus.Chain{
 		Name:                  "ScalarNet",
 		SupportsForeignAssets: true,
 		KeyType:               tss.None,
