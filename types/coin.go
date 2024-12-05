@@ -2,13 +2,10 @@ package types
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
 const (
-	// DisplayDenom defines the denomination displayed to users in client applications.
-	DisplayDenom = "scal"
-	// BaseDenom defines to the default denomination used in Scalar (staking, EVM, governance, etc.)
-	BaseDenom = "ascal"
 	// BaseDenomUnit defines the base denomination unit for Evmos.
 	// 1 evmos = 1x10^{BaseDenomUnit} aevmos
 	BaseDenomUnit = 18
@@ -17,4 +14,15 @@ const (
 )
 
 // var PowerReduction = sdk.NewInt(1e0 * params.InitialBaseFee)
-var PowerReduction = sdk.NewInt(1e6)
+var (
+	// DisplayDenom defines the denomination displayed to users in client applications.
+	DisplayDenom = scalarnet.NativeAsset
+	// BaseDenom defines to the default denomination used in Scalar (staking, EVM, governance, etc.)
+	BaseDenom = "a" + scalarnet.NativeAsset
+
+	PowerReduction    = sdk.NewInt(1e6)
+	NodeTokens        = sdk.NewInt(1e15)
+	ValidatorTokens   = sdk.NewInt(1e12)
+	BroadcasterTokens = sdk.NewInt(1e15)
+	DelegatorTokens   = sdk.NewInt(1e6)
+)

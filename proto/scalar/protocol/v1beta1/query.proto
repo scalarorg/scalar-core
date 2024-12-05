@@ -1,0 +1,23 @@
+syntax = "proto3";
+package scalar.protocol.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "scalar/protocol/v1beta1/types.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
+
+enum ProtocolStatus {
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  PROTOCOL_STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "StatusUnspecified"];
+  PROTOCOL_STATUS_ACTIVATED = 1 [(gogoproto.enumvalue_customname) = "Activated"];
+  PROTOCOL_STATUS_DEACTIVATED = 2 [(gogoproto.enumvalue_customname) = "Deactivated"];
+}
+
+message ProtocolRequest {
+  ProtocolStatus status = 1;
+}
+
+message ProtocolResponse {
+  repeated Protocol protocols = 1;
+}
