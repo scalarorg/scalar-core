@@ -15,6 +15,7 @@ if [ ! -f "$BIN" ]; then
 fi
 
 CONFIG_DIR="./.${APP_NAME}"
+CHAIN_ID=scalar-testnet
 
 # Set the denomination and amounts
 DENOM=scal
@@ -23,7 +24,7 @@ ALICE_BALANCE=2000000000000  # Initial balance for alice to cover fees and staki
 BOB_BALANCE=3000000000000    # Initial balance for bob
 
 # Step 1: Initialize the Blockchain
-$BIN init test --chain-id demo --home $CONFIG_DIR
+$BIN init test --chain-id $CHAIN_ID --home $CONFIG_DIR
 
 # Optional: Update the denomination in genesis.json if needed
 jq '.app_state.staking.params.bond_denom="'${DENOM}'"' $CONFIG_DIR/config/genesis.json >$CONFIG_DIR/config/genesis.json.tmp && mv $CONFIG_DIR/config/genesis.json.tmp $CONFIG_DIR/config/genesis.json
@@ -37,7 +38,7 @@ $BIN add-genesis-account $($BIN keys show alice -a --keyring-backend test --home
 $BIN add-genesis-account $($BIN keys show bob -a --keyring-backend test --home $CONFIG_DIR) $BOB_BALANCE$DENOM --home $CONFIG_DIR
 
 # Step 4: Create a Genesis Validator
-$BIN gentx alice $STAKING_AMOUNT$DENOM --chain-id demo --keyring-backend test --home $CONFIG_DIR
+$BIN gentx alice $STAKING_AMOUNT$DENOM --chain-id $CHAIN_ID --keyring-backend test --home $CONFIG_DIR
 
 # Step 5: Collect Genesis Transactions
 $BIN collect-gentxs --home $CONFIG_DIR

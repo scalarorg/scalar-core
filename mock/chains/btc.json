@@ -1,0 +1,15 @@
+[
+  {
+    "network": "testnet4",
+    "chainId": 3,
+    "id": "bitcoin-testnet4",
+    "name": "Bitcoin Testnet4",
+    "gateway": "0xda8367783782EC92BaDae3e534a9FCcb3fa6eF1C",
+    "_comment": "Remove gateway address in xchains core's btc module",
+    "type": "broadcast",
+    "rpcHost": "testnet4.btc.scalar.org",
+    "rpcPort": 80,
+    "rpcUser": "scalar",
+    "rpcPassword": "scalartestnet4"
+  }
+]
