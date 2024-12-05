@@ -36,7 +36,7 @@ message Proof {
 message PollMapping {
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "TxHash",
+    (gogoproto.customtype) = "Hash",
     (gogoproto.customname) = "TxID"
   ];
   uint64 poll_id = 2 [
@@ -54,6 +54,6 @@ message PollMetadata {
   bytes tx_id = 2 [
     (gogoproto.customname) = "TxID",
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "TxHash"
+    (gogoproto.customtype) = "Hash"
   ];
 }

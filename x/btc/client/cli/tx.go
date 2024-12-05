@@ -32,8 +32,8 @@ func GetTxCmd() *cobra.Command {
 
 func getCmdCreateConfirmGatewayTxs() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "confirm-gateway-txs <chain> <txID>...",
-		Short: "Confirm gateway transactions in an EVM chain",
+		Use:   "confirm-staking-txs <chain> <txID>...",
+		Short: "Confirm staking transactions in an EVM chain",
 		Args:  cobra.MinimumNArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cliCtx, err := client.GetClientTxContext(cmd)
@@ -42,16 +42,16 @@ func getCmdCreateConfirmGatewayTxs() *cobra.Command {
 			}
 
 			chain := nexus.ChainName(utils.NormalizeString(args[0]))
-			var txIDs []types.TxHash
+			var txIDs []types.Hash
 			for _, arg := range args[1:] {
-				txHash, err := types.TxHashFromHexStr(arg)
+				txHash, err := types.HashFromHexStr(arg)
 				if err != nil {
 					return fmt.Errorf("failed to parse txID %s: %v", arg, err)
 				}
 				txIDs = append(txIDs, *txHash)
 			}
 
-			msg := types.NewConfirmGatewayTxsRequest(cliCtx.GetFromAddress(), chain, txIDs)
+			msg := types.NewConfirmStakingTxsRequest(cliCtx.GetFromAddress(), chain, txIDs)
 			if err := msg.ValidateBasic(); err != nil {
 				return fmt.Errorf("failed to validate message: %v", err)
 			}

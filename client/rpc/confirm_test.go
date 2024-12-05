@@ -20,9 +20,9 @@ func TestConfirmBtcTx(t *testing.T) {
 	require.NotNil(t, mockNetworkClient)
 
 	chain := nexus.ChainName(utils.NormalizeString(chainNameBtcTestnet4))
-	txHash, err := btcTypes.TxHashFromHexStr(mockTxHash)
+	txHash, err := btcTypes.HashFromHexStr(mockTxHash)
 	require.NoError(t, err)
-	msg := btcTypes.NewConfirmGatewayTxsRequest(mockNetworkClient.GetAddress(), chain, []btcTypes.TxHash{*txHash})
+	msg := btcTypes.NewConfirmStakingTxsRequest(mockNetworkClient.GetAddress(), chain, []btcTypes.Hash{*txHash})
 
 	tx, err := rpc.ConfirmBtcTx(context.Background(), mockNetworkClient, msg)
 	require.NoError(t, err)

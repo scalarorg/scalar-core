@@ -61,7 +61,7 @@ func excludeJailedOrTombstoned(ctx sdk.Context, slashing types.SlashingKeeper, s
 	)
 }
 
-func (s msgServer) initializePolls(ctx sdk.Context, chain nexus.Chain, snapshot snapshot.Snapshot, txIDs []types.TxHash) ([]types.PollMapping, error) {
+func (s msgServer) initializePolls(ctx sdk.Context, chain nexus.Chain, snapshot snapshot.Snapshot, txIDs []types.Hash) ([]types.PollMapping, error) {
 	keeper, err := s.ForChain(ctx, chain.Name)
 	if err != nil {
 		return nil, err
