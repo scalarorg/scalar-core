@@ -14,8 +14,8 @@
   - [NetworkKind](#scalar.btc.v1beta1.NetworkKind)
   
 - [scalar/btc/v1beta1/events.proto](#scalar/btc/v1beta1/events.proto)
-  - [ConfirmGatewayTxsStarted](#scalar.btc.v1beta1.ConfirmGatewayTxsStarted)
-  - [Event](#scalar.btc.v1beta1.Event)
+    - [ConfirmStakingTxsStarted](#scalar.btc.v1beta1.ConfirmStakingTxsStarted)
+    - [Event](#scalar.btc.v1beta1.Event)
   
 - [scalar/btc/v1beta1/params.proto](#scalar/btc/v1beta1/params.proto)
   - [Params](#scalar.btc.v1beta1.Params)
@@ -25,8 +25,8 @@
   - [GenesisState.Chain](#scalar.btc.v1beta1.GenesisState.Chain)
   
 - [scalar/btc/v1beta1/tx.proto](#scalar/btc/v1beta1/tx.proto)
-  - [ConfirmGatewayTxsRequest](#scalar.btc.v1beta1.ConfirmGatewayTxsRequest)
-  - [ConfirmGatewayTxsResponse](#scalar.btc.v1beta1.ConfirmGatewayTxsResponse)
+    - [ConfirmStakingTxsRequest](#scalar.btc.v1beta1.ConfirmStakingTxsRequest)
+    - [ConfirmStakingTxsResponse](#scalar.btc.v1beta1.ConfirmStakingTxsResponse)
   
 - [scalar/btc/v1beta1/query.proto](#scalar/btc/v1beta1/query.proto)
   - [BatchedCommandsRequest](#scalar.btc.v1beta1.BatchedCommandsRequest)
@@ -176,9 +176,11 @@
 
 ## scalar/btc/v1beta1/events.proto
 
-<a name="scalar.btc.v1beta1.ConfirmGatewayTxsStarted"></a>
 
-### ConfirmGatewayTxsStarted
+
+<a name="scalar.btc.v1beta1.ConfirmStakingTxsStarted"></a>
+
+### ConfirmStakingTxsStarted
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -265,9 +267,11 @@
 
 ## scalar/btc/v1beta1/tx.proto
 
-<a name="scalar.btc.v1beta1.ConfirmGatewayTxsRequest"></a>
 
-### ConfirmGatewayTxsRequest
+
+<a name="scalar.btc.v1beta1.ConfirmStakingTxsRequest"></a>
+
+### ConfirmStakingTxsRequest
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -275,9 +279,14 @@
 | `chain` | [string](#string) |  |  |
 | `tx_ids` | [bytes](#bytes) | repeated |  |
 
-<a name="scalar.btc.v1beta1.ConfirmGatewayTxsResponse"></a>
 
-### ConfirmGatewayTxsResponse
+
+
+
+
+<a name="scalar.btc.v1beta1.ConfirmStakingTxsResponse"></a>
+
+### ConfirmStakingTxsResponse
 
  <!-- end messages -->
 
@@ -343,7 +352,7 @@ Msg defines the evm Msg service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `ConfirmGatewayTxs` | [ConfirmGatewayTxsRequest](#scalar.btc.v1beta1.ConfirmGatewayTxsRequest) | [ConfirmGatewayTxsResponse](#scalar.btc.v1beta1.ConfirmGatewayTxsResponse) |  | POST|/scalar/btc/confirm_gateway_txs|
+| `ConfirmStakingTxs` | [ConfirmStakingTxsRequest](#scalar.btc.v1beta1.ConfirmStakingTxsRequest) | [ConfirmStakingTxsResponse](#scalar.btc.v1beta1.ConfirmStakingTxsResponse) |  | POST|/scalar/btc/confirm_staking_txs|
 
 <a name="scalar.btc.v1beta1.QueryService"></a>
 

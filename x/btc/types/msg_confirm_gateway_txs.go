@@ -8,16 +8,16 @@ import (
 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 )
 
-// NewConfirmGatewayTxsRequest creates a message of type ConfirmGatewayTxsRequest
-func NewConfirmGatewayTxsRequest(sender sdk.AccAddress, chain nexus.ChainName, txIDs []TxHash) *ConfirmGatewayTxsRequest {
-	return &ConfirmGatewayTxsRequest{
+// NewConfirmStakingTxsRequest creates a message of type ConfirmStakingTxsRequest
+func NewConfirmStakingTxsRequest(sender sdk.AccAddress, chain nexus.ChainName, txIDs []Hash) *ConfirmStakingTxsRequest {
+	return &ConfirmStakingTxsRequest{
 		Sender: sender,
 		Chain:  chain,
 		TxIDs:  txIDs,
 	}
 }
 
-func (msg *ConfirmGatewayTxsRequest) ValidateBasic() error {
+func (msg *ConfirmStakingTxsRequest) ValidateBasic() error {
 	// TODO: validate the txIDs
 	if err := sdk.VerifyAddressFormat(msg.Sender); err != nil {
 		return err
@@ -31,6 +31,6 @@ func (msg *ConfirmGatewayTxsRequest) ValidateBasic() error {
 	return nil
 }
 
-func (m ConfirmGatewayTxsRequest) GetSigners() []sdk.AccAddress {
+func (m ConfirmStakingTxsRequest) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{m.Sender}
 }

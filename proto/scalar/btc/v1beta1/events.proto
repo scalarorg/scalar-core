@@ -10,7 +10,7 @@ option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
 
 option (gogoproto.goproto_getters_all) = false;
 
-message ConfirmGatewayTxsStarted {
+message ConfirmStakingTxsStarted {
   repeated PollMapping poll_mappings = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.jsontag) = "poll_mappings,omitempty"

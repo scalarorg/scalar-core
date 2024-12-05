@@ -1,16 +1,16 @@
 package keeper
 
 import (
+	"fmt"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/scalarorg/scalar-core/x/btc/types"
 
 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
-
 	vote "github.com/axelarnetwork/axelar-core/x/vote/exported"
+	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/x/btc/types"
 )
-
-// TODO: Implement this handler
 
 var _ vote.VoteHandler = &voteHandler{}
 
@@ -218,44 +218,43 @@ func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event ty
 }
 
 func (v voteHandler) handleContractCall(ctx sdk.Context, ck types.ChainKeeper, event types.Event) error {
-	// 	msg := mustToGeneralMessage(ctx, v.nexus, event)
+	// msg := mustToGeneralMessage(ctx, v.nexus, event)
 
-	// 	if err := v.nexus.SetNewMessage(ctx, msg); err != nil {
-	// 		return err
-	// 	}
-
-	// 	funcs.MustNoErr(v.nexus.EnqueueRouteMessage(ctx, msg.ID))
-	// 	funcs.MustNoErr(ck.SetEventCompleted(ctx, event.GetID()))
-
-	// 	return nil
+	// if err := v.nexus.SetNewMessage(ctx, msg); err != nil {
+	// 	return err
 	// }
 
-	// func mustToGeneralMessage(ctx sdk.Context, n types.Nexus, event types.Event) nexus.GeneralMessage {
-	// 	id := string(event.GetID())
-	// 	contractCall := event.GetEvent().(*types.Event_ContractCall).ContractCall
+	// funcs.MustNoErr(v.nexus.EnqueueRouteMessage(ctx, msg.ID))
+	// funcs.MustNoErr(ck.SetEventCompleted(ctx, event.GetID()))
 
-	// 	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
-	// 	sender := nexus.CrossChainAddress{Chain: sourceChain, Address: contractCall.Sender.Hex()}
-
-	// 	destinationChain, ok := n.GetChain(ctx, contractCall.DestinationChain)
-	// 	if !ok {
-	// 		// try forwarding it to wasm router if destination chain is not registered
-	// 		// Wasm chain names are always lower case, so normalize it for consistency in core
-	// 		destChainName := nexus.ChainName(strings.ToLower(contractCall.DestinationChain.String()))
-	// 		destinationChain = nexus.Chain{Name: destChainName, SupportsForeignAssets: false, KeyType: tss.None, Module: wasm.ModuleName}
-	// 	}
-	// 	recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: contractCall.ContractAddress}
-
-	// return nexus.NewGeneralMessage(id, sender, recipient, contractCall.PayloadHash.Bytes(), event.TxID.Bytes(), event.Index, nil)
 	return nil
 }
 
-// func mustGetMetadata(poll vote.Poll) types.PollMetadata {
-// 	// md := funcs.MustOk(poll.GetMetaData())
-// 	// metadata, ok := md.(*types.PollMetadata)
-// 	// if !ok {
-// 	// 	panic(fmt.Sprintf("poll metadata should be of type %T", &types.PollMetadata{}))
-// 	// }
-// 	// return *metadata
-// 	return types.PollMetadata{}
-// }
+func mustToGeneralMessage(ctx sdk.Context, n types.Nexus, event types.Event) nexus.GeneralMessage {
+	// id := string(event.GetID())
+	// contractCall := event.GetEvent().(*types.Event_ContractCall).ContractCall
+
+	// sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
+	// sender := nexus.CrossChainAddress{Chain: sourceChain, Address: contractCall.Sender.Hex()}
+
+	// destinationChain, ok := n.GetChain(ctx, contractCall.DestinationChain)
+	// if !ok {
+	// 	// try forwarding it to wasm router if destination chain is not registered
+	// 	// Wasm chain names are always lower case, so normalize it for consistency in core
+	// 	destChainName := nexus.ChainName(strings.ToLower(contractCall.DestinationChain.String()))
+	// 	destinationChain = nexus.Chain{Name: destChainName, SupportsForeignAssets: false, KeyType: tss.None, Module: wasm.ModuleName}
+	// }
+	// recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: contractCall.ContractAddress}
+
+	// return nexus.NewGeneralMessage(id, sender, recipient, contractCall.PayloadHash.Bytes(), event.TxID.Bytes(), event.Index, nil)
+	return nexus.GeneralMessage{}
+}
+
+func mustGetMetadata(poll vote.Poll) types.PollMetadata {
+	md := funcs.MustOk(poll.GetMetaData())
+	metadata, ok := md.(*types.PollMetadata)
+	if !ok {
+		panic(fmt.Sprintf("poll metadata should be of type %T", &types.PollMetadata{}))
+	}
+	return *metadata
+}

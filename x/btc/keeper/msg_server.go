@@ -35,7 +35,7 @@ func NewMsgServerImpl(args MsgServerConstructArgs) types.MsgServiceServer {
 	}
 }
 
-func (s msgServer) ConfirmGatewayTxs(c context.Context, req *types.ConfirmGatewayTxsRequest) (*types.ConfirmGatewayTxsResponse, error) {
+func (s msgServer) ConfirmStakingTxs(c context.Context, req *types.ConfirmStakingTxsRequest) (*types.ConfirmStakingTxsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
 	chain, ok := s.nexus.GetChain(ctx, req.Chain)
@@ -62,12 +62,12 @@ func (s msgServer) ConfirmGatewayTxs(c context.Context, req *types.ConfirmGatewa
 		return nil, err
 	}
 
-	events.Emit(ctx, &types.ConfirmGatewayTxsStarted{
+	events.Emit(ctx, &types.ConfirmStakingTxsStarted{
 		PollMappings:       pollMappings,
 		Chain:              chain.Name,
 		ConfirmationHeight: keeper.GetRequiredConfirmationHeight(ctx),
 		Participants:       snapshot.GetParticipantAddresses(),
 	})
 
-	return &types.ConfirmGatewayTxsResponse{}, nil
+	return &types.ConfirmStakingTxsResponse{}, nil
 }

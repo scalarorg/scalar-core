@@ -9,7 +9,7 @@ option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
 
 option (gogoproto.goproto_getters_all) = false;
 
-message ConfirmGatewayTxsRequest {
+message ConfirmStakingTxsRequest {
   option (axelar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
@@ -19,9 +19,9 @@ message ConfirmGatewayTxsRequest {
             "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   repeated bytes tx_ids = 3 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "TxHash",
+    (gogoproto.customtype) = "Hash",
     (gogoproto.customname) = "TxIDs"
   ];
 }
 
-message ConfirmGatewayTxsResponse {}
+message ConfirmStakingTxsResponse {}

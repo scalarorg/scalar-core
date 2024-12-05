@@ -12,10 +12,10 @@ option (gogoproto.goproto_registration) = true;
 
 // Msg defines the evm Msg service.
 service MsgService {
-  rpc ConfirmGatewayTxs(ConfirmGatewayTxsRequest)
-      returns (ConfirmGatewayTxsResponse) {
+  rpc ConfirmStakingTxs(ConfirmStakingTxsRequest)
+      returns (ConfirmStakingTxsResponse) {
     option (google.api.http) = {
-      post : "/scalar/btc/confirm_gateway_txs"
+      post : "/scalar/btc/confirm_staking_txs"
       body : "*"
     };
   }

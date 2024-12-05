@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/hex"
 	fmt "fmt"
-	"slices"
 
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 )
@@ -55,27 +54,27 @@ func (v VaultVersion) Unmarshal(data []byte) error {
 	return nil
 }
 
-type TxHash chainhash.Hash
+type Hash chainhash.Hash
 
-var ZeroTxHash = TxHash{}
+var ZeroHash = Hash{}
 
-func (h TxHash) Bytes() []byte {
+func (h Hash) Bytes() []byte {
 	return h[:]
 }
 
-func (h TxHash) IsZero() bool {
-	return bytes.Equal(h.Bytes(), ZeroTxHash.Bytes())
+func (h Hash) IsZero() bool {
+	return bytes.Equal(h.Bytes(), ZeroHash.Bytes())
 }
 
-func (h TxHash) Size() int {
+func (h Hash) Size() int {
 	return chainhash.HashSize
 }
 
-func (h TxHash) Marshal() ([]byte, error) {
+func (h Hash) Marshal() ([]byte, error) {
 	return h[:], nil
 }
 
-func (h TxHash) MarshalTo(data []byte) (int, error) {
+func (h Hash) MarshalTo(data []byte) (int, error) {
 	bytesCopied := copy(data, h[:])
 	if bytesCopied != chainhash.HashSize {
 		return 0, fmt.Errorf("failed to marshal TxHash: expected %d bytes, got %d", chainhash.HashSize, bytesCopied)
@@ -83,36 +82,24 @@ func (h TxHash) MarshalTo(data []byte) (int, error) {
 	return bytesCopied, nil
 }
 
-func (h *TxHash) Unmarshal(data []byte) error {
+func (h *Hash) Unmarshal(data []byte) error {
 	hash, err := chainhash.NewHash(data)
 	if err != nil {
 		return fmt.Errorf("failed to unmarshal TxHash: %w", err)
 	}
-	*h = TxHash(*hash)
+	*h = Hash(*hash)
 	return nil
 }
 
-func TxHashFromHexStr(hexStr string) (*TxHash, error) {
-	hexBytes, err := hex.DecodeString(hexStr)
+func HashFromHexStr(hexStr string) (*Hash, error) {
+	hash, err := chainhash.NewHashFromStr(hexStr)
 	if err != nil {
 		return nil, err
 	}
-
-	if len(hexBytes) != chainhash.HashSize {
-		return nil, fmt.Errorf("invalid hex string length: %d", len(hexBytes))
-	}
-
-	littleEndianBytes := slices.Clone(hexBytes)
-	slices.Reverse(littleEndianBytes)
-
-	hash, err := chainhash.NewHash(littleEndianBytes)
-	if err != nil {
-		return nil, err
-	}
-	return (*TxHash)(hash), nil
+	return (*Hash)(hash), nil
 }
 
-func (h TxHash) HexStr() string {
+func (h Hash) HexStr() string {
 	return (*chainhash.Hash)(&h).String()
 }
 
