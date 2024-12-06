@@ -31,5 +31,6 @@ var (
 	ValidatorTokens   = sdk.NewInt(1e12)
 	BroadcasterTokens = sdk.NewInt(1e15)
 	GovTokens         = sdk.NewInt(1e15)
+	FaucetTokens      = sdk.NewInt(1e18)
 	DelegatorTokens   = sdk.NewInt(1e6)
 )

@@ -37,6 +37,7 @@ const (
 	ValidatorKeyName   = "priv_validator"
 	BroadcasterKeyName = "broadcaster"
 	GovKeyName         = "govenance"
+	FaucetKeyName      = "faucet"
 )
 
 type GenesisState map[string]json.RawMessage
@@ -80,16 +81,20 @@ type ValidatorInfo struct {
 	NodeID      string
 	NodeDir     string
 	SeedAddress string
-	ValPubKey   cryptotypes.PubKey
-	//Balance of validator
+	RPCPort     int
+
+	ValPubKey  cryptotypes.PubKey
 	ValBalance banktypes.Balance
 	//Balance of broadcaster
 	Broadcaster        cryptotypes.PubKey
 	BroadcasterBalance banktypes.Balance
-	//NodeBalance        banktypes.Balance
-	//BroadcasterAccount *authtypes.BaseAccount
-	GovPubKey        cryptotypes.PubKey
-	GovBalance       banktypes.Balance
+
+	GovPubKey  cryptotypes.PubKey
+	GovBalance banktypes.Balance
+
+	FaucetPubKey  cryptotypes.PubKey
+	FaucetBalance banktypes.Balance
+
 	GenesisValidator tmtypes.GenesisValidator
 	BtcPubkey        string
 	GenFile          string
@@ -130,29 +135,20 @@ func GenerateGenesis(clientCtx client.Context,
 	unbondedPoolAmount := sdk.NewCoins()
 	for _, info := range validatorInfos {
 		//Validator balance must be set and greater than deligation amount
-		genBalances = append(genBalances, banktypes.Balance{
-			Address: sdk.AccAddress(info.ValPubKey.Address()).String(),
-			Coins:   info.ValBalance.Coins,
-		})
+		genBalances = append(genBalances, info.ValBalance)
 		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(info.ValPubKey.Address()), info.ValPubKey, 0, 0))
+
 		genBalances = append(genBalances, info.BroadcasterBalance)
 		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(info.Broadcaster.Address()), info.Broadcaster, 0, 0))
 
 		genBalances = append(genBalances, info.GovBalance)
 		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(info.GovPubKey.Address()), info.GovPubKey, 0, 0))
-		// genBalances = append(genBalances, info.NodeBalance)
-		// genAccounts = append(genAccounts, authtypes.NewBaseAccount(info.NodeBalance.GetAddress(), nil, 0, 0))
+
+		genBalances = append(genBalances, info.FaucetBalance)
+		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(info.FaucetPubKey.Address()), info.FaucetPubKey, 0, 0))
+
 		unbondedPoolAmount = unbondedPoolAmount.Add(info.ValBalance.Coins...)
 	}
-	//Not bonded module accounts
-	// macc := authtypes.NewEmptyModuleAccount(stakingtypes.NotBondedPoolName)
-	// unbondedPoolBalance := banktypes.Balance{
-	// 	Address: macc.GetAddress().String(),
-	// 	Coins:   unbondedPoolAmount,
-	// }
-	// genAccounts = append(genAccounts, macc)
-	// // fmt.Printf("unbondedPoolBalance %v, totalSupply %v", unbondedPoolBalance, totalSupply)
-	// genBalances = append(genBalances, unbondedPoolBalance)
 	// set the accounts in the genesis state
 	var authGenState authtypes.GenesisState
 	clientCtx.Codec.MustUnmarshalJSON(appGenState[authtypes.ModuleName], &authGenState)

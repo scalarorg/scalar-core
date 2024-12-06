@@ -48,9 +48,10 @@ const (
 )
 
 var (
+	flagValidatorMnemonic   = "VALIDATOR_MNEMONIC"
 	flagBroadcasterMnemonic = "BROADCASTER_MNEMONIC"
 	flagGovernanceMnemonic  = "GOV_MNEMONIC"
-	flagValidatorMnemonic   = "VALIDATOR_MNEMONIC"
+	flagFaucetMnemonic      = "FAUCET_MNEMONIC"
 	flagBtcPubkey           = "BTC_PUBKEY"
 	flagNodeDirPrefix       = "node-dir-prefix"
 	flagNumValidators       = "v"
@@ -58,17 +59,17 @@ var (
 	flagOutputDir           = "output-dir"
 	flagNodeDaemonHome      = "node-daemon-home"
 	flagNodeDomain          = "node-domain"
+	flagPortOffset          = "port-offset"
+	flagBaseFee             = "base-fee"
+	flagMinGasPrice         = "min-gas-price"
+	flagKeyType             = "key-type"
+	flagEnvFile             = "env-file"
 	flagEnableLogging       = "enable-logging"
 	flagRPCAddress          = "rpc.address"
 	flagAPIAddress          = "api.address"
 	flagPrintMnemonic       = "print-mnemonic"
-	flagBaseFee             = "base-fee"
-	flagMinGasPrice         = "min-gas-price"
 	flagGRPCAddress         = "grpc.address"
 	flagJSONRPCAddress      = "json-rpc.address"
-	flagKeyType             = "key-type"
-	flagEnvFile             = "env-file"
-	moduleNameFeemarket     = "feemarket"
 )
 
 type initArgs struct {
@@ -82,6 +83,7 @@ type initArgs struct {
 	numValidators   int
 	outputDir       string
 	nodeDomain      string
+	portOffset      int
 	baseFee         sdk.Int
 	minGasPrice     sdk.Dec
 }
@@ -105,6 +107,7 @@ type EnvKeys struct {
 	ValidatorMnemonic   string
 	BroadcasterMnemonic string
 	GovernanceMnemonic  string
+	FaucetMnemonic      string
 	BtcPubkey           string
 }
 
@@ -125,6 +128,7 @@ func addTestnetFlagsToCmd(cmd *cobra.Command) {
 	cmd.Flags().String(flagKeyType, string(hd.Secp256k1Type), "Key signing algorithm to generate keys for")
 	cmd.Flags().String(flagBaseFee, strconv.Itoa(params.InitialBaseFee), "The params base_fee in the feemarket module in geneis")
 	cmd.Flags().String(flagMinGasPrice, "0", "The params min_gas_price in the feemarket module in geneis")
+	cmd.Flags().Int(flagPortOffset, 0, "Port offset for the testnet")
 }
 
 // NewTestnetCmd creates a root testnet command with subcommands to run an in-process testnet or initialize
@@ -230,6 +234,7 @@ func readEnvKeys() EnvKeys {
 		ValidatorMnemonic:   os.Getenv(flagValidatorMnemonic),
 		BroadcasterMnemonic: os.Getenv(flagBroadcasterMnemonic),
 		GovernanceMnemonic:  os.Getenv(flagGovernanceMnemonic),
+		FaucetMnemonic:      os.Getenv(flagFaucetMnemonic),
 		BtcPubkey:           os.Getenv(flagBtcPubkey),
 	}
 	return envKeys
@@ -262,7 +267,7 @@ func initTestnetFiles(
 			return err
 		}
 		// Validator index starts from 1
-		validatorInfo, err := initValidatorConfig(clientCtx, cmd, nodeConfig, host, nodeDirName, args, envKeys, i+1)
+		validatorInfo, err := initValidatorConfig(clientCtx, cmd, nodeConfig, host, nodeDirName, args, envKeys, i)
 		if err != nil {
 			_ = os.RemoveAll(args.outputDir)
 			cmd.PrintErrf("failed to initialize validator config: %s", err.Error())
@@ -271,12 +276,10 @@ func initTestnetFiles(
 		validatorInfos = append(validatorInfos, *validatorInfo)
 	}
 	if err := initGenFiles(clientCtx, mbm,
-		args.chainID,
+		nodeConfig,
 		scalartypes.BaseDenom,
-		args.supportedChains,
 		validatorInfos,
-		args.baseFee,
-		args.minGasPrice,
+		args,
 	); err != nil {
 		cmd.PrintErrf("failed to initGenFiles: %s", err.Error())
 		return err
@@ -364,13 +367,48 @@ func storeValidatorInfo(pubkey cryptotypes.PubKey, keyName string, nodeDir strin
 	}
 	return nil
 }
+func createKeyring(cmd *cobra.Command, args initArgs, nodeDir string) (keyring.Keyring, keyring.SignatureAlgo, error) {
+	inBuf := bufio.NewReader(cmd.InOrStdin())
+	kb, err := keyring.New(sdk.KeyringServiceName(), args.keyringBackend, nodeDir, inBuf, defaultOption)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	keyringAlgos, _ := kb.SupportedAlgorithms()
+	algo, err := keyring.NewSigningAlgoFromString(args.algo, keyringAlgos)
+	if err != nil {
+		return nil, nil, err
+	}
+	return kb, algo, nil
+}
+func genFaucet(kb keyring.Keyring, mnemonic string, algo keyring.SignatureAlgo, tokenAmount sdk.Int) (*banktypes.Balance, error) {
+	if mnemonic != "" {
+		//broadcasterPubKey, err := createPubkeyFromMnemonic(nodeConfig, envKeys.BroadcasterMnemonic, kb, algo, scalartypes.BroadcasterKeyName)
+		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeFaucetAccount, 0)
+		pubkey, err := createKeyringAccountFromMnemonic(kb,
+			scalartypes.BroadcasterKeyName,
+			mnemonic,
+			bip44Path,
+			algo,
+		)
+		if err != nil {
+			log.Error().Err(err).Msg("[getFaucet] Create keyring account from mnemonic")
+			return nil, err
+		}
+		return &banktypes.Balance{
+			Address: sdk.AccAddress(pubkey.Address()).String(),
+			Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, scalartypes.BroadcasterTokens)},
+		}, nil
+	}
+	return nil, nil
+}
 func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	nodeConfig *tmconfig.Config,
 	host string,
 	nodeDirName string,
 	args initArgs,
 	envKeys EnvKeys,
-	index int,
+	index int, //index starts from 0
 ) (*scalartypes.ValidatorInfo, error) {
 	var err error
 	nodeDir := filepath.Join(args.outputDir, nodeDirName, args.nodeDaemonHome)
@@ -380,36 +418,24 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	}
 	fmt.Printf("Create validator config in dir %s\n", nodeDir)
 	nodeConfig.Moniker = nodeDirName
+	nodeID, err := createNodeID(nodeConfig)
+	if err != nil {
+		return nil, err
+	}
 	validatorInfo := scalartypes.ValidatorInfo{
-		Host:      host,
-		Moniker:   nodeConfig.Moniker,
-		NodeDir:   filepath.Join(nodeDir, "config"),
-		GenFile:   nodeConfig.GenesisFile(),
-		BtcPubkey: envKeys.BtcPubkey,
+		Host:        host,
+		NodeID:      nodeID,
+		RPCPort:     26657 + index*args.portOffset,
+		SeedAddress: fmt.Sprintf("%s@%s:%d", nodeID, host, 26656+index*args.portOffset),
+		Moniker:     nodeDirName,
+		NodeDir:     nodeDir,
+		GenFile:     nodeConfig.GenesisFile(),
+		BtcPubkey:   envKeys.BtcPubkey,
 	}
 	// validatorInfo.NodeID, validatorInfo.ValPubKey, err = genutil.InitializeNodeValidatorFilesFromMnemonic(nodeConfig, envKeys.ValidatorMnemonic)
-	validatorInfo.NodeID, err = createNodeID(nodeConfig)
-	if err != nil {
-		return nil, err
-	}
-	validatorInfo.SeedAddress = fmt.Sprintf("%s@%s:26656", validatorInfo.NodeID, host)
-	// validatorInfo.nodeID, validatorInfo.valPubKey, err = genutil.InitializeNodeValidatorFiles(nodeConfig)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	inBuf := bufio.NewReader(cmd.InOrStdin())
 	gentxsDir := filepath.Join(args.outputDir, "gentxs")
-	nodeConfig.RPC.ListenAddress = "tcp://0.0.0.0:26657"
-
 	// TODO: add ledger support
-	kb, err := keyring.New(sdk.KeyringServiceName(), args.keyringBackend, nodeDir, inBuf, defaultOption)
-	if err != nil {
-		return nil, err
-	}
-
-	keyringAlgos, _ := kb.SupportedAlgorithms()
-	algo, err := keyring.NewSigningAlgoFromString(args.algo, keyringAlgos)
+	kb, algo, err := createKeyring(cmd, args, nodeDir)
 	if err != nil {
 		return nil, err
 	}
@@ -444,6 +470,12 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 			return nil, err
 		}
 		validatorInfo.Broadcaster = broadcasterPubKey
+		validatorInfo.BroadcasterBalance = banktypes.Balance{
+			Address: sdk.AccAddress(broadcasterPubKey.Address()).String(),
+			Coins: sdk.Coins{
+				sdk.NewCoin(scalartypes.BaseDenom, scalartypes.BroadcasterTokens),
+			},
+		}
 	}
 	if envKeys.GovernanceMnemonic != "" {
 		//validatorInfo.GovPubKey, err = createPubkeyFromMnemonic(nodeConfig, envKeys.GovernanceMnemonic, kb, algo, scalartypes.GovKeyName)
@@ -457,6 +489,25 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		if err != nil {
 			fmt.Printf("ExtractGovernance Err: %s\n", err.Error())
 			return nil, err
+		}
+		validatorInfo.GovBalance = banktypes.Balance{
+			Address: sdk.AccAddress(validatorInfo.GovPubKey.Address()).String(),
+			Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, scalartypes.GovTokens)},
+		}
+	}
+	if envKeys.FaucetMnemonic != "" {
+		validatorInfo.FaucetPubKey, err = createKeyringAccountFromMnemonic(kb,
+			scalartypes.FaucetKeyName,
+			envKeys.FaucetMnemonic,
+			fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeFaucetAccount, uint32(index)),
+			algo,
+		)
+		if err != nil {
+			return nil, err
+		}
+		validatorInfo.FaucetBalance = banktypes.Balance{
+			Address: sdk.AccAddress(validatorInfo.FaucetPubKey.Address()).String(),
+			Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, scalartypes.FaucetTokens)},
 		}
 	}
 	//senderKeyName := nodeDirName
@@ -494,23 +545,12 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	//Use validator address as node address
 	// senderAddress := sdk.AccAddress(validatorInfo.Broadcaster.Address())
 	// senderKeyName = types.BroadcasterKeyName
-	power := int64(index * index)
+	power := int64((index + 1) * (index + 1))
 	valTokens := sdk.TokensFromConsensusPower(power, scalartypes.ValidatorTokens)
 	valCoin := sdk.NewCoin(scalartypes.BaseDenom, valTokens)
 	validatorInfo.ValBalance = banktypes.Balance{
 		Address: sdk.AccAddress(validatorInfo.ValPubKey.Address()).String(),
 		Coins:   sdk.Coins{valCoin},
-	}
-
-	validatorInfo.BroadcasterBalance = banktypes.Balance{
-		Address: sdk.AccAddress(validatorInfo.Broadcaster.Address()).String(),
-		Coins: sdk.Coins{
-			sdk.NewCoin(scalartypes.BaseDenom, scalartypes.BroadcasterTokens),
-		},
-	}
-	validatorInfo.GovBalance = banktypes.Balance{
-		Address: sdk.AccAddress(validatorInfo.GovPubKey.Address()).String(),
-		Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, scalartypes.GovTokens)},
 	}
 	tmPubKey, err := cryptocodec.ToTmPubKeyInterface(validatorInfo.ValPubKey)
 	if err != nil {
@@ -578,27 +618,37 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	if err := setCustomAppConfig(cmd); err != nil {
 		return nil, err
 	}
+	return &validatorInfo, nil
+}
+func createConfigFiles(nodeConfig *tmconfig.Config, nodeDir string, args initArgs, index int) error {
 	//Generate cosmos default app config
 	appConfig := sdkconfig.DefaultConfig()
 	appConfig.MinGasPrices = args.minGasPrices
 	appConfig.API.Enable = true
+	appConfig.API.Address = fmt.Sprintf("tcp://0.0.0.0:%d", 1317+index*args.portOffset)
+	appConfig.GRPC.Address = fmt.Sprintf("0.0.0.0:%d", 9090+index*args.portOffset)
+	appConfig.GRPCWeb.Address = fmt.Sprintf("0.0.0.0:%d", 9091+index*args.portOffset)
 	appConfig.Telemetry.Enabled = true
 	appConfig.Telemetry.PrometheusRetentionTime = 60
 	appConfig.Telemetry.EnableHostnameLabel = false
 	appConfig.Telemetry.GlobalLabels = [][]string{{"chain_id", args.chainID}}
 	sdkconfig.WriteConfigFile(filepath.Join(nodeDir, "config/app.toml"), appConfig)
 	// Generate tendermint default config
-	configPath := filepath.Join(nodeDir, "config", "config.toml")
+	//Set port to different values for each validator
+	nodeConfig.ProxyApp = fmt.Sprintf("tcp://127.0.0.1:%d", 26658+index*args.portOffset)
+	nodeConfig.PrivValidatorListenAddr = ""
+	nodeConfig.RPC.ListenAddress = fmt.Sprintf("tcp://0.0.0.0:%d", 26657+index*args.portOffset)
+	nodeConfig.P2P.ListenAddress = fmt.Sprintf("tcp://0.0.0.0:%d", 26656+index*args.portOffset)
+	configPath := filepath.Join(nodeDir, "config/config.toml")
+	//
+
 	tmconfig.WriteConfigFile(configPath, nodeConfig)
-	err = appendBridgeConfig(configPath, args.supportedChains)
+	err := appendBridgeConfig(configPath, args.supportedChains)
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to append bridge config")
-		return nil, err
 	}
-	// ReadFile(configPath)
-	return &validatorInfo, nil
+	return err
 }
-
 func appendBridgeConfig(configPath string, supportedChainsPath string) error {
 	//log.Info().Str("configPath", configPath).Str("supportedChainsPath", supportedChainsPath).Msg("Appending bridge config")
 	file, err := os.OpenFile(configPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
@@ -683,14 +733,12 @@ func setCustomAppConfig(cmd *cobra.Command) error {
 func initGenFiles(
 	clientCtx client.Context,
 	mbm module.BasicManager,
-	chainID,
+	nodeConfig *tmconfig.Config,
 	coinDenom string,
-	supportedChainsPath string,
 	validatorInfos []scalartypes.ValidatorInfo,
-	_ sdk.Int, // baseFee
-	_ sdk.Dec, // minGasPrice
+	args initArgs,
 ) error {
-	appGenState, err := scalartypes.GenerateGenesis(clientCtx, mbm, coinDenom, validatorInfos, supportedChainsPath)
+	appGenState, err := scalartypes.GenerateGenesis(clientCtx, mbm, coinDenom, validatorInfos, args.supportedChains)
 	if err != nil {
 		fmt.Printf("GenerateGenesis err: %s\n", err.Error())
 		return err
@@ -707,7 +755,7 @@ func initGenFiles(
 		fmt.Printf("Validator: power: %d; pubkey: %v, address: %s\n", validators[i].Power, hex.EncodeToString(validators[i].PubKey.Bytes()), sdk.AccAddress(validatorInfo.ValPubKey.Address()).String())
 	}
 	genDoc := tmtypes.GenesisDoc{
-		ChainID:    chainID,
+		ChainID:    args.chainID,
 		AppState:   appGenStateJSON,
 		Validators: validators,
 	}
@@ -719,6 +767,11 @@ func initGenFiles(
 			return err
 		} else {
 			fmt.Printf("genDoc successfully generated to %s\n", validatorInfos[i].GenFile)
+		}
+		nodeConfig.Moniker = validatorInfos[i].Moniker
+		nodeConfig.SetRoot(validatorInfos[i].NodeDir)
+		if err := createConfigFiles(nodeConfig, validatorInfos[i].NodeDir, args, i); err != nil {
+			return err
 		}
 		//Write seed file
 		seeds := []string{}
@@ -732,7 +785,6 @@ address = "%s"
 			}
 		}
 		utils.WriteFile("seed.toml", validatorInfos[i].NodeDir, []byte(strings.Join(seeds, "\n")))
-
 	}
 	return nil
 }
@@ -757,7 +809,7 @@ func collectGenFiles(
 			fmt.Printf("GenesisDocFromFile Err: %s\n", err.Error())
 			return err
 		}
-
+		nodeConfig.RPC.ListenAddress = fmt.Sprintf("tcp://0.0.0.0:%d", validatorInfo.RPCPort)
 		nodeAppState, err := genutil.GenAppStateFromConfig(
 			clientCtx.Codec, clientCtx.TxConfig,
 			nodeConfig, initCfg, *genDoc, genBalIterator)
