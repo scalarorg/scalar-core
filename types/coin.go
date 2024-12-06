@@ -11,6 +11,13 @@ const (
 	BaseDenomUnit = 18
 	// DefaultGasPrice is default gas price for evm transactions
 	DefaultGasPrice = 20
+
+	PurposeValidator     = 0
+	PurposeBroadcaster   = 1
+	PurposeGovernance    = 2
+	PurposeFaucetAccount = 3
+	CoinTypeMainnet      = 0
+	CoinTypeTestnet      = 1
 )
 
 // var PowerReduction = sdk.NewInt(1e0 * params.InitialBaseFee)
@@ -21,8 +28,8 @@ var (
 	BaseDenom = "a" + scalarnet.NativeAsset
 
 	PowerReduction    = sdk.NewInt(1e6)
-	NodeTokens        = sdk.NewInt(1e15)
 	ValidatorTokens   = sdk.NewInt(1e12)
 	BroadcasterTokens = sdk.NewInt(1e15)
+	GovTokens         = sdk.NewInt(1e15)
 	DelegatorTokens   = sdk.NewInt(1e6)
 )

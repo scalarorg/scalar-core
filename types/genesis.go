@@ -84,12 +84,12 @@ type ValidatorInfo struct {
 	//Balance of validator
 	ValBalance banktypes.Balance
 	//Balance of broadcaster
+	Broadcaster        cryptotypes.PubKey
 	BroadcasterBalance banktypes.Balance
-	NodeBalance        banktypes.Balance
+	//NodeBalance        banktypes.Balance
 	//BroadcasterAccount *authtypes.BaseAccount
-	MngAccount       permissiontypes.GovAccount
 	GovPubKey        cryptotypes.PubKey
-	Broadcaster      cryptotypes.PubKey
+	GovBalance       banktypes.Balance
 	GenesisValidator tmtypes.GenesisValidator
 	BtcPubkey        string
 	GenFile          string
@@ -135,12 +135,13 @@ func GenerateGenesis(clientCtx client.Context,
 			Coins:   info.ValBalance.Coins,
 		})
 		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(info.ValPubKey.Address()), info.ValPubKey, 0, 0))
-
-		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(info.Broadcaster.Address()), info.Broadcaster, 0, 0))
 		genBalances = append(genBalances, info.BroadcasterBalance)
+		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(info.Broadcaster.Address()), info.Broadcaster, 0, 0))
 
-		genBalances = append(genBalances, info.NodeBalance)
-		genAccounts = append(genAccounts, authtypes.NewBaseAccount(info.NodeBalance.GetAddress(), nil, 0, 0))
+		genBalances = append(genBalances, info.GovBalance)
+		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(info.GovPubKey.Address()), info.GovPubKey, 0, 0))
+		// genBalances = append(genBalances, info.NodeBalance)
+		// genAccounts = append(genAccounts, authtypes.NewBaseAccount(info.NodeBalance.GetAddress(), nil, 0, 0))
 		unbondedPoolAmount = unbondedPoolAmount.Add(info.ValBalance.Coins...)
 	}
 	//Not bonded module accounts
@@ -202,7 +203,6 @@ func GenerateGenesis(clientCtx client.Context,
 	appGenState[nexustypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(nexusGenState)
 	//pemission module
 	permissionGenState := permissiontypes.DefaultGenesisState()
-	govMngAccounts := make([]permissiontypes.GovAccount, len(validatorInfos))
 	govControlAccounts := make([]permissiontypes.GovAccount, len(validatorInfos))
 	govPubKeys := make([]cryptotypes.PubKey, len(validatorInfos))
 	for i, info := range validatorInfos {
@@ -210,20 +210,19 @@ func GenerateGenesis(clientCtx client.Context,
 		if info.GovPubKey == nil {
 			return appGenState, fmt.Errorf("gov pubkey is nil")
 		}
-		govMngAccounts[i] = info.MngAccount
 		govControlAccounts[i] = permissiontypes.GovAccount{
 			Address: sdk.AccAddress(info.GovPubKey.Address()),
 			Role:    permissionexported.ROLE_CHAIN_MANAGEMENT,
 		}
 	}
-
+	//Use first governance account as role access control.
+	//Scalar allow an unique account with role access control
 	govControlAccounts = append(govControlAccounts, permissiontypes.GovAccount{
 		Address: sdk.AccAddress(govPubKeys[0].Address()),
 		Role:    permissionexported.ROLE_ACCESS_CONTROL,
 	})
 
 	permissionGenState.GovAccounts = append(permissionGenState.GovAccounts, govControlAccounts...)
-	permissionGenState.GovAccounts = append(permissionGenState.GovAccounts, govMngAccounts...)
 	permissionGenState.GovernanceKey = multisig.NewLegacyAminoPubKey(1, govPubKeys)
 	appGenState[permissiontypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(permissionGenState)
 	//set staking params
