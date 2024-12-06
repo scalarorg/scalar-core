@@ -8,6 +8,15 @@ else
   exit 1
 fi
 
+echo "SCALAR_BIN_NAME: ${SCALAR_BIN_NAME}"
+echo "SCALAR_BIN_PATH: ${SCALAR_BIN_PATH}"
+echo "SCALAR_HOME_DIR: ${SCALAR_HOME_DIR}"
+echo "SCALAR_CHAIN_ID: ${SCALAR_CHAIN_ID}"
+echo "SCALAR_KEYRING_BACKEND: ${SCALAR_KEYRING_BACKEND}"
+echo "SCALAR_CHAINS_DIR: ${SCALAR_CHAINS_DIR}"
+echo "SCALAR_RUN_DIR: ${SCALAR_RUN_DIR}"
+echo "SCALAR_NUM_VALIDATORS: ${SCALAR_NUM_VALIDATORS}"
+
 set -e
 
 trap stop_gracefully SIGTERM SIGINT
@@ -19,7 +28,24 @@ stop_gracefully() {
   echo "All processes stopped."
 }
 
-CONFIG_DIR=${SCALAR_NODE1}
+if [ ! -d "${SCALAR_RUN_DIR}" ]; then
+  echo "Please set SCALAR_RUN_DIR in .env. It is the runtime directory for the node."
+  echo "Example: SCALAR_RUN_DIR=.scalar/node1/scalard"
+  exit 1
+fi
+
+startNodeProc() {
+  $SCALAR_BIN_PATH start --home $SCALAR_RUN_DIR
+}
+
+if [ -z "$1" ]; then
+  echo "--- ✅ STARTING NODE 🚀 ---"
+  startNodeProc &
+  wait
+else
+  $@ &
+  wait
+fi
 
 # fileCount() {
 #   find "$1" -maxdepth 1 ! -iname ".*" ! -iname "$(basename "$1")" | wc -l
@@ -29,10 +55,6 @@ CONFIG_DIR=${SCALAR_NODE1}
 #   sed "s/^seeds =.*/seeds = \"$1\"/g" "$CONFIG_DIR/config.toml" >"$CONFIG_DIR/config.toml.tmp" &&
 #     mv "$CONFIG_DIR/config.toml.tmp" "$CONFIG_DIR/config.toml"
 # }
-
-startNodeProc() {
-  $SCALAR_BIN_PATH start --home $CONFIG_DIR
-}
 
 # if [ -n "$CONFIG_PATH" ] && [ -d "$CONFIG_PATH" ]; then
 #   mkdir -p "$CONFIG_DIR"
@@ -58,12 +80,3 @@ startNodeProc() {
 #   PEERS=$(cat "$PEERS_FILE")
 #   addPeers "$PEERS"
 # fi
-
-if [ -z "$1" ]; then
-  echo "--- ✅ STARTING NODE 🚀 ---"
-  startNodeProc &
-  wait
-else
-  $@ &
-  wait
-fi

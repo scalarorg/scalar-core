@@ -95,8 +95,9 @@ init:
 	make dev-init
 
 .PHONY: dev
+# Usage: make dev SCALAR_RUN_DIR=.scalar/node1/scalard
 dev:
-	HOME_DIR=${SCALAR_NODE1} ./scripts/entrypoint.debug.sh
+	HOME_DIR=${SCALAR_RUN_DIR} ./scripts/entrypoint.debug.sh
 
 .PHONY: dbg
 dbg: build
@@ -177,7 +178,7 @@ prereqs:
 
 
 ######
-# Usage: make cfst WALLET=alice ARGS="bitcoin-testnet4 07b50c84f889e2f1315da875fc91734e2bac8d0153ff9a98d9da14caa4fc7d57"
+# Usage: SCALAR_RUN_DIR=.scalar/node1/scalard make cfst WALLET=node1 ARGS="bitcoin-testnet4 07b50c84f889e2f1315da875fc91734e2bac8d0153ff9a98d9da14caa4fc7d57"
 ######
 .PHONY: cfst
 cfst:
@@ -190,7 +191,7 @@ cfst:
 		exit 1; \
 	fi
 
-	$(SCALAR_BIN_PATH) tx btc confirm-staking-txs $(ARGS) --from $(WALLET) --keyring-backend $(SCALAR_KEYRING_BACKEND) --home $(SCALAR_NODE1) --chain-id $(SCALAR_CHAIN_ID)
+	$(SCALAR_BIN_PATH) tx btc confirm-staking-txs $(ARGS) --from $(WALLET) --keyring-backend $(SCALAR_KEYRING_BACKEND) --home $(SCALAR_RUN_DIR) --chain-id $(SCALAR_CHAIN_ID)
 
 .PHONY: docs
 docs:
