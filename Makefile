@@ -90,6 +90,10 @@ start: build
 dev-init:
 	./scripts/init.sh
 
+.PHONY: init
+init:
+	make dev-init
+
 .PHONY: dev
 dev:
 	HOME_DIR=${SCALAR_NODE1} ./scripts/entrypoint.debug.sh
@@ -186,7 +190,7 @@ cfst:
 		exit 1; \
 	fi
 
-	@$(SCALAR_BIN_PATH) tx btc confirm-staking-txs $(ARGS) --from $(WALLET) --keyring-backend $(SCALAR_KEYRING_BACKEND) --home $(SCALAR_HOME_DIR) --chain-id $(SCALAR_CHAIN_ID)
+	$(SCALAR_BIN_PATH) tx btc confirm-staking-txs $(ARGS) --from $(WALLET) --keyring-backend $(SCALAR_KEYRING_BACKEND) --home $(SCALAR_NODE1) --chain-id $(SCALAR_CHAIN_ID)
 
 .PHONY: docs
 docs:

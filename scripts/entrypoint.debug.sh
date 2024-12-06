@@ -21,14 +21,14 @@ stop_gracefully() {
 
 CONFIG_DIR=${SCALAR_NODE1}
 
-fileCount() {
-  find "$1" -maxdepth 1 ! -iname ".*" ! -iname "$(basename "$1")" | wc -l
-}
+# fileCount() {
+#   find "$1" -maxdepth 1 ! -iname ".*" ! -iname "$(basename "$1")" | wc -l
+# }
 
-addPeers() {
-  sed "s/^seeds =.*/seeds = \"$1\"/g" "$CONFIG_DIR/config.toml" >"$CONFIG_DIR/config.toml.tmp" &&
-    mv "$CONFIG_DIR/config.toml.tmp" "$CONFIG_DIR/config.toml"
-}
+# addPeers() {
+#   sed "s/^seeds =.*/seeds = \"$1\"/g" "$CONFIG_DIR/config.toml" >"$CONFIG_DIR/config.toml.tmp" &&
+#     mv "$CONFIG_DIR/config.toml.tmp" "$CONFIG_DIR/config.toml"
+# }
 
 startNodeProc() {
   $SCALAR_BIN_PATH start --home $CONFIG_DIR
@@ -54,10 +54,10 @@ startNodeProc() {
 #   fi
 # fi
 
-if [ -n "$PEERS_FILE" ]; then
-  PEERS=$(cat "$PEERS_FILE")
-  addPeers "$PEERS"
-fi
+# if [ -n "$PEERS_FILE" ]; then
+#   PEERS=$(cat "$PEERS_FILE")
+#   addPeers "$PEERS"
+# fi
 
 if [ -z "$1" ]; then
   echo "--- ✅ STARTING NODE 🚀 ---"
