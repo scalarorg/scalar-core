@@ -1,3 +1,11 @@
+
+# Include .env file
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
+
 VERSION := $(shell echo $(shell git describe --tags) | sed 's/^v//')
 COMMIT := $(shell git log -1 --format='%H')
 
@@ -13,21 +21,26 @@ IBC_WASM_HOOKS := false
 # Export env var to go build so Cosmos SDK can see it
 export CGO_ENABLED := 1
 
-# Include .env file
-ifneq (,$(wildcard ./.env))
-    include .env
-    export
-endif
+SCALAR_BIN_PATH ?= bin/scalard
+SCALAR_BIN_NAME ?= scalard
+SCALAR_HOME_DIR ?= .scalar
+SCALAR_CHAIN_ID ?= scalar-testnet
+SCALAR_KEYRING_BACKEND ?= test
+SCALAR_RUN_DIR ?= .scalar
+
+$(info ⛳️ Makefile Environment Variables ⛳️)
 
 $(info $$WASM is [${WASM}])
 $(info $$IBC_WASM_HOOKS is [${IBC_WASM_HOOKS}])
 $(info $$MAX_WASM_SIZE is [${MAX_WASM_SIZE}])
 $(info $$CGO_ENABLED is [${CGO_ENABLED}])
+
+$(info $$SCALAR_BIN_NAME is [${SCALAR_BIN_NAME}])
 $(info $$SCALAR_BIN_PATH is [${SCALAR_BIN_PATH}])
 $(info $$SCALAR_HOME_DIR is [${SCALAR_HOME_DIR}])
-$(info $$SCALAR_BIN_NAME is [${SCALAR_BIN_NAME}])
 $(info $$SCALAR_CHAIN_ID is [${SCALAR_CHAIN_ID}])
 $(info $$SCALAR_KEYRING_BACKEND is [${SCALAR_KEYRING_BACKEND}])
+$(info $$SCALAR_RUN_DIR is [${SCALAR_RUN_DIR}])
 
 ifndef $(WASM_CAPABILITIES)
 # Wasm capabilities: https://github.com/CosmWasm/cosmwasm/blob/main/docs/CAPABILITIES-BUILT-IN.md
@@ -72,11 +85,10 @@ ldflags = "-X github.com/cosmos/cosmos-sdk/version.Name=scalar \
 BUILD_FLAGS := -tags $(BUILD_TAGS) -ldflags $(ldflags) -trimpath
 
 
-
 # Build the project with release flags
 .PHONY: build
 build: go.sum
-	@go build -o ${SCALAR_BIN_PATH} -mod=readonly $(BUILD_FLAGS) ./cmd/${SCALAR_BIN_NAME}
+	@go build -o ./bin/scalard -mod=readonly $(BUILD_FLAGS) ./cmd/scalard
 
 .PHONY: run
 run:
@@ -97,7 +109,7 @@ init:
 .PHONY: dev
 # Usage: make dev SCALAR_RUN_DIR=.scalar/node1/scalard
 dev:
-	HOME_DIR=${SCALAR_RUN_DIR} ./scripts/entrypoint.debug.sh
+	@HOME_DIR=${SCALAR_RUN_DIR} ./scripts/entrypoint.debug.sh
 
 .PHONY: dbg
 dbg: build

@@ -8,6 +8,8 @@ else
   exit 1
 fi
 
+echo ""
+echo "🌳 Script Environment Variables 🌳"
 echo "SCALAR_BIN_NAME: ${SCALAR_BIN_NAME}"
 echo "SCALAR_BIN_PATH: ${SCALAR_BIN_PATH}"
 echo "SCALAR_HOME_DIR: ${SCALAR_HOME_DIR}"
@@ -16,6 +18,7 @@ echo "SCALAR_KEYRING_BACKEND: ${SCALAR_KEYRING_BACKEND}"
 echo "SCALAR_CHAINS_DIR: ${SCALAR_CHAINS_DIR}"
 echo "SCALAR_RUN_DIR: ${SCALAR_RUN_DIR}"
 echo "SCALAR_NUM_VALIDATORS: ${SCALAR_NUM_VALIDATORS}"
+echo ""
 
 set -e
 
@@ -28,14 +31,14 @@ stop_gracefully() {
   echo "All processes stopped."
 }
 
-if [ ! -d "${SCALAR_RUN_DIR}" ]; then
-  echo "Please set SCALAR_RUN_DIR in .env. It is the runtime directory for the node."
-  echo "Example: SCALAR_RUN_DIR=.scalar/node1/scalard"
+if [ ! -d "${HOME_DIR}" ]; then
+  echo "Please set HOME_DIR in env. It is the runtime directory for the node."
+  echo "Example: HOME_DIR=.scalar/node1/scalard"
   exit 1
 fi
 
 startNodeProc() {
-  $SCALAR_BIN_PATH start --home $SCALAR_RUN_DIR
+  $SCALAR_BIN_PATH start --home $HOME_DIR
 }
 
 if [ -z "$1" ]; then
