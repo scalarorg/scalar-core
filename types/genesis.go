@@ -213,9 +213,14 @@ func GenerateGenesis(clientCtx client.Context,
 		govMngAccounts[i] = info.MngAccount
 		govControlAccounts[i] = permissiontypes.GovAccount{
 			Address: sdk.AccAddress(info.GovPubKey.Address()),
-			Role:    permissionexported.ROLE_ACCESS_CONTROL,
+			Role:    permissionexported.ROLE_CHAIN_MANAGEMENT,
 		}
 	}
+
+	govControlAccounts = append(govControlAccounts, permissiontypes.GovAccount{
+		Address: sdk.AccAddress(govPubKeys[0].Address()),
+		Role:    permissionexported.ROLE_ACCESS_CONTROL,
+	})
 
 	permissionGenState.GovAccounts = append(permissionGenState.GovAccounts, govControlAccounts...)
 	permissionGenState.GovAccounts = append(permissionGenState.GovAccounts, govMngAccounts...)

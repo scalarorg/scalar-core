@@ -35,6 +35,11 @@ init() {
 
 verify() {
     ${SCALAR_BIN_PATH} validate-genesis --home ${SCALAR_NODE1}
+    if [ $? -ne 0 ]; then
+        echo "❌ Genesis file is invalid"
+        exit 1
+    fi
+    echo "✅ Successfully verified genesis file"
 }
 
 init
