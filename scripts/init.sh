@@ -22,11 +22,6 @@ if [ ! -f "${SCALAR_BIN_PATH}" ]; then
     exit 1
 fi
 
-if [ ! -d "${SCALAR_HOME_DIR}" ]; then
-    echo "Creating init files"
-    init
-fi
-
 init() {
     ${SCALAR_BIN_PATH} testnet init-files --v ${SCALAR_NUM_VALIDATORS} -o ${SCALAR_HOME_DIR} \
         --keyring-backend=${SCALAR_KEYRING_BACKEND} \

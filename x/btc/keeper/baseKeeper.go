@@ -12,11 +12,11 @@ import (
 	"github.com/axelarnetwork/axelar-core/utils"
 	"github.com/axelarnetwork/axelar-core/utils/key"
 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/x/btc/types"
 )
 
 var (
-	chainPrefix    = utils.KeyFromStr("chain")
 	subspacePrefix = "subspace"
 )
 
@@ -36,7 +36,7 @@ type internalKeeper struct {
 	paramsKeeper types.ParamsKeeper
 }
 
-// NewKeeper returns a new EVM base keeper
+// NewKeeper returns a new BTC base keeper
 func NewKeeper(cdc codec.BinaryCodec, storeKey sdk.StoreKey, paramsKeeper types.ParamsKeeper) *BaseKeeper {
 	return &BaseKeeper{
 		internalKeeper: internalKeeper{
@@ -53,10 +53,19 @@ func (k *BaseKeeper) InitChains(ctx sdk.Context) {
 		panic("chains are already initialized")
 	}
 
-	iter := k.getBaseStore(ctx).IteratorNew(key.FromStr(subspacePrefix))
+	clog.Red("InitChains", "subspacePrefix", subspacePrefix)
+	clog.Red("InitChains", "key", key.FromStr(subspacePrefix))
+
+	baseStore := k.getBaseStore(ctx)
+	fmt.Printf("baseStore: %+v\n", baseStore)
+	iter := baseStore.IteratorNew(key.FromStr(subspacePrefix))
+	fmt.Printf("iter: %+v\n", iter)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 
+	clog.Red("iter.Valid()", iter.Valid())
+
 	for ; iter.Valid(); iter.Next() {
+		clog.Red("iter.Value()", iter.Value())
 		_ = k.createSubspace(ctx, nexus.ChainName(iter.Value()))
 	}
 
@@ -100,6 +109,7 @@ func (k BaseKeeper) ForChain(ctx sdk.Context, chain nexus.ChainName) (types.Chai
 func (k BaseKeeper) forChain(ctx sdk.Context, chain nexus.ChainName) (chainKeeper, error) {
 	chainKey := key.FromStr(subspacePrefix).Append(key.From(chain))
 	if !k.getBaseStore(ctx).HasNew(chainKey) {
+		clog.Red("chainKey", chainKey)
 		return chainKeeper{}, fmt.Errorf("unknown chain %s", chain)
 	}
 
@@ -111,7 +121,7 @@ func (k BaseKeeper) forChain(ctx sdk.Context, chain nexus.ChainName) (chainKeepe
 
 func (k BaseKeeper) createSubspace(ctx sdk.Context, chain nexus.ChainName) params.Subspace {
 	chainKey := key.FromStr(types.ModuleName).Append(key.From(chain))
-	k.Logger(ctx).Debug(fmt.Sprintf("initialized evm subspace %s", chain))
+	k.Logger(ctx).Debug(fmt.Sprintf("initialized btc subspace %s", chain))
 	return k.paramsKeeper.Subspace(chainKey.String()).WithKeyTable(types.KeyTable())
 }
 

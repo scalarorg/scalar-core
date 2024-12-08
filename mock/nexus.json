@@ -1,0 +1,86 @@
+{
+  "nexus": {
+    "params": {
+      "chain_activation_threshold": {
+        "numerator": "55",
+        "denominator": "100"
+      },
+      "chain_maintainer_missing_vote_threshold": {
+        "numerator": "20",
+        "denominator": "100"
+      },
+      "chain_maintainer_incorrect_vote_threshold": {
+        "numerator": "15",
+        "denominator": "100"
+      },
+      "chain_maintainer_check_window": 500,
+      "gateway": "",
+      "end_blocker_limit": "50"
+    },
+    "nonce": "0",
+    "chains": [
+      {
+        "name": "Ethereum",
+        "supports_foreign_assets": true,
+        "key_type": "KEY_TYPE_MULTISIG",
+        "module": "evm"
+      },
+      {
+        "name": "Axelarnet",
+        "supports_foreign_assets": true,
+        "key_type": "KEY_TYPE_NONE",
+        "module": "axelarnet"
+      },
+      {
+        "name": "bitcoin-testnet4",
+        "supports_foreign_assets": true,
+        "key_type": "KEY_TYPE_NONE",
+        "module": "btc"
+      }
+    ],
+    "chain_states": [
+      {
+        "chain": {
+          "name": "Axelarnet",
+          "supports_foreign_assets": true,
+          "key_type": "KEY_TYPE_NONE",
+          "module": "axelarnet"
+        },
+        "activated": false,
+        "assets": [
+          {
+            "denom": "uaxl",
+            "is_native_asset": true
+          }
+        ],
+        "maintainer_states": []
+      },
+      {
+        "chain": {
+          "name": "bitcoin-testnet4",
+          "supports_foreign_assets": true,
+          "key_type": "KEY_TYPE_MULTISIG",
+          "module": "btc"
+        },
+        "activated": true,
+        "assets": [
+          {
+            "denom": "satoshi",
+            "is_native_asset": true
+          }
+        ],
+        "maintainer_states": []
+      }
+    ],
+    "linked_addresses": [],
+    "transfers": [],
+    "fee": {
+      "coins": []
+    },
+    "fee_infos": [],
+    "rate_limits": [],
+    "transfer_epochs": [],
+    "messages": [],
+    "message_nonce": "0"
+  }
+}

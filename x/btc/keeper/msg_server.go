@@ -30,6 +30,26 @@ type MsgServerConstructArgs struct {
 	Slashing    types.SlashingKeeper
 }
 
+func (args MsgServerConstructArgs) Validate() error {
+	if args.BaseKeeper == nil {
+		return fmt.Errorf("BaseKeeper is nil")
+	}
+
+	if args.Slashing == nil {
+		return fmt.Errorf("Slashing keeper is nil")
+	}
+
+	if args.Snapshotter == nil {
+		return fmt.Errorf("Snapshotter is nil")
+	}
+
+	if args.Nexus == nil {
+		return fmt.Errorf("Nexus is nil")
+	}
+
+	return nil
+}
+
 func NewMsgServerImpl(args MsgServerConstructArgs) types.MsgServiceServer {
 	return msgServer{
 		BaseKeeper:  args.BaseKeeper,

@@ -7,8 +7,8 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 
 	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
-	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	vote "github.com/axelarnetwork/axelar-core/x/vote/exported"
+	params "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
 //go:generate moq -out ./mock/expected_keepers.go -pkg mock . Voter Nexus Snapshotter BaseKeeper ChainKeeper Rewarder StakingKeeper SlashingKeeper MultisigKeeper
@@ -24,9 +24,9 @@ type BaseKeeper interface {
 
 // ChainKeeper is implemented by this module's chain keeper
 type ChainKeeper interface {
-	// Logger(ctx sdk.Context) log.Logger
+	Logger(ctx sdk.Context) log.Logger
 
-	// GetName() nexus.ChainName
+	GetName() nexus.ChainName
 
 	GetParams(ctx sdk.Context) Params
 
