@@ -50,4 +50,6 @@ func TestColorLog(t *testing.T) {
 	var chain nexus.ChainName = "btc"
 
 	clog.Red("chain", chain)
+
+	clog.Red("chain", &TestStruct{Value: 42, Text: "hello"})
 }

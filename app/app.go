@@ -373,8 +373,8 @@ func NewScalarApp(
 
 	// we need to ensure that all chain subspaces are loaded at start-up to prevent unexpected consensus failures
 	// when the params keeper is used outside the evm module's context
-	GetKeeper[evmKeeper.BaseKeeper](keepers).InitChains(app.NewContext(true, tmproto.Header{}))
 	GetKeeper[btcKeeper.BaseKeeper](keepers).InitChains(app.NewContext(true, tmproto.Header{}))
+	GetKeeper[evmKeeper.BaseKeeper](keepers).InitChains(app.NewContext(true, tmproto.Header{}))
 	return app
 }
 
@@ -613,6 +613,9 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 		),
 		btc.NewAppModule(
 			GetKeeper[btcKeeper.BaseKeeper](keepers),
+			GetKeeper[nexusKeeper.Keeper](keepers),
+			GetKeeper[snapKeeper.Keeper](keepers),
+			GetKeeper[slashingkeeper.Keeper](keepers),
 		),
 		axelarnetModule,
 		reward.NewAppModule(

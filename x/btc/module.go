@@ -67,11 +67,15 @@ type AppModule struct {
 	keeper      *keeper.BaseKeeper
 	nexus       types.Nexus
 	snapshotter types.Snapshotter
+	slashing    types.SlashingKeeper
 }
 
-func NewAppModule(keeper *keeper.BaseKeeper) AppModule {
+func NewAppModule(keeper *keeper.BaseKeeper, nexus types.Nexus, snapshotter types.Snapshotter, slashing types.SlashingKeeper) AppModule {
 	return AppModule{
-		keeper: keeper,
+		keeper:      keeper,
+		nexus:       nexus,
+		snapshotter: snapshotter,
+		slashing:    slashing,
 	}
 }
 
@@ -82,6 +86,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 		BaseKeeper:  am.keeper,
 		Nexus:       am.nexus,
 		Snapshotter: am.snapshotter,
+		Slashing:    am.slashing,
 	}
 	msgServer := keeper.NewMsgServerImpl(params)
 	types.RegisterMsgServiceServer(cfg.MsgServer(), msgServer)

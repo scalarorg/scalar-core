@@ -17,9 +17,9 @@ type chainKeeper struct {
 	chain nexus.ChainName
 }
 
-// func (k chainKeeper) GetName() nexus.ChainName {
-// 	return k.chain
-// }
+func (k chainKeeper) GetName() nexus.ChainName {
+	return k.chain
+}
 
 // GetParams gets the evm module's parameters
 func (k chainKeeper) GetParams(ctx sdk.Context) types.Params {

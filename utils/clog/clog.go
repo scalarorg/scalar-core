@@ -66,15 +66,6 @@ func NewLogger() zerolog.Logger {
 					return fmt.Sprintf("%s%s%s", colorMagenta, level, colorReset)
 				}
 			},
-			FormatMessage: func(i interface{}) string {
-				return fmt.Sprintf("%s%v%s", colorCyan, i, colorReset)
-			},
-			FormatFieldName: func(i interface{}) string {
-				return fmt.Sprintf("%s%s:%s", colorMagenta, i, colorReset)
-			},
-			FormatFieldValue: func(i interface{}) string {
-				return fmt.Sprintf("%s%v%s", colorYellow, i, colorReset)
-			},
 		}
 
 		logger = zerolog.New(output).With().Timestamp().Logger()
@@ -90,16 +81,34 @@ func logLevel(event *zerolog.Event, msg string, logs ...interface{}) {
 		event = logger.Info()
 	}
 
+	// Build the final message with colors for each part
+	coloredMsg := fmt.Sprintf("%s%s%s", colorReset, msg, colorReset)
+
 	for _, log := range logs {
-		typeOf := reflect.TypeOf(log)
-		event.Interface(typeOf.String(), log)
+		if log == nil {
+			coloredMsg += fmt.Sprintf(" %s<nil>%s", colorYellow, colorReset)
+			continue
+		}
+
+		// Get the value and type of the log
+		v := reflect.ValueOf(log)
+		t := reflect.TypeOf(log)
+
+		if v.Kind() == reflect.Struct || v.Kind() == reflect.Pointer {
+			// Add colored struct type and content
+			coloredMsg += fmt.Sprintf(" %s%s%s{%+v}", colorMagenta, t.Name(), colorYellow, log)
+		} else {
+			// Add other types with the same color
+			coloredMsg += fmt.Sprintf(" %s%v%s", colorMagenta, log, colorYellow)
+		}
 	}
 
-	event.Msg(msg)
+	// Log the final formatted message
+	event.Msg(coloredMsg)
 }
 
 func Green(msg string, fields ...interface{}) {
-	logLevel(nil, msg, fields...)
+	logLevel(logger.Info(), msg, fields...)
 }
 
 func Yellow(msg string, fields ...interface{}) {

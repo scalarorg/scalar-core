@@ -377,6 +377,7 @@ func initNexusKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keep
 	// no more validators can be added
 	addressValidators := nexusTypes.NewAddressValidators().
 		AddAddressValidator(evmTypes.ModuleName, evmKeeper.NewAddressValidator()).
+		AddAddressValidator(btcTypes.ModuleName, btcKeeper.NewAddressValidator()).
 		AddAddressValidator(scalarnetTypes.ModuleName, scalarnetKeeper.NewAddressValidator(GetKeeper[scalarnetKeeper.Keeper](keepers)))
 
 	// TODO: Add btc validator

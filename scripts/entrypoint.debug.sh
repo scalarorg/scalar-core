@@ -38,7 +38,7 @@ if [ ! -d "${HOME_DIR}" ]; then
 fi
 
 startNodeProc() {
-  $SCALAR_BIN_PATH start --home $HOME_DIR
+  $SCALAR_BIN_PATH start --home $HOME_DIR --log_level=debug
 }
 
 if [ -z "$1" ]; then
