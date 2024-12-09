@@ -2,6 +2,8 @@ syntax = "proto3";
 package scalar.btc.v1beta1;
 
 import "gogoproto/gogo.proto";
+import "google/protobuf/any.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
 
@@ -56,4 +58,47 @@ message PollMetadata {
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "Hash"
   ];
+}
+
+message StakingTx {
+  bytes tx_id = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "Hash",
+    (gogoproto.customname) = "TxID"
+  ];
+  bytes amount = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
+  // string asset = 3;
+  // string destination_chain = 4
+  //     [ (gogoproto.casttype) =
+  //           "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName"
+  //           ];
+  // bytes burner_address = 5
+  //     [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
+  // uint64 log_index = 6;
+}
+
+message CommandBatchMetadata {
+  bytes id = 1 [ (gogoproto.customname) = "ID" ];
+  repeated bytes command_ids = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "CommandIDs",
+    (gogoproto.customtype) = "CommandID"
+  ];
+  bytes data = 3;
+  bytes sig_hash = 4
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+  BatchedCommandsStatus status = 5;
+  string key_id = 6 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/axelarnetwork/axelar-core/x/multisig/exported.KeyID"
+  ];
+  bytes prev_batched_commands_id = 7
+      [ (gogoproto.customname) = "PrevBatchedCommandsID" ];
+  google.protobuf.Any signature = 8
+      [ (cosmos_proto.accepts_interface) =
+            "github.com/cosmos/codec/ProtoMarshaler" ];
 }

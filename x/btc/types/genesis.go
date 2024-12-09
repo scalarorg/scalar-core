@@ -10,10 +10,10 @@ const (
 	DefaultVaultVersion = 0
 )
 
-func DefaultGenesisState() *GenesisState {
+func DefaultGenesisState() GenesisState {
 	tag := TagFromAscii(DefaultVaultTag)
 	version := VersionFromInt(DefaultVaultVersion)
-	return &GenesisState{
+	return GenesisState{
 		Chains: []GenesisState_Chain{
 			{
 				Params: Params{
@@ -27,11 +27,16 @@ func DefaultGenesisState() *GenesisState {
 					VotingGracePeriod:   50,
 					EndBlockerLimit:     50,
 					TransferLimit:       1000,
+					VaultTag:            &tag,
+					VaultVersion:        &version,
 				},
+				CommandQueue:        utils.QueueState{},
+				ConfirmedStakingTxs: []StakingTx{},
+				CommandBatches:      []CommandBatchMetadata{},
+				Events:              []Event{},
+				ConfirmedEventQueue: utils.QueueState{},
 			},
 		},
-		VaultTag:     &tag,
-		VaultVersion: &version,
 	}
 }
 
@@ -48,10 +53,13 @@ func NewGenesisState(params Params, tag VaultTag, version VaultVersion) *Genesis
 	return &GenesisState{
 		Chains: []GenesisState_Chain{
 			{
-				Params: params,
+				Params:              params,
+				CommandQueue:        utils.QueueState{},
+				ConfirmedStakingTxs: []StakingTx{},
+				CommandBatches:      []CommandBatchMetadata{},
+				Events:              []Event{},
+				ConfirmedEventQueue: utils.QueueState{},
 			},
 		},
-		VaultTag:     &tag,
-		VaultVersion: &version,
 	}
 }

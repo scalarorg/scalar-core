@@ -36,7 +36,8 @@ func (AppModuleBasic) RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 }
 
 func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
-	return cdc.MustMarshalJSON(types.DefaultGenesisState())
+	state := types.DefaultGenesisState()
+	return cdc.MustMarshalJSON(&state)
 }
 
 func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, _ client.TxEncodingConfig, genesisState json.RawMessage) error {
@@ -122,7 +123,8 @@ func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.Ra
 }
 
 func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
-	return cdc.MustMarshalJSON(types.DefaultGenesisState())
+	state := types.DefaultGenesisState()
+	return cdc.MustMarshalJSON(&state)
 }
 
 func (AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {

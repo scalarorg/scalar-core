@@ -5,7 +5,12 @@ import (
 	"encoding/hex"
 	fmt "fmt"
 
+	utils "github.com/axelarnetwork/axelar-core/utils"
+	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
 )
 
 type VaultTag [6]byte
@@ -107,5 +112,81 @@ func (nk NetworkKind) Validate() error {
 	if nk != Mainnet && nk != Testnet {
 		return fmt.Errorf("invalid network kind: %d", nk)
 	}
+	return nil
+}
+
+const commandIDSize = 32
+
+// CommandID represents the unique command identifier
+type CommandID [commandIDSize]byte
+
+// NewCommandID is the constructor for CommandID
+func NewCommandID(data []byte, chainID sdk.Int) CommandID {
+	var commandID CommandID
+	copy(commandID[:], crypto.Keccak256(append(data, chainID.BigInt().Bytes()...))[:commandIDSize])
+
+	return commandID
+}
+
+// CommandIDFromTransferID converts a TransferID into a CommandID
+func CommandIDFromTransferID(id nexus.TransferID) CommandID {
+	var commandID CommandID
+	idBz := id.Bytes()
+
+	copy(commandID[:], common.LeftPadBytes(idBz[:], commandIDSize))
+
+	return commandID
+}
+
+// HexToCommandID decodes a hex representation of a CommandID
+func HexToCommandID(id string) (CommandID, error) {
+	bz, err := utils.HexDecode(id)
+	if err != nil {
+		return CommandID{}, err
+	}
+
+	var commandID CommandID
+	copy(commandID[:], bz)
+
+	return commandID, commandID.ValidateBasic()
+}
+
+// Hex returns the hex representation of command ID
+func (c CommandID) Hex() string {
+	return hex.EncodeToString(c[:])
+}
+
+// Size implements codec.ProtoMarshaler
+func (c CommandID) Size() int {
+	return commandIDSize
+}
+
+// Marshal implements codec.ProtoMarshaler
+func (c CommandID) Marshal() ([]byte, error) {
+	return c[:], nil
+}
+
+// MarshalTo implements codec.ProtoMarshaler
+func (c CommandID) MarshalTo(data []byte) (n int, err error) {
+	bytesCopied := copy(data, c[:])
+	if bytesCopied != commandIDSize {
+		return 0, fmt.Errorf("expected data size to be %d, actual %d", commandIDSize, len(data))
+	}
+
+	return commandIDSize, nil
+}
+
+// Unmarshal implements codec.ProtoMarshaler
+func (c *CommandID) Unmarshal(data []byte) error {
+	bytesCopied := copy(c[:], data)
+	if bytesCopied != commandIDSize {
+		return fmt.Errorf("expected data size to be %d, actual %d", commandIDSize, len(data))
+	}
+
+	return c.ValidateBasic()
+}
+
+// ValidateBasic returns an error if the given command ID is invalid
+func (c CommandID) ValidateBasic() error {
 	return nil
 }

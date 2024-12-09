@@ -5,9 +5,11 @@
 ## Table of Contents
 
 - [scalar/btc/v1beta1/types.proto](#scalar/btc/v1beta1/types.proto)
+    - [CommandBatchMetadata](#scalar.btc.v1beta1.CommandBatchMetadata)
     - [PollMapping](#scalar.btc.v1beta1.PollMapping)
     - [PollMetadata](#scalar.btc.v1beta1.PollMetadata)
     - [Proof](#scalar.btc.v1beta1.Proof)
+    - [StakingTx](#scalar.btc.v1beta1.StakingTx)
   
     - [BatchedCommandsStatus](#scalar.btc.v1beta1.BatchedCommandsStatus)
     - [NetworkKind](#scalar.btc.v1beta1.NetworkKind)
@@ -139,6 +141,28 @@
 
 
 
+<a name="scalar.btc.v1beta1.CommandBatchMetadata"></a>
+
+### CommandBatchMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [bytes](#bytes) |  |  |
+| `command_ids` | [bytes](#bytes) | repeated |  |
+| `data` | [bytes](#bytes) |  |  |
+| `sig_hash` | [bytes](#bytes) |  |  |
+| `status` | [BatchedCommandsStatus](#scalar.btc.v1beta1.BatchedCommandsStatus) |  |  |
+| `key_id` | [string](#string) |  |  |
+| `prev_batched_commands_id` | [bytes](#bytes) |  |  |
+| `signature` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+
+
+
+
+
+
 <a name="scalar.btc.v1beta1.PollMapping"></a>
 
 ### PollMapping
@@ -183,6 +207,22 @@
 | `weights` | [string](#string) | repeated |  |
 | `threshold` | [string](#string) |  |  |
 | `signatures` | [string](#string) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.StakingTx"></a>
+
+### StakingTx
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `amount` | [bytes](#bytes) |  | string asset = 3; string destination_chain = 4 [ (gogoproto.casttype) = "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ]; bytes burner_address = 5 [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ]; uint64 log_index = 6; |
 
 
 
@@ -293,6 +333,8 @@
 | `voting_grace_period` | [int64](#int64) |  |  |
 | `end_blocker_limit` | [int64](#int64) |  |  |
 | `transfer_limit` | [uint64](#uint64) |  |  |
+| `vault_tag` | [bytes](#bytes) |  |  |
+| `vault_version` | [bytes](#bytes) |  |  |
 
 
 
@@ -324,8 +366,6 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `chains` | [GenesisState.Chain](#scalar.btc.v1beta1.GenesisState.Chain) | repeated |  |
-| `vault_tag` | [bytes](#bytes) |  |  |
-| `vault_version` | [bytes](#bytes) |  |  |
 
 
 
@@ -341,6 +381,11 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `params` | [Params](#scalar.btc.v1beta1.Params) |  |  |
+| `command_queue` | [axelar.utils.v1beta1.QueueState](#axelar.utils.v1beta1.QueueState) |  |  |
+| `confirmed_staking_txs` | [StakingTx](#scalar.btc.v1beta1.StakingTx) | repeated |  |
+| `command_batches` | [CommandBatchMetadata](#scalar.btc.v1beta1.CommandBatchMetadata) | repeated |  |
+| `events` | [Event](#scalar.btc.v1beta1.Event) | repeated |  |
+| `confirmed_event_queue` | [axelar.utils.v1beta1.QueueState](#axelar.utils.v1beta1.QueueState) |  |  |
 
 
 
