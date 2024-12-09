@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [scalar/btc/v1beta1/types.proto](#scalar/btc/v1beta1/types.proto)
+    - [Command](#scalar.btc.v1beta1.Command)
     - [CommandBatchMetadata](#scalar.btc.v1beta1.CommandBatchMetadata)
     - [PollMapping](#scalar.btc.v1beta1.PollMapping)
     - [PollMetadata](#scalar.btc.v1beta1.PollMetadata)
@@ -12,11 +13,15 @@
     - [StakingTx](#scalar.btc.v1beta1.StakingTx)
   
     - [BatchedCommandsStatus](#scalar.btc.v1beta1.BatchedCommandsStatus)
+    - [CommandType](#scalar.btc.v1beta1.CommandType)
     - [NetworkKind](#scalar.btc.v1beta1.NetworkKind)
+    - [StakingTxStatus](#scalar.btc.v1beta1.StakingTxStatus)
   
 - [scalar/btc/v1beta1/events.proto](#scalar/btc/v1beta1/events.proto)
     - [ConfirmStakingTxsStarted](#scalar.btc.v1beta1.ConfirmStakingTxsStarted)
     - [Event](#scalar.btc.v1beta1.Event)
+  
+    - [Event.Status](#scalar.btc.v1beta1.Event.Status)
   
 - [scalar/btc/v1beta1/params.proto](#scalar/btc/v1beta1/params.proto)
     - [Params](#scalar.btc.v1beta1.Params)
@@ -141,6 +146,24 @@
 
 
 
+<a name="scalar.btc.v1beta1.Command"></a>
+
+### Command
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [bytes](#bytes) |  |  |
+| `params` | [bytes](#bytes) |  |  |
+| `key_id` | [string](#string) |  |  |
+| `type` | [CommandType](#scalar.btc.v1beta1.CommandType) |  |  |
+
+
+
+
+
+
 <a name="scalar.btc.v1beta1.CommandBatchMetadata"></a>
 
 ### CommandBatchMetadata
@@ -222,7 +245,11 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `tx_id` | [bytes](#bytes) |  |  |
-| `amount` | [bytes](#bytes) |  | string asset = 3; string destination_chain = 4 [ (gogoproto.casttype) = "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ]; bytes burner_address = 5 [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ]; uint64 log_index = 6; |
+| `amount` | [bytes](#bytes) |  |  |
+| `asset` | [string](#string) |  | TODO: change to asset type: sats, runes, btc, etc |
+| `destination_chain` | [string](#string) |  |  |
+| `destination_recipient_address` | [bytes](#bytes) |  |  |
+| `log_index` | [uint64](#uint64) |  |  |
 
 
 
@@ -245,6 +272,17 @@
 
 
 
+<a name="scalar.btc.v1beta1.CommandType"></a>
+
+### CommandType
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| COMMAND_TYPE_APPROVE_CONTRACT_CALL | 0 |  |
+
+
+
 <a name="scalar.btc.v1beta1.NetworkKind"></a>
 
 ### NetworkKind
@@ -254,6 +292,20 @@
 | ---- | ------ | ----------- |
 | NETWORK_KIND_MAINNET | 0 |  |
 | NETWORK_KIND_TESTNET | 1 |  |
+
+
+
+<a name="scalar.btc.v1beta1.StakingTxStatus"></a>
+
+### StakingTxStatus
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STAKING_TX_STATUS_UNSPECIFIED | 0 |  |
+| STAKING_TX_STATUS_PENDING | 1 |  |
+| STAKING_TX_STATUS_CONFIRMED | 2 |  |
+| STAKING_TX_STATUS_COMPLETED | 3 |  |
 
 
  <!-- end enums -->
@@ -295,10 +347,32 @@
 
 
 
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `index` | [uint64](#uint64) |  |  |
+| `status` | [Event.Status](#scalar.btc.v1beta1.Event.Status) |  |  |
+
+
 
 
 
  <!-- end messages -->
+
+
+<a name="scalar.btc.v1beta1.Event.Status"></a>
+
+### Event.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNSPECIFIED | 0 |  |
+| STATUS_CONFIRMED | 1 |  |
+| STATUS_COMPLETED | 2 |  |
+| STATUS_FAILED | 3 |  |
+
 
  <!-- end enums -->
 

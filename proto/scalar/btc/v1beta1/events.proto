@@ -24,4 +24,28 @@ message ConfirmStakingTxsStarted {
             "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
 }
 
-message Event {}
+message Event {
+  enum Status {
+    option (gogoproto.goproto_enum_prefix) = false;
+    option (gogoproto.goproto_enum_stringer) = true;
+
+    STATUS_UNSPECIFIED = 0
+        [ (gogoproto.enumvalue_customname) = "EventNonExistent" ];
+    STATUS_CONFIRMED = 1
+        [ (gogoproto.enumvalue_customname) = "EventConfirmed" ];
+    STATUS_COMPLETED = 2
+        [ (gogoproto.enumvalue_customname) = "EventCompleted" ];
+    STATUS_FAILED = 3 [ (gogoproto.enumvalue_customname) = "EventFailed" ];
+  }
+
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+  bytes tx_id = 2 [
+    (gogoproto.customname) = "TxID",
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "Hash"
+  ];
+  uint64 index = 3;
+  Status status = 4;
+}
