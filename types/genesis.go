@@ -430,11 +430,15 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 		for _, btcConfig := range btcConfigs {
 			vaultTag := btctypes.VaultTag([]byte(btcConfig.Tag)[:6])
 			vaultVersion := btctypes.VaultVersion([1]byte{btcConfig.Version})
+			networkKind := btctypes.Testnet
+			if btcConfig.NetworkKind == "mainnet" {
+				networkKind = btctypes.Mainnet
+			}
 			params := btctypes.Params{
 				ChainId:             btcConfig.ChainId,
 				ChainName:           nexus.ChainName(btcConfig.Name),
 				ConfirmationHeight:  2,
-				NetworkKind:         btcConfig.NetworkKind,
+				NetworkKind:         networkKind,
 				RevoteLockingPeriod: 50,
 				VotingThreshold:     utils.Threshold{Numerator: 51, Denominator: 100},
 				MinVoterCount:       1,

@@ -15,16 +15,16 @@ import (
 
 // EVMConfig contains all EVM module configuration values
 type BTCConfig struct {
-	Network     string      `mapstructure:"network"`
-	NetworkKind NetworkKind `mapstructure:"networkKind"`
-	ChainId     uint64      `mapstructure:"chainId"`
-	Name        string      `mapstructure:"name"`
-	RPCAddr     string      `mapstructure:"rpcAddr"`
-	RPCUser     string      `mapstructure:"rpcUser"`
-	RPCPassword string      `mapstructure:"rpcPassword"`
-	Tag         string      `mapstructure:"tag"`
-	Version     byte        `mapstructure:"version"`
-	WithBridge  bool        `mapstructure:"start-with-bridge"`
+	Network     string `mapstructure:"network"`
+	NetworkKind string `mapstructure:"networkKind"`
+	ChainId     uint64 `mapstructure:"chainId"`
+	Name        string `mapstructure:"name"`
+	RPCAddr     string `mapstructure:"rpcAddr"`
+	RPCUser     string `mapstructure:"rpcUser"`
+	RPCPassword string `mapstructure:"rpcPassword"`
+	Tag         string `mapstructure:"tag"`
+	Version     byte   `mapstructure:"version"`
+	WithBridge  bool   `mapstructure:"start-with-bridge"`
 }
 
 // DefaultConfig returns a configuration populated with default values
