@@ -251,7 +251,6 @@ func initTestnetFiles(
 	if args.chainID == "" {
 		args.chainID = fmt.Sprintf("scalar_%d-1", tmrand.Int63n(9999999999999)+1)
 	}
-	fmt.Printf("nodeConfig: %v\n", nodeConfig)
 	envKeys := readEnvKeys()
 	var (
 		validatorInfos []scalartypes.ValidatorInfo

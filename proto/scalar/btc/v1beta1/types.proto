@@ -60,6 +60,20 @@ message PollMetadata {
   ];
 }
 
+enum StakingTxStatus {
+  option (gogoproto.goproto_enum_prefix) = true;
+  option (gogoproto.goproto_enum_stringer) = true;
+
+  STAKING_TX_STATUS_UNSPECIFIED = 0
+      [ (gogoproto.enumvalue_customname) = "None" ];
+  STAKING_TX_STATUS_PENDING = 1
+      [ (gogoproto.enumvalue_customname) = "Pending" ];
+  STAKING_TX_STATUS_CONFIRMED = 2
+      [ (gogoproto.enumvalue_customname) = "Confirmed" ];
+  STAKING_TX_STATUS_COMPLETED = 3
+      [ (gogoproto.enumvalue_customname) = "Completed" ];
+}
+
 message StakingTx {
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
@@ -70,14 +84,13 @@ message StakingTx {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
     (gogoproto.nullable) = false
   ];
-  // string asset = 3;
-  // string destination_chain = 4
-  //     [ (gogoproto.casttype) =
-  //           "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName"
-  //           ];
-  // bytes burner_address = 5
-  //     [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
-  // uint64 log_index = 6;
+  string asset = 3; // TODO: change to asset type: sats, runes, btc, etc
+  string destination_chain = 4
+      [ (gogoproto.casttype) =
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+  bytes destination_recipient_address = 5
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
+  uint64 log_index = 6;
 }
 
 message CommandBatchMetadata {
@@ -101,4 +114,25 @@ message CommandBatchMetadata {
   google.protobuf.Any signature = 8
       [ (cosmos_proto.accepts_interface) =
             "github.com/cosmos/codec/ProtoMarshaler" ];
+}
+
+enum CommandType {
+  option (gogoproto.goproto_enum_prefix) = false;
+  option (gogoproto.goproto_enum_stringer) = false;
+  COMMAND_TYPE_APPROVE_CONTRACT_CALL = 0;
+}
+
+message Command {
+  bytes id = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "ID",
+    (gogoproto.customtype) = "CommandID"
+  ];
+  bytes params = 2;
+  string key_id = 3 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/axelarnetwork/axelar-core/x/multisig/exported.KeyID"
+  ];
+  CommandType type = 4;
 }

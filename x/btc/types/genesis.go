@@ -49,17 +49,8 @@ func (data GenesisState) Validate() error {
 	return nil
 }
 
-func NewGenesisState(params Params, tag VaultTag, version VaultVersion) *GenesisState {
+func NewGenesisState(chains []GenesisState_Chain) *GenesisState {
 	return &GenesisState{
-		Chains: []GenesisState_Chain{
-			{
-				Params:              params,
-				CommandQueue:        utils.QueueState{},
-				ConfirmedStakingTxs: []StakingTx{},
-				CommandBatches:      []CommandBatchMetadata{},
-				Events:              []Event{},
-				ConfirmedEventQueue: utils.QueueState{},
-			},
-		},
+		Chains: chains,
 	}
 }
