@@ -44,6 +44,7 @@ import (
 	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/app/params"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
+	"github.com/scalarorg/scalar-core/cmd/scalard/testnet"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
@@ -237,7 +238,7 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 	// add vald after the overwrite so it can set its own defaults
 	rootCmd.AddCommand(vald.GetValdCommand(), vald.GetHealthCheckCommand(), vald.GetSignCommand())
 	// add testnet command
-	rootCmd.AddCommand(NewTestnetCmd(app.GetModuleBasics(), banktypes.GenesisBalancesIterator{}))
+	rootCmd.AddCommand(testnet.NewTestnetCmd(app.GetModuleBasics(), banktypes.GenesisBalancesIterator{}))
 }
 
 func newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, appOpts servertypes.AppOptions) servertypes.Application {

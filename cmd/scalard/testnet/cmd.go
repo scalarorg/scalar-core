@@ -1,4 +1,4 @@
-package cmd
+package testnet
 
 import (
 	"bufio"
@@ -29,7 +29,6 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
-	"github.com/scalarorg/scalar-core/types"
 	"github.com/tendermint/tendermint/privval"
 
 	scalartypes "github.com/scalarorg/scalar-core/types"
@@ -170,7 +169,6 @@ Example:
 					return err
 				}
 			}
-
 			clientCtx, err := client.GetClientQueryContext(cmd)
 			if err != nil {
 				return err
@@ -206,6 +204,7 @@ Example:
 				return fmt.Errorf("invalid value for --min-gas-price. expected a int or decimal greater than or equal to 0 but got an negative number %s", minGasPrice)
 			}
 
+			//End Test keyring
 			return initTestnetFiles(clientCtx, cmd, serverCtx.Config, mbm, genBalIterator, args)
 		},
 	}
@@ -308,7 +307,7 @@ func createPubkeyFromSecret(config *tmconfig.Config, secret []byte, pvKeyName st
 		if err := tmos.EnsureDir(filepath.Dir(pvStateFile), 0o777); err != nil {
 			return nil, err
 		}
-		pvKeyName = types.ValidatorKeyName
+		pvKeyName = scalartypes.ValidatorKeyName
 	} else {
 		pvKeyFile = filepath.Join(config.RootDir, "config", fmt.Sprintf("%s_key.json", pvKeyName))
 		pvStateFile = filepath.Join(config.RootDir, "data", fmt.Sprintf("%s_state.json", pvKeyName))
@@ -324,7 +323,9 @@ func createPubkeyFromSecret(config *tmconfig.Config, secret []byte, pvKeyName st
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert tmtypes.Pubkey to cryptotypes.PubKey: %w", err)
 	}
-	storeValidatorInfo(valPubKey, pvKeyName, config.Moniker)
+	infoPath := filepath.Join(config.RootDir, fmt.Sprintf("%s.json", pvKeyName))
+	log.Info().Msgf("Private key saved to file: %s\n", infoPath)
+	storeValidatorInfo(valPubKey, pvKeyName, config.RootDir)
 	return valPubKey, nil
 }
 func createNodeID(config *tmconfig.Config) (string, error) {
@@ -337,7 +338,12 @@ func createNodeID(config *tmconfig.Config) (string, error) {
 	return nodeID, nil
 }
 
-func createKeyringAccountFromMnemonic(keybase keyring.Keyring, keyName string, mnemonic string, bip44Path string, algo keyring.SignatureAlgo) (cryptotypes.PubKey, error) {
+func createKeyringAccountFromMnemonic(keybase keyring.Keyring,
+	keyName string,
+	mnemonic string,
+	bip44Path string,
+	algo keyring.SignatureAlgo,
+) (cryptotypes.PubKey, sdk.AccAddress, error) {
 	info, err := keybase.NewAccount(
 		keyName,
 		mnemonic,
@@ -346,9 +352,13 @@ func createKeyringAccountFromMnemonic(keybase keyring.Keyring, keyName string, m
 		algo,
 	)
 	if err != nil {
-		return nil, err
+		info, err = keybase.Key(keyName)
 	}
-	return info.GetPubKey(), nil
+	if err != nil {
+		return nil, nil, err
+	}
+	// log.Debug().Str("keyName", keyName).Str("address", info.GetAddress().String()).Msg("Keyring account created")
+	return info.GetPubKey(), info.GetAddress(), nil
 }
 func storeValidatorInfo(pubkey cryptotypes.PubKey, keyName string, nodeDir string) error {
 	address := sdk.ValAddress(pubkey.Address())
@@ -369,6 +379,7 @@ func storeValidatorInfo(pubkey cryptotypes.PubKey, keyName string, nodeDir strin
 }
 func createKeyring(cmd *cobra.Command, args initArgs, nodeDir string) (keyring.Keyring, keyring.SignatureAlgo, error) {
 	inBuf := bufio.NewReader(cmd.InOrStdin())
+	log.Debug().Str("keyringBackend", args.keyringBackend).Str("nodeDir", nodeDir).Str("keyringServiceName", sdk.KeyringServiceName()).Msg("Create keyring")
 	kb, err := keyring.New(sdk.KeyringServiceName(), args.keyringBackend, nodeDir, inBuf, defaultOption)
 	if err != nil {
 		return nil, nil, err
@@ -383,9 +394,8 @@ func createKeyring(cmd *cobra.Command, args initArgs, nodeDir string) (keyring.K
 }
 func genFaucet(kb keyring.Keyring, mnemonic string, algo keyring.SignatureAlgo, tokenAmount sdk.Int) (*banktypes.Balance, error) {
 	if mnemonic != "" {
-		//broadcasterPubKey, err := createPubkeyFromMnemonic(nodeConfig, envKeys.BroadcasterMnemonic, kb, algo, scalartypes.BroadcasterKeyName)
 		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeFaucetAccount, 0)
-		pubkey, err := createKeyringAccountFromMnemonic(kb,
+		_, address, err := createKeyringAccountFromMnemonic(kb,
 			scalartypes.BroadcasterKeyName,
 			mnemonic,
 			bip44Path,
@@ -396,8 +406,8 @@ func genFaucet(kb keyring.Keyring, mnemonic string, algo keyring.SignatureAlgo, 
 			return nil, err
 		}
 		return &banktypes.Balance{
-			Address: sdk.AccAddress(pubkey.Address()).String(),
-			Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, scalartypes.BroadcasterTokens)},
+			Address: address.String(),
+			Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, tokenAmount)},
 		}, nil
 	}
 	return nil, nil
@@ -440,38 +450,28 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		return nil, err
 	}
 
-	//Validator public key type must be ed25519
-	valPubKey, err := createKeyringAccountFromMnemonic(kb,
-		scalartypes.ValidatorKeyName,
-		envKeys.ValidatorMnemonic,
-		fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeValidator, uint32(index)),
-		algo,
-	)
-	if err != nil {
-		return nil, err
-	}
-	//Create ed25519 validator pubkey using generated pubkey as secret
-	validatorInfo.ValPubKey, err = createPubkeyFromSecret(nodeConfig, valPubKey.Bytes(), "")
-	if err != nil {
-		return nil, err
-	}
-
 	if envKeys.BroadcasterMnemonic != "" {
 		//broadcasterPubKey, err := createPubkeyFromMnemonic(nodeConfig, envKeys.BroadcasterMnemonic, kb, algo, scalartypes.BroadcasterKeyName)
 		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeBroadcaster, uint32(index))
-		broadcasterPubKey, err := createKeyringAccountFromMnemonic(kb,
+		pubkey, address, err := createKeyringAccountFromMnemonic(kb,
 			scalartypes.BroadcasterKeyName,
 			envKeys.BroadcasterMnemonic,
 			bip44Path,
 			algo,
 		)
 		if err != nil {
-			fmt.Printf("ExtractBroadcaster Err: %s\n", err.Error())
-			return nil, err
+			log.Error().Err(err).Msg("[initValidatorConfig] Create broadcaster keyring account from mnemonic")
+			key, err := kb.Key(scalartypes.BroadcasterKeyName)
+			if err != nil {
+				log.Error().Err(err).Msg("[initValidatorConfig] Get broadcaster keyring account")
+				return nil, err
+			}
+			address = key.GetAddress()
+			validatorInfo.Broadcaster = key.GetPubKey()
 		}
-		validatorInfo.Broadcaster = broadcasterPubKey
+		validatorInfo.Broadcaster = pubkey
 		validatorInfo.BroadcasterBalance = banktypes.Balance{
-			Address: sdk.AccAddress(broadcasterPubKey.Address()).String(),
+			Address: address.String(),
 			Coins: sdk.Coins{
 				sdk.NewCoin(scalartypes.BaseDenom, scalartypes.BroadcasterTokens),
 			},
@@ -480,78 +480,92 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	if envKeys.GovernanceMnemonic != "" {
 		//validatorInfo.GovPubKey, err = createPubkeyFromMnemonic(nodeConfig, envKeys.GovernanceMnemonic, kb, algo, scalartypes.GovKeyName)
 		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeGovernance, uint32(index))
-		validatorInfo.GovPubKey, err = createKeyringAccountFromMnemonic(kb,
+		pubkey, address, err := createKeyringAccountFromMnemonic(kb,
 			scalartypes.GovKeyName,
 			envKeys.GovernanceMnemonic,
 			bip44Path,
 			algo,
 		)
+		//For testnet
+		// inMemkr := keyring.NewInMemory()
+		// info, err := inMemkr.NewAccount(scalartypes.GovKeyName, envKeys.GovernanceMnemonic, "", bip44Path, algo)
+		log.Debug().
+			Str("keyName", scalartypes.GovKeyName).
+			Str("mnemonic", envKeys.GovernanceMnemonic).
+			Str("bip44Path", bip44Path).
+			Str("krAddress", address.String()).
+			Str("pubkeyAddress", sdk.AccAddress(pubkey.Address()).String()).Msg("Keyring account created")
 		if err != nil {
-			fmt.Printf("ExtractGovernance Err: %s\n", err.Error())
-			return nil, err
+			log.Error().Err(err).Msg("[initValidatorConfig] Create governance keyring account from mnemonic")
+			key, err := kb.Key(scalartypes.GovKeyName)
+			if err != nil {
+				log.Error().Err(err).Msg("[initValidatorConfig] Get governance keyring account")
+				return nil, err
+			}
+			address = key.GetAddress()
+			validatorInfo.GovPubKey = key.GetPubKey()
 		}
+		validatorInfo.GovPubKey = pubkey
 		validatorInfo.GovBalance = banktypes.Balance{
-			Address: sdk.AccAddress(validatorInfo.GovPubKey.Address()).String(),
+			Address: address.String(),
 			Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, scalartypes.GovTokens)},
 		}
 	}
 	if envKeys.FaucetMnemonic != "" {
-		validatorInfo.FaucetPubKey, err = createKeyringAccountFromMnemonic(kb,
+		pubKey, address, err := createKeyringAccountFromMnemonic(kb,
 			scalartypes.FaucetKeyName,
 			envKeys.FaucetMnemonic,
 			fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeFaucetAccount, uint32(index)),
 			algo,
 		)
 		if err != nil {
-			return nil, err
+			log.Error().Err(err).Msg("[initValidatorConfig] Create faucet keyring account from mnemonic")
+			key, err := kb.Key(scalartypes.FaucetKeyName)
+			if err != nil {
+				log.Error().Err(err).Msg("[initValidatorConfig] Get faucet keyring account")
+				return nil, err
+			}
+			pubKey = key.GetPubKey()
+			address = key.GetAddress()
+			validatorInfo.FaucetPubKey = key.GetPubKey()
 		}
+		validatorInfo.FaucetPubKey = pubKey
 		validatorInfo.FaucetBalance = banktypes.Balance{
-			Address: sdk.AccAddress(validatorInfo.FaucetPubKey.Address()).String(),
+			Address: address.String(),
 			Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, scalartypes.FaucetTokens)},
 		}
 	}
-	//senderKeyName := nodeDirName
-	senderKeyName := scalartypes.BroadcasterKeyName
-	senderAddress := sdk.AccAddress(validatorInfo.Broadcaster.Address())
-	//Generate node key with name {senderKeyName} inthe keyring
-	// senderAddress, secret, err := testutil.GenerateSaveCoinKey(kb, senderKeyName, envKeys.NodeMnemonic, true, algo)
-	// fmt.Printf("nodeAddr: %v\n", senderAddress)
-	// if err != nil {
-	// 	_ = os.RemoveAll(args.outputDir)
-	// 	return nil, err
-	// }
-	// key, err := kb.Key(senderKeyName)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// info := map[string]string{
-	// 	"secret":  secret,
-	// 	"address": sdk.ValAddress(senderAddress).String(),
-	// 	"pubkey":  key.GetPubKey().String(),
-	// }
-
-	// cliPrint, err := json.Marshal(info)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// // save private key seed words
-	// if err := utils.WriteFile(fmt.Sprintf("%v.json", "key_seed"), nodeDir, cliPrint); err != nil {
-	// 	return nil, err
-	// }
-	// validatorInfo.NodeBalance = banktypes.Balance{
-	// 	Address: senderAddress.String(),
-	// 	Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, scalartypes.NodeTokens)},
-	// }
-	//Use validator address as node address
-	// senderAddress := sdk.AccAddress(validatorInfo.Broadcaster.Address())
-	// senderKeyName = types.BroadcasterKeyName
-	power := int64((index + 1) * (index + 1))
-	valTokens := sdk.TokensFromConsensusPower(power, scalartypes.ValidatorTokens)
-	valCoin := sdk.NewCoin(scalartypes.BaseDenom, valTokens)
+	valPower := int64((index + 1) * (index + 1))
+	//Validator public key type must be ed25519
+	valPubKey, _, err := createKeyringAccountFromMnemonic(kb,
+		scalartypes.ValidatorKeyName,
+		envKeys.ValidatorMnemonic,
+		fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeValidator, uint32(index)),
+		algo,
+	)
+	if err != nil {
+		log.Error().Err(err).Msg("[initValidatorConfig] Create validatorkeyring account from mnemonic")
+		key, err := kb.Key(scalartypes.ValidatorKeyName)
+		if err != nil {
+			log.Error().Err(err).Msg("[initValidatorConfig] Get validator keyring account")
+			return nil, err
+		}
+		valPubKey = key.GetPubKey()
+	}
+	//Create ed25519 validator pubkey using generated pubkey as secret
+	validatorInfo.ValPubKey, err = createPubkeyFromSecret(nodeConfig, valPubKey.Bytes(), "")
+	if err != nil {
+		return nil, err
+	}
+	valCoin := sdk.NewCoin(scalartypes.BaseDenom, sdk.TokensFromConsensusPower(valPower, scalartypes.ValidatorTokens))
 	validatorInfo.ValBalance = banktypes.Balance{
 		Address: sdk.AccAddress(validatorInfo.ValPubKey.Address()).String(),
 		Coins:   sdk.Coins{valCoin},
 	}
+	//senderKeyName := nodeDirName
+	senderKeyName := scalartypes.BroadcasterKeyName
+	senderAddress := sdk.AccAddress(validatorInfo.Broadcaster.Address())
+
 	tmPubKey, err := cryptocodec.ToTmPubKeyInterface(validatorInfo.ValPubKey)
 	if err != nil {
 		fmt.Printf("ToTmPubKeyInterface Err: %s\n", err.Error())
@@ -561,7 +575,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		Name:    nodeDirName,
 		Address: tmPubKey.Address(),
 		PubKey:  tmPubKey,
-		Power:   sdk.NewInt(power).Mul(scalartypes.PowerReduction).Int64(),
+		Power:   sdk.NewInt(valPower).Mul(scalartypes.PowerReduction).Int64(),
 	}
 	// validatorInfo.NodeAccount = authtypes.NewBaseAccount(nodeAddr, nil, 0, 0)
 	// validatorInfo.BroadcasterAccount = authtypes.NewBaseAccount(sdk.AccAddress(validatorInfo.Broadcaster.Address()), validatorInfo.Broadcaster, 0, 0)

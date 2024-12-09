@@ -199,26 +199,33 @@ func GenerateGenesis(clientCtx client.Context,
 	appGenState[nexustypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(nexusGenState)
 	//pemission module
 	permissionGenState := permissiontypes.DefaultGenesisState()
-	govControlAccounts := make([]permissiontypes.GovAccount, len(validatorInfos))
-	govPubKeys := make([]cryptotypes.PubKey, len(validatorInfos))
-	for i, info := range validatorInfos {
-		govPubKeys[i] = info.GovPubKey
+	govAccounts := []permissiontypes.GovAccount{}
+	govPubKeys := []cryptotypes.PubKey{}
+	for _, info := range validatorInfos {
+		govPubKeys = append(govPubKeys, info.GovPubKey, info.Broadcaster)
 		if info.GovPubKey == nil {
 			return appGenState, fmt.Errorf("gov pubkey is nil")
 		}
-		govControlAccounts[i] = permissiontypes.GovAccount{
-			Address: sdk.AccAddress(info.GovPubKey.Address()),
-			Role:    permissionexported.ROLE_CHAIN_MANAGEMENT,
-		}
+		govAccounts = append(govAccounts,
+			permissiontypes.GovAccount{
+				Address: sdk.AccAddress(info.GovPubKey.Address()),
+				Role:    permissionexported.ROLE_CHAIN_MANAGEMENT,
+			},
+			permissiontypes.GovAccount{
+				Address: sdk.AccAddress(info.Broadcaster.Address()),
+				Role:    permissionexported.ROLE_CHAIN_MANAGEMENT,
+			},
+		)
+
 	}
 	//Use first governance account as role access control.
 	//Scalar allow an unique account with role access control
-	govControlAccounts = append(govControlAccounts, permissiontypes.GovAccount{
+	govAccounts = append(govAccounts, permissiontypes.GovAccount{
 		Address: sdk.AccAddress(govPubKeys[0].Address()),
 		Role:    permissionexported.ROLE_ACCESS_CONTROL,
 	})
 
-	permissionGenState.GovAccounts = append(permissionGenState.GovAccounts, govControlAccounts...)
+	permissionGenState.GovAccounts = append(permissionGenState.GovAccounts, govAccounts...)
 	permissionGenState.GovernanceKey = multisig.NewLegacyAminoPubKey(1, govPubKeys)
 	appGenState[permissiontypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(permissionGenState)
 	//set staking params
