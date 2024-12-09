@@ -18,6 +18,7 @@ import (
 
 var (
 	subspacePrefix = "subspace"
+	chainPrefix    = utils.KeyFromStr("chain")
 )
 
 // TODO: Implement this keeper
@@ -65,7 +66,7 @@ func (k *BaseKeeper) InitChains(ctx sdk.Context) {
 	clog.Red("iter.Valid()", iter.Valid())
 
 	for ; iter.Valid(); iter.Next() {
-		clog.Red("iter.Value()", iter.Value())
+		clog.Red("iter.Value()", string(iter.Value()))
 		_ = k.createSubspace(ctx, nexus.ChainName(iter.Value()))
 	}
 

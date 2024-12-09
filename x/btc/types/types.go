@@ -3,13 +3,18 @@ package types
 import (
 	"bytes"
 	"encoding/hex"
+	"errors"
 	fmt "fmt"
+	"strconv"
+	"strings"
 
 	utils "github.com/axelarnetwork/axelar-core/utils"
 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
@@ -216,5 +221,173 @@ func (c *CommandID) Unmarshal(data []byte) error {
 
 // ValidateBasic returns an error if the given command ID is invalid
 func (c CommandID) ValidateBasic() error {
+	return nil
+}
+
+type Address common.Address
+
+// ZeroAddress represents an evm address with all bytes being zero
+var ZeroAddress = Address{}
+
+// IsZeroAddress returns true if the address contains only zero bytes; false otherwise
+func (a Address) IsZeroAddress() bool {
+	return bytes.Equal(a.Bytes(), ZeroAddress.Bytes())
+}
+
+// Bytes returns the actual byte array of the address
+func (a Address) Bytes() []byte {
+	return common.Address(a).Bytes()
+}
+
+// Hex returns an EIP55-compliant hex string representation of the address
+func (a Address) Hex() string {
+	return common.Address(a).Hex()
+}
+
+// Marshal implements codec.ProtoMarshaler
+func (a Address) Marshal() ([]byte, error) {
+	return a[:], nil
+}
+
+// MarshalTo implements codec.ProtoMarshaler
+func (a Address) MarshalTo(data []byte) (n int, err error) {
+	bytesCopied := copy(data, a[:])
+	if bytesCopied != common.AddressLength {
+		return 0, fmt.Errorf("expected data size to be %d, actual %d", common.AddressLength, len(data))
+	}
+
+	return common.AddressLength, nil
+}
+
+// Unmarshal implements codec.ProtoMarshaler
+func (a *Address) Unmarshal(data []byte) error {
+	if len(data) != common.AddressLength {
+		return fmt.Errorf("expected data size to be %d, actual %d", common.AddressLength, len(data))
+	}
+
+	*a = Address(common.BytesToAddress(data))
+
+	return nil
+}
+
+// Size implements codec.ProtoMarshaler
+func (a Address) Size() int {
+	return common.AddressLength
+}
+
+func (m *StakingTx) ValidateBasic() error {
+	if err := sdk.ValidateDenom(m.Asset); err != nil {
+		return sdkerrors.Wrap(err, "invalid asset")
+	}
+
+	if err := m.DestinationChain.Validate(); err != nil {
+		return sdkerrors.Wrap(err, "invalid destination chain")
+	}
+
+	if m.Amount.IsZero() {
+		return fmt.Errorf("amount must be >0")
+	}
+
+	return nil
+}
+
+func (m CommandBatchMetadata) ValidateBasic() error {
+	switch m.Status {
+	case BatchNonExistent:
+		return errors.New("batch does not exist")
+	case BatchSigning, BatchAborted:
+		if m.Signature != nil {
+			return errors.New("unsigned batch must not have a signature")
+		}
+	case BatchSigned:
+		if m.Signature == nil {
+			return errors.New("signed batch must have a valid signature")
+		}
+
+		if err := m.Signature.GetCachedValue().(utils.ValidatedProtoMarshaler).ValidateBasic(); err != nil {
+			return err
+		}
+	}
+
+	if len(m.ID) != 32 {
+		return errors.New("batch ID must be of length 32")
+	}
+
+	if len(m.CommandIDs) == 0 {
+		return errors.New("command IDs must not be empty")
+	}
+
+	if len(m.Data) == 0 {
+		return errors.New("batch data must not be empty")
+	}
+
+	if m.SigHash.IsZero() {
+		return errors.New("batch data hash must not be empty")
+	}
+
+	if err := m.KeyID.ValidateBasic(); err != nil {
+		return err
+	}
+
+	if len(m.PrevBatchedCommandsID) != 0 && len(m.PrevBatchedCommandsID) != 32 {
+		return errors.New("previous batch ID must either be nil or of length 32")
+	}
+
+	return nil
+}
+
+// EventID ensures a correctly formatted event ID
+type EventID string
+
+// NewEventID returns a new event ID
+func NewEventID(txID Hash, index uint64) EventID {
+	return EventID(fmt.Sprintf("%s-%d", txID.HexStr(), index))
+}
+
+// Validate returns an error, if the event ID is not in format of txID-index
+func (id EventID) Validate() error {
+	if err := utils.ValidateString(string(id)); err != nil {
+		return err
+	}
+
+	arr := strings.Split(string(id), "-")
+	if len(arr) != 2 {
+		return fmt.Errorf("event ID should be in foramt of txID-index")
+	}
+
+	bz, err := hexutil.Decode(arr[0])
+	if err != nil {
+		return sdkerrors.Wrap(err, "invalid tx hash hex encoding")
+	}
+
+	if len(bz) != common.HashLength {
+		return fmt.Errorf("invalid tx hash length")
+	}
+
+	_, err = strconv.ParseInt(arr[1], 10, 64)
+	if err != nil {
+		return sdkerrors.Wrap(err, "invalid index")
+	}
+
+	return nil
+}
+
+// GetID returns an unique ID for the event
+func (m Event) GetID() EventID {
+	return NewEventID(m.TxID, m.Index)
+}
+
+// ValidateBasic returns an error if the event is invalid
+func (m Event) ValidateBasic() error {
+	if err := m.Chain.Validate(); err != nil {
+		return sdkerrors.Wrap(err, "invalid source chain")
+	}
+
+	if m.TxID.IsZero() {
+		return fmt.Errorf("invalid tx id")
+	}
+
+	// TODO: validate event type
+
 	return nil
 }
