@@ -13,6 +13,34 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
+// EVMConfig contains all EVM module configuration values
+type BTCConfig struct {
+	Network     string      `mapstructure:"network"`
+	NetworkKind NetworkKind `mapstructure:"networkKind"`
+	ChainId     uint64      `mapstructure:"chainId"`
+	Name        string      `mapstructure:"name"`
+	RPCAddr     string      `mapstructure:"rpcAddr"`
+	RPCUser     string      `mapstructure:"rpcUser"`
+	RPCPassword string      `mapstructure:"rpcPassword"`
+	Tag         string      `mapstructure:"tag"`
+	Version     byte        `mapstructure:"version"`
+	WithBridge  bool        `mapstructure:"start-with-bridge"`
+}
+
+// DefaultConfig returns a configuration populated with default values
+func DefaultConfig() []BTCConfig {
+	return []BTCConfig{{
+		Name:        "bitcoin-testnet4",
+		ChainId:     4,
+		RPCAddr:     "http://127.0.0.1:48332",
+		RPCUser:     "user",
+		RPCPassword: "password",
+		Tag:         "SCALAR",
+		Version:     0,
+		WithBridge:  true,
+	}}
+}
+
 type VaultTag [6]byte
 
 func (VaultTag) Size() int {

@@ -6,8 +6,6 @@ import (
 	"os"
 	"time"
 
-	//btctypes "github.com/scalarorg/scalar-core/x/btc/types"
-
 	"github.com/axelarnetwork/axelar-core/utils"
 	evmtypes "github.com/axelarnetwork/axelar-core/x/evm/types"
 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
@@ -28,6 +26,7 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
+	btctypes "github.com/scalarorg/scalar-core/x/btc/types"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	protocoltypes "github.com/scalarorg/scalar-core/x/protocol/types"
 	tmtypes "github.com/tendermint/tendermint/types"
@@ -348,30 +347,30 @@ func generateNexusGenesis(supportedChainsPath string, validatorInfos []Validator
 		}
 		for _, btcConfig := range btcConfigs {
 			fmt.Printf("btcConfig %v\n", btcConfig)
-			// nexusGenState.Chains = append(nexusGenState.Chains, nexus.Chain{
-			// 	Name:                  nexus.ChainName(btcConfig.Name),
-			// 	SupportsForeignAssets: true,
-			// 	KeyType:               tss.Multisig,
-			// 	Module:                btctypes.ModuleName,
-			// })
-			// chainState := nexustypes.ChainState{
-			// 	Chain: nexus.Chain{
-			// 		Name:                  nexus.ChainName(btcConfig.Name),
-			// 		SupportsForeignAssets: true,
-			// 		KeyType:               tss.Multisig,
-			// 		Module:                btctypes.ModuleName,
-			// 	},
-			// 	Activated:        true,
-			// 	Assets:           []nexus.Asset{nexus.NewAsset(coinDenom, true)},
-			// 	MaintainerStates: make([]nexustypes.MaintainerState, len(validatorInfos)),
-			// }
-			// for i, validator := range validatorInfos {
-			// 	chainState.MaintainerStates[i] = nexustypes.MaintainerState{
-			// 		Address: sdk.ValAddress(validator.ValPubKey.Bytes()),
-			// 		Chain:   nexus.ChainName(btcConfig.Name),
-			// 	}
-			// }
-			// nexusGenState.ChainStates = append(nexusGenState.ChainStates, chainState)
+			nexusGenState.Chains = append(nexusGenState.Chains, nexus.Chain{
+				Name:                  nexus.ChainName(btcConfig.Name),
+				SupportsForeignAssets: true,
+				KeyType:               tss.Multisig,
+				Module:                btctypes.ModuleName,
+			})
+			chainState := nexustypes.ChainState{
+				Chain: nexus.Chain{
+					Name:                  nexus.ChainName(btcConfig.Name),
+					SupportsForeignAssets: true,
+					KeyType:               tss.Multisig,
+					Module:                btctypes.ModuleName,
+				},
+				Activated:        true,
+				Assets:           []nexus.Asset{nexus.NewAsset(coinDenom, true)},
+				MaintainerStates: make([]nexustypes.MaintainerState, len(validatorInfos)),
+			}
+			for i, validator := range validatorInfos {
+				chainState.MaintainerStates[i] = nexustypes.MaintainerState{
+					Address: sdk.ValAddress(validator.ValPubKey.Bytes()),
+					Chain:   nexus.ChainName(btcConfig.Name),
+				}
+			}
+			nexusGenState.ChainStates = append(nexusGenState.ChainStates, chainState)
 		}
 	}
 	return nexusGenState
@@ -423,10 +422,38 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 			})
 		}
 		genesisState[evmtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&evmGenState)
-		// btcConfigs, err := ParseJsonArrayConfig[evmtypes.EVMConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
-		// if err != nil {
-		// 	log.Error().Err(err).Msg("Failed to parse btc config")
-		// }
+		btcConfigs, err := ParseJsonArrayConfig[btctypes.BTCConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to parse btc config")
+		}
+		btcGenState := btctypes.DefaultGenesisState()
+		for _, btcConfig := range btcConfigs {
+			vaultTag := btctypes.VaultTag([]byte(btcConfig.Tag)[:6])
+			vaultVersion := btctypes.VaultVersion([1]byte{btcConfig.Version})
+			params := btctypes.Params{
+				ChainId:             btcConfig.ChainId,
+				ChainName:           nexus.ChainName(btcConfig.Name),
+				ConfirmationHeight:  2,
+				NetworkKind:         btcConfig.NetworkKind,
+				RevoteLockingPeriod: 50,
+				VotingThreshold:     utils.Threshold{Numerator: 51, Denominator: 100},
+				MinVoterCount:       1,
+				VotingGracePeriod:   50,
+				EndBlockerLimit:     50,
+				TransferLimit:       1000,
+				VaultTag:            &vaultTag,
+				VaultVersion:        &vaultVersion,
+			}
+			btcGenState.Chains = append(btcGenState.Chains, btctypes.GenesisState_Chain{
+				Params:              params,
+				CommandQueue:        utils.QueueState{},
+				ConfirmedEventQueue: utils.QueueState{},
+				// Gateway: evmtypes.Gateway{
+				// 	Address: evmtypes.Address(common.HexToAddress(evmConfig.Gateway)),
+				// },
+			})
+		}
+		genesisState[btctypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&btcGenState)
 	}
 	return nil
 }
