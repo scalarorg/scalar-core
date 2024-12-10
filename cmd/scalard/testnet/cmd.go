@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/cometbft/cometbft/p2p"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -56,6 +57,9 @@ var (
 	flagNumValidators       = "v"
 	flagSupportedChains     = "supported-chains"
 	flagOutputDir           = "output-dir"
+	flagBaseDir             = "base-dir"
+	flagTimeout             = "timeout"
+	flagBlockHeight         = "block-height"
 	flagNodeDaemonHome      = "node-daemon-home"
 	flagNodeDomain          = "node-domain"
 	flagPortOffset          = "port-offset"
@@ -88,17 +92,10 @@ type initArgs struct {
 }
 
 type startArgs struct {
-	algo           string
-	apiAddress     string
-	chainID        string
-	grpcAddress    string
-	minGasPrices   string
-	outputDir      string
-	rpcAddress     string
-	jsonrpcAddress string
-	numValidators  int
-	enableLogging  bool
-	printMnemonic  bool
+	baseDir       string
+	numValidators int
+	timeout       int
+	blockHeight   int
 }
 
 type EnvKeys struct {
@@ -108,11 +105,6 @@ type EnvKeys struct {
 	GovernanceMnemonic  string
 	FaucetMnemonic      string
 	BtcPubkey           string
-}
-
-func defaultOption(options *keyring.Options) {
-	options.SupportedAlgos = keyring.SigningAlgoList{hd.Secp256k1}
-	options.SupportedAlgosLedger = keyring.SigningAlgoList{hd.Secp256k1}
 }
 
 // createValidatorMsgGasLimit is the gas limit used in the MsgCreateValidator included in genesis transactions.
@@ -127,7 +119,6 @@ func addTestnetFlagsToCmd(cmd *cobra.Command) {
 	cmd.Flags().String(flagKeyType, string(hd.Secp256k1Type), "Key signing algorithm to generate keys for")
 	cmd.Flags().String(flagBaseFee, strconv.Itoa(params.InitialBaseFee), "The params base_fee in the feemarket module in geneis")
 	cmd.Flags().String(flagMinGasPrice, "0", "The params min_gas_price in the feemarket module in geneis")
-	cmd.Flags().Int(flagPortOffset, 0, "Port offset for the testnet")
 }
 
 // NewTestnetCmd creates a root testnet command with subcommands to run an in-process testnet or initialize
@@ -141,7 +132,7 @@ func NewTestnetCmd(mbm module.BasicManager, genBalIterator banktypes.GenesisBala
 		RunE:                       client.ValidateCmd,
 	}
 	testnetCmd.AddCommand(testnetInitFilesCmd(mbm, genBalIterator))
-	//testnetCmd.AddCommand(testnetStartCmd())
+	testnetCmd.AddCommand(testnetStartCmd())
 
 	return testnetCmd
 }
@@ -185,6 +176,7 @@ Example:
 			args.nodeDaemonHome, _ = cmd.Flags().GetString(flagNodeDaemonHome)
 			args.nodeDomain, _ = cmd.Flags().GetString(flagNodeDomain)
 			args.numValidators, _ = cmd.Flags().GetInt(flagNumValidators)
+			args.portOffset, _ = cmd.Flags().GetInt(flagPortOffset)
 			args.supportedChains, _ = cmd.Flags().GetString(flagSupportedChains)
 			args.algo, _ = cmd.Flags().GetString(flagKeyType)
 			baseFee, _ := cmd.Flags().GetString(flagBaseFee)
@@ -210,9 +202,10 @@ Example:
 	}
 
 	addTestnetFlagsToCmd(cmd)
+	cmd.Flags().Int(flagPortOffset, 0, "Port offset for the testnet")
 	cmd.Flags().String(flagNodeDirPrefix, "node", "Prefix the directory name for each node with (node results in node1, node2, ...)")
 	cmd.Flags().String(flagNodeDaemonHome, "scalard", "Home directory of the node's daemon configuration")
-	cmd.Flags().String(flagNodeDomain, "scalarnode", `Node domain: 
+	cmd.Flags().String(flagNodeDomain, "", `Node domain: 
 		*scalarnode* results in persistent peers list ID0@scalarnode1:46656, ID1@scalarnode2:46656, ...
 		*192.168.0.1* results in persistent peers list ID0@192.168.0.11:46656, ID1@192.168.0.12:46656, ...
 		`)
@@ -223,6 +216,35 @@ Example:
 	cmd.Flags().String(flags.FlagKeyringBackend, flags.DefaultKeyringBackend, "Select keyring's backend (os|file|test)")
 	cmd.Flags().String(flagEnvFile, "", "Path to environment file to load (optional)")
 
+	return cmd
+}
+
+// get cmd to start multi validator in-process testnet
+func testnetStartCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "start",
+		Short: "Launch an in-process multi-validator testnet",
+		Long: `testnet will launch an in-process multi-validator testnet,
+and generate "v" directories, populated with necessary validator configuration files
+(private validator, genesis, config, etc.).
+
+Example:
+	scalard testnet start --v 4 --base-dir ./.testnets
+	`,
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			args := startArgs{}
+			args.baseDir, _ = cmd.Flags().GetString(flagBaseDir)
+			args.numValidators, _ = cmd.Flags().GetInt(flagNumValidators)
+			args.timeout, _ = cmd.Flags().GetInt(flagTimeout)
+			args.blockHeight, _ = cmd.Flags().GetInt(flagBlockHeight)
+			return startTestnet(cmd, args)
+		},
+	}
+
+	addTestnetFlagsToCmd(cmd)
+	cmd.Flags().String(flagBaseDir, "./.testnets", "the base directory to store the testnet")
+	cmd.Flags().Int(flagTimeout, 1800, "The testnet run time. Default is 1800 seconds")
+	cmd.Flags().Int(flagBlockHeight, 100, "The block height to stop the testnet")
 	return cmd
 }
 
@@ -377,10 +399,9 @@ func storeValidatorInfo(pubkey cryptotypes.PubKey, keyName string, nodeDir strin
 	}
 	return nil
 }
-func createKeyring(cmd *cobra.Command, args initArgs, nodeDir string) (keyring.Keyring, keyring.SignatureAlgo, error) {
-	inBuf := bufio.NewReader(cmd.InOrStdin())
+func createKeyring(inBuf *bufio.Reader, args initArgs, nodeDir string) (keyring.Keyring, keyring.SignatureAlgo, error) {
 	log.Debug().Str("keyringBackend", args.keyringBackend).Str("nodeDir", nodeDir).Str("keyringServiceName", sdk.KeyringServiceName()).Msg("Create keyring")
-	kb, err := keyring.New(sdk.KeyringServiceName(), args.keyringBackend, nodeDir, inBuf, defaultOption)
+	kb, err := keyring.New(sdk.KeyringServiceName(), args.keyringBackend, nodeDir, inBuf, DefaultOption)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -445,7 +466,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	// validatorInfo.NodeID, validatorInfo.ValPubKey, err = genutil.InitializeNodeValidatorFilesFromMnemonic(nodeConfig, envKeys.ValidatorMnemonic)
 	gentxsDir := filepath.Join(args.outputDir, "gentxs")
 	// TODO: add ledger support
-	kb, algo, err := createKeyring(cmd, args, nodeDir)
+	kb, algo, err := createKeyring(bufio.NewReader(cmd.InOrStdin()), args, nodeDir)
 	if err != nil {
 		return nil, err
 	}
@@ -469,6 +490,13 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 			address = key.GetAddress()
 			validatorInfo.Broadcaster = key.GetPubKey()
 		}
+		log.Debug().
+			Str("mnemonic", envKeys.BroadcasterMnemonic).
+			Str("bip44path", bip44Path).
+			Str("keyName", scalartypes.BroadcasterKeyName).
+			Str("broadcasterPubKey", pubkey.String()).
+			Str("broadcasterAddress", address.String()).
+			Msg("Broadcaster public key")
 		validatorInfo.Broadcaster = pubkey
 		validatorInfo.BroadcasterBalance = banktypes.Balance{
 			Address: address.String(),
@@ -798,7 +826,7 @@ address = "%s"
 				seeds = append(seeds, seed)
 			}
 		}
-		utils.WriteFile("seed.toml", validatorInfos[i].NodeDir, []byte(strings.Join(seeds, "\n")))
+		utils.WriteFile("seeds.toml", filepath.Join(validatorInfos[i].NodeDir, "config"), []byte(strings.Join(seeds, "\n")))
 	}
 	return nil
 }
@@ -892,92 +920,45 @@ func ReadFile(path string) {
 	fmt.Printf("\nError: %v", err)
 }
 
-// // get cmd to start multi validator in-process testnet
-// func testnetStartCmd() *cobra.Command {
-// 	cmd := &cobra.Command{
-// 		Use:   "start",
-// 		Short: "Launch an in-process multi-validator testnet",
-// 		Long: `testnet will launch an in-process multi-validator testnet,
-// and generate "v" directories, populated with necessary validator configuration files
-// (private validator, genesis, config, etc.).
+// startTestnet starts an in-process testnet
+func startTestnet(cmd *cobra.Command, args startArgs) error {
+	networkConfig := DefaultConfig()
+	networkConfig.NumValidators = args.numValidators
+	// Default networkConfig.ChainID is random, and we should only override it if chainID provided
+	// is non-empty
+	// if args.chainID != "" {
+	// 	networkConfig.ChainID = args.chainID
+	// }
+	// networkConfig.SigningAlgo = args.algo
+	// networkConfig.MinGasPrices = args.minGasPrices
+	// networkConfig.EnableTMLogging = args.enableLogging
+	// networkConfig.RPCAddress = args.rpcAddress
+	// networkConfig.APIAddress = args.apiAddress
+	// networkConfig.GRPCAddress = args.grpcAddress
+	// networkConfig.JSONRPCAddress = args.jsonrpcAddress
+	// networkConfig.PrintMnemonic = args.printMnemonic
+	networkLogger := NewCLILogger(cmd)
 
-// Example:
-// 	scalard testnet --v 4 --output-dir ./.testnets
-// 	`,
-// 		RunE: func(cmd *cobra.Command, _ []string) error {
-// 			args := startArgs{}
-// 			args.outputDir, _ = cmd.Flags().GetString(flagOutputDir)
-// 			args.chainID, _ = cmd.Flags().GetString(flags.FlagChainID)
-// 			args.minGasPrices, _ = cmd.Flags().GetString(sdkserver.FlagMinGasPrices)
-// 			args.numValidators, _ = cmd.Flags().GetInt(flagNumValidators)
-// 			args.algo, _ = cmd.Flags().GetString(flagKeyType)
-// 			args.enableLogging, _ = cmd.Flags().GetBool(flagEnableLogging)
-// 			args.rpcAddress, _ = cmd.Flags().GetString(flagRPCAddress)
-// 			args.apiAddress, _ = cmd.Flags().GetString(flagAPIAddress)
-// 			args.grpcAddress, _ = cmd.Flags().GetString(flagGRPCAddress)
-// 			args.jsonrpcAddress, _ = cmd.Flags().GetString(flagJSONRPCAddress)
-// 			args.printMnemonic, _ = cmd.Flags().GetBool(flagPrintMnemonic)
+	baseDir := args.baseDir
+	testnet, err := New(networkLogger, cmd.InOrStdin(), baseDir, networkConfig)
+	if err != nil {
+		return err
+	}
 
-// 			return startTestnet(cmd, args)
-// 		},
-// 	}
+	_, err = testnet.WaitForHeightWithTimeout(int64(args.blockHeight), time.Duration(args.timeout)*time.Second)
+	if err != nil {
+		return err
+	}
 
-// 	addTestnetFlagsToCmd(cmd)
-// 	cmd.Flags().Bool(flagEnableLogging, false, "Enable INFO logging of tendermint validator nodes")
-// 	cmd.Flags().String(flagRPCAddress, "tcp://0.0.0.0:26657", "the RPC address to listen on")
-// 	cmd.Flags().String(flagAPIAddress, "tcp://0.0.0.0:1317", "the address to listen on for REST API")
-// 	cmd.Flags().String(flagGRPCAddress, DefaultGRPCAddress, "the gRPC server address to listen on")
-// 	cmd.Flags().String(flagJSONRPCAddress, DefaultJSONRPCAddress, "the JSON-RPC server address to listen on")
-// 	cmd.Flags().Bool(flagPrintMnemonic, true, "print mnemonic of first validator to stdout for manual testing")
-// 	return cmd
-// }
+	cmd.Println("press the Enter Key to terminate")
+	_, err = fmt.Scanln() // wait for Enter Key
+	if err != nil {
+		return err
+	}
+	// testnet.Cleanup()
 
-// // startTestnet starts an in-process testnet
-// func startTestnet(cmd *cobra.Command, args startArgs) error {
-// 	networkConfig := network.DefaultConfig()
-
-// 	// Default networkConfig.ChainID is random, and we should only override it if chainID provided
-// 	// is non-empty
-// 	if args.chainID != "" {
-// 		networkConfig.ChainID = args.chainID
-// 	}
-// 	networkConfig.SigningAlgo = args.algo
-// 	networkConfig.MinGasPrices = args.minGasPrices
-// 	networkConfig.NumValidators = args.numValidators
-// 	networkConfig.EnableTMLogging = args.enableLogging
-// 	networkConfig.RPCAddress = args.rpcAddress
-// 	networkConfig.APIAddress = args.apiAddress
-// 	networkConfig.GRPCAddress = args.grpcAddress
-// 	networkConfig.JSONRPCAddress = args.jsonrpcAddress
-// 	networkConfig.PrintMnemonic = args.printMnemonic
-// 	networkLogger := network.NewCLILogger(cmd)
-
-// 	baseDir := fmt.Sprintf("%s/%s", args.outputDir, networkConfig.ChainID)
-// 	if _, err := os.Stat(baseDir); !os.IsNotExist(err) {
-// 		return fmt.Errorf(
-// 			"testnests directory already exists for chain-id '%s': %s, please remove or select a new --chain-id",
-// 			networkConfig.ChainID, baseDir)
-// 	}
-
-// 	testnet, err := network.New(networkLogger, baseDir, networkConfig)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	_, err = testnet.WaitForHeight(1)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	cmd.Println("press the Enter Key to terminate")
-// 	_, err = fmt.Scanln() // wait for Enter Key
-// 	if err != nil {
-// 		return err
-// 	}
-// 	testnet.Cleanup()
-
-// 	return nil
-// }
+	return nil
+}
 
 func loadEnvFile(envFile string) error {
 	if envFile == "" {
