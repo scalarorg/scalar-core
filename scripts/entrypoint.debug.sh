@@ -16,7 +16,6 @@ echo "SCALAR_HOME_DIR: ${SCALAR_HOME_DIR}"
 echo "SCALAR_CHAIN_ID: ${SCALAR_CHAIN_ID}"
 echo "SCALAR_KEYRING_BACKEND: ${SCALAR_KEYRING_BACKEND}"
 echo "SCALAR_CHAINS_DIR: ${SCALAR_CHAINS_DIR}"
-echo "SCALAR_RUN_DIR: ${SCALAR_RUN_DIR}"
 echo "SCALAR_NUM_VALIDATORS: ${SCALAR_NUM_VALIDATORS}"
 echo ""
 
@@ -31,14 +30,14 @@ stop_gracefully() {
   echo "All processes stopped."
 }
 
-if [ ! -d "${HOME_DIR}" ]; then
-  echo "Please set HOME_DIR in env. It is the runtime directory for the node."
-  echo "Example: HOME_DIR=.scalar/node1/scalard"
+if [ ! -d "${SCALAR_HOME_DIR}" ]; then
+  echo "Please set SCALAR_HOME_DIR in env. It is the runtime directory for the node."
+  echo "Example: SCALAR_HOME_DIR=.scalar/node1/scalard"
   exit 1
 fi
 
 startNodeProc() {
-  $SCALAR_BIN_PATH start --home $HOME_DIR --log_level=debug
+  $SCALAR_BIN_PATH start --home $SCALAR_HOME_DIR --log_level=debug
 }
 
 if [ -z "$1" ]; then

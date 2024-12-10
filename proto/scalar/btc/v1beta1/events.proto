@@ -24,6 +24,13 @@ message ConfirmStakingTxsStarted {
             "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
 }
 
+message VoteEvents {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+  repeated Event events = 2 [ (gogoproto.nullable) = false ];
+}
+
 message Event {
   enum Status {
     option (gogoproto.goproto_enum_prefix) = false;
@@ -46,6 +53,20 @@ message Event {
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "Hash"
   ];
-  uint64 index = 3;
-  Status status = 4;
+  Status status = 3;
+  uint64 index = 4;
+  oneof event { EventStakingTx staking_tx = 5; }
+}
+
+message EventStakingTx {
+  string prev_out_point = 1;
+  uint64 amount = 2;
+  string asset = 3;
+  bytes payload_hash = 4 [
+    (gogoproto.customtype) =
+        "github.com/axelarnetwork/axelar-core/x/evm/types.Hash",
+    (gogoproto.nullable) = false
+  ];
+  StakingTxMetadata metadata = 5 [ (gogoproto.nullable) = false ];
+
 }

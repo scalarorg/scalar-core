@@ -43,7 +43,7 @@ RUN if [[ "${WASM}" == "true" ]]; then \
 
 COPY . .
 
-RUN make MUSLC="${WASM}" WASM="${WASM}" IBC_WASM_HOOKS="${IBC_WASM_HOOKS}" build
+RUN make LOCAL_LIB_PATH="/usr/lib"  MUSLC="${WASM}" WASM="${WASM}" IBC_WASM_HOOKS="${IBC_WASM_HOOKS}" build
 
 FROM alpine:3.20
 

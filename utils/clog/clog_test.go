@@ -52,4 +52,8 @@ func TestColorLog(t *testing.T) {
 	clog.Red("chain", chain)
 
 	clog.Red("chain", &TestStruct{Value: 42, Text: "hello"})
+
+	clog.Yellow("block_height_not_found", "block_hash:", 123)
+	clog.Yellowf("User %s logged in from %s", "John", "192.168.1.1")
+	clog.Yellowf("Test struct %+v", TestStruct{Value: 42, Text: "hello"})
 }
