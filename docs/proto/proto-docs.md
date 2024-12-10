@@ -11,6 +11,7 @@
     - [PollMetadata](#scalar.btc.v1beta1.PollMetadata)
     - [Proof](#scalar.btc.v1beta1.Proof)
     - [StakingTx](#scalar.btc.v1beta1.StakingTx)
+    - [StakingTxMetadata](#scalar.btc.v1beta1.StakingTxMetadata)
   
     - [BatchedCommandsStatus](#scalar.btc.v1beta1.BatchedCommandsStatus)
     - [CommandType](#scalar.btc.v1beta1.CommandType)
@@ -20,6 +21,8 @@
 - [scalar/btc/v1beta1/events.proto](#scalar/btc/v1beta1/events.proto)
     - [ConfirmStakingTxsStarted](#scalar.btc.v1beta1.ConfirmStakingTxsStarted)
     - [Event](#scalar.btc.v1beta1.Event)
+    - [EventStakingTx](#scalar.btc.v1beta1.EventStakingTx)
+    - [VoteEvents](#scalar.btc.v1beta1.VoteEvents)
   
     - [Event.Status](#scalar.btc.v1beta1.Event.Status)
   
@@ -255,6 +258,31 @@
 
 
 
+
+<a name="scalar.btc.v1beta1.StakingTxMetadata"></a>
+
+### StakingTxMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tag` | [bytes](#bytes) |  |  |
+| `version` | [bytes](#bytes) |  |  |
+| `network_id` | [NetworkKind](#scalar.btc.v1beta1.NetworkKind) |  |  |
+| `flags` | [uint32](#uint32) |  |  |
+| `service_tag` | [bytes](#bytes) |  |  |
+| `have_only_covenants` | [bool](#bool) |  |  |
+| `covenant_quorum` | [uint32](#uint32) |  |  |
+| `destination_chain_type` | [uint32](#uint32) |  |  |
+| `destination_chain_id` | [uint64](#uint64) |  |  |
+| `destination_contract_address` | [bytes](#bytes) |  |  |
+| `destination_recipient_address` | [bytes](#bytes) |  |  |
+
+
+
+
+
  <!-- end messages -->
 
 
@@ -351,8 +379,44 @@
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
 | `tx_id` | [bytes](#bytes) |  |  |
-| `index` | [uint64](#uint64) |  |  |
 | `status` | [Event.Status](#scalar.btc.v1beta1.Event.Status) |  |  |
+| `index` | [uint64](#uint64) |  |  |
+| `staking_tx` | [EventStakingTx](#scalar.btc.v1beta1.EventStakingTx) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.EventStakingTx"></a>
+
+### EventStakingTx
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `prev_out_point` | [string](#string) |  |  |
+| `amount` | [uint64](#uint64) |  |  |
+| `asset` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `metadata` | [StakingTxMetadata](#scalar.btc.v1beta1.StakingTxMetadata) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.VoteEvents"></a>
+
+### VoteEvents
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `events` | [Event](#scalar.btc.v1beta1.Event) | repeated |  |
 
 
 

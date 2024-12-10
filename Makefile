@@ -21,12 +21,15 @@ IBC_WASM_HOOKS := false
 # Export env var to go build so Cosmos SDK can see it
 export CGO_ENABLED := 1
 
+# Add bitcoin-vault lib to CGO_LDFLAGS and CGO_CFLAGS
+export CGO_LDFLAGS := ${CGO_LDFLAGS} -lbitcoin_vault_ffi
+
 SCALAR_BIN_PATH ?= bin/scalard
 SCALAR_BIN_NAME ?= scalard
 SCALAR_HOME_DIR ?= .scalar
-SCALAR_CHAIN_ID ?= scalar-testnet
+SCALAR_CHAIN_ID ?= scalar-testnet-1
 SCALAR_KEYRING_BACKEND ?= test
-SCALAR_RUN_DIR ?= .scalar
+LOCAL_LIB_PATH ?= $(shell pwd)/lib
 
 $(info ⛳️ Makefile Environment Variables ⛳️)
 
@@ -34,13 +37,14 @@ $(info $$WASM is [${WASM}])
 $(info $$IBC_WASM_HOOKS is [${IBC_WASM_HOOKS}])
 $(info $$MAX_WASM_SIZE is [${MAX_WASM_SIZE}])
 $(info $$CGO_ENABLED is [${CGO_ENABLED}])
+$(info $$CGO_LDFLAGS is [${CGO_LDFLAGS}])
+$(info $$LOCAL_LIB_PATH is [${LOCAL_LIB_PATH}])
 
 $(info $$SCALAR_BIN_NAME is [${SCALAR_BIN_NAME}])
 $(info $$SCALAR_BIN_PATH is [${SCALAR_BIN_PATH}])
 $(info $$SCALAR_HOME_DIR is [${SCALAR_HOME_DIR}])
 $(info $$SCALAR_CHAIN_ID is [${SCALAR_CHAIN_ID}])
 $(info $$SCALAR_KEYRING_BACKEND is [${SCALAR_KEYRING_BACKEND}])
-$(info $$SCALAR_RUN_DIR is [${SCALAR_RUN_DIR}])
 
 ifndef $(WASM_CAPABILITIES)
 # Wasm capabilities: https://github.com/CosmWasm/cosmwasm/blob/main/docs/CAPABILITIES-BUILT-IN.md
@@ -88,7 +92,7 @@ BUILD_FLAGS := -tags $(BUILD_TAGS) -ldflags $(ldflags) -trimpath
 # Build the project with release flags
 .PHONY: build
 build: go.sum
-	@go build -o ./bin/scalard -mod=readonly $(BUILD_FLAGS) ./cmd/scalard
+	@CGO_LDFLAGS="${CGO_LDFLAGS} -L${LOCAL_LIB_PATH}" go build -o ./bin/scalard -mod=readonly $(BUILD_FLAGS) ./cmd/scalard
 
 .PHONY: run
 run:
@@ -100,16 +104,20 @@ start: build
 
 .PHONY: dev-init
 dev-init:
-	./scripts/init.sh
+	@./scripts/dev-init.sh
 
 .PHONY: init
 init:
-	make dev-init
+	echo "🚒 deprecated"
 
 .PHONY: dev
-# Usage: make dev SCALAR_RUN_DIR=.scalar/node1/scalard
+# Usage: make dev SCALAR_HOME_DIR=.scalar/node1/scalard
 dev:
-	@HOME_DIR=${SCALAR_RUN_DIR} ./scripts/entrypoint.debug.sh
+	@if [ -z "$(N)" ]; then \
+		SCALAR_HOME_DIR=${SCALAR_HOME_DIR} ./scripts/entrypoint.debug.sh; \
+	else \
+		SCALAR_HOME_DIR=./.scalar/node${N}/scalard ./scripts/entrypoint.debug.sh; \
+	fi
 
 .PHONY: dbg
 dbg: build
@@ -190,7 +198,7 @@ prereqs:
 
 
 ######
-# Usage: SCALAR_RUN_DIR=.scalar/node1/scalard make cfst WALLET=node1 ARGS="bitcoin-testnet4 07b50c84f889e2f1315da875fc91734e2bac8d0153ff9a98d9da14caa4fc7d57"
+# Usage: SCALAR_HOME_DIR=.scalar/node1/scalard make cfst WALLET=node1 ARGS="bitcoin-testnet4 07b50c84f889e2f1315da875fc91734e2bac8d0153ff9a98d9da14caa4fc7d57"
 ######
 .PHONY: cfst
 cfst:
@@ -198,12 +206,8 @@ cfst:
 		echo "ARGS is required"; \
 		exit 1; \
 	fi
-	@if [ -z "$(WALLET)" ]; then \
-		echo "WALLET is required"; \
-		exit 1; \
-	fi
 
-	$(SCALAR_BIN_PATH) tx btc confirm-staking-txs $(ARGS) --from $(WALLET) --keyring-backend $(SCALAR_KEYRING_BACKEND) --home $(SCALAR_RUN_DIR) --chain-id $(SCALAR_CHAIN_ID)
+	$(SCALAR_BIN_PATH) tx btc confirm-staking-txs $(ARGS) --from $(WALLET) --keyring-backend $(SCALAR_KEYRING_BACKEND) --home $(SCALAR_HOME_DIR) --chain-id $(SCALAR_CHAIN_ID)
 
 .PHONY: docs
 docs:
@@ -213,5 +217,4 @@ docs:
 mnemonic:
 	$(eval user := $(filter-out $@,$(MAKECMDGOALS)))
 	$(BIN_PATH) keys export $(user) --keyring-backend $(SCALAR_KEYRING_BACKEND) --unsafe --unarmored-hex --home $(SCALAR_DIR)
-
 

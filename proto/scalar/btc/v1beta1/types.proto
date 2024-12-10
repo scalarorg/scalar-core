@@ -7,6 +7,8 @@ import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
 
+option (gogoproto.goproto_getters_all) = false;
+
 enum NetworkKind {
   option (gogoproto.goproto_enum_prefix) = false;
   option (gogoproto.goproto_enum_stringer) = true;
@@ -89,7 +91,8 @@ message StakingTx {
       [ (gogoproto.casttype) =
             "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
   bytes destination_recipient_address = 5
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
+      [ (gogoproto.customtype) =
+            "github.com/axelarnetwork/axelar-core/x/evm/types.Address" ];
   uint64 log_index = 6;
 }
 
@@ -135,4 +138,30 @@ message Command {
         "github.com/axelarnetwork/axelar-core/x/multisig/exported.KeyID"
   ];
   CommandType type = 4;
+}
+
+message StakingTxMetadata {
+  bytes tag = 1
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "VaultTag" ];
+  bytes version = 2
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "VaultVersion" ];
+  NetworkKind network_id = 3;
+  uint32 flags = 4 [ (gogoproto.casttype) = "uint8" ];
+  bytes service_tag = 5;
+  bool have_only_covenants = 6;
+  uint32 covenant_quorum = 7 [ (gogoproto.casttype) = "uint8" ];
+  uint32 destination_chain_type = 8
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/bitcoin-vault/go-utils/chain.ChainType" ];
+  uint64 destination_chain_id = 9;
+  bytes destination_contract_address = 10 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/axelarnetwork/axelar-core/x/evm/types.Address"
+  ];
+  bytes destination_recipient_address = 11 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/axelarnetwork/axelar-core/x/evm/types.Address"
+  ];
 }

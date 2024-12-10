@@ -50,7 +50,6 @@ func (k chainKeeper) GetParams(ctx sdk.Context) types.Params {
 }
 
 func (k chainKeeper) getConfirmedStakingTxs(ctx sdk.Context) []types.StakingTx {
-
 	var stakingTxs []types.StakingTx
 	iter := k.getStore(ctx).IteratorNew(confirmedStakingTxPrefix)
 	defer utils.CloseLogError(iter, k.Logger(ctx))

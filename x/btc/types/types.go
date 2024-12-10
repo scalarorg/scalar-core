@@ -18,7 +18,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-// EVMConfig contains all EVM module configuration values
+// BTCConfig contains all BTC module configuration values
 type BTCConfig struct {
 	Network     string `mapstructure:"network"`
 	NetworkKind string `mapstructure:"networkKind"`
@@ -95,6 +95,18 @@ func (v VaultVersion) Unmarshal(data []byte) error {
 type Hash chainhash.Hash
 
 var ZeroHash = Hash{}
+
+func FromChainHash(hash chainhash.Hash) Hash {
+	return Hash(hash)
+}
+
+func (h Hash) Into() chainhash.Hash {
+	return chainhash.Hash(h)
+}
+
+func (h Hash) IntoRef() *chainhash.Hash {
+	return (*chainhash.Hash)(&h)
+}
 
 func (h Hash) Bytes() []byte {
 	return h[:]
@@ -224,57 +236,6 @@ func (c CommandID) ValidateBasic() error {
 	return nil
 }
 
-type Address common.Address
-
-// ZeroAddress represents an evm address with all bytes being zero
-var ZeroAddress = Address{}
-
-// IsZeroAddress returns true if the address contains only zero bytes; false otherwise
-func (a Address) IsZeroAddress() bool {
-	return bytes.Equal(a.Bytes(), ZeroAddress.Bytes())
-}
-
-// Bytes returns the actual byte array of the address
-func (a Address) Bytes() []byte {
-	return common.Address(a).Bytes()
-}
-
-// Hex returns an EIP55-compliant hex string representation of the address
-func (a Address) Hex() string {
-	return common.Address(a).Hex()
-}
-
-// Marshal implements codec.ProtoMarshaler
-func (a Address) Marshal() ([]byte, error) {
-	return a[:], nil
-}
-
-// MarshalTo implements codec.ProtoMarshaler
-func (a Address) MarshalTo(data []byte) (n int, err error) {
-	bytesCopied := copy(data, a[:])
-	if bytesCopied != common.AddressLength {
-		return 0, fmt.Errorf("expected data size to be %d, actual %d", common.AddressLength, len(data))
-	}
-
-	return common.AddressLength, nil
-}
-
-// Unmarshal implements codec.ProtoMarshaler
-func (a *Address) Unmarshal(data []byte) error {
-	if len(data) != common.AddressLength {
-		return fmt.Errorf("expected data size to be %d, actual %d", common.AddressLength, len(data))
-	}
-
-	*a = Address(common.BytesToAddress(data))
-
-	return nil
-}
-
-// Size implements codec.ProtoMarshaler
-func (a Address) Size() int {
-	return common.AddressLength
-}
-
 func (m *StakingTx) ValidateBasic() error {
 	if err := sdk.ValidateDenom(m.Asset); err != nil {
 		return sdkerrors.Wrap(err, "invalid asset")
@@ -389,5 +350,37 @@ func (m Event) ValidateBasic() error {
 
 	// TODO: validate event type
 
+	return nil
+}
+
+// NewVoteEvents is the constructor for vote events
+func NewVoteEvents(chain nexus.ChainName, events ...Event) *VoteEvents {
+	return &VoteEvents{
+		Chain:  chain,
+		Events: events,
+	}
+}
+
+// ValidateBasic does stateless validation of the object
+func (m VoteEvents) ValidateBasic() error {
+	if err := m.Chain.Validate(); err != nil {
+		return err
+	}
+
+	for _, event := range m.Events {
+		if err := event.ValidateBasic(); err != nil {
+			return err
+		}
+
+		if event.Chain != m.Chain {
+			return fmt.Errorf("events are not from the same source chain")
+		}
+	}
+
+	return nil
+}
+
+func (m *EventStakingTx) ValidateBasic() error {
+	// TODO: validate event
 	return nil
 }

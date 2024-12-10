@@ -367,6 +367,10 @@ func createKeyringAccountFromMnemonic(keybase keyring.Keyring,
 	bip44Path string,
 	algo keyring.SignatureAlgo,
 ) (cryptotypes.PubKey, sdk.AccAddress, error) {
+	fmt.Println("keyname", keyName)
+	fmt.Println("mnemonic", mnemonic)
+	fmt.Println("bip44Path", bip44Path)
+	fmt.Println("algo", algo)
 	info, err := keybase.NewAccount(
 		keyName,
 		mnemonic,
