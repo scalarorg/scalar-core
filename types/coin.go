@@ -20,7 +20,6 @@ const (
 	CoinTypeTestnet      = 1
 )
 
-// var PowerReduction = sdk.NewInt(1e0 * params.InitialBaseFee)
 var (
 	// DisplayDenom defines the denomination displayed to users in client applications.
 	DisplayDenom = scalarnet.NativeAsset
