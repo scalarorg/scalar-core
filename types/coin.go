@@ -28,8 +28,8 @@ var (
 
 	PowerReduction    = sdk.NewInt(1e6)
 	ValidatorTokens   = sdk.NewInt(1e12)
-	BroadcasterTokens = sdk.NewInt(1e15)
-	GovTokens         = sdk.NewInt(1e15)
+	BroadcasterTokens = sdk.NewInt(1e16)
+	GovTokens         = sdk.NewInt(1e16)
 	FaucetTokens      = sdk.NewInt(1e18)
 	DelegatorTokens   = sdk.NewInt(1e6)
 )

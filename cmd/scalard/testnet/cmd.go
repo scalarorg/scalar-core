@@ -2,7 +2,6 @@ package testnet
 
 import (
 	"bufio"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -118,7 +117,7 @@ func addTestnetFlagsToCmd(cmd *cobra.Command) {
 	cmd.Flags().String(sdkserver.FlagMinGasPrices, fmt.Sprintf("0.000006%s", scalartypes.BaseDenom), "Minimum gas prices to accept for transactions; All fees in a tx must meet this minimum (e.g. 0.01photino,0.001stake)")
 	cmd.Flags().String(flagKeyType, string(hd.Secp256k1Type), "Key signing algorithm to generate keys for")
 	cmd.Flags().String(flagBaseFee, strconv.Itoa(params.InitialBaseFee), "The params base_fee in the feemarket module in geneis")
-	cmd.Flags().String(flagMinGasPrice, "0", "The params min_gas_price in the feemarket module in geneis")
+	cmd.Flags().String(flagMinGasPrice, "0.001", "The params min_gas_price in the feemarket module in geneis")
 }
 
 // NewTestnetCmd creates a root testnet command with subcommands to run an in-process testnet or initialize
@@ -181,7 +180,6 @@ Example:
 			args.algo, _ = cmd.Flags().GetString(flagKeyType)
 			baseFee, _ := cmd.Flags().GetString(flagBaseFee)
 			minGasPrice, _ := cmd.Flags().GetString(flagMinGasPrice)
-
 			var ok bool
 			args.baseFee, ok = sdk.NewIntFromString(baseFee)
 			if !ok || args.baseFee.LT(sdk.ZeroInt()) {
@@ -251,8 +249,13 @@ Example:
 const nodeDirPerm = 0o755
 
 func readEnvKeys() EnvKeys {
+	// validatorMnemonic := os.Getenv(flagValidatorMnemonic + strconv.Itoa(index))
+	// if validatorMnemonic == "" {
+	// 	validatorMnemonic = os.Getenv(flagValidatorMnemonic)
+	// }
+	validatorMnemonic := os.Getenv(flagValidatorMnemonic)
 	envKeys := EnvKeys{
-		ValidatorMnemonic:   os.Getenv(flagValidatorMnemonic),
+		ValidatorMnemonic:   validatorMnemonic,
 		BroadcasterMnemonic: os.Getenv(flagBroadcasterMnemonic),
 		GovernanceMnemonic:  os.Getenv(flagGovernanceMnemonic),
 		FaucetMnemonic:      os.Getenv(flagFaucetMnemonic),
@@ -274,13 +277,13 @@ func initTestnetFiles(
 		args.chainID = fmt.Sprintf("scalar_%d-1", tmrand.Int63n(9999999999999)+1)
 	}
 	fmt.Printf("nodeConfig: %v\n", nodeConfig)
-	envKeys := readEnvKeys()
 	var (
 		validatorInfos []scalartypes.ValidatorInfo
 	)
-
+	envKeys := readEnvKeys()
 	// generate private keys, node IDs, and initial transactions
 	for i := 0; i < args.numValidators; i++ {
+
 		nodeDirName := getNodeDirName(i, args.nodeDirPrefix)
 		host, err := getHost(i, args.nodeDomain)
 		if err != nil {
@@ -379,6 +382,12 @@ func createKeyringAccountFromMnemonic(keybase keyring.Keyring,
 	if err != nil {
 		return nil, nil, err
 	}
+	ko, err := keyring.MkAccKeyOutput(info)
+	if err != nil {
+		log.Error().Err(err).Msg("[createKeyringAccountFromMnemonic] MkAccKeyOutput")
+		return nil, nil, err
+	}
+	log.Debug().Str("keyName", keyName).Msgf("MkAccKeyOutput: %v", ko)
 	// log.Debug().Str("keyName", keyName).Str("address", info.GetAddress().String()).Msg("Keyring account created")
 	return info.GetPubKey(), info.GetAddress(), nil
 }
@@ -449,6 +458,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	}
 	fmt.Printf("Create validator config in dir %s\n", nodeDir)
 	nodeConfig.Moniker = nodeDirName
+	//nodeID, valPubKey, err := genutil.InitializeNodeValidatorFilesFromMnemonic(nodeConfig, envKeys.ValidatorMnemonic)
 	nodeID, err := createNodeID(nodeConfig)
 	if err != nil {
 		return nil, err
@@ -463,7 +473,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		GenFile:     nodeConfig.GenesisFile(),
 		BtcPubkey:   envKeys.BtcPubkey,
 	}
-	// validatorInfo.NodeID, validatorInfo.ValPubKey, err = genutil.InitializeNodeValidatorFilesFromMnemonic(nodeConfig, envKeys.ValidatorMnemonic)
+
 	gentxsDir := filepath.Join(args.outputDir, "gentxs")
 	// TODO: add ledger support
 	kb, algo, err := createKeyring(bufio.NewReader(cmd.InOrStdin()), args, nodeDir)
@@ -565,6 +575,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	}
 	valPower := int64((index + 1) * (index + 1))
 	//Validator public key type must be ed25519
+	// validatorInfo.NodeID, validatorInfo.ValPubKey, err = genutil.InitializeNodeValidatorFilesFromMnemonic(nodeConfig, envKeys.ValidatorMnemonic)
 	valPubKey, _, err := createKeyringAccountFromMnemonic(kb,
 		scalartypes.ValidatorKeyName,
 		envKeys.ValidatorMnemonic,
@@ -585,16 +596,18 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	if err != nil {
 		return nil, err
 	}
+	valAddress := sdk.AccAddress(validatorInfo.ValPubKey.Address())
 	valCoin := sdk.NewCoin(scalartypes.BaseDenom, sdk.TokensFromConsensusPower(valPower, scalartypes.ValidatorTokens))
 	validatorInfo.ValBalance = banktypes.Balance{
-		Address: sdk.AccAddress(validatorInfo.ValPubKey.Address()).String(),
+		//Address: sdk.AccAddress(validatorInfo.ValPubKey.Address()).String(),
+		Address: valAddress.String(),
 		Coins:   sdk.Coins{valCoin},
 	}
-	//senderKeyName := nodeDirName
-	senderKeyName := scalartypes.BroadcasterKeyName
-	senderAddress := sdk.AccAddress(validatorInfo.Broadcaster.Address())
 
-	tmPubKey, err := cryptocodec.ToTmPubKeyInterface(validatorInfo.ValPubKey)
+	senderKeyName := scalartypes.BroadcasterKeyName
+	senderAddress := validatorInfo.Broadcaster.Address()
+	senderPubKey := validatorInfo.ValPubKey
+	tmPubKey, err := cryptocodec.ToTmPubKeyInterface(senderPubKey)
 	if err != nil {
 		fmt.Printf("ToTmPubKeyInterface Err: %s\n", err.Error())
 		return nil, err
@@ -611,12 +624,18 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	//Create a self delegation message for validator
 	createValMsg, err := stakingtypes.NewMsgCreateValidator(
 		sdk.ValAddress(senderAddress),
-		validatorInfo.ValPubKey,
+		senderPubKey,
 		valCoin,
-		stakingtypes.NewDescription(nodeDirName, "", "", "", ""),
+		stakingtypes.NewDescription(nodeDirName, validatorInfo.NodeID, "", "", ""),
 		stakingtypes.NewCommissionRates(sdk.OneDec(), sdk.OneDec(), sdk.OneDec()),
 		sdk.OneInt(),
 	)
+	log.Debug().
+		Str("valPubKey", validatorInfo.ValPubKey.String()).
+		Str("senderAddress", senderAddress.String()).
+		Str("deligatorAddress", sdk.AccAddress(valAddress).String()).
+		Str("valCoin", valCoin.String()).
+		Str("senderKeyName", senderKeyName).Msg("MsgCreateValidator")
 	if err != nil {
 		return nil, err
 	}
@@ -627,14 +646,17 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	}
 
 	minGasPrice := args.minGasPrice
-	if sdk.NewDecFromInt(args.baseFee).GT(args.minGasPrice) {
-		minGasPrice = sdk.NewDecFromInt(args.baseFee)
-	}
-
+	// if sdk.NewDecFromInt(args.baseFee).GT(args.minGasPrice) {
+	// 	minGasPrice = sdk.NewDecFromInt(args.baseFee)
+	// }
+	feeAmount := sdk.NewCoin(scalartypes.BaseDenom, minGasPrice.MulInt64(createValidatorMsgGasLimit).Ceil().TruncateInt())
 	txBuilder.SetMemo(validatorInfo.SeedAddress)
 	txBuilder.SetGasLimit(createValidatorMsgGasLimit)
-	txBuilder.SetFeeAmount(sdk.NewCoins(sdk.NewCoin(scalartypes.BaseDenom, minGasPrice.MulInt64(createValidatorMsgGasLimit).Ceil().TruncateInt())))
-
+	txBuilder.SetFeeAmount(sdk.NewCoins(feeAmount))
+	log.Debug().
+		Str("minGasPrice", minGasPrice.String()).
+		Str("createValidatorMsgGasLimit", strconv.FormatInt(createValidatorMsgGasLimit, 10)).
+		Any("feeAmount", feeAmount).Msg("SetFeeAmount")
 	txFactory := tx.Factory{}
 	txFactory = txFactory.
 		WithChainID(args.chainID).
@@ -794,7 +816,7 @@ func initGenFiles(
 	validators := make([]tmtypes.GenesisValidator, len(validatorInfos))
 	for i, validatorInfo := range validatorInfos {
 		validators[i] = validatorInfo.GenesisValidator
-		fmt.Printf("Validator: power: %d; pubkey: %v, address: %s\n", validators[i].Power, hex.EncodeToString(validators[i].PubKey.Bytes()), sdk.AccAddress(validatorInfo.ValPubKey.Address()).String())
+		fmt.Printf("Validator: power: %d; pubkey: %v, address: %s\n", validators[i].Power, validators[i].PubKey, sdk.AccAddress(validatorInfo.ValPubKey.Address()).String())
 	}
 	genDoc := tmtypes.GenesisDoc{
 		ChainID:    args.chainID,

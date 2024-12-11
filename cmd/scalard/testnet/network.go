@@ -234,8 +234,8 @@ func New(l Logger, ioReader io.Reader, baseDir string, cfg Config) (*Network, er
 		if err != nil {
 			return nil, err
 		}
+		log.Debug().Msgf("Seeds: %v", seeds)
 		tmCfg = config.MergeSeeds(tmCfg, seeds)
-		ctx.Config = tmCfg
 		ctx.Viper.SetConfigType("toml")
 		ctx.Viper.SetConfigName("config")
 		err = ctx.Viper.ReadInConfig()
@@ -301,7 +301,7 @@ func New(l Logger, ioReader io.Reader, baseDir string, cfg Config) (*Network, er
 
 	// Ensure we cleanup incase any test was abruptly halted (e.g. SIGINT) as any
 	// defer in a test would not be called.
-	server.TrapSignal(network.Cleanup)
+	// server.TrapSignal(network.Cleanup)
 
 	return network, nil
 }
