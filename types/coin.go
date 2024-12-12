@@ -27,7 +27,8 @@ var (
 	BaseDenom = "a" + scalarnet.NativeAsset
 
 	PowerReduction    = sdk.NewInt(1e6)
-	ValidatorTokens   = sdk.NewInt(1e12)
+	ValidatorTokens   = sdk.NewInt(1e16)
+	ValidatorStaking  = sdk.NewInt(1e12)
 	BroadcasterTokens = sdk.NewInt(1e16)
 	GovTokens         = sdk.NewInt(1e16)
 	FaucetTokens      = sdk.NewInt(1e18)
