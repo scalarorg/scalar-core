@@ -4,9 +4,9 @@
 package mock
 
 import (
-	"github.com/scalarorg/scalar-core/x/vote/exported"
 	"github.com/cosmos/cosmos-sdk/codec"
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/x/vote/exported"
 	"sync"
 )
 

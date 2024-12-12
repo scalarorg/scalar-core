@@ -71,8 +71,8 @@ func validateFee(ctx sdk.Context, n types.Nexus, token sdk.Coin, msgType nexus.M
 		return fmt.Errorf("unexpected message type for fee")
 	}
 
-	axelar := funcs.MustOk(n.GetChain(ctx, exported.Scalarnet.Name))
-	if !n.IsAssetRegistered(ctx, axelar, token.GetDenom()) {
+	scalar := funcs.MustOk(n.GetChain(ctx, exported.Scalarnet.Name))
+	if !n.IsAssetRegistered(ctx, scalar, token.GetDenom()) {
 		return fmt.Errorf("unregistered fee denom %s", token.GetDenom())
 	}
 

@@ -4,7 +4,7 @@
 package mock
 
 import (
-	github_com_axelarnetwork_axelar_core_x_vote_exported "github.com/scalarorg/scalar-core/x/vote/exported"
+	github_com_scalarorg_scalar_core_x_vote_exported "github.com/scalarorg/scalar-core/x/vote/exported"
 	"github.com/scalarorg/scalar-core/x/vote/types"
 	"sync"
 )
@@ -19,10 +19,10 @@ var _ types.VoteRouter = &VoteRouterMock{}
 //
 //		// make and configure a mocked types.VoteRouter
 //		mockedVoteRouter := &VoteRouterMock{
-//			AddHandlerFunc: func(module string, handler github_com_axelarnetwork_axelar_core_x_vote_exported.VoteHandler) types.VoteRouter {
+//			AddHandlerFunc: func(module string, handler github_com_scalarorg_scalar_core_x_vote_exported.VoteHandler) types.VoteRouter {
 //				panic("mock out the AddHandler method")
 //			},
-//			GetHandlerFunc: func(module string) github_com_axelarnetwork_axelar_core_x_vote_exported.VoteHandler {
+//			GetHandlerFunc: func(module string) github_com_scalarorg_scalar_core_x_vote_exported.VoteHandler {
 //				panic("mock out the GetHandler method")
 //			},
 //			HasHandlerFunc: func(module string) bool {
@@ -39,10 +39,10 @@ var _ types.VoteRouter = &VoteRouterMock{}
 //	}
 type VoteRouterMock struct {
 	// AddHandlerFunc mocks the AddHandler method.
-	AddHandlerFunc func(module string, handler github_com_axelarnetwork_axelar_core_x_vote_exported.VoteHandler) types.VoteRouter
+	AddHandlerFunc func(module string, handler github_com_scalarorg_scalar_core_x_vote_exported.VoteHandler) types.VoteRouter
 
 	// GetHandlerFunc mocks the GetHandler method.
-	GetHandlerFunc func(module string) github_com_axelarnetwork_axelar_core_x_vote_exported.VoteHandler
+	GetHandlerFunc func(module string) github_com_scalarorg_scalar_core_x_vote_exported.VoteHandler
 
 	// HasHandlerFunc mocks the HasHandler method.
 	HasHandlerFunc func(module string) bool
@@ -57,7 +57,7 @@ type VoteRouterMock struct {
 			// Module is the module argument value.
 			Module string
 			// Handler is the handler argument value.
-			Handler github_com_axelarnetwork_axelar_core_x_vote_exported.VoteHandler
+			Handler github_com_scalarorg_scalar_core_x_vote_exported.VoteHandler
 		}
 		// GetHandler holds details about calls to the GetHandler method.
 		GetHandler []struct {
@@ -80,13 +80,13 @@ type VoteRouterMock struct {
 }
 
 // AddHandler calls AddHandlerFunc.
-func (mock *VoteRouterMock) AddHandler(module string, handler github_com_axelarnetwork_axelar_core_x_vote_exported.VoteHandler) types.VoteRouter {
+func (mock *VoteRouterMock) AddHandler(module string, handler github_com_scalarorg_scalar_core_x_vote_exported.VoteHandler) types.VoteRouter {
 	if mock.AddHandlerFunc == nil {
 		panic("VoteRouterMock.AddHandlerFunc: method is nil but VoteRouter.AddHandler was just called")
 	}
 	callInfo := struct {
 		Module  string
-		Handler github_com_axelarnetwork_axelar_core_x_vote_exported.VoteHandler
+		Handler github_com_scalarorg_scalar_core_x_vote_exported.VoteHandler
 	}{
 		Module:  module,
 		Handler: handler,
@@ -103,11 +103,11 @@ func (mock *VoteRouterMock) AddHandler(module string, handler github_com_axelarn
 //	len(mockedVoteRouter.AddHandlerCalls())
 func (mock *VoteRouterMock) AddHandlerCalls() []struct {
 	Module  string
-	Handler github_com_axelarnetwork_axelar_core_x_vote_exported.VoteHandler
+	Handler github_com_scalarorg_scalar_core_x_vote_exported.VoteHandler
 } {
 	var calls []struct {
 		Module  string
-		Handler github_com_axelarnetwork_axelar_core_x_vote_exported.VoteHandler
+		Handler github_com_scalarorg_scalar_core_x_vote_exported.VoteHandler
 	}
 	mock.lockAddHandler.RLock()
 	calls = mock.calls.AddHandler
@@ -116,7 +116,7 @@ func (mock *VoteRouterMock) AddHandlerCalls() []struct {
 }
 
 // GetHandler calls GetHandlerFunc.
-func (mock *VoteRouterMock) GetHandler(module string) github_com_axelarnetwork_axelar_core_x_vote_exported.VoteHandler {
+func (mock *VoteRouterMock) GetHandler(module string) github_com_scalarorg_scalar_core_x_vote_exported.VoteHandler {
 	if mock.GetHandlerFunc == nil {
 		panic("VoteRouterMock.GetHandlerFunc: method is nil but VoteRouter.GetHandler was just called")
 	}

@@ -4,11 +4,11 @@
 package mock
 
 import (
-	"github.com/scalarorg/scalar-core/x/ante/types"
 	permission "github.com/axelarnetwork/axelar-core/x/permission/exported"
-	rewardtypes "github.com/scalarorg/scalar-core/x/reward/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/scalarorg/scalar-core/x/ante/types"
+	rewardtypes "github.com/scalarorg/scalar-core/x/reward/types"
 	"sync"
 )
 

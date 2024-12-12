@@ -4,8 +4,8 @@
 package mock
 
 import (
-	"github.com/scalarorg/scalar-core/app"
 	ibcexported "github.com/cosmos/ibc-go/v4/modules/core/exported"
+	"github.com/scalarorg/scalar-core/app"
 	"sync"
 )
 

@@ -4,8 +4,8 @@
 package mock
 
 import (
-	"github.com/scalarorg/scalar-core/x/reward/exported"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/x/reward/exported"
 	"sync"
 )
 

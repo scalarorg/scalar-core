@@ -5,11 +5,11 @@ package mock
 
 import (
 	utils "github.com/axelarnetwork/axelar-core/utils"
-	reward "github.com/scalarorg/scalar-core/x/reward/exported"
-	github_com_axelarnetwork_axelar_core_x_vote_exported "github.com/scalarorg/scalar-core/x/vote/exported"
-	"github.com/scalarorg/scalar-core/x/vote/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	reward "github.com/scalarorg/scalar-core/x/reward/exported"
+	github_com_scalarorg_scalar_core_x_vote_exported "github.com/scalarorg/scalar-core/x/vote/exported"
+	"github.com/scalarorg/scalar-core/x/vote/types"
 	"github.com/tendermint/tendermint/libs/log"
 	"sync"
 )
@@ -24,13 +24,13 @@ var _ types.Voter = &VoterMock{}
 //
 //		// make and configure a mocked types.Voter
 //		mockedVoter := &VoterMock{
-//			DeletePollFunc: func(ctx sdk.Context, pollID github_com_axelarnetwork_axelar_core_x_vote_exported.PollID)  {
+//			DeletePollFunc: func(ctx sdk.Context, pollID github_com_scalarorg_scalar_core_x_vote_exported.PollID)  {
 //				panic("mock out the DeletePoll method")
 //			},
 //			GetParamsFunc: func(ctx sdk.Context) types.Params {
 //				panic("mock out the GetParams method")
 //			},
-//			GetPollFunc: func(ctx sdk.Context, id github_com_axelarnetwork_axelar_core_x_vote_exported.PollID) (github_com_axelarnetwork_axelar_core_x_vote_exported.Poll, bool) {
+//			GetPollFunc: func(ctx sdk.Context, id github_com_scalarorg_scalar_core_x_vote_exported.PollID) (github_com_scalarorg_scalar_core_x_vote_exported.Poll, bool) {
 //				panic("mock out the GetPoll method")
 //			},
 //			GetPollQueueFunc: func(ctx sdk.Context) utils.KVQueue {
@@ -50,13 +50,13 @@ var _ types.Voter = &VoterMock{}
 //	}
 type VoterMock struct {
 	// DeletePollFunc mocks the DeletePoll method.
-	DeletePollFunc func(ctx sdk.Context, pollID github_com_axelarnetwork_axelar_core_x_vote_exported.PollID)
+	DeletePollFunc func(ctx sdk.Context, pollID github_com_scalarorg_scalar_core_x_vote_exported.PollID)
 
 	// GetParamsFunc mocks the GetParams method.
 	GetParamsFunc func(ctx sdk.Context) types.Params
 
 	// GetPollFunc mocks the GetPoll method.
-	GetPollFunc func(ctx sdk.Context, id github_com_axelarnetwork_axelar_core_x_vote_exported.PollID) (github_com_axelarnetwork_axelar_core_x_vote_exported.Poll, bool)
+	GetPollFunc func(ctx sdk.Context, id github_com_scalarorg_scalar_core_x_vote_exported.PollID) (github_com_scalarorg_scalar_core_x_vote_exported.Poll, bool)
 
 	// GetPollQueueFunc mocks the GetPollQueue method.
 	GetPollQueueFunc func(ctx sdk.Context) utils.KVQueue
@@ -74,7 +74,7 @@ type VoterMock struct {
 			// Ctx is the ctx argument value.
 			Ctx sdk.Context
 			// PollID is the pollID argument value.
-			PollID github_com_axelarnetwork_axelar_core_x_vote_exported.PollID
+			PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID
 		}
 		// GetParams holds details about calls to the GetParams method.
 		GetParams []struct {
@@ -86,7 +86,7 @@ type VoterMock struct {
 			// Ctx is the ctx argument value.
 			Ctx sdk.Context
 			// ID is the id argument value.
-			ID github_com_axelarnetwork_axelar_core_x_vote_exported.PollID
+			ID github_com_scalarorg_scalar_core_x_vote_exported.PollID
 		}
 		// GetPollQueue holds details about calls to the GetPollQueue method.
 		GetPollQueue []struct {
@@ -111,13 +111,13 @@ type VoterMock struct {
 }
 
 // DeletePoll calls DeletePollFunc.
-func (mock *VoterMock) DeletePoll(ctx sdk.Context, pollID github_com_axelarnetwork_axelar_core_x_vote_exported.PollID) {
+func (mock *VoterMock) DeletePoll(ctx sdk.Context, pollID github_com_scalarorg_scalar_core_x_vote_exported.PollID) {
 	if mock.DeletePollFunc == nil {
 		panic("VoterMock.DeletePollFunc: method is nil but Voter.DeletePoll was just called")
 	}
 	callInfo := struct {
 		Ctx    sdk.Context
-		PollID github_com_axelarnetwork_axelar_core_x_vote_exported.PollID
+		PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID
 	}{
 		Ctx:    ctx,
 		PollID: pollID,
@@ -134,11 +134,11 @@ func (mock *VoterMock) DeletePoll(ctx sdk.Context, pollID github_com_axelarnetwo
 //	len(mockedVoter.DeletePollCalls())
 func (mock *VoterMock) DeletePollCalls() []struct {
 	Ctx    sdk.Context
-	PollID github_com_axelarnetwork_axelar_core_x_vote_exported.PollID
+	PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID
 } {
 	var calls []struct {
 		Ctx    sdk.Context
-		PollID github_com_axelarnetwork_axelar_core_x_vote_exported.PollID
+		PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID
 	}
 	mock.lockDeletePoll.RLock()
 	calls = mock.calls.DeletePoll
@@ -179,13 +179,13 @@ func (mock *VoterMock) GetParamsCalls() []struct {
 }
 
 // GetPoll calls GetPollFunc.
-func (mock *VoterMock) GetPoll(ctx sdk.Context, id github_com_axelarnetwork_axelar_core_x_vote_exported.PollID) (github_com_axelarnetwork_axelar_core_x_vote_exported.Poll, bool) {
+func (mock *VoterMock) GetPoll(ctx sdk.Context, id github_com_scalarorg_scalar_core_x_vote_exported.PollID) (github_com_scalarorg_scalar_core_x_vote_exported.Poll, bool) {
 	if mock.GetPollFunc == nil {
 		panic("VoterMock.GetPollFunc: method is nil but Voter.GetPoll was just called")
 	}
 	callInfo := struct {
 		Ctx sdk.Context
-		ID  github_com_axelarnetwork_axelar_core_x_vote_exported.PollID
+		ID  github_com_scalarorg_scalar_core_x_vote_exported.PollID
 	}{
 		Ctx: ctx,
 		ID:  id,
@@ -202,11 +202,11 @@ func (mock *VoterMock) GetPoll(ctx sdk.Context, id github_com_axelarnetwork_axel
 //	len(mockedVoter.GetPollCalls())
 func (mock *VoterMock) GetPollCalls() []struct {
 	Ctx sdk.Context
-	ID  github_com_axelarnetwork_axelar_core_x_vote_exported.PollID
+	ID  github_com_scalarorg_scalar_core_x_vote_exported.PollID
 } {
 	var calls []struct {
 		Ctx sdk.Context
-		ID  github_com_axelarnetwork_axelar_core_x_vote_exported.PollID
+		ID  github_com_scalarorg_scalar_core_x_vote_exported.PollID
 	}
 	mock.lockGetPoll.RLock()
 	calls = mock.calls.GetPoll
