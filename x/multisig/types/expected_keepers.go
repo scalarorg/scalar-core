@@ -6,10 +6,10 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	reward "github.com/axelarnetwork/axelar-core/x/reward/exported"
 	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 )
 
 //go:generate moq -pkg mock -out ./mock/expected_keepers.go . Keeper Snapshotter Staker Slasher Rewarder Nexus KeygenParticipator

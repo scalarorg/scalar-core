@@ -8,7 +8,7 @@ import (
 	utils "github.com/axelarnetwork/axelar-core/utils"
 	github_com_axelarnetwork_axelar_core_x_nexus_exported "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
-	reward "github.com/axelarnetwork/axelar-core/x/reward/exported"
+	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	cosmossdktypes "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"

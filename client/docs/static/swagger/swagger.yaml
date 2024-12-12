@@ -17082,7 +17082,7 @@ paths:
           format: boolean
       tags:
         - QueryService
-  /axelar/reward/refund_message:
+  /scalar/reward/refund_message:
     post:
       operationId: RefundMsg
       responses:
@@ -17474,7 +17474,7 @@ paths:
                       }
       tags:
         - MsgService
-  /axelar/reward/v1beta1/inflation_rate:
+  /scalar/reward/v1beta1/inflation_rate:
     get:
       operationId: InflationRate2
       responses:
@@ -17685,7 +17685,7 @@ paths:
           type: string
       tags:
         - QueryService
-  /axelar/reward/v1beta1/inflation_rate/{validator}:
+  /scalar/reward/v1beta1/inflation_rate/{validator}:
     get:
       operationId: InflationRate
       responses:
@@ -17896,7 +17896,7 @@ paths:
           type: string
       tags:
         - QueryService
-  /axelar/reward/v1beta1/params:
+  /scalar/reward/v1beta1/params:
     get:
       operationId: RewardParams
       responses:
@@ -18242,7 +18242,7 @@ paths:
                       format: byte
       tags:
         - QueryService
-  /axelar/tss/heartbeat:
+  /scalar/tss/heartbeat:
     post:
       operationId: HeartBeat
       responses:
@@ -18456,9 +18456,10 @@ paths:
                 type: array
                 items:
                   type: string
+                title: 'Deprecated: this field will be removed in the next release'
       tags:
         - MsgService
-  /axelar/tss/v1beta1/params:
+  /scalar/tss/v1beta1/params:
     get:
       operationId: TSSParams
       responses:
@@ -20266,7 +20267,7 @@ paths:
                         }
       tags:
         - Query
-  /axelar/vote/v1beta1/params:
+  /scalar/vote/v1beta1/params:
     get:
       operationId: VoteParams
       responses:
@@ -20490,7 +20491,7 @@ paths:
                         }
       tags:
         - QueryService
-  /axelar/vote/vote:
+  /scalar/vote/vote:
     post:
       operationId: AxelarVote
       responses:
@@ -54134,14 +54135,6 @@ definitions:
                   "@type": "type.googleapis.com/google.protobuf.Duration",
                   "value": "1.212s"
                 }
-  axelar.tss.exported.v1beta1.KeyType:
-    type: string
-    enum:
-      - KEY_TYPE_UNSPECIFIED
-      - KEY_TYPE_NONE
-      - KEY_TYPE_THRESHOLD
-      - KEY_TYPE_MULTISIG
-    default: KEY_TYPE_UNSPECIFIED
   cosmos.base.v1beta1.Coin:
     type: object
     properties:
@@ -54539,6 +54532,14 @@ definitions:
         format: byte
   scalar.scalarnet.v1beta1.RouteMessageResponse:
     type: object
+  scalar.tss.exported.v1beta1.KeyType:
+    type: string
+    enum:
+      - KEY_TYPE_UNSPECIFIED
+      - KEY_TYPE_NONE
+      - KEY_TYPE_THRESHOLD
+      - KEY_TYPE_MULTISIG
+    default: KEY_TYPE_UNSPECIFIED
   axelar.utils.v1beta1.Threshold:
     type: object
     properties:
@@ -56942,13 +56943,13 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  axelar.reward.v1beta1.InflationRateResponse:
+  scalar.reward.v1beta1.InflationRateResponse:
     type: object
     properties:
       inflation_rate:
         type: string
         format: byte
-  axelar.reward.v1beta1.Params:
+  scalar.reward.v1beta1.Params:
     type: object
     properties:
       external_chain_voting_inflation_rate:
@@ -56958,7 +56959,7 @@ definitions:
         type: string
         format: byte
     title: Params represent the genesis parameters for the module
-  axelar.reward.v1beta1.ParamsResponse:
+  scalar.reward.v1beta1.ParamsResponse:
     type: object
     properties:
       params:
@@ -56971,7 +56972,7 @@ definitions:
             type: string
             format: byte
         title: Params represent the genesis parameters for the module
-  axelar.reward.v1beta1.RefundMsgRequest:
+  scalar.reward.v1beta1.RefundMsgRequest:
     type: object
     properties:
       sender:
@@ -57139,7 +57140,7 @@ definitions:
                 "@type": "type.googleapis.com/google.protobuf.Duration",
                 "value": "1.212s"
               }
-  axelar.reward.v1beta1.RefundMsgResponse:
+  scalar.reward.v1beta1.RefundMsgResponse:
     type: object
     properties:
       data:
@@ -57183,7 +57184,7 @@ definitions:
         format: byte
   axelar.snapshot.v1beta1.RegisterProxyResponse:
     type: object
-  axelar.tss.exported.v1beta1.KeyRequirement:
+  scalar.tss.exported.v1beta1.KeyRequirement:
     type: object
     properties:
       key_role:
@@ -57278,7 +57279,7 @@ definitions:
         type: string
         format: int64
     title: KeyRequirement defines requirements for keys
-  axelar.tss.exported.v1beta1.KeyRole:
+  scalar.tss.exported.v1beta1.KeyRole:
     type: string
     enum:
       - KEY_ROLE_UNSPECIFIED
@@ -57286,14 +57287,14 @@ definitions:
       - KEY_ROLE_SECONDARY_KEY
       - KEY_ROLE_EXTERNAL_KEY
     default: KEY_ROLE_UNSPECIFIED
-  axelar.tss.exported.v1beta1.KeyShareDistributionPolicy:
+  scalar.tss.exported.v1beta1.KeyShareDistributionPolicy:
     type: string
     enum:
       - KEY_SHARE_DISTRIBUTION_POLICY_UNSPECIFIED
       - KEY_SHARE_DISTRIBUTION_POLICY_WEIGHTED_BY_STAKE
       - KEY_SHARE_DISTRIBUTION_POLICY_ONE_PER_VALIDATOR
     default: KEY_SHARE_DISTRIBUTION_POLICY_UNSPECIFIED
-  axelar.tss.v1beta1.HeartBeatRequest:
+  scalar.tss.v1beta1.HeartBeatRequest:
     type: object
     properties:
       sender:
@@ -57303,9 +57304,10 @@ definitions:
         type: array
         items:
           type: string
-  axelar.tss.v1beta1.HeartBeatResponse:
+        title: 'Deprecated: this field will be removed in the next release'
+  scalar.tss.v1beta1.HeartBeatResponse:
     type: object
-  axelar.tss.v1beta1.Params:
+  scalar.tss.v1beta1.Params:
     type: object
     properties:
       key_requirements:
@@ -57460,7 +57462,7 @@ definitions:
         type: string
         format: int64
     title: Params is the parameter set for this module
-  axelar.tss.v1beta1.ParamsResponse:
+  scalar.tss.v1beta1.ParamsResponse:
     type: object
     properties:
       params:
@@ -58216,7 +58218,7 @@ definitions:
       LegacyAminoPubKey specifies a public key type
       which nests multiple public keys and a threshold,
       it uses legacy amino address rules.
-  axelar.vote.v1beta1.Params:
+  scalar.vote.v1beta1.Params:
     type: object
     properties:
       default_voting_threshold:
@@ -58237,7 +58239,7 @@ definitions:
         type: string
         format: int64
     title: Params represent the genesis parameters for the module
-  axelar.vote.v1beta1.ParamsResponse:
+  scalar.vote.v1beta1.ParamsResponse:
     type: object
     properties:
       params:
@@ -58261,7 +58263,7 @@ definitions:
             type: string
             format: int64
         title: Params represent the genesis parameters for the module
-  axelar.vote.v1beta1.VoteRequest:
+  scalar.vote.v1beta1.VoteRequest:
     type: object
     properties:
       sender:
@@ -58432,7 +58434,7 @@ definitions:
                 "@type": "type.googleapis.com/google.protobuf.Duration",
                 "value": "1.212s"
               }
-  axelar.vote.v1beta1.VoteResponse:
+  scalar.vote.v1beta1.VoteResponse:
     type: object
     properties:
       log:

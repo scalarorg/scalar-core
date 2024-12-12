@@ -62,6 +62,21 @@
     - [GenesisState](#scalar.covenant.v1beta1.GenesisState)
   
 - [scalar/covenant/v1beta1/query.proto](#scalar/covenant/v1beta1/query.proto)
+- [scalar/tss/exported/v1beta1/types.proto](#scalar/tss/exported/v1beta1/types.proto)
+    - [KeyRequirement](#scalar.tss.exported.v1beta1.KeyRequirement)
+    - [SigKeyPair](#scalar.tss.exported.v1beta1.SigKeyPair)
+  
+    - [KeyRole](#scalar.tss.exported.v1beta1.KeyRole)
+    - [KeyShareDistributionPolicy](#scalar.tss.exported.v1beta1.KeyShareDistributionPolicy)
+    - [KeyType](#scalar.tss.exported.v1beta1.KeyType)
+  
+- [scalar/vote/exported/v1beta1/types.proto](#scalar/vote/exported/v1beta1/types.proto)
+    - [PollKey](#scalar.vote.exported.v1beta1.PollKey)
+    - [PollMetadata](#scalar.vote.exported.v1beta1.PollMetadata)
+    - [PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants)
+  
+    - [PollState](#scalar.vote.exported.v1beta1.PollState)
+  
 - [scalar/nexus/exported/v1beta1/types.proto](#scalar/nexus/exported/v1beta1/types.proto)
     - [Asset](#scalar.nexus.exported.v1beta1.Asset)
     - [Chain](#scalar.nexus.exported.v1beta1.Chain)
@@ -371,6 +386,31 @@
   
 - [scalar/protocol/v1beta1/service.proto](#scalar/protocol/v1beta1/service.proto)
 - [scalar/protocol/v1beta1/tx.proto](#scalar/protocol/v1beta1/tx.proto)
+- [scalar/reward/v1beta1/params.proto](#scalar/reward/v1beta1/params.proto)
+    - [Params](#scalar.reward.v1beta1.Params)
+  
+- [scalar/reward/v1beta1/types.proto](#scalar/reward/v1beta1/types.proto)
+    - [Pool](#scalar.reward.v1beta1.Pool)
+    - [Pool.Reward](#scalar.reward.v1beta1.Pool.Reward)
+    - [Refund](#scalar.reward.v1beta1.Refund)
+  
+- [scalar/reward/v1beta1/genesis.proto](#scalar/reward/v1beta1/genesis.proto)
+    - [GenesisState](#scalar.reward.v1beta1.GenesisState)
+  
+- [scalar/reward/v1beta1/query.proto](#scalar/reward/v1beta1/query.proto)
+    - [InflationRateRequest](#scalar.reward.v1beta1.InflationRateRequest)
+    - [InflationRateResponse](#scalar.reward.v1beta1.InflationRateResponse)
+    - [ParamsRequest](#scalar.reward.v1beta1.ParamsRequest)
+    - [ParamsResponse](#scalar.reward.v1beta1.ParamsResponse)
+  
+- [scalar/reward/v1beta1/tx.proto](#scalar/reward/v1beta1/tx.proto)
+    - [RefundMsgRequest](#scalar.reward.v1beta1.RefundMsgRequest)
+    - [RefundMsgResponse](#scalar.reward.v1beta1.RefundMsgResponse)
+  
+- [scalar/reward/v1beta1/service.proto](#scalar/reward/v1beta1/service.proto)
+    - [MsgService](#scalar.reward.v1beta1.MsgService)
+    - [QueryService](#scalar.reward.v1beta1.QueryService)
+  
 - [scalar/scalarnet/v1beta1/events.proto](#scalar/scalarnet/v1beta1/events.proto)
     - [ContractCallSubmitted](#scalar.scalarnet.v1beta1.ContractCallSubmitted)
     - [ContractCallWithTokenSubmitted](#scalar.scalarnet.v1beta1.ContractCallWithTokenSubmitted)
@@ -441,6 +481,110 @@
 - [scalar/scalarnet/v1beta1/service.proto](#scalar/scalarnet/v1beta1/service.proto)
     - [MsgService](#scalar.scalarnet.v1beta1.MsgService)
     - [QueryService](#scalar.scalarnet.v1beta1.QueryService)
+  
+- [scalar/tss/tofnd/v1beta1/common.proto](#scalar/tss/tofnd/v1beta1/common.proto)
+    - [KeyPresenceRequest](#scalar.tss.tofnd.v1beta1.KeyPresenceRequest)
+    - [KeyPresenceResponse](#scalar.tss.tofnd.v1beta1.KeyPresenceResponse)
+  
+    - [KeyPresenceResponse.Response](#scalar.tss.tofnd.v1beta1.KeyPresenceResponse.Response)
+  
+- [scalar/tss/tofnd/v1beta1/multisig.proto](#scalar/tss/tofnd/v1beta1/multisig.proto)
+    - [KeygenRequest](#scalar.tss.tofnd.v1beta1.KeygenRequest)
+    - [KeygenResponse](#scalar.tss.tofnd.v1beta1.KeygenResponse)
+    - [SignRequest](#scalar.tss.tofnd.v1beta1.SignRequest)
+    - [SignResponse](#scalar.tss.tofnd.v1beta1.SignResponse)
+  
+    - [Multisig](#scalar.tss.tofnd.v1beta1.Multisig)
+  
+- [scalar/tss/tofnd/v1beta1/tofnd.proto](#scalar/tss/tofnd/v1beta1/tofnd.proto)
+    - [KeygenInit](#scalar.tss.tofnd.v1beta1.KeygenInit)
+    - [KeygenOutput](#scalar.tss.tofnd.v1beta1.KeygenOutput)
+    - [MessageIn](#scalar.tss.tofnd.v1beta1.MessageIn)
+    - [MessageOut](#scalar.tss.tofnd.v1beta1.MessageOut)
+    - [MessageOut.CriminalList](#scalar.tss.tofnd.v1beta1.MessageOut.CriminalList)
+    - [MessageOut.CriminalList.Criminal](#scalar.tss.tofnd.v1beta1.MessageOut.CriminalList.Criminal)
+    - [MessageOut.KeygenResult](#scalar.tss.tofnd.v1beta1.MessageOut.KeygenResult)
+    - [MessageOut.SignResult](#scalar.tss.tofnd.v1beta1.MessageOut.SignResult)
+    - [RecoverRequest](#scalar.tss.tofnd.v1beta1.RecoverRequest)
+    - [RecoverResponse](#scalar.tss.tofnd.v1beta1.RecoverResponse)
+    - [SignInit](#scalar.tss.tofnd.v1beta1.SignInit)
+    - [TrafficIn](#scalar.tss.tofnd.v1beta1.TrafficIn)
+    - [TrafficOut](#scalar.tss.tofnd.v1beta1.TrafficOut)
+  
+    - [MessageOut.CriminalList.Criminal.CrimeType](#scalar.tss.tofnd.v1beta1.MessageOut.CriminalList.Criminal.CrimeType)
+    - [RecoverResponse.Response](#scalar.tss.tofnd.v1beta1.RecoverResponse.Response)
+  
+- [scalar/tss/v1beta1/params.proto](#scalar/tss/v1beta1/params.proto)
+    - [Params](#scalar.tss.v1beta1.Params)
+  
+- [scalar/tss/v1beta1/types.proto](#scalar/tss/v1beta1/types.proto)
+    - [ExternalKeys](#scalar.tss.v1beta1.ExternalKeys)
+    - [KeyInfo](#scalar.tss.v1beta1.KeyInfo)
+    - [KeyRecoveryInfo](#scalar.tss.v1beta1.KeyRecoveryInfo)
+    - [KeyRecoveryInfo.PrivateEntry](#scalar.tss.v1beta1.KeyRecoveryInfo.PrivateEntry)
+    - [KeygenVoteData](#scalar.tss.v1beta1.KeygenVoteData)
+    - [MultisigInfo](#scalar.tss.v1beta1.MultisigInfo)
+    - [MultisigInfo.Info](#scalar.tss.v1beta1.MultisigInfo.Info)
+    - [ValidatorStatus](#scalar.tss.v1beta1.ValidatorStatus)
+  
+- [scalar/tss/v1beta1/genesis.proto](#scalar/tss/v1beta1/genesis.proto)
+    - [GenesisState](#scalar.tss.v1beta1.GenesisState)
+  
+- [scalar/tss/v1beta1/query.proto](#scalar/tss/v1beta1/query.proto)
+    - [ParamsRequest](#scalar.tss.v1beta1.ParamsRequest)
+    - [ParamsResponse](#scalar.tss.v1beta1.ParamsResponse)
+  
+- [scalar/tss/v1beta1/tx.proto](#scalar/tss/v1beta1/tx.proto)
+    - [HeartBeatRequest](#scalar.tss.v1beta1.HeartBeatRequest)
+    - [HeartBeatResponse](#scalar.tss.v1beta1.HeartBeatResponse)
+    - [ProcessKeygenTrafficRequest](#scalar.tss.v1beta1.ProcessKeygenTrafficRequest)
+    - [ProcessKeygenTrafficResponse](#scalar.tss.v1beta1.ProcessKeygenTrafficResponse)
+    - [ProcessSignTrafficRequest](#scalar.tss.v1beta1.ProcessSignTrafficRequest)
+    - [ProcessSignTrafficResponse](#scalar.tss.v1beta1.ProcessSignTrafficResponse)
+    - [RegisterExternalKeysRequest](#scalar.tss.v1beta1.RegisterExternalKeysRequest)
+    - [RegisterExternalKeysRequest.ExternalKey](#scalar.tss.v1beta1.RegisterExternalKeysRequest.ExternalKey)
+    - [RegisterExternalKeysResponse](#scalar.tss.v1beta1.RegisterExternalKeysResponse)
+    - [RotateKeyRequest](#scalar.tss.v1beta1.RotateKeyRequest)
+    - [RotateKeyResponse](#scalar.tss.v1beta1.RotateKeyResponse)
+    - [StartKeygenRequest](#scalar.tss.v1beta1.StartKeygenRequest)
+    - [StartKeygenResponse](#scalar.tss.v1beta1.StartKeygenResponse)
+    - [SubmitMultisigPubKeysRequest](#scalar.tss.v1beta1.SubmitMultisigPubKeysRequest)
+    - [SubmitMultisigPubKeysResponse](#scalar.tss.v1beta1.SubmitMultisigPubKeysResponse)
+    - [SubmitMultisigSignaturesRequest](#scalar.tss.v1beta1.SubmitMultisigSignaturesRequest)
+    - [SubmitMultisigSignaturesResponse](#scalar.tss.v1beta1.SubmitMultisigSignaturesResponse)
+    - [VotePubKeyRequest](#scalar.tss.v1beta1.VotePubKeyRequest)
+    - [VotePubKeyResponse](#scalar.tss.v1beta1.VotePubKeyResponse)
+    - [VoteSigRequest](#scalar.tss.v1beta1.VoteSigRequest)
+    - [VoteSigResponse](#scalar.tss.v1beta1.VoteSigResponse)
+  
+- [scalar/tss/v1beta1/service.proto](#scalar/tss/v1beta1/service.proto)
+    - [MsgService](#scalar.tss.v1beta1.MsgService)
+    - [QueryService](#scalar.tss.v1beta1.QueryService)
+  
+- [scalar/vote/v1beta1/events.proto](#scalar/vote/v1beta1/events.proto)
+    - [Voted](#scalar.vote.v1beta1.Voted)
+  
+- [scalar/vote/v1beta1/params.proto](#scalar/vote/v1beta1/params.proto)
+    - [Params](#scalar.vote.v1beta1.Params)
+  
+- [scalar/vote/v1beta1/genesis.proto](#scalar/vote/v1beta1/genesis.proto)
+    - [GenesisState](#scalar.vote.v1beta1.GenesisState)
+  
+- [scalar/vote/v1beta1/query.proto](#scalar/vote/v1beta1/query.proto)
+    - [ParamsRequest](#scalar.vote.v1beta1.ParamsRequest)
+    - [ParamsResponse](#scalar.vote.v1beta1.ParamsResponse)
+  
+- [scalar/vote/v1beta1/types.proto](#scalar/vote/v1beta1/types.proto)
+    - [TalliedVote](#scalar.vote.v1beta1.TalliedVote)
+    - [TalliedVote.IsVoterLateEntry](#scalar.vote.v1beta1.TalliedVote.IsVoterLateEntry)
+  
+- [scalar/vote/v1beta1/tx.proto](#scalar/vote/v1beta1/tx.proto)
+    - [VoteRequest](#scalar.vote.v1beta1.VoteRequest)
+    - [VoteResponse](#scalar.vote.v1beta1.VoteResponse)
+  
+- [scalar/vote/v1beta1/service.proto](#scalar/vote/v1beta1/service.proto)
+    - [MsgService](#scalar.vote.v1beta1.MsgService)
+    - [QueryService](#scalar.vote.v1beta1.QueryService)
   
 - [Scalar Value Types](#scalar-value-types)
 
@@ -1190,6 +1334,193 @@ Vote handler
 
 
 
+<a name="scalar/tss/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/tss/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.tss.exported.v1beta1.KeyRequirement"></a>
+
+### KeyRequirement
+KeyRequirement defines requirements for keys
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_role` | [KeyRole](#scalar.tss.exported.v1beta1.KeyRole) |  |  |
+| `key_type` | [KeyType](#scalar.tss.exported.v1beta1.KeyType) |  |  |
+| `min_keygen_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `safety_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `key_share_distribution_policy` | [KeyShareDistributionPolicy](#scalar.tss.exported.v1beta1.KeyShareDistributionPolicy) |  |  |
+| `max_total_share_count` | [int64](#int64) |  |  |
+| `min_total_share_count` | [int64](#int64) |  |  |
+| `keygen_voting_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `sign_voting_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `keygen_timeout` | [int64](#int64) |  |  |
+| `sign_timeout` | [int64](#int64) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.exported.v1beta1.SigKeyPair"></a>
+
+### SigKeyPair
+PubKeyInfo holds a pubkey and a signature
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `pub_key` | [bytes](#bytes) |  |  |
+| `signature` | [bytes](#bytes) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.tss.exported.v1beta1.KeyRole"></a>
+
+### KeyRole
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| KEY_ROLE_UNSPECIFIED | 0 |  |
+| KEY_ROLE_MASTER_KEY | 1 |  |
+| KEY_ROLE_SECONDARY_KEY | 2 |  |
+| KEY_ROLE_EXTERNAL_KEY | 3 |  |
+
+
+
+<a name="scalar.tss.exported.v1beta1.KeyShareDistributionPolicy"></a>
+
+### KeyShareDistributionPolicy
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| KEY_SHARE_DISTRIBUTION_POLICY_UNSPECIFIED | 0 |  |
+| KEY_SHARE_DISTRIBUTION_POLICY_WEIGHTED_BY_STAKE | 1 |  |
+| KEY_SHARE_DISTRIBUTION_POLICY_ONE_PER_VALIDATOR | 2 |  |
+
+
+
+<a name="scalar.tss.exported.v1beta1.KeyType"></a>
+
+### KeyType
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| KEY_TYPE_UNSPECIFIED | 0 |  |
+| KEY_TYPE_NONE | 1 |  |
+| KEY_TYPE_THRESHOLD | 2 |  |
+| KEY_TYPE_MULTISIG | 3 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/vote/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/vote/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.vote.exported.v1beta1.PollKey"></a>
+
+### PollKey
+PollKey represents the key data for a poll
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.vote.exported.v1beta1.PollMetadata"></a>
+
+### PollMetadata
+PollMetadata represents a poll with write-in voting, i.e. the result of the
+vote can have any data type
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `expires_at` | [int64](#int64) |  |  |
+| `result` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+| `voting_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `state` | [PollState](#scalar.vote.exported.v1beta1.PollState) |  |  |
+| `min_voter_count` | [int64](#int64) |  |  |
+| `reward_pool_name` | [string](#string) |  |  |
+| `grace_period` | [int64](#int64) |  |  |
+| `completed_at` | [int64](#int64) |  |  |
+| `id` | [uint64](#uint64) |  |  |
+| `snapshot` | [axelar.snapshot.exported.v1beta1.Snapshot](#axelar.snapshot.exported.v1beta1.Snapshot) |  |  |
+| `module` | [string](#string) |  |  |
+| `module_metadata` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+
+
+
+
+
+
+<a name="scalar.vote.exported.v1beta1.PollParticipants"></a>
+
+### PollParticipants
+PollParticipants should be embedded in poll events in other modules
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `poll_id` | [uint64](#uint64) |  |  |
+| `participants` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.vote.exported.v1beta1.PollState"></a>
+
+### PollState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| POLL_STATE_UNSPECIFIED | 0 |  |
+| POLL_STATE_PENDING | 1 |  |
+| POLL_STATE_COMPLETED | 2 |  |
+| POLL_STATE_FAILED | 3 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/nexus/exported/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -1223,7 +1554,7 @@ Chain represents the properties of a registered blockchain
 | ----- | ---- | ----- | ----------- |
 | `name` | [string](#string) |  |  |
 | `supports_foreign_assets` | [bool](#bool) |  |  |
-| `key_type` | [axelar.tss.exported.v1beta1.KeyType](#axelar.tss.exported.v1beta1.KeyType) |  |  |
+| `key_type` | [scalar.tss.exported.v1beta1.KeyType](#scalar.tss.exported.v1beta1.KeyType) |  |  |
 | `module` | [string](#string) |  |  |
 
 
@@ -2028,7 +2359,7 @@ TransferKey contains information for a transfer operatorship
 | `deposit_address` | [bytes](#bytes) |  |  |
 | `token_address` | [bytes](#bytes) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
-| `participants` | [axelar.vote.exported.v1beta1.PollParticipants](#axelar.vote.exported.v1beta1.PollParticipants) |  |  |
+| `participants` | [scalar.vote.exported.v1beta1.PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants) |  |  |
 | `asset` | [string](#string) |  |  |
 
 
@@ -2048,7 +2379,7 @@ TransferKey contains information for a transfer operatorship
 | `chain` | [string](#string) |  |  |
 | `gateway_address` | [bytes](#bytes) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
-| `participants` | [axelar.vote.exported.v1beta1.PollParticipants](#axelar.vote.exported.v1beta1.PollParticipants) |  |  |
+| `participants` | [scalar.vote.exported.v1beta1.PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants) |  |  |
 
 
 
@@ -2086,7 +2417,7 @@ TransferKey contains information for a transfer operatorship
 | `tx_id` | [bytes](#bytes) |  |  |
 | `gateway_address` | [bytes](#bytes) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
-| `participants` | [axelar.vote.exported.v1beta1.PollParticipants](#axelar.vote.exported.v1beta1.PollParticipants) |  |  |
+| `participants` | [scalar.vote.exported.v1beta1.PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants) |  |  |
 
 
 
@@ -2107,7 +2438,7 @@ TransferKey contains information for a transfer operatorship
 | `token_address` | [bytes](#bytes) |  |  |
 | `token_details` | [TokenDetails](#scalar.evm.v1beta1.TokenDetails) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
-| `participants` | [axelar.vote.exported.v1beta1.PollParticipants](#axelar.vote.exported.v1beta1.PollParticipants) |  |  |
+| `participants` | [scalar.vote.exported.v1beta1.PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants) |  |  |
 
 
 
@@ -3167,7 +3498,7 @@ ParamsRequest represents a message that queries the params
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `name` | [string](#string) |  |  |
-| `key_type` | [axelar.tss.exported.v1beta1.KeyType](#axelar.tss.exported.v1beta1.KeyType) |  | **Deprecated.**  |
+| `key_type` | [scalar.tss.exported.v1beta1.KeyType](#scalar.tss.exported.v1beta1.KeyType) |  | **Deprecated.**  |
 | `params` | [bytes](#bytes) |  |  |
 
 
@@ -5710,6 +6041,294 @@ QueryService defines the gRPC querier service.
 
 
 
+<a name="scalar/reward/v1beta1/params.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/reward/v1beta1/params.proto
+
+
+
+<a name="scalar.reward.v1beta1.Params"></a>
+
+### Params
+Params represent the genesis parameters for the module
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `external_chain_voting_inflation_rate` | [bytes](#bytes) |  |  |
+| `key_mgmt_relative_inflation_rate` | [bytes](#bytes) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/reward/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/reward/v1beta1/types.proto
+
+
+
+<a name="scalar.reward.v1beta1.Pool"></a>
+
+### Pool
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `name` | [string](#string) |  |  |
+| `rewards` | [Pool.Reward](#scalar.reward.v1beta1.Pool.Reward) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.reward.v1beta1.Pool.Reward"></a>
+
+### Pool.Reward
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `validator` | [bytes](#bytes) |  |  |
+| `coins` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.reward.v1beta1.Refund"></a>
+
+### Refund
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `payer` | [bytes](#bytes) |  |  |
+| `fees` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/reward/v1beta1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/reward/v1beta1/genesis.proto
+
+
+
+<a name="scalar.reward.v1beta1.GenesisState"></a>
+
+### GenesisState
+GenesisState represents the genesis state
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.reward.v1beta1.Params) |  |  |
+| `pools` | [Pool](#scalar.reward.v1beta1.Pool) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/reward/v1beta1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/reward/v1beta1/query.proto
+
+
+
+<a name="scalar.reward.v1beta1.InflationRateRequest"></a>
+
+### InflationRateRequest
+InflationRateRequest represents a message that queries the Axelar specific
+inflation RPC method. Ideally, this would use ValAddress as the validator
+field type. However, this makes it awkward for REST-based calls, because it
+would expect a byte array as part of the url. So, the bech32 encoded address
+string is used for this request instead.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `validator` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.reward.v1beta1.InflationRateResponse"></a>
+
+### InflationRateResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `inflation_rate` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.reward.v1beta1.ParamsRequest"></a>
+
+### ParamsRequest
+ParamsRequest represents a message that queries the params
+
+
+
+
+
+
+<a name="scalar.reward.v1beta1.ParamsResponse"></a>
+
+### ParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.reward.v1beta1.Params) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/reward/v1beta1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/reward/v1beta1/tx.proto
+
+
+
+<a name="scalar.reward.v1beta1.RefundMsgRequest"></a>
+
+### RefundMsgRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `inner_message` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+
+
+
+
+
+
+<a name="scalar.reward.v1beta1.RefundMsgResponse"></a>
+
+### RefundMsgResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `data` | [bytes](#bytes) |  |  |
+| `log` | [string](#string) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/reward/v1beta1/service.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/reward/v1beta1/service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="scalar.reward.v1beta1.MsgService"></a>
+
+### MsgService
+Msg defines the axelarnet Msg service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `RefundMsg` | [RefundMsgRequest](#scalar.reward.v1beta1.RefundMsgRequest) | [RefundMsgResponse](#scalar.reward.v1beta1.RefundMsgResponse) |  | POST|/scalar/reward/refund_message|
+
+
+<a name="scalar.reward.v1beta1.QueryService"></a>
+
+### QueryService
+QueryService defines the gRPC querier service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `InflationRate` | [InflationRateRequest](#scalar.reward.v1beta1.InflationRateRequest) | [InflationRateResponse](#scalar.reward.v1beta1.InflationRateResponse) |  | GET|/scalar/reward/v1beta1/inflation_rate/{validator}GET|/scalar/reward/v1beta1/inflation_rate|
+| `Params` | [ParamsRequest](#scalar.reward.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.reward.v1beta1.ParamsResponse) |  | GET|/scalar/reward/v1beta1/params|
+
+ <!-- end services -->
+
+
+
 <a name="scalar/scalarnet/v1beta1/events.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -6695,6 +7314,1304 @@ QueryService defines the gRPC querier service.
 | `Params` | [ParamsRequest](#scalar.scalarnet.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.scalarnet.v1beta1.ParamsResponse) |  | GET|/scalar/scalarnet/v1beta1/params|
 | `IBCPath` | [IBCPathRequest](#scalar.scalarnet.v1beta1.IBCPathRequest) | [IBCPathResponse](#scalar.scalarnet.v1beta1.IBCPathResponse) |  | GET|/scalar/scalarnet/v1beta1/ibc_path/{chain}|
 | `ChainByIBCPath` | [ChainByIBCPathRequest](#scalar.scalarnet.v1beta1.ChainByIBCPathRequest) | [ChainByIBCPathResponse](#scalar.scalarnet.v1beta1.ChainByIBCPathResponse) |  | GET|/scalar/scalarnet/v1beta1/chain_by_ibc_path/{ibc_path}|
+
+ <!-- end services -->
+
+
+
+<a name="scalar/tss/tofnd/v1beta1/common.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/tss/tofnd/v1beta1/common.proto
+File copied from golang tofnd with minor tweaks
+
+
+<a name="scalar.tss.tofnd.v1beta1.KeyPresenceRequest"></a>
+
+### KeyPresenceRequest
+Key presence check types
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_uid` | [string](#string) |  |  |
+| `pub_key` | [bytes](#bytes) |  | SEC1-encoded compressed pub key bytes to find the right |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.KeyPresenceResponse"></a>
+
+### KeyPresenceResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `response` | [KeyPresenceResponse.Response](#scalar.tss.tofnd.v1beta1.KeyPresenceResponse.Response) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.tss.tofnd.v1beta1.KeyPresenceResponse.Response"></a>
+
+### KeyPresenceResponse.Response
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| RESPONSE_UNSPECIFIED | 0 |  |
+| RESPONSE_PRESENT | 1 |  |
+| RESPONSE_ABSENT | 2 |  |
+| RESPONSE_FAIL | 3 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/tss/tofnd/v1beta1/multisig.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/tss/tofnd/v1beta1/multisig.proto
+File copied from golang tofnd with minor tweaks
+
+
+<a name="scalar.tss.tofnd.v1beta1.KeygenRequest"></a>
+
+### KeygenRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_uid` | [string](#string) |  |  |
+| `party_uid` | [string](#string) |  | used only for logging |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.KeygenResponse"></a>
+
+### KeygenResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `pub_key` | [bytes](#bytes) |  | SEC1-encoded compressed curve point |
+| `error` | [string](#string) |  | reply with an error message if keygen fails |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.SignRequest"></a>
+
+### SignRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_uid` | [string](#string) |  |  |
+| `msg_to_sign` | [bytes](#bytes) |  | 32-byte pre-hashed message digest |
+| `party_uid` | [string](#string) |  | used only for logging |
+| `pub_key` | [bytes](#bytes) |  | SEC1-encoded compressed pub key bytes to find the right |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.SignResponse"></a>
+
+### SignResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `signature` | [bytes](#bytes) |  | ASN.1 DER-encoded ECDSA signature |
+| `error` | [string](#string) |  | reply with an error message if sign fails |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="scalar.tss.tofnd.v1beta1.Multisig"></a>
+
+### Multisig
+
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `KeyPresence` | [KeyPresenceRequest](#scalar.tss.tofnd.v1beta1.KeyPresenceRequest) | [KeyPresenceResponse](#scalar.tss.tofnd.v1beta1.KeyPresenceResponse) |  | |
+| `Keygen` | [KeygenRequest](#scalar.tss.tofnd.v1beta1.KeygenRequest) | [KeygenResponse](#scalar.tss.tofnd.v1beta1.KeygenResponse) |  | |
+| `Sign` | [SignRequest](#scalar.tss.tofnd.v1beta1.SignRequest) | [SignResponse](#scalar.tss.tofnd.v1beta1.SignResponse) |  | |
+
+ <!-- end services -->
+
+
+
+<a name="scalar/tss/tofnd/v1beta1/tofnd.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/tss/tofnd/v1beta1/tofnd.proto
+File copied from golang tofnd with minor tweaks
+
+
+<a name="scalar.tss.tofnd.v1beta1.KeygenInit"></a>
+
+### KeygenInit
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `new_key_uid` | [string](#string) |  |  |
+| `party_uids` | [string](#string) | repeated |  |
+| `party_share_counts` | [uint32](#uint32) | repeated |  |
+| `my_party_index` | [uint32](#uint32) |  | parties[my_party_index] belongs to the server |
+| `threshold` | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.KeygenOutput"></a>
+
+### KeygenOutput
+Keygen's success response
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `pub_key` | [bytes](#bytes) |  | pub_key; common for all parties |
+| `group_recover_info` | [bytes](#bytes) |  | recover info of all parties' shares; common for all parties |
+| `private_recover_info` | [bytes](#bytes) |  | private recover info of this party's shares; unique for each party |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.MessageIn"></a>
+
+### MessageIn
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `keygen_init` | [KeygenInit](#scalar.tss.tofnd.v1beta1.KeygenInit) |  | first message only, Keygen |
+| `sign_init` | [SignInit](#scalar.tss.tofnd.v1beta1.SignInit) |  | first message only, Sign |
+| `traffic` | [TrafficIn](#scalar.tss.tofnd.v1beta1.TrafficIn) |  | all subsequent messages |
+| `abort` | [bool](#bool) |  | abort the protocol, ignore the bool value |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.MessageOut"></a>
+
+### MessageOut
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `traffic` | [TrafficOut](#scalar.tss.tofnd.v1beta1.TrafficOut) |  | all but final message |
+| `keygen_result` | [MessageOut.KeygenResult](#scalar.tss.tofnd.v1beta1.MessageOut.KeygenResult) |  | final message only, Keygen |
+| `sign_result` | [MessageOut.SignResult](#scalar.tss.tofnd.v1beta1.MessageOut.SignResult) |  | final message only, Sign |
+| `need_recover` | [bool](#bool) |  | issue recover from client |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.MessageOut.CriminalList"></a>
+
+### MessageOut.CriminalList
+Keygen/Sign failure response message
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `criminals` | [MessageOut.CriminalList.Criminal](#scalar.tss.tofnd.v1beta1.MessageOut.CriminalList.Criminal) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.MessageOut.CriminalList.Criminal"></a>
+
+### MessageOut.CriminalList.Criminal
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `party_uid` | [string](#string) |  |  |
+| `crime_type` | [MessageOut.CriminalList.Criminal.CrimeType](#scalar.tss.tofnd.v1beta1.MessageOut.CriminalList.Criminal.CrimeType) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.MessageOut.KeygenResult"></a>
+
+### MessageOut.KeygenResult
+Keygen's response types
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `data` | [KeygenOutput](#scalar.tss.tofnd.v1beta1.KeygenOutput) |  | Success response |
+| `criminals` | [MessageOut.CriminalList](#scalar.tss.tofnd.v1beta1.MessageOut.CriminalList) |  | Faiilure response |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.MessageOut.SignResult"></a>
+
+### MessageOut.SignResult
+Sign's response types
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `signature` | [bytes](#bytes) |  | Success response |
+| `criminals` | [MessageOut.CriminalList](#scalar.tss.tofnd.v1beta1.MessageOut.CriminalList) |  | Failure response |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.RecoverRequest"></a>
+
+### RecoverRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `keygen_init` | [KeygenInit](#scalar.tss.tofnd.v1beta1.KeygenInit) |  |  |
+| `keygen_output` | [KeygenOutput](#scalar.tss.tofnd.v1beta1.KeygenOutput) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.RecoverResponse"></a>
+
+### RecoverResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `response` | [RecoverResponse.Response](#scalar.tss.tofnd.v1beta1.RecoverResponse.Response) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.SignInit"></a>
+
+### SignInit
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `new_sig_uid` | [string](#string) |  |  |
+| `key_uid` | [string](#string) |  |  |
+| `party_uids` | [string](#string) | repeated | TODO replace this with a subset of indices? |
+| `message_to_sign` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.TrafficIn"></a>
+
+### TrafficIn
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `from_party_uid` | [string](#string) |  |  |
+| `payload` | [bytes](#bytes) |  |  |
+| `is_broadcast` | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.TrafficOut"></a>
+
+### TrafficOut
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `to_party_uid` | [string](#string) |  |  |
+| `payload` | [bytes](#bytes) |  |  |
+| `is_broadcast` | [bool](#bool) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.tss.tofnd.v1beta1.MessageOut.CriminalList.Criminal.CrimeType"></a>
+
+### MessageOut.CriminalList.Criminal.CrimeType
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| CRIME_TYPE_UNSPECIFIED | 0 |  |
+| CRIME_TYPE_NON_MALICIOUS | 1 |  |
+| CRIME_TYPE_MALICIOUS | 2 |  |
+
+
+
+<a name="scalar.tss.tofnd.v1beta1.RecoverResponse.Response"></a>
+
+### RecoverResponse.Response
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| RESPONSE_UNSPECIFIED | 0 |  |
+| RESPONSE_SUCCESS | 1 |  |
+| RESPONSE_FAIL | 2 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/tss/v1beta1/params.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/tss/v1beta1/params.proto
+
+
+
+<a name="scalar.tss.v1beta1.Params"></a>
+
+### Params
+Params is the parameter set for this module
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_requirements` | [scalar.tss.exported.v1beta1.KeyRequirement](#scalar.tss.exported.v1beta1.KeyRequirement) | repeated | KeyRequirements defines the requirement for each key role |
+| `suspend_duration_in_blocks` | [int64](#int64) |  | SuspendDurationInBlocks defines the number of blocks a validator is disallowed to participate in any TSS ceremony after committing a malicious behaviour during signing |
+| `heartbeat_period_in_blocks` | [int64](#int64) |  | HeartBeatPeriodInBlocks defines the time period in blocks for tss to emit the event asking validators to send their heartbeats |
+| `max_missed_blocks_per_window` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `unbonding_locking_key_rotation_count` | [int64](#int64) |  |  |
+| `external_multisig_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `max_sign_queue_size` | [int64](#int64) |  |  |
+| `max_simultaneous_sign_shares` | [int64](#int64) |  |  |
+| `tss_signed_blocks_window` | [int64](#int64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/tss/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/tss/v1beta1/types.proto
+
+
+
+<a name="scalar.tss.v1beta1.ExternalKeys"></a>
+
+### ExternalKeys
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `key_ids` | [string](#string) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.KeyInfo"></a>
+
+### KeyInfo
+KeyInfo holds information about a key
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+| `key_role` | [scalar.tss.exported.v1beta1.KeyRole](#scalar.tss.exported.v1beta1.KeyRole) |  |  |
+| `key_type` | [scalar.tss.exported.v1beta1.KeyType](#scalar.tss.exported.v1beta1.KeyType) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.KeyRecoveryInfo"></a>
+
+### KeyRecoveryInfo
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+| `public` | [bytes](#bytes) |  |  |
+| `private` | [KeyRecoveryInfo.PrivateEntry](#scalar.tss.v1beta1.KeyRecoveryInfo.PrivateEntry) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.KeyRecoveryInfo.PrivateEntry"></a>
+
+### KeyRecoveryInfo.PrivateEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.KeygenVoteData"></a>
+
+### KeygenVoteData
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `pub_key` | [bytes](#bytes) |  |  |
+| `group_recovery_info` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.MultisigInfo"></a>
+
+### MultisigInfo
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `timeout` | [int64](#int64) |  |  |
+| `target_num` | [int64](#int64) |  |  |
+| `infos` | [MultisigInfo.Info](#scalar.tss.v1beta1.MultisigInfo.Info) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.MultisigInfo.Info"></a>
+
+### MultisigInfo.Info
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `participant` | [bytes](#bytes) |  |  |
+| `data` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.ValidatorStatus"></a>
+
+### ValidatorStatus
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `validator` | [bytes](#bytes) |  |  |
+| `suspended_until` | [uint64](#uint64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/tss/v1beta1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/tss/v1beta1/genesis.proto
+
+
+
+<a name="scalar.tss.v1beta1.GenesisState"></a>
+
+### GenesisState
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.tss.v1beta1.Params) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/tss/v1beta1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/tss/v1beta1/query.proto
+
+
+
+<a name="scalar.tss.v1beta1.ParamsRequest"></a>
+
+### ParamsRequest
+ParamsRequest represents a message that queries the params
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.ParamsResponse"></a>
+
+### ParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.tss.v1beta1.Params) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/tss/v1beta1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/tss/v1beta1/tx.proto
+
+
+
+<a name="scalar.tss.v1beta1.HeartBeatRequest"></a>
+
+### HeartBeatRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `key_ids` | [string](#string) | repeated | **Deprecated.** Deprecated: this field will be removed in the next release
+
+key_ids was deprecated in v1.0 |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.HeartBeatResponse"></a>
+
+### HeartBeatResponse
+
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.ProcessKeygenTrafficRequest"></a>
+
+### ProcessKeygenTrafficRequest
+ProcessKeygenTrafficRequest protocol message
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `session_id` | [string](#string) |  |  |
+| `payload` | [scalar.tss.tofnd.v1beta1.TrafficOut](#scalar.tss.tofnd.v1beta1.TrafficOut) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.ProcessKeygenTrafficResponse"></a>
+
+### ProcessKeygenTrafficResponse
+
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.ProcessSignTrafficRequest"></a>
+
+### ProcessSignTrafficRequest
+ProcessSignTrafficRequest protocol message
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `session_id` | [string](#string) |  |  |
+| `payload` | [scalar.tss.tofnd.v1beta1.TrafficOut](#scalar.tss.tofnd.v1beta1.TrafficOut) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.ProcessSignTrafficResponse"></a>
+
+### ProcessSignTrafficResponse
+
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.RegisterExternalKeysRequest"></a>
+
+### RegisterExternalKeysRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `external_keys` | [RegisterExternalKeysRequest.ExternalKey](#scalar.tss.v1beta1.RegisterExternalKeysRequest.ExternalKey) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.RegisterExternalKeysRequest.ExternalKey"></a>
+
+### RegisterExternalKeysRequest.ExternalKey
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `pub_key` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.RegisterExternalKeysResponse"></a>
+
+### RegisterExternalKeysResponse
+
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.RotateKeyRequest"></a>
+
+### RotateKeyRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `key_role` | [scalar.tss.exported.v1beta1.KeyRole](#scalar.tss.exported.v1beta1.KeyRole) |  |  |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.RotateKeyResponse"></a>
+
+### RotateKeyResponse
+
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.StartKeygenRequest"></a>
+
+### StartKeygenRequest
+StartKeygenRequest indicate the start of keygen
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `key_info` | [KeyInfo](#scalar.tss.v1beta1.KeyInfo) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.StartKeygenResponse"></a>
+
+### StartKeygenResponse
+
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.SubmitMultisigPubKeysRequest"></a>
+
+### SubmitMultisigPubKeysRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `key_id` | [string](#string) |  |  |
+| `sig_key_pairs` | [scalar.tss.exported.v1beta1.SigKeyPair](#scalar.tss.exported.v1beta1.SigKeyPair) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.SubmitMultisigPubKeysResponse"></a>
+
+### SubmitMultisigPubKeysResponse
+
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.SubmitMultisigSignaturesRequest"></a>
+
+### SubmitMultisigSignaturesRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `sig_id` | [string](#string) |  |  |
+| `signatures` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.SubmitMultisigSignaturesResponse"></a>
+
+### SubmitMultisigSignaturesResponse
+
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.VotePubKeyRequest"></a>
+
+### VotePubKeyRequest
+VotePubKeyRequest represents the message to vote on a public key
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `poll_key` | [scalar.vote.exported.v1beta1.PollKey](#scalar.vote.exported.v1beta1.PollKey) |  |  |
+| `result` | [scalar.tss.tofnd.v1beta1.MessageOut.KeygenResult](#scalar.tss.tofnd.v1beta1.MessageOut.KeygenResult) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.VotePubKeyResponse"></a>
+
+### VotePubKeyResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `log` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.VoteSigRequest"></a>
+
+### VoteSigRequest
+VoteSigRequest represents a message to vote for a signature
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `poll_key` | [scalar.vote.exported.v1beta1.PollKey](#scalar.vote.exported.v1beta1.PollKey) |  |  |
+| `result` | [scalar.tss.tofnd.v1beta1.MessageOut.SignResult](#scalar.tss.tofnd.v1beta1.MessageOut.SignResult) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.v1beta1.VoteSigResponse"></a>
+
+### VoteSigResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `log` | [string](#string) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/tss/v1beta1/service.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/tss/v1beta1/service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="scalar.tss.v1beta1.MsgService"></a>
+
+### MsgService
+Msg defines the tss Msg service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `HeartBeat` | [HeartBeatRequest](#scalar.tss.v1beta1.HeartBeatRequest) | [HeartBeatResponse](#scalar.tss.v1beta1.HeartBeatResponse) |  | POST|/scalar/tss/heartbeat|
+
+
+<a name="scalar.tss.v1beta1.QueryService"></a>
+
+### QueryService
+Query defines the gRPC querier service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `Params` | [ParamsRequest](#scalar.tss.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.tss.v1beta1.ParamsResponse) |  | GET|/scalar/tss/v1beta1/params|
+
+ <!-- end services -->
+
+
+
+<a name="scalar/vote/v1beta1/events.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/vote/v1beta1/events.proto
+
+
+
+<a name="scalar.vote.v1beta1.Voted"></a>
+
+### Voted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `action` | [string](#string) |  |  |
+| `poll` | [string](#string) |  |  |
+| `voter` | [string](#string) |  |  |
+| `state` | [string](#string) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/vote/v1beta1/params.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/vote/v1beta1/params.proto
+
+
+
+<a name="scalar.vote.v1beta1.Params"></a>
+
+### Params
+Params represent the genesis parameters for the module
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `default_voting_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `end_blocker_limit` | [int64](#int64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/vote/v1beta1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/vote/v1beta1/genesis.proto
+
+
+
+<a name="scalar.vote.v1beta1.GenesisState"></a>
+
+### GenesisState
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.vote.v1beta1.Params) |  |  |
+| `poll_metadatas` | [scalar.vote.exported.v1beta1.PollMetadata](#scalar.vote.exported.v1beta1.PollMetadata) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/vote/v1beta1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/vote/v1beta1/query.proto
+
+
+
+<a name="scalar.vote.v1beta1.ParamsRequest"></a>
+
+### ParamsRequest
+ParamsRequest represents a message that queries the params
+
+
+
+
+
+
+<a name="scalar.vote.v1beta1.ParamsResponse"></a>
+
+### ParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.vote.v1beta1.Params) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/vote/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/vote/v1beta1/types.proto
+
+
+
+<a name="scalar.vote.v1beta1.TalliedVote"></a>
+
+### TalliedVote
+TalliedVote represents a vote for a poll with the accumulated stake of all
+validators voting for the same data
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tally` | [bytes](#bytes) |  |  |
+| `data` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+| `is_voter_late` | [TalliedVote.IsVoterLateEntry](#scalar.vote.v1beta1.TalliedVote.IsVoterLateEntry) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.vote.v1beta1.TalliedVote.IsVoterLateEntry"></a>
+
+### TalliedVote.IsVoterLateEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [bool](#bool) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/vote/v1beta1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/vote/v1beta1/tx.proto
+
+
+
+<a name="scalar.vote.v1beta1.VoteRequest"></a>
+
+### VoteRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+| `vote` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+
+
+
+
+
+
+<a name="scalar.vote.v1beta1.VoteResponse"></a>
+
+### VoteResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `log` | [string](#string) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/vote/v1beta1/service.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/vote/v1beta1/service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="scalar.vote.v1beta1.MsgService"></a>
+
+### MsgService
+Msg defines the vote Msg service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `Vote` | [VoteRequest](#scalar.vote.v1beta1.VoteRequest) | [VoteResponse](#scalar.vote.v1beta1.VoteResponse) |  | POST|/scalar/vote/vote|
+
+
+<a name="scalar.vote.v1beta1.QueryService"></a>
+
+### QueryService
+QueryService defines the gRPC querier service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `Params` | [ParamsRequest](#scalar.vote.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.vote.v1beta1.ParamsResponse) |  | GET|/scalar/vote/v1beta1/params|
 
  <!-- end services -->
 

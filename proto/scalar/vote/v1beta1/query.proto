@@ -1,0 +1,14 @@
+syntax = "proto3";
+package scalar.vote.v1beta1;
+
+option go_package = "github.com/scalarorg/scalar-core/x/vote/types";
+
+import "gogoproto/gogo.proto";
+import "scalar/vote/v1beta1/params.proto";
+
+option (gogoproto.goproto_getters_all) = false;
+
+// ParamsRequest represents a message that queries the params
+message ParamsRequest {}
+
+message ParamsResponse { Params params = 1 [ (gogoproto.nullable) = false ]; }

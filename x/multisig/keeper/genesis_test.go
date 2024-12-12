@@ -13,8 +13,6 @@ import (
 	"github.com/axelarnetwork/axelar-core/testutils/fake"
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
 	"github.com/axelarnetwork/axelar-core/utils"
-	reward "github.com/axelarnetwork/axelar-core/x/reward/exported"
-	rewardmock "github.com/axelarnetwork/axelar-core/x/reward/exported/mock"
 	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	"github.com/axelarnetwork/utils/funcs"
 	"github.com/axelarnetwork/utils/slices"
@@ -30,6 +28,8 @@ import (
 	"github.com/scalarorg/scalar-core/x/multisig/types"
 	"github.com/scalarorg/scalar-core/x/multisig/types/mock"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	reward "github.com/scalarorg/scalar-core/x/reward/exported"
+	rewardmock "github.com/scalarorg/scalar-core/x/reward/exported/mock"
 )
 
 func TestInitExportGenesis(t *testing.T) {

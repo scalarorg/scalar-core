@@ -15,12 +15,12 @@ import (
 
 	"github.com/axelarnetwork/axelar-core/utils"
 	"github.com/axelarnetwork/axelar-core/utils/events"
-	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
 	"github.com/axelarnetwork/utils/funcs"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/keeper"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
+	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 )
 
 // Fee is used to pay relayer for executing cross chain message

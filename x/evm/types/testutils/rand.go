@@ -15,7 +15,6 @@ import (
 
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
 	"github.com/axelarnetwork/axelar-core/utils"
-	votetestutils "github.com/axelarnetwork/axelar-core/x/vote/exported/testutils"
 	"github.com/axelarnetwork/utils/funcs"
 	"github.com/axelarnetwork/utils/slices"
 	"github.com/scalarorg/scalar-core/x/evm/types"
@@ -25,6 +24,7 @@ import (
 	"github.com/scalarorg/scalar-core/x/multisig/types/testutils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustestutils "github.com/scalarorg/scalar-core/x/nexus/exported/testutils"
+	votetestutils "github.com/scalarorg/scalar-core/x/vote/exported/testutils"
 )
 
 // RandomChains returns a random (valid) slice of chains for testing

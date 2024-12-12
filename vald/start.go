@@ -28,8 +28,6 @@ import (
 	"github.com/axelarnetwork/axelar-core/cmd/axelard/cmd/utils"
 	"github.com/axelarnetwork/axelar-core/sdk-utils/broadcast"
 	errors2 "github.com/axelarnetwork/axelar-core/utils/errors"
-	"github.com/axelarnetwork/axelar-core/x/tss/tofnd"
-	tssTypes "github.com/axelarnetwork/axelar-core/x/tss/types"
 	tmEvents "github.com/axelarnetwork/tm-events/events"
 	"github.com/axelarnetwork/tm-events/pubsub"
 	"github.com/axelarnetwork/tm-events/tendermint"
@@ -50,6 +48,8 @@ import (
 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
+	"github.com/scalarorg/scalar-core/x/tss/tofnd"
+	tssTypes "github.com/scalarorg/scalar-core/x/tss/types"
 )
 
 // RW grants -rw------- file permissions

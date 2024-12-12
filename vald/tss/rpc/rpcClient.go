@@ -1,6 +1,6 @@
 package rpc
 
-import "github.com/axelarnetwork/axelar-core/x/tss/tofnd"
+import "github.com/scalarorg/scalar-core/x/tss/tofnd"
 
 //go:generate moq -pkg mock -out ./mock/rpcClient.go . MultiSigClient
 

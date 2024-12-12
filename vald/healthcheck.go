@@ -18,11 +18,11 @@ import (
 
 	"github.com/axelarnetwork/axelar-core/x/snapshot/keeper"
 	snapshotTypes "github.com/axelarnetwork/axelar-core/x/snapshot/types"
-	"github.com/axelarnetwork/axelar-core/x/tss/tofnd"
-	tssTypes "github.com/axelarnetwork/axelar-core/x/tss/types"
 	"github.com/scalarorg/scalar-core/vald/config"
 	"github.com/scalarorg/scalar-core/vald/tss"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
+	"github.com/scalarorg/scalar-core/x/tss/tofnd"
+	tssTypes "github.com/scalarorg/scalar-core/x/tss/types"
 )
 
 const (

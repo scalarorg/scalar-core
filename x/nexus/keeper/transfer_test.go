@@ -16,7 +16,7 @@ package keeper_test
 // 	"github.com/axelarnetwork/axelar-core/testutils/fake"
 // 	"github.com/axelarnetwork/axelar-core/testutils/rand"
 // 	"github.com/axelarnetwork/axelar-core/utils"
-// 	axelarnettypes "github.com/axelarnetwork/axelar-core/x/axelarnet/types"
+// 	axelarnettypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
 // 	"github.com/axelarnetwork/utils/funcs"
 // 	. "github.com/axelarnetwork/utils/test"
 // 	"github.com/scalarorg/scalar-core/app"

@@ -10,7 +10,7 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/gogo/protobuf/proto"
 
-	"github.com/axelarnetwork/axelar-core/x/reward/exported"
+	"github.com/scalarorg/scalar-core/x/reward/exported"
 )
 
 // RegisterLegacyAminoCodec registers concrete types on codec

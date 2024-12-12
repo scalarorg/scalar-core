@@ -12,13 +12,13 @@ import (
 
 	"github.com/axelarnetwork/axelar-core/testutils/fake"
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/axelar-core/x/axelarnet/types/testutils"
 	"github.com/axelarnetwork/utils/funcs"
 	. "github.com/axelarnetwork/utils/test"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/types"
 	"github.com/scalarorg/scalar-core/x/nexus/types/mock"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
+	"github.com/scalarorg/scalar-core/x/scalarnet/types/testutils"
 )
 
 func TestLockableAsset(t *testing.T) {

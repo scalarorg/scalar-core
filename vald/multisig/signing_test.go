@@ -15,7 +15,6 @@ import (
 
 	broadcastmock "github.com/axelarnetwork/axelar-core/sdk-utils/broadcast/mock"
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/axelar-core/x/tss/tofnd"
 	"github.com/axelarnetwork/utils/funcs"
 	. "github.com/axelarnetwork/utils/test"
 	"github.com/scalarorg/scalar-core/vald/multisig"
@@ -23,6 +22,7 @@ import (
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 	"github.com/scalarorg/scalar-core/x/multisig/types"
 	typestestutils "github.com/scalarorg/scalar-core/x/multisig/types/testutils"
+	"github.com/scalarorg/scalar-core/x/tss/tofnd"
 )
 
 func TestMgr_ProcessSigningStarted(t *testing.T) {

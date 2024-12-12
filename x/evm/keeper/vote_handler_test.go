@@ -17,10 +17,6 @@ import (
 
 	fakemock "github.com/axelarnetwork/axelar-core/testutils/fake/interfaces/mock"
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	reward "github.com/axelarnetwork/axelar-core/x/reward/exported"
-	rewardmock "github.com/axelarnetwork/axelar-core/x/reward/exported/mock"
-	vote "github.com/axelarnetwork/axelar-core/x/vote/exported"
-	votemock "github.com/axelarnetwork/axelar-core/x/vote/exported/mock"
 	"github.com/axelarnetwork/utils/slices"
 	. "github.com/axelarnetwork/utils/test"
 	"github.com/scalarorg/scalar-core/app/params"
@@ -30,7 +26,11 @@ import (
 	"github.com/scalarorg/scalar-core/x/evm/types/mock"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexusmock "github.com/scalarorg/scalar-core/x/nexus/exported/mock"
+	reward "github.com/scalarorg/scalar-core/x/reward/exported"
+	rewardmock "github.com/scalarorg/scalar-core/x/reward/exported/mock"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
+	vote "github.com/scalarorg/scalar-core/x/vote/exported"
+	votemock "github.com/scalarorg/scalar-core/x/vote/exported/mock"
 )
 
 func TestHandleExpiredPoll(t *testing.T) {

@@ -14,12 +14,12 @@ import (
 	"github.com/axelarnetwork/axelar-core/utils"
 	"github.com/axelarnetwork/axelar-core/utils/events"
 	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
-	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
-	vote "github.com/axelarnetwork/axelar-core/x/vote/exported"
 	"github.com/axelarnetwork/utils/funcs"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	tss "github.com/scalarorg/scalar-core/x/tss/exported"
+	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
 var _ types.MsgServiceServer = msgServer{}

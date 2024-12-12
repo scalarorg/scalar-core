@@ -6,10 +6,10 @@ import (
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/tendermint/tendermint/libs/log"
 
-	reward "github.com/axelarnetwork/axelar-core/x/reward/exported"
 	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
-	vote "github.com/axelarnetwork/axelar-core/x/vote/exported"
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
+	reward "github.com/scalarorg/scalar-core/x/reward/exported"
+	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
 //go:generate moq -out ./mock/expected_keepers.go -pkg mock . Voter Nexus Snapshotter BaseKeeper ChainKeeper Rewarder StakingKeeper SlashingKeeper MultisigKeeper

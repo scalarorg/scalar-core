@@ -7,8 +7,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	geth "github.com/ethereum/go-ethereum/core/types"
 
-	voteTypes "github.com/axelarnetwork/axelar-core/x/vote/types"
 	"github.com/scalarorg/scalar-core/x/evm/types"
+	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
 
 // ProcessTransferKeyConfirmation votes on the correctness of an EVM chain key transfer

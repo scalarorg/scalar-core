@@ -6,7 +6,7 @@ package mock
 import (
 	"context"
 	"github.com/scalarorg/scalar-core/vald/tss/rpc"
-	"github.com/axelarnetwork/axelar-core/x/tss/tofnd"
+	"github.com/scalarorg/scalar-core/x/tss/tofnd"
 	"google.golang.org/grpc"
 	"sync"
 )

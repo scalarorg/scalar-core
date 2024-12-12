@@ -3,10 +3,10 @@ package config
 import (
 	"time"
 
-	tss "github.com/axelarnetwork/axelar-core/x/tss/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	btc "github.com/scalarorg/scalar-core/x/btc/types"
 	evm "github.com/scalarorg/scalar-core/x/evm/types"
+	tss "github.com/scalarorg/scalar-core/x/tss/types"
 )
 
 // ValdConfig contains all necessary vald configurations
