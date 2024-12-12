@@ -20,10 +20,10 @@
       }
     },
     {
-      "url": "../../tmp-swagger-gen/axelar/evm/v1beta1/query.swagger.json"
+      "url": "../../tmp-swagger-gen/scalar/evm/v1beta1/query.swagger.json"
     },
     {
-      "url": "../../tmp-swagger-gen/axelar/evm/v1beta1/service.swagger.json",
+      "url": "../../tmp-swagger-gen/scalar/evm/v1beta1/service.swagger.json",
       "operationIds": {
         "rename": {
           "Link": "EvmLink",
@@ -34,10 +34,10 @@
       }
     },
     {
-      "url": "../../tmp-swagger-gen/axelar/multisig/v1beta1/query.swagger.json"
+      "url": "../../tmp-swagger-gen/scalar/multisig/v1beta1/query.swagger.json"
     },
     {
-      "url": "../../tmp-swagger-gen/axelar/multisig/v1beta1/service.swagger.json",
+      "url": "../../tmp-swagger-gen/scalar/multisig/v1beta1/service.swagger.json",
       "operationIds": {
         "rename": {
           "Params": "MultisigParams"
@@ -45,10 +45,10 @@
       }
     },
     {
-      "url": "../../tmp-swagger-gen/axelar/nexus/v1beta1/query.swagger.json"
+      "url": "../../tmp-swagger-gen/scalar/nexus/v1beta1/query.swagger.json"
     },
     {
-      "url": "../../tmp-swagger-gen/axelar/nexus/v1beta1/service.swagger.json",
+      "url": "../../tmp-swagger-gen/scalar/nexus/v1beta1/service.swagger.json",
       "operationIds": {
         "rename": {
           "Params": "NexusParams"

@@ -1,0 +1,91 @@
+syntax = "proto3";
+package scalar.multisig.v1beta1;
+
+option go_package = "github.com/scalarorg/scalar-core/x/multisig/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+import "axelar/permission/exported/v1beta1/types.proto";
+
+message StartKeygenRequest {
+  option (axelar.permission.exported.v1beta1.permission_role) =
+      ROLE_CHAIN_MANAGEMENT;
+
+  string sender = 1 [ (gogoproto.casttype) =
+                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string key_id = 2 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+  ];
+}
+
+message StartKeygenResponse {}
+
+message SubmitPubKeyRequest {
+  option (axelar.permission.exported.v1beta1.permission_role) =
+      ROLE_UNRESTRICTED;
+
+  string sender = 1 [ (gogoproto.casttype) =
+                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string key_id = 2 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+  ];
+  bytes pub_key = 3
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/multisig/exported.PublicKey" ];
+  bytes signature = 4 [ (gogoproto.casttype) = "Signature" ];
+}
+
+message SubmitPubKeyResponse {}
+
+message SubmitSignatureRequest {
+  option (axelar.permission.exported.v1beta1.permission_role) =
+      ROLE_UNRESTRICTED;
+
+  string sender = 1 [ (gogoproto.casttype) =
+                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
+  bytes signature = 3 [ (gogoproto.casttype) = "Signature" ];
+}
+
+message SubmitSignatureResponse {}
+
+message RotateKeyRequest {
+  option (axelar.permission.exported.v1beta1.permission_role) =
+      ROLE_CHAIN_MANAGEMENT;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string key_id = 3 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+  ];
+}
+
+message RotateKeyResponse {}
+
+message KeygenOptOutRequest {
+  option (axelar.permission.exported.v1beta1.permission_role) =
+      ROLE_UNRESTRICTED;
+
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+}
+
+message KeygenOptOutResponse {}
+
+message KeygenOptInRequest {
+  option (axelar.permission.exported.v1beta1.permission_role) =
+      ROLE_UNRESTRICTED;
+
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+}
+
+message KeygenOptInResponse {}

@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/types"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
 )
 

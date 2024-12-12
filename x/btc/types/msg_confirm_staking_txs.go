@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 // NewConfirmStakingTxsRequest creates a message of type ConfirmStakingTxsRequest

@@ -3,10 +3,10 @@ package keeper
 import (
 	"fmt"
 
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/axelarnetwork/utils/funcs"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/x/btc/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 
 	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	vote "github.com/axelarnetwork/axelar-core/x/vote/exported"

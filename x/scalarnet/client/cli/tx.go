@@ -17,8 +17,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/axelarnetwork/axelar-core/utils"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 )
 
 const (

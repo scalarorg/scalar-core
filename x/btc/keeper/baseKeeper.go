@@ -11,9 +11,9 @@ import (
 
 	"github.com/axelarnetwork/axelar-core/utils"
 	"github.com/axelarnetwork/axelar-core/utils/key"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/x/btc/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 var (

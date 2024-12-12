@@ -8,7 +8,7 @@ import "google/protobuf/duration.proto";
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "cosmos_proto/cosmos.proto";
-import "axelar/nexus/exported/v1beta1/types.proto";
+import "scalar/nexus/exported/v1beta1/types.proto";
 import "scalar/scalarnet/v1beta1/types.proto";
 import "axelar/permission/exported/v1beta1/types.proto";
 
@@ -24,7 +24,7 @@ message LinkRequest {
   string recipient_addr = 2;
   string recipient_chain = 3
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string asset = 4;
 }
 
@@ -72,7 +72,7 @@ message RegisterIBCPathRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string path = 3;
 }
 
@@ -85,20 +85,20 @@ message AddCosmosBasedChainRequest {
       ROLE_ACCESS_CONTROL;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
-  axelar.nexus.exported.v1beta1.Chain chain = 2 [
+  scalar.nexus.exported.v1beta1.Chain chain = 2 [
     deprecated = true,
     (gogoproto.nullable) = false
   ]; // chain was deprecated in v0.27
   string addr_prefix = 3;
   reserved 4; // min_amount was removed in v0.15
-  repeated axelar.nexus.exported.v1beta1.Asset native_assets = 5 [
+  repeated scalar.nexus.exported.v1beta1.Asset native_assets = 5 [
     deprecated = true,
     (gogoproto.nullable) = false
   ]; // native_assets was deprecated in v0.27
   // TODO: Rename this to `chain` after v1beta1 -> v1 version bump
   string cosmos_chain = 6
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string ibc_path = 7 [ (gogoproto.customname) = "IBCPath" ];
 }
 
@@ -113,8 +113,8 @@ message RegisterAssetRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
-  axelar.nexus.exported.v1beta1.Asset asset = 3
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  scalar.nexus.exported.v1beta1.Asset asset = 3
       [ (gogoproto.nullable) = false ];
   bytes limit = 4 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
@@ -158,13 +158,13 @@ message RetryIBCTransferRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2 [
     (gogoproto.casttype) =
-        "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName",
+        "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName",
     deprecated = true
   ];
   uint64 id = 3 [
     (gogoproto.customname) = "ID",
     (gogoproto.casttype) =
-        "github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID"
+        "github.com/scalarorg/scalar-core/x/nexus/exported.TransferID"
   ];
 }
 
@@ -191,7 +191,7 @@ message CallContractRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string contract_address = 3;
   bytes payload = 4;
   Fee fee = 5;

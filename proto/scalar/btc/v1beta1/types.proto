@@ -37,8 +37,6 @@ message Proof {
   repeated string signatures = 4;
 }
 
-
-
 enum StakingTxStatus {
   option (gogoproto.goproto_enum_prefix) = true;
   option (gogoproto.goproto_enum_stringer) = true;
@@ -66,10 +64,10 @@ message StakingTx {
   string asset = 3; // TODO: change to asset type: sats, runes, btc, etc
   string destination_chain = 4
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   bytes destination_recipient_address = 5
       [ (gogoproto.customtype) =
-            "github.com/axelarnetwork/axelar-core/x/evm/types.Address" ];
+            "github.com/scalarorg/scalar-core/x/evm/types.Address" ];
   uint64 log_index = 6;
 }
 
@@ -87,7 +85,7 @@ message CommandBatchMetadata {
   string key_id = 6 [
     (gogoproto.customname) = "KeyID",
     (gogoproto.casttype) =
-        "github.com/axelarnetwork/axelar-core/x/multisig/exported.KeyID"
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
   bytes prev_batched_commands_id = 7
       [ (gogoproto.customname) = "PrevBatchedCommandsID" ];
@@ -112,7 +110,7 @@ message Command {
   string key_id = 3 [
     (gogoproto.customname) = "KeyID",
     (gogoproto.casttype) =
-        "github.com/axelarnetwork/axelar-core/x/multisig/exported.KeyID"
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
   CommandType type = 4;
 }
@@ -134,11 +132,11 @@ message StakingTxMetadata {
   bytes destination_contract_address = 10 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) =
-        "github.com/axelarnetwork/axelar-core/x/evm/types.Address"
+        "github.com/scalarorg/scalar-core/x/evm/types.Address"
   ];
   bytes destination_recipient_address = 11 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) =
-        "github.com/axelarnetwork/axelar-core/x/evm/types.Address"
+        "github.com/scalarorg/scalar-core/x/evm/types.Address"
   ];
 }

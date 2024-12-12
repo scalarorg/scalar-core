@@ -10,7 +10,7 @@ import (
 	"golang.org/x/exp/maps"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 

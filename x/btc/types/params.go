@@ -4,8 +4,8 @@ import (
 	fmt "fmt"
 
 	utils "github.com/axelarnetwork/axelar-core/utils"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/axelarnetwork/utils/log"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 )

@@ -29,7 +29,7 @@ message IBCTransfer {
   uint64 id = 7 [
     (gogoproto.customname) = "ID",
     (gogoproto.casttype) =
-        "github.com/axelarnetwork/axelar-core/x/nexus/exported.TransferID"
+        "github.com/scalarorg/scalar-core/x/nexus/exported.TransferID"
   ];
   Status status = 8;
 }
@@ -37,7 +37,7 @@ message IBCTransfer {
 message CosmosChain {
   string name = 1
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string ibc_path = 2 [ (gogoproto.customname) = "IBCPath" ];
   repeated Asset assets = 3 [ (gogoproto.nullable) = false, deprecated = true ];
   string addr_prefix = 4;

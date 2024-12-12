@@ -11,7 +11,7 @@ import (
 
 	"github.com/scalarorg/scalar-core/x/btc/types"
 
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 // GetTxCmd returns the transaction commands for this module

@@ -17,7 +17,7 @@ message ConfirmStakingTxsRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   repeated bytes tx_ids = 3 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "Hash",
@@ -34,7 +34,7 @@ message EventConfirmStakingTxsStarted {
   ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   uint64 confirmation_height = 4;
   repeated bytes participants = 5
       [ (gogoproto.casttype) =

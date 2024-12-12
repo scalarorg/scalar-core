@@ -9,9 +9,9 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
-	evm "github.com/axelarnetwork/axelar-core/x/evm/types"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/axelarnetwork/utils/funcs"
+	evm "github.com/scalarorg/scalar-core/x/evm/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 var (

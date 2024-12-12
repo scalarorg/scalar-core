@@ -18,9 +18,9 @@ package types_test
 //
 // "github.com/axelarnetwork/axelar-core/testutils/rand"
 // "github.com/axelarnetwork/axelar-core/utils"
-// evmtestutils "github.com/axelarnetwork/axelar-core/x/evm/types/testutils"
-// nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
-// nexustestutils "github.com/axelarnetwork/axelar-core/x/nexus/exported/testutils"
+// evmtestutils "github.com/scalarorg/scalar-core/x/evm/types/testutils"
+// nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+// nexustestutils "github.com/scalarorg/scalar-core/x/nexus/exported/testutils"
 // "github.com/axelarnetwork/utils/funcs"
 // "github.com/axelarnetwork/utils/slices"
 // "github.com/scalarorg/scalar-core/x/scalarnet/types"

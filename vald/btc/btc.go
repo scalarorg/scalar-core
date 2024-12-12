@@ -14,11 +14,11 @@ import (
 
 	"github.com/axelarnetwork/axelar-core/sdk-utils/broadcast"
 	"github.com/axelarnetwork/axelar-core/utils/errors"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/axelarnetwork/utils/log"
 	"github.com/axelarnetwork/utils/monads/results"
 	"github.com/axelarnetwork/utils/slices"
 	sdkClient "github.com/cosmos/cosmos-sdk/client"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 // ErrNotFinalized is returned when a transaction is not finalized

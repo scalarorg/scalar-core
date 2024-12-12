@@ -8,8 +8,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
 
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
-	nexusTypes "github.com/axelarnetwork/axelar-core/x/nexus/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	nexusTypes "github.com/scalarorg/scalar-core/x/nexus/types"
 )
 
 var _ types.QueryServiceServer = Querier{}

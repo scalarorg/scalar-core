@@ -12,8 +12,8 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 
 	"github.com/axelarnetwork/axelar-core/utils/events"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/keeper"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"

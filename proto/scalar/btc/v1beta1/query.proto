@@ -24,7 +24,7 @@ message BatchedCommandsResponse {
   string key_id = 4 [
     (gogoproto.customname) = "KeyID",
     (gogoproto.casttype) =
-        "github.com/axelarnetwork/axelar-core/x/multisig/exported.KeyID"
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
   reserved 5; // signature was removed in v0.20.0
   string execute_data = 6;

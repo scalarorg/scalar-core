@@ -25,7 +25,6 @@ import (
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/axelarnetwork/axelar-core/app"
 	"github.com/axelarnetwork/axelar-core/cmd/axelard/cmd/utils"
 	"github.com/axelarnetwork/axelar-core/sdk-utils/broadcast"
 	errors2 "github.com/axelarnetwork/axelar-core/utils/errors"
@@ -35,8 +34,6 @@ import (
 	grpc "github.com/axelarnetwork/axelar-core/vald/tofnd_grpc"
 	"github.com/axelarnetwork/axelar-core/vald/tss"
 	axelarnet "github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
-	evmTypes "github.com/axelarnetwork/axelar-core/x/evm/types"
-	multisigTypes "github.com/axelarnetwork/axelar-core/x/multisig/types"
 	"github.com/axelarnetwork/axelar-core/x/tss/tofnd"
 	tssTypes "github.com/axelarnetwork/axelar-core/x/tss/types"
 	tmEvents "github.com/axelarnetwork/tm-events/events"
@@ -46,10 +43,13 @@ import (
 	"github.com/axelarnetwork/utils/jobs"
 	"github.com/axelarnetwork/utils/log"
 	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/vald/btc"
 	btcRPC "github.com/scalarorg/scalar-core/vald/btc/rpc"
 	"github.com/scalarorg/scalar-core/vald/config"
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
+	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
+	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 )
 
 // RW grants -rw------- file permissions

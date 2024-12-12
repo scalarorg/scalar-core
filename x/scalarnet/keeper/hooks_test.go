@@ -18,9 +18,9 @@ package keeper_test
 
 // 	"github.com/axelarnetwork/axelar-core/testutils/fake"
 // 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-// 	evm "github.com/axelarnetwork/axelar-core/x/evm/exported"
-// 	evmkeeper "github.com/axelarnetwork/axelar-core/x/evm/keeper"
-// 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
+// 	evm "github.com/scalarorg/scalar-core/x/evm/exported"
+// 	evmkeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
+// 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 // 	"github.com/axelarnetwork/utils/funcs"
 // 	. "github.com/axelarnetwork/utils/test"
 // 	"github.com/scalarorg/scalar-core/app"

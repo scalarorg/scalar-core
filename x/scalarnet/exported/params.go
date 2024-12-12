@@ -2,7 +2,7 @@ package exported
 
 import (
 	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 const (

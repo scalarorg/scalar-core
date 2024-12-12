@@ -10,8 +10,8 @@ package keeper_test
 
 // 	"github.com/axelarnetwork/axelar-core/testutils/fake"
 // 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-// 	evm "github.com/axelarnetwork/axelar-core/x/evm/exported"
-// 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
+// 	evm "github.com/scalarorg/scalar-core/x/evm/exported"
+// 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet/exported"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet/keeper"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet/types"

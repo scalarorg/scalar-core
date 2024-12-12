@@ -3,7 +3,7 @@ syntax = "proto3";
 package scalar.scalarnet.v1beta1;
 
 import "gogoproto/gogo.proto";
-import "axelar/nexus/exported/v1beta1/types.proto";
+import "scalar/nexus/exported/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/scalarnet/types";
 option (gogoproto.goproto_getters_all) = false;
@@ -23,7 +23,7 @@ message ContractCall {
 
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string contract_address = 2;
   bytes payload = 3;
 }

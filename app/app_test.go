@@ -21,11 +21,11 @@ import (
 	encproto "google.golang.org/grpc/encoding/proto"
 
 	"github.com/axelarnetwork/axelar-core/testutils/fake"
-	multisig "github.com/axelarnetwork/axelar-core/x/multisig/types"
-	"github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/axelarnetwork/utils/funcs"
 	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/app/params"
+	multisig "github.com/scalarorg/scalar-core/x/multisig/types"
+	"github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 func TestNewScalarApp(t *testing.T) {

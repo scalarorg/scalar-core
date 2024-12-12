@@ -12,9 +12,9 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/axelarnetwork/axelar-core/testutils/fake"
-	nexusTypes "github.com/axelarnetwork/axelar-core/x/nexus/types"
 	. "github.com/axelarnetwork/utils/test"
 	"github.com/scalarorg/scalar-core/app"
+	nexusTypes "github.com/scalarorg/scalar-core/x/nexus/types"
 )
 
 func TestMigratePreInitializedModuleAccounts(t *testing.T) {

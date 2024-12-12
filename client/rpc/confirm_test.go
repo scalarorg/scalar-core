@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/client/rpc"
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 const (

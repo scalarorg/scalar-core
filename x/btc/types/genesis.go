@@ -2,7 +2,7 @@ package types
 
 import (
 	utils "github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/axelar-core/x/nexus/exported"
+	"github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 const (

@@ -14,9 +14,9 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
-	nexustestutils "github.com/axelarnetwork/axelar-core/x/nexus/exported/testutils"
 	"github.com/axelarnetwork/utils/funcs"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	nexustestutils "github.com/scalarorg/scalar-core/x/nexus/exported/testutils"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
 )
 
