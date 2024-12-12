@@ -12,17 +12,17 @@ package keeper
 // 	"github.com/tendermint/tendermint/libs/log"
 // 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-// 	"github.com/axelarnetwork/axelar-core/app/params"
+// 	"github.com/scalarorg/scalar-core/app/params"
 // 	"github.com/axelarnetwork/axelar-core/testutils/fake"
 // 	"github.com/axelarnetwork/axelar-core/testutils/rand"
 // 	"github.com/axelarnetwork/axelar-core/utils"
-// 	axelarnet "github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
-// 	axelarnetkeeper "github.com/axelarnetwork/axelar-core/x/axelarnet/keeper"
+// 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
+// 	ScalarnetKeeper "github.com/axelarnetwork/axelar-core/x/axelarnet/keeper"
 // 	axelarnetTypes "github.com/axelarnetwork/axelar-core/x/axelarnet/types"
 // 	"github.com/axelarnetwork/axelar-core/x/axelarnet/types/mock"
-// 	evm "github.com/axelarnetwork/axelar-core/x/evm/exported"
-// 	evmkeeper "github.com/axelarnetwork/axelar-core/x/evm/keeper"
-// 	evmTypes "github.com/axelarnetwork/axelar-core/x/evm/types"
+// 	evm "github.com/scalarorg/scalar-core/x/evm/exported"
+// 	evmkeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
+// 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 // 	"github.com/axelarnetwork/utils/funcs"
 // 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 // 	"github.com/scalarorg/scalar-core/x/nexus/types"
@@ -44,13 +44,13 @@ package keeper
 
 // 	axelarnetK := &mock.BaseKeeperMock{
 // 		GetCosmosChainByNameFunc: func(ctx sdk.Context, chain exported.ChainName) (axelarnetTypes.CosmosChain, bool) {
-// 			return axelarnetTypes.CosmosChain{Name: axelarnet.Axelarnet.Name, AddrPrefix: "axelar"}, true
+// 			return axelarnetTypes.CosmosChain{Name: scalarnet.Scalarnet.Name, AddrPrefix: "axelar"}, true
 // 		},
 // 	}
 
 // 	addressValidators := types.NewAddressValidators()
 // 	addressValidators.AddAddressValidator(evmTypes.ModuleName, evmkeeper.NewAddressValidator()).
-// 		AddAddressValidator(axelarnetTypes.ModuleName, axelarnetkeeper.NewAddressValidator(axelarnetK))
+// 		AddAddressValidator(axelarnetTypes.ModuleName, ScalarnetKeeper.NewAddressValidator(axelarnetK))
 
 // 	addressValidators.Seal()
 // 	keeper.SetAddressValidators(addressValidators)
@@ -61,7 +61,7 @@ package keeper
 // func getRandomAxelarnetAddress() exported.CrossChainAddress {
 // 	sdk.GetConfig().SetBech32PrefixForAccount("axelar", "axelar")
 // 	return exported.CrossChainAddress{
-// 		Chain:   axelarnet.Axelarnet,
+// 		Chain:   scalarnet.Scalarnet,
 // 		Address: rand.AccAddr().String(),
 // 	}
 // }
@@ -110,18 +110,18 @@ package keeper
 
 // 	expected := types.DefaultGenesisState()
 
-// 	if err := keeper.RegisterFee(ctx, axelarnet.Axelarnet, testutils.RandFee(axelarnet.Axelarnet.Name, axelarnet.NativeAsset)); err != nil {
+// 	if err := keeper.RegisterFee(ctx, scalarnet.Scalarnet, testutils.RandFee(scalarnet.Scalarnet.Name, scalarnet.NativeAsset)); err != nil {
 // 		panic(err)
 // 	}
 
-// 	if err := keeper.RegisterAsset(ctx, evm.Ethereum, exported.NewAsset(axelarnet.NativeAsset, false), utils.MaxUint, time.Hour); err != nil {
+// 	if err := keeper.RegisterAsset(ctx, evm.Ethereum, exported.NewAsset(scalarnet.NativeAsset, false), utils.MaxUint, time.Hour); err != nil {
 // 		panic(err)
 // 	}
-// 	if err := keeper.RegisterFee(ctx, evm.Ethereum, testutils.RandFee(evm.Ethereum.Name, axelarnet.NativeAsset)); err != nil {
+// 	if err := keeper.RegisterFee(ctx, evm.Ethereum, testutils.RandFee(evm.Ethereum.Name, scalarnet.NativeAsset)); err != nil {
 // 		panic(err)
 // 	}
 
-// 	rateLimit := testutils.RandRateLimit(axelarnet.Axelarnet.Name, axelarnet.NativeAsset)
+// 	rateLimit := testutils.RandRateLimit(scalarnet.Scalarnet.Name, scalarnet.NativeAsset)
 // 	funcs.MustNoErr(keeper.SetRateLimit(ctx, rateLimit.Chain, rateLimit.Limit, rateLimit.Window))
 // 	expected.RateLimits = keeper.getRateLimits(ctx)
 
@@ -147,10 +147,10 @@ package keeper
 // 		depositAddress := linkedAddress.DepositAddress
 // 		recipientAddress := linkedAddress.RecipientAddress
 
-// 		_, minFee, maxFee, err := keeper.getCrossChainFees(ctx, depositAddress.Chain, recipientAddress.Chain, axelarnet.NativeAsset)
+// 		_, minFee, maxFee, err := keeper.getCrossChainFees(ctx, depositAddress.Chain, recipientAddress.Chain, scalarnet.NativeAsset)
 // 		assert.Nil(t, err)
 
-// 		asset := sdk.NewCoin(axelarnet.NativeAsset, testutils.RandInt(minFee.Int64()/2, maxFee.Int64()*2))
+// 		asset := sdk.NewCoin(scalarnet.NativeAsset, testutils.RandInt(minFee.Int64()/2, maxFee.Int64()*2))
 // 		fees, err := keeper.ComputeTransferFee(ctx, depositAddress.Chain, recipientAddress.Chain, asset)
 // 		assert.Nil(t, err)
 
@@ -182,13 +182,13 @@ package keeper
 
 // 	expected.ChainStates = []types.ChainState{
 // 		{
-// 			Chain:     axelarnet.Axelarnet,
-// 			Assets:    []exported.Asset{exported.NewAsset(axelarnet.NativeAsset, true)},
+// 			Chain:     scalarnet.Scalarnet,
+// 			Assets:    []exported.Asset{exported.NewAsset(scalarnet.NativeAsset, true)},
 // 			Activated: true,
 // 		},
 // 		{
 // 			Chain:     evm.Ethereum,
-// 			Assets:    []exported.Asset{exported.NewAsset(axelarnet.NativeAsset, false)},
+// 			Assets:    []exported.Asset{exported.NewAsset(scalarnet.NativeAsset, false)},
 // 			Activated: true,
 // 		},
 // 	}

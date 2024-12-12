@@ -12,13 +12,13 @@ import (
 
 	"github.com/axelarnetwork/axelar-core/testutils/fake"
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	axelarnet "github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
 	"github.com/axelarnetwork/axelar-core/x/axelarnet/types/testutils"
 	"github.com/axelarnetwork/utils/funcs"
 	. "github.com/axelarnetwork/utils/test"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/types"
 	"github.com/scalarorg/scalar-core/x/nexus/types/mock"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
 func TestLockableAsset(t *testing.T) {
@@ -44,7 +44,7 @@ func TestLockableAsset(t *testing.T) {
 		coin = sdk.NewCoin(rand.Denom(5, 10), sdk.NewInt(rand.PosI64()))
 		nexus.GetChainByNativeAssetFunc = func(ctx sdk.Context, asset string) (exported.Chain, bool) {
 			if asset == coin.Denom {
-				return axelarnet.Axelarnet, true
+				return scalarnet.Scalarnet, true
 			}
 
 			return exported.Chain{}, false
@@ -58,7 +58,7 @@ func TestLockableAsset(t *testing.T) {
 			return exported.Chain{}, false
 		}
 		nexus.IsAssetRegisteredFunc = func(ctx sdk.Context, chain exported.Chain, asset string) bool {
-			return chain == axelarnet.Axelarnet && asset == coin.Denom
+			return chain == scalarnet.Scalarnet && asset == coin.Denom
 		}
 	})
 
@@ -71,13 +71,13 @@ func TestLockableAsset(t *testing.T) {
 
 		nexus.GetChainByNativeAssetFunc = func(ctx sdk.Context, asset string) (exported.Chain, bool) {
 			if asset == trace.GetBaseDenom() {
-				return axelarnet.Axelarnet, true
+				return scalarnet.Scalarnet, true
 			}
 
 			return exported.Chain{}, false
 		}
 		ibc.GetIBCPathFunc = func(ctx sdk.Context, chain exported.ChainName) (string, bool) {
-			return path, chain == axelarnet.Axelarnet.Name
+			return path, chain == scalarnet.Scalarnet.Name
 		}
 
 		coin = sdk.NewCoin(trace.GetBaseDenom(), sdk.NewInt(rand.PosI64()))
@@ -98,7 +98,7 @@ func TestLockableAsset(t *testing.T) {
 			return ibctypes.DenomTrace{}, fmt.Errorf("denom not found")
 		}
 		ibc.GetIBCPathFunc = func(ctx sdk.Context, chain exported.ChainName) (string, bool) {
-			if chain == axelarnet.Axelarnet.Name {
+			if chain == scalarnet.Scalarnet.Name {
 				return path, true
 			}
 
@@ -106,7 +106,7 @@ func TestLockableAsset(t *testing.T) {
 		}
 		nexus.GetChainByNativeAssetFunc = func(ctx sdk.Context, asset string) (exported.Chain, bool) {
 			if asset == trace.BaseDenom {
-				return axelarnet.Axelarnet, true
+				return scalarnet.Scalarnet, true
 			}
 
 			return exported.Chain{}, false
@@ -133,7 +133,7 @@ func TestLockableAsset(t *testing.T) {
 			When("registered ibc path differs from ics20 trace", func() {
 				registeredPath := testutils.RandomIBCPath()
 				ibc.GetIBCPathFunc = func(ctx sdk.Context, chain exported.ChainName) (string, bool) {
-					if chain == axelarnet.Axelarnet.Name {
+					if chain == scalarnet.Scalarnet.Name {
 						return registeredPath, true
 					}
 					return "", false

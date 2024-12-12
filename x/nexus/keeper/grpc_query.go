@@ -10,10 +10,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
 	"github.com/axelarnetwork/utils/slices"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/types"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
 var _ types.QueryServiceServer = Querier{}
@@ -21,14 +21,14 @@ var _ types.QueryServiceServer = Querier{}
 // Querier implements the grpc queries for the nexus module
 type Querier struct {
 	keeper    Keeper
-	axelarnet types.AxelarnetKeeper
+	scalarnet types.ScalarnetKeeper
 }
 
 // NewGRPCQuerier creates a new nexus Querier
-func NewGRPCQuerier(k Keeper, a types.AxelarnetKeeper) Querier {
+func NewGRPCQuerier(k Keeper, s types.ScalarnetKeeper) Querier {
 	return Querier{
 		keeper:    k,
-		axelarnet: a,
+		scalarnet: s,
 	}
 }
 
@@ -134,8 +134,8 @@ func (q Querier) TransferFee(c context.Context, req *types.TransferFeeRequest) (
 
 	// When source chain is another cosmos chain, use axelarnet for fee info where deposit address is generated on
 	feeCalcSourceChain := sourceChain
-	if q.axelarnet.IsCosmosChain(ctx, feeCalcSourceChain.Name) {
-		feeCalcSourceChain = exported.Axelarnet
+	if q.scalarnet.IsCosmosChain(ctx, feeCalcSourceChain.Name) {
+		feeCalcSourceChain = scalarnet.Scalarnet
 	}
 
 	fee, err := q.keeper.ComputeTransferFee(ctx, feeCalcSourceChain, destinationChain, amount)

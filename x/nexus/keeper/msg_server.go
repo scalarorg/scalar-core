@@ -24,17 +24,17 @@ type msgServer struct {
 	snapshotter types.Snapshotter
 	slashing    types.SlashingKeeper
 	staking     types.StakingKeeper
-	axelarnet   types.AxelarnetKeeper
+	scalarnet   types.ScalarnetKeeper
 }
 
 // NewMsgServerImpl returns an implementation of the nexus MsgServiceServer interface for the provided Keeper.
-func NewMsgServerImpl(k types.Nexus, snapshotter types.Snapshotter, slashing types.SlashingKeeper, staking types.StakingKeeper, axelarnet types.AxelarnetKeeper) types.MsgServiceServer {
+func NewMsgServerImpl(k types.Nexus, snapshotter types.Snapshotter, slashing types.SlashingKeeper, staking types.StakingKeeper, scalarnet types.ScalarnetKeeper) types.MsgServiceServer {
 	return msgServer{
 		Nexus:       k,
 		snapshotter: snapshotter,
 		slashing:    slashing,
 		staking:     staking,
-		axelarnet:   axelarnet,
+		scalarnet:   scalarnet,
 	}
 }
 
@@ -62,7 +62,7 @@ func (s msgServer) RegisterChainMaintainer(c context.Context, req *types.Registe
 			continue
 		}
 
-		if s.axelarnet.IsCosmosChain(ctx, chain.Name) {
+		if s.scalarnet.IsCosmosChain(ctx, chain.Name) {
 			s.Logger(ctx).Debug(fmt.Sprintf("'%s' is a cosmos chain, skipping maintainer registration", chain.Name))
 			continue
 		}
@@ -187,7 +187,7 @@ func (s msgServer) activateChain(ctx sdk.Context, chain exported.Chain) {
 	}
 
 	// no chain maintainer for cosmos chains
-	if !s.axelarnet.IsCosmosChain(ctx, chain.Name) && !s.isActivationThresholdMet(ctx, chain) {
+	if !s.scalarnet.IsCosmosChain(ctx, chain.Name) && !s.isActivationThresholdMet(ctx, chain) {
 		return
 	}
 

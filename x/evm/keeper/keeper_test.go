@@ -17,7 +17,7 @@ package keeper_test
 // 	"github.com/axelarnetwork/axelar-core/testutils"
 // 	"github.com/axelarnetwork/axelar-core/testutils/fake"
 // 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-// 	axelarnet "github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
+// 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 // 	multisigTestUtils "github.com/scalarorg/scalar-core/x/multisig/exported/testutils"
 // 	types2 "github.com/scalarorg/scalar-core/x/multisig/types"
 // 	testutils2 "github.com/scalarorg/scalar-core/x/multisig/types/testutils"
@@ -251,7 +251,7 @@ package keeper_test
 // 				TxID:             types.Hash(common.HexToHash(rand.HexStr(common.HashLength))),
 // 				Amount:           sdk.NewUint(uint64(rand.I64Between(1000, 1000000))),
 // 				Asset:            "asset",
-// 				DestinationChain: axelarnet.Axelarnet.Name,
+// 				DestinationChain: scalarnet.Scalarnet.Name,
 // 				BurnerAddress:    types.Address(common.HexToAddress(rand.HexStr(common.AddressLength))),
 // 			}
 // 			deposits[deposit.BurnerAddress.Hex()] = deposit

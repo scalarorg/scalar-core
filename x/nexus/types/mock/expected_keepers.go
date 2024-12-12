@@ -1842,26 +1842,26 @@ func (mock *SnapshotterMock) GetProxyCalls() []struct {
 	return calls
 }
 
-// Ensure, that AxelarnetKeeperMock does implement nexustypes.AxelarnetKeeper.
+// Ensure, that ScalarnetKeeperMock does implement nexustypes.ScalarnetKeeper.
 // If this is not the case, regenerate this file with moq.
-var _ nexustypes.AxelarnetKeeper = &AxelarnetKeeperMock{}
+var _ nexustypes.ScalarnetKeeper = &ScalarnetKeeperMock{}
 
-// AxelarnetKeeperMock is a mock implementation of nexustypes.AxelarnetKeeper.
+// ScalarnetKeeperMock is a mock implementation of nexustypes.ScalarnetKeeper.
 //
-//	func TestSomethingThatUsesAxelarnetKeeper(t *testing.T) {
+//	func TestSomethingThatUsesScalarnetKeeper(t *testing.T) {
 //
-//		// make and configure a mocked nexustypes.AxelarnetKeeper
-//		mockedAxelarnetKeeper := &AxelarnetKeeperMock{
+//		// make and configure a mocked nexustypes.ScalarnetKeeper
+//		mockedScalarnetKeeper := &ScalarnetKeeperMock{
 //			IsCosmosChainFunc: func(ctx cosmossdktypes.Context, chain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName) bool {
 //				panic("mock out the IsCosmosChain method")
 //			},
 //		}
 //
-//		// use mockedAxelarnetKeeper in code that requires nexustypes.AxelarnetKeeper
+//		// use mockedScalarnetKeeper in code that requires nexustypes.ScalarnetKeeper
 //		// and then make assertions.
 //
 //	}
-type AxelarnetKeeperMock struct {
+type ScalarnetKeeperMock struct {
 	// IsCosmosChainFunc mocks the IsCosmosChain method.
 	IsCosmosChainFunc func(ctx cosmossdktypes.Context, chain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName) bool
 
@@ -1879,9 +1879,9 @@ type AxelarnetKeeperMock struct {
 }
 
 // IsCosmosChain calls IsCosmosChainFunc.
-func (mock *AxelarnetKeeperMock) IsCosmosChain(ctx cosmossdktypes.Context, chain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName) bool {
+func (mock *ScalarnetKeeperMock) IsCosmosChain(ctx cosmossdktypes.Context, chain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName) bool {
 	if mock.IsCosmosChainFunc == nil {
-		panic("AxelarnetKeeperMock.IsCosmosChainFunc: method is nil but AxelarnetKeeper.IsCosmosChain was just called")
+		panic("ScalarnetKeeperMock.IsCosmosChainFunc: method is nil but ScalarnetKeeper.IsCosmosChain was just called")
 	}
 	callInfo := struct {
 		Ctx   cosmossdktypes.Context
@@ -1899,8 +1899,8 @@ func (mock *AxelarnetKeeperMock) IsCosmosChain(ctx cosmossdktypes.Context, chain
 // IsCosmosChainCalls gets all the calls that were made to IsCosmosChain.
 // Check the length with:
 //
-//	len(mockedAxelarnetKeeper.IsCosmosChainCalls())
-func (mock *AxelarnetKeeperMock) IsCosmosChainCalls() []struct {
+//	len(mockedScalarnetKeeper.IsCosmosChainCalls())
+func (mock *ScalarnetKeeperMock) IsCosmosChainCalls() []struct {
 	Ctx   cosmossdktypes.Context
 	Chain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName
 } {

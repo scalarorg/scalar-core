@@ -17,7 +17,6 @@ import (
 
 	fakemock "github.com/axelarnetwork/axelar-core/testutils/fake/interfaces/mock"
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	axelarnet "github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
 	reward "github.com/axelarnetwork/axelar-core/x/reward/exported"
 	rewardmock "github.com/axelarnetwork/axelar-core/x/reward/exported/mock"
 	vote "github.com/axelarnetwork/axelar-core/x/vote/exported"
@@ -31,6 +30,7 @@ import (
 	"github.com/scalarorg/scalar-core/x/evm/types/mock"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexusmock "github.com/scalarorg/scalar-core/x/nexus/exported/mock"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
 func TestHandleExpiredPoll(t *testing.T) {
@@ -313,8 +313,8 @@ func TestHandleResult(t *testing.T) {
 				switch chainName {
 				case exported.Ethereum.Name:
 					return exported.Ethereum, true
-				case axelarnet.Axelarnet.Name:
-					return axelarnet.Axelarnet, true
+				case scalarnet.Scalarnet.Name:
+					return scalarnet.Scalarnet, true
 				default:
 					return nexus.Chain{}, false
 				}

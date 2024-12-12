@@ -10,12 +10,12 @@ import (
 
 	"github.com/axelarnetwork/axelar-core/utils"
 	"github.com/axelarnetwork/axelar-core/utils/events"
-	axelarnet "github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
 	"github.com/axelarnetwork/utils/funcs"
 	"github.com/axelarnetwork/utils/slices"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
 func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus) error {
@@ -254,8 +254,8 @@ func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset 
 		return fmt.Errorf("unsupported event type %T", event)
 	}
 
-	if message.Recipient.Chain.Name.Equals(axelarnet.Axelarnet.Name) {
-		return fmt.Errorf("%s is not a supported recipient", axelarnet.Axelarnet.Name)
+	if message.Recipient.Chain.Name.Equals(scalarnet.Scalarnet.Name) {
+		return fmt.Errorf("%s is not a supported recipient", scalarnet.Scalarnet.Name)
 	}
 
 	return n.SetNewMessage(ctx, message)

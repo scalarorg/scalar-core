@@ -5,7 +5,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/axelarnetwork/axelar-core/vald/evm/rpc"
+	"github.com/scalarorg/scalar-core/vald/evm/rpc"
 )
 
 func stringToFinalityOverride(

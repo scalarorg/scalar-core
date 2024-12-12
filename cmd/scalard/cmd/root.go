@@ -40,11 +40,11 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	"github.com/axelarnetwork/axelar-core/config"
-	"github.com/axelarnetwork/axelar-core/vald"
 	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/app/params"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
 	"github.com/scalarorg/scalar-core/cmd/scalard/testnet"
+	"github.com/scalarorg/scalar-core/vald"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 

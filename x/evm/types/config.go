@@ -1,6 +1,6 @@
 package types
 
-import "github.com/axelarnetwork/axelar-core/vald/evm/rpc"
+import "github.com/scalarorg/scalar-core/vald/evm/rpc"
 
 // EVMConfig contains all EVM module configuration values
 type EVMConfig struct {

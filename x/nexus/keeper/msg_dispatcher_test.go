@@ -14,13 +14,13 @@ import (
 
 	"github.com/axelarnetwork/axelar-core/testutils/fake"
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	axelarnet "github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
-	evm "github.com/axelarnetwork/axelar-core/x/evm/exported"
 	. "github.com/axelarnetwork/utils/test"
+	evm "github.com/scalarorg/scalar-core/x/evm/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/keeper"
 	"github.com/scalarorg/scalar-core/x/nexus/types"
 	"github.com/scalarorg/scalar-core/x/nexus/types/mock"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
 func TestMessenger_DispatchMsg(t *testing.T) {
@@ -157,8 +157,8 @@ func TestMessenger_DispatchMsg(t *testing.T) {
 				switch chain {
 				case evm.Ethereum.Name:
 					return evm.Ethereum, true
-				case axelarnet.Axelarnet.Name:
-					return axelarnet.Axelarnet, true
+				case scalarnet.Scalarnet.Name:
+					return scalarnet.Scalarnet, true
 				default:
 					return exported.Chain{}, false
 				}
@@ -191,7 +191,7 @@ func TestMessenger_DispatchMsg(t *testing.T) {
 						assert.NoError(t, err)
 
 						assert.Len(t, nexus.SetNewMessageCalls(), 1)
-						assert.Equal(t, nexus.SetNewMessageCalls()[0].Msg.Recipient.Chain, axelarnet.Axelarnet)
+						assert.Equal(t, nexus.SetNewMessageCalls()[0].Msg.Recipient.Chain, scalarnet.Scalarnet)
 						assert.Equal(t, nexus.SetNewMessageCalls()[0].Msg.Status, exported.Approved)
 						assert.Nil(t, nexus.SetNewMessageCalls()[0].Msg.Asset)
 
@@ -221,7 +221,7 @@ func TestMessenger_DispatchMsg(t *testing.T) {
 							assert.NoError(t, err)
 
 							assert.Len(t, nexus.SetNewMessageCalls(), 1)
-							assert.Equal(t, nexus.SetNewMessageCalls()[0].Msg.Recipient.Chain, axelarnet.Axelarnet)
+							assert.Equal(t, nexus.SetNewMessageCalls()[0].Msg.Recipient.Chain, scalarnet.Scalarnet)
 							assert.Equal(t, nexus.SetNewMessageCalls()[0].Msg.Status, exported.Approved)
 							assert.Nil(t, nexus.SetNewMessageCalls()[0].Msg.Asset)
 

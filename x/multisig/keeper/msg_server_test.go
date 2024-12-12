@@ -10,7 +10,6 @@ import (
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/axelarnetwork/axelar-core/app"
 	"github.com/axelarnetwork/axelar-core/testutils/fake"
 	rand2 "github.com/axelarnetwork/axelar-core/testutils/rand"
 	"github.com/axelarnetwork/axelar-core/utils"
@@ -19,6 +18,7 @@ import (
 	"github.com/axelarnetwork/utils/slices"
 	. "github.com/axelarnetwork/utils/test"
 	"github.com/axelarnetwork/utils/test/rand"
+	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 	exportedmock "github.com/scalarorg/scalar-core/x/multisig/exported/mock"
 	"github.com/scalarorg/scalar-core/x/multisig/keeper"
