@@ -1,0 +1,30 @@
+syntax = "proto3";
+package scalar.vote.v1beta1;
+
+option go_package = "github.com/scalarorg/scalar-core/x/vote/types";
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "scalar/vote/v1beta1/tx.proto";
+import "scalar/vote/v1beta1/query.proto";
+
+option (gogoproto.goproto_registration) = true;
+
+// Msg defines the vote Msg service.
+service MsgService {
+  rpc Vote(VoteRequest) returns (VoteResponse) {
+    option (google.api.http) = {
+      post : "/scalar/vote/vote"
+      body : "*"
+    };
+  }
+}
+
+// QueryService defines the gRPC querier service.
+service QueryService {
+  rpc Params(ParamsRequest) returns (ParamsResponse) {
+    option (google.api.http) = {
+      get : "/scalar/vote/v1beta1/params"
+    };
+  }
+}

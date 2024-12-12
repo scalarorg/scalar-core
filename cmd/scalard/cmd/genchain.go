@@ -11,9 +11,9 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/spf13/cobra"
 
-	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
 	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	nexusTypes "github.com/scalarorg/scalar-core/x/nexus/types"
+	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 
 	//btctypes "github.com/scalar/scalar-core/x/btc/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"

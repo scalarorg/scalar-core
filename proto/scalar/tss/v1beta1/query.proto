@@ -1,0 +1,14 @@
+syntax = "proto3";
+package scalar.tss.v1beta1;
+
+option go_package = "github.com/scalarorg/scalar-core/x/tss/types";
+
+import "gogoproto/gogo.proto";
+import "scalar/tss/v1beta1/params.proto";
+
+option (gogoproto.goproto_getters_all) = false;
+
+// ParamsRequest represents a message that queries the params
+message ParamsRequest {}
+
+message ParamsResponse { Params params = 1 [ (gogoproto.nullable) = false ]; }

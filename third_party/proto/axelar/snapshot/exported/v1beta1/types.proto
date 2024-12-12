@@ -7,7 +7,7 @@ import "gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 import "cosmos/base/v1beta1/coin.proto";
-import "axelar/tss/exported/v1beta1/types.proto";
+import "scalar/tss/exported/v1beta1/types.proto";
 import "cosmos_proto/cosmos.proto";
 import "cosmos/staking/v1beta1/staking.proto";
 

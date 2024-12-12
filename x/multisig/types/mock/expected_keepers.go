@@ -8,7 +8,7 @@ import (
 	github_com_axelarnetwork_axelar_core_x_multisig_exported "github.com/scalarorg/scalar-core/x/multisig/exported"
 	"github.com/scalarorg/scalar-core/x/multisig/types"
 	github_com_axelarnetwork_axelar_core_x_nexus_exported "github.com/scalarorg/scalar-core/x/nexus/exported"
-	reward "github.com/axelarnetwork/axelar-core/x/reward/exported"
+	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	exported "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingTypes "github.com/cosmos/cosmos-sdk/x/staking/types"

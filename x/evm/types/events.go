@@ -1,8 +1,8 @@
 package types
 
 import (
-	vote "github.com/axelarnetwork/axelar-core/x/vote/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
 // Event types

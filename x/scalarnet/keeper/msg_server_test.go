@@ -26,7 +26,7 @@ package keeper_test
 // nexusmock "github.com/scalarorg/scalar-core/x/nexus/exported/mock"
 // nexustestutils "github.com/scalarorg/scalar-core/x/nexus/exported/testutils"
 // nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
-// tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
+// tss "github.com/scalarorg/scalar-core/x/tss/exported"
 // "github.com/axelarnetwork/utils/funcs"
 // "github.com/axelarnetwork/utils/slices"
 // . "github.com/axelarnetwork/utils/test"

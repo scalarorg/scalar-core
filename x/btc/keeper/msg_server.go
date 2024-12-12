@@ -9,8 +9,8 @@ import (
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 
 	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
-	vote "github.com/axelarnetwork/axelar-core/x/vote/exported"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
 var _ types.MsgServiceServer = msgServer{}

@@ -7,8 +7,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 )
 
 // NewAddChainRequest is the constructor for NewAddChainRequest

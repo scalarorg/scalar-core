@@ -8,9 +8,9 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	geth "github.com/ethereum/go-ethereum/core/types"
 
-	voteTypes "github.com/axelarnetwork/axelar-core/x/vote/types"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
 
 // ProcessGatewayTxConfirmation votes on the correctness of an EVM chain gateway's transactions

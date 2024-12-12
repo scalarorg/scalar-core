@@ -18,8 +18,6 @@ import (
 
 	broadcastmock "github.com/axelarnetwork/axelar-core/sdk-utils/broadcast/mock"
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	vote "github.com/axelarnetwork/axelar-core/x/vote/exported"
-	votetypes "github.com/axelarnetwork/axelar-core/x/vote/types"
 	"github.com/axelarnetwork/utils/funcs"
 	"github.com/axelarnetwork/utils/monads/results"
 	"github.com/axelarnetwork/utils/slices"
@@ -31,6 +29,8 @@ import (
 	"github.com/scalarorg/scalar-core/x/evm/exported"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	vote "github.com/scalarorg/scalar-core/x/vote/exported"
+	votetypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
 
 func TestMgr_ProcessTransferKeyConfirmation(t *testing.T) {

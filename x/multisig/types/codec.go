@@ -5,7 +5,7 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	reward "github.com/axelarnetwork/axelar-core/x/reward/exported"
+	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 )
 
 // RegisterInterfaces registers types and interfaces with the given registry

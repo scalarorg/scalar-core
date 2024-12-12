@@ -2,8 +2,8 @@ package testutils
 
 import (
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
+	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 )
 
 // RandomChain returns a random nexus chain

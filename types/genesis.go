@@ -9,7 +9,6 @@ import (
 	"github.com/axelarnetwork/axelar-core/utils"
 	permissionexported "github.com/axelarnetwork/axelar-core/x/permission/exported"
 	permissiontypes "github.com/axelarnetwork/axelar-core/x/permission/types"
-	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/multisig"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
@@ -29,6 +28,7 @@ import (
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
 	protocoltypes "github.com/scalarorg/scalar-core/x/protocol/types"
+	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 	tmtypes "github.com/tendermint/tendermint/types"
 )
 

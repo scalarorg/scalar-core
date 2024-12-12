@@ -12,7 +12,7 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/spf13/cobra"
 
-	rewardTypes "github.com/axelarnetwork/axelar-core/x/reward/types"
+	rewardTypes "github.com/scalarorg/scalar-core/x/reward/types"
 )
 
 const (

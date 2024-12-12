@@ -11,8 +11,8 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/spf13/cobra"
 
-	"github.com/axelarnetwork/axelar-core/x/vote"
-	voteTypes "github.com/axelarnetwork/axelar-core/x/vote/types"
+	"github.com/scalarorg/scalar-core/x/vote"
+	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
 
 const (

@@ -1,8 +1,8 @@
 package exported
 
 import (
-	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
+	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 )
 
 var (

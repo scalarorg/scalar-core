@@ -5,7 +5,7 @@ option go_package = "github.com/scalarorg/scalar-core/x/nexus/exported";
 
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
-import "axelar/tss/exported/v1beta1/types.proto";
+import "scalar/tss/exported/v1beta1/types.proto";
 
 option (gogoproto.goproto_getters_all) = false;
 
@@ -15,7 +15,7 @@ message Chain {
 
   string name = 1 [ (gogoproto.casttype) = "ChainName" ];
   bool supports_foreign_assets = 3;
-  axelar.tss.exported.v1beta1.KeyType key_type = 4;
+  scalar.tss.exported.v1beta1.KeyType key_type = 4;
   string module = 5;
 }
 

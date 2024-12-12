@@ -15,8 +15,6 @@ import (
 	"github.com/axelarnetwork/axelar-core/testutils/fake"
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
 	"github.com/axelarnetwork/axelar-core/utils"
-	reward "github.com/axelarnetwork/axelar-core/x/reward/exported"
-	rewardmock "github.com/axelarnetwork/axelar-core/x/reward/exported/mock"
 	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	snapshottestutils "github.com/axelarnetwork/axelar-core/x/snapshot/exported/testutils"
 	"github.com/axelarnetwork/utils/funcs"
@@ -29,6 +27,8 @@ import (
 	"github.com/scalarorg/scalar-core/x/multisig/types"
 	"github.com/scalarorg/scalar-core/x/multisig/types/mock"
 	typestestutils "github.com/scalarorg/scalar-core/x/multisig/types/testutils"
+	reward "github.com/scalarorg/scalar-core/x/reward/exported"
+	rewardmock "github.com/scalarorg/scalar-core/x/reward/exported/mock"
 )
 
 func TestEndBlocker(t *testing.T) {

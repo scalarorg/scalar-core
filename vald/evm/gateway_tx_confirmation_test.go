@@ -13,7 +13,6 @@ import (
 
 	mock2 "github.com/axelarnetwork/axelar-core/sdk-utils/broadcast/mock"
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/axelar-core/x/vote/exported"
 	"github.com/axelarnetwork/utils/monads/results"
 	"github.com/scalarorg/scalar-core/vald/evm"
 	evmmock "github.com/scalarorg/scalar-core/vald/evm/mock"
@@ -21,6 +20,7 @@ import (
 	"github.com/scalarorg/scalar-core/vald/evm/rpc/mock"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	"github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
 func TestMgr_ProcessGatewayTxConfirmationMissingBlockNumberNotPanics(t *testing.T) {

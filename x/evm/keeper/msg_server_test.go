@@ -31,7 +31,6 @@ import (
 	"github.com/axelarnetwork/axelar-core/utils"
 	utilsMock "github.com/axelarnetwork/axelar-core/utils/mock"
 	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
-	vote "github.com/axelarnetwork/axelar-core/x/vote/exported"
 	"github.com/axelarnetwork/utils/funcs"
 	"github.com/axelarnetwork/utils/slices"
 	. "github.com/axelarnetwork/utils/test"
@@ -45,6 +44,7 @@ import (
 	multisigTestUtils "github.com/scalarorg/scalar-core/x/multisig/exported/testutils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
+	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
 var (

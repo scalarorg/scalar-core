@@ -17,7 +17,7 @@ message PollMapping {
     (gogoproto.nullable) = false,
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
-        "github.com/axelarnetwork/axelar-core/x/vote/exported.PollID"
+        "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
   ];
 }
 
@@ -44,7 +44,7 @@ message PollFailed {
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
-        "github.com/axelarnetwork/axelar-core/x/vote/exported.PollID",
+        "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
     (gogoproto.nullable) = false
   ];
 }
@@ -61,7 +61,7 @@ message PollExpired {
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
-        "github.com/axelarnetwork/axelar-core/x/vote/exported.PollID",
+        "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
     (gogoproto.nullable) = false
   ];
 }
@@ -78,7 +78,7 @@ message PollCompleted {
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
-        "github.com/axelarnetwork/axelar-core/x/vote/exported.PollID",
+        "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
     (gogoproto.nullable) = false
   ];
 }

@@ -17,13 +17,13 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/axelar-core/x/tss/tofnd"
 	"github.com/axelarnetwork/utils/funcs"
 	"github.com/scalarorg/scalar-core/vald/config"
 	"github.com/scalarorg/scalar-core/vald/tss"
 	evm "github.com/scalarorg/scalar-core/x/evm/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
+	"github.com/scalarorg/scalar-core/x/tss/tofnd"
 )
 
 // GetSignCommand returns the command to execute a manual sign request from vald

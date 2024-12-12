@@ -8,13 +8,13 @@ import (
 	"github.com/gogo/protobuf/proto"
 
 	permissiontypes "github.com/axelarnetwork/axelar-core/x/permission/types"
-	rewardtypes "github.com/axelarnetwork/axelar-core/x/reward/types"
 	snapshottypes "github.com/axelarnetwork/axelar-core/x/snapshot/types"
-	tsstypes "github.com/axelarnetwork/axelar-core/x/tss/types"
-	votetypes "github.com/axelarnetwork/axelar-core/x/vote/types"
 	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
+	rewardtypes "github.com/scalarorg/scalar-core/x/reward/types"
 	scalarnettypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
+	tsstypes "github.com/scalarorg/scalar-core/x/tss/types"
+	votetypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
 
 type customRegistry interface {

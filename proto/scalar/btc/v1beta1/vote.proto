@@ -20,7 +20,7 @@ message NoEventsConfirmed {
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
-        "github.com/axelarnetwork/axelar-core/x/vote/exported.PollID",
+        "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
     (gogoproto.nullable) = false
   ];
 }

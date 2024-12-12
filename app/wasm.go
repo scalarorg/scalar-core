@@ -14,8 +14,8 @@ import (
 	ibcexported "github.com/cosmos/ibc-go/v4/modules/core/exported"
 	"golang.org/x/exp/maps"
 
-	"github.com/axelarnetwork/axelar-core/x/ante"
 	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/x/ante"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexusKeeper "github.com/scalarorg/scalar-core/x/nexus/keeper"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"

@@ -15,8 +15,6 @@ import (
 
 	broadcastmock "github.com/axelarnetwork/axelar-core/sdk-utils/broadcast/mock"
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/axelar-core/x/vote/exported"
-	votetypes "github.com/axelarnetwork/axelar-core/x/vote/types"
 	"github.com/axelarnetwork/utils/monads/results"
 	"github.com/axelarnetwork/utils/slices"
 	. "github.com/axelarnetwork/utils/test"
@@ -27,6 +25,8 @@ import (
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	"github.com/scalarorg/scalar-core/x/evm/types/testutils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	"github.com/scalarorg/scalar-core/x/vote/exported"
+	votetypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
 
 func TestMgr_ProccessDepositConfirmation(t *testing.T) {
