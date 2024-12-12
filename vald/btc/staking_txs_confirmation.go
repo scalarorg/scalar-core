@@ -13,7 +13,7 @@ import (
 	"github.com/scalarorg/scalar-core/x/btc/types"
 )
 
-func (mgr Mgr) ProcessStakingTxsConfirmation(event *types.ConfirmStakingTxsStarted) error {
+func (mgr Mgr) ProcessStakingTxsConfirmation(event *types.EventConfirmStakingTxsStarted) error {
 
 	if !mgr.isParticipantOf(event.Participants) {
 		pollIDs := slices.Map(event.PollMappings, func(m types.PollMapping) vote.PollID { return m.PollID })

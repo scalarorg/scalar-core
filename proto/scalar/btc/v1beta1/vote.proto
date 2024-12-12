@@ -1,0 +1,35 @@
+syntax = "proto3";
+package scalar.btc.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "scalar/btc/v1beta1/types.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Vote handler
+message NoEventsConfirmed {
+  bytes tx_id = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "Hash",
+    (gogoproto.customname) = "TxID"
+  ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+  uint64 poll_id = 3 [
+    (gogoproto.customname) = "PollID",
+    (gogoproto.customtype) =
+        "github.com/axelarnetwork/axelar-core/x/vote/exported.PollID",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message BTCEventConfirmed {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+  string event_id = 2
+      [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
+  string type = 3;
+}

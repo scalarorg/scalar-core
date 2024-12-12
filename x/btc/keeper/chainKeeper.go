@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/axelarnetwork/axelar-core/utils"
+	"github.com/axelarnetwork/axelar-core/utils/events"
 	"github.com/axelarnetwork/axelar-core/utils/key"
 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/axelarnetwork/utils/funcs"
@@ -243,4 +244,29 @@ func (k chainKeeper) GetConfirmedEventQueue(ctx sdk.Context) utils.KVQueue {
 				Append(utils.KeyFromBz(indexBz))
 		},
 	)
+}
+
+// GetEvent returns the event for the given event ID
+func (k chainKeeper) GetEvent(ctx sdk.Context, eventID types.EventID) (event types.Event, ok bool) {
+	k.getStore(ctx).GetNew(key.FromBz(getEventKey(eventID).AsKey()), &event)
+
+	return event, event.Status != types.EventNonExistent
+}
+
+func (k chainKeeper) SetConfirmedEvent(ctx sdk.Context, event types.Event) error {
+	eventID := event.GetID()
+	if _, ok := k.GetEvent(ctx, eventID); ok {
+		return fmt.Errorf("event %s is already confirmed", eventID)
+	}
+
+	event.Status = types.EventConfirmed
+	k.setEvent(ctx, event)
+
+	events.Emit(ctx, &types.BTCEventConfirmed{
+		Chain:   event.Chain,
+		EventID: event.GetID(),
+		Type:    event.GetEventType(),
+	})
+
+	return nil
 }

@@ -39,7 +39,7 @@ func (s msgServer) ConfirmStakingTxs(c context.Context, req *types.ConfirmStakin
 		return nil, err
 	}
 
-	event := &types.ConfirmStakingTxsStarted{
+	event := &types.EventConfirmStakingTxsStarted{
 		Chain:              chain.Name,
 		PollMappings:       pollMappings,
 		ConfirmationHeight: keeper.GetRequiredConfirmationHeight(ctx),
