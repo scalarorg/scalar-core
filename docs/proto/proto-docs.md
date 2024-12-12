@@ -7,8 +7,6 @@
 - [scalar/btc/v1beta1/types.proto](#scalar/btc/v1beta1/types.proto)
     - [Command](#scalar.btc.v1beta1.Command)
     - [CommandBatchMetadata](#scalar.btc.v1beta1.CommandBatchMetadata)
-    - [PollMapping](#scalar.btc.v1beta1.PollMapping)
-    - [PollMetadata](#scalar.btc.v1beta1.PollMetadata)
     - [Proof](#scalar.btc.v1beta1.Proof)
     - [StakingTx](#scalar.btc.v1beta1.StakingTx)
     - [StakingTxMetadata](#scalar.btc.v1beta1.StakingTxMetadata)
@@ -19,7 +17,6 @@
     - [StakingTxStatus](#scalar.btc.v1beta1.StakingTxStatus)
   
 - [scalar/btc/v1beta1/events.proto](#scalar/btc/v1beta1/events.proto)
-    - [ConfirmStakingTxsStarted](#scalar.btc.v1beta1.ConfirmStakingTxsStarted)
     - [Event](#scalar.btc.v1beta1.Event)
     - [EventStakingTx](#scalar.btc.v1beta1.EventStakingTx)
     - [VoteEvents](#scalar.btc.v1beta1.VoteEvents)
@@ -33,9 +30,17 @@
     - [GenesisState](#scalar.btc.v1beta1.GenesisState)
     - [GenesisState.Chain](#scalar.btc.v1beta1.GenesisState.Chain)
   
+- [scalar/btc/v1beta1/poll.proto](#scalar/btc/v1beta1/poll.proto)
+    - [PollCompleted](#scalar.btc.v1beta1.PollCompleted)
+    - [PollExpired](#scalar.btc.v1beta1.PollExpired)
+    - [PollFailed](#scalar.btc.v1beta1.PollFailed)
+    - [PollMapping](#scalar.btc.v1beta1.PollMapping)
+    - [PollMetadata](#scalar.btc.v1beta1.PollMetadata)
+  
 - [scalar/btc/v1beta1/tx.proto](#scalar/btc/v1beta1/tx.proto)
     - [ConfirmStakingTxsRequest](#scalar.btc.v1beta1.ConfirmStakingTxsRequest)
     - [ConfirmStakingTxsResponse](#scalar.btc.v1beta1.ConfirmStakingTxsResponse)
+    - [EventConfirmStakingTxsStarted](#scalar.btc.v1beta1.EventConfirmStakingTxsStarted)
   
 - [scalar/btc/v1beta1/query.proto](#scalar/btc/v1beta1/query.proto)
     - [BatchedCommandsRequest](#scalar.btc.v1beta1.BatchedCommandsRequest)
@@ -44,6 +49,10 @@
 - [scalar/btc/v1beta1/service.proto](#scalar/btc/v1beta1/service.proto)
     - [MsgService](#scalar.btc.v1beta1.MsgService)
     - [QueryService](#scalar.btc.v1beta1.QueryService)
+  
+- [scalar/btc/v1beta1/vote.proto](#scalar/btc/v1beta1/vote.proto)
+    - [BTCEventConfirmed](#scalar.btc.v1beta1.BTCEventConfirmed)
+    - [NoEventsConfirmed](#scalar.btc.v1beta1.NoEventsConfirmed)
   
 - [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
     - [Covenant](#scalar.covenant.v1beta1.Covenant)
@@ -189,38 +198,6 @@
 
 
 
-<a name="scalar.btc.v1beta1.PollMapping"></a>
-
-### PollMapping
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `tx_id` | [bytes](#bytes) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.btc.v1beta1.PollMetadata"></a>
-
-### PollMetadata
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `tx_id` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
 <a name="scalar.btc.v1beta1.Proof"></a>
 
 ### Proof
@@ -348,24 +325,6 @@
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/btc/v1beta1/events.proto
-
-
-
-<a name="scalar.btc.v1beta1.ConfirmStakingTxsStarted"></a>
-
-### ConfirmStakingTxsStarted
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `poll_mappings` | [PollMapping](#scalar.btc.v1beta1.PollMapping) | repeated |  |
-| `chain` | [string](#string) |  |  |
-| `confirmation_height` | [uint64](#uint64) |  |  |
-| `participants` | [bytes](#bytes) | repeated |  |
-
-
-
 
 
 
@@ -539,6 +498,105 @@
 
 
 
+<a name="scalar/btc/v1beta1/poll.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/btc/v1beta1/poll.proto
+
+
+
+<a name="scalar.btc.v1beta1.PollCompleted"></a>
+
+### PollCompleted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.PollExpired"></a>
+
+### PollExpired
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.PollFailed"></a>
+
+### PollFailed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.PollMapping"></a>
+
+### PollMapping
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.PollMetadata"></a>
+
+### PollMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/btc/v1beta1/tx.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -567,6 +625,24 @@
 
 ### ConfirmStakingTxsResponse
 
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.EventConfirmStakingTxsStarted"></a>
+
+### EventConfirmStakingTxsStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `poll_mappings` | [PollMapping](#scalar.btc.v1beta1.PollMapping) | repeated |  |
+| `chain` | [string](#string) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `participants` | [bytes](#bytes) | repeated |  |
 
 
 
@@ -667,6 +743,56 @@ QueryService defines the gRPC querier service.
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `BatchedCommands` | [BatchedCommandsRequest](#scalar.btc.v1beta1.BatchedCommandsRequest) | [BatchedCommandsResponse](#scalar.btc.v1beta1.BatchedCommandsResponse) | BatchedCommands queries the batched commands for a specified chain and BatchedCommandsID if no BatchedCommandsID is specified, then it returns the latest batched commands | GET|/scalar/btc/v1beta1/batched_commands/{chain}/{id}|
+
+ <!-- end services -->
+
+
+
+<a name="scalar/btc/v1beta1/vote.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/btc/v1beta1/vote.proto
+
+
+
+<a name="scalar.btc.v1beta1.BTCEventConfirmed"></a>
+
+### BTCEventConfirmed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+| `type` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.NoEventsConfirmed"></a>
+
+### NoEventsConfirmed
+Vote handler
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
 
  <!-- end services -->
 

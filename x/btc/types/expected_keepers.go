@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/libs/log"
 
+	reward "github.com/axelarnetwork/axelar-core/x/reward/exported"
 	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	vote "github.com/axelarnetwork/axelar-core/x/vote/exported"
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -33,6 +34,8 @@ type ChainKeeper interface {
 	// GetNetwork(ctx sdk.Context) string
 
 	GetRequiredConfirmationHeight(ctx sdk.Context) uint64
+
+	SetConfirmedEvent(ctx sdk.Context, event Event) error
 }
 
 // ParamsKeeper represents a global paramstore
@@ -64,8 +67,8 @@ type Nexus interface {
 	// GetChainByNativeAsset(ctx sdk.Context, asset string) (chain nexus.Chain, ok bool)
 	// ComputeTransferFee(ctx sdk.Context, sourceChain nexus.Chain, destinationChain nexus.Chain, asset sdk.Coin) (sdk.Coin, error)
 	// AddTransferFee(ctx sdk.Context, coin sdk.Coin)
-	// GetChainMaintainerState(ctx sdk.Context, chain nexus.Chain, address sdk.ValAddress) (nexus.MaintainerState, bool)
-	// SetChainMaintainerState(ctx sdk.Context, maintainerState nexus.MaintainerState) error
+	GetChainMaintainerState(ctx sdk.Context, chain nexus.Chain, address sdk.ValAddress) (nexus.MaintainerState, bool)
+	SetChainMaintainerState(ctx sdk.Context, maintainerState nexus.MaintainerState) error
 	// RateLimitTransfer(ctx sdk.Context, chain nexus.ChainName, asset sdk.Coin, direction nexus.TransferDirection) error
 	// SetNewMessage(ctx sdk.Context, m nexus.GeneralMessage) error
 	// GetProcessingMessages(ctx sdk.Context, chain nexus.ChainName, limit int64) []nexus.GeneralMessage
@@ -89,13 +92,7 @@ type Snapshotter interface {
 
 // Rewarder provides reward functionality
 type Rewarder interface {
-	// GetPool(ctx sdk.Context, name string) reward.RewardPool
-}
-
-// StakingKeeper adopts the methods from "github.com/cosmos/cosmos-sdk/x/staking/exported" that are
-// actually used by this module
-type StakingKeeper interface {
-	// PowerReduction(ctx sdk.Context) sdk.Int
+	GetPool(ctx sdk.Context, name string) reward.RewardPool
 }
 
 // SlashingKeeper provides functionality to manage slashing info for a validator

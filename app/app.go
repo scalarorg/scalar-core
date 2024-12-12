@@ -613,6 +613,7 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 		),
 		btc.NewAppModule(
 			GetKeeper[btcKeeper.BaseKeeper](keepers),
+			GetKeeper[voteKeeper.Keeper](keepers),
 			GetKeeper[nexusKeeper.Keeper](keepers),
 			GetKeeper[snapKeeper.Keeper](keepers),
 			GetKeeper[slashingkeeper.Keeper](keepers),

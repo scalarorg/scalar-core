@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	fmt "fmt"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -383,4 +384,17 @@ func (m VoteEvents) ValidateBasic() error {
 func (m *EventStakingTx) ValidateBasic() error {
 	// TODO: validate event
 	return nil
+}
+
+func getType(val interface{}) string {
+	t := reflect.TypeOf(val)
+	for t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+	return t.Name()
+}
+
+// GetEventType returns the type for the event
+func (m Event) GetEventType() string {
+	return getType(m.GetEvent())
 }

@@ -66,17 +66,20 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 type AppModule struct {
 	AppModuleBasic
 	keeper      *keeper.BaseKeeper
+	voter       types.Voter
 	nexus       types.Nexus
 	snapshotter types.Snapshotter
 	slashing    types.SlashingKeeper
 }
 
-func NewAppModule(keeper *keeper.BaseKeeper, nexus types.Nexus, snapshotter types.Snapshotter, slashing types.SlashingKeeper) AppModule {
+func NewAppModule(keeper *keeper.BaseKeeper, voter types.Voter, nexus types.Nexus, snapshotter types.Snapshotter, slashing types.SlashingKeeper) AppModule {
 	return AppModule{
-		keeper:      keeper,
-		nexus:       nexus,
-		snapshotter: snapshotter,
-		slashing:    slashing,
+		AppModuleBasic: AppModuleBasic{},
+		keeper:         keeper,
+		voter:          voter,
+		nexus:          nexus,
+		snapshotter:    snapshotter,
+		slashing:       slashing,
 	}
 }
 

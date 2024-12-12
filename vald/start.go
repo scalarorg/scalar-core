@@ -250,7 +250,7 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 	evmGatewayTxConf := eventBus.Subscribe(tmEvents.Filter[*evmTypes.ConfirmGatewayTxStarted]())
 	evmGatewayTxsConf := eventBus.Subscribe(tmEvents.Filter[*evmTypes.ConfirmGatewayTxsStarted]())
 
-	btcDepConf := eventBus.Subscribe(tmEvents.Filter[*btcTypes.ConfirmStakingTxsStarted]())
+	btcDepConf := eventBus.Subscribe(tmEvents.Filter[*btcTypes.EventConfirmStakingTxsStarted]())
 
 	multisigKeygen := eventBus.Subscribe(tmEvents.Filter[*multisigTypes.KeygenStarted]())
 	multisigSigning := eventBus.Subscribe(tmEvents.Filter[*multisigTypes.SigningStarted]())

@@ -4,6 +4,7 @@ package scalar.btc.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "axelar/permission/exported/v1beta1/types.proto";
+import "scalar/btc/v1beta1/poll.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
 
@@ -25,3 +26,17 @@ message ConfirmStakingTxsRequest {
 }
 
 message ConfirmStakingTxsResponse {}
+
+message EventConfirmStakingTxsStarted {
+  repeated PollMapping poll_mappings = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "poll_mappings,omitempty"
+  ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+  uint64 confirmation_height = 4;
+  repeated bytes participants = 5
+      [ (gogoproto.casttype) =
+            "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
+}
