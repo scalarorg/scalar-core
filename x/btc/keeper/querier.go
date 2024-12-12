@@ -1,8 +1,8 @@
 package keeper
 
 import (
-	"github.com/axelarnetwork/axelar-core/x/evm/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/x/evm/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 )
 

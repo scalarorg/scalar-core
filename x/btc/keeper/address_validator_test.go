@@ -10,8 +10,8 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/axelarnetwork/axelar-core/testutils/fake"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/btc/exported"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 func TestAddressValidator(t *testing.T) {

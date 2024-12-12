@@ -15,10 +15,10 @@ import (
 	"golang.org/x/exp/maps"
 
 	"github.com/axelarnetwork/axelar-core/x/ante"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
-	nexusKeeper "github.com/axelarnetwork/axelar-core/x/nexus/keeper"
-	nexustypes "github.com/axelarnetwork/axelar-core/x/nexus/types"
 	"github.com/axelarnetwork/utils/funcs"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	nexusKeeper "github.com/scalarorg/scalar-core/x/nexus/keeper"
+	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
 )
 
 //go:generate moq -pkg mock -out ./mock/ibchooks.go . PacketI

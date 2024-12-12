@@ -23,7 +23,7 @@ package scalarnet_test
 // 	"github.com/axelarnetwork/utils/slices"
 // 	. "github.com/axelarnetwork/utils/test"
 // 	appParams "github.com/scalarorg/scalar-core/app/params"
-// 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
+// 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet/keeper"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet/types"

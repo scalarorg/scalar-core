@@ -7,9 +7,6 @@ import (
 	"time"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	evmtypes "github.com/axelarnetwork/axelar-core/x/evm/types"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
-	nexustypes "github.com/axelarnetwork/axelar-core/x/nexus/types"
 	permissionexported "github.com/axelarnetwork/axelar-core/x/permission/exported"
 	permissiontypes "github.com/axelarnetwork/axelar-core/x/permission/types"
 	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
@@ -28,6 +25,9 @@ import (
 	"github.com/rs/zerolog/log"
 	btctypes "github.com/scalarorg/scalar-core/x/btc/types"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
+	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
 	protocoltypes "github.com/scalarorg/scalar-core/x/protocol/types"
 	tmtypes "github.com/tendermint/tendermint/types"
 )

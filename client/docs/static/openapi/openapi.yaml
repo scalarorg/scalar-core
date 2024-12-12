@@ -2860,7 +2860,7 @@ paths:
                             }
       tags:
         - QueryService
-  /axelar/evm/add_chain:
+  /scalar/evm/add_chain:
     post:
       operationId: AddChain
       responses:
@@ -3065,7 +3065,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/evm/confirm_deposit:
+  /scalar/evm/confirm_deposit:
     post:
       operationId: EvmConfirmDeposit
       responses:
@@ -3269,7 +3269,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/evm/confirm_gateway_tx:
+  /scalar/evm/confirm_gateway_tx:
     post:
       summary: "Deprecated: use ConfirmGatewayTxs instead"
       operationId: ConfirmGatewayTx
@@ -3454,7 +3454,7 @@ paths:
         $ref: "#/components/requestBodies/ConfirmGatewayTxBody"
       tags:
         - MsgService
-  /axelar/evm/confirm_gateway_txs:
+  /scalar/evm/confirm_gateway_txs:
     post:
       operationId: ConfirmGatewayTxs
       responses:
@@ -3653,7 +3653,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/evm/confirm_token:
+  /scalar/evm/confirm_token:
     post:
       operationId: ConfirmToken
       responses:
@@ -3858,7 +3858,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/evm/confirm_transfer_key:
+  /scalar/evm/confirm_transfer_key:
     post:
       operationId: ConfirmTransferKey
       responses:
@@ -4042,7 +4042,7 @@ paths:
         $ref: "#/components/requestBodies/ConfirmGatewayTxBody"
       tags:
         - MsgService
-  /axelar/evm/create_burn_tokens:
+  /scalar/evm/create_burn_tokens:
     post:
       operationId: CreateBurnTokens
       responses:
@@ -4241,7 +4241,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/evm/create_deploy_token:
+  /scalar/evm/create_deploy_token:
     post:
       operationId: CreateDeployToken
       responses:
@@ -4465,7 +4465,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/evm/create_pending_transfers:
+  /scalar/evm/create_pending_transfers:
     post:
       operationId: CreatePendingTransfers
       responses:
@@ -4664,7 +4664,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/evm/create_transfer_operatorship:
+  /scalar/evm/create_transfer_operatorship:
     post:
       operationId: CreateTransferOperatorship
       responses:
@@ -4848,7 +4848,7 @@ paths:
         $ref: "#/components/requestBodies/CreateTransferOperatorshipBody"
       tags:
         - MsgService
-  /axelar/evm/link:
+  /scalar/evm/link:
     post:
       operationId: EvmLink
       responses:
@@ -5056,7 +5056,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/evm/retry-failed-event:
+  /scalar/evm/retry-failed-event:
     post:
       operationId: RetryFailedEvent
       responses:
@@ -5252,7 +5252,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/evm/set_gateway:
+  /scalar/evm/set_gateway:
     post:
       operationId: SetGateway
       responses:
@@ -5449,7 +5449,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/evm/sign_commands:
+  /scalar/evm/sign_commands:
     post:
       operationId: SignCommands
       responses:
@@ -5650,7 +5650,7 @@ paths:
         required: true
       tags:
         - MsgService
-  "/axelar/evm/v1beta1/batched_commands/{chain}/{id}":
+  "/scalar/evm/v1beta1/batched_commands/{chain}/{id}":
     get:
       summary: >-
         BatchedCommands queries the batched commands for a specified chain and
@@ -5894,7 +5894,7 @@ paths:
             type: string
       tags:
         - QueryService
-  /axelar/evm/v1beta1/burner_info:
+  /scalar/evm/v1beta1/burner_info:
     get:
       summary: BurnerInfo queries the burner info for the specified address
       operationId: BurnerInfo
@@ -6110,7 +6110,7 @@ paths:
             format: byte
       tags:
         - QueryService
-  "/axelar/evm/v1beta1/bytecode/{chain}/{contract}":
+  "/scalar/evm/v1beta1/bytecode/{chain}/{contract}":
     get:
       summary: |-
         Bytecode queries the bytecode of a specified gateway at the specified
@@ -6309,7 +6309,7 @@ paths:
             type: string
       tags:
         - QueryService
-  /axelar/evm/v1beta1/chains:
+  /scalar/evm/v1beta1/chains:
     get:
       summary: Chains queries the available evm chains
       operationId: EvmChains
@@ -6508,7 +6508,7 @@ paths:
             default: CHAIN_STATUS_UNSPECIFIED
       tags:
         - QueryService
-  /axelar/evm/v1beta1/command_request:
+  /scalar/evm/v1beta1/command_request:
     get:
       summary: Command queries the command of a chain provided the command id
       operationId: Command
@@ -6716,7 +6716,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/evm/v1beta1/confirmation_height/{chain}":
+  "/scalar/evm/v1beta1/confirmation_height/{chain}":
     get:
       summary: ConfirmationHeight queries the confirmation height for the specified
         chain
@@ -6910,7 +6910,7 @@ paths:
             type: string
       tags:
         - QueryService
-  /axelar/evm/v1beta1/deposit_state:
+  /scalar/evm/v1beta1/deposit_state:
     get:
       summary: DepositState queries the state of the specified deposit
       operationId: DepositState
@@ -7120,7 +7120,7 @@ paths:
             format: byte
       tags:
         - QueryService
-  "/axelar/evm/v1beta1/erc20_tokens/{chain}":
+  "/scalar/evm/v1beta1/erc20_tokens/{chain}":
     get:
       summary: ERC20Tokens queries the ERC20 tokens registered for a chain
       operationId: ERC20Tokens
@@ -7332,7 +7332,7 @@ paths:
             default: TOKEN_TYPE_UNSPECIFIED
       tags:
         - QueryService
-  "/axelar/evm/v1beta1/event/{chain}/{event_id}":
+  "/scalar/evm/v1beta1/event/{chain}/{event_id}":
     get:
       summary: Event queries an event at the specified chain
       operationId: Event
@@ -7644,7 +7644,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/evm/v1beta1/gateway_address/{chain}":
+  "/scalar/evm/v1beta1/gateway_address/{chain}":
     get:
       summary: |-
         GatewayAddress queries the address of axelar gateway at the specified
@@ -7838,7 +7838,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/evm/v1beta1/key_address/{chain}":
+  "/scalar/evm/v1beta1/key_address/{chain}":
     get:
       summary: KeyAddress queries the address of key of a chain
       operationId: KeyAddress
@@ -8046,7 +8046,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/evm/v1beta1/params/{chain}":
+  "/scalar/evm/v1beta1/params/{chain}":
     get:
       operationId: EVMParams
       responses:
@@ -8295,7 +8295,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/evm/v1beta1/pending_commands/{chain}":
+  "/scalar/evm/v1beta1/pending_commands/{chain}":
     get:
       summary: PendingCommands queries the pending commands for the specified chain
       operationId: PendingCommands
@@ -8503,7 +8503,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/evm/v1beta1/token_info/{chain}":
+  "/scalar/evm/v1beta1/token_info/{chain}":
     get:
       summary: TokenInfo queries the token info for a registered ERC20 Token
       operationId: TokenInfo
@@ -8733,7 +8733,7 @@ paths:
             type: string
       tags:
         - QueryService
-  /axelar/multisig/rotate_key:
+  /scalar/multisig/rotate_key:
     post:
       operationId: RotateKey
       responses:
@@ -8917,7 +8917,7 @@ paths:
         $ref: "#/components/requestBodies/CreateTransferOperatorshipBody"
       tags:
         - MsgService
-  /axelar/multisig/start_keygen:
+  /scalar/multisig/start_keygen:
     post:
       operationId: StartKeygen
       responses:
@@ -9110,7 +9110,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/multisig/submit_pub_key:
+  /scalar/multisig/submit_pub_key:
     post:
       operationId: SubmitPubKey
       responses:
@@ -9309,7 +9309,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/multisig/submit_signature:
+  /scalar/multisig/submit_signature:
     post:
       operationId: SubmitSignature
       responses:
@@ -9506,7 +9506,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/multisig/v1beta1/key:
+  /scalar/multisig/v1beta1/key:
     get:
       summary: |-
         Key returns the key corresponding to a given key ID.
@@ -9733,7 +9733,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/multisig/v1beta1/key_id/{chain}":
+  "/scalar/multisig/v1beta1/key_id/{chain}":
     get:
       summary: |-
         KeyID returns the key ID of a key assigned to a given chain.
@@ -9929,7 +9929,7 @@ paths:
             type: string
       tags:
         - QueryService
-  /axelar/multisig/v1beta1/keygen_opt_in:
+  /scalar/multisig/v1beta1/keygen_opt_in:
     post:
       operationId: KeygenOptIn
       responses:
@@ -10113,7 +10113,7 @@ paths:
         $ref: "#/components/requestBodies/KeygenOptInBody"
       tags:
         - MsgService
-  /axelar/multisig/v1beta1/keygen_opt_out:
+  /scalar/multisig/v1beta1/keygen_opt_out:
     post:
       operationId: KeygenOptOut
       responses:
@@ -10297,7 +10297,7 @@ paths:
         $ref: "#/components/requestBodies/KeygenOptInBody"
       tags:
         - MsgService
-  /axelar/multisig/v1beta1/keygen_session:
+  /scalar/multisig/v1beta1/keygen_session:
     get:
       summary: |-
         KeygenSession returns the keygen session info for a given key ID.
@@ -10535,7 +10535,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/multisig/v1beta1/next_key_id/{chain}":
+  "/scalar/multisig/v1beta1/next_key_id/{chain}":
     get:
       summary: |-
         NextKeyID returns the key ID assigned for the next rotation on a given
@@ -10735,7 +10735,7 @@ paths:
             type: string
       tags:
         - QueryService
-  /axelar/multisig/v1beta1/params:
+  /scalar/multisig/v1beta1/params:
     get:
       operationId: MultisigParams
       responses:
@@ -10965,7 +10965,7 @@ paths:
                             }
       tags:
         - QueryService
-  /axelar/nexus/activate_chain:
+  /scalar/nexus/activate_chain:
     post:
       operationId: ActivateChain
       responses:
@@ -11162,7 +11162,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/nexus/deactivate_chain:
+  /scalar/nexus/deactivate_chain:
     post:
       operationId: DeactivateChain
       responses:
@@ -11359,7 +11359,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/nexus/deregister_chain_maintainer:
+  /scalar/nexus/deregister_chain_maintainer:
     post:
       operationId: DeregisterChainMaintainer
       responses:
@@ -11543,7 +11543,7 @@ paths:
         $ref: "#/components/requestBodies/DeregisterChainMaintainerBody"
       tags:
         - MsgService
-  /axelar/nexus/register_asset_fee:
+  /scalar/nexus/register_asset_fee:
     post:
       operationId: RegisterAssetFee
       responses:
@@ -11756,7 +11756,7 @@ paths:
         required: true
       tags:
         - MsgService
-  /axelar/nexus/register_chain_maintainer:
+  /scalar/nexus/register_chain_maintainer:
     post:
       operationId: RegisterChainMaintainer
       responses:
@@ -11940,7 +11940,7 @@ paths:
         $ref: "#/components/requestBodies/DeregisterChainMaintainerBody"
       tags:
         - MsgService
-  /axelar/nexus/set_transfer_rate_limit:
+  /scalar/nexus/set_transfer_rate_limit:
     post:
       operationId: SetTransferRateLimit
       responses:
@@ -12155,7 +12155,7 @@ paths:
         required: true
       tags:
         - MsgService
-  "/axelar/nexus/v1beta1/assets/{chain}":
+  "/scalar/nexus/v1beta1/assets/{chain}":
     get:
       summary: Assets queries the assets registered for a chain
       operationId: Assets
@@ -12349,7 +12349,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/nexus/v1beta1/chain_maintainers/{chain}":
+  "/scalar/nexus/v1beta1/chain_maintainers/{chain}":
     get:
       summary: ChainMaintainers queries the chain maintainers for a given chain
       operationId: ChainMaintainers
@@ -12544,7 +12544,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/nexus/v1beta1/chain_state/{chain}":
+  "/scalar/nexus/v1beta1/chain_state/{chain}":
     get:
       summary: ChainState queries the state of a registered chain on the network
       operationId: ChainState
@@ -12814,7 +12814,7 @@ paths:
             type: string
       tags:
         - QueryService
-  /axelar/nexus/v1beta1/chains:
+  /scalar/nexus/v1beta1/chains:
     get:
       summary: Chains queries the chains registered on the network
       operationId: Chains
@@ -13013,7 +13013,7 @@ paths:
             default: CHAIN_STATUS_UNSPECIFIED
       tags:
         - QueryService
-  "/axelar/nexus/v1beta1/chains_by_asset/{asset}":
+  "/scalar/nexus/v1beta1/chains_by_asset/{asset}":
     get:
       summary: ChainsByAsset queries the chains that support an asset on the network
       operationId: ChainsByAsset
@@ -13207,7 +13207,7 @@ paths:
             type: string
       tags:
         - QueryService
-  /axelar/nexus/v1beta1/fee:
+  /scalar/nexus/v1beta1/fee:
     get:
       summary: FeeInfo queries the fee info by chain and asset
       operationId: FeeInfo2
@@ -13418,7 +13418,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/nexus/v1beta1/fee_info/{chain}/{asset}":
+  "/scalar/nexus/v1beta1/fee_info/{chain}/{asset}":
     get:
       summary: FeeInfo queries the fee info by chain and asset
       operationId: FeeInfo
@@ -13629,7 +13629,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/nexus/v1beta1/latest_deposit_address/{recipient_addr}/{recipient_chain}/{deposit_chain}":
+  "/scalar/nexus/v1beta1/latest_deposit_address/{recipient_addr}/{recipient_chain}/{deposit_chain}":
     get:
       summary: LatestDepositAddress queries the a deposit address by recipient
       operationId: LatestDepositAddress
@@ -13831,7 +13831,7 @@ paths:
             type: string
       tags:
         - QueryService
-  /axelar/nexus/v1beta1/message:
+  /scalar/nexus/v1beta1/message:
     get:
       operationId: Message
       responses:
@@ -14110,7 +14110,7 @@ paths:
             type: string
       tags:
         - QueryService
-  /axelar/nexus/v1beta1/params:
+  /scalar/nexus/v1beta1/params:
     get:
       operationId: NexusParams
       responses:
@@ -14348,7 +14348,7 @@ paths:
                             }
       tags:
         - QueryService
-  "/axelar/nexus/v1beta1/recipient_address/{deposit_chain}/{deposit_addr}":
+  "/scalar/nexus/v1beta1/recipient_address/{deposit_chain}/{deposit_addr}":
     get:
       summary: RecipientAddress queries the recipient address for a given deposit
         address
@@ -14548,7 +14548,7 @@ paths:
             type: string
       tags:
         - QueryService
-  /axelar/nexus/v1beta1/transfer_fee:
+  /scalar/nexus/v1beta1/transfer_fee:
     get:
       summary: |-
         TransferFee queries the transfer fee by the source, destination chain,
@@ -14764,7 +14764,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/nexus/v1beta1/transfer_fee/{source_chain}/{destination_chain}/{amount}":
+  "/scalar/nexus/v1beta1/transfer_fee/{source_chain}/{destination_chain}/{amount}":
     get:
       summary: |-
         TransferFee queries the transfer fee by the source, destination chain,
@@ -14980,7 +14980,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/nexus/v1beta1/transfer_rate_limit/{chain}/{asset}":
+  "/scalar/nexus/v1beta1/transfer_rate_limit/{chain}/{asset}":
     get:
       summary: |-
         TransferRateLimit queries the transfer rate limit for a given chain and
@@ -15200,7 +15200,7 @@ paths:
             type: string
       tags:
         - QueryService
-  "/axelar/nexus/v1beta1/transfers_for_chain/{chain}/{state}":
+  "/scalar/nexus/v1beta1/transfers_for_chain/{chain}/{state}":
     get:
       summary: TransfersForChain queries transfers by chain
       operationId: TransfersForChain
@@ -49704,33 +49704,6 @@ components:
                     "@type": "type.googleapis.com/google.protobuf.Duration",
                     "value": "1.212s"
                   }
-    axelar.nexus.exported.v1beta1.Asset:
-      type: object
-      properties:
-        denom:
-          type: string
-        is_native_asset:
-          type: boolean
-          format: boolean
-    axelar.nexus.exported.v1beta1.Chain:
-      type: object
-      properties:
-        name:
-          type: string
-        supports_foreign_assets:
-          type: boolean
-          format: boolean
-        key_type:
-          type: string
-          enum:
-            - KEY_TYPE_UNSPECIFIED
-            - KEY_TYPE_NONE
-            - KEY_TYPE_THRESHOLD
-            - KEY_TYPE_MULTISIG
-          default: KEY_TYPE_UNSPECIFIED
-        module:
-          type: string
-      title: Chain represents the properties of a registered blockchain
     axelar.tss.exported.v1beta1.KeyType:
       type: string
       enum:
@@ -49751,6 +49724,33 @@ components:
 
         NOTE: The amount field is an Int which implements the custom method
         signatures required by gogoproto.
+    scalar.nexus.exported.v1beta1.Asset:
+      type: object
+      properties:
+        denom:
+          type: string
+        is_native_asset:
+          type: boolean
+          format: boolean
+    scalar.nexus.exported.v1beta1.Chain:
+      type: object
+      properties:
+        name:
+          type: string
+        supports_foreign_assets:
+          type: boolean
+          format: boolean
+        key_type:
+          type: string
+          enum:
+            - KEY_TYPE_UNSPECIFIED
+            - KEY_TYPE_NONE
+            - KEY_TYPE_THRESHOLD
+            - KEY_TYPE_MULTISIG
+          default: KEY_TYPE_UNSPECIFIED
+        module:
+          type: string
+      title: Chain represents the properties of a registered blockchain
     scalar.scalarnet.v1beta1.AddCosmosBasedChainRequest:
       type: object
       properties:
@@ -50112,7 +50112,21 @@ components:
           format: byte
     scalar.scalarnet.v1beta1.RouteMessageResponse:
       type: object
-    axelar.evm.v1beta1.AddChainRequest:
+    axelar.utils.v1beta1.Threshold:
+      type: object
+      properties:
+        numerator:
+          type: string
+          format: int64
+          title: >-
+            split threshold into Numerator and denominator to avoid floating
+            point
+
+            errors down the line
+        denominator:
+          type: string
+          format: int64
+    scalar.evm.v1beta1.AddChainRequest:
       type: object
       properties:
         sender:
@@ -50131,16 +50145,16 @@ components:
         params:
           type: string
           format: byte
-    axelar.evm.v1beta1.AddChainResponse:
+    scalar.evm.v1beta1.AddChainResponse:
       type: object
-    axelar.evm.v1beta1.Asset:
+    scalar.evm.v1beta1.Asset:
       type: object
       properties:
         chain:
           type: string
         name:
           type: string
-    axelar.evm.v1beta1.BatchedCommandsResponse:
+    scalar.evm.v1beta1.BatchedCommandsResponse:
       type: object
       properties:
         id:
@@ -50182,7 +50196,7 @@ components:
               type: array
               items:
                 type: string
-    axelar.evm.v1beta1.BatchedCommandsStatus:
+    scalar.evm.v1beta1.BatchedCommandsStatus:
       type: string
       enum:
         - BATCHED_COMMANDS_STATUS_UNSPECIFIED
@@ -50190,7 +50204,7 @@ components:
         - BATCHED_COMMANDS_STATUS_ABORTED
         - BATCHED_COMMANDS_STATUS_SIGNED
       default: BATCHED_COMMANDS_STATUS_UNSPECIFIED
-    axelar.evm.v1beta1.BurnerInfo:
+    scalar.evm.v1beta1.BurnerInfo:
       type: object
       properties:
         burner_address:
@@ -50213,7 +50227,7 @@ components:
         address
 
         that is deposited by an user
-    axelar.evm.v1beta1.BurnerInfoResponse:
+    scalar.evm.v1beta1.BurnerInfoResponse:
       type: object
       properties:
         chain:
@@ -50241,26 +50255,26 @@ components:
             address
 
             that is deposited by an user
-    axelar.evm.v1beta1.BytecodeResponse:
+    scalar.evm.v1beta1.BytecodeResponse:
       type: object
       properties:
         bytecode:
           type: string
-    axelar.evm.v1beta1.ChainStatus:
+    scalar.evm.v1beta1.ChainStatus:
       type: string
       enum:
         - CHAIN_STATUS_UNSPECIFIED
         - CHAIN_STATUS_ACTIVATED
         - CHAIN_STATUS_DEACTIVATED
       default: CHAIN_STATUS_UNSPECIFIED
-    axelar.evm.v1beta1.ChainsResponse:
+    scalar.evm.v1beta1.ChainsResponse:
       type: object
       properties:
         chains:
           type: array
           items:
             type: string
-    axelar.evm.v1beta1.CommandResponse:
+    scalar.evm.v1beta1.CommandResponse:
       type: object
       properties:
         id:
@@ -50276,7 +50290,7 @@ components:
         max_gas_cost:
           type: integer
           format: int64
-    axelar.evm.v1beta1.ConfirmDepositRequest:
+    scalar.evm.v1beta1.ConfirmDepositRequest:
       type: object
       properties:
         sender:
@@ -50294,9 +50308,9 @@ components:
           type: string
           format: byte
       title: MsgConfirmDeposit represents an erc20 deposit confirmation message
-    axelar.evm.v1beta1.ConfirmDepositResponse:
+    scalar.evm.v1beta1.ConfirmDepositResponse:
       type: object
-    axelar.evm.v1beta1.ConfirmGatewayTxRequest:
+    scalar.evm.v1beta1.ConfirmGatewayTxRequest:
       type: object
       properties:
         sender:
@@ -50307,9 +50321,9 @@ components:
         tx_id:
           type: string
           format: byte
-    axelar.evm.v1beta1.ConfirmGatewayTxResponse:
+    scalar.evm.v1beta1.ConfirmGatewayTxResponse:
       type: object
-    axelar.evm.v1beta1.ConfirmGatewayTxsRequest:
+    scalar.evm.v1beta1.ConfirmGatewayTxsRequest:
       type: object
       properties:
         sender:
@@ -50322,9 +50336,9 @@ components:
           items:
             type: string
             format: byte
-    axelar.evm.v1beta1.ConfirmGatewayTxsResponse:
+    scalar.evm.v1beta1.ConfirmGatewayTxsResponse:
       type: object
-    axelar.evm.v1beta1.ConfirmTokenRequest:
+    scalar.evm.v1beta1.ConfirmTokenRequest:
       type: object
       properties:
         sender:
@@ -50343,9 +50357,9 @@ components:
             name:
               type: string
       title: MsgConfirmToken represents a token deploy confirmation message
-    axelar.evm.v1beta1.ConfirmTokenResponse:
+    scalar.evm.v1beta1.ConfirmTokenResponse:
       type: object
-    axelar.evm.v1beta1.ConfirmTransferKeyRequest:
+    scalar.evm.v1beta1.ConfirmTransferKeyRequest:
       type: object
       properties:
         sender:
@@ -50356,15 +50370,15 @@ components:
         tx_id:
           type: string
           format: byte
-    axelar.evm.v1beta1.ConfirmTransferKeyResponse:
+    scalar.evm.v1beta1.ConfirmTransferKeyResponse:
       type: object
-    axelar.evm.v1beta1.ConfirmationHeightResponse:
+    scalar.evm.v1beta1.ConfirmationHeightResponse:
       type: object
       properties:
         height:
           type: string
           format: uint64
-    axelar.evm.v1beta1.CreateBurnTokensRequest:
+    scalar.evm.v1beta1.CreateBurnTokensRequest:
       type: object
       properties:
         sender:
@@ -50377,9 +50391,9 @@ components:
         burn
 
         tokens with AxelarGateway
-    axelar.evm.v1beta1.CreateBurnTokensResponse:
+    scalar.evm.v1beta1.CreateBurnTokensResponse:
       type: object
-    axelar.evm.v1beta1.CreateDeployTokenRequest:
+    scalar.evm.v1beta1.CreateDeployTokenRequest:
       type: object
       properties:
         sender:
@@ -50415,9 +50429,9 @@ components:
       title: |-
         CreateDeployTokenRequest represents the message to create a deploy token
         command for AxelarGateway
-    axelar.evm.v1beta1.CreateDeployTokenResponse:
+    scalar.evm.v1beta1.CreateDeployTokenResponse:
       type: object
-    axelar.evm.v1beta1.CreatePendingTransfersRequest:
+    scalar.evm.v1beta1.CreatePendingTransfersRequest:
       type: object
       properties:
         sender:
@@ -50430,9 +50444,9 @@ components:
         creation of
 
         commands handling all pending transfers
-    axelar.evm.v1beta1.CreatePendingTransfersResponse:
+    scalar.evm.v1beta1.CreatePendingTransfersResponse:
       type: object
-    axelar.evm.v1beta1.CreateTransferOperatorshipRequest:
+    scalar.evm.v1beta1.CreateTransferOperatorshipRequest:
       type: object
       properties:
         sender:
@@ -50442,9 +50456,9 @@ components:
           type: string
         key_id:
           type: string
-    axelar.evm.v1beta1.CreateTransferOperatorshipResponse:
+    scalar.evm.v1beta1.CreateTransferOperatorshipResponse:
       type: object
-    axelar.evm.v1beta1.DepositStateResponse:
+    scalar.evm.v1beta1.DepositStateResponse:
       type: object
       properties:
         status:
@@ -50455,7 +50469,7 @@ components:
             - DEPOSIT_STATUS_CONFIRMED
             - DEPOSIT_STATUS_BURNED
           default: DEPOSIT_STATUS_UNSPECIFIED
-    axelar.evm.v1beta1.DepositStatus:
+    scalar.evm.v1beta1.DepositStatus:
       type: string
       enum:
         - DEPOSIT_STATUS_UNSPECIFIED
@@ -50463,7 +50477,7 @@ components:
         - DEPOSIT_STATUS_CONFIRMED
         - DEPOSIT_STATUS_BURNED
       default: DEPOSIT_STATUS_UNSPECIFIED
-    axelar.evm.v1beta1.ERC20TokensResponse:
+    scalar.evm.v1beta1.ERC20TokensResponse:
       type: object
       properties:
         tokens:
@@ -50478,14 +50492,14 @@ components:
       title: |-
         ERC20TokensResponse describes the asset and symbol for all
         ERC20 tokens requested for a chain
-    axelar.evm.v1beta1.ERC20TokensResponse.Token:
+    scalar.evm.v1beta1.ERC20TokensResponse.Token:
       type: object
       properties:
         asset:
           type: string
         symbol:
           type: string
-    axelar.evm.v1beta1.Event:
+    scalar.evm.v1beta1.Event:
       type: object
       properties:
         chain:
@@ -50602,7 +50616,7 @@ components:
               items:
                 type: string
                 format: byte
-    axelar.evm.v1beta1.Event.Status:
+    scalar.evm.v1beta1.Event.Status:
       type: string
       enum:
         - STATUS_UNSPECIFIED
@@ -50610,7 +50624,7 @@ components:
         - STATUS_COMPLETED
         - STATUS_FAILED
       default: STATUS_UNSPECIFIED
-    axelar.evm.v1beta1.EventContractCall:
+    scalar.evm.v1beta1.EventContractCall:
       type: object
       properties:
         sender:
@@ -50623,7 +50637,7 @@ components:
         payload_hash:
           type: string
           format: byte
-    axelar.evm.v1beta1.EventContractCallWithToken:
+    scalar.evm.v1beta1.EventContractCallWithToken:
       type: object
       properties:
         sender:
@@ -50641,7 +50655,7 @@ components:
         amount:
           type: string
           format: byte
-    axelar.evm.v1beta1.EventMultisigOperatorshipTransferred:
+    scalar.evm.v1beta1.EventMultisigOperatorshipTransferred:
       type: object
       properties:
         new_operators:
@@ -50657,7 +50671,7 @@ components:
           items:
             type: string
             format: byte
-    axelar.evm.v1beta1.EventMultisigOwnershipTransferred:
+    scalar.evm.v1beta1.EventMultisigOwnershipTransferred:
       type: object
       properties:
         pre_owners:
@@ -50676,7 +50690,7 @@ components:
         new_threshold:
           type: string
           format: byte
-    axelar.evm.v1beta1.EventResponse:
+    scalar.evm.v1beta1.EventResponse:
       type: object
       properties:
         event:
@@ -50796,7 +50810,7 @@ components:
                   items:
                     type: string
                     format: byte
-    axelar.evm.v1beta1.EventTokenDeployed:
+    scalar.evm.v1beta1.EventTokenDeployed:
       type: object
       properties:
         symbol:
@@ -50804,7 +50818,7 @@ components:
         token_address:
           type: string
           format: byte
-    axelar.evm.v1beta1.EventTokenSent:
+    scalar.evm.v1beta1.EventTokenSent:
       type: object
       properties:
         sender:
@@ -50819,7 +50833,7 @@ components:
         amount:
           type: string
           format: byte
-    axelar.evm.v1beta1.EventTransfer:
+    scalar.evm.v1beta1.EventTransfer:
       type: object
       properties:
         to:
@@ -50828,12 +50842,12 @@ components:
         amount:
           type: string
           format: byte
-    axelar.evm.v1beta1.GatewayAddressResponse:
+    scalar.evm.v1beta1.GatewayAddressResponse:
       type: object
       properties:
         address:
           type: string
-    axelar.evm.v1beta1.KeyAddressResponse:
+    scalar.evm.v1beta1.KeyAddressResponse:
       type: object
       properties:
         key_id:
@@ -50849,14 +50863,14 @@ components:
                 type: string
         threshold:
           type: string
-    axelar.evm.v1beta1.KeyAddressResponse.WeightedAddress:
+    scalar.evm.v1beta1.KeyAddressResponse.WeightedAddress:
       type: object
       properties:
         address:
           type: string
         weight:
           type: string
-    axelar.evm.v1beta1.LinkRequest:
+    scalar.evm.v1beta1.LinkRequest:
       type: object
       properties:
         sender:
@@ -50875,12 +50889,12 @@ components:
         burner
 
         address
-    axelar.evm.v1beta1.LinkResponse:
+    scalar.evm.v1beta1.LinkResponse:
       type: object
       properties:
         deposit_addr:
           type: string
-    axelar.evm.v1beta1.NetworkInfo:
+    scalar.evm.v1beta1.NetworkInfo:
       type: object
       properties:
         name:
@@ -50889,7 +50903,7 @@ components:
           type: string
           format: byte
       title: NetworkInfo describes information about a network
-    axelar.evm.v1beta1.Params:
+    scalar.evm.v1beta1.Params:
       type: object
       properties:
         chain:
@@ -50949,7 +50963,7 @@ components:
           type: string
           format: uint64
       title: Params is the parameter set for this module
-    axelar.evm.v1beta1.ParamsResponse:
+    scalar.evm.v1beta1.ParamsResponse:
       type: object
       properties:
         params:
@@ -51012,7 +51026,7 @@ components:
               type: string
               format: uint64
           title: Params is the parameter set for this module
-    axelar.evm.v1beta1.PendingCommandsResponse:
+    scalar.evm.v1beta1.PendingCommandsResponse:
       type: object
       properties:
         commands:
@@ -51033,7 +51047,7 @@ components:
               max_gas_cost:
                 type: integer
                 format: int64
-    axelar.evm.v1beta1.Proof:
+    scalar.evm.v1beta1.Proof:
       type: object
       properties:
         addresses:
@@ -51050,7 +51064,7 @@ components:
           type: array
           items:
             type: string
-    axelar.evm.v1beta1.QueryCommandResponse:
+    scalar.evm.v1beta1.QueryCommandResponse:
       type: object
       properties:
         id:
@@ -51066,7 +51080,7 @@ components:
         max_gas_cost:
           type: integer
           format: int64
-    axelar.evm.v1beta1.QueryDepositStateParams:
+    scalar.evm.v1beta1.QueryDepositStateParams:
       type: object
       properties:
         tx_id:
@@ -51075,7 +51089,7 @@ components:
         burner_address:
           type: string
           format: byte
-    axelar.evm.v1beta1.RetryFailedEventRequest:
+    scalar.evm.v1beta1.RetryFailedEventRequest:
       type: object
       properties:
         sender:
@@ -51085,9 +51099,9 @@ components:
           type: string
         event_id:
           type: string
-    axelar.evm.v1beta1.RetryFailedEventResponse:
+    scalar.evm.v1beta1.RetryFailedEventResponse:
       type: object
-    axelar.evm.v1beta1.SetGatewayRequest:
+    scalar.evm.v1beta1.SetGatewayRequest:
       type: object
       properties:
         sender:
@@ -51098,9 +51112,9 @@ components:
         address:
           type: string
           format: byte
-    axelar.evm.v1beta1.SetGatewayResponse:
+    scalar.evm.v1beta1.SetGatewayResponse:
       type: object
-    axelar.evm.v1beta1.SignCommandsRequest:
+    scalar.evm.v1beta1.SignCommandsRequest:
       type: object
       properties:
         sender:
@@ -51108,7 +51122,7 @@ components:
           format: byte
         chain:
           type: string
-    axelar.evm.v1beta1.SignCommandsResponse:
+    scalar.evm.v1beta1.SignCommandsResponse:
       type: object
       properties:
         batched_commands_id:
@@ -51117,7 +51131,7 @@ components:
         command_count:
           type: integer
           format: int64
-    axelar.evm.v1beta1.TokenDetails:
+    scalar.evm.v1beta1.TokenDetails:
       type: object
       properties:
         token_name:
@@ -51130,7 +51144,7 @@ components:
         capacity:
           type: string
           format: byte
-    axelar.evm.v1beta1.TokenInfoResponse:
+    scalar.evm.v1beta1.TokenInfoResponse:
       type: object
       properties:
         asset:
@@ -51158,48 +51172,34 @@ components:
           format: boolean
         burner_code_hash:
           type: string
-    axelar.evm.v1beta1.TokenType:
+    scalar.evm.v1beta1.TokenType:
       type: string
       enum:
         - TOKEN_TYPE_UNSPECIFIED
         - TOKEN_TYPE_INTERNAL
         - TOKEN_TYPE_EXTERNAL
       default: TOKEN_TYPE_UNSPECIFIED
-    axelar.utils.v1beta1.Threshold:
-      type: object
-      properties:
-        numerator:
-          type: string
-          format: int64
-          title: >-
-            split threshold into Numerator and denominator to avoid floating
-            point
-
-            errors down the line
-        denominator:
-          type: string
-          format: int64
-    axelar.multisig.exported.v1beta1.KeyState:
+    scalar.multisig.exported.v1beta1.KeyState:
       type: string
       enum:
         - KEY_STATE_UNSPECIFIED
         - KEY_STATE_ASSIGNED
         - KEY_STATE_ACTIVE
       default: KEY_STATE_UNSPECIFIED
-    axelar.multisig.exported.v1beta1.MultisigState:
+    scalar.multisig.exported.v1beta1.MultisigState:
       type: string
       enum:
         - MULTISIG_STATE_UNSPECIFIED
         - MULTISIG_STATE_PENDING
         - MULTISIG_STATE_COMPLETED
       default: MULTISIG_STATE_UNSPECIFIED
-    axelar.multisig.v1beta1.KeyIDResponse:
+    scalar.multisig.v1beta1.KeyIDResponse:
       type: object
       properties:
         key_id:
           type: string
       description: KeyIDResponse contains the key ID of the key assigned to a given chain.
-    axelar.multisig.v1beta1.KeyResponse:
+    scalar.multisig.v1beta1.KeyResponse:
       type: object
       properties:
         key_id:
@@ -51237,23 +51237,23 @@ components:
                 type: string
           title: Keygen participants in descending order by weight
       description: KeyResponse contains the key corresponding to a given key id.
-    axelar.multisig.v1beta1.KeygenOptInRequest:
+    scalar.multisig.v1beta1.KeygenOptInRequest:
       type: object
       properties:
         sender:
           type: string
           format: byte
-    axelar.multisig.v1beta1.KeygenOptInResponse:
+    scalar.multisig.v1beta1.KeygenOptInResponse:
       type: object
-    axelar.multisig.v1beta1.KeygenOptOutRequest:
+    scalar.multisig.v1beta1.KeygenOptOutRequest:
       type: object
       properties:
         sender:
           type: string
           format: byte
-    axelar.multisig.v1beta1.KeygenOptOutResponse:
+    scalar.multisig.v1beta1.KeygenOptOutResponse:
       type: object
-    axelar.multisig.v1beta1.KeygenParticipant:
+    scalar.multisig.v1beta1.KeygenParticipant:
       type: object
       properties:
         address:
@@ -51263,7 +51263,7 @@ components:
           format: byte
         pub_key:
           type: string
-    axelar.multisig.v1beta1.KeygenSessionResponse:
+    scalar.multisig.v1beta1.KeygenSessionResponse:
       type: object
       properties:
         started_at:
@@ -51312,7 +51312,7 @@ components:
           title: Keygen candidates in descending order by weight
       description: KeygenSessionResponse contains the keygen session info for a given
         key ID.
-    axelar.multisig.v1beta1.NextKeyIDResponse:
+    scalar.multisig.v1beta1.NextKeyIDResponse:
       type: object
       properties:
         key_id:
@@ -51320,7 +51320,7 @@ components:
       title: |-
         NextKeyIDResponse contains the key ID for the next rotation on the given
         chain
-    axelar.multisig.v1beta1.Params:
+    scalar.multisig.v1beta1.Params:
       type: object
       properties:
         keygen_threshold:
@@ -51367,7 +51367,7 @@ components:
           type: string
           format: uint64
       title: Params represent the genesis parameters for the module
-    axelar.multisig.v1beta1.ParamsResponse:
+    scalar.multisig.v1beta1.ParamsResponse:
       type: object
       properties:
         params:
@@ -51417,7 +51417,7 @@ components:
               type: string
               format: uint64
           title: Params represent the genesis parameters for the module
-    axelar.multisig.v1beta1.RotateKeyRequest:
+    scalar.multisig.v1beta1.RotateKeyRequest:
       type: object
       properties:
         sender:
@@ -51427,18 +51427,18 @@ components:
           type: string
         key_id:
           type: string
-    axelar.multisig.v1beta1.RotateKeyResponse:
+    scalar.multisig.v1beta1.RotateKeyResponse:
       type: object
-    axelar.multisig.v1beta1.StartKeygenRequest:
+    scalar.multisig.v1beta1.StartKeygenRequest:
       type: object
       properties:
         sender:
           type: string
         key_id:
           type: string
-    axelar.multisig.v1beta1.StartKeygenResponse:
+    scalar.multisig.v1beta1.StartKeygenResponse:
       type: object
-    axelar.multisig.v1beta1.SubmitPubKeyRequest:
+    scalar.multisig.v1beta1.SubmitPubKeyRequest:
       type: object
       properties:
         sender:
@@ -51451,9 +51451,9 @@ components:
         signature:
           type: string
           format: byte
-    axelar.multisig.v1beta1.SubmitPubKeyResponse:
+    scalar.multisig.v1beta1.SubmitPubKeyResponse:
       type: object
-    axelar.multisig.v1beta1.SubmitSignatureRequest:
+    scalar.multisig.v1beta1.SubmitSignatureRequest:
       type: object
       properties:
         sender:
@@ -51464,945 +51464,8 @@ components:
         signature:
           type: string
           format: byte
-    axelar.multisig.v1beta1.SubmitSignatureResponse:
+    scalar.multisig.v1beta1.SubmitSignatureResponse:
       type: object
-    axelar.nexus.exported.v1beta1.CrossChainAddress:
-      type: object
-      properties:
-        chain:
-          type: object
-          properties:
-            name:
-              type: string
-            supports_foreign_assets:
-              type: boolean
-              format: boolean
-            key_type:
-              type: string
-              enum:
-                - KEY_TYPE_UNSPECIFIED
-                - KEY_TYPE_NONE
-                - KEY_TYPE_THRESHOLD
-                - KEY_TYPE_MULTISIG
-              default: KEY_TYPE_UNSPECIFIED
-            module:
-              type: string
-          title: Chain represents the properties of a registered blockchain
-        address:
-          type: string
-      title: CrossChainAddress represents a generalized address on any registered
-        chain
-    axelar.nexus.exported.v1beta1.CrossChainTransfer:
-      type: object
-      properties:
-        recipient:
-          type: object
-          properties:
-            chain:
-              type: object
-              properties:
-                name:
-                  type: string
-                supports_foreign_assets:
-                  type: boolean
-                  format: boolean
-                key_type:
-                  type: string
-                  enum:
-                    - KEY_TYPE_UNSPECIFIED
-                    - KEY_TYPE_NONE
-                    - KEY_TYPE_THRESHOLD
-                    - KEY_TYPE_MULTISIG
-                  default: KEY_TYPE_UNSPECIFIED
-                module:
-                  type: string
-              title: Chain represents the properties of a registered blockchain
-            address:
-              type: string
-          title: CrossChainAddress represents a generalized address on any registered
-            chain
-        asset:
-          type: object
-          properties:
-            denom:
-              type: string
-            amount:
-              type: string
-          description: |-
-            Coin defines a token with a denomination and an amount.
-
-            NOTE: The amount field is an Int which implements the custom method
-            signatures required by gogoproto.
-        id:
-          type: string
-          format: uint64
-        state:
-          type: string
-          enum:
-            - TRANSFER_STATE_UNSPECIFIED
-            - TRANSFER_STATE_PENDING
-            - TRANSFER_STATE_ARCHIVED
-            - TRANSFER_STATE_INSUFFICIENT_AMOUNT
-          default: TRANSFER_STATE_UNSPECIFIED
-      title: |-
-        CrossChainTransfer represents a generalized transfer of some asset to a
-        registered blockchain
-    axelar.nexus.exported.v1beta1.FeeInfo:
-      type: object
-      properties:
-        chain:
-          type: string
-        asset:
-          type: string
-        fee_rate:
-          type: string
-          format: byte
-        min_fee:
-          type: string
-          format: byte
-        max_fee:
-          type: string
-          format: byte
-    axelar.nexus.exported.v1beta1.GeneralMessage:
-      type: object
-      properties:
-        id:
-          type: string
-        sender:
-          type: object
-          properties:
-            chain:
-              type: object
-              properties:
-                name:
-                  type: string
-                supports_foreign_assets:
-                  type: boolean
-                  format: boolean
-                key_type:
-                  type: string
-                  enum:
-                    - KEY_TYPE_UNSPECIFIED
-                    - KEY_TYPE_NONE
-                    - KEY_TYPE_THRESHOLD
-                    - KEY_TYPE_MULTISIG
-                  default: KEY_TYPE_UNSPECIFIED
-                module:
-                  type: string
-              title: Chain represents the properties of a registered blockchain
-            address:
-              type: string
-          title: CrossChainAddress represents a generalized address on any registered
-            chain
-        recipient:
-          type: object
-          properties:
-            chain:
-              type: object
-              properties:
-                name:
-                  type: string
-                supports_foreign_assets:
-                  type: boolean
-                  format: boolean
-                key_type:
-                  type: string
-                  enum:
-                    - KEY_TYPE_UNSPECIFIED
-                    - KEY_TYPE_NONE
-                    - KEY_TYPE_THRESHOLD
-                    - KEY_TYPE_MULTISIG
-                  default: KEY_TYPE_UNSPECIFIED
-                module:
-                  type: string
-              title: Chain represents the properties of a registered blockchain
-            address:
-              type: string
-          title: CrossChainAddress represents a generalized address on any registered
-            chain
-        payload_hash:
-          type: string
-          format: byte
-        status:
-          type: string
-          enum:
-            - STATUS_UNSPECIFIED
-            - STATUS_APPROVED
-            - STATUS_PROCESSING
-            - STATUS_EXECUTED
-            - STATUS_FAILED
-          default: STATUS_UNSPECIFIED
-        asset:
-          type: object
-          properties:
-            denom:
-              type: string
-            amount:
-              type: string
-          description: |-
-            Coin defines a token with a denomination and an amount.
-
-            NOTE: The amount field is an Int which implements the custom method
-            signatures required by gogoproto.
-        source_tx_id:
-          type: string
-          format: byte
-        source_tx_index:
-          type: string
-          format: uint64
-    axelar.nexus.exported.v1beta1.GeneralMessage.Status:
-      type: string
-      enum:
-        - STATUS_UNSPECIFIED
-        - STATUS_APPROVED
-        - STATUS_PROCESSING
-        - STATUS_EXECUTED
-        - STATUS_FAILED
-      default: STATUS_UNSPECIFIED
-    axelar.nexus.exported.v1beta1.TransferState:
-      type: string
-      enum:
-        - TRANSFER_STATE_UNSPECIFIED
-        - TRANSFER_STATE_PENDING
-        - TRANSFER_STATE_ARCHIVED
-        - TRANSFER_STATE_INSUFFICIENT_AMOUNT
-      default: TRANSFER_STATE_UNSPECIFIED
-    axelar.nexus.v1beta1.ActivateChainRequest:
-      type: object
-      properties:
-        sender:
-          type: string
-          format: byte
-        chains:
-          type: array
-          items:
-            type: string
-      title: ActivateChainRequest represents a message to activate chains
-    axelar.nexus.v1beta1.ActivateChainResponse:
-      type: object
-    axelar.nexus.v1beta1.AssetsResponse:
-      type: object
-      properties:
-        assets:
-          type: array
-          items:
-            type: string
-    axelar.nexus.v1beta1.ChainMaintainersResponse:
-      type: object
-      properties:
-        maintainers:
-          type: array
-          items:
-            type: string
-            format: byte
-    axelar.nexus.v1beta1.ChainState:
-      type: object
-      properties:
-        chain:
-          type: object
-          properties:
-            name:
-              type: string
-            supports_foreign_assets:
-              type: boolean
-              format: boolean
-            key_type:
-              type: string
-              enum:
-                - KEY_TYPE_UNSPECIFIED
-                - KEY_TYPE_NONE
-                - KEY_TYPE_THRESHOLD
-                - KEY_TYPE_MULTISIG
-              default: KEY_TYPE_UNSPECIFIED
-            module:
-              type: string
-          title: Chain represents the properties of a registered blockchain
-        activated:
-          type: boolean
-          format: boolean
-        assets:
-          type: array
-          items:
-            type: object
-            properties:
-              denom:
-                type: string
-              is_native_asset:
-                type: boolean
-                format: boolean
-        maintainer_states:
-          type: array
-          items:
-            type: object
-            properties:
-              address:
-                type: string
-                format: byte
-              missing_votes:
-                type: object
-                properties:
-                  true_count_cache:
-                    type: object
-                    properties:
-                      cumulative_value:
-                        type: array
-                        items:
-                          type: string
-                          format: uint64
-                      index:
-                        type: integer
-                        format: int32
-                      max_size:
-                        type: integer
-                        format: int32
-              incorrect_votes:
-                type: object
-                properties:
-                  true_count_cache:
-                    type: object
-                    properties:
-                      cumulative_value:
-                        type: array
-                        items:
-                          type: string
-                          format: uint64
-                      index:
-                        type: integer
-                        format: int32
-                      max_size:
-                        type: integer
-                        format: int32
-              chain:
-                type: string
-      title: ChainState represents the state of a registered blockchain
-    axelar.nexus.v1beta1.ChainStateResponse:
-      type: object
-      properties:
-        state:
-          type: object
-          properties:
-            chain:
-              type: object
-              properties:
-                name:
-                  type: string
-                supports_foreign_assets:
-                  type: boolean
-                  format: boolean
-                key_type:
-                  type: string
-                  enum:
-                    - KEY_TYPE_UNSPECIFIED
-                    - KEY_TYPE_NONE
-                    - KEY_TYPE_THRESHOLD
-                    - KEY_TYPE_MULTISIG
-                  default: KEY_TYPE_UNSPECIFIED
-                module:
-                  type: string
-              title: Chain represents the properties of a registered blockchain
-            activated:
-              type: boolean
-              format: boolean
-            assets:
-              type: array
-              items:
-                type: object
-                properties:
-                  denom:
-                    type: string
-                  is_native_asset:
-                    type: boolean
-                    format: boolean
-            maintainer_states:
-              type: array
-              items:
-                type: object
-                properties:
-                  address:
-                    type: string
-                    format: byte
-                  missing_votes:
-                    type: object
-                    properties:
-                      true_count_cache:
-                        type: object
-                        properties:
-                          cumulative_value:
-                            type: array
-                            items:
-                              type: string
-                              format: uint64
-                          index:
-                            type: integer
-                            format: int32
-                          max_size:
-                            type: integer
-                            format: int32
-                  incorrect_votes:
-                    type: object
-                    properties:
-                      true_count_cache:
-                        type: object
-                        properties:
-                          cumulative_value:
-                            type: array
-                            items:
-                              type: string
-                              format: uint64
-                          index:
-                            type: integer
-                            format: int32
-                          max_size:
-                            type: integer
-                            format: int32
-                  chain:
-                    type: string
-          title: ChainState represents the state of a registered blockchain
-    axelar.nexus.v1beta1.ChainStatus:
-      type: string
-      enum:
-        - CHAIN_STATUS_UNSPECIFIED
-        - CHAIN_STATUS_ACTIVATED
-        - CHAIN_STATUS_DEACTIVATED
-      default: CHAIN_STATUS_UNSPECIFIED
-    axelar.nexus.v1beta1.ChainsByAssetResponse:
-      type: object
-      properties:
-        chains:
-          type: array
-          items:
-            type: string
-    axelar.nexus.v1beta1.ChainsResponse:
-      type: object
-      properties:
-        chains:
-          type: array
-          items:
-            type: string
-    axelar.nexus.v1beta1.DeactivateChainRequest:
-      type: object
-      properties:
-        sender:
-          type: string
-          format: byte
-        chains:
-          type: array
-          items:
-            type: string
-      title: DeactivateChainRequest represents a message to deactivate chains
-    axelar.nexus.v1beta1.DeactivateChainResponse:
-      type: object
-    axelar.nexus.v1beta1.DeregisterChainMaintainerRequest:
-      type: object
-      properties:
-        sender:
-          type: string
-          format: byte
-        chains:
-          type: array
-          items:
-            type: string
-    axelar.nexus.v1beta1.DeregisterChainMaintainerResponse:
-      type: object
-    axelar.nexus.v1beta1.FeeInfoResponse:
-      type: object
-      properties:
-        fee_info:
-          type: object
-          properties:
-            chain:
-              type: string
-            asset:
-              type: string
-            fee_rate:
-              type: string
-              format: byte
-            min_fee:
-              type: string
-              format: byte
-            max_fee:
-              type: string
-              format: byte
-    axelar.nexus.v1beta1.LatestDepositAddressResponse:
-      type: object
-      properties:
-        deposit_addr:
-          type: string
-    axelar.nexus.v1beta1.MaintainerState:
-      type: object
-      properties:
-        address:
-          type: string
-          format: byte
-        missing_votes:
-          type: object
-          properties:
-            true_count_cache:
-              type: object
-              properties:
-                cumulative_value:
-                  type: array
-                  items:
-                    type: string
-                    format: uint64
-                index:
-                  type: integer
-                  format: int32
-                max_size:
-                  type: integer
-                  format: int32
-        incorrect_votes:
-          type: object
-          properties:
-            true_count_cache:
-              type: object
-              properties:
-                cumulative_value:
-                  type: array
-                  items:
-                    type: string
-                    format: uint64
-                index:
-                  type: integer
-                  format: int32
-                max_size:
-                  type: integer
-                  format: int32
-        chain:
-          type: string
-    axelar.nexus.v1beta1.MessageResponse:
-      type: object
-      properties:
-        message:
-          type: object
-          properties:
-            id:
-              type: string
-            sender:
-              type: object
-              properties:
-                chain:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    supports_foreign_assets:
-                      type: boolean
-                      format: boolean
-                    key_type:
-                      type: string
-                      enum:
-                        - KEY_TYPE_UNSPECIFIED
-                        - KEY_TYPE_NONE
-                        - KEY_TYPE_THRESHOLD
-                        - KEY_TYPE_MULTISIG
-                      default: KEY_TYPE_UNSPECIFIED
-                    module:
-                      type: string
-                  title: Chain represents the properties of a registered blockchain
-                address:
-                  type: string
-              title: CrossChainAddress represents a generalized address on any registered
-                chain
-            recipient:
-              type: object
-              properties:
-                chain:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    supports_foreign_assets:
-                      type: boolean
-                      format: boolean
-                    key_type:
-                      type: string
-                      enum:
-                        - KEY_TYPE_UNSPECIFIED
-                        - KEY_TYPE_NONE
-                        - KEY_TYPE_THRESHOLD
-                        - KEY_TYPE_MULTISIG
-                      default: KEY_TYPE_UNSPECIFIED
-                    module:
-                      type: string
-                  title: Chain represents the properties of a registered blockchain
-                address:
-                  type: string
-              title: CrossChainAddress represents a generalized address on any registered
-                chain
-            payload_hash:
-              type: string
-              format: byte
-            status:
-              type: string
-              enum:
-                - STATUS_UNSPECIFIED
-                - STATUS_APPROVED
-                - STATUS_PROCESSING
-                - STATUS_EXECUTED
-                - STATUS_FAILED
-              default: STATUS_UNSPECIFIED
-            asset:
-              type: object
-              properties:
-                denom:
-                  type: string
-                amount:
-                  type: string
-              description: >-
-                Coin defines a token with a denomination and an amount.
-
-
-                NOTE: The amount field is an Int which implements the custom method
-
-                signatures required by gogoproto.
-            source_tx_id:
-              type: string
-              format: byte
-            source_tx_index:
-              type: string
-              format: uint64
-    axelar.nexus.v1beta1.Params:
-      type: object
-      properties:
-        chain_activation_threshold:
-          type: object
-          properties:
-            numerator:
-              type: string
-              format: int64
-              title: >-
-                split threshold into Numerator and denominator to avoid floating
-                point
-
-                errors down the line
-            denominator:
-              type: string
-              format: int64
-        chain_maintainer_missing_vote_threshold:
-          type: object
-          properties:
-            numerator:
-              type: string
-              format: int64
-              title: >-
-                split threshold into Numerator and denominator to avoid floating
-                point
-
-                errors down the line
-            denominator:
-              type: string
-              format: int64
-        chain_maintainer_incorrect_vote_threshold:
-          type: object
-          properties:
-            numerator:
-              type: string
-              format: int64
-              title: >-
-                split threshold into Numerator and denominator to avoid floating
-                point
-
-                errors down the line
-            denominator:
-              type: string
-              format: int64
-        chain_maintainer_check_window:
-          type: integer
-          format: int32
-        gateway:
-          type: string
-          format: byte
-        end_blocker_limit:
-          type: string
-          format: uint64
-      title: Params represent the genesis parameters for the module
-    axelar.nexus.v1beta1.ParamsResponse:
-      type: object
-      properties:
-        params:
-          type: object
-          properties:
-            chain_activation_threshold:
-              type: object
-              properties:
-                numerator:
-                  type: string
-                  format: int64
-                  title: >-
-                    split threshold into Numerator and denominator to avoid
-                    floating point
-
-                    errors down the line
-                denominator:
-                  type: string
-                  format: int64
-            chain_maintainer_missing_vote_threshold:
-              type: object
-              properties:
-                numerator:
-                  type: string
-                  format: int64
-                  title: >-
-                    split threshold into Numerator and denominator to avoid
-                    floating point
-
-                    errors down the line
-                denominator:
-                  type: string
-                  format: int64
-            chain_maintainer_incorrect_vote_threshold:
-              type: object
-              properties:
-                numerator:
-                  type: string
-                  format: int64
-                  title: >-
-                    split threshold into Numerator and denominator to avoid
-                    floating point
-
-                    errors down the line
-                denominator:
-                  type: string
-                  format: int64
-            chain_maintainer_check_window:
-              type: integer
-              format: int32
-            gateway:
-              type: string
-              format: byte
-            end_blocker_limit:
-              type: string
-              format: uint64
-          title: Params represent the genesis parameters for the module
-    axelar.nexus.v1beta1.RecipientAddressResponse:
-      type: object
-      properties:
-        recipient_addr:
-          type: string
-        recipient_chain:
-          type: string
-    axelar.nexus.v1beta1.RegisterAssetFeeRequest:
-      type: object
-      properties:
-        sender:
-          type: string
-          format: byte
-        fee_info:
-          type: object
-          properties:
-            chain:
-              type: string
-            asset:
-              type: string
-            fee_rate:
-              type: string
-              format: byte
-            min_fee:
-              type: string
-              format: byte
-            max_fee:
-              type: string
-              format: byte
-      title: >-
-        RegisterAssetFeeRequest represents a message to register the transfer
-        fee
-
-        info associated to an asset on a chain
-    axelar.nexus.v1beta1.RegisterAssetFeeResponse:
-      type: object
-    axelar.nexus.v1beta1.RegisterChainMaintainerRequest:
-      type: object
-      properties:
-        sender:
-          type: string
-          format: byte
-        chains:
-          type: array
-          items:
-            type: string
-    axelar.nexus.v1beta1.RegisterChainMaintainerResponse:
-      type: object
-    axelar.nexus.v1beta1.SetTransferRateLimitRequest:
-      type: object
-      properties:
-        sender:
-          type: string
-          format: byte
-        chain:
-          type: string
-        limit:
-          type: object
-          properties:
-            denom:
-              type: string
-            amount:
-              type: string
-          description: |-
-            Coin defines a token with a denomination and an amount.
-
-            NOTE: The amount field is an Int which implements the custom method
-            signatures required by gogoproto.
-        window:
-          type: string
-      title: |-
-        SetTransferRateLimitRequest represents a message to set rate limits on
-        transfers
-    axelar.nexus.v1beta1.SetTransferRateLimitResponse:
-      type: object
-    axelar.nexus.v1beta1.TransferFeeResponse:
-      type: object
-      properties:
-        fee:
-          type: object
-          properties:
-            denom:
-              type: string
-            amount:
-              type: string
-          description: |-
-            Coin defines a token with a denomination and an amount.
-
-            NOTE: The amount field is an Int which implements the custom method
-            signatures required by gogoproto.
-    axelar.nexus.v1beta1.TransferRateLimit:
-      type: object
-      properties:
-        limit:
-          type: string
-          format: byte
-        window:
-          type: string
-        incoming:
-          type: string
-          format: byte
-        outgoing:
-          type: string
-          format: byte
-        time_left:
-          type: string
-          title: time_left indicates the time left in the rate limit window
-        from:
-          type: string
-          format: byte
-        to:
-          type: string
-          format: byte
-    axelar.nexus.v1beta1.TransferRateLimitResponse:
-      type: object
-      properties:
-        transfer_rate_limit:
-          type: object
-          properties:
-            limit:
-              type: string
-              format: byte
-            window:
-              type: string
-            incoming:
-              type: string
-              format: byte
-            outgoing:
-              type: string
-              format: byte
-            time_left:
-              type: string
-              title: time_left indicates the time left in the rate limit window
-            from:
-              type: string
-              format: byte
-            to:
-              type: string
-              format: byte
-    axelar.nexus.v1beta1.TransfersForChainResponse:
-      type: object
-      properties:
-        transfers:
-          type: array
-          items:
-            type: object
-            properties:
-              recipient:
-                type: object
-                properties:
-                  chain:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                      supports_foreign_assets:
-                        type: boolean
-                        format: boolean
-                      key_type:
-                        type: string
-                        enum:
-                          - KEY_TYPE_UNSPECIFIED
-                          - KEY_TYPE_NONE
-                          - KEY_TYPE_THRESHOLD
-                          - KEY_TYPE_MULTISIG
-                        default: KEY_TYPE_UNSPECIFIED
-                      module:
-                        type: string
-                    title: Chain represents the properties of a registered blockchain
-                  address:
-                    type: string
-                title: CrossChainAddress represents a generalized address on any registered
-                  chain
-              asset:
-                type: object
-                properties:
-                  denom:
-                    type: string
-                  amount:
-                    type: string
-                description: >-
-                  Coin defines a token with a denomination and an amount.
-
-
-                  NOTE: The amount field is an Int which implements the custom method
-
-                  signatures required by gogoproto.
-              id:
-                type: string
-                format: uint64
-              state:
-                type: string
-                enum:
-                  - TRANSFER_STATE_UNSPECIFIED
-                  - TRANSFER_STATE_PENDING
-                  - TRANSFER_STATE_ARCHIVED
-                  - TRANSFER_STATE_INSUFFICIENT_AMOUNT
-                default: TRANSFER_STATE_UNSPECIFIED
-            title: >-
-              CrossChainTransfer represents a generalized transfer of some asset
-              to a
-
-              registered blockchain
-        pagination:
-          type: object
-          properties:
-            next_key:
-              type: string
-              format: byte
-              title: |-
-                next_key is the key to be passed to PageRequest.key to
-                query the next page most efficiently
-            total:
-              type: string
-              format: uint64
-              title: >-
-                total is total number of results available if
-                PageRequest.count_total
-
-                was set, its value is undefined otherwise
-          description: |-
-            PageResponse is to be embedded in gRPC response messages where the
-            corresponding request message has used PageRequest.
-
-             message SomeResponse {
-                     repeated Bar results = 1;
-                     PageResponse page = 2;
-             }
     axelar.utils.v1beta1.Bitmap:
       type: object
       properties:
@@ -52515,6 +51578,943 @@ components:
                  repeated Bar results = 1;
                  PageResponse page = 2;
          }
+    scalar.nexus.exported.v1beta1.CrossChainAddress:
+      type: object
+      properties:
+        chain:
+          type: object
+          properties:
+            name:
+              type: string
+            supports_foreign_assets:
+              type: boolean
+              format: boolean
+            key_type:
+              type: string
+              enum:
+                - KEY_TYPE_UNSPECIFIED
+                - KEY_TYPE_NONE
+                - KEY_TYPE_THRESHOLD
+                - KEY_TYPE_MULTISIG
+              default: KEY_TYPE_UNSPECIFIED
+            module:
+              type: string
+          title: Chain represents the properties of a registered blockchain
+        address:
+          type: string
+      title: CrossChainAddress represents a generalized address on any registered
+        chain
+    scalar.nexus.exported.v1beta1.CrossChainTransfer:
+      type: object
+      properties:
+        recipient:
+          type: object
+          properties:
+            chain:
+              type: object
+              properties:
+                name:
+                  type: string
+                supports_foreign_assets:
+                  type: boolean
+                  format: boolean
+                key_type:
+                  type: string
+                  enum:
+                    - KEY_TYPE_UNSPECIFIED
+                    - KEY_TYPE_NONE
+                    - KEY_TYPE_THRESHOLD
+                    - KEY_TYPE_MULTISIG
+                  default: KEY_TYPE_UNSPECIFIED
+                module:
+                  type: string
+              title: Chain represents the properties of a registered blockchain
+            address:
+              type: string
+          title: CrossChainAddress represents a generalized address on any registered
+            chain
+        asset:
+          type: object
+          properties:
+            denom:
+              type: string
+            amount:
+              type: string
+          description: |-
+            Coin defines a token with a denomination and an amount.
+
+            NOTE: The amount field is an Int which implements the custom method
+            signatures required by gogoproto.
+        id:
+          type: string
+          format: uint64
+        state:
+          type: string
+          enum:
+            - TRANSFER_STATE_UNSPECIFIED
+            - TRANSFER_STATE_PENDING
+            - TRANSFER_STATE_ARCHIVED
+            - TRANSFER_STATE_INSUFFICIENT_AMOUNT
+          default: TRANSFER_STATE_UNSPECIFIED
+      title: |-
+        CrossChainTransfer represents a generalized transfer of some asset to a
+        registered blockchain
+    scalar.nexus.exported.v1beta1.FeeInfo:
+      type: object
+      properties:
+        chain:
+          type: string
+        asset:
+          type: string
+        fee_rate:
+          type: string
+          format: byte
+        min_fee:
+          type: string
+          format: byte
+        max_fee:
+          type: string
+          format: byte
+    scalar.nexus.exported.v1beta1.GeneralMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        sender:
+          type: object
+          properties:
+            chain:
+              type: object
+              properties:
+                name:
+                  type: string
+                supports_foreign_assets:
+                  type: boolean
+                  format: boolean
+                key_type:
+                  type: string
+                  enum:
+                    - KEY_TYPE_UNSPECIFIED
+                    - KEY_TYPE_NONE
+                    - KEY_TYPE_THRESHOLD
+                    - KEY_TYPE_MULTISIG
+                  default: KEY_TYPE_UNSPECIFIED
+                module:
+                  type: string
+              title: Chain represents the properties of a registered blockchain
+            address:
+              type: string
+          title: CrossChainAddress represents a generalized address on any registered
+            chain
+        recipient:
+          type: object
+          properties:
+            chain:
+              type: object
+              properties:
+                name:
+                  type: string
+                supports_foreign_assets:
+                  type: boolean
+                  format: boolean
+                key_type:
+                  type: string
+                  enum:
+                    - KEY_TYPE_UNSPECIFIED
+                    - KEY_TYPE_NONE
+                    - KEY_TYPE_THRESHOLD
+                    - KEY_TYPE_MULTISIG
+                  default: KEY_TYPE_UNSPECIFIED
+                module:
+                  type: string
+              title: Chain represents the properties of a registered blockchain
+            address:
+              type: string
+          title: CrossChainAddress represents a generalized address on any registered
+            chain
+        payload_hash:
+          type: string
+          format: byte
+        status:
+          type: string
+          enum:
+            - STATUS_UNSPECIFIED
+            - STATUS_APPROVED
+            - STATUS_PROCESSING
+            - STATUS_EXECUTED
+            - STATUS_FAILED
+          default: STATUS_UNSPECIFIED
+        asset:
+          type: object
+          properties:
+            denom:
+              type: string
+            amount:
+              type: string
+          description: |-
+            Coin defines a token with a denomination and an amount.
+
+            NOTE: The amount field is an Int which implements the custom method
+            signatures required by gogoproto.
+        source_tx_id:
+          type: string
+          format: byte
+        source_tx_index:
+          type: string
+          format: uint64
+    scalar.nexus.exported.v1beta1.GeneralMessage.Status:
+      type: string
+      enum:
+        - STATUS_UNSPECIFIED
+        - STATUS_APPROVED
+        - STATUS_PROCESSING
+        - STATUS_EXECUTED
+        - STATUS_FAILED
+      default: STATUS_UNSPECIFIED
+    scalar.nexus.exported.v1beta1.TransferState:
+      type: string
+      enum:
+        - TRANSFER_STATE_UNSPECIFIED
+        - TRANSFER_STATE_PENDING
+        - TRANSFER_STATE_ARCHIVED
+        - TRANSFER_STATE_INSUFFICIENT_AMOUNT
+      default: TRANSFER_STATE_UNSPECIFIED
+    scalar.nexus.v1beta1.ActivateChainRequest:
+      type: object
+      properties:
+        sender:
+          type: string
+          format: byte
+        chains:
+          type: array
+          items:
+            type: string
+      title: ActivateChainRequest represents a message to activate chains
+    scalar.nexus.v1beta1.ActivateChainResponse:
+      type: object
+    scalar.nexus.v1beta1.AssetsResponse:
+      type: object
+      properties:
+        assets:
+          type: array
+          items:
+            type: string
+    scalar.nexus.v1beta1.ChainMaintainersResponse:
+      type: object
+      properties:
+        maintainers:
+          type: array
+          items:
+            type: string
+            format: byte
+    scalar.nexus.v1beta1.ChainState:
+      type: object
+      properties:
+        chain:
+          type: object
+          properties:
+            name:
+              type: string
+            supports_foreign_assets:
+              type: boolean
+              format: boolean
+            key_type:
+              type: string
+              enum:
+                - KEY_TYPE_UNSPECIFIED
+                - KEY_TYPE_NONE
+                - KEY_TYPE_THRESHOLD
+                - KEY_TYPE_MULTISIG
+              default: KEY_TYPE_UNSPECIFIED
+            module:
+              type: string
+          title: Chain represents the properties of a registered blockchain
+        activated:
+          type: boolean
+          format: boolean
+        assets:
+          type: array
+          items:
+            type: object
+            properties:
+              denom:
+                type: string
+              is_native_asset:
+                type: boolean
+                format: boolean
+        maintainer_states:
+          type: array
+          items:
+            type: object
+            properties:
+              address:
+                type: string
+                format: byte
+              missing_votes:
+                type: object
+                properties:
+                  true_count_cache:
+                    type: object
+                    properties:
+                      cumulative_value:
+                        type: array
+                        items:
+                          type: string
+                          format: uint64
+                      index:
+                        type: integer
+                        format: int32
+                      max_size:
+                        type: integer
+                        format: int32
+              incorrect_votes:
+                type: object
+                properties:
+                  true_count_cache:
+                    type: object
+                    properties:
+                      cumulative_value:
+                        type: array
+                        items:
+                          type: string
+                          format: uint64
+                      index:
+                        type: integer
+                        format: int32
+                      max_size:
+                        type: integer
+                        format: int32
+              chain:
+                type: string
+      title: ChainState represents the state of a registered blockchain
+    scalar.nexus.v1beta1.ChainStateResponse:
+      type: object
+      properties:
+        state:
+          type: object
+          properties:
+            chain:
+              type: object
+              properties:
+                name:
+                  type: string
+                supports_foreign_assets:
+                  type: boolean
+                  format: boolean
+                key_type:
+                  type: string
+                  enum:
+                    - KEY_TYPE_UNSPECIFIED
+                    - KEY_TYPE_NONE
+                    - KEY_TYPE_THRESHOLD
+                    - KEY_TYPE_MULTISIG
+                  default: KEY_TYPE_UNSPECIFIED
+                module:
+                  type: string
+              title: Chain represents the properties of a registered blockchain
+            activated:
+              type: boolean
+              format: boolean
+            assets:
+              type: array
+              items:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  is_native_asset:
+                    type: boolean
+                    format: boolean
+            maintainer_states:
+              type: array
+              items:
+                type: object
+                properties:
+                  address:
+                    type: string
+                    format: byte
+                  missing_votes:
+                    type: object
+                    properties:
+                      true_count_cache:
+                        type: object
+                        properties:
+                          cumulative_value:
+                            type: array
+                            items:
+                              type: string
+                              format: uint64
+                          index:
+                            type: integer
+                            format: int32
+                          max_size:
+                            type: integer
+                            format: int32
+                  incorrect_votes:
+                    type: object
+                    properties:
+                      true_count_cache:
+                        type: object
+                        properties:
+                          cumulative_value:
+                            type: array
+                            items:
+                              type: string
+                              format: uint64
+                          index:
+                            type: integer
+                            format: int32
+                          max_size:
+                            type: integer
+                            format: int32
+                  chain:
+                    type: string
+          title: ChainState represents the state of a registered blockchain
+    scalar.nexus.v1beta1.ChainStatus:
+      type: string
+      enum:
+        - CHAIN_STATUS_UNSPECIFIED
+        - CHAIN_STATUS_ACTIVATED
+        - CHAIN_STATUS_DEACTIVATED
+      default: CHAIN_STATUS_UNSPECIFIED
+    scalar.nexus.v1beta1.ChainsByAssetResponse:
+      type: object
+      properties:
+        chains:
+          type: array
+          items:
+            type: string
+    scalar.nexus.v1beta1.ChainsResponse:
+      type: object
+      properties:
+        chains:
+          type: array
+          items:
+            type: string
+    scalar.nexus.v1beta1.DeactivateChainRequest:
+      type: object
+      properties:
+        sender:
+          type: string
+          format: byte
+        chains:
+          type: array
+          items:
+            type: string
+      title: DeactivateChainRequest represents a message to deactivate chains
+    scalar.nexus.v1beta1.DeactivateChainResponse:
+      type: object
+    scalar.nexus.v1beta1.DeregisterChainMaintainerRequest:
+      type: object
+      properties:
+        sender:
+          type: string
+          format: byte
+        chains:
+          type: array
+          items:
+            type: string
+    scalar.nexus.v1beta1.DeregisterChainMaintainerResponse:
+      type: object
+    scalar.nexus.v1beta1.FeeInfoResponse:
+      type: object
+      properties:
+        fee_info:
+          type: object
+          properties:
+            chain:
+              type: string
+            asset:
+              type: string
+            fee_rate:
+              type: string
+              format: byte
+            min_fee:
+              type: string
+              format: byte
+            max_fee:
+              type: string
+              format: byte
+    scalar.nexus.v1beta1.LatestDepositAddressResponse:
+      type: object
+      properties:
+        deposit_addr:
+          type: string
+    scalar.nexus.v1beta1.MaintainerState:
+      type: object
+      properties:
+        address:
+          type: string
+          format: byte
+        missing_votes:
+          type: object
+          properties:
+            true_count_cache:
+              type: object
+              properties:
+                cumulative_value:
+                  type: array
+                  items:
+                    type: string
+                    format: uint64
+                index:
+                  type: integer
+                  format: int32
+                max_size:
+                  type: integer
+                  format: int32
+        incorrect_votes:
+          type: object
+          properties:
+            true_count_cache:
+              type: object
+              properties:
+                cumulative_value:
+                  type: array
+                  items:
+                    type: string
+                    format: uint64
+                index:
+                  type: integer
+                  format: int32
+                max_size:
+                  type: integer
+                  format: int32
+        chain:
+          type: string
+    scalar.nexus.v1beta1.MessageResponse:
+      type: object
+      properties:
+        message:
+          type: object
+          properties:
+            id:
+              type: string
+            sender:
+              type: object
+              properties:
+                chain:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    supports_foreign_assets:
+                      type: boolean
+                      format: boolean
+                    key_type:
+                      type: string
+                      enum:
+                        - KEY_TYPE_UNSPECIFIED
+                        - KEY_TYPE_NONE
+                        - KEY_TYPE_THRESHOLD
+                        - KEY_TYPE_MULTISIG
+                      default: KEY_TYPE_UNSPECIFIED
+                    module:
+                      type: string
+                  title: Chain represents the properties of a registered blockchain
+                address:
+                  type: string
+              title: CrossChainAddress represents a generalized address on any registered
+                chain
+            recipient:
+              type: object
+              properties:
+                chain:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    supports_foreign_assets:
+                      type: boolean
+                      format: boolean
+                    key_type:
+                      type: string
+                      enum:
+                        - KEY_TYPE_UNSPECIFIED
+                        - KEY_TYPE_NONE
+                        - KEY_TYPE_THRESHOLD
+                        - KEY_TYPE_MULTISIG
+                      default: KEY_TYPE_UNSPECIFIED
+                    module:
+                      type: string
+                  title: Chain represents the properties of a registered blockchain
+                address:
+                  type: string
+              title: CrossChainAddress represents a generalized address on any registered
+                chain
+            payload_hash:
+              type: string
+              format: byte
+            status:
+              type: string
+              enum:
+                - STATUS_UNSPECIFIED
+                - STATUS_APPROVED
+                - STATUS_PROCESSING
+                - STATUS_EXECUTED
+                - STATUS_FAILED
+              default: STATUS_UNSPECIFIED
+            asset:
+              type: object
+              properties:
+                denom:
+                  type: string
+                amount:
+                  type: string
+              description: >-
+                Coin defines a token with a denomination and an amount.
+
+
+                NOTE: The amount field is an Int which implements the custom method
+
+                signatures required by gogoproto.
+            source_tx_id:
+              type: string
+              format: byte
+            source_tx_index:
+              type: string
+              format: uint64
+    scalar.nexus.v1beta1.Params:
+      type: object
+      properties:
+        chain_activation_threshold:
+          type: object
+          properties:
+            numerator:
+              type: string
+              format: int64
+              title: >-
+                split threshold into Numerator and denominator to avoid floating
+                point
+
+                errors down the line
+            denominator:
+              type: string
+              format: int64
+        chain_maintainer_missing_vote_threshold:
+          type: object
+          properties:
+            numerator:
+              type: string
+              format: int64
+              title: >-
+                split threshold into Numerator and denominator to avoid floating
+                point
+
+                errors down the line
+            denominator:
+              type: string
+              format: int64
+        chain_maintainer_incorrect_vote_threshold:
+          type: object
+          properties:
+            numerator:
+              type: string
+              format: int64
+              title: >-
+                split threshold into Numerator and denominator to avoid floating
+                point
+
+                errors down the line
+            denominator:
+              type: string
+              format: int64
+        chain_maintainer_check_window:
+          type: integer
+          format: int32
+        gateway:
+          type: string
+          format: byte
+        end_blocker_limit:
+          type: string
+          format: uint64
+      title: Params represent the genesis parameters for the module
+    scalar.nexus.v1beta1.ParamsResponse:
+      type: object
+      properties:
+        params:
+          type: object
+          properties:
+            chain_activation_threshold:
+              type: object
+              properties:
+                numerator:
+                  type: string
+                  format: int64
+                  title: >-
+                    split threshold into Numerator and denominator to avoid
+                    floating point
+
+                    errors down the line
+                denominator:
+                  type: string
+                  format: int64
+            chain_maintainer_missing_vote_threshold:
+              type: object
+              properties:
+                numerator:
+                  type: string
+                  format: int64
+                  title: >-
+                    split threshold into Numerator and denominator to avoid
+                    floating point
+
+                    errors down the line
+                denominator:
+                  type: string
+                  format: int64
+            chain_maintainer_incorrect_vote_threshold:
+              type: object
+              properties:
+                numerator:
+                  type: string
+                  format: int64
+                  title: >-
+                    split threshold into Numerator and denominator to avoid
+                    floating point
+
+                    errors down the line
+                denominator:
+                  type: string
+                  format: int64
+            chain_maintainer_check_window:
+              type: integer
+              format: int32
+            gateway:
+              type: string
+              format: byte
+            end_blocker_limit:
+              type: string
+              format: uint64
+          title: Params represent the genesis parameters for the module
+    scalar.nexus.v1beta1.RecipientAddressResponse:
+      type: object
+      properties:
+        recipient_addr:
+          type: string
+        recipient_chain:
+          type: string
+    scalar.nexus.v1beta1.RegisterAssetFeeRequest:
+      type: object
+      properties:
+        sender:
+          type: string
+          format: byte
+        fee_info:
+          type: object
+          properties:
+            chain:
+              type: string
+            asset:
+              type: string
+            fee_rate:
+              type: string
+              format: byte
+            min_fee:
+              type: string
+              format: byte
+            max_fee:
+              type: string
+              format: byte
+      title: >-
+        RegisterAssetFeeRequest represents a message to register the transfer
+        fee
+
+        info associated to an asset on a chain
+    scalar.nexus.v1beta1.RegisterAssetFeeResponse:
+      type: object
+    scalar.nexus.v1beta1.RegisterChainMaintainerRequest:
+      type: object
+      properties:
+        sender:
+          type: string
+          format: byte
+        chains:
+          type: array
+          items:
+            type: string
+    scalar.nexus.v1beta1.RegisterChainMaintainerResponse:
+      type: object
+    scalar.nexus.v1beta1.SetTransferRateLimitRequest:
+      type: object
+      properties:
+        sender:
+          type: string
+          format: byte
+        chain:
+          type: string
+        limit:
+          type: object
+          properties:
+            denom:
+              type: string
+            amount:
+              type: string
+          description: |-
+            Coin defines a token with a denomination and an amount.
+
+            NOTE: The amount field is an Int which implements the custom method
+            signatures required by gogoproto.
+        window:
+          type: string
+      title: |-
+        SetTransferRateLimitRequest represents a message to set rate limits on
+        transfers
+    scalar.nexus.v1beta1.SetTransferRateLimitResponse:
+      type: object
+    scalar.nexus.v1beta1.TransferFeeResponse:
+      type: object
+      properties:
+        fee:
+          type: object
+          properties:
+            denom:
+              type: string
+            amount:
+              type: string
+          description: |-
+            Coin defines a token with a denomination and an amount.
+
+            NOTE: The amount field is an Int which implements the custom method
+            signatures required by gogoproto.
+    scalar.nexus.v1beta1.TransferRateLimit:
+      type: object
+      properties:
+        limit:
+          type: string
+          format: byte
+        window:
+          type: string
+        incoming:
+          type: string
+          format: byte
+        outgoing:
+          type: string
+          format: byte
+        time_left:
+          type: string
+          title: time_left indicates the time left in the rate limit window
+        from:
+          type: string
+          format: byte
+        to:
+          type: string
+          format: byte
+    scalar.nexus.v1beta1.TransferRateLimitResponse:
+      type: object
+      properties:
+        transfer_rate_limit:
+          type: object
+          properties:
+            limit:
+              type: string
+              format: byte
+            window:
+              type: string
+            incoming:
+              type: string
+              format: byte
+            outgoing:
+              type: string
+              format: byte
+            time_left:
+              type: string
+              title: time_left indicates the time left in the rate limit window
+            from:
+              type: string
+              format: byte
+            to:
+              type: string
+              format: byte
+    scalar.nexus.v1beta1.TransfersForChainResponse:
+      type: object
+      properties:
+        transfers:
+          type: array
+          items:
+            type: object
+            properties:
+              recipient:
+                type: object
+                properties:
+                  chain:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      supports_foreign_assets:
+                        type: boolean
+                        format: boolean
+                      key_type:
+                        type: string
+                        enum:
+                          - KEY_TYPE_UNSPECIFIED
+                          - KEY_TYPE_NONE
+                          - KEY_TYPE_THRESHOLD
+                          - KEY_TYPE_MULTISIG
+                        default: KEY_TYPE_UNSPECIFIED
+                      module:
+                        type: string
+                    title: Chain represents the properties of a registered blockchain
+                  address:
+                    type: string
+                title: CrossChainAddress represents a generalized address on any registered
+                  chain
+              asset:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom method
+
+                  signatures required by gogoproto.
+              id:
+                type: string
+                format: uint64
+              state:
+                type: string
+                enum:
+                  - TRANSFER_STATE_UNSPECIFIED
+                  - TRANSFER_STATE_PENDING
+                  - TRANSFER_STATE_ARCHIVED
+                  - TRANSFER_STATE_INSUFFICIENT_AMOUNT
+                default: TRANSFER_STATE_UNSPECIFIED
+            title: >-
+              CrossChainTransfer represents a generalized transfer of some asset
+              to a
+
+              registered blockchain
+        pagination:
+          type: object
+          properties:
+            next_key:
+              type: string
+              format: byte
+              title: |-
+                next_key is the key to be passed to PageRequest.key to
+                query the next page most efficiently
+            total:
+              type: string
+              format: uint64
+              title: >-
+                total is total number of results available if
+                PageRequest.count_total
+
+                was set, its value is undefined otherwise
+          description: |-
+            PageResponse is to be embedded in gRPC response messages where the
+            corresponding request message has used PageRequest.
+
+             message SomeResponse {
+                     repeated Bar results = 1;
+                     PageResponse page = 2;
+             }
     axelar.reward.v1beta1.InflationRateResponse:
       type: object
       properties:

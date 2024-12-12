@@ -2,8 +2,8 @@ package types
 
 import (
 	utils "github.com/axelarnetwork/axelar-core/utils"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/tendermint/tendermint/libs/log"
 
 	reward "github.com/axelarnetwork/axelar-core/x/reward/exported"

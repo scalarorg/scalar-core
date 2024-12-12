@@ -8,7 +8,7 @@ import (
 	host "github.com/cosmos/ibc-go/v4/modules/core/24-host"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 // NewAddCosmosBasedChainRequest is the constructor for NewAddCosmosBasedChainRequest

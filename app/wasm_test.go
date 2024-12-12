@@ -18,13 +18,13 @@ import (
 
 	"github.com/axelarnetwork/axelar-core/testutils/fake"
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
-	nexusmock "github.com/axelarnetwork/axelar-core/x/nexus/types/mock"
 	"github.com/axelarnetwork/utils/funcs"
 	. "github.com/axelarnetwork/utils/test"
 	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/app/mock"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	nexusmock "github.com/scalarorg/scalar-core/x/nexus/types/mock"
 )
 
 func TestAnteHandlerMessenger_DispatchMsg(t *testing.T) {

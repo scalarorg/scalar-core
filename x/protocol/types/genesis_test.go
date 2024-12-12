@@ -3,10 +3,10 @@ package types
 import (
 	"testing"
 
-	evmtypes "github.com/axelarnetwork/axelar-core/x/evm/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
+	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	"github.com/stretchr/testify/assert"
 )
 

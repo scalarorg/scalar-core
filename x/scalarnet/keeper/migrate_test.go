@@ -11,9 +11,9 @@ package keeper_test
 
 // 	"github.com/axelarnetwork/axelar-core/testutils/fake"
 // 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-// 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
-// 	nexusmock "github.com/axelarnetwork/axelar-core/x/nexus/exported/mock"
-// 	nexustypes "github.com/axelarnetwork/axelar-core/x/nexus/types"
+// 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+// 	nexusmock "github.com/scalarorg/scalar-core/x/nexus/exported/mock"
+// 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
 // 	"github.com/axelarnetwork/utils/funcs"
 // 	. "github.com/axelarnetwork/utils/test"
 // 	"github.com/scalarorg/scalar-core/app"

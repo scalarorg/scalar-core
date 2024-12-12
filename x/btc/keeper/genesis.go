@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/axelarnetwork/utils/funcs"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 
 	"github.com/scalarorg/scalar-core/x/btc/types"
 )

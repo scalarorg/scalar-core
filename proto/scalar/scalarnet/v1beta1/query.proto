@@ -36,5 +36,5 @@ message ChainByIBCPathRequest { string ibc_path = 1; }
 message ChainByIBCPathResponse {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
 }

@@ -11,12 +11,12 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/spf13/cobra"
 
-	evmtypes "github.com/axelarnetwork/axelar-core/x/evm/types"
-	nexusTypes "github.com/axelarnetwork/axelar-core/x/nexus/types"
 	tss "github.com/axelarnetwork/axelar-core/x/tss/exported"
+	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
+	nexusTypes "github.com/scalarorg/scalar-core/x/nexus/types"
 
 	//btctypes "github.com/scalar/scalar-core/x/btc/types"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 // func AddGenesisBTCChainCmd(defaultNodeHome string) *cobra.Command {

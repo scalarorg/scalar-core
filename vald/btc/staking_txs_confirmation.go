@@ -3,7 +3,6 @@ package btc
 import (
 	"context"
 
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	vote "github.com/axelarnetwork/axelar-core/x/vote/exported"
 	voteTypes "github.com/axelarnetwork/axelar-core/x/vote/types"
 	"github.com/axelarnetwork/utils/slices"
@@ -11,6 +10,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/scalarorg/scalar-core/vald/btc/rpc"
 	"github.com/scalarorg/scalar-core/x/btc/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 func (mgr Mgr) ProcessStakingTxsConfirmation(event *types.EventConfirmStakingTxsStarted) error {

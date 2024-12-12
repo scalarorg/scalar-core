@@ -29,7 +29,7 @@ message RotateKeyRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   tss.exported.v1beta1.KeyRole key_role = 3;
   string key_id = 4 [
     (gogoproto.customname) = "KeyID",
@@ -114,7 +114,7 @@ message RegisterExternalKeysRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   repeated ExternalKey external_keys = 3 [ (gogoproto.nullable) = false ];
 }
 

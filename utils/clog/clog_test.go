@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/utils/clog"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 type TestStruct struct {

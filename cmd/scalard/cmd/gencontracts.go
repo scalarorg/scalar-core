@@ -11,7 +11,7 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/spf13/cobra"
 
-	evmTypes "github.com/axelarnetwork/axelar-core/x/evm/types"
+	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 )
 
 const (

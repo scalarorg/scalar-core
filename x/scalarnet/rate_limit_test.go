@@ -18,8 +18,8 @@ package scalarnet_test
 //
 // "github.com/axelarnetwork/axelar-core/testutils/fake"
 // "github.com/axelarnetwork/axelar-core/testutils/rand"
-// nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
-// nexustestutils "github.com/axelarnetwork/axelar-core/x/nexus/exported/testutils"
+// nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+// nexustestutils "github.com/scalarorg/scalar-core/x/nexus/exported/testutils"
 // . "github.com/axelarnetwork/utils/test"
 // appParams "github.com/scalarorg/scalar-core/app/params"
 // "github.com/scalarorg/scalar-core/x/scalarnet"

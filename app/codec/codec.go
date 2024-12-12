@@ -7,13 +7,13 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/gogo/protobuf/proto"
 
-	evmtypes "github.com/axelarnetwork/axelar-core/x/evm/types"
-	nexustypes "github.com/axelarnetwork/axelar-core/x/nexus/types"
 	permissiontypes "github.com/axelarnetwork/axelar-core/x/permission/types"
 	rewardtypes "github.com/axelarnetwork/axelar-core/x/reward/types"
 	snapshottypes "github.com/axelarnetwork/axelar-core/x/snapshot/types"
 	tsstypes "github.com/axelarnetwork/axelar-core/x/tss/types"
 	votetypes "github.com/axelarnetwork/axelar-core/x/vote/types"
+	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
+	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
 	scalarnettypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
 )
 

@@ -11,7 +11,7 @@ package keeper_test
 // 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 // 	"github.com/axelarnetwork/axelar-core/testutils/fake"
-// 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
+// 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 // 	. "github.com/axelarnetwork/utils/test"
 // 	"github.com/axelarnetwork/utils/test/rand"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet/keeper"

@@ -24,7 +24,7 @@ message PollMapping {
 message PollMetadata {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   bytes tx_id = 2 [
     (gogoproto.customname) = "TxID",
     (gogoproto.nullable) = false,
@@ -40,7 +40,7 @@ message PollFailed {
   ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
@@ -57,7 +57,7 @@ message PollExpired {
   ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
@@ -74,7 +74,7 @@ message PollCompleted {
   ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =

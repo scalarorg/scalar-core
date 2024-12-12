@@ -16,7 +16,7 @@ message NoEventsConfirmed {
   ];
   string chain = 2
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
@@ -28,7 +28,7 @@ message NoEventsConfirmed {
 message BTCEventConfirmed {
   string chain = 1
       [ (gogoproto.casttype) =
-            "github.com/axelarnetwork/axelar-core/x/nexus/exported.ChainName" ];
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string event_id = 2
       [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
   string type = 3;

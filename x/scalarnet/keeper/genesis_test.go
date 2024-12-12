@@ -18,7 +18,7 @@ package keeper_test
 // 	"github.com/axelarnetwork/axelar-core/testutils/rand"
 // 	"github.com/axelarnetwork/axelar-core/utils"
 // 	"github.com/axelarnetwork/axelar-core/utils/key"
-// 	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
+// 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 // 	"github.com/axelarnetwork/utils/slices"
 // 	. "github.com/axelarnetwork/utils/test"
 // 	"github.com/scalarorg/scalar-core/app"

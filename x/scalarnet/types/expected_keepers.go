@@ -17,8 +17,8 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/axelarnetwork/axelar-core/utils"
-	nexus "github.com/axelarnetwork/axelar-core/x/nexus/exported"
-	nexustypes "github.com/axelarnetwork/axelar-core/x/nexus/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
 )
 
 //go:generate moq -out ./mock/expected_keepers.go -pkg mock . BaseKeeper Nexus BankKeeper IBCTransferKeeper ChannelKeeper AccountKeeper PortKeeper GovKeeper StakingKeeper FeegrantKeeper IBCKeeper
