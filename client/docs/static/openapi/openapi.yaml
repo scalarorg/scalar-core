@@ -15268,6 +15268,7 @@ paths:
                             - TRANSFER_STATE_PENDING
                             - TRANSFER_STATE_ARCHIVED
                             - TRANSFER_STATE_INSUFFICIENT_AMOUNT
+                            - TRANSFER_STATE_FAILED
                           default: TRANSFER_STATE_UNSPECIFIED
                       title: >-
                         CrossChainTransfer represents a generalized transfer of
@@ -15487,6 +15488,7 @@ paths:
               - TRANSFER_STATE_PENDING
               - TRANSFER_STATE_ARCHIVED
               - TRANSFER_STATE_INSUFFICIENT_AMOUNT
+              - TRANSFER_STATE_FAILED
         - name: pagination.key
           description: |-
             key is a value returned in PageResponse.next_key to begin
@@ -51655,6 +51657,7 @@ components:
             - TRANSFER_STATE_PENDING
             - TRANSFER_STATE_ARCHIVED
             - TRANSFER_STATE_INSUFFICIENT_AMOUNT
+            - TRANSFER_STATE_FAILED
           default: TRANSFER_STATE_UNSPECIFIED
       title: |-
         CrossChainTransfer represents a generalized transfer of some asset to a
@@ -51778,6 +51781,7 @@ components:
         - TRANSFER_STATE_PENDING
         - TRANSFER_STATE_ARCHIVED
         - TRANSFER_STATE_INSUFFICIENT_AMOUNT
+        - TRANSFER_STATE_FAILED
       default: TRANSFER_STATE_UNSPECIFIED
     scalar.nexus.v1beta1.ActivateChainRequest:
       type: object
@@ -52484,6 +52488,7 @@ components:
                   - TRANSFER_STATE_PENDING
                   - TRANSFER_STATE_ARCHIVED
                   - TRANSFER_STATE_INSUFFICIENT_AMOUNT
+                  - TRANSFER_STATE_FAILED
                 default: TRANSFER_STATE_UNSPECIFIED
             title: >-
               CrossChainTransfer represents a generalized transfer of some asset

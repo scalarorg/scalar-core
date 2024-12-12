@@ -7,10 +7,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibctypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
 
-	axelarnet "github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
 	"github.com/axelarnetwork/utils/funcs"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/types"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
 // NewLockableAsset creates a new lockable asset.
@@ -197,7 +197,7 @@ func toAssetAndType(ctx sdk.Context, nexus types.Nexus, ibc types.IBCKeeper, coi
 		return coin, types.ICS20, nil
 	case isNativeAssetOnAxelarnet(ctx, nexus, denom):
 		return coin, types.Native, nil
-	case nexus.IsAssetRegistered(ctx, axelarnet.Axelarnet, denom):
+	case nexus.IsAssetRegistered(ctx, scalarnet.Scalarnet, denom):
 		return coin, types.External, nil
 	default:
 		return sdk.Coin{}, types.Unrecognized, fmt.Errorf("unrecognized coin %s", denom)
@@ -233,5 +233,5 @@ func isICS20Denom(denom string) bool {
 func isNativeAssetOnAxelarnet(ctx sdk.Context, nexus types.Nexus, denom string) bool {
 	chain, ok := nexus.GetChainByNativeAsset(ctx, denom)
 
-	return ok && chain.Name.Equals(axelarnet.Axelarnet.Name)
+	return ok && chain.Name.Equals(scalarnet.Scalarnet.Name)
 }

@@ -19,7 +19,6 @@ import (
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
 	"github.com/axelarnetwork/axelar-core/utils"
 	utilsMock "github.com/axelarnetwork/axelar-core/utils/mock"
-	axelarnet "github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
 	"github.com/axelarnetwork/utils/slices"
 	. "github.com/axelarnetwork/utils/test"
 	"github.com/scalarorg/scalar-core/x/evm/types"
@@ -30,6 +29,7 @@ import (
 	multisigTypesTestuilts "github.com/scalarorg/scalar-core/x/multisig/types/testutils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustestutils "github.com/scalarorg/scalar-core/x/nexus/exported/testutils"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
 func setup() (sdk.Context, *mock.BaseKeeperMock, *mock.NexusMock, *mock.MultisigKeeperMock, *mock.ChainKeeperMock, *mock.ChainKeeperMock) {
@@ -518,7 +518,7 @@ func TestHandleContractCall(t *testing.T) {
 				case sourceChainName:
 					return nexus.Chain{Name: chain, Module: types.ModuleName}, true
 				case destinationChainName:
-					return nexus.Chain{Name: chain, Module: axelarnet.ModuleName}, true
+					return nexus.Chain{Name: chain, Module: scalarnet.ModuleName}, true
 				default:
 					return nexus.Chain{}, false
 				}

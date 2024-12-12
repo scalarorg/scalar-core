@@ -9,8 +9,8 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	abci "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/axelarnetwork/axelar-core/app/params"
 	"github.com/axelarnetwork/axelar-core/testutils/fake"
+	"github.com/scalarorg/scalar-core/app/params"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/keeper"
 	"github.com/scalarorg/scalar-core/x/nexus/types"
@@ -32,7 +32,7 @@ func TestMsgServerActivateDeactivateWasm(t *testing.T) {
 	snap := mock.SnapshotterMock{}
 	slashing := mock.SlashingKeeperMock{}
 	staking := mock.StakingKeeperMock{}
-	ax := mock.AxelarnetKeeperMock{}
+	ax := mock.ScalarnetKeeperMock{}
 
 	msgServer := keeper.NewMsgServerImpl(k, &snap, &slashing, &staking, &ax)
 

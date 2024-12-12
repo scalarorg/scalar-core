@@ -15,7 +15,7 @@ import (
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
-//go:generate moq -out ./mock/expected_keepers.go -pkg mock . Nexus Snapshotter AxelarnetKeeper RewardKeeper SlashingKeeper WasmKeeper AccountKeeper StakingKeeper MsgIDGenerator IBCKeeper BankKeeper
+//go:generate moq -out ./mock/expected_keepers.go -pkg mock . Nexus Snapshotter ScalarnetKeeper RewardKeeper SlashingKeeper WasmKeeper AccountKeeper StakingKeeper MsgIDGenerator IBCKeeper BankKeeper
 
 // Nexus provides functionality to manage cross-chain transfers
 type Nexus interface {
@@ -76,8 +76,8 @@ type StakingKeeper interface {
 	GetLastTotalPower(sdk.Context) sdk.Int
 }
 
-// AxelarnetKeeper provides functionality to the axelarnet module
-type AxelarnetKeeper interface {
+// ScalarnetKeeper provides functionality to the axelarnet module
+type ScalarnetKeeper interface {
 	IsCosmosChain(ctx sdk.Context, chain exported.ChainName) bool
 }
 

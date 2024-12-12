@@ -6,9 +6,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	axelarnet "github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
-	evm "github.com/axelarnetwork/axelar-core/x/evm/exported"
+	evm "github.com/scalarorg/scalar-core/x/evm/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
 // NewGenesisState is the constructor of GenesisState
@@ -47,10 +47,10 @@ func DefaultGenesisState() *GenesisState {
 	return NewGenesisState(
 		DefaultParams(),
 		0,
-		[]exported.Chain{evm.Ethereum, axelarnet.Axelarnet},
+		[]exported.Chain{evm.Ethereum, scalarnet.Scalarnet},
 		[]ChainState{{
-			Chain:  axelarnet.Axelarnet,
-			Assets: []exported.Asset{exported.NewAsset(axelarnet.NativeAsset, true)},
+			Chain:  scalarnet.Scalarnet,
+			Assets: []exported.Asset{exported.NewAsset(scalarnet.NativeAsset, true)},
 		}},
 		[]LinkedAddresses{},
 		[]exported.CrossChainTransfer{},

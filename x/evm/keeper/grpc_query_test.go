@@ -16,7 +16,6 @@ import (
 
 	"github.com/axelarnetwork/axelar-core/testutils"
 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	axelarnet "github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
 	. "github.com/axelarnetwork/utils/test"
 	"github.com/scalarorg/scalar-core/x/evm/exported"
 	evmKeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
@@ -27,6 +26,7 @@ import (
 	multisigTestutils "github.com/scalarorg/scalar-core/x/multisig/exported/testutils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustestutils "github.com/scalarorg/scalar-core/x/nexus/exported/testutils"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
 func TestQueryPendingCommands(t *testing.T) {
@@ -127,7 +127,7 @@ func TestChains(t *testing.T) {
 	Given("an evm querier", func() {
 		nexusKeeper = &mock.NexusMock{
 			GetChainsFunc: func(ctx sdk.Context) []nexus.Chain {
-				return []nexus.Chain{exported.Ethereum, axelarnet.Axelarnet, avalanche}
+				return []nexus.Chain{exported.Ethereum, scalarnet.Scalarnet, avalanche}
 			},
 			IsChainActivatedFunc: func(ctx sdk.Context, chain nexus.Chain) bool { return !chain.Name.Equals(avalanche.Name) },
 		}

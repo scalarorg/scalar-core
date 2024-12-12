@@ -30,7 +30,6 @@ import (
 	rand2 "github.com/axelarnetwork/axelar-core/testutils/rand"
 	"github.com/axelarnetwork/axelar-core/utils"
 	utilsMock "github.com/axelarnetwork/axelar-core/utils/mock"
-	axelarnet "github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
 	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	vote "github.com/axelarnetwork/axelar-core/x/vote/exported"
 	"github.com/axelarnetwork/utils/funcs"
@@ -45,6 +44,7 @@ import (
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	multisigTestUtils "github.com/scalarorg/scalar-core/x/multisig/exported/testutils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
 var (
@@ -331,7 +331,7 @@ func TestCreateBurnTokens(t *testing.T) {
 				TxID:             types.Hash(common.HexToHash(rand.HexStr(common.HashLength))),
 				Amount:           sdk.NewUint(uint64(rand.I64Between(1000, 1000000))),
 				Asset:            rand.Str(5),
-				DestinationChain: axelarnet.Axelarnet.Name,
+				DestinationChain: scalarnet.Scalarnet.Name,
 				BurnerAddress:    types.Address(common.HexToAddress(rand.HexStr(common.AddressLength))),
 			}
 			deposits = append(deposits, deposit)
@@ -387,21 +387,21 @@ func TestCreateBurnTokens(t *testing.T) {
 			TxID:             types.Hash(common.HexToHash(rand.HexStr(common.HashLength))),
 			Amount:           sdk.NewUint(uint64(rand.I64Between(1000, 1000000))),
 			Asset:            rand.Str(5),
-			DestinationChain: axelarnet.Axelarnet.Name,
+			DestinationChain: scalarnet.Scalarnet.Name,
 			BurnerAddress:    types.Address(common.HexToAddress(rand.HexStr(common.AddressLength))),
 		}
 		deposit2 := types.ERC20Deposit{
 			TxID:             types.Hash(common.HexToHash(rand.HexStr(common.HashLength))),
 			Amount:           sdk.NewUint(uint64(rand.I64Between(1000, 1000000))),
 			Asset:            rand.Str(5),
-			DestinationChain: axelarnet.Axelarnet.Name,
+			DestinationChain: scalarnet.Scalarnet.Name,
 			BurnerAddress:    deposit1.BurnerAddress,
 		}
 		deposit3 := types.ERC20Deposit{
 			TxID:             types.Hash(common.HexToHash(rand.HexStr(common.HashLength))),
 			Amount:           sdk.NewUint(uint64(rand.I64Between(1000, 1000000))),
 			Asset:            rand.Str(5),
-			DestinationChain: axelarnet.Axelarnet.Name,
+			DestinationChain: scalarnet.Scalarnet.Name,
 			BurnerAddress:    deposit1.BurnerAddress,
 		}
 		burnerInfo := types.BurnerInfo{
@@ -457,7 +457,7 @@ func TestLink_UnknownChain(t *testing.T) {
 		TransferLimit:       50,
 	}))
 
-	recipient := nexus.CrossChainAddress{Address: rand.ValAddr().String(), Chain: axelarnet.Axelarnet}
+	recipient := nexus.CrossChainAddress{Address: rand.ValAddr().String(), Chain: scalarnet.Scalarnet}
 	asset := rand.Str(3)
 
 	n := &mock.NexusMock{
@@ -499,7 +499,7 @@ func TestLink_NoGateway(t *testing.T) {
 		TransferLimit:       50,
 	}))
 
-	recipient := nexus.CrossChainAddress{Address: rand.ValAddr().String(), Chain: axelarnet.Axelarnet}
+	recipient := nexus.CrossChainAddress{Address: rand.ValAddr().String(), Chain: scalarnet.Scalarnet}
 	asset := rand.Str(3)
 
 	chains := map[nexus.ChainName]nexus.Chain{exported.Ethereum.Name: exported.Ethereum}
@@ -529,7 +529,7 @@ func TestLink_NoRecipientChain(t *testing.T) {
 	ctx := sdk.NewContext(fake.NewMultiStore(), tmproto.Header{}, false, log.TestingLogger())
 	k := newKeeper(ctx, "Ethereum", minConfHeight)
 
-	recipient := nexus.CrossChainAddress{Address: rand.ValAddr().String(), Chain: axelarnet.Axelarnet}
+	recipient := nexus.CrossChainAddress{Address: rand.ValAddr().String(), Chain: scalarnet.Scalarnet}
 	asset := rand.Str(3)
 
 	chains := map[nexus.ChainName]nexus.Chain{exported.Ethereum.Name: exported.Ethereum}
@@ -562,7 +562,7 @@ func TestLink_NoRegisteredAsset(t *testing.T) {
 
 	asset := rand.Str(3)
 
-	chains := map[nexus.ChainName]nexus.Chain{axelarnet.Axelarnet.Name: axelarnet.Axelarnet, exported.Ethereum.Name: exported.Ethereum}
+	chains := map[nexus.ChainName]nexus.Chain{scalarnet.Scalarnet.Name: scalarnet.Scalarnet, exported.Ethereum.Name: exported.Ethereum}
 	n := &mock.NexusMock{
 		IsChainActivatedFunc: func(ctx sdk.Context, chain nexus.Chain) bool { return true },
 		GetChainFunc: func(ctx sdk.Context, chain nexus.ChainName) (nexus.Chain, bool) {
@@ -578,7 +578,7 @@ func TestLink_NoRegisteredAsset(t *testing.T) {
 		},
 	}
 	server := keeper.NewMsgServerImpl(k, n, &mock.VoterMock{}, &mock.SnapshotterMock{}, &mock.StakingKeeperMock{}, &mock.SlashingKeeperMock{}, multisigKeeper)
-	recipient := nexus.CrossChainAddress{Address: rand.ValAddr().String(), Chain: axelarnet.Axelarnet}
+	recipient := nexus.CrossChainAddress{Address: rand.ValAddr().String(), Chain: scalarnet.Scalarnet}
 	_, err := server.Link(sdk.WrapSDKContext(ctx), &types.LinkRequest{Sender: rand.AccAddr(), Chain: evmChain, RecipientAddr: recipient.Address, Asset: asset, RecipientChain: recipient.Chain.Name})
 
 	assert.Error(t, err)
@@ -598,7 +598,7 @@ func TestLink_Success(t *testing.T) {
 	chainKeeper := funcs.Must(k.ForChain(ctx, chain))
 	chainKeeper.SetGateway(ctx, types.Address(common.HexToAddress(gateway)))
 
-	token, err := chainKeeper.CreateERC20Token(ctx, axelarnet.NativeAsset, tokenDetails, types.ZeroAddress)
+	token, err := chainKeeper.CreateERC20Token(ctx, scalarnet.NativeAsset, tokenDetails, types.ZeroAddress)
 	if err != nil {
 		panic(err)
 	}
@@ -612,7 +612,7 @@ func TestLink_Success(t *testing.T) {
 		panic(err)
 	}
 
-	recipient := nexus.CrossChainAddress{Address: rand.ValAddr().String(), Chain: axelarnet.Axelarnet}
+	recipient := nexus.CrossChainAddress{Address: rand.ValAddr().String(), Chain: scalarnet.Scalarnet}
 	salt := chainKeeper.GenerateSalt(ctx, recipient.Address)
 	burnAddr, err := chainKeeper.GetBurnerAddress(ctx, token, salt, types.Address(common.HexToAddress(gateway)))
 	if err != nil {
@@ -620,7 +620,7 @@ func TestLink_Success(t *testing.T) {
 	}
 	sender := nexus.CrossChainAddress{Address: burnAddr.Hex(), Chain: exported.Ethereum}
 
-	chains := map[nexus.ChainName]nexus.Chain{axelarnet.Axelarnet.Name: axelarnet.Axelarnet, exported.Ethereum.Name: exported.Ethereum}
+	chains := map[nexus.ChainName]nexus.Chain{scalarnet.Scalarnet.Name: scalarnet.Scalarnet, exported.Ethereum.Name: exported.Ethereum}
 	n := &mock.NexusMock{
 		IsChainActivatedFunc: func(ctx sdk.Context, chain nexus.Chain) bool { return true },
 		LinkAddressesFunc:    func(ctx sdk.Context, s nexus.CrossChainAddress, r nexus.CrossChainAddress) error { return nil },
@@ -636,7 +636,7 @@ func TestLink_Success(t *testing.T) {
 		},
 	}
 	server := keeper.NewMsgServerImpl(k, n, &mock.VoterMock{}, &mock.SnapshotterMock{}, &mock.StakingKeeperMock{}, &mock.SlashingKeeperMock{}, multisigKeeper)
-	_, err = server.Link(sdk.WrapSDKContext(ctx), &types.LinkRequest{Sender: rand.AccAddr(), Chain: evmChain, RecipientAddr: recipient.Address, RecipientChain: recipient.Chain.Name, Asset: axelarnet.NativeAsset})
+	_, err = server.Link(sdk.WrapSDKContext(ctx), &types.LinkRequest{Sender: rand.AccAddr(), Chain: evmChain, RecipientAddr: recipient.Address, RecipientChain: recipient.Chain.Name, Asset: scalarnet.NativeAsset})
 
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(n.IsAssetRegisteredCalls()))
@@ -645,7 +645,7 @@ func TestLink_Success(t *testing.T) {
 	assert.Equal(t, sender, n.LinkAddressesCalls()[0].Sender)
 	assert.Equal(t, recipient, n.LinkAddressesCalls()[0].Recipient)
 
-	expected := &types.BurnerInfo{BurnerAddress: burnAddr, TokenAddress: token.GetAddress(), DestinationChain: recipient.Chain.Name, Symbol: msg.TokenDetails.Symbol, Asset: axelarnet.NativeAsset, Salt: salt}
+	expected := &types.BurnerInfo{BurnerAddress: burnAddr, TokenAddress: token.GetAddress(), DestinationChain: recipient.Chain.Name, Symbol: msg.TokenDetails.Symbol, Asset: scalarnet.NativeAsset, Salt: salt}
 	actual := chainKeeper.GetBurnerInfo(ctx, burnAddr)
 	assert.EqualValues(t, expected, actual)
 }
@@ -789,7 +789,7 @@ func TestHandleMsgConfirmTokenDeploy(t *testing.T) {
 		v = &mock.VoterMock{
 			InitializePollFunc: func(ctx sdk.Context, pollBuilder vote.PollBuilder) (vote.PollID, error) { return 0, nil },
 		}
-		chains := map[nexus.ChainName]nexus.Chain{axelarnet.Axelarnet.Name: axelarnet.Axelarnet, exported.Ethereum.Name: exported.Ethereum}
+		chains := map[nexus.ChainName]nexus.Chain{scalarnet.Scalarnet.Name: scalarnet.Scalarnet, exported.Ethereum.Name: exported.Ethereum}
 		n = &mock.NexusMock{
 			GetChainMaintainersFunc: func(ctx sdk.Context, chain nexus.Chain) []sdk.ValAddress {
 				return []sdk.ValAddress{}
@@ -806,12 +806,12 @@ func TestHandleMsgConfirmTokenDeploy(t *testing.T) {
 			},
 		}
 
-		token = createMockERC20Token(axelarnet.NativeAsset, createDetails(randomNormalizedStr(10), randomNormalizedStr(3)))
+		token = createMockERC20Token(scalarnet.NativeAsset, createDetails(randomNormalizedStr(10), randomNormalizedStr(3)))
 		msg = &types.ConfirmTokenRequest{
 			Sender: rand.AccAddr(),
 			Chain:  evmChain,
 			TxID:   types.Hash(common.BytesToHash(rand.Bytes(common.HashLength))),
-			Asset:  types.NewAsset(axelarnet.Axelarnet.Name.String(), axelarnet.NativeAsset),
+			Asset:  types.NewAsset(scalarnet.Scalarnet.Name.String(), scalarnet.NativeAsset),
 		}
 		snapshotKeeper := &mock.SnapshotterMock{
 			CreateSnapshotFunc: func(sdk.Context, []sdk.ValAddress, func(snapshot.ValidatorI) bool, func(consensusPower sdk.Uint) sdk.Uint, utils.Threshold) (snapshot.Snapshot, error) {
@@ -898,7 +898,7 @@ func TestAddChain(t *testing.T) {
 
 		chains := map[nexus.ChainName]nexus.Chain{
 			exported.Ethereum.Name:   exported.Ethereum,
-			axelarnet.Axelarnet.Name: axelarnet.Axelarnet,
+			scalarnet.Scalarnet.Name: scalarnet.Scalarnet,
 		}
 		basek = &mock.BaseKeeperMock{
 			CreateChainFunc: func(_ sdk.Context, params types.Params) error { return nil },
@@ -952,7 +952,7 @@ func TestAddChain(t *testing.T) {
 	t.Run("chain already registered", testutils.Func(func(t *testing.T) {
 		setup()
 
-		msg.Name = axelarnet.Axelarnet.Name
+		msg.Name = scalarnet.Scalarnet.Name
 
 		_, err := server.AddChain(sdk.WrapSDKContext(ctx), msg)
 
@@ -1046,7 +1046,7 @@ func TestHandleMsgConfirmDeposit(t *testing.T) {
 		}
 		chains := map[nexus.ChainName]nexus.Chain{
 			exported.Ethereum.Name:   exported.Ethereum,
-			axelarnet.Axelarnet.Name: axelarnet.Axelarnet,
+			scalarnet.Scalarnet.Name: scalarnet.Scalarnet,
 		}
 		n = &mock.NexusMock{
 			GetChainMaintainersFunc: func(ctx sdk.Context, chain nexus.Chain) []sdk.ValAddress { return []sdk.ValAddress{} },
@@ -1191,7 +1191,7 @@ func TestHandleMsgCreateDeployToken(t *testing.T) {
 			EnqueueCommandFunc: func(ctx sdk.Context, cmd types.Command) error { return nil },
 		}
 
-		chains := map[nexus.ChainName]nexus.Chain{axelarnet.Axelarnet.Name: axelarnet.Axelarnet, exported.Ethereum.Name: exported.Ethereum}
+		chains := map[nexus.ChainName]nexus.Chain{scalarnet.Scalarnet.Name: scalarnet.Scalarnet, exported.Ethereum.Name: exported.Ethereum}
 		n = &mock.NexusMock{
 			IsChainActivatedFunc: func(ctx sdk.Context, chain nexus.Chain) bool { return true },
 			GetChainFunc: func(ctx sdk.Context, chain nexus.ChainName) (nexus.Chain, bool) {
@@ -1544,7 +1544,7 @@ func newKeeper(ctx sdk.Context, chain nexus.ChainName, confHeight int64) types.B
 func createMsgSignDeploy(details types.TokenDetails) *types.CreateDeployTokenRequest {
 	account := rand.AccAddr()
 
-	asset := types.NewAsset(axelarnet.Axelarnet.Name.String(), axelarnet.NativeAsset)
+	asset := types.NewAsset(scalarnet.Scalarnet.Name.String(), scalarnet.NativeAsset)
 	return types.NewCreateDeployTokenRequest(account, exported.Ethereum.Name.String(), asset, details, types.ZeroAddress, sdk.NewUint(uint64(rand.PosI64())).String())
 }
 

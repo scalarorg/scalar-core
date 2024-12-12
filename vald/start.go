@@ -28,12 +28,6 @@ import (
 	"github.com/axelarnetwork/axelar-core/cmd/axelard/cmd/utils"
 	"github.com/axelarnetwork/axelar-core/sdk-utils/broadcast"
 	errors2 "github.com/axelarnetwork/axelar-core/utils/errors"
-	"github.com/axelarnetwork/axelar-core/vald/evm"
-	evmRPC "github.com/axelarnetwork/axelar-core/vald/evm/rpc"
-	"github.com/axelarnetwork/axelar-core/vald/multisig"
-	grpc "github.com/axelarnetwork/axelar-core/vald/tofnd_grpc"
-	"github.com/axelarnetwork/axelar-core/vald/tss"
-	axelarnet "github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
 	"github.com/axelarnetwork/axelar-core/x/tss/tofnd"
 	tssTypes "github.com/axelarnetwork/axelar-core/x/tss/types"
 	tmEvents "github.com/axelarnetwork/tm-events/events"
@@ -47,9 +41,15 @@ import (
 	"github.com/scalarorg/scalar-core/vald/btc"
 	btcRPC "github.com/scalarorg/scalar-core/vald/btc/rpc"
 	"github.com/scalarorg/scalar-core/vald/config"
+	"github.com/scalarorg/scalar-core/vald/evm"
+	evmRPC "github.com/scalarorg/scalar-core/vald/evm/rpc"
+	"github.com/scalarorg/scalar-core/vald/multisig"
+	grpc "github.com/scalarorg/scalar-core/vald/tofnd_grpc"
+	"github.com/scalarorg/scalar-core/vald/tss"
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
 // RW grants -rw------- file permissions
@@ -60,10 +60,6 @@ const RWX = 0700
 
 var once sync.Once
 var cleanupCommands []func()
-
-const (
-	timeout = time.Hour
-)
 
 // GetValdCommand returns the command to start vald
 func GetValdCommand() *cobra.Command {
@@ -116,7 +112,7 @@ func GetValdCommand() *cobra.Command {
 	utils.OverwriteFlagDefaults(cmd, map[string]string{
 		flags.FlagBroadcastMode:  flags.BroadcastSync,
 		flags.FlagChainID:        app.Name,
-		flags.FlagGasPrices:      "0.007" + axelarnet.NativeAsset,
+		flags.FlagGasPrices:      "0.007" + scalarnet.NativeAsset,
 		flags.FlagKeyringBackend: "file",
 	}, false)
 

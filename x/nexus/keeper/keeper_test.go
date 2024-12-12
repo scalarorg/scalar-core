@@ -11,17 +11,17 @@ package keeper_test
 // 	"github.com/tendermint/tendermint/libs/log"
 // 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-// 	"github.com/axelarnetwork/axelar-core/app"
+// 	"github.com/scalarorg/scalar-core/app"
 // 	"github.com/axelarnetwork/axelar-core/testutils"
 // 	"github.com/axelarnetwork/axelar-core/testutils/fake"
 // 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-// 	axelarnet "github.com/axelarnetwork/axelar-core/x/axelarnet/exported"
-// 	axelarnetkeeper "github.com/axelarnetwork/axelar-core/x/axelarnet/keeper"
+// 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
+// 	ScalarnetKeeper "github.com/axelarnetwork/axelar-core/x/axelarnet/keeper"
 // 	axelarnetTypes "github.com/axelarnetwork/axelar-core/x/axelarnet/types"
 // 	axelarnetmock "github.com/axelarnetwork/axelar-core/x/axelarnet/types/mock"
-// 	evm "github.com/axelarnetwork/axelar-core/x/evm/exported"
-// 	evmkeeper "github.com/axelarnetwork/axelar-core/x/evm/keeper"
-// 	evmTypes "github.com/axelarnetwork/axelar-core/x/evm/types"
+// 	evm "github.com/scalarorg/scalar-core/x/evm/exported"
+// 	evmkeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
+// 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 // 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 // 	"github.com/scalarorg/scalar-core/x/nexus/keeper"
 // 	"github.com/scalarorg/scalar-core/x/nexus/types"
@@ -36,7 +36,7 @@ package keeper_test
 // 		GetCosmosChainByNameFunc: func(ctx sdk.Context, chain exported.ChainName) (axelarnetTypes.CosmosChain, bool) {
 // 			var prefix string
 // 			switch chain {
-// 			case axelarnet.Axelarnet.Name:
+// 			case scalarnet.Scalarnet.Name:
 // 				prefix = "axelar"
 // 			case "terra", "terra-2":
 // 				prefix = "terra"
@@ -49,7 +49,7 @@ package keeper_test
 
 // 	validators := types.NewAddressValidators()
 // 	validators.AddAddressValidator(evmTypes.ModuleName, evmkeeper.NewAddressValidator()).
-// 		AddAddressValidator(axelarnetTypes.ModuleName, axelarnetkeeper.NewAddressValidator(axelarnetK))
+// 		AddAddressValidator(axelarnetTypes.ModuleName, ScalarnetKeeper.NewAddressValidator(axelarnetK))
 
 // 	validators.Seal()
 
@@ -72,12 +72,12 @@ package keeper_test
 
 // 	terra := exported.Chain{Name: exported.ChainName("terra"), Module: axelarnetTypes.ModuleName, SupportsForeignAssets: true}
 // 	evmAddr := exported.CrossChainAddress{Chain: evm.Ethereum, Address: "0x68B93045fe7D8794a7cAF327e7f855CD6Cd03BB8"}
-// 	axelarAddr := exported.CrossChainAddress{Chain: axelarnet.Axelarnet, Address: "axelar1t66w8cazua870wu7t2hsffndmy2qy2v556ymndnczs83qpz2h45sq6lq9w"}
+// 	axelarAddr := exported.CrossChainAddress{Chain: scalarnet.Scalarnet, Address: "axelar1t66w8cazua870wu7t2hsffndmy2qy2v556ymndnczs83qpz2h45sq6lq9w"}
 
 // 	t.Run("should pass address validation", testutils.Func(func(t *testing.T) {
 // 		err := k.LinkAddresses(ctx,
 // 			evmAddr,
-// 			exported.CrossChainAddress{Chain: axelarnet.Axelarnet, Address: "axelar1t66w8cazua870wu7t2hsffndmy2qy2v556ymndnczs83qpz2h45sq6lq9w"},
+// 			exported.CrossChainAddress{Chain: scalarnet.Scalarnet, Address: "axelar1t66w8cazua870wu7t2hsffndmy2qy2v556ymndnczs83qpz2h45sq6lq9w"},
 // 		)
 // 		assert.NoError(t, err)
 
@@ -103,7 +103,7 @@ package keeper_test
 
 // 		err = k.LinkAddresses(ctx,
 // 			evmAddr,
-// 			exported.CrossChainAddress{Chain: axelarnet.Axelarnet, Address: rand.StrBetween(10, 30)},
+// 			exported.CrossChainAddress{Chain: scalarnet.Scalarnet, Address: rand.StrBetween(10, 30)},
 // 		)
 // 		assert.ErrorContains(t, err, "decoding bech32 failed")
 // 	}))
@@ -124,17 +124,17 @@ package keeper_test
 // 	}).Repeat(repeats))
 
 // 	t.Run("successfully link", testutils.Func(func(t *testing.T) {
-// 		sender, recipient := makeRandAddressesForChain(axelarnet.Axelarnet, evm.Ethereum)
+// 		sender, recipient := makeRandAddressesForChain(scalarnet.Scalarnet, evm.Ethereum)
 // 		err := k.LinkAddresses(ctx, sender, recipient)
 // 		assert.NoError(t, err)
-// 		_, err = k.EnqueueForTransfer(ctx, sender, makeRandAmount(axelarnet.NativeAsset))
+// 		_, err = k.EnqueueForTransfer(ctx, sender, makeRandAmount(scalarnet.NativeAsset))
 // 		assert.NoError(t, err)
 // 		recp, ok := k.GetRecipient(ctx, sender)
 // 		assert.True(t, ok)
 // 		assert.Equal(t, recipient, recp)
 
 // 		sender.Address = rand.Str(20)
-// 		_, err = k.EnqueueForTransfer(ctx, sender, makeRandAmount(axelarnet.NativeAsset))
+// 		_, err = k.EnqueueForTransfer(ctx, sender, makeRandAmount(scalarnet.NativeAsset))
 // 		assert.Error(t, err)
 // 		recp, ok = k.GetRecipient(ctx, sender)
 // 		assert.False(t, ok)
