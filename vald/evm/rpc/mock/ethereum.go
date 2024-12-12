@@ -5,11 +5,11 @@ package mock
 
 import (
 	"context"
-	evmrpc "github.com/scalarorg/scalar-core/vald/evm/rpc"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	ethereumrpc "github.com/ethereum/go-ethereum/rpc"
+	evmrpc "github.com/scalarorg/scalar-core/vald/evm/rpc"
 	"math/big"
 	"sync"
 )

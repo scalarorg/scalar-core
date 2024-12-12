@@ -21,15 +21,14 @@ IBC_WASM_HOOKS := false
 # Export env var to go build so Cosmos SDK can see it
 export CGO_ENABLED := 1
 
-# Add bitcoin-vault lib to CGO_LDFLAGS and CGO_CFLAGS
-export CGO_LDFLAGS := ${CGO_LDFLAGS} -lbitcoin_vault_ffi
-
 SCALAR_BIN_PATH ?= bin/scalard
 SCALAR_BIN_NAME ?= scalard
 SCALAR_HOME_DIR ?= .scalar
 SCALAR_CHAIN_ID ?= scalar-testnet-1
 SCALAR_KEYRING_BACKEND ?= test
 LOCAL_LIB_PATH ?= $(shell pwd)/lib
+
+export CGO_LDFLAGS := ${CGO_LDFLAGS} -lbitcoin_vault_ffi  -L${LOCAL_LIB_PATH}
 
 $(info ⛳️ Makefile Environment Variables ⛳️)
 
@@ -92,7 +91,7 @@ BUILD_FLAGS := -tags $(BUILD_TAGS) -ldflags $(ldflags) -trimpath
 # Build the project with release flags
 .PHONY: build
 build: go.sum
-	@CGO_LDFLAGS="${CGO_LDFLAGS} -L${LOCAL_LIB_PATH}" go build -o ./bin/scalard -mod=readonly $(BUILD_FLAGS) ./cmd/scalard
+	@go build -o ./bin/scalard -mod=readonly $(BUILD_FLAGS) ./cmd/scalard
 
 .PHONY: run
 run:
@@ -175,6 +174,27 @@ proto-clean:
 .PHONY: proto-all proto-gen proto-gen-any proto-format proto-lint proto-check-breaking proto-update-deps proto-clean
 
 
+.PHONY: generate
+generate: prereqs docs generate-mocks
+
+.PHONY: generate-mocks
+generate-mocks:
+	go generate -x ./...
+
+.PHONY: docs
+docs:
+	@echo "Removing old clidocs"
+
+	@if find docs/cli -name "*.md"  | grep -q .; then \
+		rm docs/cli/*.md; \
+	fi
+
+	@echo "Generating new cli docs"
+	@go run  $(BUILD_FLAGS) cmd/scalard/main.go --docs docs/cli
+	@# ensure docs are canonically formatted
+	@mdformat docs/cli/*
+
+
 # Install all generate prerequisites
 .Phony: prereqs
 prereqs:
@@ -182,7 +202,8 @@ prereqs:
 		echo "Installing mdformat in a virtual environment..." && \
 		python3 -m venv .venv && \
 		. .venv/bin/activate && \
-		pip install mdformat )
+		pip3 install mdformat && \
+		sudo ln -sf $(PWD)/.venv/bin/mdformat /usr/local/bin/mdformat )
 	@which protoc &>/dev/null || echo "Please install protoc for grpc (https://grpc.io/docs/languages/go/quickstart/)"
 	go install github.com/bufbuild/buf/cmd/buf@latest
 	go install golang.org/x/tools/cmd/goimports@latest
@@ -209,8 +230,8 @@ cfst:
 
 	$(SCALAR_BIN_PATH) tx btc confirm-staking-txs $(ARGS) --from $(WALLET) --keyring-backend $(SCALAR_KEYRING_BACKEND) --home $(SCALAR_HOME_DIR) --chain-id $(SCALAR_CHAIN_ID)
 
-.PHONY: docs
-docs:
+.PHONY: open-docs
+open-docs:
 	open client/docs/static/openapi/index.html
 
 .PHONY: mnemonic

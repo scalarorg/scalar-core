@@ -4,12 +4,12 @@
 package mock
 
 import (
-	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
-	"github.com/scalarorg/scalar-core/x/reward/exported"
-	rewardtypes "github.com/scalarorg/scalar-core/x/reward/types"
 	cosmossdktypes "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	"github.com/scalarorg/scalar-core/x/reward/exported"
+	rewardtypes "github.com/scalarorg/scalar-core/x/reward/types"
 	"github.com/tendermint/tendermint/libs/log"
 	"sync"
 )

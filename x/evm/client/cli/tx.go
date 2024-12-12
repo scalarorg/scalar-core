@@ -82,11 +82,11 @@ func GetCmdSetGateway() *cobra.Command {
 	return cmd
 }
 
-// GetCmdLink links a cross chain address to an EVM chain address created by Axelar
+// GetCmdLink links a cross chain address to an EVM chain address created by Scalar
 func GetCmdLink() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "link [chain] [recipient chain] [recipient address] [asset name]",
-		Short: "Link a cross chain address to an EVM chain address created by Axelar",
+		Short: "Link a cross chain address to an EVM chain address created by Scalar",
 		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cliCtx, err := client.GetClientTxContext(cmd)

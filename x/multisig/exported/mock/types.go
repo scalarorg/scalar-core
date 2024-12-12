@@ -5,11 +5,11 @@ package mock
 
 import (
 	"github.com/axelarnetwork/axelar-core/utils"
-	multisigexported "github.com/scalarorg/scalar-core/x/multisig/exported"
 	snapshotexported "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	ec "github.com/btcsuite/btcd/btcec/v2/ecdsa"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	multisigexported "github.com/scalarorg/scalar-core/x/multisig/exported"
 	"sync"
 	"time"
 )

@@ -5,13 +5,13 @@ package mock
 
 import (
 	utils "github.com/axelarnetwork/axelar-core/utils"
-	github_com_axelarnetwork_axelar_core_x_multisig_exported "github.com/scalarorg/scalar-core/x/multisig/exported"
-	"github.com/scalarorg/scalar-core/x/multisig/types"
-	github_com_axelarnetwork_axelar_core_x_nexus_exported "github.com/scalarorg/scalar-core/x/nexus/exported"
-	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	exported "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingTypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	github_com_scalarorg_scalar_core_x_multisig_exported "github.com/scalarorg/scalar-core/x/multisig/exported"
+	"github.com/scalarorg/scalar-core/x/multisig/types"
+	github_com_scalarorg_scalar_core_x_nexus_exported "github.com/scalarorg/scalar-core/x/nexus/exported"
+	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	"github.com/tendermint/tendermint/libs/log"
 	"sync"
 )
@@ -26,25 +26,25 @@ var _ types.Keeper = &KeeperMock{}
 //
 //		// make and configure a mocked types.Keeper
 //		mockedKeeper := &KeeperMock{
-//			DeleteKeygenSessionFunc: func(ctx sdk.Context, id github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID)  {
+//			DeleteKeygenSessionFunc: func(ctx sdk.Context, id github_com_scalarorg_scalar_core_x_multisig_exported.KeyID)  {
 //				panic("mock out the DeleteKeygenSession method")
 //			},
 //			DeleteSigningSessionFunc: func(ctx sdk.Context, id uint64)  {
 //				panic("mock out the DeleteSigningSession method")
 //			},
-//			GetCurrentKeyIDFunc: func(ctx sdk.Context, chainName github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName) (github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID, bool) {
+//			GetCurrentKeyIDFunc: func(ctx sdk.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, bool) {
 //				panic("mock out the GetCurrentKeyID method")
 //			},
-//			GetKeyFunc: func(ctx sdk.Context, keyID github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID) (github_com_axelarnetwork_axelar_core_x_multisig_exported.Key, bool) {
+//			GetKeyFunc: func(ctx sdk.Context, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID) (github_com_scalarorg_scalar_core_x_multisig_exported.Key, bool) {
 //				panic("mock out the GetKey method")
 //			},
-//			GetKeygenSessionFunc: func(ctx sdk.Context, id github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID) (types.KeygenSession, bool) {
+//			GetKeygenSessionFunc: func(ctx sdk.Context, id github_com_scalarorg_scalar_core_x_multisig_exported.KeyID) (types.KeygenSession, bool) {
 //				panic("mock out the GetKeygenSession method")
 //			},
 //			GetKeygenSessionsByExpiryFunc: func(ctx sdk.Context, expiry int64) []types.KeygenSession {
 //				panic("mock out the GetKeygenSessionsByExpiry method")
 //			},
-//			GetNextKeyIDFunc: func(ctx sdk.Context, chainName github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName) (github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID, bool) {
+//			GetNextKeyIDFunc: func(ctx sdk.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, bool) {
 //				panic("mock out the GetNextKeyID method")
 //			},
 //			GetParamsFunc: func(ctx sdk.Context) types.Params {
@@ -70,25 +70,25 @@ var _ types.Keeper = &KeeperMock{}
 //	}
 type KeeperMock struct {
 	// DeleteKeygenSessionFunc mocks the DeleteKeygenSession method.
-	DeleteKeygenSessionFunc func(ctx sdk.Context, id github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID)
+	DeleteKeygenSessionFunc func(ctx sdk.Context, id github_com_scalarorg_scalar_core_x_multisig_exported.KeyID)
 
 	// DeleteSigningSessionFunc mocks the DeleteSigningSession method.
 	DeleteSigningSessionFunc func(ctx sdk.Context, id uint64)
 
 	// GetCurrentKeyIDFunc mocks the GetCurrentKeyID method.
-	GetCurrentKeyIDFunc func(ctx sdk.Context, chainName github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName) (github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID, bool)
+	GetCurrentKeyIDFunc func(ctx sdk.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, bool)
 
 	// GetKeyFunc mocks the GetKey method.
-	GetKeyFunc func(ctx sdk.Context, keyID github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID) (github_com_axelarnetwork_axelar_core_x_multisig_exported.Key, bool)
+	GetKeyFunc func(ctx sdk.Context, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID) (github_com_scalarorg_scalar_core_x_multisig_exported.Key, bool)
 
 	// GetKeygenSessionFunc mocks the GetKeygenSession method.
-	GetKeygenSessionFunc func(ctx sdk.Context, id github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID) (types.KeygenSession, bool)
+	GetKeygenSessionFunc func(ctx sdk.Context, id github_com_scalarorg_scalar_core_x_multisig_exported.KeyID) (types.KeygenSession, bool)
 
 	// GetKeygenSessionsByExpiryFunc mocks the GetKeygenSessionsByExpiry method.
 	GetKeygenSessionsByExpiryFunc func(ctx sdk.Context, expiry int64) []types.KeygenSession
 
 	// GetNextKeyIDFunc mocks the GetNextKeyID method.
-	GetNextKeyIDFunc func(ctx sdk.Context, chainName github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName) (github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID, bool)
+	GetNextKeyIDFunc func(ctx sdk.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, bool)
 
 	// GetParamsFunc mocks the GetParams method.
 	GetParamsFunc func(ctx sdk.Context) types.Params
@@ -112,7 +112,7 @@ type KeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx sdk.Context
 			// ID is the id argument value.
-			ID github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID
+			ID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
 		}
 		// DeleteSigningSession holds details about calls to the DeleteSigningSession method.
 		DeleteSigningSession []struct {
@@ -126,21 +126,21 @@ type KeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx sdk.Context
 			// ChainName is the chainName argument value.
-			ChainName github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName
+			ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
 		}
 		// GetKey holds details about calls to the GetKey method.
 		GetKey []struct {
 			// Ctx is the ctx argument value.
 			Ctx sdk.Context
 			// KeyID is the keyID argument value.
-			KeyID github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID
+			KeyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
 		}
 		// GetKeygenSession holds details about calls to the GetKeygenSession method.
 		GetKeygenSession []struct {
 			// Ctx is the ctx argument value.
 			Ctx sdk.Context
 			// ID is the id argument value.
-			ID github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID
+			ID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
 		}
 		// GetKeygenSessionsByExpiry holds details about calls to the GetKeygenSessionsByExpiry method.
 		GetKeygenSessionsByExpiry []struct {
@@ -154,7 +154,7 @@ type KeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx sdk.Context
 			// ChainName is the chainName argument value.
-			ChainName github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName
+			ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
 		}
 		// GetParams holds details about calls to the GetParams method.
 		GetParams []struct {
@@ -199,13 +199,13 @@ type KeeperMock struct {
 }
 
 // DeleteKeygenSession calls DeleteKeygenSessionFunc.
-func (mock *KeeperMock) DeleteKeygenSession(ctx sdk.Context, id github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID) {
+func (mock *KeeperMock) DeleteKeygenSession(ctx sdk.Context, id github_com_scalarorg_scalar_core_x_multisig_exported.KeyID) {
 	if mock.DeleteKeygenSessionFunc == nil {
 		panic("KeeperMock.DeleteKeygenSessionFunc: method is nil but Keeper.DeleteKeygenSession was just called")
 	}
 	callInfo := struct {
 		Ctx sdk.Context
-		ID  github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID
+		ID  github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
 	}{
 		Ctx: ctx,
 		ID:  id,
@@ -222,11 +222,11 @@ func (mock *KeeperMock) DeleteKeygenSession(ctx sdk.Context, id github_com_axela
 //	len(mockedKeeper.DeleteKeygenSessionCalls())
 func (mock *KeeperMock) DeleteKeygenSessionCalls() []struct {
 	Ctx sdk.Context
-	ID  github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID
+	ID  github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
 } {
 	var calls []struct {
 		Ctx sdk.Context
-		ID  github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID
+		ID  github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
 	}
 	mock.lockDeleteKeygenSession.RLock()
 	calls = mock.calls.DeleteKeygenSession
@@ -271,13 +271,13 @@ func (mock *KeeperMock) DeleteSigningSessionCalls() []struct {
 }
 
 // GetCurrentKeyID calls GetCurrentKeyIDFunc.
-func (mock *KeeperMock) GetCurrentKeyID(ctx sdk.Context, chainName github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName) (github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID, bool) {
+func (mock *KeeperMock) GetCurrentKeyID(ctx sdk.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, bool) {
 	if mock.GetCurrentKeyIDFunc == nil {
 		panic("KeeperMock.GetCurrentKeyIDFunc: method is nil but Keeper.GetCurrentKeyID was just called")
 	}
 	callInfo := struct {
 		Ctx       sdk.Context
-		ChainName github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
 	}{
 		Ctx:       ctx,
 		ChainName: chainName,
@@ -294,11 +294,11 @@ func (mock *KeeperMock) GetCurrentKeyID(ctx sdk.Context, chainName github_com_ax
 //	len(mockedKeeper.GetCurrentKeyIDCalls())
 func (mock *KeeperMock) GetCurrentKeyIDCalls() []struct {
 	Ctx       sdk.Context
-	ChainName github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName
+	ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
 } {
 	var calls []struct {
 		Ctx       sdk.Context
-		ChainName github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
 	}
 	mock.lockGetCurrentKeyID.RLock()
 	calls = mock.calls.GetCurrentKeyID
@@ -307,13 +307,13 @@ func (mock *KeeperMock) GetCurrentKeyIDCalls() []struct {
 }
 
 // GetKey calls GetKeyFunc.
-func (mock *KeeperMock) GetKey(ctx sdk.Context, keyID github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID) (github_com_axelarnetwork_axelar_core_x_multisig_exported.Key, bool) {
+func (mock *KeeperMock) GetKey(ctx sdk.Context, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID) (github_com_scalarorg_scalar_core_x_multisig_exported.Key, bool) {
 	if mock.GetKeyFunc == nil {
 		panic("KeeperMock.GetKeyFunc: method is nil but Keeper.GetKey was just called")
 	}
 	callInfo := struct {
 		Ctx   sdk.Context
-		KeyID github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID
+		KeyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
 	}{
 		Ctx:   ctx,
 		KeyID: keyID,
@@ -330,11 +330,11 @@ func (mock *KeeperMock) GetKey(ctx sdk.Context, keyID github_com_axelarnetwork_a
 //	len(mockedKeeper.GetKeyCalls())
 func (mock *KeeperMock) GetKeyCalls() []struct {
 	Ctx   sdk.Context
-	KeyID github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID
+	KeyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
 } {
 	var calls []struct {
 		Ctx   sdk.Context
-		KeyID github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID
+		KeyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
 	}
 	mock.lockGetKey.RLock()
 	calls = mock.calls.GetKey
@@ -343,13 +343,13 @@ func (mock *KeeperMock) GetKeyCalls() []struct {
 }
 
 // GetKeygenSession calls GetKeygenSessionFunc.
-func (mock *KeeperMock) GetKeygenSession(ctx sdk.Context, id github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID) (types.KeygenSession, bool) {
+func (mock *KeeperMock) GetKeygenSession(ctx sdk.Context, id github_com_scalarorg_scalar_core_x_multisig_exported.KeyID) (types.KeygenSession, bool) {
 	if mock.GetKeygenSessionFunc == nil {
 		panic("KeeperMock.GetKeygenSessionFunc: method is nil but Keeper.GetKeygenSession was just called")
 	}
 	callInfo := struct {
 		Ctx sdk.Context
-		ID  github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID
+		ID  github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
 	}{
 		Ctx: ctx,
 		ID:  id,
@@ -366,11 +366,11 @@ func (mock *KeeperMock) GetKeygenSession(ctx sdk.Context, id github_com_axelarne
 //	len(mockedKeeper.GetKeygenSessionCalls())
 func (mock *KeeperMock) GetKeygenSessionCalls() []struct {
 	Ctx sdk.Context
-	ID  github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID
+	ID  github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
 } {
 	var calls []struct {
 		Ctx sdk.Context
-		ID  github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID
+		ID  github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
 	}
 	mock.lockGetKeygenSession.RLock()
 	calls = mock.calls.GetKeygenSession
@@ -415,13 +415,13 @@ func (mock *KeeperMock) GetKeygenSessionsByExpiryCalls() []struct {
 }
 
 // GetNextKeyID calls GetNextKeyIDFunc.
-func (mock *KeeperMock) GetNextKeyID(ctx sdk.Context, chainName github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName) (github_com_axelarnetwork_axelar_core_x_multisig_exported.KeyID, bool) {
+func (mock *KeeperMock) GetNextKeyID(ctx sdk.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, bool) {
 	if mock.GetNextKeyIDFunc == nil {
 		panic("KeeperMock.GetNextKeyIDFunc: method is nil but Keeper.GetNextKeyID was just called")
 	}
 	callInfo := struct {
 		Ctx       sdk.Context
-		ChainName github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
 	}{
 		Ctx:       ctx,
 		ChainName: chainName,
@@ -438,11 +438,11 @@ func (mock *KeeperMock) GetNextKeyID(ctx sdk.Context, chainName github_com_axela
 //	len(mockedKeeper.GetNextKeyIDCalls())
 func (mock *KeeperMock) GetNextKeyIDCalls() []struct {
 	Ctx       sdk.Context
-	ChainName github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName
+	ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
 } {
 	var calls []struct {
 		Ctx       sdk.Context
-		ChainName github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
 	}
 	mock.lockGetNextKeyID.RLock()
 	calls = mock.calls.GetNextKeyID
@@ -1023,10 +1023,10 @@ var _ types.Nexus = &NexusMock{}
 //
 //		// make and configure a mocked types.Nexus
 //		mockedNexus := &NexusMock{
-//			GetChainFunc: func(ctx sdk.Context, chain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName) (github_com_axelarnetwork_axelar_core_x_nexus_exported.Chain, bool) {
+//			GetChainFunc: func(ctx sdk.Context, chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_nexus_exported.Chain, bool) {
 //				panic("mock out the GetChain method")
 //			},
-//			GetChainsFunc: func(ctx sdk.Context) []github_com_axelarnetwork_axelar_core_x_nexus_exported.Chain {
+//			GetChainsFunc: func(ctx sdk.Context) []github_com_scalarorg_scalar_core_x_nexus_exported.Chain {
 //				panic("mock out the GetChains method")
 //			},
 //		}
@@ -1037,10 +1037,10 @@ var _ types.Nexus = &NexusMock{}
 //	}
 type NexusMock struct {
 	// GetChainFunc mocks the GetChain method.
-	GetChainFunc func(ctx sdk.Context, chain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName) (github_com_axelarnetwork_axelar_core_x_nexus_exported.Chain, bool)
+	GetChainFunc func(ctx sdk.Context, chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_nexus_exported.Chain, bool)
 
 	// GetChainsFunc mocks the GetChains method.
-	GetChainsFunc func(ctx sdk.Context) []github_com_axelarnetwork_axelar_core_x_nexus_exported.Chain
+	GetChainsFunc func(ctx sdk.Context) []github_com_scalarorg_scalar_core_x_nexus_exported.Chain
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -1049,7 +1049,7 @@ type NexusMock struct {
 			// Ctx is the ctx argument value.
 			Ctx sdk.Context
 			// Chain is the chain argument value.
-			Chain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName
+			Chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
 		}
 		// GetChains holds details about calls to the GetChains method.
 		GetChains []struct {
@@ -1062,13 +1062,13 @@ type NexusMock struct {
 }
 
 // GetChain calls GetChainFunc.
-func (mock *NexusMock) GetChain(ctx sdk.Context, chain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName) (github_com_axelarnetwork_axelar_core_x_nexus_exported.Chain, bool) {
+func (mock *NexusMock) GetChain(ctx sdk.Context, chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_nexus_exported.Chain, bool) {
 	if mock.GetChainFunc == nil {
 		panic("NexusMock.GetChainFunc: method is nil but Nexus.GetChain was just called")
 	}
 	callInfo := struct {
 		Ctx   sdk.Context
-		Chain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName
+		Chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
 	}{
 		Ctx:   ctx,
 		Chain: chain,
@@ -1085,11 +1085,11 @@ func (mock *NexusMock) GetChain(ctx sdk.Context, chain github_com_axelarnetwork_
 //	len(mockedNexus.GetChainCalls())
 func (mock *NexusMock) GetChainCalls() []struct {
 	Ctx   sdk.Context
-	Chain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName
+	Chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
 } {
 	var calls []struct {
 		Ctx   sdk.Context
-		Chain github_com_axelarnetwork_axelar_core_x_nexus_exported.ChainName
+		Chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
 	}
 	mock.lockGetChain.RLock()
 	calls = mock.calls.GetChain
@@ -1098,7 +1098,7 @@ func (mock *NexusMock) GetChainCalls() []struct {
 }
 
 // GetChains calls GetChainsFunc.
-func (mock *NexusMock) GetChains(ctx sdk.Context) []github_com_axelarnetwork_axelar_core_x_nexus_exported.Chain {
+func (mock *NexusMock) GetChains(ctx sdk.Context) []github_com_scalarorg_scalar_core_x_nexus_exported.Chain {
 	if mock.GetChainsFunc == nil {
 		panic("NexusMock.GetChainsFunc: method is nil but Nexus.GetChains was just called")
 	}

@@ -70,7 +70,7 @@ func (k chainKeeper) GetChainID(ctx sdk.Context) (sdk.Int, bool) {
 	return k.GetChainIDByNetwork(ctx, network)
 }
 
-// GetNetwork returns the EVM network Axelar-Core is expected to connect to
+// GetNetwork returns the EVM network Scalar-Core is expected to connect to
 func (k chainKeeper) GetNetwork(ctx sdk.Context) string {
 	return getParam[string](k, ctx, types.KeyNetwork)
 }
@@ -125,7 +125,7 @@ func (k chainKeeper) getBurnerInfos(ctx sdk.Context) []types.BurnerInfo {
 	return burners
 }
 
-// calculates the token address for some asset with the provided axelar gateway address
+// calculates the token address for some asset with the provided scalar gateway address
 func (k chainKeeper) getTokenAddress(ctx sdk.Context, details types.TokenDetails, gatewayAddr types.Address) (types.Address, error) {
 	var saltToken [32]byte
 	copy(saltToken[:], crypto.Keccak256Hash([]byte(details.Symbol)).Bytes())
@@ -773,7 +773,7 @@ func (k chainKeeper) initTokenMetadata(ctx sdk.Context, asset string, details ty
 
 	gatewayAddr, found := k.GetGatewayAddress(ctx)
 	if !found {
-		return types.ERC20TokenMetadata{}, fmt.Errorf("axelar gateway address for chain '%s' not set", k.chain)
+		return types.ERC20TokenMetadata{}, fmt.Errorf("scalar gateway address for chain '%s' not set", k.chain)
 	}
 
 	tokenAddr, err := k.getTokenAddress(ctx, details, gatewayAddr)

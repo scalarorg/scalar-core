@@ -4,8 +4,8 @@
 package mock
 
 import (
-	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	types "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	"sync"
 )
 
