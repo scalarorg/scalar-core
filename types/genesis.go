@@ -82,8 +82,10 @@ type ValidatorInfo struct {
 	SeedAddress string
 	RPCPort     int
 
-	ValPubKey  cryptotypes.PubKey
-	ValBalance banktypes.Balance
+	ValPubKey      cryptotypes.PubKey
+	ValBalance     banktypes.Balance
+	ValNodePubKey  cryptotypes.PubKey
+	ValNodeBalance banktypes.Balance
 	//Balance of broadcaster
 	Broadcaster        cryptotypes.PubKey
 	BroadcasterBalance banktypes.Balance
@@ -129,11 +131,15 @@ func GenerateGenesis(clientCtx client.Context,
 	supportedChainsPath string,
 ) (GenesisState, error) {
 	appGenState := mbm.DefaultGenesis(clientCtx.Codec)
-	genAccounts := []authtypes.GenesisAccount{}
 	genBalances := []banktypes.Balance{}
-	unbondedPoolAmount := sdk.NewCoins()
+	genAccounts := []authtypes.GenesisAccount{}
+	//allValAmount := sdk.NewCoins()
 	for _, info := range validatorInfos {
+		valBalances := sdk.NewCoins()
 		//Validator balance must be set and greater than deligation amount
+		genBalances = append(genBalances, info.ValNodeBalance)
+		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(info.ValNodePubKey.Address()), info.ValNodePubKey, 0, 0))
+
 		genBalances = append(genBalances, info.ValBalance)
 		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(info.ValPubKey.Address()), info.ValPubKey, 0, 0))
 
@@ -146,7 +152,11 @@ func GenerateGenesis(clientCtx client.Context,
 		genBalances = append(genBalances, info.FaucetBalance)
 		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(info.FaucetPubKey.Address()), info.FaucetPubKey, 0, 0))
 
-		unbondedPoolAmount = unbondedPoolAmount.Add(info.ValBalance.Coins...)
+		valBalances = valBalances.Add(info.ValNodeBalance.Coins...).
+			Add(info.BroadcasterBalance.Coins...).
+			Add(info.GovBalance.Coins...).
+			Add(info.FaucetBalance.Coins...)
+		fmt.Printf("valBalances %v\n", valBalances)
 	}
 	// set the accounts in the genesis state
 	var authGenState authtypes.GenesisState
@@ -160,6 +170,7 @@ func GenerateGenesis(clientCtx client.Context,
 	appGenState[authtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&authGenState)
 	totalSupply := sdk.NewCoins()
 	for _, balance := range genBalances {
+		fmt.Printf("address %s, balance %v\n", balance.Address, balance.Coins)
 		totalSupply = totalSupply.Add(balance.Coins...)
 	}
 	// set the balances in the genesis state
@@ -282,7 +293,7 @@ func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *s
 	// 		},
 	// 	)
 	// 	validator.Tokens = validatorInfo.ValBalance.Coins[0].Amount
-	// 	validator.Status = stakingtypes.Unbonded
+	// 	validator.Status = stakingtypes.Bonded
 	// 	validator.MinSelfDelegation = sdk.OneInt()
 	// 	validator.DelegatorShares = sdk.NewDecFromInt(DelegatorTokens)
 	// 	if err != nil {
@@ -303,7 +314,7 @@ func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *s
 	// 		ValidatorAddress: sdk.ValAddress(validatorInfo.ValPubKey.Address()).String(),
 	// 		Shares:           validator.DelegatorShares,
 	// 	}
-	// 	fmt.Printf("delegation %v, validator %v", delegation, validator)
+	// 	//fmt.Printf("delegation %v, validator %v", delegation, validator)
 	// 	stakingGenState.Delegations = append(stakingGenState.Delegations, delegation)
 	// }
 	return stakingGenState

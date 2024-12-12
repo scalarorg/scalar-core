@@ -2,7 +2,9 @@ package testnet
 
 import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/cosmos/cosmos-sdk/client/keys"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
+	"github.com/rs/zerolog/log"
 	"github.com/tendermint/tendermint/node"
 	"github.com/tendermint/tendermint/p2p"
 	pvm "github.com/tendermint/tendermint/privval"
@@ -27,7 +29,15 @@ func NewAppOptionsWithFlagHome(homePath string) servertypes.AppOptions {
 		flags.FlagHome: homePath,
 	}
 }
-
+func generateKey(keyNme string, keyAlgo string, homePath string) error {
+	addKeyCmd := keys.AddKeyCommand()
+	addKeyCmd.SetArgs([]string{keyNme, "--algo", keyAlgo, "--keyring-backend", "test", "--home", homePath, "--output", "json"})
+	err := addKeyCmd.Execute()
+	if err != nil {
+		log.Error().Err(err).Msg("[generateKey] Add key")
+	}
+	return err
+}
 func startInProcess(cfg Config, val *Validator) error {
 	logger := val.Ctx.Logger
 	tmCfg := val.Ctx.Config
@@ -45,6 +55,7 @@ func startInProcess(cfg Config, val *Validator) error {
 	app := cfg.AppConstructor(*val)
 
 	genDocProvider := node.DefaultGenesisDocProviderFunc(tmCfg)
+	log.Debug().Msgf("Address book file: %v", tmCfg.P2P.AddrBookFile())
 	tmNode, err := node.NewNode(
 		tmCfg,
 		pvm.LoadOrGenFilePV(tmCfg.PrivValidatorKeyFile(), tmCfg.PrivValidatorStateFile()),

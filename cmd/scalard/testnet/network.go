@@ -219,6 +219,7 @@ func New(l Logger, ioReader io.Reader, baseDir string, cfg Config) (*Network, er
 		ctx := server.NewDefaultContext()
 		tmCfg := ctx.Config
 		tmCfg.RootDir = filepath.Join(valRootDir, "scalard")
+		tmCfg.P2P.RootDir = filepath.Join(valRootDir, "scalard")
 		tmCfg.Moniker = nodeMoniker
 		tmCfg.Consensus.TimeoutCommit = cfg.TimeoutCommit
 
@@ -234,8 +235,9 @@ func New(l Logger, ioReader io.Reader, baseDir string, cfg Config) (*Network, er
 		if err != nil {
 			return nil, err
 		}
+		log.Debug().Msgf("Seeds: %v", seeds)
 		tmCfg = config.MergeSeeds(tmCfg, seeds)
-		ctx.Config = tmCfg
+		log.Debug().Msgf("P2P Seeds: %v", tmCfg.P2P.Seeds)
 		ctx.Viper.SetConfigType("toml")
 		ctx.Viper.SetConfigName("config")
 		err = ctx.Viper.ReadInConfig()
@@ -301,7 +303,7 @@ func New(l Logger, ioReader io.Reader, baseDir string, cfg Config) (*Network, er
 
 	// Ensure we cleanup incase any test was abruptly halted (e.g. SIGINT) as any
 	// defer in a test would not be called.
-	server.TrapSignal(network.Cleanup)
+	// server.TrapSignal(network.Cleanup)
 
 	return network, nil
 }
