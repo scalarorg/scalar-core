@@ -239,3 +239,10 @@ mnemonic:
 	$(eval user := $(filter-out $@,$(MAKECMDGOALS)))
 	$(BIN_PATH) keys export $(user) --keyring-backend $(SCALAR_KEYRING_BACKEND) --unsafe --unarmored-hex --home $(SCALAR_DIR)
 
+
+.PHONY: lib lib-clean
+lib:
+	cp ../bitcoin-vault/target/release/libbitcoin_vault_ffi.* ./lib
+
+lib-clean:
+	rm -rf ./lib/*
