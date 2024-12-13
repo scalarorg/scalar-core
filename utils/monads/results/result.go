@@ -16,6 +16,11 @@ func (res Result[T]) Err() error {
 	return res.err
 }
 
+// IsErr returns true if the result is an error
+func (res Result[T]) IsErr() bool {
+	return res.err != nil
+}
+
 // New wraps a (value, error) tuple in a Result
 func New[T any](ok T, err error) Result[T] {
 	if err != nil {

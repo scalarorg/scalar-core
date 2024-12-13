@@ -6,9 +6,11 @@ import (
 	"strings"
 
 	"github.com/btcsuite/btcd/btcjson"
+	"github.com/btcsuite/btcd/wire"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/scalarorg/scalar-core/utils/clog"
+	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/vald/btc/rpc"
 	"github.com/scalarorg/scalar-core/x/btc/types"
 
@@ -16,7 +18,6 @@ import (
 	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
 	"github.com/scalarorg/scalar-core/utils/errors"
 	"github.com/scalarorg/scalar-core/utils/log"
-	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -111,10 +112,10 @@ func (mgr Mgr) isFinalized(chain nexus.ChainName, txReceipt btcjson.TxRawResult,
 // - Err(ErrNotFinalized) if the transaction is not finalized
 //
 // - Err(err) otherwise
-func (mgr Mgr) GetTxReceiptIfFinalized(chain nexus.ChainName, txID types.Hash, confHeight uint64) (results.Result[rpc.TxReceipt], error) {
+func (mgr Mgr) GetTxReceiptIfFinalized(chain nexus.ChainName, txID types.Hash, confHeight uint64) (rpc.TxResult, error) {
 	txReceipts, err := mgr.GetTxReceiptsIfFinalized(chain, []types.Hash{txID}, confHeight)
 	if err != nil {
-		return results.Result[rpc.TxReceipt]{}, err
+		return rpc.TxResult{}, err
 	}
 
 	return txReceipts[0], err
@@ -133,30 +134,26 @@ func (mgr Mgr) GetTxReceiptIfFinalized(chain nexus.ChainName, txID types.Hash, c
 // - Err(ErrNotFinalized) if the transaction is not finalized
 //
 // - Err(err) otherwise
-func (mgr Mgr) GetTxReceiptsIfFinalized(chain nexus.ChainName, txIDs []types.Hash, confHeight uint64) ([]results.Result[rpc.TxReceipt], error) {
+func (mgr Mgr) GetTxReceiptsIfFinalized(chain nexus.ChainName, txIDs []types.Hash, confHeight uint64) ([]rpc.TxResult, error) {
 	client, ok := mgr.rpcs[strings.ToLower(chain.String())]
 	if !ok {
 		return nil, fmt.Errorf("rpc client not found for chain %s", chain.String())
 	}
 
-	receipts, err := client.GetTransactions(txIDs)
+	txResults, err := client.GetTransactions(txIDs)
 	if err != nil {
-		return slices.Map(txIDs, func(_ types.Hash) results.Result[rpc.TxReceipt] {
-			return results.FromErr[rpc.TxReceipt](
-				sdkerrors.Wrapf(
-					errors.With(err, "chain", chain.String(), "tx_ids", txIDs),
-					"cannot get transaction receipts"),
-			)
-		}), nil
+		return nil, sdkerrors.Wrapf(
+			errors.With(err, "chain", chain.String(), "tx_ids", txIDs),
+			"cannot get transaction receipts",
+		)
 	}
 
-	return slices.Map(receipts, func(receipt rpc.TxResult) results.Result[rpc.TxReceipt] {
+	return slices.Map(txResults, func(receipt rpc.TxResult) results.Result[rpc.TxReceipt] {
 		return results.Pipe(results.Result[rpc.TxReceipt](receipt), func(receipt rpc.TxReceipt) results.Result[rpc.TxReceipt] {
-
-			isFinalized, err := mgr.isFinalized(chain, receipt.Data, confHeight)
+			isFinalized, err := mgr.isFinalized(chain, receipt.Raw, confHeight)
 			if err != nil {
 				return results.FromErr[rpc.TxReceipt](sdkerrors.Wrapf(errors.With(err, "chain", chain.String()),
-					"cannot determine if the transaction %s is finalized", receipt.Data.Txid),
+					"cannot determine if the transaction %s is finalized", receipt.Raw.Txid),
 				)
 			}
 
@@ -164,11 +161,11 @@ func (mgr Mgr) GetTxReceiptsIfFinalized(chain nexus.ChainName, txIDs []types.Has
 				return results.FromErr[rpc.TxReceipt](ErrNotFinalized)
 			}
 
-			if receipt.Data.Confirmations <= confHeight {
+			if receipt.Raw.Confirmations <= confHeight {
 				return results.FromErr[rpc.TxReceipt](ErrTxFailed)
 			}
 
-			return results.FromOk[rpc.TxReceipt](receipt)
+			return results.FromOk(receipt)
 		})
 	}), nil
 }
@@ -176,4 +173,18 @@ func (mgr Mgr) GetTxReceiptsIfFinalized(chain nexus.ChainName, txIDs []types.Has
 // isParticipantOf checks if the validator is in the poll participants list
 func (mgr Mgr) isParticipantOf(participants []sdk.ValAddress) bool {
 	return slices.Any(participants, func(v sdk.ValAddress) bool { return v.Equals(mgr.validator) })
+}
+
+func (mgr *Mgr) getTxOut(chain nexus.ChainName, outpoint wire.OutPoint) (*btcjson.GetTxOutResult, error) {
+	client, ok := mgr.rpcs[strings.ToLower(chain.String())]
+	if !ok {
+		return nil, fmt.Errorf("rpc client not found for chain %s", chain.String())
+	}
+
+	txOut, err := client.GetTxOut(outpoint)
+	if err != nil {
+		return nil, err
+	}
+
+	return txOut, nil
 }

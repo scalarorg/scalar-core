@@ -10,7 +10,7 @@ import "scalar/btc/v1beta1/query.proto";
 
 option (gogoproto.goproto_registration) = true;
 
-// Msg defines the evm Msg service.
+// Msg defines the btc Msg service.
 service MsgService {
   rpc ConfirmStakingTxs(ConfirmStakingTxsRequest)
       returns (ConfirmStakingTxsResponse) {

@@ -58,7 +58,7 @@ func (mgr Mgr) processStakingTxReceipt(chain nexus.ChainName, receipt rpc.TxRece
 
 	var events []types.Event
 
-	btcEvent, err := DecodeStakingTransaction(&receipt)
+	btcEvent, err := mgr.decodeStakingTransaction(&receipt)
 	if err != nil {
 		mgr.logger().Debug(sdkerrors.Wrap(err, "decode event ContractCall failed").Error())
 	}
@@ -67,7 +67,7 @@ func (mgr Mgr) processStakingTxReceipt(chain nexus.ChainName, receipt rpc.TxRece
 		mgr.logger().Debug(sdkerrors.Wrap(err, "invalid event ContractCall").Error())
 	}
 
-	txID, err := types.HashFromHexStr(receipt.Data.Txid)
+	txID, err := types.HashFromHexStr(receipt.Raw.Txid)
 	if err != nil {
 		mgr.logger().Debug(sdkerrors.Wrap(err, "invalid tx id").Error())
 	}

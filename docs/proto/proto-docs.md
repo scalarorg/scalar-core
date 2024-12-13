@@ -1068,7 +1068,7 @@ Msg defines the nexus Msg service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `prev_out_point` | [string](#string) |  |  |
+| `sender` | [string](#string) |  |  |
 | `amount` | [uint64](#uint64) |  |  |
 | `asset` | [string](#string) |  |  |
 | `payload_hash` | [bytes](#bytes) |  |  |
@@ -1536,7 +1536,7 @@ Msg defines the nexus Msg service.
 <a name="scalar.btc.v1beta1.MsgService"></a>
 
 ### MsgService
-Msg defines the evm Msg service.
+Msg defines the btc Msg service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
