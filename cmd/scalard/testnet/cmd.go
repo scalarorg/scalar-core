@@ -32,6 +32,7 @@ import (
 	"github.com/tendermint/tendermint/privval"
 
 	scalartypes "github.com/scalarorg/scalar-core/types"
+	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	"github.com/spf13/cobra"
 	tmconfig "github.com/tendermint/tendermint/config"
 	tmed25519 "github.com/tendermint/tendermint/crypto/ed25519"
@@ -351,6 +352,7 @@ func createPubkeyFromSecret(config *tmconfig.Config, secret []byte, pvKeyName st
 	storeValidatorInfo(valPubKey, pvKeyName, config.RootDir)
 	return valPubKey, nil
 }
+
 func createNodeID(config *tmconfig.Config) (string, error) {
 	nodeKey, err := p2p.LoadOrGenNodeKey(config.NodeKeyFile())
 	if err != nil {
@@ -741,7 +743,7 @@ func appendBridgeConfig(configPath string, supportedChainsPath string) error {
 
 	if supportedChainsPath != "" {
 		// Add evm bridge config
-		evmConfigs, err := scalartypes.ParseJsonArrayConfig[scalartypes.EvmNetworkConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
+		evmConfigs, err := scalartypes.ParseJsonArrayConfig[evmtypes.EVMConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to parse evm config")
 		}
@@ -757,7 +759,7 @@ start-with-bridge = true
 finality_override = "confirmation"
 # When using new chains (not Ethereum Mainnet), you may need to set the finality override to "confirmation" to avoid issues with the bridge
 # With finality override, scalar will create evm client using ethereum.go, not ethereum_2.go
-			`, evmConfig.ID, evmConfig.ChainID, evmConfig.RpcUrl))
+			`, evmConfig.ID, evmConfig.ChainID, evmConfig.RPCAddr))
 		}
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to write evm bridge config")

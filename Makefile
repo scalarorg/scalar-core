@@ -243,6 +243,7 @@ mnemonic:
 
 .PHONY: lib lib-clean
 lib:
+	mkdir -p ./lib
 	cp ../bitcoin-vault/target/release/libbitcoin_vault_ffi.* ./lib
 
 lib-clean:

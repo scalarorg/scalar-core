@@ -3,6 +3,7 @@ package types
 import (
 	"bytes"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	fmt "fmt"
 	"reflect"
@@ -18,34 +19,6 @@ import (
 	utils "github.com/scalarorg/scalar-core/utils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
-
-// BTCConfig contains all BTC module configuration values
-type BTCConfig struct {
-	Network     string `mapstructure:"network"`
-	NetworkKind string `mapstructure:"networkKind"`
-	ChainId     uint64 `mapstructure:"chainId"`
-	Name        string `mapstructure:"name"`
-	RPCAddr     string `mapstructure:"rpcAddr"`
-	RPCUser     string `mapstructure:"rpcUser"`
-	RPCPassword string `mapstructure:"rpcPassword"`
-	Tag         string `mapstructure:"tag"`
-	Version     byte   `mapstructure:"version"`
-	WithBridge  bool   `mapstructure:"start-with-bridge"`
-}
-
-// DefaultConfig returns a configuration populated with default values
-func DefaultConfig() []BTCConfig {
-	return []BTCConfig{{
-		Name:        "bitcoin-testnet4",
-		ChainId:     4,
-		RPCAddr:     "http://127.0.0.1:48332",
-		RPCUser:     "user",
-		RPCPassword: "password",
-		Tag:         "SCALAR",
-		Version:     0,
-		WithBridge:  true,
-	}}
-}
 
 type VaultTag [6]byte
 
@@ -158,6 +131,27 @@ func (nk NetworkKind) Validate() error {
 	if nk != Mainnet && nk != Testnet {
 		return fmt.Errorf("invalid network kind: %d", nk)
 	}
+	return nil
+}
+
+func (nk NetworkKind) MarshalJSON() ([]byte, error) {
+	return json.Marshal(nk.String())
+}
+
+func (nk *NetworkKind) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	return nk.FromString(s)
+}
+
+func (nk *NetworkKind) FromString(s string) error {
+	num, ok := NetworkKind_value[s]
+	if !ok {
+		return fmt.Errorf("invalid network kind: %s", s)
+	}
+	*nk = NetworkKind(num)
 	return nil
 }
 

@@ -527,7 +527,7 @@ func createBTCMgr(valdCfg config.ValdConfig, cliCtx sdkClient.Context, b broadca
 			panic(err)
 		}
 
-		log.WithKeyVals("chain", config.Name, "url", config.RPCAddr).
+		log.WithKeyVals("chain", config.Name, "url", fmt.Sprintf("%s:%d", config.RpcHost, config.RpcPort)).
 			Debugf("created JSON-RPC client of type %T", client)
 
 		rpcs[chainName] = client

@@ -41,39 +41,6 @@ const (
 
 type GenesisState map[string]json.RawMessage
 
-type EvmNetworkConfig struct {
-	ChainID    uint64        `json:"chainId"`
-	ID         string        `json:"id"`
-	Name       string        `json:"name"`
-	Gateway    string        `json:"gateway"`
-	Finality   int           `json:"finality"`
-	LastBlock  uint64        `json:"lastBlock"`
-	GasLimit   uint64        `json:"gasLimit"`
-	BlockTime  time.Duration `json:"blockTime"` //Timeout im ms for pending txs
-	MaxRetry   int           `json:"maxRetry"`
-	RetryDelay time.Duration `json:"retryDelay"`
-	TxTimeout  time.Duration `json:"txTimeout"` //Timeout for send txs (~3s)
-	RpcUrl     string        `json:"rpcUrl"`
-}
-
-type BtcNetworkConfig struct {
-	ChainID    uint64        `json:"chainId"`
-	ID         string        `json:"id"`
-	Name       string        `json:"name"`
-	Gateway    string        `json:"gateway"` //Taproot address
-	Finality   int           `json:"finality"`
-	LastBlock  uint64        `json:"lastBlock"`
-	GasLimit   uint64        `json:"gasLimit"`
-	BlockTime  time.Duration `json:"blockTime"` //Timeout im ms for pending txs
-	MaxRetry   int           `json:"maxRetry"`
-	RetryDelay time.Duration `json:"retryDelay"`
-	TxTimeout  time.Duration `json:"txTimeout"` //Timeout for send txs (~3s)
-	RpcHost    string        `json:"rpcHost"`
-	RpcPort    int           `json:"rpcPort"`
-	RpcUser    string        `json:"rpcUser"`
-	RpcPass    string        `json:"rpcPass"`
-}
-
 type ValidatorInfo struct {
 	Host        string
 	Moniker     string
@@ -322,7 +289,7 @@ func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *s
 func generateNexusGenesis(supportedChainsPath string, validatorInfos []ValidatorInfo, coinDenom string) *nexustypes.GenesisState {
 	nexusGenState := nexustypes.DefaultGenesisState()
 	if supportedChainsPath != "" {
-		evmConfigs, err := ParseJsonArrayConfig[EvmNetworkConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
+		evmConfigs, err := ParseJsonArrayConfig[evmtypes.EVMConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to parse evm config")
 		}
@@ -352,7 +319,7 @@ func generateNexusGenesis(supportedChainsPath string, validatorInfos []Validator
 			}
 			nexusGenState.ChainStates = append(nexusGenState.ChainStates, chainState)
 		}
-		btcConfigs, err := ParseJsonArrayConfig[BtcNetworkConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
+		btcConfigs, err := ParseJsonArrayConfig[btctypes.BTCConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to parse btc config")
 		}
@@ -388,7 +355,7 @@ func generateNexusGenesis(supportedChainsPath string, validatorInfos []Validator
 }
 func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath string, genesisState map[string]json.RawMessage) error {
 	if supportedChainsPath != "" {
-		evmConfigs, err := ParseJsonArrayConfig[EvmNetworkConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
+		evmConfigs, err := ParseJsonArrayConfig[evmtypes.EVMConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to parse evm config")
 		}
@@ -441,15 +408,11 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 		for _, btcConfig := range btcConfigs {
 			vaultTag := btctypes.VaultTag([]byte(btcConfig.Tag)[:6])
 			vaultVersion := btctypes.VaultVersion([1]byte{btcConfig.Version})
-			networkKind := btctypes.Testnet
-			if btcConfig.NetworkKind == "mainnet" {
-				networkKind = btctypes.Mainnet
-			}
 			params := btctypes.Params{
-				ChainId:             btcConfig.ChainId,
+				ChainId:             btcConfig.ChainID,
 				ChainName:           nexus.ChainName(btcConfig.Name),
 				ConfirmationHeight:  2,
-				NetworkKind:         networkKind,
+				NetworkKind:         btcConfig.NetworkKind,
 				RevoteLockingPeriod: 50,
 				VotingThreshold:     utils.Threshold{Numerator: 51, Denominator: 100},
 				MinVoterCount:       1,
