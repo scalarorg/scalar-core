@@ -7,8 +7,8 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	. "github.com/axelarnetwork/utils/test"
+	"github.com/scalarorg/scalar-core/testutils/rand"
+	. "github.com/scalarorg/scalar-core/utils/test"
 	"github.com/scalarorg/scalar-core/x/ante"
 	"github.com/scalarorg/scalar-core/x/ante/types/mock"
 )

@@ -5,12 +5,12 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
-	"github.com/axelarnetwork/utils/funcs"
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	"github.com/scalarorg/scalar-core/x/reward/exported"
 	"github.com/scalarorg/scalar-core/x/reward/types"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 )
 
 // BeginBlocker is called at the beginning of every block

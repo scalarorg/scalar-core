@@ -24,9 +24,9 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/exp/maps"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/utils/funcs"
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -77,10 +77,10 @@ func validateBurnerCode(burnerCode []byte) error {
 	return nil
 }
 
-// AxelarGateway contract ABI and command selectors
+// ScalarGateway contract ABI and command selectors
 const (
 	// TODO: Check if there's a way to install the smart contract module with compiled ABI files
-	axelarGatewayABI = `[
+	ScalarGatewayABI = `[
 		{
 			"inputs": [
 				{
@@ -96,7 +96,7 @@ const (
 		}
 	]`
 
-	axelarGatewayFuncExecute = "execute"
+	ScalarGatewayFuncExecute = "execute"
 )
 
 // IsEVMChain returns true if a chain is an EVM chain
@@ -407,7 +407,7 @@ func (s Signature) ToHomesteadSig() []byte {
 	return bz
 }
 
-// ToSignature transforms an Axelar generated signature into a recoverable signature
+// ToSignature transforms an Scalar generated signature into a recoverable signature
 func ToSignature(sig ec.Signature, hash common.Hash, pk ecdsa.PublicKey) (Signature, error) {
 	s := Signature{}
 	encSig := sig.Serialize()
@@ -467,7 +467,7 @@ func KeysToAddresses(keys ...ecdsa.PublicKey) []common.Address {
 // CreateExecuteDataMultisig wraps the specific command data and includes the command signatures.
 // Returns the data that goes into the data field of an EVM transaction
 func CreateExecuteDataMultisig(data []byte, addresses []common.Address, weights []sdk.Uint, threshold sdk.Uint, signatures [][]byte) ([]byte, error) {
-	abiEncoder, err := abi.JSON(strings.NewReader(axelarGatewayABI))
+	abiEncoder, err := abi.JSON(strings.NewReader(ScalarGatewayABI))
 	if err != nil {
 		return nil, err
 	}
@@ -487,10 +487,10 @@ func CreateExecuteDataMultisig(data []byte, addresses []common.Address, weights 
 		return nil, err
 	}
 
-	return abiEncoder.Pack(axelarGatewayFuncExecute, executeData)
+	return abiEncoder.Pack(ScalarGatewayFuncExecute, executeData)
 }
 
-// GetSignHash returns the hash that needs to be signed so AxelarGateway accepts the given command
+// GetSignHash returns the hash that needs to be signed so ScalarGateway accepts the given command
 func GetSignHash(commandData []byte) common.Hash {
 	hash := crypto.Keccak256(commandData)
 

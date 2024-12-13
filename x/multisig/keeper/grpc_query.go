@@ -10,9 +10,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/utils/funcs"
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 	"github.com/scalarorg/scalar-core/x/multisig/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"

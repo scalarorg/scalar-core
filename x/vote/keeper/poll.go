@@ -9,9 +9,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/libs/log"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/utils/monads/cached"
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/monads/cached"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/vote/exported"
 	"github.com/scalarorg/scalar-core/x/vote/types"
 )

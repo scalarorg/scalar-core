@@ -12,7 +12,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/gorilla/mux"
 
-	clientUtils "github.com/axelarnetwork/axelar-core/utils"
+	clientUtils "github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )

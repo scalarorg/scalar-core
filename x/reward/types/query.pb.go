@@ -24,7 +24,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// InflationRateRequest represents a message that queries the Axelar specific
+// InflationRateRequest represents a message that queries the scalar specific
 // inflation RPC method. Ideally, this would use ValAddress as the validator
 // field type. However, this makes it awkward for REST-based calls, because it
 // would expect a byte array as part of the url. So, the bech32 encoded address

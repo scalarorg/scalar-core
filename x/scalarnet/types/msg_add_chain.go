@@ -7,7 +7,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	host "github.com/cosmos/ibc-go/v4/modules/core/24-host"
 
-	"github.com/axelarnetwork/axelar-core/utils"
+	"github.com/scalarorg/scalar-core/utils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 

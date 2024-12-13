@@ -10,14 +10,14 @@ import "cosmos/base/v1beta1/coin.proto";
 import "cosmos_proto/cosmos.proto";
 import "scalar/nexus/exported/v1beta1/types.proto";
 import "scalar/scalarnet/v1beta1/types.proto";
-import "axelar/permission/exported/v1beta1/types.proto";
+import "scalar/permission/exported/v1beta1/types.proto";
 
 option (gogoproto.goproto_getters_all) = false;
 
 // MsgLink represents a message to link a cross-chain address to an Scalar
 // address
 message LinkRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -32,7 +32,7 @@ message LinkResponse { string deposit_addr = 1; };
 
 // MsgConfirmDeposit represents a deposit confirmation message
 message ConfirmDepositRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -53,7 +53,7 @@ message ConfirmDepositResponse {}
 // MsgExecutePendingTransfers represents a message to trigger transfer all
 // pending transfers
 message ExecutePendingTransfersRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -66,7 +66,7 @@ message ExecutePendingTransfersResponse {}
 message RegisterIBCPathRequest {
   option deprecated = true;
 
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_CHAIN_MANAGEMENT;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -81,7 +81,7 @@ message RegisterIBCPathResponse {}
 // MsgAddCosmosBasedChain represents a message to register a cosmos based chain
 // to nexus
 message AddCosmosBasedChainRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_ACCESS_CONTROL;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -107,7 +107,7 @@ message AddCosmosBasedChainResponse {}
 // RegisterAssetRequest represents a message to register an asset to a cosmos
 // based chain
 message RegisterAssetRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_CHAIN_MANAGEMENT;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -129,7 +129,7 @@ message RegisterAssetResponse {}
 // RouteIBCTransfersRequest represents a message to route pending transfers to
 // cosmos based chains
 message RouteIBCTransfersRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -140,7 +140,7 @@ message RouteIBCTransfersResponse {}
 // RegisterFeeCollectorRequest represents a message to register scalarnet fee
 // collector account
 message RegisterFeeCollectorRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_ACCESS_CONTROL;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -152,7 +152,7 @@ message RegisterFeeCollectorRequest {
 message RegisterFeeCollectorResponse {}
 
 message RetryIBCTransferRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -171,7 +171,7 @@ message RetryIBCTransferRequest {
 message RetryIBCTransferResponse {}
 
 message RouteMessageRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -184,7 +184,7 @@ message RouteMessageRequest {
 message RouteMessageResponse {}
 
 message CallContractRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
 
   bytes sender = 1 [ (gogoproto.casttype) =

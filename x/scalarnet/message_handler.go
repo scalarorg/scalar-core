@@ -12,10 +12,10 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
 	ibcexported "github.com/cosmos/ibc-go/v4/modules/core/exported"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/axelar-core/utils/events"
-	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/events"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/keeper"
@@ -110,7 +110,7 @@ func OnRecvMessage(ctx sdk.Context, k keeper.Keeper, ibcK keeper.IBCKeeper, n ty
 		return channeltypes.NewErrorAcknowledgement(err)
 	}
 
-	// Skip if packet not sent to Axelar message sender account.
+	// Skip if packet not sent to Scalar message sender account.
 	if data.GetReceiver() != types.ScalarIBCAccount.String() {
 		// Rate limit non-GMP IBC transfers
 		// IBC receives are rate limited on the from direction (tokens coming from the source chain).

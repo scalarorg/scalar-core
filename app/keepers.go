@@ -51,23 +51,23 @@ import (
 	"github.com/scalarorg/scalar-core/x/scalarnet"
 	"golang.org/x/mod/semver"
 
-	bankKeeper "github.com/axelarnetwork/axelar-core/x/bank/keeper"
-	permissionKeeper "github.com/axelarnetwork/axelar-core/x/permission/keeper"
-	permissionTypes "github.com/axelarnetwork/axelar-core/x/permission/types"
-	snapKeeper "github.com/axelarnetwork/axelar-core/x/snapshot/keeper"
-	snapTypes "github.com/axelarnetwork/axelar-core/x/snapshot/types"
-	"github.com/axelarnetwork/utils/maps"
 	scalarParams "github.com/scalarorg/scalar-core/app/params"
+	"github.com/scalarorg/scalar-core/utils/maps"
+	bankKeeper "github.com/scalarorg/scalar-core/x/bank/keeper"
 	evmKeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 	multisigKeeper "github.com/scalarorg/scalar-core/x/multisig/keeper"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	nexusKeeper "github.com/scalarorg/scalar-core/x/nexus/keeper"
 	nexusTypes "github.com/scalarorg/scalar-core/x/nexus/types"
+	permissionKeeper "github.com/scalarorg/scalar-core/x/permission/keeper"
+	permissionTypes "github.com/scalarorg/scalar-core/x/permission/types"
 	rewardKeeper "github.com/scalarorg/scalar-core/x/reward/keeper"
 	rewardTypes "github.com/scalarorg/scalar-core/x/reward/types"
 	scalarnetKeeper "github.com/scalarorg/scalar-core/x/scalarnet/keeper"
 	scalarnetTypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
+	snapKeeper "github.com/scalarorg/scalar-core/x/snapshot/keeper"
+	snapTypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 	tssKeeper "github.com/scalarorg/scalar-core/x/tss/keeper"
 	tssTypes "github.com/scalarorg/scalar-core/x/tss/types"
 	voteKeeper "github.com/scalarorg/scalar-core/x/vote/keeper"
@@ -235,8 +235,8 @@ func initGovernanceKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey,
 		GetKeeper[stakingkeeper.Keeper](keepers), govRouter,
 	)
 
-	axelarnetK := GetKeeper[scalarnetKeeper.Keeper](keepers)
-	govK.SetHooks(govtypes.NewMultiGovHooks(axelarnetK.Hooks(GetKeeper[nexusKeeper.Keeper](keepers), govK)))
+	scalarnetK := GetKeeper[scalarnetKeeper.Keeper](keepers)
+	govK.SetHooks(govtypes.NewMultiGovHooks(scalarnetK.Hooks(GetKeeper[nexusKeeper.Keeper](keepers), govK)))
 	return &govK
 }
 
@@ -348,20 +348,20 @@ func initWasmContractKeeper(keepers *KeeperCache) *wasmkeeper.PermissionedKeeper
 	return wasmkeeper.NewDefaultPermissionKeeper(GetKeeper[wasm.Keeper](keepers))
 }
 
-func initAxelarIBCKeeper(keepers *KeeperCache) *scalarnetKeeper.IBCKeeper {
+func initScalarIBCKeeper(keepers *KeeperCache) *scalarnetKeeper.IBCKeeper {
 	ibcK := scalarnetKeeper.NewIBCKeeper(*GetKeeper[scalarnetKeeper.Keeper](keepers), GetKeeper[ibctransferkeeper.Keeper](keepers))
 	return &ibcK
 }
 
 func initscalarnetKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *scalarnetKeeper.Keeper {
-	axelarnetK := scalarnetKeeper.NewKeeper(
+	scalarnetK := scalarnetKeeper.NewKeeper(
 		appCodec,
 		keys[scalarnetTypes.StoreKey],
 		keepers.getSubspace(scalarnetTypes.ModuleName),
 		GetKeeper[ibckeeper.Keeper](keepers).ChannelKeeper,
 		GetKeeper[feegrantkeeper.Keeper](keepers),
 	)
-	return &axelarnetK
+	return &scalarnetK
 }
 
 func initEvmKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *evmKeeper.BaseKeeper {

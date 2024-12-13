@@ -12,9 +12,9 @@ package keeper_test
 // 	"github.com/ethereum/go-ethereum/crypto"
 // 	"github.com/stretchr/testify/assert"
 
-// 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-// 	"github.com/axelarnetwork/utils/funcs"
-// 	. "github.com/axelarnetwork/utils/test"
+// 	"github.com/scalarorg/scalar-core/testutils/rand"
+// 	"github.com/scalarorg/scalar-core/utils/test"
+// 	. "github.com/scalarorg/scalar-core/utils/test"
 // 	"github.com/scalarorg/scalar-core/app"
 // 	evm "github.com/scalarorg/scalar-core/x/evm/exported"
 // 	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"

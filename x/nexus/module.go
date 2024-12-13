@@ -15,8 +15,8 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/axelar-core/utils/grpc"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/grpc"
 	"github.com/scalarorg/scalar-core/x/nexus/client/cli"
 	"github.com/scalarorg/scalar-core/x/nexus/keeper"
 	"github.com/scalarorg/scalar-core/x/nexus/types"
@@ -87,21 +87,21 @@ type AppModule struct {
 	snapshotter types.Snapshotter
 	slashing    types.SlashingKeeper
 	staking     types.StakingKeeper
-	axelarnet   types.ScalarnetKeeper
+	scalarnet   types.ScalarnetKeeper
 	reward      types.RewardKeeper
 	bank        types.BankKeeper
 	account     types.AccountKeeper
 }
 
 // NewAppModule creates a new AppModule object
-func NewAppModule(k keeper.Keeper, snapshotter types.Snapshotter, slashing types.SlashingKeeper, staking types.StakingKeeper, axelarnet types.ScalarnetKeeper, reward types.RewardKeeper, bank types.BankKeeper, account types.AccountKeeper) AppModule {
+func NewAppModule(k keeper.Keeper, snapshotter types.Snapshotter, slashing types.SlashingKeeper, staking types.StakingKeeper, scalarnet types.ScalarnetKeeper, reward types.RewardKeeper, bank types.BankKeeper, account types.AccountKeeper) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
 		keeper:         k,
 		snapshotter:    snapshotter,
 		slashing:       slashing,
 		staking:        staking,
-		axelarnet:      axelarnet,
+		scalarnet:      scalarnet,
 		reward:         reward,
 		bank:           bank,
 		account:        account,
@@ -116,9 +116,9 @@ func (AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {
 // RegisterServices registers a GRPC query service to respond to the
 // module-specific GRPC queries.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
-	msgServer := keeper.NewMsgServerImpl(am.keeper, am.snapshotter, am.slashing, am.staking, am.axelarnet)
+	msgServer := keeper.NewMsgServerImpl(am.keeper, am.snapshotter, am.slashing, am.staking, am.scalarnet)
 	types.RegisterMsgServiceServer(grpc.ServerWithSDKErrors{Server: cfg.MsgServer(), Err: types.ErrNexus, Logger: am.keeper.Logger}, msgServer)
-	types.RegisterQueryServiceServer(cfg.QueryServer(), keeper.NewGRPCQuerier(am.keeper, am.axelarnet))
+	types.RegisterQueryServiceServer(cfg.QueryServer(), keeper.NewGRPCQuerier(am.keeper, am.scalarnet))
 
 	err := cfg.RegisterMigration(types.ModuleName, 6, keeper.Migrate6to7(am.keeper))
 	if err != nil {
@@ -155,7 +155,7 @@ func (am AppModule) EndBlock(ctx sdk.Context, req abci.RequestEndBlock) []abci.V
 // Route returns the module's route
 // Deprecated
 func (am AppModule) Route() sdk.Route {
-	return sdk.NewRoute(types.RouterKey, NewHandler(am.keeper, am.snapshotter, am.slashing, am.staking, am.axelarnet))
+	return sdk.NewRoute(types.RouterKey, NewHandler(am.keeper, am.snapshotter, am.slashing, am.staking, am.scalarnet))
 }
 
 // QuerierRoute returns this module's query route

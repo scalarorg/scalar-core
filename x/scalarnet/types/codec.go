@@ -56,7 +56,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		panic(fmt.Errorf("failed to convert registry type %T", registry))
 	}
 
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/axelar.scalarnet.v1beta1.ExecuteMessageRequest", &RouteMessageRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".scalarnet.v1beta1.ExecuteMessageRequest", &RouteMessageRequest{})
 
 	registry.RegisterImplementations((*govtypes.Content)(nil),
 		&CallContractsProposal{},

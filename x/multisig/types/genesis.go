@@ -9,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 )
 

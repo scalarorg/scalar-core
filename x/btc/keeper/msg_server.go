@@ -3,13 +3,13 @@ package keeper
 import (
 	"fmt"
 
-	"github.com/axelarnetwork/utils/funcs"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/x/btc/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 
-	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 

@@ -12,7 +12,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/axelarnetwork/axelar-core/utils"
+	"github.com/scalarorg/scalar-core/utils"
 )
 
 // NewGenesisState returns a new genesis state

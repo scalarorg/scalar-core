@@ -7,12 +7,12 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/gogo/protobuf/proto"
 
-	permissiontypes "github.com/axelarnetwork/axelar-core/x/permission/types"
-	snapshottypes "github.com/axelarnetwork/axelar-core/x/snapshot/types"
 	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
+	permissiontypes "github.com/scalarorg/scalar-core/x/permission/types"
 	rewardtypes "github.com/scalarorg/scalar-core/x/reward/types"
 	scalarnettypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
+	snapshottypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 	tsstypes "github.com/scalarorg/scalar-core/x/tss/types"
 	votetypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
@@ -22,7 +22,7 @@ type customRegistry interface {
 }
 
 // RegisterLegacyMsgInterfaces registers the msg codec before the package name
-// refactor done in https://github.com/axelarnetwork/axelar-core/commit/2d5e35d7da4fb02ac55fb040fed420954d3be020
+// refactor done in https://github.com/scalarorg/scalar-core/commit/2d5e35d7da4fb02ac55fb040fed420954d3be020
 // to keep transaction query backwards compatible
 func RegisterLegacyMsgInterfaces(registry cdctypes.InterfaceRegistry) {
 	r, ok := registry.(customRegistry)
@@ -30,7 +30,7 @@ func RegisterLegacyMsgInterfaces(registry cdctypes.InterfaceRegistry) {
 		panic(fmt.Errorf("failed to convert registry type %T", registry))
 	}
 
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/axelar.evm.v1beta1.CreateTransferOwnershipRequest", &evmtypes.CreateTransferOwnershipRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".evm.v1beta1.CreateTransferOwnershipRequest", &evmtypes.CreateTransferOwnershipRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/scalar.scalarnet.v1beta1.RegisterIBCPathRequest", &scalarnettypes.RegisterIBCPathRequest{})
 
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/scalar.scalarnet.v1beta1.LinkRequest", &scalarnettypes.LinkRequest{})
@@ -83,15 +83,15 @@ func RegisterLegacyMsgInterfaces(registry cdctypes.InterfaceRegistry) {
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/tss.v1beta1.SubmitMultisigPubKeysRequest", &tsstypes.SubmitMultisigPubKeysRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/tss.v1beta1.SubmitMultisigSignaturesRequest", &tsstypes.SubmitMultisigSignaturesRequest{})
 
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/axelar.tss.v1beta1.StartKeygenRequest", &tsstypes.StartKeygenRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/axelar.tss.v1beta1.ProcessKeygenTrafficRequest", &tsstypes.ProcessKeygenTrafficRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/axelar.tss.v1beta1.ProcessSignTrafficRequest", &tsstypes.ProcessSignTrafficRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/axelar.tss.v1beta1.RotateKeyRequest", &tsstypes.RotateKeyRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/axelar.tss.v1beta1.VoteSigRequest", &tsstypes.VoteSigRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/axelar.tss.v1beta1.VotePubKeyRequest", &tsstypes.VotePubKeyRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/axelar.tss.v1beta1.RegisterExternalKeysRequest", &tsstypes.RegisterExternalKeysRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/axelar.tss.v1beta1.SubmitMultisigPubKeysRequest", &tsstypes.SubmitMultisigPubKeysRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/axelar.tss.v1beta1.SubmitMultisigSignaturesRequest", &tsstypes.SubmitMultisigSignaturesRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".tss.v1beta1.StartKeygenRequest", &tsstypes.StartKeygenRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".tss.v1beta1.ProcessKeygenTrafficRequest", &tsstypes.ProcessKeygenTrafficRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".tss.v1beta1.ProcessSignTrafficRequest", &tsstypes.ProcessSignTrafficRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".tss.v1beta1.RotateKeyRequest", &tsstypes.RotateKeyRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".tss.v1beta1.VoteSigRequest", &tsstypes.VoteSigRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".tss.v1beta1.VotePubKeyRequest", &tsstypes.VotePubKeyRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".tss.v1beta1.RegisterExternalKeysRequest", &tsstypes.RegisterExternalKeysRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".tss.v1beta1.SubmitMultisigPubKeysRequest", &tsstypes.SubmitMultisigPubKeysRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".tss.v1beta1.SubmitMultisigSignaturesRequest", &tsstypes.SubmitMultisigSignaturesRequest{})
 
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/vote.v1beta1.VoteRequest", &votetypes.VoteRequest{})
 }

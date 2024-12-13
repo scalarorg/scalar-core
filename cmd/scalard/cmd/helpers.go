@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/axelarnetwork/axelar-core/utils"
+	"github.com/scalarorg/scalar-core/utils"
 )
 
 func parseThreshold(str string) (utils.Threshold, error) {

@@ -25,17 +25,17 @@ import (
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/axelarnetwork/axelar-core/cmd/axelard/cmd/utils"
-	"github.com/axelarnetwork/axelar-core/sdk-utils/broadcast"
-	errors2 "github.com/axelarnetwork/axelar-core/utils/errors"
 	tmEvents "github.com/axelarnetwork/tm-events/events"
 	"github.com/axelarnetwork/tm-events/pubsub"
 	"github.com/axelarnetwork/tm-events/tendermint"
-	"github.com/axelarnetwork/utils/funcs"
-	"github.com/axelarnetwork/utils/jobs"
-	"github.com/axelarnetwork/utils/log"
-	"github.com/axelarnetwork/utils/slices"
 	"github.com/scalarorg/scalar-core/app"
+	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
+	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
+	errors2 "github.com/scalarorg/scalar-core/utils/errors"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/jobs"
+	"github.com/scalarorg/scalar-core/utils/log"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/vald/btc"
 	btcRPC "github.com/scalarorg/scalar-core/vald/btc/rpc"
 	"github.com/scalarorg/scalar-core/vald/config"
@@ -173,7 +173,7 @@ func setPersistentFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().String("tofnd-host", defaultConf.Host, "host name for tss daemon")
 	cmd.PersistentFlags().String("tofnd-port", defaultConf.Port, "port for tss daemon")
 	cmd.PersistentFlags().String("tofnd-dial-timeout", defaultConf.DialTimeout.String(), "dialup timeout to the tss daemon")
-	cmd.PersistentFlags().String("validator-addr", "", "the address of the validator operator, i.e axelarvaloper1..")
+	cmd.PersistentFlags().String("validator-addr", "", "the address of the validator operator, i.e scalarvaloper1..")
 	cmd.PersistentFlags().String(flags.FlagChainID, app.Name, "The network chain ID")
 }
 
@@ -418,18 +418,18 @@ func createEventBus(client *tendermint.RobustClient, startBlock int64, retries i
 	return tmEvents.NewEventBus(tmEvents.NewBlockSource(client, notifier, tmEvents.Retries(retries), tmEvents.BackOff(backOff)), pubsub.NewBus[tmEvents.ABCIEventWithHeight]())
 }
 
-func createRefundableBroadcaster(txf tx.Factory, ctx sdkClient.Context, axelarCfg config.ValdConfig) broadcast.Broadcaster {
-	broadcaster := broadcast.WithStateManager(ctx, txf, broadcast.WithResponseTimeout(axelarCfg.BroadcastConfig.MaxTimeout))
-	broadcaster = broadcast.WithRetry(broadcaster, axelarCfg.MaxRetries, axelarCfg.MinSleepBeforeRetry)
-	broadcaster = broadcast.Batched(broadcaster, axelarCfg.BatchThreshold, axelarCfg.BatchSizeLimit)
+func createRefundableBroadcaster(txf tx.Factory, ctx sdkClient.Context, valdCfg config.ValdConfig) broadcast.Broadcaster {
+	broadcaster := broadcast.WithStateManager(ctx, txf, broadcast.WithResponseTimeout(valdCfg.BroadcastConfig.MaxTimeout))
+	broadcaster = broadcast.WithRetry(broadcaster, valdCfg.MaxRetries, valdCfg.MinSleepBeforeRetry)
+	broadcaster = broadcast.Batched(broadcaster, valdCfg.BatchThreshold, valdCfg.BatchSizeLimit)
 	broadcaster = broadcast.WithRefund(broadcaster)
 	broadcaster = broadcast.SuppressExecutionErrs(broadcaster)
 
 	return broadcaster
 }
 
-func createMultisigMgr(broadcaster broadcast.Broadcaster, cliCtx sdkClient.Context, axelarCfg config.ValdConfig, valAddr sdk.ValAddress) *multisig.Mgr {
-	conn, err := grpc.Connect(axelarCfg.TssConfig.Host, axelarCfg.TssConfig.Port, axelarCfg.TssConfig.DialTimeout)
+func createMultisigMgr(broadcaster broadcast.Broadcaster, cliCtx sdkClient.Context, valdCfg config.ValdConfig, valAddr sdk.ValAddress) *multisig.Mgr {
+	conn, err := grpc.Connect(valdCfg.TssConfig.Host, valdCfg.TssConfig.Port, valdCfg.TssConfig.DialTimeout)
 	if err != nil {
 		panic(sdkerrors.Wrap(err, "failed to create multisig manager"))
 	}
@@ -438,9 +438,9 @@ func createMultisigMgr(broadcaster broadcast.Broadcaster, cliCtx sdkClient.Conte
 	return multisig.NewMgr(tofnd.NewMultisigClient(conn), cliCtx, valAddr, broadcaster, timeout)
 }
 
-func createTSSMgr(broadcaster broadcast.Broadcaster, cliCtx sdkClient.Context, axelarCfg config.ValdConfig, valAddr string, cdc *codec.LegacyAmino) *tss.Mgr {
+func createTSSMgr(broadcaster broadcast.Broadcaster, cliCtx sdkClient.Context, valdCfg config.ValdConfig, valAddr string, cdc *codec.LegacyAmino) *tss.Mgr {
 	create := func() (*tss.Mgr, error) {
-		conn, err := tss.Connect(axelarCfg.TssConfig.Host, axelarCfg.TssConfig.Port, axelarCfg.TssConfig.DialTimeout)
+		conn, err := tss.Connect(valdCfg.TssConfig.Host, valdCfg.TssConfig.Port, valdCfg.TssConfig.DialTimeout)
 		if err != nil {
 			return nil, err
 		}

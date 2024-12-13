@@ -7,7 +7,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/axelarnetwork/utils/log"
+	"github.com/scalarorg/scalar-core/utils/log"
 )
 
 // Connect connects to tofnd gRPC Server

@@ -9,9 +9,9 @@ import (
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/types"
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"

@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/axelarnetwork/axelar-core/utils/events"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/clog"
+	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/x/btc/types"
 )
 

@@ -6,9 +6,8 @@ require (
 	cosmossdk.io/api v0.2.6
 	github.com/CosmWasm/wasmd v0.33.0
 	github.com/CosmWasm/wasmvm v1.3.1
-	github.com/axelarnetwork/axelar-core v1.1.2
+	github.com/armon/go-metrics v0.4.1
 	github.com/axelarnetwork/tm-events v0.0.0-20230704201410-3cf91089034b
-	github.com/axelarnetwork/utils v0.0.0-20230706045331-b7aacc1f4a2f
 	github.com/btcsuite/btcd v0.24.2
 	github.com/btcsuite/btcd/btcec/v2 v2.3.2
 	github.com/btcsuite/btcd/chaincfg/chainhash v1.1.0
@@ -16,6 +15,7 @@ require (
 	github.com/cosmos/cosmos-sdk v0.45.16
 	github.com/cosmos/ibc-go/v4 v4.6.0
 	github.com/ethereum/go-ethereum v1.10.26
+	github.com/go-errors/errors v1.5.1
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/mock v1.6.0
 	github.com/golang/protobuf v1.5.4
@@ -38,9 +38,12 @@ require (
 	github.com/stretchr/testify v1.9.0
 	github.com/tendermint/tendermint v0.34.27
 	github.com/tendermint/tm-db v0.6.8-0.20220506192307-f628bb5dc95b
+	golang.org/x/crypto v0.28.0
 	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa
 	golang.org/x/mod v0.21.0
 	golang.org/x/sync v0.8.0
+	golang.org/x/text v0.19.0
+	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2
 	google.golang.org/genproto/googleapis/api v0.0.0-20240311132316-a219d84964c2
 	google.golang.org/grpc v1.67.1
 	google.golang.org/protobuf v1.35.1
@@ -56,7 +59,7 @@ require (
 	github.com/DataDog/zstd v1.5.2 // indirect
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect
 	github.com/Workiva/go-datastructures v1.0.53 // indirect
-	github.com/armon/go-metrics v0.4.1 // indirect
+	github.com/axelarnetwork/utils v0.0.0-20230706045331-b7aacc1f4a2f // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/speakeasy v0.1.1-0.20220910012023-760eaf8b6816 // indirect
 	github.com/btcsuite/btcd/btcutil v1.1.6 // indirect
@@ -100,7 +103,6 @@ require (
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/getsentry/sentry-go v0.27.0 // indirect
-	github.com/go-errors/errors v1.5.1 // indirect
 	github.com/go-kit/kit v0.13.0 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
@@ -176,13 +178,10 @@ require (
 	go.etcd.io/bbolt v1.4.0-alpha.0.0.20240404170359-43604f3112c5 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
-	golang.org/x/crypto v0.28.0 // indirect
 	golang.org/x/net v0.30.0 // indirect
 	golang.org/x/sys v0.26.0 // indirect
 	golang.org/x/term v0.25.0 // indirect
-	golang.org/x/text v0.19.0 // indirect
 	golang.org/x/tools v0.25.0 // indirect
-	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/genproto v0.0.0-20240213162025-012b6fc9bca9 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240814211410-ddb44dafa142 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect

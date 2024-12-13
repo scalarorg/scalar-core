@@ -3,7 +3,7 @@ syntax = "proto3";
 package scalar.btc.v1beta1;
 
 import "gogoproto/gogo.proto";
-import "axelar/permission/exported/v1beta1/types.proto";
+import "scalar/permission/exported/v1beta1/types.proto";
 import "scalar/btc/v1beta1/poll.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
@@ -11,7 +11,7 @@ option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
 option (gogoproto.goproto_getters_all) = false;
 
 message ConfirmStakingTxsRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];

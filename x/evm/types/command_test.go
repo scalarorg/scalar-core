@@ -13,10 +13,10 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/utils/funcs"
-	"github.com/axelarnetwork/utils/slices"
 	"github.com/scalarorg/scalar-core/app/params"
+	"github.com/scalarorg/scalar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	"github.com/scalarorg/scalar-core/x/evm/types/testutils"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"

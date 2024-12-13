@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/axelarnetwork/axelar-core/utils"
+	"github.com/scalarorg/scalar-core/utils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 

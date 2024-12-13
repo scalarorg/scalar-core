@@ -5,8 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
 
-	permission "github.com/axelarnetwork/axelar-core/x/permission/exported"
 	"github.com/scalarorg/scalar-core/x/ante/types"
+	permission "github.com/scalarorg/scalar-core/x/permission/exported"
 )
 
 // RestrictedTx checks if the signer is authorized to send restricted transactions

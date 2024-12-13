@@ -762,8 +762,8 @@ github.com/apache/thrift v0.16.0/go.mod h1:PHK3hniurgQaNMZYaCLEqXKsYK8upmhPbmdP2
 github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6/go.mod h1:grANhF5doyWs3UAsr3K4I6qtAmlQcZDesFNEHPZAzj8=
 github.com/armon/go-metrics v0.4.1 h1:hR91U9KYmb6bLBYLQjyM+3j+rcd/UhE+G78SFnF8gJA=
 github.com/armon/go-metrics v0.4.1/go.mod h1:E6amYzXo6aW1tqzoZGT755KkbgrJsSdpwZ+3JqfkOG4=
-github.com/axelarnetwork/axelar-core v1.1.2 h1:mePj+qpoH2SNsEtcy1ZEYBwGvguvmYcY7QoHplR8ey0=
-github.com/axelarnetwork/axelar-core v1.1.2/go.mod h1:FffkVtkXhEqIV7srHEvWgGxxcA8B9zUoc4mIErQpKtk=
+github.com/scalarorg/scalar-core v1.1.2 h1:mePj+qpoH2SNsEtcy1ZEYBwGvguvmYcY7QoHplR8ey0=
+github.com/scalarorg/scalar-core v1.1.2/go.mod h1:FffkVtkXhEqIV7srHEvWgGxxcA8B9zUoc4mIErQpKtk=
 github.com/axelarnetwork/cosmos-sdk v0.45.17-0.20240321205000-47c0c80e20ca h1:8pY+xR4RKOJhVEY+9eFodfGVcucYB/v/wjtflGl1STY=
 github.com/axelarnetwork/cosmos-sdk v0.45.17-0.20240321205000-47c0c80e20ca/go.mod h1:bScuNwWAP0TZJpUf+SHXRU3xGoUPp+X9nAzfeIXts40=
 github.com/axelarnetwork/utils v0.0.0-20230706045331-b7aacc1f4a2f h1:Q0Qh79MuZ/PWKzytqU8/4dt+S2QemdYYPXkjwp/i4l0=

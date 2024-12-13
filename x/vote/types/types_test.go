@@ -8,9 +8,9 @@ import (
 	gogoprototypes "github.com/gogo/protobuf/types"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	. "github.com/axelarnetwork/utils/test"
 	"github.com/scalarorg/scalar-core/app"
+	"github.com/scalarorg/scalar-core/testutils/rand"
+	. "github.com/scalarorg/scalar-core/utils/test"
 	"github.com/scalarorg/scalar-core/x/vote/exported"
 	"github.com/scalarorg/scalar-core/x/vote/types"
 )

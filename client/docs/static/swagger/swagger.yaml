@@ -4684,7 +4684,7 @@ paths:
               CreateBurnTokensRequest represents the message to create commands
               to burn
 
-              tokens with AxelarGateway
+              tokens with scalarGateway
       tags:
         - MsgService
   /scalar/evm/create_deploy_token:
@@ -4928,7 +4928,7 @@ paths:
               CreateDeployTokenRequest represents the message to create a deploy
               token
 
-              command for AxelarGateway
+              command for scalarGateway
       tags:
         - MsgService
   /scalar/evm/create_pending_transfers:
@@ -8411,7 +8411,7 @@ paths:
   /scalar/evm/v1beta1/gateway_address/{chain}:
     get:
       summary: |-
-        GatewayAddress queries the address of axelar gateway at the specified
+        GatewayAddress queries the address of scalar gateway at the specified
         chain
       operationId: GatewayAddress
       responses:
@@ -18109,7 +18109,7 @@ paths:
                         }
       tags:
         - QueryService
-  /axelar/snapshot/deactivate_proxy:
+  /scalar/snapshot/deactivate_proxy:
     post:
       summary: DeactivateProxy defines a method for deregistering a proxy account.
       operationId: DeactivateProxy
@@ -18152,7 +18152,7 @@ paths:
                 format: byte
       tags:
         - MsgService
-  /axelar/snapshot/register_proxy:
+  /scalar/snapshot/register_proxy:
     post:
       summary: >-
         RegisterProxy defines a method for registering a proxy account that can
@@ -18202,7 +18202,7 @@ paths:
                 format: byte
       tags:
         - MsgService
-  /axelar/snapshot/v1beta1/params:
+  /scalar/snapshot/v1beta1/params:
     get:
       operationId: SnapshotParams
       responses:
@@ -18822,7 +18822,7 @@ paths:
                         }
       tags:
         - QueryService
-  /axelar/permission/deregister_controller:
+  /scalar/permission/deregister_controller:
     post:
       operationId: DeregisterController
       responses:
@@ -19040,7 +19040,7 @@ paths:
               controller account
       tags:
         - Msg
-  /axelar/permission/register_controller:
+  /scalar/permission/register_controller:
     post:
       operationId: RegisterController
       responses:
@@ -19258,7 +19258,7 @@ paths:
               controller account
       tags:
         - Msg
-  /axelar/permission/update_governance_key:
+  /scalar/permission/update_governance_key:
     post:
       operationId: UpdateGovernanceKey
       responses:
@@ -19662,7 +19662,7 @@ paths:
                   it uses legacy amino address rules.
       tags:
         - Msg
-  /axelar/permission/v1beta1/governance_key:
+  /scalar/permission/v1beta1/governance_key:
     get:
       summary: GovernanceKey returns the multisig governance key
       operationId: GovernanceKey
@@ -20061,7 +20061,7 @@ paths:
                         }
       tags:
         - Query
-  /axelar/permission/v1beta1/params:
+  /scalar/permission/v1beta1/params:
     get:
       operationId: PermissionParams
       responses:
@@ -20493,7 +20493,7 @@ paths:
         - QueryService
   /scalar/vote/vote:
     post:
-      operationId: AxelarVote
+      operationId: ScalarVote
       responses:
         '200':
           description: A successful response.
@@ -54540,18 +54540,6 @@ definitions:
       - KEY_TYPE_THRESHOLD
       - KEY_TYPE_MULTISIG
     default: KEY_TYPE_UNSPECIFIED
-  axelar.utils.v1beta1.Threshold:
-    type: object
-    properties:
-      numerator:
-        type: string
-        format: int64
-        title: |-
-          split threshold into Numerator and denominator to avoid floating point
-          errors down the line
-      denominator:
-        type: string
-        format: int64
   scalar.evm.v1beta1.AddChainRequest:
     type: object
     properties:
@@ -54814,7 +54802,7 @@ definitions:
         type: string
     title: |-
       CreateBurnTokensRequest represents the message to create commands to burn
-      tokens with AxelarGateway
+      tokens with scalarGateway
   scalar.evm.v1beta1.CreateBurnTokensResponse:
     type: object
   scalar.evm.v1beta1.CreateDeployTokenRequest:
@@ -54852,7 +54840,7 @@ definitions:
         type: string
     title: |-
       CreateDeployTokenRequest represents the message to create a deploy token
-      command for AxelarGateway
+      command for scalarGateway
   scalar.evm.v1beta1.CreateDeployTokenResponse:
     type: object
   scalar.evm.v1beta1.CreatePendingTransfersRequest:
@@ -55603,6 +55591,18 @@ definitions:
       - TOKEN_TYPE_INTERNAL
       - TOKEN_TYPE_EXTERNAL
     default: TOKEN_TYPE_UNSPECIFIED
+  scalar.utils.v1beta1.Threshold:
+    type: object
+    properties:
+      numerator:
+        type: string
+        format: int64
+        title: |-
+          split threshold into Numerator and denominator to avoid floating point
+          errors down the line
+      denominator:
+        type: string
+        format: int64
   scalar.multisig.exported.v1beta1.KeyState:
     type: string
     enum:
@@ -55889,37 +55889,6 @@ definitions:
         format: byte
   scalar.multisig.v1beta1.SubmitSignatureResponse:
     type: object
-  axelar.utils.v1beta1.Bitmap:
-    type: object
-    properties:
-      true_count_cache:
-        type: object
-        properties:
-          cumulative_value:
-            type: array
-            items:
-              type: string
-              format: uint64
-          index:
-            type: integer
-            format: int32
-          max_size:
-            type: integer
-            format: int32
-  axelar.utils.v1beta1.CircularBuffer:
-    type: object
-    properties:
-      cumulative_value:
-        type: array
-        items:
-          type: string
-          format: uint64
-      index:
-        type: integer
-        format: int32
-      max_size:
-        type: integer
-        format: int32
   cosmos.base.query.v1beta1.PageRequest:
     type: object
     properties:
@@ -56943,6 +56912,37 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
+  scalar.utils.v1beta1.Bitmap:
+    type: object
+    properties:
+      true_count_cache:
+        type: object
+        properties:
+          cumulative_value:
+            type: array
+            items:
+              type: string
+              format: uint64
+          index:
+            type: integer
+            format: int32
+          max_size:
+            type: integer
+            format: int32
+  scalar.utils.v1beta1.CircularBuffer:
+    type: object
+    properties:
+      cumulative_value:
+        type: array
+        items:
+          type: string
+          format: uint64
+      index:
+        type: integer
+        format: int32
+      max_size:
+        type: integer
+        format: int32
   scalar.reward.v1beta1.InflationRateResponse:
     type: object
     properties:
@@ -57148,22 +57148,22 @@ definitions:
         format: byte
       log:
         type: string
-  axelar.snapshot.v1beta1.DeactivateProxyRequest:
+  scalar.snapshot.v1beta1.DeactivateProxyRequest:
     type: object
     properties:
       sender:
         type: string
         format: byte
-  axelar.snapshot.v1beta1.DeactivateProxyResponse:
+  scalar.snapshot.v1beta1.DeactivateProxyResponse:
     type: object
-  axelar.snapshot.v1beta1.Params:
+  scalar.snapshot.v1beta1.Params:
     type: object
     properties:
       min_proxy_balance:
         type: string
         format: int64
     title: Params represent the genesis parameters for the module
-  axelar.snapshot.v1beta1.ParamsResponse:
+  scalar.snapshot.v1beta1.ParamsResponse:
     type: object
     properties:
       params:
@@ -57173,7 +57173,7 @@ definitions:
             type: string
             format: int64
         title: Params represent the genesis parameters for the module
-  axelar.snapshot.v1beta1.RegisterProxyRequest:
+  scalar.snapshot.v1beta1.RegisterProxyRequest:
     type: object
     properties:
       sender:
@@ -57182,7 +57182,7 @@ definitions:
       proxy_addr:
         type: string
         format: byte
-  axelar.snapshot.v1beta1.RegisterProxyResponse:
+  scalar.snapshot.v1beta1.RegisterProxyResponse:
     type: object
   scalar.tss.exported.v1beta1.KeyRequirement:
     type: object
@@ -57622,7 +57622,184 @@ definitions:
             type: string
             format: int64
         title: Params is the parameter set for this module
-  axelar.permission.v1beta1.DeregisterControllerRequest:
+  cosmos.crypto.multisig.LegacyAminoPubKey:
+    type: object
+    properties:
+      threshold:
+        type: integer
+        format: int64
+      public_keys:
+        type: array
+        items:
+          type: object
+          properties:
+            type_url:
+              type: string
+              description: >-
+                A URL/resource name that uniquely identifies the type of the
+                serialized
+
+                protocol buffer message. This string must contain at least
+
+                one "/" character. The last segment of the URL's path must
+                represent
+
+                the fully qualified name of the type (as in
+
+                `path/google.protobuf.Duration`). The name should be in a
+                canonical form
+
+                (e.g., leading "." is not accepted).
+
+
+                In practice, teams usually precompile into the binary all types
+                that they
+
+                expect it to use in the context of Any. However, for URLs which
+                use the
+
+                scheme `http`, `https`, or no scheme, one can optionally set up
+                a type
+
+                server that maps type URLs to message definitions as follows:
+
+
+                * If no scheme is provided, `https` is assumed.
+
+                * An HTTP GET on the URL must yield a [google.protobuf.Type][]
+                  value in binary format, or produce an error.
+                * Applications are allowed to cache lookup results based on the
+                  URL, or have them precompiled into a binary to avoid any
+                  lookup. Therefore, binary compatibility needs to be preserved
+                  on changes to types. (Use versioned type names to manage
+                  breaking changes.)
+
+                Note: this functionality is not currently available in the
+                official
+
+                protobuf release, and it is not used for type URLs beginning
+                with
+
+                type.googleapis.com.
+
+
+                Schemes other than `http`, `https` (or the empty scheme) might
+                be
+
+                used with implementation specific semantics.
+            value:
+              type: string
+              format: byte
+              description: >-
+                Must be a valid serialized protocol buffer of the above
+                specified type.
+          description: >-
+            `Any` contains an arbitrary serialized protocol buffer message along
+            with a
+
+            URL that describes the type of the serialized message.
+
+
+            Protobuf library provides support to pack/unpack Any values in the
+            form
+
+            of utility functions or additional generated methods of the Any
+            type.
+
+
+            Example 1: Pack and unpack a message in C++.
+
+                Foo foo = ...;
+                Any any;
+                any.PackFrom(foo);
+                ...
+                if (any.UnpackTo(&foo)) {
+                  ...
+                }
+
+            Example 2: Pack and unpack a message in Java.
+
+                Foo foo = ...;
+                Any any = Any.pack(foo);
+                ...
+                if (any.is(Foo.class)) {
+                  foo = any.unpack(Foo.class);
+                }
+
+             Example 3: Pack and unpack a message in Python.
+
+                foo = Foo(...)
+                any = Any()
+                any.Pack(foo)
+                ...
+                if any.Is(Foo.DESCRIPTOR):
+                  any.Unpack(foo)
+                  ...
+
+             Example 4: Pack and unpack a message in Go
+
+                 foo := &pb.Foo{...}
+                 any, err := anypb.New(foo)
+                 if err != nil {
+                   ...
+                 }
+                 ...
+                 foo := &pb.Foo{}
+                 if err := any.UnmarshalTo(foo); err != nil {
+                   ...
+                 }
+
+            The pack methods provided by protobuf library will by default use
+
+            'type.googleapis.com/full.type.name' as the type URL and the unpack
+
+            methods only use the fully qualified type name after the last '/'
+
+            in the type URL, for example "foo.bar.com/x/y.z" will yield type
+
+            name "y.z".
+
+
+
+            JSON
+
+            ====
+
+            The JSON representation of an `Any` value uses the regular
+
+            representation of the deserialized, embedded message, with an
+
+            additional field `@type` which contains the type URL. Example:
+
+                package google.profile;
+                message Person {
+                  string first_name = 1;
+                  string last_name = 2;
+                }
+
+                {
+                  "@type": "type.googleapis.com/google.profile.Person",
+                  "firstName": <string>,
+                  "lastName": <string>
+                }
+
+            If the embedded message type is well-known and has a custom JSON
+
+            representation, that representation will be embedded adding a field
+
+            `value` which holds the custom JSON in addition to the `@type`
+
+            field. Example (for message [google.protobuf.Duration][]):
+
+                {
+                  "@type": "type.googleapis.com/google.protobuf.Duration",
+                  "value": "1.212s"
+                }
+    description: |-
+      LegacyAminoPubKey specifies a public key type
+      which nests multiple public keys and a threshold,
+      it uses legacy amino address rules.
+  scalar.permission.v1beta1.DeregisterControllerRequest:
     type: object
     properties:
       sender:
@@ -57634,18 +57811,18 @@ definitions:
     title: >-
       DeregisterController represents a message to deregister a controller
       account
-  axelar.permission.v1beta1.DeregisterControllerResponse:
+  scalar.permission.v1beta1.DeregisterControllerResponse:
     type: object
-  axelar.permission.v1beta1.Params:
+  scalar.permission.v1beta1.Params:
     type: object
     title: Params represent the genesis parameters for the module
-  axelar.permission.v1beta1.ParamsResponse:
+  scalar.permission.v1beta1.ParamsResponse:
     type: object
     properties:
       params:
         type: object
         title: Params represent the genesis parameters for the module
-  axelar.permission.v1beta1.QueryGovernanceKeyResponse:
+  scalar.permission.v1beta1.QueryGovernanceKeyResponse:
     type: object
     properties:
       governance_key:
@@ -57835,7 +58012,7 @@ definitions:
     title: |-
       QueryGovernanceKeyResponse is the response type for the
       Query/GovernanceKey RPC method
-  axelar.permission.v1beta1.RegisterControllerRequest:
+  scalar.permission.v1beta1.RegisterControllerRequest:
     type: object
     properties:
       sender:
@@ -57847,9 +58024,9 @@ definitions:
     title: >-
       MsgRegisterController represents a message to register a controller
       account
-  axelar.permission.v1beta1.RegisterControllerResponse:
+  scalar.permission.v1beta1.RegisterControllerResponse:
     type: object
-  axelar.permission.v1beta1.UpdateGovernanceKeyRequest:
+  scalar.permission.v1beta1.UpdateGovernanceKeyRequest:
     type: object
     properties:
       sender:
@@ -58039,185 +58216,8 @@ definitions:
           LegacyAminoPubKey specifies a public key type
           which nests multiple public keys and a threshold,
           it uses legacy amino address rules.
-  axelar.permission.v1beta1.UpdateGovernanceKeyResponse:
+  scalar.permission.v1beta1.UpdateGovernanceKeyResponse:
     type: object
-  cosmos.crypto.multisig.LegacyAminoPubKey:
-    type: object
-    properties:
-      threshold:
-        type: integer
-        format: int64
-      public_keys:
-        type: array
-        items:
-          type: object
-          properties:
-            type_url:
-              type: string
-              description: >-
-                A URL/resource name that uniquely identifies the type of the
-                serialized
-
-                protocol buffer message. This string must contain at least
-
-                one "/" character. The last segment of the URL's path must
-                represent
-
-                the fully qualified name of the type (as in
-
-                `path/google.protobuf.Duration`). The name should be in a
-                canonical form
-
-                (e.g., leading "." is not accepted).
-
-
-                In practice, teams usually precompile into the binary all types
-                that they
-
-                expect it to use in the context of Any. However, for URLs which
-                use the
-
-                scheme `http`, `https`, or no scheme, one can optionally set up
-                a type
-
-                server that maps type URLs to message definitions as follows:
-
-
-                * If no scheme is provided, `https` is assumed.
-
-                * An HTTP GET on the URL must yield a [google.protobuf.Type][]
-                  value in binary format, or produce an error.
-                * Applications are allowed to cache lookup results based on the
-                  URL, or have them precompiled into a binary to avoid any
-                  lookup. Therefore, binary compatibility needs to be preserved
-                  on changes to types. (Use versioned type names to manage
-                  breaking changes.)
-
-                Note: this functionality is not currently available in the
-                official
-
-                protobuf release, and it is not used for type URLs beginning
-                with
-
-                type.googleapis.com.
-
-
-                Schemes other than `http`, `https` (or the empty scheme) might
-                be
-
-                used with implementation specific semantics.
-            value:
-              type: string
-              format: byte
-              description: >-
-                Must be a valid serialized protocol buffer of the above
-                specified type.
-          description: >-
-            `Any` contains an arbitrary serialized protocol buffer message along
-            with a
-
-            URL that describes the type of the serialized message.
-
-
-            Protobuf library provides support to pack/unpack Any values in the
-            form
-
-            of utility functions or additional generated methods of the Any
-            type.
-
-
-            Example 1: Pack and unpack a message in C++.
-
-                Foo foo = ...;
-                Any any;
-                any.PackFrom(foo);
-                ...
-                if (any.UnpackTo(&foo)) {
-                  ...
-                }
-
-            Example 2: Pack and unpack a message in Java.
-
-                Foo foo = ...;
-                Any any = Any.pack(foo);
-                ...
-                if (any.is(Foo.class)) {
-                  foo = any.unpack(Foo.class);
-                }
-
-             Example 3: Pack and unpack a message in Python.
-
-                foo = Foo(...)
-                any = Any()
-                any.Pack(foo)
-                ...
-                if any.Is(Foo.DESCRIPTOR):
-                  any.Unpack(foo)
-                  ...
-
-             Example 4: Pack and unpack a message in Go
-
-                 foo := &pb.Foo{...}
-                 any, err := anypb.New(foo)
-                 if err != nil {
-                   ...
-                 }
-                 ...
-                 foo := &pb.Foo{}
-                 if err := any.UnmarshalTo(foo); err != nil {
-                   ...
-                 }
-
-            The pack methods provided by protobuf library will by default use
-
-            'type.googleapis.com/full.type.name' as the type URL and the unpack
-
-            methods only use the fully qualified type name after the last '/'
-
-            in the type URL, for example "foo.bar.com/x/y.z" will yield type
-
-            name "y.z".
-
-
-
-            JSON
-
-            ====
-
-            The JSON representation of an `Any` value uses the regular
-
-            representation of the deserialized, embedded message, with an
-
-            additional field `@type` which contains the type URL. Example:
-
-                package google.profile;
-                message Person {
-                  string first_name = 1;
-                  string last_name = 2;
-                }
-
-                {
-                  "@type": "type.googleapis.com/google.profile.Person",
-                  "firstName": <string>,
-                  "lastName": <string>
-                }
-
-            If the embedded message type is well-known and has a custom JSON
-
-            representation, that representation will be embedded adding a field
-
-            `value` which holds the custom JSON in addition to the `@type`
-
-            field. Example (for message [google.protobuf.Duration][]):
-
-                {
-                  "@type": "type.googleapis.com/google.protobuf.Duration",
-                  "value": "1.212s"
-                }
-    description: |-
-      LegacyAminoPubKey specifies a public key type
-      which nests multiple public keys and a threshold,
-      it uses legacy amino address rules.
   scalar.vote.v1beta1.Params:
     type: object
     properties:

@@ -35,8 +35,8 @@ service MsgService {
     };
   }
 
-  rpc DeactivateChain(scalar.nexus.v1beta1.DeactivateChainRequest)
-      returns (scalar.nexus.v1beta1.DeactivateChainResponse) {
+  rpc DeactivateChain(DeactivateChainRequest)
+      returns (DeactivateChainResponse) {
     option (google.api.http) = {
       post : "/scalar/nexus/deactivate_chain"
       body : "*"

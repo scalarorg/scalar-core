@@ -7,16 +7,16 @@ import (
 	ec "github.com/btcsuite/btcd/btcec/v2/ecdsa"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/axelar-core/utils"
-	utilstestutils "github.com/axelarnetwork/axelar-core/utils/testutils"
-	snapshottypes "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
-	snapshottestutils "github.com/axelarnetwork/axelar-core/x/snapshot/exported/testutils"
-	"github.com/axelarnetwork/utils/funcs"
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/slices"
+	utilstestutils "github.com/scalarorg/scalar-core/utils/testutils"
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 	multisigtestutils "github.com/scalarorg/scalar-core/x/multisig/exported/testutils"
 	"github.com/scalarorg/scalar-core/x/multisig/types"
+	snapshottypes "github.com/scalarorg/scalar-core/x/snapshot/exported"
+	snapshottestutils "github.com/scalarorg/scalar-core/x/snapshot/exported/testutils"
 )
 
 // PublicKey returns a random public key

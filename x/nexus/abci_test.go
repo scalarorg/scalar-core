@@ -10,9 +10,9 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/axelarnetwork/axelar-core/testutils/fake"
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	. "github.com/axelarnetwork/utils/test"
+	"github.com/scalarorg/scalar-core/testutils/fake"
+	"github.com/scalarorg/scalar-core/testutils/rand"
+	. "github.com/scalarorg/scalar-core/utils/test"
 	"github.com/scalarorg/scalar-core/x/nexus"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/types"

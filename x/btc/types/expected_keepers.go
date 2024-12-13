@@ -1,14 +1,14 @@
 package types
 
 import (
-	utils "github.com/axelarnetwork/axelar-core/utils"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	utils "github.com/scalarorg/scalar-core/utils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/tendermint/tendermint/libs/log"
 
-	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 

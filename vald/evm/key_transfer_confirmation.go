@@ -52,7 +52,7 @@ func (mgr Mgr) processTransferKeyLogs(event *types.ConfirmKeyTransferStarted, lo
 			continue
 		}
 
-		// Event is not emitted by the axelar gateway
+		// Event is not emitted by the  gateway
 		if txlog.Address != common.Address(event.GatewayAddress) {
 			continue
 		}

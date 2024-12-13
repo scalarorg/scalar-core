@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"errors"
 
-	"github.com/axelarnetwork/utils/log"
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
 	"github.com/ethereum/go-ethereum/common"
@@ -13,6 +12,7 @@ import (
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	evmUtils "github.com/scalarorg/bitcoin-vault/go-utils/evm"
 	"github.com/scalarorg/scalar-core/utils/clog"
+	"github.com/scalarorg/scalar-core/utils/log"
 	"github.com/scalarorg/scalar-core/vald/btc/rpc"
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"

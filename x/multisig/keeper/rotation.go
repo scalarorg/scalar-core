@@ -5,10 +5,10 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	gogoprototypes "github.com/gogo/protobuf/types"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/axelar-core/utils/events"
-	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 	"github.com/scalarorg/scalar-core/x/multisig/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"

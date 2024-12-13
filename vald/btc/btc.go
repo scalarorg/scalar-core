@@ -12,12 +12,12 @@ import (
 	"github.com/scalarorg/scalar-core/vald/btc/rpc"
 	"github.com/scalarorg/scalar-core/x/btc/types"
 
-	"github.com/axelarnetwork/axelar-core/sdk-utils/broadcast"
-	"github.com/axelarnetwork/axelar-core/utils/errors"
-	"github.com/axelarnetwork/utils/log"
-	"github.com/axelarnetwork/utils/monads/results"
-	"github.com/axelarnetwork/utils/slices"
 	sdkClient "github.com/cosmos/cosmos-sdk/client"
+	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
+	"github.com/scalarorg/scalar-core/utils/errors"
+	"github.com/scalarorg/scalar-core/utils/log"
+	"github.com/scalarorg/scalar-core/utils/monads/results"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 

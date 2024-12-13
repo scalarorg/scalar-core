@@ -1,6 +1,6 @@
 ## scalard query evm latest-batched-commands
 
-Get the latest batched commands that can be wrapped in an EVM transaction to be executed in Axelar Gateway
+Get the latest batched commands that can be wrapped in an EVM transaction to be executed in Scalar Gateway
 
 ```
 scalard query evm latest-batched-commands [chain] [flags]

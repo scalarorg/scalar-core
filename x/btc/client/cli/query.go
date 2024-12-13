@@ -3,9 +3,9 @@ package cli
 import (
 	"fmt"
 
-	"github.com/axelarnetwork/axelar-core/utils"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/scalarorg/scalar-core/utils"
 	"github.com/spf13/cobra"
 
 	"github.com/scalarorg/scalar-core/x/btc/types"
@@ -33,7 +33,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 func getCmdQueryBatchedCommands() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "batched-commands [chain] [batchedCommandsID]",
-		Short: "Get the signed batched commands that can be wrapped in an EVM transaction to be executed in Axelar Gateway",
+		Short: "Get the signed batched commands that can be wrapped in an EVM transaction to be executed in Scalar Gateway",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)

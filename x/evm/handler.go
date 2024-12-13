@@ -7,7 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/axelarnetwork/axelar-core/utils/errors"
+	"github.com/scalarorg/scalar-core/utils/errors"
 	"github.com/scalarorg/scalar-core/x/evm/keeper"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 )

@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/testutils/rand"
 )
 
 func TestRouteMessageRequest_ValidateBasic(t *testing.T) {

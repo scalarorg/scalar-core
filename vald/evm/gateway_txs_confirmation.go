@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"

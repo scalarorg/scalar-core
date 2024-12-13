@@ -3,8 +3,8 @@ package types
 import (
 	fmt "fmt"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 )
 

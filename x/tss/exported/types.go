@@ -11,7 +11,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/axelarnetwork/axelar-core/utils"
+	"github.com/scalarorg/scalar-core/utils"
 )
 
 // key id length range bounds dictated by tofnd

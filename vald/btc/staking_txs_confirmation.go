@@ -3,9 +3,9 @@ package btc
 import (
 	"context"
 
-	"github.com/axelarnetwork/utils/slices"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/vald/btc/rpc"
 	"github.com/scalarorg/scalar-core/x/btc/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"

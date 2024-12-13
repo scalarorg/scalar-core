@@ -7,7 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/axelarnetwork/axelar-core/utils/events"
+	"github.com/scalarorg/scalar-core/utils/events"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 	"github.com/scalarorg/scalar-core/x/vote/types"
 )

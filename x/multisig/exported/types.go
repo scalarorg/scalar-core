@@ -12,10 +12,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/axelar-core/x/snapshot/exported"
-	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/x/snapshot/exported"
 )
 
 //go:generate moq -out ./mock/types.go -pkg mock . SigHandler Key MultiSig

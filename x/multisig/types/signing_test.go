@@ -7,18 +7,18 @@ import (
 	"github.com/btcsuite/btcd/btcec/v2"
 	ec "github.com/btcsuite/btcd/btcec/v2/ecdsa"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/axelar-core/utils"
-	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
-	"github.com/axelarnetwork/utils/funcs"
-	"github.com/axelarnetwork/utils/slices"
-	. "github.com/axelarnetwork/utils/test"
+	"github.com/scalarorg/scalar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/slices"
+	. "github.com/scalarorg/scalar-core/utils/test"
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 	exportedtestutils "github.com/scalarorg/scalar-core/x/multisig/exported/testutils"
 	"github.com/scalarorg/scalar-core/x/multisig/types"
 	"github.com/scalarorg/scalar-core/x/multisig/types/testutils"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 )
 
 func TestSig(t *testing.T) {

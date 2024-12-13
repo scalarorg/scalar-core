@@ -9,7 +9,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/axelarnetwork/utils/monads/results"
+	"github.com/scalarorg/scalar-core/utils/monads/results"
 )
 
 //go:generate moq -out ./mock/client.go -pkg mock . Client

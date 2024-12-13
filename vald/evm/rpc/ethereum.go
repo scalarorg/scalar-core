@@ -12,8 +12,8 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/axelarnetwork/utils/monads/results"
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils/monads/results"
+	"github.com/scalarorg/scalar-core/utils/slices"
 )
 
 //go:generate moq -out ./mock/ethereum.go -pkg mock . EthereumJSONRPCClient JSONRPCClient

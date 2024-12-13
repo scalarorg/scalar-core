@@ -98,17 +98,11 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/axelarnetwork/axelar-core/x/auxiliary"
-	auxiliarytypes "github.com/axelarnetwork/axelar-core/x/auxiliary/types"
-	bankKepper "github.com/axelarnetwork/axelar-core/x/bank/keeper"
-	"github.com/axelarnetwork/axelar-core/x/permission"
-	permissionKeeper "github.com/axelarnetwork/axelar-core/x/permission/keeper"
-	permissionTypes "github.com/axelarnetwork/axelar-core/x/permission/types"
-	"github.com/axelarnetwork/axelar-core/x/snapshot"
-	snapKeeper "github.com/axelarnetwork/axelar-core/x/snapshot/keeper"
-	snapTypes "github.com/axelarnetwork/axelar-core/x/snapshot/types"
 	appParams "github.com/scalarorg/scalar-core/app/params"
 	"github.com/scalarorg/scalar-core/x/ante"
+	"github.com/scalarorg/scalar-core/x/auxiliary"
+	auxiliarytypes "github.com/scalarorg/scalar-core/x/auxiliary/types"
+	bankKepper "github.com/scalarorg/scalar-core/x/bank/keeper"
 	"github.com/scalarorg/scalar-core/x/btc"
 	"github.com/scalarorg/scalar-core/x/evm"
 	evmKeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
@@ -119,6 +113,9 @@ import (
 	"github.com/scalarorg/scalar-core/x/nexus"
 	nexusKeeper "github.com/scalarorg/scalar-core/x/nexus/keeper"
 	nexusTypes "github.com/scalarorg/scalar-core/x/nexus/types"
+	"github.com/scalarorg/scalar-core/x/permission"
+	permissionKeeper "github.com/scalarorg/scalar-core/x/permission/keeper"
+	permissionTypes "github.com/scalarorg/scalar-core/x/permission/types"
 	"github.com/scalarorg/scalar-core/x/reward"
 	rewardKeeper "github.com/scalarorg/scalar-core/x/reward/keeper"
 	rewardTypes "github.com/scalarorg/scalar-core/x/reward/types"
@@ -126,6 +123,9 @@ import (
 	scalarnetclient "github.com/scalarorg/scalar-core/x/scalarnet/client"
 	scalarnetKeeper "github.com/scalarorg/scalar-core/x/scalarnet/keeper"
 	scalarnetTypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
+	"github.com/scalarorg/scalar-core/x/snapshot"
+	snapKeeper "github.com/scalarorg/scalar-core/x/snapshot/keeper"
+	snapTypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 	"github.com/scalarorg/scalar-core/x/tss"
 	tssKeeper "github.com/scalarorg/scalar-core/x/tss/keeper"
 	tssTypes "github.com/scalarorg/scalar-core/x/tss/types"
@@ -137,7 +137,7 @@ import (
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 
 	// Override with generated statik docs
-	_ "github.com/axelarnetwork/axelar-core/client/docs/statik"
+	_ "github.com/scalarorg/scalar-core/client/docs/statik"
 )
 
 // Name is the name of the application
@@ -184,7 +184,7 @@ func init() {
 	}
 }
 
-// ScalarApp defines the axelar Cosmos app that runs all modules
+// ScalarApp defines the  Cosmos app that runs all modules
 type ScalarApp struct {
 	*bam.BaseApp
 	// Keys and Keepers are necessary for the app to interact with the cosmos-sdk and to be able to test the app in isolation without mocks
@@ -241,7 +241,7 @@ func NewScalarApp(
 	SetKeeper(keepers, initCapabilityKeeper(appCodec, keys, memKeys))
 	SetKeeper(keepers, initIBCKeeper(appCodec, keys, keepers))
 
-	// set up custom axelar keepers
+	// set up custom  keepers
 	SetKeeper(keepers, initscalarnetKeeper(appCodec, keys, keepers))
 	SetKeeper(keepers, initEvmKeeper(appCodec, keys, keepers))
 	SetKeeper(keepers, initBtcKeeper(appCodec, keys, keepers))
@@ -258,7 +258,7 @@ func NewScalarApp(
 	ics4Wrapper := InitICS4Wrapper(keepers, wasmHooks)
 	SetKeeper(keepers, initIBCTransferKeeper(appCodec, keys, keepers, ics4Wrapper))
 
-	SetKeeper(keepers, initAxelarIBCKeeper(keepers))
+	SetKeeper(keepers, initScalarIBCKeeper(keepers))
 
 	if IsWasmEnabled() {
 		if wasmDir == "" {
@@ -399,7 +399,7 @@ func InitICS4Wrapper(keepers *KeeperCache, wasmHooks *ibchooks.WasmHooks) ibchoo
 func initIBCMiddleware(keepers *KeeperCache, ics4Middleware ibchooks.ICS4Middleware) ibchooks.IBCMiddleware {
 	// IBCModule deals with received IBC packets. These need to get rate limited when appropriate,
 	// so we wrap the transfer module's IBCModule with a rate limiter.
-	ibcModule := scalarnet.NewAxelarnetIBCModule(
+	ibcModule := scalarnet.NewScalarnetIBCModule(
 		transfer.NewIBCModule(*GetKeeper[ibctransferkeeper.Keeper](keepers)),
 		*GetKeeper[scalarnetKeeper.IBCKeeper](keepers),
 		scalarnet.NewRateLimiter(GetKeeper[scalarnetKeeper.Keeper](keepers), GetKeeper[nexusKeeper.Keeper](keepers)),
@@ -520,7 +520,7 @@ func initBaseApp(db dbm.DB, traceStore io.Writer, encodingConfig appParams.Encod
 	return bApp
 }
 
-func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appParams.EncodingConfig, appOpts servertypes.AppOptions, axelarnetModule scalarnet.AppModule) []module.AppModule {
+func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appParams.EncodingConfig, appOpts servertypes.AppOptions, scalarnetModule scalarnet.AppModule) []module.AppModule {
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
 	// we prefer to be more strict in what arguments the modules expect.
 	var skipGenesisInvariants = cast.ToBool(appOpts.Get(crisis.FlagSkipGenesisInvariants))
@@ -618,7 +618,7 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 			GetKeeper[snapKeeper.Keeper](keepers),
 			GetKeeper[slashingkeeper.Keeper](keepers),
 		),
-		axelarnetModule,
+		scalarnetModule,
 		reward.NewAppModule(
 			*GetKeeper[rewardKeeper.Keeper](keepers),
 			GetKeeper[nexusKeeper.Keeper](keepers),
@@ -766,7 +766,7 @@ func orderMigrations() []string {
 		migrationOrder = append(migrationOrder, ibchookstypes.ModuleName)
 	}
 
-	// axelar modules
+	//  modules
 	migrationOrder = append(migrationOrder,
 		multisigTypes.ModuleName,
 		tssTypes.ModuleName,
@@ -818,7 +818,7 @@ func orderBeginBlockers() []string {
 		beginBlockerOrder = append(beginBlockerOrder, ibchookstypes.ModuleName)
 	}
 
-	// axelar custom modules
+	//  custom modules
 	beginBlockerOrder = append(beginBlockerOrder,
 		rewardTypes.ModuleName,
 		nexusTypes.ModuleName,
@@ -865,7 +865,7 @@ func orderEndBlockers() []string {
 		endBlockerOrder = append(endBlockerOrder, ibchookstypes.ModuleName)
 	}
 
-	// axelar custom modules
+	//  custom modules
 	endBlockerOrder = append(endBlockerOrder,
 		multisigTypes.ModuleName,
 		tssTypes.ModuleName,

@@ -10,7 +10,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/axelarnetwork/axelar-core/sdk-utils/broadcast"
+	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 	"github.com/scalarorg/scalar-core/x/multisig/types"
 	"github.com/scalarorg/scalar-core/x/tss/tofnd"

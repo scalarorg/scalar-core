@@ -169,7 +169,8 @@ proto-update-deps:
 	@$(DOCKER_BUF) mod update
 
 proto-clean:
-	find x -type f \( -name "*.pb.go" -o -name "*.pb.gw.go" \) -delete
+	LOOKING_DIR="x utils"; \
+	find $$LOOKING_DIR -type f \( -name "*.pb.go" -o -name "*.pb.gw.go" \) -delete
 
 .PHONY: proto-all proto-gen proto-gen-any proto-format proto-lint proto-check-breaking proto-update-deps proto-clean
 

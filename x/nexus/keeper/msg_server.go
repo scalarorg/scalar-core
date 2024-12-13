@@ -7,11 +7,11 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
-	"github.com/axelarnetwork/utils/funcs"
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/types"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 )
 
 var _ types.MsgServiceServer = msgServer{}

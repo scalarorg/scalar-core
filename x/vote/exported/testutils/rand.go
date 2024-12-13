@@ -1,9 +1,9 @@
 package testutils
 
 import (
-	rand2 "github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/utils/slices"
-	"github.com/axelarnetwork/utils/test/rand"
+	rand2 "github.com/scalarorg/scalar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/utils/slices"
+	"github.com/scalarorg/scalar-core/utils/test/rand"
 	"github.com/scalarorg/scalar-core/x/vote/exported"
 )
 

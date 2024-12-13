@@ -13,11 +13,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/axelarnetwork/axelar-core/utils/grpc"
-	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/grpc"
 	"github.com/scalarorg/scalar-core/x/reward/client/cli"
 	"github.com/scalarorg/scalar-core/x/reward/keeper"
 	"github.com/scalarorg/scalar-core/x/reward/types"

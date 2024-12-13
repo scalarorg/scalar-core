@@ -9,11 +9,11 @@ import (
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/tendermint/tendermint/libs/log"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
+	"github.com/scalarorg/scalar-core/utils"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 

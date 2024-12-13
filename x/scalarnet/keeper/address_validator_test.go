@@ -8,8 +8,8 @@ package keeper_test
 // 	"github.com/tendermint/tendermint/libs/log"
 // 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-// 	"github.com/axelarnetwork/axelar-core/testutils/fake"
-// 	"github.com/axelarnetwork/axelar-core/testutils/rand"
+// 	"github.com/scalarorg/scalar-core/testutils/fake"
+// 	"github.com/scalarorg/scalar-core/testutils/rand"
 // 	evm "github.com/scalarorg/scalar-core/x/evm/exported"
 // 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet/exported"
@@ -35,14 +35,14 @@ package keeper_test
 // 		},
 // 	}
 
-// 	sdk.GetConfig().SetBech32PrefixForAccount("axelar", "axelar")
+// 	sdk.GetConfig().SetBech32PrefixForAccount("", "")
 
 // 	validator := keeper.NewAddressValidator(scalarnetK)
 // 	assert.NotNil(t, validator)
 
-// 	axelarAddr := "axelar1t66w8cazua870wu7t2hsffndmy2qy2v556ymndnczs83qpz2h45sq6lq9w"
+// 	scalarAddr := "scalar1t66w8cazua870wu7t2hsffndmy2qy2v556ymndnczs83qpz2h45sq6lq9w"
 
-// 	addr := nexus.CrossChainAddress{Chain: exported.Scalarnet, Address: axelarAddr}
+// 	addr := nexus.CrossChainAddress{Chain: exported.Scalarnet, Address: scalarAddr}
 // 	assert.NoError(t, validator(ctx, addr))
 
 // 	addr = nexus.CrossChainAddress{Chain: nexus.Chain{Name: "terra", Module: types.ModuleName}, Address: "terra18zhnqjv70v0d2f8v0s5lape0gr5ua94eqkk8ex"}
@@ -65,7 +65,7 @@ package keeper_test
 // 	addr = nexus.CrossChainAddress{Chain: exported.Scalarnet, Address: ""}
 // 	assert.Error(t, validator(ctx, addr))
 
-// 	addr = nexus.CrossChainAddress{Chain: exported.Scalarnet, Address: "axelar1t66w8cazua870wu7t2hsffndmy2qy2v556ymndnczs83qpz2h45sq6lq9v"}
+// 	addr = nexus.CrossChainAddress{Chain: exported.Scalarnet, Address: "scalar1t66w8cazua870wu7t2hsffndmy2qy2v556ymndnczs83qpz2h45sq6lq9v"}
 // 	assert.ErrorContains(t, validator(ctx, addr), "invalid checksum")
 
 // 	addr = nexus.CrossChainAddress{Chain: exported.Scalarnet, Address: "osmo18zhnqjv70v0d2f8v0s5lape0gr5ua94ewflhd5"}

@@ -43,7 +43,7 @@ func NewMessageRoute(
 	}
 }
 
-// all general messages are sent from the Axelar general message sender, so receiver can use the packet sender to authenticate the message
+// all general messages are sent from the Scalar general message sender, so receiver can use the packet sender to authenticate the message
 // escrowAssetToMessageSender sends the asset to general msg sender account
 func escrowAssetToMessageSender(
 	ctx sdk.Context,

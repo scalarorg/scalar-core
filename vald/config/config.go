@@ -21,7 +21,7 @@ type ValdConfig struct {
 	MaxLatestBlockAge            time.Duration `mapstructure:"max_latest_block_age"`  // If a block is older than this, vald does not consider it to be the latest block. This is supposed to be sufficiently larger than the block production time.
 	NoNewBlockPanicTimeout       time.Duration `mapstructure:"no_new_blocks_timeout"` // At times vald stalls completely. Until the bug is found it is better to panic and allow users to restart the process instead of doing nothing. Once at least one block has been seen vald will panic if it does not see another before the timout expires.
 
-	EVMConfig []evm.EVMConfig `mapstructure:"axelar_bridge_evm"`
+	EVMConfig []evm.EVMConfig `mapstructure:"scalar_bridge_evm"`
 	BTCConfig []btc.BTCConfig `mapstructure:"scalar_bridge_btc"`
 }
 

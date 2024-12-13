@@ -1,7 +1,7 @@
 package types
 
 import (
-	utils "github.com/axelarnetwork/axelar-core/utils"
+	utils "github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 

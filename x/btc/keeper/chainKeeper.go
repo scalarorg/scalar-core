@@ -4,14 +4,14 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/axelar-core/utils/events"
-	"github.com/axelarnetwork/axelar-core/utils/key"
-	"github.com/axelarnetwork/utils/funcs"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/events"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/key"
 	"github.com/scalarorg/scalar-core/x/btc/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -97,7 +97,7 @@ func (k chainKeeper) getEvents(ctx sdk.Context) []types.Event {
 // 	return k.GetChainIDByNetwork(ctx, network)
 // }
 
-// // GetNetwork returns the EVM network Axelar-Core is expected to connect to
+// // GetNetwork returns the EVM network Scalar-Core is expected to connect to
 // func (k chainKeeper) GetNetwork(ctx sdk.Context) string {
 // 	return getParam[string](k, ctx, types.KeyNetwork)
 // }

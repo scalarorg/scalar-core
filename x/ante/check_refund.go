@@ -8,9 +8,9 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	antetypes "github.com/cosmos/cosmos-sdk/x/auth/ante"
 
-	auxiliarytypes "github.com/axelarnetwork/axelar-core/x/auxiliary/types"
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/ante/types"
+	auxiliarytypes "github.com/scalarorg/scalar-core/x/auxiliary/types"
 	rewardtypes "github.com/scalarorg/scalar-core/x/reward/types"
 )
 

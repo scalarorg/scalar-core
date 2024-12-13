@@ -1,6 +1,6 @@
 ## scalard query btc batched-commands
 
-Get the signed batched commands that can be wrapped in an EVM transaction to be executed in Axelar Gateway
+Get the signed batched commands that can be wrapped in an EVM transaction to be executed in Scalar Gateway
 
 ```
 scalard query btc batched-commands [chain] [batchedCommandsID] [flags]

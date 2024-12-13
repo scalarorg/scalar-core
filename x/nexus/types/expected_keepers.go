@@ -9,10 +9,10 @@ import (
 	ibctypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
 	"github.com/tendermint/tendermint/libs/log"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
+	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 )
 
 //go:generate moq -out ./mock/expected_keepers.go -pkg mock . Nexus Snapshotter ScalarnetKeeper RewardKeeper SlashingKeeper WasmKeeper AccountKeeper StakingKeeper MsgIDGenerator IBCKeeper BankKeeper
@@ -76,7 +76,7 @@ type StakingKeeper interface {
 	GetLastTotalPower(sdk.Context) sdk.Int
 }
 
-// ScalarnetKeeper provides functionality to the axelarnet module
+// ScalarnetKeeper provides functionality to the scalarnet module
 type ScalarnetKeeper interface {
 	IsCosmosChain(ctx sdk.Context, chain exported.ChainName) bool
 }

@@ -6,8 +6,8 @@ package keeper_test
 // 	sdk "github.com/cosmos/cosmos-sdk/types"
 // 	"github.com/stretchr/testify/assert"
 
-// 	"github.com/axelarnetwork/axelar-core/testutils/rand"
-// 	"github.com/axelarnetwork/axelar-core/utils/testutils"
+// 	"github.com/scalarorg/scalar-core/testutils/rand"
+// 	"github.com/scalarorg/scalar-core/utils/testutils"
 // 	"github.com/scalarorg/scalar-core/app/params"
 // 	"github.com/scalarorg/scalar-core/x/multisig/keeper"
 // 	"github.com/scalarorg/scalar-core/x/multisig/types"

@@ -4,6 +4,25 @@
 
 ## Table of Contents
 
+- [scalar/auxiliary/v1beta1/events.proto](#scalar/auxiliary/v1beta1/events.proto)
+    - [BatchedMessageFailed](#scalar.auxiliary.v1beta1.BatchedMessageFailed)
+  
+- [scalar/auxiliary/v1beta1/genesis.proto](#scalar/auxiliary/v1beta1/genesis.proto)
+    - [GenesisState](#scalar.auxiliary.v1beta1.GenesisState)
+  
+- [scalar/permission/exported/v1beta1/types.proto](#scalar/permission/exported/v1beta1/types.proto)
+    - [Role](#scalar.permission.exported.v1beta1.Role)
+  
+    - [File-level Extensions](#scalar/permission/exported/v1beta1/types.proto-extensions)
+  
+- [scalar/auxiliary/v1beta1/tx.proto](#scalar/auxiliary/v1beta1/tx.proto)
+    - [BatchRequest](#scalar.auxiliary.v1beta1.BatchRequest)
+    - [BatchResponse](#scalar.auxiliary.v1beta1.BatchResponse)
+    - [BatchResponse.Response](#scalar.auxiliary.v1beta1.BatchResponse.Response)
+  
+- [scalar/auxiliary/v1beta1/service.proto](#scalar/auxiliary/v1beta1/service.proto)
+    - [MsgService](#scalar.auxiliary.v1beta1.MsgService)
+  
 - [scalar/btc/v1beta1/types.proto](#scalar/btc/v1beta1/types.proto)
     - [Command](#scalar.btc.v1beta1.Command)
     - [CommandBatchMetadata](#scalar.btc.v1beta1.CommandBatchMetadata)
@@ -22,6 +41,14 @@
     - [VoteEvents](#scalar.btc.v1beta1.VoteEvents)
   
     - [Event.Status](#scalar.btc.v1beta1.Event.Status)
+  
+- [scalar/utils/v1beta1/queuer.proto](#scalar/utils/v1beta1/queuer.proto)
+    - [QueueState](#scalar.utils.v1beta1.QueueState)
+    - [QueueState.Item](#scalar.utils.v1beta1.QueueState.Item)
+    - [QueueState.ItemsEntry](#scalar.utils.v1beta1.QueueState.ItemsEntry)
+  
+- [scalar/utils/v1beta1/threshold.proto](#scalar/utils/v1beta1/threshold.proto)
+    - [Threshold](#scalar.utils.v1beta1.Threshold)
   
 - [scalar/btc/v1beta1/params.proto](#scalar/btc/v1beta1/params.proto)
     - [Params](#scalar.btc.v1beta1.Params)
@@ -69,6 +96,11 @@
     - [KeyRole](#scalar.tss.exported.v1beta1.KeyRole)
     - [KeyShareDistributionPolicy](#scalar.tss.exported.v1beta1.KeyShareDistributionPolicy)
     - [KeyType](#scalar.tss.exported.v1beta1.KeyType)
+  
+- [scalar/snapshot/exported/v1beta1/types.proto](#scalar/snapshot/exported/v1beta1/types.proto)
+    - [Participant](#scalar.snapshot.exported.v1beta1.Participant)
+    - [Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot)
+    - [Snapshot.ParticipantsEntry](#scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry)
   
 - [scalar/vote/exported/v1beta1/types.proto](#scalar/vote/exported/v1beta1/types.proto)
     - [PollKey](#scalar.vote.exported.v1beta1.PollKey)
@@ -313,6 +345,10 @@
 - [scalar/nexus/v1beta1/params.proto](#scalar/nexus/v1beta1/params.proto)
     - [Params](#scalar.nexus.v1beta1.Params)
   
+- [scalar/utils/v1beta1/bitmap.proto](#scalar/utils/v1beta1/bitmap.proto)
+    - [Bitmap](#scalar.utils.v1beta1.Bitmap)
+    - [CircularBuffer](#scalar.utils.v1beta1.CircularBuffer)
+  
 - [scalar/nexus/v1beta1/types.proto](#scalar/nexus/v1beta1/types.proto)
     - [ChainState](#scalar.nexus.v1beta1.ChainState)
     - [LinkedAddresses](#scalar.nexus.v1beta1.LinkedAddresses)
@@ -371,6 +407,33 @@
 - [scalar/nexus/v1beta1/service.proto](#scalar/nexus/v1beta1/service.proto)
     - [MsgService](#scalar.nexus.v1beta1.MsgService)
     - [QueryService](#scalar.nexus.v1beta1.QueryService)
+  
+- [scalar/permission/v1beta1/types.proto](#scalar/permission/v1beta1/types.proto)
+    - [GovAccount](#scalar.permission.v1beta1.GovAccount)
+  
+- [scalar/permission/v1beta1/params.proto](#scalar/permission/v1beta1/params.proto)
+    - [Params](#scalar.permission.v1beta1.Params)
+  
+- [scalar/permission/v1beta1/genesis.proto](#scalar/permission/v1beta1/genesis.proto)
+    - [GenesisState](#scalar.permission.v1beta1.GenesisState)
+  
+- [scalar/permission/v1beta1/query.proto](#scalar/permission/v1beta1/query.proto)
+    - [ParamsRequest](#scalar.permission.v1beta1.ParamsRequest)
+    - [ParamsResponse](#scalar.permission.v1beta1.ParamsResponse)
+    - [QueryGovernanceKeyRequest](#scalar.permission.v1beta1.QueryGovernanceKeyRequest)
+    - [QueryGovernanceKeyResponse](#scalar.permission.v1beta1.QueryGovernanceKeyResponse)
+  
+- [scalar/permission/v1beta1/tx.proto](#scalar/permission/v1beta1/tx.proto)
+    - [DeregisterControllerRequest](#scalar.permission.v1beta1.DeregisterControllerRequest)
+    - [DeregisterControllerResponse](#scalar.permission.v1beta1.DeregisterControllerResponse)
+    - [RegisterControllerRequest](#scalar.permission.v1beta1.RegisterControllerRequest)
+    - [RegisterControllerResponse](#scalar.permission.v1beta1.RegisterControllerResponse)
+    - [UpdateGovernanceKeyRequest](#scalar.permission.v1beta1.UpdateGovernanceKeyRequest)
+    - [UpdateGovernanceKeyResponse](#scalar.permission.v1beta1.UpdateGovernanceKeyResponse)
+  
+- [scalar/permission/v1beta1/service.proto](#scalar/permission/v1beta1/service.proto)
+    - [Msg](#scalar.permission.v1beta1.Msg)
+    - [Query](#scalar.permission.v1beta1.Query)
   
 - [scalar/protocol/v1beta1/types.proto](#scalar/protocol/v1beta1/types.proto)
     - [Protocol](#scalar.protocol.v1beta1.Protocol)
@@ -482,6 +545,32 @@
     - [MsgService](#scalar.scalarnet.v1beta1.MsgService)
     - [QueryService](#scalar.scalarnet.v1beta1.QueryService)
   
+- [scalar/snapshot/v1beta1/params.proto](#scalar/snapshot/v1beta1/params.proto)
+    - [Params](#scalar.snapshot.v1beta1.Params)
+  
+- [scalar/snapshot/v1beta1/types.proto](#scalar/snapshot/v1beta1/types.proto)
+    - [ProxiedValidator](#scalar.snapshot.v1beta1.ProxiedValidator)
+  
+- [scalar/snapshot/v1beta1/genesis.proto](#scalar/snapshot/v1beta1/genesis.proto)
+    - [GenesisState](#scalar.snapshot.v1beta1.GenesisState)
+  
+- [scalar/snapshot/v1beta1/query.proto](#scalar/snapshot/v1beta1/query.proto)
+    - [ParamsRequest](#scalar.snapshot.v1beta1.ParamsRequest)
+    - [ParamsResponse](#scalar.snapshot.v1beta1.ParamsResponse)
+    - [QueryValidatorsResponse](#scalar.snapshot.v1beta1.QueryValidatorsResponse)
+    - [QueryValidatorsResponse.TssIllegibilityInfo](#scalar.snapshot.v1beta1.QueryValidatorsResponse.TssIllegibilityInfo)
+    - [QueryValidatorsResponse.Validator](#scalar.snapshot.v1beta1.QueryValidatorsResponse.Validator)
+  
+- [scalar/snapshot/v1beta1/tx.proto](#scalar/snapshot/v1beta1/tx.proto)
+    - [DeactivateProxyRequest](#scalar.snapshot.v1beta1.DeactivateProxyRequest)
+    - [DeactivateProxyResponse](#scalar.snapshot.v1beta1.DeactivateProxyResponse)
+    - [RegisterProxyRequest](#scalar.snapshot.v1beta1.RegisterProxyRequest)
+    - [RegisterProxyResponse](#scalar.snapshot.v1beta1.RegisterProxyResponse)
+  
+- [scalar/snapshot/v1beta1/service.proto](#scalar/snapshot/v1beta1/service.proto)
+    - [MsgService](#scalar.snapshot.v1beta1.MsgService)
+    - [QueryService](#scalar.snapshot.v1beta1.QueryService)
+  
 - [scalar/tss/tofnd/v1beta1/common.proto](#scalar/tss/tofnd/v1beta1/common.proto)
     - [KeyPresenceRequest](#scalar.tss.tofnd.v1beta1.KeyPresenceRequest)
     - [KeyPresenceResponse](#scalar.tss.tofnd.v1beta1.KeyPresenceResponse)
@@ -587,6 +676,191 @@
     - [QueryService](#scalar.vote.v1beta1.QueryService)
   
 - [Scalar Value Types](#scalar-value-types)
+
+
+
+<a name="scalar/auxiliary/v1beta1/events.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/auxiliary/v1beta1/events.proto
+
+
+
+<a name="scalar.auxiliary.v1beta1.BatchedMessageFailed"></a>
+
+### BatchedMessageFailed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `index` | [int32](#int32) |  |  |
+| `error` | [string](#string) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/auxiliary/v1beta1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/auxiliary/v1beta1/genesis.proto
+
+
+
+<a name="scalar.auxiliary.v1beta1.GenesisState"></a>
+
+### GenesisState
+GenesisState represents the genesis state
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/permission/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/permission/exported/v1beta1/types.proto
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.permission.exported.v1beta1.Role"></a>
+
+### Role
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| ROLE_UNSPECIFIED | 0 |  |
+| ROLE_UNRESTRICTED | 1 |  |
+| ROLE_CHAIN_MANAGEMENT | 2 |  |
+| ROLE_ACCESS_CONTROL | 3 |  |
+
+
+ <!-- end enums -->
+
+
+<a name="scalar/permission/exported/v1beta1/types.proto-extensions"></a>
+
+### File-level Extensions
+| Extension | Type | Base | Number | Description |
+| --------- | ---- | ---- | ------ | ----------- |
+| `permission_role` | Role | .google.protobuf.MessageOptions | 50000 | 50000-99999 reserved for use withing individual organizations |
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/auxiliary/v1beta1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/auxiliary/v1beta1/tx.proto
+
+
+
+<a name="scalar.auxiliary.v1beta1.BatchRequest"></a>
+
+### BatchRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `messages` | [google.protobuf.Any](#google.protobuf.Any) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.auxiliary.v1beta1.BatchResponse"></a>
+
+### BatchResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `responses` | [BatchResponse.Response](#scalar.auxiliary.v1beta1.BatchResponse.Response) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.auxiliary.v1beta1.BatchResponse.Response"></a>
+
+### BatchResponse.Response
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `result` | [cosmos.base.abci.v1beta1.Result](#cosmos.base.abci.v1beta1.Result) |  |  |
+| `err` | [string](#string) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/auxiliary/v1beta1/service.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/auxiliary/v1beta1/service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="scalar.auxiliary.v1beta1.MsgService"></a>
+
+### MsgService
+Msg defines the nexus Msg service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `Batch` | [BatchRequest](#scalar.auxiliary.v1beta1.BatchRequest) | [BatchResponse](#scalar.auxiliary.v1beta1.BatchResponse) |  | POST|/scalar/auxiliary/batch|
+
+ <!-- end services -->
 
 
 
@@ -844,6 +1118,101 @@
 
 
 
+<a name="scalar/utils/v1beta1/queuer.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/utils/v1beta1/queuer.proto
+
+
+
+<a name="scalar.utils.v1beta1.QueueState"></a>
+
+### QueueState
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `items` | [QueueState.ItemsEntry](#scalar.utils.v1beta1.QueueState.ItemsEntry) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.utils.v1beta1.QueueState.Item"></a>
+
+### QueueState.Item
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [bytes](#bytes) |  |  |
+| `value` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.utils.v1beta1.QueueState.ItemsEntry"></a>
+
+### QueueState.ItemsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [QueueState.Item](#scalar.utils.v1beta1.QueueState.Item) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/utils/v1beta1/threshold.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/utils/v1beta1/threshold.proto
+
+
+
+<a name="scalar.utils.v1beta1.Threshold"></a>
+
+### Threshold
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `numerator` | [int64](#int64) |  | split threshold into Numerator and denominator to avoid floating point errors down the line |
+| `denominator` | [int64](#int64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/btc/v1beta1/params.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -864,7 +1233,7 @@
 | `network_kind` | [NetworkKind](#scalar.btc.v1beta1.NetworkKind) |  |  |
 | `revote_locking_period` | [int64](#int64) |  |  |
 | `chain_id` | [uint64](#uint64) |  |  |
-| `voting_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
 | `min_voter_count` | [int64](#int64) |  |  |
 | `voting_grace_period` | [int64](#int64) |  |  |
 | `end_blocker_limit` | [int64](#int64) |  |  |
@@ -917,11 +1286,11 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `params` | [Params](#scalar.btc.v1beta1.Params) |  |  |
-| `command_queue` | [axelar.utils.v1beta1.QueueState](#axelar.utils.v1beta1.QueueState) |  |  |
+| `command_queue` | [scalar.utils.v1beta1.QueueState](#scalar.utils.v1beta1.QueueState) |  |  |
 | `confirmed_staking_txs` | [StakingTx](#scalar.btc.v1beta1.StakingTx) | repeated |  |
 | `command_batches` | [CommandBatchMetadata](#scalar.btc.v1beta1.CommandBatchMetadata) | repeated |  |
 | `events` | [Event](#scalar.btc.v1beta1.Event) | repeated |  |
-| `confirmed_event_queue` | [axelar.utils.v1beta1.QueueState](#axelar.utils.v1beta1.QueueState) |  |  |
+| `confirmed_event_queue` | [scalar.utils.v1beta1.QueueState](#scalar.utils.v1beta1.QueueState) |  |  |
 
 
 
@@ -1351,13 +1720,13 @@ KeyRequirement defines requirements for keys
 | ----- | ---- | ----- | ----------- |
 | `key_role` | [KeyRole](#scalar.tss.exported.v1beta1.KeyRole) |  |  |
 | `key_type` | [KeyType](#scalar.tss.exported.v1beta1.KeyType) |  |  |
-| `min_keygen_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
-| `safety_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `min_keygen_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `safety_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
 | `key_share_distribution_policy` | [KeyShareDistributionPolicy](#scalar.tss.exported.v1beta1.KeyShareDistributionPolicy) |  |  |
 | `max_total_share_count` | [int64](#int64) |  |  |
 | `min_total_share_count` | [int64](#int64) |  |  |
-| `keygen_voting_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
-| `sign_voting_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `keygen_voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `sign_voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
 | `keygen_timeout` | [int64](#int64) |  |  |
 | `sign_timeout` | [int64](#int64) |  |  |
 
@@ -1432,6 +1801,72 @@ PubKeyInfo holds a pubkey and a signature
 
 
 
+<a name="scalar/snapshot/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/snapshot/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.snapshot.exported.v1beta1.Participant"></a>
+
+### Participant
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [bytes](#bytes) |  |  |
+| `weight` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.snapshot.exported.v1beta1.Snapshot"></a>
+
+### Snapshot
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+| `height` | [int64](#int64) |  |  |
+| `participants` | [Snapshot.ParticipantsEntry](#scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry) | repeated |  |
+| `bonded_weight` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry"></a>
+
+### Snapshot.ParticipantsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [Participant](#scalar.snapshot.exported.v1beta1.Participant) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/vote/exported/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -1466,14 +1901,14 @@ vote can have any data type
 | ----- | ---- | ----- | ----------- |
 | `expires_at` | [int64](#int64) |  |  |
 | `result` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
-| `voting_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
 | `state` | [PollState](#scalar.vote.exported.v1beta1.PollState) |  |  |
 | `min_voter_count` | [int64](#int64) |  |  |
 | `reward_pool_name` | [string](#string) |  |  |
 | `grace_period` | [int64](#int64) |  |  |
 | `completed_at` | [int64](#int64) |  |  |
 | `id` | [uint64](#uint64) |  |  |
-| `snapshot` | [axelar.snapshot.exported.v1beta1.Snapshot](#axelar.snapshot.exported.v1beta1.Snapshot) |  |  |
+| `snapshot` | [scalar.snapshot.exported.v1beta1.Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot) |  |  |
 | `module` | [string](#string) |  |  |
 | `module_metadata` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
 
@@ -2728,7 +3163,7 @@ Params is the parameter set for this module
 | `burnable` | [bytes](#bytes) |  |  |
 | `revote_locking_period` | [int64](#int64) |  |  |
 | `networks` | [NetworkInfo](#scalar.evm.v1beta1.NetworkInfo) | repeated |  |
-| `voting_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
 | `min_voter_count` | [int64](#int64) |  |  |
 | `commands_gas_limit` | [uint32](#uint32) |  |  |
 | `voting_grace_period` | [int64](#int64) |  |  |
@@ -2797,14 +3232,14 @@ GenesisState represents the genesis state
 | ----- | ---- | ----- | ----------- |
 | `params` | [Params](#scalar.evm.v1beta1.Params) |  |  |
 | `burner_infos` | [BurnerInfo](#scalar.evm.v1beta1.BurnerInfo) | repeated |  |
-| `command_queue` | [axelar.utils.v1beta1.QueueState](#axelar.utils.v1beta1.QueueState) |  |  |
+| `command_queue` | [scalar.utils.v1beta1.QueueState](#scalar.utils.v1beta1.QueueState) |  |  |
 | `confirmed_deposits` | [ERC20Deposit](#scalar.evm.v1beta1.ERC20Deposit) | repeated |  |
 | `burned_deposits` | [ERC20Deposit](#scalar.evm.v1beta1.ERC20Deposit) | repeated |  |
 | `command_batches` | [CommandBatchMetadata](#scalar.evm.v1beta1.CommandBatchMetadata) | repeated |  |
 | `gateway` | [Gateway](#scalar.evm.v1beta1.Gateway) |  |  |
 | `tokens` | [ERC20TokenMetadata](#scalar.evm.v1beta1.ERC20TokenMetadata) | repeated |  |
 | `events` | [Event](#scalar.evm.v1beta1.Event) | repeated |  |
-| `confirmed_event_queue` | [axelar.utils.v1beta1.QueueState](#axelar.utils.v1beta1.QueueState) |  |  |
+| `confirmed_event_queue` | [scalar.utils.v1beta1.QueueState](#scalar.utils.v1beta1.QueueState) |  |  |
 | `legacy_confirmed_deposits` | [ERC20Deposit](#scalar.evm.v1beta1.ERC20Deposit) | repeated |  |
 | `legacy_burned_deposits` | [ERC20Deposit](#scalar.evm.v1beta1.ERC20Deposit) | repeated |  |
 
@@ -3658,7 +4093,7 @@ MsgConfirmToken represents a token deploy confirmation message
 
 ### CreateBurnTokensRequest
 CreateBurnTokensRequest represents the message to create commands to burn
-tokens with AxelarGateway
+tokens with scalarGateway
 
 
 | Field | Type | Label | Description |
@@ -3685,7 +4120,7 @@ tokens with AxelarGateway
 
 ### CreateDeployTokenRequest
 CreateDeployTokenRequest represents the message to create a deploy token
-command for AxelarGateway
+command for scalarGateway
 
 
 | Field | Type | Label | Description |
@@ -3974,7 +4409,7 @@ QueryService defines the gRPC querier service.
 | `Chains` | [ChainsRequest](#scalar.evm.v1beta1.ChainsRequest) | [ChainsResponse](#scalar.evm.v1beta1.ChainsResponse) | Chains queries the available evm chains | GET|/scalar/evm/v1beta1/chains|
 | `Command` | [CommandRequest](#scalar.evm.v1beta1.CommandRequest) | [CommandResponse](#scalar.evm.v1beta1.CommandResponse) | Command queries the command of a chain provided the command id | GET|/scalar/evm/v1beta1/command_request|
 | `KeyAddress` | [KeyAddressRequest](#scalar.evm.v1beta1.KeyAddressRequest) | [KeyAddressResponse](#scalar.evm.v1beta1.KeyAddressResponse) | KeyAddress queries the address of key of a chain | GET|/scalar/evm/v1beta1/key_address/{chain}|
-| `GatewayAddress` | [GatewayAddressRequest](#scalar.evm.v1beta1.GatewayAddressRequest) | [GatewayAddressResponse](#scalar.evm.v1beta1.GatewayAddressResponse) | GatewayAddress queries the address of axelar gateway at the specified chain | GET|/scalar/evm/v1beta1/gateway_address/{chain}|
+| `GatewayAddress` | [GatewayAddressRequest](#scalar.evm.v1beta1.GatewayAddressRequest) | [GatewayAddressResponse](#scalar.evm.v1beta1.GatewayAddressResponse) | GatewayAddress queries the address of scalar gateway at the specified chain | GET|/scalar/evm/v1beta1/gateway_address/{chain}|
 | `Bytecode` | [BytecodeRequest](#scalar.evm.v1beta1.BytecodeRequest) | [BytecodeResponse](#scalar.evm.v1beta1.BytecodeResponse) | Bytecode queries the bytecode of a specified gateway at the specified chain | GET|/scalar/evm/v1beta1/bytecode/{chain}/{contract}|
 | `Event` | [EventRequest](#scalar.evm.v1beta1.EventRequest) | [EventResponse](#scalar.evm.v1beta1.EventResponse) | Event queries an event at the specified chain | GET|/scalar/evm/v1beta1/event/{chain}/{event_id}|
 | `ERC20Tokens` | [ERC20TokensRequest](#scalar.evm.v1beta1.ERC20TokensRequest) | [ERC20TokensResponse](#scalar.evm.v1beta1.ERC20TokensResponse) | ERC20Tokens queries the ERC20 tokens registered for a chain | GET|/scalar/evm/v1beta1/erc20_tokens/{chain}|
@@ -4233,8 +4668,8 @@ Params represent the genesis parameters for the module
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `keygen_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
-| `signing_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `keygen_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
 | `keygen_timeout` | [int64](#int64) |  |  |
 | `keygen_grace_period` | [int64](#int64) |  |  |
 | `signing_timeout` | [int64](#int64) |  |  |
@@ -4271,9 +4706,9 @@ Params represent the genesis parameters for the module
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `id` | [string](#string) |  |  |
-| `snapshot` | [axelar.snapshot.exported.v1beta1.Snapshot](#axelar.snapshot.exported.v1beta1.Snapshot) |  |  |
+| `snapshot` | [scalar.snapshot.exported.v1beta1.Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot) |  |  |
 | `pub_keys` | [Key.PubKeysEntry](#scalar.multisig.v1beta1.Key.PubKeysEntry) | repeated |  |
-| `signing_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
 | `state` | [scalar.multisig.exported.v1beta1.KeyState](#scalar.multisig.exported.v1beta1.KeyState) |  |  |
 
 
@@ -4324,7 +4759,7 @@ Params represent the genesis parameters for the module
 | ----- | ---- | ----- | ----------- |
 | `key` | [Key](#scalar.multisig.v1beta1.Key) |  |  |
 | `state` | [scalar.multisig.exported.v1beta1.MultisigState](#scalar.multisig.exported.v1beta1.MultisigState) |  |  |
-| `keygen_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `keygen_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
 | `expires_at` | [int64](#int64) |  |  |
 | `completed_at` | [int64](#int64) |  |  |
 | `is_pub_key_received` | [KeygenSession.IsPubKeyReceivedEntry](#scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry) | repeated |  |
@@ -5034,12 +5469,60 @@ Params represent the genesis parameters for the module
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `chain_activation_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
-| `chain_maintainer_missing_vote_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
-| `chain_maintainer_incorrect_vote_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `chain_activation_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `chain_maintainer_missing_vote_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `chain_maintainer_incorrect_vote_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
 | `chain_maintainer_check_window` | [int32](#int32) |  |  |
 | `gateway` | [bytes](#bytes) |  |  |
 | `end_blocker_limit` | [uint64](#uint64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/utils/v1beta1/bitmap.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/utils/v1beta1/bitmap.proto
+
+
+
+<a name="scalar.utils.v1beta1.Bitmap"></a>
+
+### Bitmap
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `true_count_cache` | [CircularBuffer](#scalar.utils.v1beta1.CircularBuffer) |  |  |
+
+
+
+
+
+
+<a name="scalar.utils.v1beta1.CircularBuffer"></a>
+
+### CircularBuffer
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `cumulative_value` | [uint64](#uint64) | repeated |  |
+| `index` | [int32](#int32) |  |  |
+| `max_size` | [int32](#int32) |  |  |
 
 
 
@@ -5105,8 +5588,8 @@ ChainState represents the state of a registered blockchain
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `address` | [bytes](#bytes) |  |  |
-| `missing_votes` | [axelar.utils.v1beta1.Bitmap](#axelar.utils.v1beta1.Bitmap) |  |  |
-| `incorrect_votes` | [axelar.utils.v1beta1.Bitmap](#axelar.utils.v1beta1.Bitmap) |  |  |
+| `missing_votes` | [scalar.utils.v1beta1.Bitmap](#scalar.utils.v1beta1.Bitmap) |  |  |
+| `incorrect_votes` | [scalar.utils.v1beta1.Bitmap](#scalar.utils.v1beta1.Bitmap) |  |  |
 | `chain` | [string](#string) |  |  |
 
 
@@ -5886,6 +6369,298 @@ QueryService defines the gRPC querier service.
 
 
 
+<a name="scalar/permission/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/permission/v1beta1/types.proto
+
+
+
+<a name="scalar.permission.v1beta1.GovAccount"></a>
+
+### GovAccount
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [bytes](#bytes) |  |  |
+| `role` | [scalar.permission.exported.v1beta1.Role](#scalar.permission.exported.v1beta1.Role) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/permission/v1beta1/params.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/permission/v1beta1/params.proto
+
+
+
+<a name="scalar.permission.v1beta1.Params"></a>
+
+### Params
+Params represent the genesis parameters for the module
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/permission/v1beta1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/permission/v1beta1/genesis.proto
+
+
+
+<a name="scalar.permission.v1beta1.GenesisState"></a>
+
+### GenesisState
+GenesisState represents the genesis state
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.permission.v1beta1.Params) |  |  |
+| `governance_key` | [cosmos.crypto.multisig.LegacyAminoPubKey](#cosmos.crypto.multisig.LegacyAminoPubKey) |  |  |
+| `gov_accounts` | [GovAccount](#scalar.permission.v1beta1.GovAccount) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/permission/v1beta1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/permission/v1beta1/query.proto
+
+
+
+<a name="scalar.permission.v1beta1.ParamsRequest"></a>
+
+### ParamsRequest
+ParamsRequest represents a message that queries the params
+
+
+
+
+
+
+<a name="scalar.permission.v1beta1.ParamsResponse"></a>
+
+### ParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.permission.v1beta1.Params) |  |  |
+
+
+
+
+
+
+<a name="scalar.permission.v1beta1.QueryGovernanceKeyRequest"></a>
+
+### QueryGovernanceKeyRequest
+QueryGovernanceKeyRequest is the request type for the
+Query/GovernanceKey RPC method
+
+
+
+
+
+
+<a name="scalar.permission.v1beta1.QueryGovernanceKeyResponse"></a>
+
+### QueryGovernanceKeyResponse
+QueryGovernanceKeyResponse is the response type for the
+Query/GovernanceKey RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `governance_key` | [cosmos.crypto.multisig.LegacyAminoPubKey](#cosmos.crypto.multisig.LegacyAminoPubKey) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/permission/v1beta1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/permission/v1beta1/tx.proto
+
+
+
+<a name="scalar.permission.v1beta1.DeregisterControllerRequest"></a>
+
+### DeregisterControllerRequest
+DeregisterController represents a message to deregister a controller account
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `controller` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.permission.v1beta1.DeregisterControllerResponse"></a>
+
+### DeregisterControllerResponse
+
+
+
+
+
+
+
+<a name="scalar.permission.v1beta1.RegisterControllerRequest"></a>
+
+### RegisterControllerRequest
+MsgRegisterController represents a message to register a controller account
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `controller` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.permission.v1beta1.RegisterControllerResponse"></a>
+
+### RegisterControllerResponse
+
+
+
+
+
+
+
+<a name="scalar.permission.v1beta1.UpdateGovernanceKeyRequest"></a>
+
+### UpdateGovernanceKeyRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `governance_key` | [cosmos.crypto.multisig.LegacyAminoPubKey](#cosmos.crypto.multisig.LegacyAminoPubKey) |  |  |
+
+
+
+
+
+
+<a name="scalar.permission.v1beta1.UpdateGovernanceKeyResponse"></a>
+
+### UpdateGovernanceKeyResponse
+
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/permission/v1beta1/service.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/permission/v1beta1/service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="scalar.permission.v1beta1.Msg"></a>
+
+### Msg
+Msg defines the gov Msg service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `RegisterController` | [RegisterControllerRequest](#scalar.permission.v1beta1.RegisterControllerRequest) | [RegisterControllerResponse](#scalar.permission.v1beta1.RegisterControllerResponse) |  | POST|/scalar/permission/register_controller|
+| `DeregisterController` | [DeregisterControllerRequest](#scalar.permission.v1beta1.DeregisterControllerRequest) | [DeregisterControllerResponse](#scalar.permission.v1beta1.DeregisterControllerResponse) |  | POST|/scalar/permission/deregister_controller|
+| `UpdateGovernanceKey` | [UpdateGovernanceKeyRequest](#scalar.permission.v1beta1.UpdateGovernanceKeyRequest) | [UpdateGovernanceKeyResponse](#scalar.permission.v1beta1.UpdateGovernanceKeyResponse) |  | POST|/scalar/permission/update_governance_key|
+
+
+<a name="scalar.permission.v1beta1.Query"></a>
+
+### Query
+Query defines the gRPC querier service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `GovernanceKey` | [QueryGovernanceKeyRequest](#scalar.permission.v1beta1.QueryGovernanceKeyRequest) | [QueryGovernanceKeyResponse](#scalar.permission.v1beta1.QueryGovernanceKeyResponse) | GovernanceKey returns the multisig governance key | GET|/scalar/permission/v1beta1/governance_key|
+| `Params` | [ParamsRequest](#scalar.permission.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.permission.v1beta1.ParamsResponse) |  | GET|/scalar/permission/v1beta1/params|
+
+ <!-- end services -->
+
+
+
 <a name="scalar/protocol/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -6179,7 +6954,7 @@ GenesisState represents the genesis state
 <a name="scalar.reward.v1beta1.InflationRateRequest"></a>
 
 ### InflationRateRequest
-InflationRateRequest represents a message that queries the Axelar specific
+InflationRateRequest represents a message that queries the scalar specific
 inflation RPC method. Ideally, this would use ValAddress as the validator
 field type. However, this makes it awkward for REST-based calls, because it
 would expect a byte array as part of the url. So, the bech32 encoded address
@@ -6308,7 +7083,7 @@ ParamsRequest represents a message that queries the params
 <a name="scalar.reward.v1beta1.MsgService"></a>
 
 ### MsgService
-Msg defines the axelarnet Msg service.
+Msg defines the scalarnet Msg service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
@@ -6713,7 +7488,7 @@ Params represent the genesis parameters for the module
 | `params` | [Params](#scalar.scalarnet.v1beta1.Params) |  |  |
 | `collector_address` | [bytes](#bytes) |  |  |
 | `chains` | [CosmosChain](#scalar.scalarnet.v1beta1.CosmosChain) | repeated |  |
-| `transfer_queue` | [axelar.utils.v1beta1.QueueState](#axelar.utils.v1beta1.QueueState) |  |  |
+| `transfer_queue` | [scalar.utils.v1beta1.QueueState](#scalar.utils.v1beta1.QueueState) |  |  |
 | `ibc_transfers` | [IBCTransfer](#scalar.scalarnet.v1beta1.IBCTransfer) | repeated |  |
 | `seq_id_mapping` | [GenesisState.SeqIdMappingEntry](#scalar.scalarnet.v1beta1.GenesisState.SeqIdMappingEntry) | repeated |  |
 
@@ -7319,6 +8094,300 @@ QueryService defines the gRPC querier service.
 
 
 
+<a name="scalar/snapshot/v1beta1/params.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/snapshot/v1beta1/params.proto
+
+
+
+<a name="scalar.snapshot.v1beta1.Params"></a>
+
+### Params
+Params represent the genesis parameters for the module
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `min_proxy_balance` | [int64](#int64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/snapshot/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/snapshot/v1beta1/types.proto
+
+
+
+<a name="scalar.snapshot.v1beta1.ProxiedValidator"></a>
+
+### ProxiedValidator
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `validator` | [bytes](#bytes) |  |  |
+| `proxy` | [bytes](#bytes) |  |  |
+| `active` | [bool](#bool) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/snapshot/v1beta1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/snapshot/v1beta1/genesis.proto
+
+
+
+<a name="scalar.snapshot.v1beta1.GenesisState"></a>
+
+### GenesisState
+GenesisState represents the genesis state
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.snapshot.v1beta1.Params) |  |  |
+| `proxied_validators` | [ProxiedValidator](#scalar.snapshot.v1beta1.ProxiedValidator) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/snapshot/v1beta1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/snapshot/v1beta1/query.proto
+
+
+
+<a name="scalar.snapshot.v1beta1.ParamsRequest"></a>
+
+### ParamsRequest
+ParamsRequest represents a message that queries the params
+
+
+
+
+
+
+<a name="scalar.snapshot.v1beta1.ParamsResponse"></a>
+
+### ParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.snapshot.v1beta1.Params) |  |  |
+
+
+
+
+
+
+<a name="scalar.snapshot.v1beta1.QueryValidatorsResponse"></a>
+
+### QueryValidatorsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `validators` | [QueryValidatorsResponse.Validator](#scalar.snapshot.v1beta1.QueryValidatorsResponse.Validator) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.snapshot.v1beta1.QueryValidatorsResponse.TssIllegibilityInfo"></a>
+
+### QueryValidatorsResponse.TssIllegibilityInfo
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tombstoned` | [bool](#bool) |  |  |
+| `jailed` | [bool](#bool) |  |  |
+| `missed_too_many_blocks` | [bool](#bool) |  |  |
+| `no_proxy_registered` | [bool](#bool) |  |  |
+| `tss_suspended` | [bool](#bool) |  |  |
+| `proxy_insuficient_funds` | [bool](#bool) |  |  |
+| `stale_tss_heartbeat` | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="scalar.snapshot.v1beta1.QueryValidatorsResponse.Validator"></a>
+
+### QueryValidatorsResponse.Validator
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `operator_address` | [string](#string) |  |  |
+| `moniker` | [string](#string) |  |  |
+| `tss_illegibility_info` | [QueryValidatorsResponse.TssIllegibilityInfo](#scalar.snapshot.v1beta1.QueryValidatorsResponse.TssIllegibilityInfo) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/snapshot/v1beta1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/snapshot/v1beta1/tx.proto
+
+
+
+<a name="scalar.snapshot.v1beta1.DeactivateProxyRequest"></a>
+
+### DeactivateProxyRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.snapshot.v1beta1.DeactivateProxyResponse"></a>
+
+### DeactivateProxyResponse
+
+
+
+
+
+
+
+<a name="scalar.snapshot.v1beta1.RegisterProxyRequest"></a>
+
+### RegisterProxyRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `proxy_addr` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.snapshot.v1beta1.RegisterProxyResponse"></a>
+
+### RegisterProxyResponse
+
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/snapshot/v1beta1/service.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/snapshot/v1beta1/service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="scalar.snapshot.v1beta1.MsgService"></a>
+
+### MsgService
+Msg defines the snapshot Msg service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `RegisterProxy` | [RegisterProxyRequest](#scalar.snapshot.v1beta1.RegisterProxyRequest) | [RegisterProxyResponse](#scalar.snapshot.v1beta1.RegisterProxyResponse) | RegisterProxy defines a method for registering a proxy account that can act in a validator account's stead. | POST|/scalar/snapshot/register_proxy|
+| `DeactivateProxy` | [DeactivateProxyRequest](#scalar.snapshot.v1beta1.DeactivateProxyRequest) | [DeactivateProxyResponse](#scalar.snapshot.v1beta1.DeactivateProxyResponse) | DeactivateProxy defines a method for deregistering a proxy account. | POST|/scalar/snapshot/deactivate_proxy|
+
+
+<a name="scalar.snapshot.v1beta1.QueryService"></a>
+
+### QueryService
+QueryService defines the gRPC querier service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `Params` | [ParamsRequest](#scalar.snapshot.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.snapshot.v1beta1.ParamsResponse) |  | GET|/scalar/snapshot/v1beta1/params|
+
+ <!-- end services -->
+
+
+
 <a name="scalar/tss/tofnd/v1beta1/common.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -7752,9 +8821,9 @@ Params is the parameter set for this module
 | `key_requirements` | [scalar.tss.exported.v1beta1.KeyRequirement](#scalar.tss.exported.v1beta1.KeyRequirement) | repeated | KeyRequirements defines the requirement for each key role |
 | `suspend_duration_in_blocks` | [int64](#int64) |  | SuspendDurationInBlocks defines the number of blocks a validator is disallowed to participate in any TSS ceremony after committing a malicious behaviour during signing |
 | `heartbeat_period_in_blocks` | [int64](#int64) |  | HeartBeatPeriodInBlocks defines the time period in blocks for tss to emit the event asking validators to send their heartbeats |
-| `max_missed_blocks_per_window` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `max_missed_blocks_per_window` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
 | `unbonding_locking_key_rotation_count` | [int64](#int64) |  |  |
-| `external_multisig_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `external_multisig_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
 | `max_sign_queue_size` | [int64](#int64) |  |  |
 | `max_simultaneous_sign_shares` | [int64](#int64) |  |  |
 | `tss_signed_blocks_window` | [int64](#int64) |  |  |
@@ -8392,7 +9461,7 @@ Params represent the genesis parameters for the module
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `default_voting_threshold` | [axelar.utils.v1beta1.Threshold](#axelar.utils.v1beta1.Threshold) |  |  |
+| `default_voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
 | `end_blocker_limit` | [int64](#int64) |  |  |
 
 

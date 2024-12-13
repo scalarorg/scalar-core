@@ -12,6 +12,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/stretchr/testify/assert"
 	abcitypes "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
@@ -20,10 +21,9 @@ import (
 	"google.golang.org/grpc/encoding"
 	encproto "google.golang.org/grpc/encoding/proto"
 
-	"github.com/axelarnetwork/axelar-core/testutils/fake"
-	"github.com/axelarnetwork/utils/funcs"
 	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/app/params"
+	"github.com/scalarorg/scalar-core/testutils/fake"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/types"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 )

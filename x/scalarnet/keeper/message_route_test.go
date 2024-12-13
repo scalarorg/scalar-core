@@ -11,15 +11,15 @@ package keeper_test
 // "github.com/ethereum/go-ethereum/common/hexutil"
 // "github.com/stretchr/testify/assert"
 //
-// "github.com/axelarnetwork/axelar-core/testutils/rand"
+// "github.com/scalarorg/scalar-core/testutils/rand"
 // evmtestutils "github.com/scalarorg/scalar-core/x/evm/types/testutils"
 // nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 // nexusmock "github.com/scalarorg/scalar-core/x/nexus/exported/mock"
 // nexustestutils "github.com/scalarorg/scalar-core/x/nexus/exported/testutils"
 // nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
-// "github.com/axelarnetwork/utils/funcs"
-// "github.com/axelarnetwork/utils/slices"
-// . "github.com/axelarnetwork/utils/test"
+// "github.com/scalarorg/scalar-core/utils/test"
+// "github.com/scalarorg/scalar-core/utils/slices"
+// . "github.com/scalarorg/scalar-core/utils/test"
 // "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 // "github.com/scalarorg/scalar-core/x/scalarnet/keeper"
 // "github.com/scalarorg/scalar-core/x/scalarnet/types"
@@ -155,7 +155,7 @@ package keeper_test
 //
 // assert.Len(t, bankK.SendCoinsCalls(), 1)
 // assert.Equal(t, routingCtx.Sender, bankK.SendCoinsCalls()[0].FromAddr)
-// assert.Equal(t, types.AxelarIBCAccount, bankK.SendCoinsCalls()[0].ToAddr)
+// assert.Equal(t, types.ScalarIBCAccount, bankK.SendCoinsCalls()[0].ToAddr)
 // assert.Equal(t, sdk.NewCoins(sdk.NewCoin(exported.NativeAsset, sdk.OneInt())), bankK.SendCoinsCalls()[0].Amt)
 //
 // assert.Len(t, ibcK.SendMessageCalls(), 1)
@@ -185,7 +185,7 @@ package keeper_test
 //
 // assert.Len(t, bankK.SendCoinsCalls(), 1)
 // assert.Equal(t, routingCtx.FeeGranter, bankK.SendCoinsCalls()[0].FromAddr)
-// assert.Equal(t, types.AxelarIBCAccount, bankK.SendCoinsCalls()[0].ToAddr)
+// assert.Equal(t, types.ScalarIBCAccount, bankK.SendCoinsCalls()[0].ToAddr)
 // assert.Equal(t, sdk.NewCoins(sdk.NewCoin(exported.NativeAsset, sdk.OneInt())), bankK.SendCoinsCalls()[0].Amt)
 //
 // assert.Len(t, ibcK.SendMessageCalls(), 1)
@@ -219,7 +219,7 @@ package keeper_test
 // assert.NoError(t, route(ctx, routingCtx, msg))
 //
 // assert.Len(t, lockableAsset.UnlockToCalls(), 1)
-// assert.Equal(t, types.AxelarIBCAccount, lockableAsset.UnlockToCalls()[0].ToAddr)
+// assert.Equal(t, types.ScalarIBCAccount, lockableAsset.UnlockToCalls()[0].ToAddr)
 //
 // assert.Len(t, ibcK.SendMessageCalls(), 1)
 // assert.Equal(t, msg.Recipient, ibcK.SendMessageCalls()[0].Recipient)

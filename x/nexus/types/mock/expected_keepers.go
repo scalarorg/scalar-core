@@ -5,14 +5,14 @@ package mock
 
 import (
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	utils "github.com/axelarnetwork/axelar-core/utils"
-	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	cosmossdktypes "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibctypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
+	utils "github.com/scalarorg/scalar-core/utils"
 	github_com_scalarorg_scalar_core_x_nexus_exported "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	"github.com/tendermint/tendermint/libs/log"
 	"sync"
 	time "time"

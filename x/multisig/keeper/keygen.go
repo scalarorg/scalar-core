@@ -7,15 +7,15 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	gogoprototypes "github.com/gogo/protobuf/types"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/axelar-core/utils/events"
-	"github.com/axelarnetwork/axelar-core/utils/key"
-	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
-	"github.com/axelarnetwork/utils/funcs"
-	"github.com/axelarnetwork/utils/math"
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/events"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/key"
+	"github.com/scalarorg/scalar-core/utils/math"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 	"github.com/scalarorg/scalar-core/x/multisig/types"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 )
 
 // GetKeygenSessionsByExpiry returns all keygen sessions that either expires at

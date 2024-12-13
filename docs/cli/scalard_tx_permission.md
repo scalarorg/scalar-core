@@ -28,4 +28,4 @@ scalard tx permission [flags]
 - [scalard tx](scalard_tx.md) - Transactions subcommands
 - [scalard tx permission deregister-controller](scalard_tx_permission_deregister-controller.md) - Deregister controller account
 - [scalard tx permission register-controller](scalard_tx_permission_register-controller.md) - Register controller account
-- [scalard tx permission update-governance-key](scalard_tx_permission_update-governance-key.md) - Update the multisig governance key for axelar network
+- [scalard tx permission update-governance-key](scalard_tx_permission_update-governance-key.md) - Update the multisig governance key for network

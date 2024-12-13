@@ -6,22 +6,23 @@ option go_package = "github.com/scalarorg/scalar-core/x/tss/exported";
 import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
 import "cosmos_proto/cosmos.proto";
-import "axelar/utils/v1beta1/threshold.proto";
+import "scalar/utils/v1beta1/threshold.proto";
 import "gogoproto/gogo.proto";
 
 // KeyRequirement defines requirements for keys
 message KeyRequirement {
   KeyRole key_role = 1;
   KeyType key_type = 2;
-  axelar.utils.v1beta1.Threshold min_keygen_threshold = 3
+  scalar.utils.v1beta1.Threshold min_keygen_threshold = 3
       [ (gogoproto.nullable) = false ];
-  axelar.utils.v1beta1.Threshold safety_threshold = 4 [ (gogoproto.nullable) = false ];
+  scalar.utils.v1beta1.Threshold safety_threshold = 4
+      [ (gogoproto.nullable) = false ];
   KeyShareDistributionPolicy key_share_distribution_policy = 5;
   int64 max_total_share_count = 6;
   int64 min_total_share_count = 7;
-  axelar.utils.v1beta1.Threshold keygen_voting_threshold = 8
+  scalar.utils.v1beta1.Threshold keygen_voting_threshold = 8
       [ (gogoproto.nullable) = false ];
-  axelar.utils.v1beta1.Threshold sign_voting_threshold = 9
+  scalar.utils.v1beta1.Threshold sign_voting_threshold = 9
       [ (gogoproto.nullable) = false ];
   int64 keygen_timeout = 10;
   int64 sign_timeout = 11;

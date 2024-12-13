@@ -7,7 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/axelarnetwork/axelar-core/utils/events"
+	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/x/multisig/types"
 )
 

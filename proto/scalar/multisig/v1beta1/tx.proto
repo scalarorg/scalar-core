@@ -5,10 +5,10 @@ option go_package = "github.com/scalarorg/scalar-core/x/multisig/types";
 option (gogoproto.goproto_getters_all) = false;
 
 import "gogoproto/gogo.proto";
-import "axelar/permission/exported/v1beta1/types.proto";
+import "scalar/permission/exported/v1beta1/types.proto";
 
 message StartKeygenRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_CHAIN_MANAGEMENT;
 
   string sender = 1 [ (gogoproto.casttype) =
@@ -23,7 +23,7 @@ message StartKeygenRequest {
 message StartKeygenResponse {}
 
 message SubmitPubKeyRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
 
   string sender = 1 [ (gogoproto.casttype) =
@@ -42,7 +42,7 @@ message SubmitPubKeyRequest {
 message SubmitPubKeyResponse {}
 
 message SubmitSignatureRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
 
   string sender = 1 [ (gogoproto.casttype) =
@@ -54,7 +54,7 @@ message SubmitSignatureRequest {
 message SubmitSignatureResponse {}
 
 message RotateKeyRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_CHAIN_MANAGEMENT;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -71,7 +71,7 @@ message RotateKeyRequest {
 message RotateKeyResponse {}
 
 message KeygenOptOutRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
 
   bytes sender = 1 [ (gogoproto.casttype) =
@@ -81,7 +81,7 @@ message KeygenOptOutRequest {
 message KeygenOptOutResponse {}
 
 message KeygenOptInRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
 
   bytes sender = 1 [ (gogoproto.casttype) =

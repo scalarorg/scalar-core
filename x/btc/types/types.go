@@ -9,13 +9,13 @@ import (
 	"strconv"
 	"strings"
 
-	utils "github.com/axelarnetwork/axelar-core/utils"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+	utils "github.com/scalarorg/scalar-core/utils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 

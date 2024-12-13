@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/types"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
@@ -132,7 +132,7 @@ func (q Querier) TransferFee(c context.Context, req *types.TransferFeeRequest) (
 		return nil, fmt.Errorf("amount cannot be negative")
 	}
 
-	// When source chain is another cosmos chain, use axelarnet for fee info where deposit address is generated on
+	// When source chain is another cosmos chain, use scalarnet for fee info where deposit address is generated on
 	feeCalcSourceChain := sourceChain
 	if q.scalarnet.IsCosmosChain(ctx, feeCalcSourceChain.Name) {
 		feeCalcSourceChain = scalarnet.Scalarnet

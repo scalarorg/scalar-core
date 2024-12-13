@@ -6,13 +6,13 @@ option go_package = "github.com/scalarorg/scalar-core/x/vote/types";
 import "google/protobuf/any.proto";
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
-import "axelar/permission/exported/v1beta1/types.proto";
+import "scalar/permission/exported/v1beta1/types.proto";
 import "scalar/vote/v1beta1/types.proto";
 
 option (gogoproto.goproto_getters_all) = false;
 
 message VoteRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
 
   reserved 2, 3; // poll_key and vote were removed in v0.20

@@ -10,8 +10,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/gorilla/mux"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	clientUtils "github.com/axelarnetwork/axelar-core/utils"
+	"github.com/scalarorg/scalar-core/utils"
+	clientUtils "github.com/scalarorg/scalar-core/utils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
 )
@@ -96,7 +96,7 @@ func RegisterRoutes(cliCtx client.Context, r *mux.Router) {
 	registerTx(TxHandlerRouteIBCTransfers(cliCtx), TxRouteIBCTransfers)
 }
 
-// TxHandlerLink returns the handler to link an Axelar address to a cross-chain address
+// TxHandlerLink returns the handler to link an Scalar address to a cross-chain address
 func TxHandlerLink(cliCtx client.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req ReqLink
@@ -154,7 +154,7 @@ func TxHandlerConfirmDeposit(cliCtx client.Context) http.HandlerFunc {
 	}
 }
 
-// TxHandlerExecutePendingTransfers returns the handler to execute pending transfers to Axelar
+// TxHandlerExecutePendingTransfers returns the handler to execute pending transfers to Scalar
 func TxHandlerExecutePendingTransfers(cliCtx client.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req ReqExecutePendingTransfers

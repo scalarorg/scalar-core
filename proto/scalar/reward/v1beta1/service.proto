@@ -10,7 +10,7 @@ import "scalar/reward/v1beta1/query.proto";
 
 option (gogoproto.goproto_registration) = true;
 
-// Msg defines the axelarnet Msg service.
+// Msg defines the scalarnet Msg service.
 service MsgService {
   rpc RefundMsg(RefundMsgRequest) returns (RefundMsgResponse) {
     option (google.api.http) = {

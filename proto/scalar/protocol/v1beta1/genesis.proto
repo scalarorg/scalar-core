@@ -1,7 +1,7 @@
 syntax = "proto3";
 package scalar.protocol.v1beta1;
 
-import "axelar/utils/v1beta1/queuer.proto";
+import "scalar/utils/v1beta1/queuer.proto";
 import "gogoproto/gogo.proto";
 import "scalar/protocol/v1beta1/types.proto";
 
@@ -11,5 +11,5 @@ option (gogoproto.goproto_getters_all) = false;
 message GenesisState {
   option (gogoproto.stable_marshaler) = true;
 
-  repeated Protocol protocols = 3 [(gogoproto.nullable) = false];
+  repeated Protocol protocols = 3 [ (gogoproto.nullable) = false ];
 }

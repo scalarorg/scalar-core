@@ -16,13 +16,13 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/axelarnetwork/axelar-core/testutils/fake"
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/utils/funcs"
-	. "github.com/axelarnetwork/utils/test"
 	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/app/mock"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd"
+	"github.com/scalarorg/scalar-core/testutils/fake"
+	"github.com/scalarorg/scalar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	. "github.com/scalarorg/scalar-core/utils/test"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexusmock "github.com/scalarorg/scalar-core/x/nexus/types/mock"
 )

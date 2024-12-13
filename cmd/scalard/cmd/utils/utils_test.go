@@ -7,8 +7,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/axelarnetwork/axelar-core/testutils"
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/testutils"
+	"github.com/scalarorg/scalar-core/testutils/rand"
 )
 
 func TestOverwriteFlagDefaults(t *testing.T) {

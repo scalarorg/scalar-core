@@ -9,13 +9,13 @@ import "scalar/tss/v1beta1/types.proto";
 import "scalar/tss/tofnd/v1beta1/tofnd.proto";
 import "scalar/vote/exported/v1beta1/types.proto";
 import "cosmos/crypto/multisig/keys.proto";
-import "axelar/permission/exported/v1beta1/types.proto";
+import "scalar/permission/exported/v1beta1/types.proto";
 
 option (gogoproto.goproto_getters_all) = false;
 
 // StartKeygenRequest indicate the start of keygen
 message StartKeygenRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_CHAIN_MANAGEMENT;
   string sender = 1 [ (gogoproto.casttype) =
                           "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -25,7 +25,7 @@ message StartKeygenRequest {
 message StartKeygenResponse {}
 
 message RotateKeyRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_CHAIN_MANAGEMENT;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -44,7 +44,7 @@ message RotateKeyResponse {}
 
 // ProcessKeygenTrafficRequest protocol message
 message ProcessKeygenTrafficRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -56,7 +56,7 @@ message ProcessKeygenTrafficResponse {}
 
 // ProcessSignTrafficRequest protocol message
 message ProcessSignTrafficRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -68,7 +68,7 @@ message ProcessSignTrafficResponse {}
 
 // VotePubKeyRequest represents the message to vote on a public key
 message VotePubKeyRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -80,7 +80,7 @@ message VotePubKeyResponse { string log = 1; }
 
 // VoteSigRequest represents a message to vote for a signature
 message VoteSigRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -92,7 +92,7 @@ message VoteSigRequest {
 message VoteSigResponse { string log = 1; }
 
 message HeartBeatRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -109,7 +109,7 @@ message HeartBeatRequest {
 message HeartBeatResponse {}
 
 message RegisterExternalKeysRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_CHAIN_MANAGEMENT;
   message ExternalKey {
     string id = 1 [
@@ -131,7 +131,7 @@ message RegisterExternalKeysRequest {
 message RegisterExternalKeysResponse {};
 
 message SubmitMultisigPubKeysRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -147,7 +147,7 @@ message SubmitMultisigPubKeysRequest {
 message SubmitMultisigPubKeysResponse {}
 
 message SubmitMultisigSignaturesRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
