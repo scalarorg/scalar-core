@@ -3,7 +3,6 @@ syntax = "proto3";
 package scalar.btc.v1beta1;
 
 import "gogoproto/gogo.proto";
-import "scalar/btc/v1beta1/tx.proto";
 import "scalar/btc/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
@@ -32,4 +31,11 @@ message BatchedCommandsResponse {
       [ (gogoproto.customname) = "PrevBatchedCommandsID" ];
   repeated string command_ids = 8 [ (gogoproto.customname) = "CommandIDs" ];
   Proof proof = 9;
+}
+
+message GetTagAndVersionRequest {}
+
+message GetTagAndVersionResponse {
+  bytes tag = 1;
+  bytes version = 2;
 }

@@ -19,7 +19,7 @@ message CreateProtocolRequest {
       5; // e.g., "616171bb-e71a-4d3f-a4a7-045de8f3cad0"
   string btc_signer_address =
       6; // e.g., "tb1q37dgjm7e7h385aykhd6gps7uqx0kv26w2ugu8c"
-  string btc_signer_pk =
+  bytes btc_signer_pk =
       7; // e.g.,
          // "0x021387aab21303782b17e760c670432559df3968e52cb82cc2d8f9be43a227d5dc"
   string btc_network = 8; // e.g., "bitcoin-testnet4"
@@ -40,10 +40,10 @@ message SetProtocolStatusResponse { Protocol protocol = 1; }
 
 message AddDestinationChainToProtocolRequest {
   string protocol_name = 1;
-  string chain_name = 2;                   // e.g., "ethereum-sepolia"
-  string chain_id = 3;                     // e.g., "11155111"
-  string chain_type = 4;                   // Chain type
-  string chain_smart_contract_address = 5; // Contract address on the chain
+  string chain_name = 2;                  // e.g., "ethereum-sepolia"
+  uint64 chain_id = 3;                    // e.g., "11155111"
+  string chain_type = 4;                  // Chain type
+  bytes chain_smart_contract_address = 5; // Contract address on the chain
 
   // Fields for ERC20 token
   string token_asset = 6;
@@ -78,7 +78,7 @@ message AddDestinationChainToProtocolResponse {}
 
 message DeleteDestinationChainFromProtocolRequest {
   string protocol_name = 1;
-  string chain_id = 2;
+  uint64 chain_id = 2;
 }
 
 message DeleteDestinationChainFromProtocolResponse {}
@@ -87,7 +87,7 @@ message AddCustodianToCustodianGroupRequest {
   string protocol_name = 1;
   string custodian_group_name = 2;
   string name = 3;
-  string btc_pk =
+  bytes btc_pk =
       4; // e.g.,
          // "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
   ProtocolStatus status = 5;
@@ -114,7 +114,7 @@ message UpdateCustodianGroupResponse {}
 
 message CreateCustodianRequest {
   string name = 1;
-  string btc_pk = 2;
+  bytes btc_pk = 2;
   ProtocolStatus status = 3;
   string description = 4;
 }
@@ -123,7 +123,7 @@ message CreateCustodianResponse {}
 
 message UpdateCustodianRequest {
   string name = 1;
-  string btc_pk = 2;
+  bytes btc_pk = 2;
   ProtocolStatus status = 3;
   string description = 4;
 }
@@ -135,7 +135,7 @@ message UpdateBtcChainRequest {
   string btc_signer_endpoint = 2;
   string btc_signer_access_token = 3;
   string btc_signer_address = 4;
-  string btc_signer_pk = 5;
+  bytes btc_signer_pk = 5;
   string btc_network = 6;
 }
 
