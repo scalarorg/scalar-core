@@ -1,4 +1,246 @@
 syntax = "proto3";
 package scalar.protocol.v1beta1;
 
+import "scalar/protocol/v1beta1/query.proto";
+import "scalar/protocol/v1beta1/tx.proto";
+import "google/api/annotations.proto";
+
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
+
+// Query defines the gRPC querier service
+service QueryService {
+  // GetProtocols returns all Protocol
+  rpc GetProtocols(GetProtocolsRequest) returns (GetProtocolsResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/protocols"
+    };
+  }
+
+  // GetProtocolsByStatus returns protocols based on status
+  rpc GetProtocolsByStatus(GetProtocolsByStatusRequest)
+      returns (GetProtocolsByStatusResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/protocols/status/{status}"
+    };
+  }
+
+  // Get protocols by name
+  rpc GetProtocolByName(GetProtocolByNameRequest)
+      returns (GetProtocolByNameResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/protocols/name/{name}"
+    };
+  }
+
+  // Get protocol by scalar pk
+  rpc GetProtocolByScalarPk(GetProtocolByScalarPkRequest)
+      returns (GetProtocolByScalarPkResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/protocols/scalar_pk/{scalar_pk}"
+    };
+  }
+
+  // Get custodians
+  rpc GetCustodians(GetCustodiansRequest) returns (GetCustodiansResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/custodians"
+    };
+  }
+
+  // Get custodian by name
+  rpc GetCustodianByName(GetCustodianByNameRequest)
+      returns (GetCustodianByNameResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/custodians/name/{name}"
+    };
+  }
+
+  // Get custodian groups
+  rpc GetCustodianGroups(GetCustodianGroupsRequest)
+      returns (GetCustodianGroupsResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/custodian_groups"
+    };
+  }
+
+  // Get custodian group by name
+  rpc GetCustodianGroupByName(GetCustodianGroupByNameRequest)
+      returns (GetCustodianGroupByNameResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/custodian_groups/name/{name}"
+    };
+  }
+
+  // Get DestinationChains
+  rpc GetDestinationChainsByProtocolName(
+      GetDestinationChainsByProtocolNameRequest)
+      returns (GetDestinationChainsByProtocolNameResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/destination_chains/protocol/"
+            "{protocol_name}"
+    };
+  }
+
+  // Get available btc networks
+  rpc GetAvailableBtcNetworks(GetAvailableBtcNetworksRequest)
+      returns (GetAvailableBtcNetworksResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/available_btc_networks"
+    };
+  }
+
+  rpc GetAvailableCustodianGroupsByBtcNetworkName(
+      GetAvailableCustodianGroupsByBtcNetworkNameRequest)
+      returns (GetAvailableCustodianGroupsByBtcNetworkNameResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/available_custodian_groups/btc_network/"
+            "{btc_network_name}"
+    };
+  }
+
+  // Get available chain types
+  rpc GetAvailableChainTypes(GetAvailableChainTypesRequest)
+      returns (GetAvailableChainTypesResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/available_chain_types"
+    };
+  }
+
+  // Get available chains by chain type
+  rpc GetAvailableChainsByChainType(GetAvailableChainsByChainTypeRequest)
+      returns (GetAvailableChainsByChainTypeResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/available_chains/chain_type/{chain_type}"
+    };
+  }
+}
+
+service MsgService {
+  // Create protocol
+  rpc CreateProtocol(CreateProtocolRequest) returns (CreateProtocolResponse) {
+    option (google.api.http) = {
+      post : "/scalar/protocol/v1beta1/create_protocol"
+      body : "*"
+    };
+  }
+
+  // Delete protocol
+  rpc DeleteProtocol(DeleteProtocolRequest) returns (DeleteProtocolResponse) {
+    option (google.api.http) = {
+      post : "/scalar/protocol/v1beta1/delete_protocol"
+      body : "*"
+    };
+  }
+
+  // Update protocol basic info
+  rpc UpdateProtocolBasicInfo(UpdateProtocolBasicInfoRequest)
+      returns (UpdateProtocolBasicInfoResponse) {
+    option (google.api.http) = {
+      post : "/scalar/protocol/v1beta1/update_protocol_basic_info"
+      body : "*"
+    };
+  }
+
+  // Set protocol status
+  rpc SetProtocolStatus(SetProtocolStatusRequest)
+      returns (SetProtocolStatusResponse) {
+    option (google.api.http) = {
+      post : "/scalar/protocol/v1beta1/set_protocol_status"
+      body : "*"
+    };
+  }
+
+  // Set protocol custodian group
+  rpc SetProtocolCustodianGroup(SetProtocolCustodianGroupRequest)
+      returns (SetProtocolCustodianGroupResponse) {
+    option (google.api.http) = {
+      post : "/scalar/protocol/v1beta1/set_protocol_custodian_group"
+      body : "*"
+    };
+  }
+
+  // Set protocol BTC chain
+  rpc SetProtocolBtcChain(SetProtocolBtcChainRequest)
+      returns (SetProtocolBtcChainResponse) {
+    option (google.api.http) = {
+      post : "/scalar/protocol/v1beta1/set_protocol_btc_chain"
+      body : "*"
+    };
+  }
+
+  // Add DestinationChain into protocol
+  rpc AddDestinationChainToProtocol(AddDestinationChainToProtocolRequest)
+      returns (AddDestinationChainToProtocolResponse) {
+    option (google.api.http) = {
+      post : "/scalar/protocol/v1beta1/add_destination_chain_to_protocol"
+      body : "*"
+    };
+  }
+
+  // Delete DestinationChain from protocol
+  rpc DeleteDestinationChainFromProtocol(
+      DeleteDestinationChainFromProtocolRequest)
+      returns (DeleteDestinationChainFromProtocolResponse) {
+    option (google.api.http) = {
+      post : "/scalar/protocol/v1beta1/delete_destination_chain_from_protocol"
+      body : "*"
+    };
+  }
+
+  // Add Custodian to custodian group
+  // TODO: recalculate taproot address when adding custodian to custodian group
+  rpc AddCustodianToCustodianGroup(AddCustodianToCustodianGroupRequest)
+      returns (AddCustodianToCustodianGroupResponse) {
+    option (google.api.http) = {
+      post : "/scalar/protocol/v1beta1/add_custodian_to_custodian_group"
+      body : "*"
+    };
+  }
+
+  // Delete Custodian from custodian group
+  // TODO: recalculate taproot address when deleting custodian from custodian
+  // group
+  rpc DeleteCustodianFromCustodianGroup(
+      DeleteCustodianFromCustodianGroupRequest)
+      returns (DeleteCustodianFromCustodianGroupResponse) {
+    option (google.api.http) = {
+      post : "/scalar/protocol/v1beta1/delete_custodian_from_custodian_group"
+      body : "*"
+    };
+  }
+
+  // Update Custodian group
+  rpc UpdateCustodianGroup(UpdateCustodianGroupRequest)
+      returns (UpdateCustodianGroupResponse) {
+    option (google.api.http) = {
+      post : "/scalar/protocol/v1beta1/update_custodian_group"
+      body : "*"
+    };
+  }
+
+  // Create custodian
+  rpc CreateCustodian(CreateCustodianRequest)
+      returns (CreateCustodianResponse) {
+    option (google.api.http) = {
+      post : "/scalar/protocol/v1beta1/create_custodian"
+      body : "*"
+    };
+  }
+
+  // Update custodian
+  rpc UpdateCustodian(UpdateCustodianRequest)
+      returns (UpdateCustodianResponse) {
+    option (google.api.http) = {
+      post : "/scalar/protocol/v1beta1/update_custodian"
+      body : "*"
+    };
+  }
+
+  // Update BTC chain
+  rpc UpdateBtcChain(UpdateBtcChainRequest) returns (UpdateBtcChainResponse) {
+    option (google.api.http) = {
+      post : "/scalar/protocol/v1beta1/update_btc_chain"
+      body : "*"
+    };
+  }
+}

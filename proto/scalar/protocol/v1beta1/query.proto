@@ -1,23 +1,73 @@
 syntax = "proto3";
 package scalar.protocol.v1beta1;
 
-import "gogoproto/gogo.proto";
-import "scalar/protocol/v1beta1/types.proto";
-
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
-enum ProtocolStatus {
-  option (gogoproto.goproto_enum_prefix) = false;
+import "scalar/protocol/v1beta1/types.proto";
 
-  PROTOCOL_STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "StatusUnspecified"];
-  PROTOCOL_STATUS_ACTIVATED = 1 [(gogoproto.enumvalue_customname) = "Activated"];
-  PROTOCOL_STATUS_DEACTIVATED = 2 [(gogoproto.enumvalue_customname) = "Deactivated"];
+message GetProtocolsRequest {}
+
+message GetProtocolsResponse { repeated Protocol protocols = 1; }
+
+message GetProtocolByNameRequest { string name = 1; }
+
+message GetProtocolByNameResponse { Protocol protocol = 1; }
+
+message GetProtocolsByStatusRequest { ProtocolStatus status = 1; }
+
+message GetProtocolsByStatusResponse { repeated Protocol protocols = 1; }
+
+message GetProtocolByScalarPkRequest { bytes scalar_pk = 1; }
+
+message GetProtocolByScalarPkResponse { Protocol protocol = 1; }
+
+message GetCustodiansRequest {}
+
+message GetCustodiansResponse { repeated Custodian custodians = 1; }
+
+message GetCustodianByNameRequest { string name = 1; }
+
+message GetCustodianByNameResponse { Custodian custodian = 1; }
+
+message GetCustodianGroupsRequest {}
+
+message GetCustodianGroupsResponse {
+  repeated CustodianGroup custodian_groups = 1;
 }
 
-message ProtocolRequest {
-  ProtocolStatus status = 1;
+message GetCustodianGroupByNameRequest { string name = 1; }
+
+message GetCustodianGroupByNameResponse { CustodianGroup custodian_group = 1; }
+
+message GetDestinationChainsByProtocolNameRequest { string protocol_name = 1; }
+
+message GetDestinationChainsByProtocolNameResponse {
+  repeated DestinationChain destination_chains = 1;
 }
 
-message ProtocolResponse {
-  repeated Protocol protocols = 1;
+message GetAvailableBtcNetworksRequest {}
+
+message GetAvailableBtcNetworksResponse { repeated string btc_networks = 1; }
+
+message GetAvailableCustodianGroupsByBtcNetworkNameRequest {
+  string btc_network_name = 1;
+}
+
+message GetAvailableCustodianGroupsByBtcNetworkNameResponse {
+  repeated string custodian_group_names = 1;
+}
+
+message GetAvailableChainTypesRequest {}
+
+message GetAvailableChainTypesResponse { repeated string chain_types = 1; }
+
+message GetAvailableChainsByChainTypeRequest { string chain_type = 1; }
+
+message GetAvailableChainsByChainTypeResponse {
+  message ShortenedChain {
+    string chain_name = 1;
+    uint64 chain_id = 2;
+  }
+
+  repeated ShortenedChain shortened_chains = 1;
 }
