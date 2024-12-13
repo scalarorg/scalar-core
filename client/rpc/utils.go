@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/rs/zerolog/log"
-	"github.com/scalarorg/relayers/pkg/clients/cosmos"
+	"github.com/scalarorg/scalar-core/client/rpc/cosmos"
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 )
 

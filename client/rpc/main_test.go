@@ -7,8 +7,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
-	"github.com/scalarorg/relayers/pkg/clients/cosmos"
 	"github.com/scalarorg/scalar-core/client/rpc"
+	"github.com/scalarorg/scalar-core/client/rpc/cosmos"
+	"github.com/scalarorg/scalar-core/client/rpc/codec"
 )
 
 const (
@@ -39,7 +40,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	txConfig := tx.NewTxConfig(rpc.GetProtoCodec(), []signing.SignMode{signing.SignMode_SIGN_MODE_DIRECT})
+	txConfig := tx.NewTxConfig(codec.GetProtoCodec(), []signing.SignMode{signing.SignMode_SIGN_MODE_DIRECT})
 	var err error
 
 	mockClientCtx, err = cosmos.CreateClientContextWithOptions(&CosmosNetworkConfig, cosmos.WithRpcClientCtx(CosmosNetworkConfig.RPCUrl))
