@@ -1,4 +1,4 @@
-package rpc
+package codec 
 
 import (
 	//Importing the types package is necessary to register the codec

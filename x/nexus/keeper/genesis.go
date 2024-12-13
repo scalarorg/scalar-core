@@ -35,6 +35,9 @@ func (k Keeper) InitGenesis(ctx sdk.Context, genState *types.GenesisState) {
 			}
 		}
 		k.setChainState(ctx, chainState)
+		for _, maintainer := range chainState.MaintainerStates {
+			k.setChainMaintainerState(ctx, &maintainer)
+		}
 	}
 
 	for _, linkedAddresses := range genState.LinkedAddresses {
