@@ -1,6 +1,6 @@
 ## scalard tx scalarnet execute-pending-transfers
 
-Send all pending transfers to Axelar chain
+Send all pending transfers to Scalar chain
 
 ```
 scalard tx scalarnet execute-pending-transfers [flags]

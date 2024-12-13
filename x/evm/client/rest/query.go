@@ -9,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/gorilla/mux"
 
-	"github.com/axelarnetwork/axelar-core/utils"
+	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/evm/keeper"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 )

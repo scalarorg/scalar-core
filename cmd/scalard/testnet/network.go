@@ -15,7 +15,6 @@ import (
 	"time"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
-	"github.com/axelarnetwork/axelar-core/config"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -31,6 +30,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/app/params"
+	"github.com/scalarorg/scalar-core/config"
 	scalartypes "github.com/scalarorg/scalar-core/types"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	tmconfig "github.com/tendermint/tendermint/config"

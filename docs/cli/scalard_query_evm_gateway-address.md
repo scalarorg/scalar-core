@@ -1,6 +1,6 @@
 ## scalard query evm gateway-address
 
-Query the Axelar Gateway contract address
+Query the Scalar Gateway contract address
 
 ```
 scalard query evm gateway-address [chain] [flags]

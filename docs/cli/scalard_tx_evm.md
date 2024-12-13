@@ -32,9 +32,9 @@ scalard tx evm [flags]
 - [scalard tx evm confirm-gateway-txs](scalard_tx_evm_confirm-gateway-txs.md) - Confirm gateway transactions in an EVM chain
 - [scalard tx evm confirm-transfer-operatorship](scalard_tx_evm_confirm-transfer-operatorship.md) - Confirm a transfer operatorship in an EVM chain transaction
 - [scalard tx evm create-burn-tokens](scalard_tx_evm_create-burn-tokens.md) - Create burn commands for all confirmed token deposits in an EVM chain
-- [scalard tx evm create-deploy-token](scalard_tx_evm_create-deploy-token.md) - Create a deploy token command with the AxelarGateway contract
+- [scalard tx evm create-deploy-token](scalard_tx_evm_create-deploy-token.md) - Create a deploy token command with the ScalarGateway contract
 - [scalard tx evm create-pending-transfers](scalard_tx_evm_create-pending-transfers.md) - Create commands for handling all pending transfers to an EVM chain
-- [scalard tx evm link](scalard_tx_evm_link.md) - Link a cross chain address to an EVM chain address created by Axelar
+- [scalard tx evm link](scalard_tx_evm_link.md) - Link a cross chain address to an EVM chain address created by Scalar
 - [scalard tx evm retry-event](scalard_tx_evm_retry-event.md) - Retry a failed event
 - [scalard tx evm set-gateway](scalard_tx_evm_set-gateway.md) - Set the gateway address for the given evm chain
 - [scalard tx evm sign-commands](scalard_tx_evm_sign-commands.md) - Sign pending commands for an EVM chain contract

@@ -3,10 +3,10 @@ package cli
 import (
 	"fmt"
 
-	"github.com/axelarnetwork/axelar-core/utils"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	"github.com/scalarorg/scalar-core/utils"
 	"github.com/spf13/cobra"
 
 	"github.com/scalarorg/scalar-core/x/btc/types"

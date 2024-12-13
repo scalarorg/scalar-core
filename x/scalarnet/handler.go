@@ -11,7 +11,7 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/axelarnetwork/axelar-core/utils/events"
+	"github.com/scalarorg/scalar-core/utils/events"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/keeper"
@@ -118,7 +118,7 @@ func NewProposalHandler(k keeper.Keeper, nexusK types.Nexus, accountK types.Acco
 				}
 				recipient := nexus.CrossChainAddress{Chain: destChain, Address: contractCall.ContractAddress}
 
-				// axelar gateway expects keccak256 hashes for payloads
+				//  gateway expects keccak256 hashes for payloads
 				payloadHash := crypto.Keccak256(contractCall.Payload)
 				msgID, txID, nonce := nexusK.GenerateMessageID(ctx)
 				msg := nexus.NewGeneralMessage(msgID, sender, recipient, payloadHash, txID, nonce, nil)

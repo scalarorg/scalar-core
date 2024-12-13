@@ -6,9 +6,9 @@ import (
 	"github.com/btcsuite/btcd/btcec/v2"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/utils/funcs"
-	. "github.com/axelarnetwork/utils/test"
+	"github.com/scalarorg/scalar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	. "github.com/scalarorg/scalar-core/utils/test"
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 	typestestutils "github.com/scalarorg/scalar-core/x/multisig/types/testutils"
 )

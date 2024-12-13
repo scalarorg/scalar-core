@@ -10,15 +10,14 @@ import (
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/axelarnetwork/axelar-core/testutils/fake"
-	rand2 "github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/axelar-core/utils"
-	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
-	"github.com/axelarnetwork/utils/funcs"
-	"github.com/axelarnetwork/utils/slices"
-	. "github.com/axelarnetwork/utils/test"
-	"github.com/axelarnetwork/utils/test/rand"
 	"github.com/scalarorg/scalar-core/app"
+	"github.com/scalarorg/scalar-core/testutils/fake"
+	rand2 "github.com/scalarorg/scalar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/slices"
+	test "github.com/scalarorg/scalar-core/utils/test"
+	"github.com/scalarorg/scalar-core/utils/test/rand"
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 	exportedmock "github.com/scalarorg/scalar-core/x/multisig/exported/mock"
 	"github.com/scalarorg/scalar-core/x/multisig/keeper"
@@ -27,6 +26,7 @@ import (
 	mock2 "github.com/scalarorg/scalar-core/x/multisig/types/mock"
 	"github.com/scalarorg/scalar-core/x/multisig/types/testutils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 )
 
 func TestMsgServer(t *testing.T) {
@@ -44,7 +44,7 @@ func TestMsgServer(t *testing.T) {
 		expiresAt   int64
 	)
 
-	givenMsgServer := Given("a multisig msg server", func() {
+	givenMsgServer := test.Given("a multisig msg server", func() {
 		subspace := params.NewSubspace(encCfg.Codec, encCfg.Amino, sdk.NewKVStoreKey("paramsKey"), sdk.NewKVStoreKey("tparamsKey"), "multisig")
 		k = keeper.NewKeeper(encCfg.Codec, sdk.NewKVStoreKey(types.StoreKey), subspace)
 
@@ -60,10 +60,10 @@ func TestMsgServer(t *testing.T) {
 		msgServer = keeper.NewMsgServer(k, snapshotter, &mock2.StakerMock{}, nexusK)
 	})
 
-	whenSenderIsProxy := When("the sender is a proxy", func() {
+	whenSenderIsProxy := test.When("the sender is a proxy", func() {
 		snapshotter.GetOperatorFunc = func(sdk.Context, sdk.AccAddress) sdk.ValAddress { return rand.Sample(validators, 1)[0].Address }
 	})
-	keySessionExists := When("a key session exists", func() {
+	keySessionExists := test.When("a key session exists", func() {
 		keyID = exported.KeyID(rand.HexStr(5))
 		_, err := msgServer.StartKeygen(sdk.WrapSDKContext(ctx), types.NewStartKeygenRequest(rand2.AccAddr(), keyID))
 		expiresAt = ctx.BlockHeight() + types.DefaultParams().KeygenTimeout
@@ -72,11 +72,11 @@ func TestMsgServer(t *testing.T) {
 		assert.Len(t, k.GetKeygenSessionsByExpiry(ctx, expiresAt), 1)
 		assert.Len(t, k.GetKeygenSessionsByExpiry(ctx, ctx.BlockHeight()+types.DefaultParams().KeygenGracePeriod), 0)
 	})
-	requestIsMade := When("a request is made", func() {
+	requestIsMade := test.When("a request is made", func() {
 		sk := funcs.Must(btcec.NewPrivateKey())
 		req = types.NewSubmitPubKeyRequest(rand2.AccAddr(), keyID, sk.PubKey().SerializeCompressed(), ecdsa.Sign(sk, []byte(keyID)).Serialize())
 	})
-	pubKeyFails := Then("submit pubkey fails", func(t *testing.T) {
+	pubKeyFails := test.Then("submit pubkey fails", func(t *testing.T) {
 		_, err := msgServer.SubmitPubKey(sdk.WrapSDKContext(ctx), req)
 		assert.Error(t, err)
 	})
@@ -91,7 +91,7 @@ func TestMsgServer(t *testing.T) {
 					When2(requestIsMade).
 					Then2(pubKeyFails),
 
-				When("the sender is not a proxy", func() {
+				test.When("the sender is not a proxy", func() {
 					snapshotter.GetOperatorFunc = func(sdk.Context, sdk.AccAddress) sdk.ValAddress { return nil }
 				}).
 					When2(keySessionExists).
@@ -228,25 +228,25 @@ func TestMsgServer(t *testing.T) {
 				k.SetKey(ctx, key)
 			}).
 			Branch(
-				Then("should panic if sig handler is not registered for the given module", func(t *testing.T) {
+				test.Then("should panic if sig handler is not registered for the given module", func(t *testing.T) {
 					assert.Panics(t, func() {
 						k.Sign(ctx, exported.KeyID(rand.HexStr(5)), rand.Bytes(exported.HashLength), rand.AlphaStrBetween(3, 3))
 					})
 				}),
 
-				Then("should fail if the key does not exist", func(t *testing.T) {
+				test.Then("should fail if the key does not exist", func(t *testing.T) {
 					err := k.Sign(ctx, exported.KeyID(rand.HexStr(5)), rand.Bytes(exported.HashLength), module)
 
 					assert.Error(t, err)
 				}),
 
-				Then("should fail if the key is inactive", func(t *testing.T) {
+				test.Then("should fail if the key is inactive", func(t *testing.T) {
 					err := k.Sign(ctx, keyID, rand.Bytes(exported.HashLength), module)
 
 					assert.ErrorContains(t, err, "not activated")
 				}),
 
-				Then("should fail if the key is assigned", func(t *testing.T) {
+				test.Then("should fail if the key is assigned", func(t *testing.T) {
 					key.State = exported.Assigned
 					k.SetKey(ctx, key)
 
@@ -255,11 +255,11 @@ func TestMsgServer(t *testing.T) {
 					assert.ErrorContains(t, err, "not activated")
 				}),
 
-				When("key is active", func() {
+				test.When("key is active", func() {
 					key.State = exported.Active
 					k.SetKey(ctx, key)
 				}).Branch(
-					Then("should fail if payload hash is invalid", func(t *testing.T) {
+					test.Then("should fail if payload hash is invalid", func(t *testing.T) {
 						err := k.Sign(ctx, keyID, rand.Bytes(100), module)
 						assert.Error(t, err)
 
@@ -268,14 +268,14 @@ func TestMsgServer(t *testing.T) {
 						assert.Error(t, err)
 					}),
 
-					Then("should start signing if the key exists", func(t *testing.T) {
+					test.Then("should start signing if the key exists", func(t *testing.T) {
 						err := k.Sign(ctx, keyID, rand.Bytes(exported.HashLength), module)
 
 						assert.NoError(t, err)
 						assert.Len(t, k.GetSigningSessionsByExpiry(ctx, ctx.BlockHeight()+types.DefaultParams().SigningTimeout), 1)
 					}),
 
-					When("signing session exists", func() {
+					test.When("signing session exists", func() {
 						payloadHash = rand.Bytes(exported.HashLength)
 						funcs.MustNoErr(k.Sign(ctx, keyID, payloadHash, module))
 
@@ -283,7 +283,7 @@ func TestMsgServer(t *testing.T) {
 						sigID = funcs.Must(sdk.ParseTypedEvent(events[len(events)-1])).(*types.SigningStarted).SigID
 					}).
 						Branch(
-							Then("should fail if the signing session does not exist", func(t *testing.T) {
+							test.Then("should fail if the signing session does not exist", func(t *testing.T) {
 								pIndex := rand.I64Between(1, participantCount)
 								signature := ecdsa.Sign(privateKeys[pIndex], payloadHash).Serialize()
 								_, err := msgServer.SubmitSignature(sdk.WrapSDKContext(ctx), types.NewSubmitSignatureRequest(proxies[pIndex], uint64(rand.PosI64()), signature))
@@ -291,14 +291,14 @@ func TestMsgServer(t *testing.T) {
 								assert.Error(t, err)
 							}),
 
-							Then("should fail if proxy is not registered", func(t *testing.T) {
+							test.Then("should fail if proxy is not registered", func(t *testing.T) {
 								signature := ecdsa.Sign(privateKeys[rand.I64Between(1, participantCount)], payloadHash).Serialize()
 								_, err := msgServer.SubmitSignature(sdk.WrapSDKContext(ctx), types.NewSubmitSignatureRequest(rand2.AccAddr(), sigID, signature))
 
 								assert.Error(t, err)
 							}),
 
-							Then("should succeed", func(t *testing.T) {
+							test.Then("should succeed", func(t *testing.T) {
 								for i, proxy := range proxies {
 									signature := ecdsa.Sign(privateKeys[i], payloadHash).Serialize()
 									_, err := msgServer.SubmitSignature(sdk.WrapSDKContext(ctx), types.NewSubmitSignatureRequest(proxy, sigID, signature))
@@ -341,7 +341,7 @@ func TestMsgServer(t *testing.T) {
 				k.SetKey(ctx, key)
 			}).
 			Branch(
-				When("chain is unknown", func() {
+				test.When("chain is unknown", func() {
 					nexusK.GetChainFunc = func(sdk.Context, nexus.ChainName) (nexus.Chain, bool) { return nexus.Chain{}, false }
 				}).
 					Then("should fail", func(t *testing.T) {
@@ -349,7 +349,7 @@ func TestMsgServer(t *testing.T) {
 						assert.Error(t, err)
 					}),
 
-				When("chain is known", func() {
+				test.When("chain is known", func() {
 					chain = nexus.ChainName(rand.AlphaStrBetween(1, 5))
 					nexusK.GetChainFunc = func(ctx sdk.Context, cn nexus.ChainName) (nexus.Chain, bool) {
 						return nexus.Chain{}, cn == chain

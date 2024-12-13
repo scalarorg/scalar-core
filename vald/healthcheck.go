@@ -16,11 +16,11 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 
-	"github.com/axelarnetwork/axelar-core/x/snapshot/keeper"
-	snapshotTypes "github.com/axelarnetwork/axelar-core/x/snapshot/types"
 	"github.com/scalarorg/scalar-core/vald/config"
 	"github.com/scalarorg/scalar-core/vald/tss"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
+	"github.com/scalarorg/scalar-core/x/snapshot/keeper"
+	snapshotTypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 	"github.com/scalarorg/scalar-core/x/tss/tofnd"
 	tssTypes "github.com/scalarorg/scalar-core/x/tss/types"
 )

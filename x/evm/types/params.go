@@ -10,7 +10,7 @@ import (
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	gethParams "github.com/ethereum/go-ethereum/params"
 
-	"github.com/axelarnetwork/axelar-core/utils"
+	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/evm/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )

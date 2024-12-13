@@ -9,8 +9,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/cobra"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/evm/keeper"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
@@ -34,7 +34,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 
 	evmQueryCmd.AddCommand(
 		getCmdAddress(),
-		getCmdAxelarGatewayAddress(),
+		getCmdScalarGatewayAddress(),
 		getCmdTokenAddress(queryRoute),
 		getCmdDepositState(),
 		getCmdBytecode(),
@@ -89,7 +89,7 @@ func getCmdAddress() *cobra.Command {
 	return cmd
 }
 
-// getCmdTokenAddress returns the query for an EVM chain master address that owns the AxelarGateway contract
+// getCmdTokenAddress returns the query for an EVM chain master address that owns the ScalarGateway contract
 func getCmdTokenAddress(queryRoute string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "token-address [chain]",
@@ -168,11 +168,11 @@ func getCmdDepositState() *cobra.Command {
 	return cmd
 }
 
-// getCmdAxelarGatewayAddress returns the query for the AxelarGateway contract address
-func getCmdAxelarGatewayAddress() *cobra.Command {
+// getCmdScalarGatewayAddress returns the query for the ScalarGateway contract address
+func getCmdScalarGatewayAddress() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "gateway-address [chain]",
-		Short: "Query the Axelar Gateway contract address",
+		Short: "Query the Scalar Gateway contract address",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -238,7 +238,7 @@ func getCmdBytecode() *cobra.Command {
 func getCmdQueryBatchedCommands() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "batched-commands [chain] [batchedCommandsID]",
-		Short: "Get the signed batched commands that can be wrapped in an EVM transaction to be executed in Axelar Gateway",
+		Short: "Get the signed batched commands that can be wrapped in an EVM transaction to be executed in Scalar Gateway",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -271,7 +271,7 @@ func getCmdQueryBatchedCommands() *cobra.Command {
 func getCmdLatestBatchedCommands() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "latest-batched-commands [chain]",
-		Short: "Get the latest batched commands that can be wrapped in an EVM transaction to be executed in Axelar Gateway",
+		Short: "Get the latest batched commands that can be wrapped in an EVM transaction to be executed in Scalar Gateway",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)

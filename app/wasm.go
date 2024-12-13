@@ -12,9 +12,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibcexported "github.com/cosmos/ibc-go/v4/modules/core/exported"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 	"golang.org/x/exp/maps"
 
-	"github.com/axelarnetwork/utils/funcs"
 	"github.com/scalarorg/scalar-core/x/ante"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexusKeeper "github.com/scalarorg/scalar-core/x/nexus/keeper"

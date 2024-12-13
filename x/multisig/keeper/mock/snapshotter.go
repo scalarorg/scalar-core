@@ -4,10 +4,10 @@
 package mock
 
 import (
-	"github.com/axelarnetwork/axelar-core/utils"
-	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/multisig/keeper"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	"sync"
 )
 

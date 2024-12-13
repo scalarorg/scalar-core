@@ -14,11 +14,11 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	evmTypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/axelar-core/utils/events"
-	"github.com/axelarnetwork/axelar-core/utils/key"
-	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/events"
+	"github.com/scalarorg/scalar-core/utils/key"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -168,7 +168,7 @@ func (k chainKeeper) GenerateSalt(ctx sdk.Context, recipient string) types.Hash 
 	return salt
 }
 
-// GetBurnerAddress calculates a burner address for the given token address, salt, and axelar gateway address
+// GetBurnerAddress calculates a burner address for the given token address, salt, and  gateway address
 func (k chainKeeper) GetBurnerAddress(ctx sdk.Context, token types.ERC20Token, salt types.Hash, gatewayAddr types.Address) (types.Address, error) {
 	var tokenBurnerCodeHash types.Hash
 	if token.IsExternal() {

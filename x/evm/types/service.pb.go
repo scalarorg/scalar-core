@@ -686,7 +686,7 @@ type QueryServiceClient interface {
 	Command(ctx context.Context, in *CommandRequest, opts ...grpc.CallOption) (*CommandResponse, error)
 	// KeyAddress queries the address of key of a chain
 	KeyAddress(ctx context.Context, in *KeyAddressRequest, opts ...grpc.CallOption) (*KeyAddressResponse, error)
-	// GatewayAddress queries the address of axelar gateway at the specified
+	// GatewayAddress queries the address of scalar gateway at the specified
 	// chain
 	GatewayAddress(ctx context.Context, in *GatewayAddressRequest, opts ...grpc.CallOption) (*GatewayAddressResponse, error)
 	// Bytecode queries the bytecode of a specified gateway at the specified
@@ -856,7 +856,7 @@ type QueryServiceServer interface {
 	Command(context.Context, *CommandRequest) (*CommandResponse, error)
 	// KeyAddress queries the address of key of a chain
 	KeyAddress(context.Context, *KeyAddressRequest) (*KeyAddressResponse, error)
-	// GatewayAddress queries the address of axelar gateway at the specified
+	// GatewayAddress queries the address of scalar gateway at the specified
 	// chain
 	GatewayAddress(context.Context, *GatewayAddressRequest) (*GatewayAddressResponse, error)
 	// Bytecode queries the bytecode of a specified gateway at the specified

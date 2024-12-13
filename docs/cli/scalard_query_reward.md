@@ -1,6 +1,6 @@
 ## scalard query reward
 
-Querying commands for the scalarreward module
+Querying commands for the reward module
 
 ```
 scalard query reward [flags]

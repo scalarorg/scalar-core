@@ -5,7 +5,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	auxiliarytypes "github.com/axelarnetwork/axelar-core/x/auxiliary/types"
+	auxiliarytypes "github.com/scalarorg/scalar-core/x/auxiliary/types"
 )
 
 // txWithUnwrappedMsgs implements the FeeTx interface

@@ -14,8 +14,8 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/spf13/cobra"
 
-	"github.com/axelarnetwork/axelar-core/x/permission/exported"
-	permissionTypes "github.com/axelarnetwork/axelar-core/x/permission/types"
+	"github.com/scalarorg/scalar-core/x/permission/exported"
+	permissionTypes "github.com/scalarorg/scalar-core/x/permission/types"
 )
 
 // SetMultisigGovernanceCmd returns set-governance-key cobra Command.

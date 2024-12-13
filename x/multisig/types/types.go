@@ -9,8 +9,8 @@ import (
 	"github.com/btcsuite/btcd/btcec/v2"
 	ec "github.com/btcsuite/btcd/btcec/v2/ecdsa"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 
-	"github.com/axelarnetwork/utils/funcs"
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )

@@ -26,4 +26,4 @@ scalard query btc [flags]
 ### SEE ALSO
 
 - [scalard query](scalard_query.md) - Querying subcommands
-- [scalard query btc batched-commands](scalard_query_btc_batched-commands.md) - Get the signed batched commands that can be wrapped in an EVM transaction to be executed in Axelar Gateway
+- [scalard query btc batched-commands](scalard_query_btc_batched-commands.md) - Get the signed batched commands that can be wrapped in an EVM transaction to be executed in Scalar Gateway

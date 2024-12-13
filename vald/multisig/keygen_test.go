@@ -13,11 +13,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 
-	broadcastmock "github.com/axelarnetwork/axelar-core/sdk-utils/broadcast/mock"
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/utils/funcs"
-	"github.com/axelarnetwork/utils/slices"
-	. "github.com/axelarnetwork/utils/test"
+	broadcastmock "github.com/scalarorg/scalar-core/sdk-utils/broadcast/mock"
+	"github.com/scalarorg/scalar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/slices"
+	test "github.com/scalarorg/scalar-core/utils/test"
 	"github.com/scalarorg/scalar-core/vald/multisig"
 	"github.com/scalarorg/scalar-core/vald/multisig/mock"
 	"github.com/scalarorg/scalar-core/x/multisig/exported/testutils"
@@ -35,7 +35,7 @@ func TestMgr_ProcessKeygenStarted(t *testing.T) {
 		event *types.KeygenStarted
 	)
 
-	givenMgr := Given("the multisig manager", func() {
+	givenMgr := test.Given("the multisig manager", func() {
 		client = &mock.ClientMock{}
 		broadcaster = &broadcastmock.BroadcasterMock{}
 		participant = rand.ValAddr()

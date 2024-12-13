@@ -6,8 +6,8 @@ option go_package = "github.com/scalarorg/scalar-core/x/vote/exported";
 import "gogoproto/gogo.proto";
 import "google/protobuf/any.proto";
 import "cosmos_proto/cosmos.proto";
-import "axelar/snapshot/exported/v1beta1/types.proto";
-import "axelar/utils/v1beta1/threshold.proto";
+import "scalar/snapshot/exported/v1beta1/types.proto";
+import "scalar/utils/v1beta1/threshold.proto";
 
 option (gogoproto.goproto_getters_all) = false;
 
@@ -21,7 +21,7 @@ message PollMetadata {
   google.protobuf.Any result = 4
       [ (cosmos_proto.accepts_interface) =
             "github.com/cosmos/codec/ProtoMarshaler" ];
-  axelar.utils.v1beta1.Threshold voting_threshold = 5
+  scalar.utils.v1beta1.Threshold voting_threshold = 5
       [ (gogoproto.nullable) = false ];
   PollState state = 6;
   int64 min_voter_count = 7;
@@ -33,7 +33,7 @@ message PollMetadata {
     (gogoproto.customtype) = "PollID",
     (gogoproto.nullable) = false
   ];
-  axelar.snapshot.exported.v1beta1.Snapshot snapshot = 15
+  scalar.snapshot.exported.v1beta1.Snapshot snapshot = 15
       [ (gogoproto.nullable) = false ];
   string module = 16;
   google.protobuf.Any module_metadata = 17

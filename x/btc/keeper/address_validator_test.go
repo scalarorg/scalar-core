@@ -9,7 +9,7 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/axelarnetwork/axelar-core/testutils/fake"
+	"github.com/scalarorg/scalar-core/testutils/fake"
 	"github.com/scalarorg/scalar-core/x/btc/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )

@@ -13,8 +13,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/cobra"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -254,7 +254,7 @@ func GetCmdCreatePendingTransfers() *cobra.Command {
 func GetCmdCreateDeployToken() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-deploy-token [evm chain] [origin chain] [origin asset] [token name] [symbol] [decimals] [capacity] [mintLimit]",
-		Short: "Create a deploy token command with the AxelarGateway contract",
+		Short: "Create a deploy token command with the ScalarGateway contract",
 		Args:  cobra.ExactArgs(8),
 	}
 	address := cmd.Flags().String(flagAddress, types.ZeroAddress.Hex(), "existing ERC20 token's address")

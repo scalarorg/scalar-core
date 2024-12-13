@@ -6,8 +6,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibctypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 
-	"github.com/axelarnetwork/utils/funcs"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/types"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
@@ -195,7 +195,7 @@ func toAssetAndType(ctx sdk.Context, nexus types.Nexus, ibc types.IBCKeeper, coi
 	// check if the denom is the registered asset name for an ICS20 coin from a cosmos chain
 	case isFromExternalCosmosChain(ctx, nexus, ibc, denom):
 		return coin, types.ICS20, nil
-	case isNativeAssetOnAxelarnet(ctx, nexus, denom):
+	case isNativeAssetOnScalarnet(ctx, nexus, denom):
 		return coin, types.Native, nil
 	case nexus.IsAssetRegistered(ctx, scalarnet.Scalarnet, denom):
 		return coin, types.External, nil
@@ -230,7 +230,7 @@ func isICS20Denom(denom string) bool {
 	return true
 }
 
-func isNativeAssetOnAxelarnet(ctx sdk.Context, nexus types.Nexus, denom string) bool {
+func isNativeAssetOnScalarnet(ctx sdk.Context, nexus types.Nexus, denom string) bool {
 	chain, ok := nexus.GetChainByNativeAsset(ctx, denom)
 
 	return ok && chain.Name.Equals(scalarnet.Scalarnet.Name)

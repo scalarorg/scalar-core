@@ -12,9 +12,9 @@ import (
 	ibctmtypes "github.com/cosmos/ibc-go/v4/modules/light-clients/07-tendermint/types"
 	ibctesting "github.com/cosmos/ibc-go/v4/testing"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/testutils/rand"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustestutils "github.com/scalarorg/scalar-core/x/nexus/exported/testutils"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"

@@ -28,4 +28,4 @@ scalard query reward inflation-rate [flags]
 
 ### SEE ALSO
 
-- [scalard query reward](scalard_query_reward.md) - Querying commands for the scalarreward module
+- [scalard query reward](scalard_query_reward.md) - Querying commands for the reward module

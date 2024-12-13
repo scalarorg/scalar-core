@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/testutils/rand"
 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/vote/exported"

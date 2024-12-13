@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/reward/types"
 )
@@ -28,7 +28,7 @@ func NewGRPCQuerier(k Keeper, m types.Minter, n types.Nexus) Querier {
 	}
 }
 
-// InflationRate returns the Axelar network inflation
+// InflationRate returns the Scalar network inflation
 func (q Querier) InflationRate(c context.Context, req *types.InflationRateRequest) (*types.InflationRateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 

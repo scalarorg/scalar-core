@@ -11,9 +11,9 @@ import (
 	geth "github.com/ethereum/go-ethereum/core/types"
 	"github.com/stretchr/testify/assert"
 
-	mock2 "github.com/axelarnetwork/axelar-core/sdk-utils/broadcast/mock"
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/utils/monads/results"
+	mock2 "github.com/scalarorg/scalar-core/sdk-utils/broadcast/mock"
+	"github.com/scalarorg/scalar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/vald/evm"
 	evmmock "github.com/scalarorg/scalar-core/vald/evm/mock"
 	evmRpc "github.com/scalarorg/scalar-core/vald/evm/rpc"

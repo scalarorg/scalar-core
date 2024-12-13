@@ -4,9 +4,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	permission "github.com/axelarnetwork/axelar-core/x/permission/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	permission "github.com/scalarorg/scalar-core/x/permission/exported"
 	rewardtypes "github.com/scalarorg/scalar-core/x/reward/types"
 )
 

@@ -11,13 +11,13 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	rand2 "github.com/axelarnetwork/axelar-core/testutils/rand"
-	testutils "github.com/axelarnetwork/utils/test"
-	"github.com/axelarnetwork/utils/test/rand"
+	rand2 "github.com/scalarorg/scalar-core/testutils/rand"
+	testutils "github.com/scalarorg/scalar-core/utils/test"
+	"github.com/scalarorg/scalar-core/utils/test/rand"
 	"github.com/scalarorg/scalar-core/x/reward/keeper"
 	"github.com/scalarorg/scalar-core/x/reward/types"
 	"github.com/scalarorg/scalar-core/x/reward/types/mock"
-	axelarnet "github.com/scalarorg/scalar-core/x/scalarnet/types"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/types"
 	tsstypes "github.com/scalarorg/scalar-core/x/tss/types"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 	votetypes "github.com/scalarorg/scalar-core/x/vote/types"
@@ -122,8 +122,8 @@ func TestHandleMsgRefundRequest(t *testing.T) {
 	}).Repeat(repeatCount))
 }
 
-func randomMsgLink() *axelarnet.LinkRequest {
-	return axelarnet.NewLinkRequest(
+func randomMsgLink() *scalarnet.LinkRequest {
+	return scalarnet.NewLinkRequest(
 		rand2.AccAddr(),
 		rand.StrBetween(5, 100),
 		rand.StrBetween(5, 100),

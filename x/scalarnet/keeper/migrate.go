@@ -19,9 +19,9 @@ func Migrate6to7(k Keeper, bankK types.BankKeeper, accountK types.AccountKeeper,
 			return err
 		}
 
-		// All IBC transfer are routed from AxelarIBCAccount after v1.1
-		// This migration updates the sender of failed transfers to AxelarIBCAccount for retry
-		err = migrateFailedTransfersToAxelarIBCAccount(ctx, k)
+		// All IBC transfer are routed from ScalarIBCAccount after v1.1
+		// This migration updates the sender of failed transfers to ScalarIBCAccount for retry
+		err = migrateFailedTransfersToScalarIBCAccount(ctx, k)
 		if err != nil {
 			return err
 		}
@@ -31,10 +31,10 @@ func Migrate6to7(k Keeper, bankK types.BankKeeper, accountK types.AccountKeeper,
 }
 
 func escrowFundsFromFailedTransfers(ctx sdk.Context, k Keeper, bankK types.BankKeeper, accountK types.AccountKeeper, nexusK types.Nexus, ibcK IBCKeeper) error {
-	axelarnetModuleAccount := accountK.GetModuleAddress(types.ModuleName)
+	scalarnetModuleAddress := accountK.GetModuleAddress(types.ModuleName)
 	nexusModuleAccount := accountK.GetModuleAddress(nexus.ModuleName)
 
-	balances := bankK.SpendableCoins(ctx, axelarnetModuleAccount)
+	balances := bankK.SpendableCoins(ctx, scalarnetModuleAddress)
 	for _, coin := range balances {
 		asset, err := nexusK.NewLockableAsset(ctx, ibcK, bankK, coin)
 		if err != nil {
@@ -58,7 +58,7 @@ func escrowFundsFromFailedTransfers(ctx sdk.Context, k Keeper, bankK types.BankK
 	return nil
 }
 
-func migrateFailedTransfersToAxelarIBCAccount(ctx sdk.Context, k Keeper) error {
+func migrateFailedTransfersToScalarIBCAccount(ctx sdk.Context, k Keeper) error {
 	transfers := k.getIBCTransfers(ctx)
 	for _, transfer := range transfers {
 		if transfer.Status != types.TransferFailed {

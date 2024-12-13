@@ -1,6 +1,6 @@
 ## scalard tx scalarnet link
 
-Link a cross chain address to an Axelar address
+Link a cross chain address to an Scalar address
 
 ```
 scalard tx scalarnet link [recipient chain] [recipient address] [asset] [flags]

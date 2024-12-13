@@ -1,7 +1,7 @@
 package testutils
 
 import (
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/testutils/rand"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 )

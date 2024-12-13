@@ -36,7 +36,7 @@
       - [total](scalard_query_bank_total.md) - Query the total supply of coins of the chain
     - [block [height]](scalard_query_block.md) - Get verified data for a the block at given height
     - [btc](scalard_query_btc.md) - Querying commands for the btc module
-      - [batched-commands [chain] [batchedCommandsID]](scalard_query_btc_batched-commands.md) - Get the signed batched commands that can be wrapped in an EVM transaction to be executed in Axelar Gateway
+      - [batched-commands [chain] [batchedCommandsID]](scalard_query_btc_batched-commands.md) - Get the signed batched commands that can be wrapped in an EVM transaction to be executed in Scalar Gateway
     - [distribution](scalard_query_distribution.md) - Querying commands for the distribution module
       - [commission [validator]](scalard_query_distribution_commission.md) - Query distribution validator commission
       - [community-pool](scalard_query_distribution_community-pool.md) - Query the amount of coins in the community pool
@@ -47,7 +47,7 @@
     - [evidence](scalard_query_evidence.md) - Query for evidence by hash or for all (paginated) submitted evidence
     - [evm](scalard_query_evm.md) - Querying commands for the evm module
       - [address [chain]](scalard_query_evm_address.md) - Returns the EVM address
-      - [batched-commands [chain] [batchedCommandsID]](scalard_query_evm_batched-commands.md) - Get the signed batched commands that can be wrapped in an EVM transaction to be executed in Axelar Gateway
+      - [batched-commands [chain] [batchedCommandsID]](scalard_query_evm_batched-commands.md) - Get the signed batched commands that can be wrapped in an EVM transaction to be executed in Scalar Gateway
       - [burner-info [deposit address]](scalard_query_evm_burner-info.md) - Get information about a burner address
       - [bytecode [chain] [contract]](scalard_query_evm_bytecode.md) - Fetch the bytecode of an EVM contract [contract] for chain [chain]
       - [chains](scalard_query_evm_chains.md) - Return the supported EVM chains by status
@@ -55,8 +55,8 @@
       - [confirmation-height [chain]](scalard_query_evm_confirmation-height.md) - Returns the minimum confirmation height for the given chain
       - [erc20-tokens [chain]](scalard_query_evm_erc20-tokens.md) - Returns the ERC20 tokens for the given chain
       - [event [chain] [event-id]](scalard_query_evm_event.md) - Returns an event for the given chain
-      - [gateway-address [chain]](scalard_query_evm_gateway-address.md) - Query the Axelar Gateway contract address
-      - [latest-batched-commands [chain]](scalard_query_evm_latest-batched-commands.md) - Get the latest batched commands that can be wrapped in an EVM transaction to be executed in Axelar Gateway
+      - [gateway-address [chain]](scalard_query_evm_gateway-address.md) - Query the Scalar Gateway contract address
+      - [latest-batched-commands [chain]](scalard_query_evm_latest-batched-commands.md) - Get the latest batched commands that can be wrapped in an EVM transaction to be executed in Scalar Gateway
       - [params [chain]](scalard_query_evm_params.md) - Returns the params for the evm module
       - [pending-commands [chain]](scalard_query_evm_pending-commands.md) - Get the list of commands not yet added to a batch
       - [token-address [chain]](scalard_query_evm_token-address.md) - Query a token address by by either symbol or asset
@@ -138,7 +138,7 @@
     - [permission](scalard_query_permission.md) - Querying commands for the permission module
       - [governance-key](scalard_query_permission_governance-key.md) - Returns the governance key
       - [params](scalard_query_permission_params.md) - Returns the params for the permission module
-    - [reward](scalard_query_reward.md) - Querying commands for the scalarreward module
+    - [reward](scalard_query_reward.md) - Querying commands for the reward module
       - [inflation-rate](scalard_query_reward_inflation-rate.md) - Returns the inflation rate on the network. If a validator is provided, query the inflation rate for that validator.
       - [params](scalard_query_reward_params.md) - Returns the params for the reward module
     - [scalarnet](scalard_query_scalarnet.md) - Querying commands for the scalarnet module
@@ -231,9 +231,9 @@
       - [confirm-gateway-txs [chain] [txID]...](scalard_tx_evm_confirm-gateway-txs.md) - Confirm gateway transactions in an EVM chain
       - [confirm-transfer-operatorship [chain] [txID]](scalard_tx_evm_confirm-transfer-operatorship.md) - Confirm a transfer operatorship in an EVM chain transaction
       - [create-burn-tokens [chain]](scalard_tx_evm_create-burn-tokens.md) - Create burn commands for all confirmed token deposits in an EVM chain
-      - [create-deploy-token [evm chain] [origin chain] [origin asset] [token name] [symbol] [decimals] [capacity] [mintLimit]](scalard_tx_evm_create-deploy-token.md) - Create a deploy token command with the AxelarGateway contract
+      - [create-deploy-token [evm chain] [origin chain] [origin asset] [token name] [symbol] [decimals] [capacity] [mintLimit]](scalard_tx_evm_create-deploy-token.md) - Create a deploy token command with the ScalarGateway contract
       - [create-pending-transfers [chain]](scalard_tx_evm_create-pending-transfers.md) - Create commands for handling all pending transfers to an EVM chain
-      - [link [chain] [recipient chain] [recipient address] [asset name]](scalard_tx_evm_link.md) - Link a cross chain address to an EVM chain address created by Axelar
+      - [link [chain] [recipient chain] [recipient address] [asset name]](scalard_tx_evm_link.md) - Link a cross chain address to an EVM chain address created by Scalar
       - [retry-event [chain] [event ID]](scalard_tx_evm_retry-event.md) - Retry a failed event
       - [set-gateway [chain] [address]](scalard_tx_evm_set-gateway.md) - Set the gateway address for the given evm chain
       - [sign-commands [chain]](scalard_tx_evm_sign-commands.md) - Sign pending commands for an EVM chain contract
@@ -280,13 +280,13 @@
     - [permission](scalard_tx_permission.md) - permission transactions subcommands
       - [deregister-controller [controller]](scalard_tx_permission_deregister-controller.md) - Deregister controller account
       - [register-controller [controller]](scalard_tx_permission_register-controller.md) - Register controller account
-      - [update-governance-key [threshold] \[[pubKey]...\]](scalard_tx_permission_update-governance-key.md) - Update the multisig governance key for axelar network
+      - [update-governance-key [threshold] \[[pubKey]...\]](scalard_tx_permission_update-governance-key.md) - Update the multisig governance key for network
     - [scalarnet](scalard_tx_scalarnet.md) - scalarnet transactions subcommands
       - [add-cosmos-based-chain [name] [address prefix] [ibc path] [native asset]...](scalard_tx_scalarnet_add-cosmos-based-chain.md) - Add a new cosmos based chain
       - [call-contract [destination chain] [contract address] [hex encoded payload]](scalard_tx_scalarnet_call-contract.md) - Call a contract on another chain
-      - [confirm-deposit [denom] [burnerAddr]](scalard_tx_scalarnet_confirm-deposit.md) - Confirm a deposit to Axelar chain that sent given the asset denomination and the burner address
-      - [execute-pending-transfers](scalard_tx_scalarnet_execute-pending-transfers.md) - Send all pending transfers to Axelar chain
-      - [link [recipient chain] [recipient address] [asset]](scalard_tx_scalarnet_link.md) - Link a cross chain address to an Axelar address
+      - [confirm-deposit [denom] [burnerAddr]](scalard_tx_scalarnet_confirm-deposit.md) - Confirm a deposit to Scalar chain that sent given the asset denomination and the burner address
+      - [execute-pending-transfers](scalard_tx_scalarnet_execute-pending-transfers.md) - Send all pending transfers to Scalar chain
+      - [link [recipient chain] [recipient address] [asset]](scalard_tx_scalarnet_link.md) - Link a cross chain address to an Scalar address
       - [register-asset [chain] [denom]](scalard_tx_scalarnet_register-asset.md) - Register a new asset to a cosmos based chain
       - [register-fee-collector [fee collector]](scalard_tx_scalarnet_register-fee-collector.md) - Register scalarnet fee collector account
       - [retry-ibc-transfer [transfer ID]](scalard_tx_scalarnet_retry-ibc-transfer.md) - Retry a failed IBC transfer

@@ -14,9 +14,9 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/axelarnetwork/axelar-core/testutils"
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	. "github.com/axelarnetwork/utils/test"
+	"github.com/scalarorg/scalar-core/testutils"
+	"github.com/scalarorg/scalar-core/testutils/rand"
+	. "github.com/scalarorg/scalar-core/utils/test"
 	"github.com/scalarorg/scalar-core/x/evm/exported"
 	evmKeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
 	"github.com/scalarorg/scalar-core/x/evm/types"

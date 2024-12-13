@@ -16,7 +16,7 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/spf13/cobra"
 
-	"github.com/axelarnetwork/axelar-core/utils"
+	"github.com/scalarorg/scalar-core/utils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
 )
@@ -31,7 +31,7 @@ const (
 
 // GetTxCmd returns the transaction commands for this module
 func GetTxCmd() *cobra.Command {
-	axelarTxCmd := &cobra.Command{
+	scalarnetTxCmd := &cobra.Command{
 		Use:                        types.ModuleName,
 		Short:                      fmt.Sprintf("%s transactions subcommands", types.ModuleName),
 		DisableFlagParsing:         true,
@@ -40,7 +40,7 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	axelarTxCmd.AddCommand(
+	scalarnetTxCmd.AddCommand(
 		GetCmdLink(),
 		GetCmdConfirmDeposit(),
 		GetCmdExecutePendingTransfersTx(),
@@ -53,14 +53,14 @@ func GetTxCmd() *cobra.Command {
 		getCmdCallContract(),
 	)
 
-	return axelarTxCmd
+	return scalarnetTxCmd
 }
 
-// GetCmdLink links a cross chain address to an Axelar chain address
+// GetCmdLink links a cross chain address to an Scalar chain address
 func GetCmdLink() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "link [recipient chain] [recipient address] [asset]",
-		Short: "Link a cross chain address to an Axelar address",
+		Short: "Link a cross chain address to an Scalar address",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -81,7 +81,7 @@ func GetCmdLink() *cobra.Command {
 func GetCmdConfirmDeposit() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "confirm-deposit [denom] [burnerAddr]",
-		Short: "Confirm a deposit to Axelar chain that sent given the asset denomination and the burner address",
+		Short: "Confirm a deposit to Scalar chain that sent given the asset denomination and the burner address",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cliCtx, err := client.GetClientTxContext(cmd)
@@ -103,11 +103,11 @@ func GetCmdConfirmDeposit() *cobra.Command {
 	return cmd
 }
 
-// GetCmdExecutePendingTransfersTx returns the cli command to transfer all pending token transfers to Axelar chain
+// GetCmdExecutePendingTransfersTx returns the cli command to transfer all pending token transfers to Scalar chain
 func GetCmdExecutePendingTransfersTx() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "execute-pending-transfers",
-		Short: "Send all pending transfers to Axelar chain",
+		Short: "Send all pending transfers to Scalar chain",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cliCtx, err := client.GetClientTxContext(cmd)

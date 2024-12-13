@@ -5,7 +5,7 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/tendermint/tendermint/libs/log"
 
-	"github.com/axelarnetwork/axelar-core/utils"
+	"github.com/scalarorg/scalar-core/utils"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	"github.com/scalarorg/scalar-core/x/vote/exported"
 )

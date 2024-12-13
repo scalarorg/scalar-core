@@ -172,7 +172,7 @@ service QueryService {
     option (google.api.http).get = "/scalar/evm/v1beta1/key_address/{chain}";
   }
 
-  // GatewayAddress queries the address of axelar gateway at the specified
+  // GatewayAddress queries the address of scalar gateway at the specified
   // chain
   rpc GatewayAddress(GatewayAddressRequest) returns (GatewayAddressResponse) {
     option (google.api.http).get =

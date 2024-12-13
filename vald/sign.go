@@ -14,10 +14,10 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/pkg/errors"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/spf13/cobra"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/vald/config"
 	"github.com/scalarorg/scalar-core/vald/tss"
 	evm "github.com/scalarorg/scalar-core/x/evm/types"

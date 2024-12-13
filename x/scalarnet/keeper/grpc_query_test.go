@@ -10,10 +10,10 @@ package keeper_test
 // 	"github.com/tendermint/tendermint/libs/log"
 // 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-// 	"github.com/axelarnetwork/axelar-core/testutils/fake"
+// 	"github.com/scalarorg/scalar-core/testutils/fake"
 // 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
-// 	. "github.com/axelarnetwork/utils/test"
-// 	"github.com/axelarnetwork/utils/test/rand"
+// 	. "github.com/scalarorg/scalar-core/utils/test"
+// 	"github.com/scalarorg/scalar-core/utils/test/rand"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet/keeper"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet/types/mock"

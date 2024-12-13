@@ -1,6 +1,6 @@
 ## scalard tx permission update-governance-key
 
-Update the multisig governance key for axelar network
+Update the multisig governance key for network
 
 ```
 scalard tx permission update-governance-key [threshold] [[pubKey]...] [flags]

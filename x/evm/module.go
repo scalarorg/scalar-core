@@ -15,8 +15,8 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/axelar-core/utils/grpc"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/grpc"
 	"github.com/scalarorg/scalar-core/x/evm/client/cli"
 	"github.com/scalarorg/scalar-core/x/evm/client/rest"
 	"github.com/scalarorg/scalar-core/x/evm/keeper"

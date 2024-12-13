@@ -1,0 +1,53 @@
+syntax = "proto3";
+package scalar.permission.v1beta1;
+
+option go_package = "github.com/scalarorg/scalar-core/x/permission/types";
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "scalar/permission/v1beta1/tx.proto";
+import "scalar/permission/v1beta1/query.proto";
+
+option (gogoproto.goproto_registration) = true;
+
+// Msg defines the gov Msg service.
+service Msg {
+  rpc RegisterController(RegisterControllerRequest)
+      returns (RegisterControllerResponse) {
+    option (google.api.http) = {
+      post : "/scalar/permission/register_controller"
+      body : "*"
+    };
+  }
+
+  rpc DeregisterController(DeregisterControllerRequest)
+      returns (DeregisterControllerResponse) {
+    option (google.api.http) = {
+      post : "/scalar/permission/deregister_controller"
+      body : "*"
+    };
+  }
+
+  rpc UpdateGovernanceKey(UpdateGovernanceKeyRequest)
+      returns (UpdateGovernanceKeyResponse) {
+    option (google.api.http) = {
+      post : "/scalar/permission/update_governance_key"
+      body : "*"
+    };
+  }
+}
+
+// Query defines the gRPC querier service.
+service Query {
+  // GovernanceKey returns the multisig governance key
+  rpc GovernanceKey(QueryGovernanceKeyRequest)
+      returns (QueryGovernanceKeyResponse) {
+    option (google.api.http).get = "/scalar/permission/v1beta1/governance_key";
+  }
+
+  rpc Params(ParamsRequest) returns (ParamsResponse) {
+    option (google.api.http) = {
+      get : "/scalar/permission/v1beta1/params"
+    };
+  }
+}

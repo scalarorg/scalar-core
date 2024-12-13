@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/axelarnetwork/axelar-core/utils"
+	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
@@ -195,7 +195,7 @@ type CoinType int
 const (
 	// Unrecognized means coin type is unrecognized
 	Unrecognized = iota
-	// Native means native token on Axelarnet
+	// Native means native token on scalarnet
 	Native = 1
 	// ICS20 means coin from IBC chains
 	ICS20 = 2

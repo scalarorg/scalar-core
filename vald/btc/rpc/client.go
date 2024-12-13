@@ -1,8 +1,8 @@
 package rpc
 
 import (
-	"github.com/axelarnetwork/utils/monads/results"
 	"github.com/btcsuite/btcd/rpcclient"
+	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/x/btc/types"
 )
 

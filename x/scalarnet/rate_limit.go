@@ -9,8 +9,8 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
 	porttypes "github.com/cosmos/ibc-go/v4/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v4/modules/core/exported"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 
-	"github.com/axelarnetwork/utils/funcs"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/keeper"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
@@ -108,9 +108,9 @@ func parseTokenFromPacket(packet ibcexported.PacketI) (sdk.Coin, error) {
 	asset := data.Denom
 	// If the asset being transferred is an IBC denom originating on the destination chain,
 	// then the full denom in the IBC transfer contains the IBC channel to the destination chain as a prefix, `transfer/channel-x/asset`.
-	// e.g. For IBC channel Axelar channel-0 <-> channel-1 Cosmoshub,
-	// For an asset `uusdc` originating on Axelar, the full denom when sending it from Cosmoshub -> Axelar will be `transfer/channel-1/uusdc`
-	// Similarly, for an asset `uatom` originating on Cosmoshub, the full denom when sending it from Axelar -> Cosmoshub will be `transfer/channel-0/uatom`
+	// e.g. For IBC channel Scalar channel-0 <-> channel-1 Cosmoshub,
+	// For an asset `uusdc` originating on Scalar, the full denom when sending it from Cosmoshub -> Scalar will be `transfer/channel-1/uusdc`
+	// Similarly, for an asset `uatom` originating on Cosmoshub, the full denom when sending it from Scalar -> Cosmoshub will be `transfer/channel-0/uatom`
 	// So, if the source channel of the packet is a prefix of the denom being transferred, we remove it to use the remaining denom as the asset for the rate limit.
 	if ibctransfertypes.ReceiverChainIsSource(packet.GetSourcePort(), packet.GetSourceChannel(), data.Denom) {
 		ibcTransferPrefix := ibctransfertypes.GetDenomPrefix(packet.GetSourcePort(), packet.GetSourceChannel())

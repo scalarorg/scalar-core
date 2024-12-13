@@ -5,7 +5,6 @@ package mock
 
 import (
 	context "context"
-	utils "github.com/axelarnetwork/axelar-core/utils"
 	cosmossdktypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -15,6 +14,7 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v4/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
 	ibcexported "github.com/cosmos/ibc-go/v4/modules/core/exported"
+	utils "github.com/scalarorg/scalar-core/utils"
 	github_com_scalarorg_scalar_core_x_nexus_exported "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
 	scalarnettypes "github.com/scalarorg/scalar-core/x/scalarnet/types"

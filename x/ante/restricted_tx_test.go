@@ -9,14 +9,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/exp/maps"
 
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/axelar-core/x/permission/exported"
-	"github.com/axelarnetwork/utils/slices"
-	. "github.com/axelarnetwork/utils/test"
+	"github.com/scalarorg/scalar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/utils/slices"
+	. "github.com/scalarorg/scalar-core/utils/test"
 	"github.com/scalarorg/scalar-core/x/ante"
 	"github.com/scalarorg/scalar-core/x/ante/types/mock"
 	evm "github.com/scalarorg/scalar-core/x/evm/types"
-	axelarnet "github.com/scalarorg/scalar-core/x/scalarnet/types"
+	"github.com/scalarorg/scalar-core/x/permission/exported"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/types"
 )
 
 func TestRestrictedTx(t *testing.T) {
@@ -85,7 +85,7 @@ func TestRestrictedTx(t *testing.T) {
 	msgRoleIsUnrestricted := func() { tx = txWithMsg(&evm.LinkRequest{}) }
 	msgRoleIsUnspecified := func() { tx = txWithMsg(&banktypes.MsgSend{}) }
 	msgRoleIsChainManagement := func() { tx = txWithMsg(&evm.CreateDeployTokenRequest{}) }
-	msgRoleIsAccessControl := func() { tx = txWithMsg(&axelarnet.RegisterFeeCollectorRequest{}) }
+	msgRoleIsAccessControl := func() { tx = txWithMsg(&scalarnet.RegisterFeeCollectorRequest{}) }
 
 	Given("a restricted tx ante handler", func() {
 		permission = &mock.PermissionMock{}

@@ -4,15 +4,15 @@
 package mock
 
 import (
-	utils "github.com/axelarnetwork/axelar-core/utils"
-	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	"github.com/cosmos/cosmos-sdk/codec"
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
+	utils "github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	github_com_scalarorg_scalar_core_x_multisig_exported "github.com/scalarorg/scalar-core/x/multisig/exported"
 	github_com_scalarorg_scalar_core_x_nexus_exported "github.com/scalarorg/scalar-core/x/nexus/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 	"github.com/tendermint/tendermint/libs/log"
 	"sync"

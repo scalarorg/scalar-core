@@ -15,9 +15,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/utils/funcs"
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -426,7 +426,7 @@ func (q Querier) KeyAddress(c context.Context, req *types.KeyAddressRequest) (*t
 	return &res, nil
 }
 
-// GatewayAddress returns the axelar gateway address for the specified chain
+// GatewayAddress returns the  gateway address for the specified chain
 func (q Querier) GatewayAddress(c context.Context, req *types.GatewayAddressRequest) (*types.GatewayAddressResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
@@ -437,7 +437,7 @@ func (q Querier) GatewayAddress(c context.Context, req *types.GatewayAddressRequ
 
 	address, ok := ck.GetGatewayAddress(ctx)
 	if !ok {
-		return nil, status.Error(codes.NotFound, sdkerrors.Wrap(types.ErrEVM, fmt.Sprintf("axelar gateway not set for chain [%s]", req.Chain)).Error())
+		return nil, status.Error(codes.NotFound, sdkerrors.Wrap(types.ErrEVM, fmt.Sprintf(" gateway not set for chain [%s]", req.Chain)).Error())
 	}
 
 	return &types.GatewayAddressResponse{Address: address.Hex()}, nil

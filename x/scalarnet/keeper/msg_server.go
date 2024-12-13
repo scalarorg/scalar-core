@@ -10,10 +10,10 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/axelar-core/utils/events"
-	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/events"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/types"
@@ -62,7 +62,7 @@ func (s msgServer) CallContract(c context.Context, req *types.CallContractReques
 
 	sender := nexus.CrossChainAddress{Chain: exported.Scalarnet, Address: req.Sender.String()}
 
-	// axelar gateway expects keccak256 hashes for payloads
+	//  gateway expects keccak256 hashes for payloads
 	payloadHash := crypto.Keccak256(req.Payload)
 
 	msgID, txID, nonce := s.nexus.GenerateMessageID(ctx)
@@ -431,7 +431,7 @@ func (s msgServer) RouteIBCTransfers(c context.Context, _ *types.RouteIBCTransfe
 	return &types.RouteIBCTransfersResponse{}, nil
 }
 
-// RegisterFeeCollector handles register axelar fee collector account
+// RegisterFeeCollector handles register  fee collector account
 func (s msgServer) RegisterFeeCollector(c context.Context, req *types.RegisterFeeCollectorRequest) (*types.RegisterFeeCollectorResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
@@ -480,8 +480,8 @@ func (s msgServer) RetryIBCTransfer(c context.Context, req *types.RetryIBCTransf
 		return nil, err
 	}
 
-	// Note: Starting from version 1.1, all IBC transfers are routed through AxelarIBCAccount,
-	// and all previously failed transfers have been migrated to use AxelarIBCAccount as the sender.
+	// Note: Starting from version 1.1, all IBC transfers are routed through ScalarIBCAccount,
+	// and all previously failed transfers have been migrated to use ScalarIBCAccount as the sender.
 	//
 	// This is a temporary measure to prevent pending transfers that would fail during the upgrade process.
 	// It can be removed if no such cases exists during upgrade, or the migration can be re-run to update senders in version 1.2.

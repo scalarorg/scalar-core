@@ -28,9 +28,9 @@ scalard tx scalarnet [flags]
 - [scalard tx](scalard_tx.md) - Transactions subcommands
 - [scalard tx scalarnet add-cosmos-based-chain](scalard_tx_scalarnet_add-cosmos-based-chain.md) - Add a new cosmos based chain
 - [scalard tx scalarnet call-contract](scalard_tx_scalarnet_call-contract.md) - Call a contract on another chain
-- [scalard tx scalarnet confirm-deposit](scalard_tx_scalarnet_confirm-deposit.md) - Confirm a deposit to Axelar chain that sent given the asset denomination and the burner address
-- [scalard tx scalarnet execute-pending-transfers](scalard_tx_scalarnet_execute-pending-transfers.md) - Send all pending transfers to Axelar chain
-- [scalard tx scalarnet link](scalard_tx_scalarnet_link.md) - Link a cross chain address to an Axelar address
+- [scalard tx scalarnet confirm-deposit](scalard_tx_scalarnet_confirm-deposit.md) - Confirm a deposit to Scalar chain that sent given the asset denomination and the burner address
+- [scalard tx scalarnet execute-pending-transfers](scalard_tx_scalarnet_execute-pending-transfers.md) - Send all pending transfers to Scalar chain
+- [scalard tx scalarnet link](scalard_tx_scalarnet_link.md) - Link a cross chain address to an Scalar address
 - [scalard tx scalarnet register-asset](scalard_tx_scalarnet_register-asset.md) - Register a new asset to a cosmos based chain
 - [scalard tx scalarnet register-fee-collector](scalard_tx_scalarnet_register-fee-collector.md) - Register scalarnet fee collector account
 - [scalard tx scalarnet retry-ibc-transfer](scalard_tx_scalarnet_retry-ibc-transfer.md) - Retry a failed IBC transfer

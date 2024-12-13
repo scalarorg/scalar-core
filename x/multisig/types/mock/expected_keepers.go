@@ -4,14 +4,14 @@
 package mock
 
 import (
-	utils "github.com/axelarnetwork/axelar-core/utils"
-	exported "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingTypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	utils "github.com/scalarorg/scalar-core/utils"
 	github_com_scalarorg_scalar_core_x_multisig_exported "github.com/scalarorg/scalar-core/x/multisig/exported"
 	"github.com/scalarorg/scalar-core/x/multisig/types"
 	github_com_scalarorg_scalar_core_x_nexus_exported "github.com/scalarorg/scalar-core/x/nexus/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
+	exported "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	"github.com/tendermint/tendermint/libs/log"
 	"sync"
 )

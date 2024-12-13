@@ -7,8 +7,8 @@ import (
 
 	gov "github.com/cosmos/cosmos-sdk/x/gov/types"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/utils/slices"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/slices"
 )
 
 const (

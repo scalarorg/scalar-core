@@ -6,7 +6,7 @@ import (
 
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 
-	"github.com/axelarnetwork/axelar-core/utils"
+	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/tss/exported"
 )
 

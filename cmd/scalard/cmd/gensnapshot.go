@@ -11,7 +11,7 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/spf13/cobra"
 
-	snapshotTypes "github.com/axelarnetwork/axelar-core/x/snapshot/types"
+	snapshotTypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 )
 
 const flagMinProxyBalance = "min-proxy-balance"

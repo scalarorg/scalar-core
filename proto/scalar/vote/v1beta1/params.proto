@@ -4,13 +4,13 @@ package scalar.vote.v1beta1;
 option go_package = "github.com/scalarorg/scalar-core/x/vote/types";
 
 import "gogoproto/gogo.proto";
-import "axelar/utils/v1beta1/threshold.proto";
+import "scalar/utils/v1beta1/threshold.proto";
 
 option (gogoproto.goproto_getters_all) = false;
 
 // Params represent the genesis parameters for the module
 message Params {
-  axelar.utils.v1beta1.Threshold default_voting_threshold = 1
+  scalar.utils.v1beta1.Threshold default_voting_threshold = 1
       [ (gogoproto.nullable) = false ];
   int64 end_blocker_limit = 2;
 }

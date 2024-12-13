@@ -43,7 +43,7 @@ scalard query [flags]
 - [scalard query nexus](scalard_query_nexus.md) - Querying commands for the nexus module
 - [scalard query params](scalard_query_params.md) - Querying commands for the params module
 - [scalard query permission](scalard_query_permission.md) - Querying commands for the permission module
-- [scalard query reward](scalard_query_reward.md) - Querying commands for the scalarreward module
+- [scalard query reward](scalard_query_reward.md) - Querying commands for the reward module
 - [scalard query scalarnet](scalard_query_scalarnet.md) - Querying commands for the scalarnet module
 - [scalard query slashing](scalard_query_slashing.md) - Querying commands for the slashing module
 - [scalard query snapshot](scalard_query_snapshot.md) - Querying commands for the snapshot module

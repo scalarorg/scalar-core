@@ -1,6 +1,6 @@
 ## scalard tx evm create-deploy-token
 
-Create a deploy token command with the AxelarGateway contract
+Create a deploy token command with the ScalarGateway contract
 
 ```
 scalard tx evm create-deploy-token [evm chain] [origin chain] [origin asset] [token name] [symbol] [decimals] [capacity] [mintLimit] [flags]

@@ -6,8 +6,8 @@ option go_package = "github.com/scalarorg/scalar-core/x/multisig/types";
 import "google/protobuf/any.proto";
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
-import "axelar/utils/v1beta1/threshold.proto";
-import "axelar/snapshot/exported/v1beta1/types.proto";
+import "scalar/utils/v1beta1/threshold.proto";
+import "scalar/snapshot/exported/v1beta1/types.proto";
 import "scalar/multisig/exported/v1beta1/types.proto";
 
 message Key {
@@ -18,12 +18,12 @@ message Key {
     (gogoproto.casttype) =
         "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
-  axelar.snapshot.exported.v1beta1.Snapshot snapshot = 2
+  scalar.snapshot.exported.v1beta1.Snapshot snapshot = 2
       [ (gogoproto.nullable) = false ];
   map<string, bytes> pub_keys = 3
       [ (gogoproto.castvalue) =
             "github.com/scalarorg/scalar-core/x/multisig/exported.PublicKey" ];
-  axelar.utils.v1beta1.Threshold signing_threshold = 4
+  scalar.utils.v1beta1.Threshold signing_threshold = 4
       [ (gogoproto.nullable) = false ];
   multisig.exported.v1beta1.KeyState state = 5;
 }
@@ -33,7 +33,7 @@ message KeygenSession {
 
   Key key = 1 [ (gogoproto.nullable) = false ];
   multisig.exported.v1beta1.MultisigState state = 2;
-  axelar.utils.v1beta1.Threshold keygen_threshold = 3
+  scalar.utils.v1beta1.Threshold keygen_threshold = 3
       [ (gogoproto.nullable) = false ];
   int64 expires_at = 4;
   int64 completed_at = 5;

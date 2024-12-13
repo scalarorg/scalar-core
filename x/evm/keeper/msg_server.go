@@ -10,14 +10,14 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/axelar-core/utils/events"
-	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
-	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/x/evm/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
@@ -101,7 +101,7 @@ func (s msgServer) ConfirmGatewayTx(c context.Context, req *types.ConfirmGateway
 
 	gatewayAddress, ok := keeper.GetGatewayAddress(ctx)
 	if !ok {
-		return nil, fmt.Errorf("axelar gateway address not set")
+		return nil, fmt.Errorf(" gateway address not set")
 	}
 
 	pollParticipants, err := s.initializePoll(ctx, chain, req.TxID)
@@ -140,7 +140,7 @@ func (s msgServer) ConfirmGatewayTxs(c context.Context, req *types.ConfirmGatewa
 
 	gatewayAddress, ok := keeper.GetGatewayAddress(ctx)
 	if !ok {
-		return nil, fmt.Errorf("axelar gateway address not set")
+		return nil, fmt.Errorf(" gateway address not set")
 	}
 
 	snapshot, err := s.CreateSnapshot(ctx, chain)
@@ -220,7 +220,7 @@ func (s msgServer) Link(c context.Context, req *types.LinkRequest) (*types.LinkR
 	}
 	gatewayAddr, ok := keeper.GetGatewayAddress(ctx)
 	if !ok {
-		return nil, fmt.Errorf("axelar gateway address not set")
+		return nil, fmt.Errorf(" gateway address not set")
 	}
 
 	recipientChain, ok := s.nexus.GetChain(ctx, req.RecipientChain)
@@ -411,7 +411,7 @@ func (s msgServer) ConfirmTransferKey(c context.Context, req *types.ConfirmTrans
 
 	gatewayAddr, ok := keeper.GetGatewayAddress(ctx)
 	if !ok {
-		return nil, fmt.Errorf("axelar gateway address not set")
+		return nil, fmt.Errorf(" gateway address not set")
 	}
 
 	pollParticipants, err := s.initializePoll(ctx, chain, req.TxID)
@@ -672,7 +672,7 @@ func (s msgServer) CreateTransferOperatorship(c context.Context, req *types.Crea
 	}
 
 	if _, ok := keeper.GetGatewayAddress(ctx); !ok {
-		return nil, fmt.Errorf("axelar gateway address not set")
+		return nil, fmt.Errorf(" gateway address not set")
 	}
 
 	cmd, err := s.createTransferKeyCommand(ctx, keeper, req.Chain, multisig.KeyID(req.KeyID))

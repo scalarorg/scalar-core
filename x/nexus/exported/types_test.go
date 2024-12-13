@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/testutils/rand"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 

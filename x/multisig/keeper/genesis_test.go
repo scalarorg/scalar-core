@@ -10,14 +10,13 @@ import (
 	"github.com/stretchr/testify/assert"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/axelarnetwork/axelar-core/testutils/fake"
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	"github.com/axelarnetwork/axelar-core/utils"
-	snapshot "github.com/axelarnetwork/axelar-core/x/snapshot/exported"
-	"github.com/axelarnetwork/utils/funcs"
-	"github.com/axelarnetwork/utils/slices"
-	. "github.com/axelarnetwork/utils/test"
 	"github.com/scalarorg/scalar-core/app"
+	"github.com/scalarorg/scalar-core/testutils/fake"
+	"github.com/scalarorg/scalar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/slices"
+	test "github.com/scalarorg/scalar-core/utils/test"
 	evm "github.com/scalarorg/scalar-core/x/evm/exported"
 	evmKeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
 	"github.com/scalarorg/scalar-core/x/multisig"
@@ -30,6 +29,7 @@ import (
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	rewardmock "github.com/scalarorg/scalar-core/x/reward/exported/mock"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 )
 
 func TestInitExportGenesis(t *testing.T) {
@@ -77,13 +77,13 @@ func TestInitExportGenesis(t *testing.T) {
 		msgServer = keeper.NewMsgServer(k, snapshotter, &mock.StakerMock{}, nexusK)
 	}
 
-	givenMsgServer := Given("a multisig msg server", setup)
+	givenMsgServer := test.Given("a multisig msg server", setup)
 
-	whenKeygenSessionExists := When("some keygen session exists", func() {
+	whenKeygenSessionExists := test.When("some keygen session exists", func() {
 		msgServer.StartKeygen(sdk.WrapSDKContext(ctx), types.NewStartKeygenRequest(rand.AccAddr(), testutils.KeyID()))
 	})
 
-	whenKeyExists := When("some key exists", func() {
+	whenKeyExists := test.When("some key exists", func() {
 		keyID = testutils.KeyID()
 
 		msgServer.StartKeygen(sdk.WrapSDKContext(ctx), types.NewStartKeygenRequest(rand.AccAddr(), keyID))
@@ -97,15 +97,15 @@ func TestInitExportGenesis(t *testing.T) {
 		multisig.EndBlocker(ctx.WithBlockHeight(ctx.BlockHeight()+types.DefaultParams().KeygenGracePeriod), abci.RequestEndBlock{}, k, rewardK)
 	})
 
-	whenSigningSessionExists := When("some signing session exists", func() {
+	whenSigningSessionExists := test.When("some signing session exists", func() {
 		k.Sign(ctx, keyID, rand.Bytes(exported.HashLength), chain.Module)
 	})
 
-	whenKeyIsAssigned := When("some key is assigned", func() {
+	whenKeyIsAssigned := test.When("some key is assigned", func() {
 		k.AssignKey(ctx, chain.Name, keyID)
 	})
 
-	whenKeyIsRotated := When("some key is rotated", func() {
+	whenKeyIsRotated := test.When("some key is rotated", func() {
 		k.RotateKey(ctx, chain.Name)
 	})
 

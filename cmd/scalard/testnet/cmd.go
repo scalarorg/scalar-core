@@ -747,9 +747,9 @@ func appendBridgeConfig(configPath string, supportedChainsPath string) error {
 		}
 		for _, evmConfig := range evmConfigs {
 			//Todo: change bridge config to scalar_bridge_evm if rewrite vald module
-			//https://github.com/axelarnetwork/axelar-core/blob/main/vald/config/config.go#L24
+			//https://github.com/scalarorg/scalar-core/blob/main/vald/config/config.go#L24
 			_, err = file.WriteString(fmt.Sprintf(`
-[[axelar_bridge_evm]]
+[[scalar_bridge_evm]]
 id = "%s"
 chain_id = %d
 rpc_addr = "%s"

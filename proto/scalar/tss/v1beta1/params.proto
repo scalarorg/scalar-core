@@ -4,7 +4,7 @@ package scalar.tss.v1beta1;
 option go_package = "github.com/scalarorg/scalar-core/x/tss/types";
 
 import "gogoproto/gogo.proto";
-import "axelar/utils/v1beta1/threshold.proto";
+import "scalar/utils/v1beta1/threshold.proto";
 import "scalar/tss/exported/v1beta1/types.proto";
 
 option (gogoproto.goproto_getters_all) = false;
@@ -21,10 +21,10 @@ message Params {
   // HeartBeatPeriodInBlocks defines the time period in blocks for tss to
   // emit the event asking validators to send their heartbeats
   int64 heartbeat_period_in_blocks = 3;
-  axelar.utils.v1beta1.Threshold max_missed_blocks_per_window = 4
+  scalar.utils.v1beta1.Threshold max_missed_blocks_per_window = 4
       [ (gogoproto.nullable) = false ];
   int64 unbonding_locking_key_rotation_count = 5;
-  axelar.utils.v1beta1.Threshold external_multisig_threshold = 6
+  scalar.utils.v1beta1.Threshold external_multisig_threshold = 6
       [ (gogoproto.nullable) = false ];
   int64 max_sign_queue_size = 7;
   int64 max_simultaneous_sign_shares = 8;

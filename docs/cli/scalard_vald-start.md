@@ -32,7 +32,7 @@ scalard vald-start [flags]
       --tofnd-dial-timeout string   dialup timeout to the tss daemon (default "15s")
       --tofnd-host string           host name for tss daemon (default "localhost")
       --tofnd-port string           port for tss daemon (default "50051")
-      --validator-addr string       the address of the validator operator, i.e axelarvaloper1..
+      --validator-addr string       the address of the validator operator, i.e scalarvaloper1..
   -y, --yes                         Skip tx broadcasting prompt confirmation
 ```
 

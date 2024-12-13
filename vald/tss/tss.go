@@ -10,9 +10,9 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"google.golang.org/grpc"
 
-	"github.com/axelarnetwork/axelar-core/sdk-utils/broadcast"
 	tmEvents "github.com/axelarnetwork/tm-events/events"
-	"github.com/axelarnetwork/utils/log"
+	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
+	"github.com/scalarorg/scalar-core/utils/log"
 	"github.com/scalarorg/scalar-core/vald/tss/rpc"
 	"github.com/scalarorg/scalar-core/x/tss/tofnd"
 	tss "github.com/scalarorg/scalar-core/x/tss/types"

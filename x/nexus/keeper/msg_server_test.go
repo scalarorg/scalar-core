@@ -9,8 +9,8 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	abci "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/axelarnetwork/axelar-core/testutils/fake"
 	"github.com/scalarorg/scalar-core/app/params"
+	"github.com/scalarorg/scalar-core/testutils/fake"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/keeper"
 	"github.com/scalarorg/scalar-core/x/nexus/types"

@@ -6,8 +6,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/axelarnetwork/axelar-core/utils"
 	"github.com/scalarorg/scalar-core/client/rpc"
+	"github.com/scalarorg/scalar-core/utils"
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )

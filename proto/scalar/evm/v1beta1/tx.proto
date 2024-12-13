@@ -7,13 +7,12 @@ import "gogoproto/gogo.proto";
 import "scalar/vote/exported/v1beta1/types.proto";
 import "scalar/tss/exported/v1beta1/types.proto";
 import "scalar/evm/v1beta1/types.proto";
-import "axelar/permission/exported/v1beta1/types.proto";
+import "scalar/permission/exported/v1beta1/types.proto";
 
 option (gogoproto.goproto_getters_all) = false;
 
 message SetGatewayRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
-      ROLE_ACCESS_CONTROL;
+  option (permission.exported.v1beta1.permission_role) = ROLE_ACCESS_CONTROL;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2
@@ -28,7 +27,7 @@ message SetGatewayResponse {}
 message ConfirmGatewayTxRequest {
   option deprecated = true;
 
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -45,7 +44,7 @@ message ConfirmGatewayTxRequest {
 message ConfirmGatewayTxResponse { option deprecated = true; }
 
 message ConfirmGatewayTxsRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -63,7 +62,7 @@ message ConfirmGatewayTxsResponse {}
 
 // MsgConfirmDeposit represents an erc20 deposit confirmation message
 message ConfirmDepositRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -88,7 +87,7 @@ message ConfirmDepositResponse {}
 
 // MsgConfirmToken represents a token deploy confirmation message
 message ConfirmTokenRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -108,7 +107,7 @@ message ConfirmTokenResponse {}
 message ConfirmTransferKeyRequest {
   reserved 4, 5; // transfer_type and key_id were deleted in v0.20
 
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -127,7 +126,7 @@ message ConfirmTransferKeyResponse {}
 // MsgLink represents the message that links a cross chain address to a burner
 // address
 message LinkRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -144,9 +143,9 @@ message LinkRequest {
 message LinkResponse { string deposit_addr = 1; }
 
 // CreateBurnTokensRequest represents the message to create commands to burn
-// tokens with AxelarGateway
+// tokens with scalarGateway
 message CreateBurnTokensRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -158,9 +157,9 @@ message CreateBurnTokensRequest {
 message CreateBurnTokensResponse {}
 
 // CreateDeployTokenRequest represents the message to create a deploy token
-// command for AxelarGateway
+// command for scalarGateway
 message CreateDeployTokenRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_CHAIN_MANAGEMENT;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -180,7 +179,7 @@ message CreateDeployTokenResponse {}
 // CreatePendingTransfersRequest represents a message to trigger the creation of
 // commands handling all pending transfers
 message CreatePendingTransfersRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -193,7 +192,7 @@ message CreatePendingTransfersResponse {}
 
 message CreateTransferOwnershipRequest {
   option deprecated = true;
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_CHAIN_MANAGEMENT;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -210,7 +209,7 @@ message CreateTransferOwnershipRequest {
 message CreateTransferOwnershipResponse { option deprecated = true; }
 
 message CreateTransferOperatorshipRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_CHAIN_MANAGEMENT;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -227,7 +226,7 @@ message CreateTransferOperatorshipRequest {
 message CreateTransferOperatorshipResponse {}
 
 message SignCommandsRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -243,7 +242,7 @@ message SignCommandsResponse {
 }
 
 message AddChainRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_ACCESS_CONTROL;
   reserved 3; // native_asset was removed in v0.14
 
@@ -260,7 +259,7 @@ message AddChainRequest {
 message AddChainResponse {}
 
 message RetryFailedEventRequest {
-  option (axelar.permission.exported.v1beta1.permission_role) =
+  option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];

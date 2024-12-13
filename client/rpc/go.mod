@@ -3,7 +3,7 @@ module github.com/scalarorg/scalar-core/client/rpc
 go 1.23.3
 
 require (
-	github.com/axelarnetwork/axelar-core v1.1.2
+	github.com/scalarorg/scalar-core v1.1.2
 	github.com/cosmos/cosmos-sdk v0.45.16
 	github.com/rs/zerolog v1.33.0
 	github.com/scalarorg/relayers v0.0.0-20241205033129-aa614e1d10c6

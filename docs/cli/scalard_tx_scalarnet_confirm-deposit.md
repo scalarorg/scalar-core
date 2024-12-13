@@ -1,6 +1,6 @@
 ## scalard tx scalarnet confirm-deposit
 
-Confirm a deposit to Axelar chain that sent given the asset denomination and the burner address
+Confirm a deposit to Scalar chain that sent given the asset denomination and the burner address
 
 ```
 scalard tx scalarnet confirm-deposit [denom] [burnerAddr] [flags]

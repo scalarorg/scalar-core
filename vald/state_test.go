@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/axelarnetwork/axelar-core/testutils"
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
+	"github.com/scalarorg/scalar-core/testutils"
+	"github.com/scalarorg/scalar-core/testutils/rand"
 	"github.com/scalarorg/scalar-core/vald"
 	"github.com/scalarorg/scalar-core/vald/mock"
 )

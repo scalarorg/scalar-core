@@ -3,9 +3,9 @@ package keeper
 import (
 	"fmt"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/utils/funcs"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 
 	"github.com/scalarorg/scalar-core/x/btc/types"

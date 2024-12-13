@@ -8,8 +8,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 
-	"github.com/axelarnetwork/utils/funcs"
 	evm "github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -103,7 +103,7 @@ func unpackVersionedPayload(versionedPayload []byte) (version, []byte, error) {
 	return v, versionedPayload[versionSize:], nil
 }
 
-// ConstructWasmMessageV1 creates a json serialized wasm message from Axelar defined abi encoded payload
+// ConstructWasmMessageV1 creates a json serialized wasm message from Scalar defined abi encoded payload
 // The abi encoded payload must contain the following information in order
 // - method name (string)
 // - argument names ([]string)

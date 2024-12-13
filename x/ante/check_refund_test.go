@@ -14,28 +14,28 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/stretchr/testify/assert"
 	abcitypes "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	abci "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/axelarnetwork/axelar-core/testutils/fake"
-	"github.com/axelarnetwork/axelar-core/testutils/rand"
-	auxiliarytypes "github.com/axelarnetwork/axelar-core/x/auxiliary/types"
-	snapshotkeeper "github.com/axelarnetwork/axelar-core/x/snapshot/keeper"
-	snapshottypes "github.com/axelarnetwork/axelar-core/x/snapshot/types"
-	"github.com/axelarnetwork/utils/funcs"
 	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/app/params"
+	"github.com/scalarorg/scalar-core/testutils/fake"
+	"github.com/scalarorg/scalar-core/testutils/rand"
 	"github.com/scalarorg/scalar-core/x/ante"
 	"github.com/scalarorg/scalar-core/x/ante/types/mock"
+	auxiliarytypes "github.com/scalarorg/scalar-core/x/auxiliary/types"
 	evm "github.com/scalarorg/scalar-core/x/evm/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/types"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
 	rewardtypes "github.com/scalarorg/scalar-core/x/reward/types"
-	axelarnet "github.com/scalarorg/scalar-core/x/scalarnet/types"
+	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/types"
+	snapshotkeeper "github.com/scalarorg/scalar-core/x/snapshot/keeper"
+	snapshottypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 	votetypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
 
@@ -69,7 +69,7 @@ func TestCheckRefundFeeDecorator_AnteHandle(t *testing.T) {
 			label:       "multiple non-refundable messages",
 			succeeds:    true,
 			refundCount: 0,
-			msgs:        []sdk.Msg{&exported.WasmMessage{}, &evm.ConfirmGatewayTxsRequest{}, &axelarnet.LinkRequest{}},
+			msgs:        []sdk.Msg{&exported.WasmMessage{}, &evm.ConfirmGatewayTxsRequest{}, &scalarnet.LinkRequest{}},
 		},
 		{
 			label:       "single refundable message",
@@ -94,7 +94,7 @@ func TestCheckRefundFeeDecorator_AnteHandle(t *testing.T) {
 			msgs: []sdk.Msg{
 				rewardtypes.NewRefundMsgRequest(sender, &votetypes.VoteRequest{}),
 				rewardtypes.NewRefundMsgRequest(sender, &multisig.SubmitSignatureRequest{}),
-				&axelarnet.LinkRequest{},
+				&scalarnet.LinkRequest{},
 				rewardtypes.NewRefundMsgRequest(sender, &votetypes.VoteRequest{}),
 			},
 		},
@@ -104,7 +104,7 @@ func TestCheckRefundFeeDecorator_AnteHandle(t *testing.T) {
 			refundCount: 0,
 			msgs: []sdk.Msg{auxiliarytypes.NewBatchRequest(
 				sender,
-				[]sdk.Msg{&exported.WasmMessage{}, &evm.ConfirmGatewayTxsRequest{}, &axelarnet.LinkRequest{}},
+				[]sdk.Msg{&exported.WasmMessage{}, &evm.ConfirmGatewayTxsRequest{}, &scalarnet.LinkRequest{}},
 			)},
 		},
 		{
@@ -129,7 +129,7 @@ func TestCheckRefundFeeDecorator_AnteHandle(t *testing.T) {
 				sender,
 				[]sdk.Msg{
 					rewardtypes.NewRefundMsgRequest(sender, &multisig.SubmitSignatureRequest{}),
-					&axelarnet.LinkRequest{},
+					&scalarnet.LinkRequest{},
 					rewardtypes.NewRefundMsgRequest(sender, &votetypes.VoteRequest{}),
 				},
 			)},
@@ -146,7 +146,7 @@ func TestCheckRefundFeeDecorator_AnteHandle(t *testing.T) {
 						rewardtypes.NewRefundMsgRequest(sender, &votetypes.VoteRequest{}),
 					},
 				),
-				&axelarnet.LinkRequest{},
+				&scalarnet.LinkRequest{},
 			},
 		},
 	}
@@ -183,7 +183,7 @@ func TestCheckRefundFeeDecorator_AnteHandle(t *testing.T) {
 }
 
 func prepareAnteHandler(ctx sdk.Context, sender sdk.AccAddress, encConfig params.EncodingConfig) (sdk.AnteHandler, *mock.RewardMock) {
-	axelarApp := app.NewScalarApp(
+	baseApp := app.NewScalarApp(
 		log.TestingLogger(),
 		dbm.NewMemDB(),
 		nil,
@@ -198,18 +198,18 @@ func prepareAnteHandler(ctx sdk.Context, sender sdk.AccAddress, encConfig params
 	)
 
 	// set up proxy and validator because the refund ante handler checks the sender
-	bankKeeper := app.GetKeeper[bankkeeper.BaseKeeper](axelarApp.Keepers)
+	bankKeeper := app.GetKeeper[bankkeeper.BaseKeeper](baseApp.Keepers)
 	bankKeeper.SetParams(ctx, banktypes.DefaultParams())
 	balance := sdk.NewCoins(sdk.NewInt64Coin("stake", 1e10))
 	funcs.MustNoErr(bankKeeper.MintCoins(ctx, nexustypes.ModuleName, balance))
 	funcs.MustNoErr(bankKeeper.SendCoinsFromModuleToAccount(ctx, nexustypes.ModuleName, sender, balance))
 
-	stakingKeeper := app.GetKeeper[stakingkeeper.Keeper](axelarApp.Keepers)
+	stakingKeeper := app.GetKeeper[stakingkeeper.Keeper](baseApp.Keepers)
 	stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
 	validator := stakingtypes.Validator{OperatorAddress: rand.ValAddr().String()}
 	stakingKeeper.SetValidator(ctx, validator)
 
-	snapshotKeeper := app.GetKeeper[snapshotkeeper.Keeper](axelarApp.Keepers)
+	snapshotKeeper := app.GetKeeper[snapshotkeeper.Keeper](baseApp.Keepers)
 	snapshotKeeper.SetParams(ctx, snapshottypes.DefaultParams())
 	funcs.MustNoErr(snapshotKeeper.ActivateProxy(ctx, validator.GetOperator(), sender))
 
@@ -217,7 +217,7 @@ func prepareAnteHandler(ctx sdk.Context, sender sdk.AccAddress, encConfig params
 
 	anteHandler := ante.NewCheckRefundFeeDecorator(
 		encConfig.InterfaceRegistry,
-		app.GetKeeper[authkeeper.AccountKeeper](axelarApp.Keepers),
+		app.GetKeeper[authkeeper.AccountKeeper](baseApp.Keepers),
 		stakingKeeper,
 		snapshotKeeper,
 		rewardKeeper,

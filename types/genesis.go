@@ -6,9 +6,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	permissionexported "github.com/axelarnetwork/axelar-core/x/permission/exported"
-	permissiontypes "github.com/axelarnetwork/axelar-core/x/permission/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/multisig"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
@@ -22,11 +19,14 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
+	"github.com/scalarorg/scalar-core/utils"
 	btctypes "github.com/scalarorg/scalar-core/x/btc/types"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
+	permissionexported "github.com/scalarorg/scalar-core/x/permission/exported"
+	permissiontypes "github.com/scalarorg/scalar-core/x/permission/types"
 	protocoltypes "github.com/scalarorg/scalar-core/x/protocol/types"
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 	tmtypes "github.com/tendermint/tendermint/types"
@@ -204,7 +204,7 @@ func GenerateGenesis(clientCtx client.Context,
 	mintGenState := minttypes.DefaultGenesisState()
 	mintGenState.Params.MintDenom = coinDenom
 	appGenState[minttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(mintGenState)
-	//axelar nexus
+	// nexus
 	nexusGenState := generateNexusGenesis(supportedChainsPath, validatorInfos, coinDenom)
 	appGenState[nexustypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(nexusGenState)
 	//pemission module

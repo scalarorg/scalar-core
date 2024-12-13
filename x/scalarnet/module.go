@@ -17,14 +17,14 @@ import (
 	ibcexported "github.com/cosmos/ibc-go/v4/modules/core/exported"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 
-	"github.com/axelarnetwork/axelar-core/utils"
-	"github.com/axelarnetwork/axelar-core/utils/events"
-	"github.com/axelarnetwork/axelar-core/utils/grpc"
-	"github.com/axelarnetwork/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/events"
+	"github.com/scalarorg/scalar-core/utils/grpc"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/client/cli"
 	"github.com/scalarorg/scalar-core/x/scalarnet/client/rest"
@@ -183,8 +183,8 @@ func (am AppModule) EndBlock(ctx sdk.Context, req abci.RequestEndBlock) []abci.V
 // ConsensusVersion implements AppModule/ConsensusVersion.
 func (AppModule) ConsensusVersion() uint64 { return 7 }
 
-// AxelarnetIBCModule is an IBCModule that adds rate limiting and gmp processing to the ibc middleware
-type AxelarnetIBCModule struct {
+// ScalarnetIBCModule is an IBCModule that adds rate limiting and gmp processing to the ibc middleware
+type ScalarnetIBCModule struct {
 	porttypes.IBCModule
 	keeper      keeper.Keeper
 	nexus       types.Nexus
@@ -193,15 +193,15 @@ type AxelarnetIBCModule struct {
 	rateLimiter RateLimiter
 }
 
-// NewAxelarnetIBCModule creates a new AxelarnetIBCModule instance
-func NewAxelarnetIBCModule(
+// NewScalarnetIBCModule creates a new ScalarnetIBCModule instance
+func NewScalarnetIBCModule(
 	transferModule porttypes.IBCModule,
 	ibcK keeper.IBCKeeper,
 	rateLimiter RateLimiter,
 	nexus types.Nexus,
 	bank types.BankKeeper,
-) AxelarnetIBCModule {
-	return AxelarnetIBCModule{
+) ScalarnetIBCModule {
+	return ScalarnetIBCModule{
 		IBCModule:   transferModule,
 		keeper:      ibcK.Keeper,
 		nexus:       nexus,
@@ -214,12 +214,12 @@ func NewAxelarnetIBCModule(
 // OnRecvPacket implements the IBCModule interface. A successful acknowledgement
 // is returned if the packet data is successfully decoded and the receive application
 // logic returns without error.
-func (m AxelarnetIBCModule) OnRecvPacket(
+func (m ScalarnetIBCModule) OnRecvPacket(
 	ctx sdk.Context,
 	packet channeltypes.Packet,
 	relayer sdk.AccAddress,
 ) ibcexported.Acknowledgement {
-	// TODO: split axelar routed packets and gmp into separated middleware?
+	// TODO: split  routed packets and gmp into separated middleware?
 
 	ack := m.IBCModule.OnRecvPacket(ctx, packet, relayer)
 	if !ack.Success() {
@@ -230,7 +230,7 @@ func (m AxelarnetIBCModule) OnRecvPacket(
 }
 
 // OnAcknowledgementPacket implements the IBCModule interface
-func (m AxelarnetIBCModule) OnAcknowledgementPacket(
+func (m ScalarnetIBCModule) OnAcknowledgementPacket(
 	ctx sdk.Context,
 	packet channeltypes.Packet,
 	acknowledgement []byte,
@@ -269,7 +269,7 @@ func (m AxelarnetIBCModule) OnAcknowledgementPacket(
 }
 
 // OnTimeoutPacket implements the IBCModule interface
-func (m AxelarnetIBCModule) OnTimeoutPacket(
+func (m ScalarnetIBCModule) OnTimeoutPacket(
 	ctx sdk.Context,
 	packet channeltypes.Packet,
 	relayer sdk.AccAddress,
@@ -307,7 +307,7 @@ func getSeqMessageIDMapping(ctx sdk.Context, k keeper.Keeper, portID, channelID 
 }
 
 func setRoutedPacketCompleted(ctx sdk.Context, k keeper.Keeper, n types.Nexus, portID, channelID string, seq uint64) error {
-	// check if the packet is Axelar routed cross chain transfer
+	// check if the packet is Scalar routed cross chain transfer
 	transferID, ok := getSeqIDMapping(ctx, k, portID, channelID, seq)
 	if ok {
 		events.Emit(ctx,
@@ -324,7 +324,7 @@ func setRoutedPacketCompleted(ctx sdk.Context, k keeper.Keeper, n types.Nexus, p
 		return k.SetTransferCompleted(ctx, transferID)
 	}
 
-	// check if the packet is Axelar routed general message
+	// check if the packet is Scalar routed general message
 	messageID, ok := getSeqMessageIDMapping(ctx, k, portID, channelID, seq)
 	if ok {
 		k.Logger(ctx).Debug(fmt.Sprintf("general message %s executed", messageID),
@@ -336,12 +336,12 @@ func setRoutedPacketCompleted(ctx sdk.Context, k keeper.Keeper, n types.Nexus, p
 	return nil
 }
 
-func (m AxelarnetIBCModule) setRoutedPacketFailed(ctx sdk.Context, packet channeltypes.Packet, bank types.BankKeeper) error {
+func (m ScalarnetIBCModule) setRoutedPacketFailed(ctx sdk.Context, packet channeltypes.Packet, bank types.BankKeeper) error {
 	// IBC ack/timeout packets, by convention, use the source port/channel to represent native chain -> counterparty chain channel id
 	// https://github.com/cosmos/ibc/tree/main/spec/core/ics-004-channel-and-packet-semantics#definitions
 	port, channel, sequence := packet.GetSourcePort(), packet.GetSourceChannel(), packet.GetSequence()
 
-	// check if the packet is Axelar routed cross chain transfer
+	// check if the packet is Scalar routed cross chain transfer
 	transferID, ok := getSeqIDMapping(ctx, m.keeper, port, channel, sequence)
 	if ok {
 		lockableAsset, err := m.nexus.NewLockableAsset(ctx, m.ibcK, m.bank, funcs.MustOk(m.keeper.GetTransfer(ctx, transferID)).Token)
@@ -372,7 +372,7 @@ func (m AxelarnetIBCModule) setRoutedPacketFailed(ctx sdk.Context, packet channe
 		return m.keeper.SetTransferFailed(ctx, transferID)
 	}
 
-	// check if the packet is Axelar routed general message
+	// check if the packet is Scalar routed general message
 	messageID, ok := getSeqMessageIDMapping(ctx, m.keeper, port, channel, sequence)
 	if ok {
 		lockableAsset, err := m.nexus.NewLockableAsset(ctx, m.ibcK, m.bank, extractTokenFromAckOrTimeoutPacket(packet))
@@ -404,8 +404,8 @@ func extractTokenFromAckOrTimeoutPacket(packet channeltypes.Packet) sdk.Coin {
 }
 
 // Temporary logic to handle in-transit IBC transfers during upgrade. Previously IBC transfers were sent from the asset
-// escrow address, but now they're sent from Axelar IBC account. IBC refunds the token to the original sender, so we move
-// the tokens from the asset escrow to the Axelar IBC account for correct processing.
+// escrow address, but now they're sent from Scalar IBC account. IBC refunds the token to the original sender, so we move
+// the tokens from the asset escrow to the Scalar IBC account for correct processing.
 //
 // Deprecated: Remove this function after the v1.1 upgrade and ensure no in-transit IBC transfers are left.
 func refundFromAssetEscrowAddressToIBCAccount(ctx sdk.Context, packet channeltypes.Packet, bank types.BankKeeper) error {
