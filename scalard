@@ -1,0 +1,6 @@
+#! /bin/bash
+BINARY=./bin/scalard
+HOME_DIR=.runtime/node1/scalard
+CHAIN_ID=scalar-testnet-1
+
+$BINARY $@ --home $HOME_DIR

@@ -85,7 +85,7 @@ ldflags = "-X github.com/cosmos/cosmos-sdk/version.Name=scalar \
 	-X $(GO_MOD_PATH)/app.MaxWasmSize=${MAX_WASM_SIZE} \
 	-w -s ${STATIC_LINK_FLAGS}"
 
-BUILD_FLAGS := -tags $(BUILD_TAGS) -ldflags $(ldflags) -trimpath
+BUILD_FLAGS := -tags $(BUILD_TAGS) -ldflags $(ldflags) -trimpath -buildvcs=false
 
 
 # Build the project with release flags

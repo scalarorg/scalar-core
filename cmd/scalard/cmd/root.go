@@ -31,6 +31,7 @@ import (
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/rs/zerolog"
+	"github.com/scalarorg/scalar-core/config"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -43,13 +44,12 @@ import (
 	"github.com/scalarorg/scalar-core/app/params"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
 	"github.com/scalarorg/scalar-core/cmd/scalard/testnet"
-	"github.com/scalarorg/scalar-core/config"
 	"github.com/scalarorg/scalar-core/vald"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
 var (
-	minGasPrice = "0.007" + scalarnet.NativeAsset
+	minGasPrice = "0.007" + scalarnet.BaseAsset
 	wasmDirFlag = "wasm-dir"
 )
 

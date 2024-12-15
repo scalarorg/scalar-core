@@ -28,6 +28,7 @@ import (
 	permissionexported "github.com/scalarorg/scalar-core/x/permission/exported"
 	permissiontypes "github.com/scalarorg/scalar-core/x/permission/types"
 	protocoltypes "github.com/scalarorg/scalar-core/x/protocol/types"
+	snapshottypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 	tmtypes "github.com/tendermint/tendermint/types"
 )
@@ -101,6 +102,7 @@ func GenerateGenesis(clientCtx client.Context,
 	genBalances := []banktypes.Balance{}
 	genAccounts := []authtypes.GenesisAccount{}
 	//allValAmount := sdk.NewCoins()
+	proxyValidators := []snapshottypes.ProxiedValidator{}
 	for _, info := range validatorInfos {
 		valBalances := sdk.NewCoins()
 		//Validator balance must be set and greater than deligation amount
@@ -118,7 +120,12 @@ func GenerateGenesis(clientCtx client.Context,
 
 		genBalances = append(genBalances, info.FaucetBalance)
 		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(info.FaucetPubKey.Address()), info.FaucetPubKey, 0, 0))
-
+		valAddr := sdk.ValAddress(info.ValPubKey.Address())
+		proxyValidators = append(proxyValidators, snapshottypes.ProxiedValidator{
+			Validator: valAddr,
+			Proxy:     sdk.AccAddress(info.Broadcaster.Address()),
+			Active:    true,
+		})
 		valBalances = valBalances.Add(info.ValNodeBalance.Coins...).
 			Add(info.BroadcasterBalance.Coins...).
 			Add(info.GovBalance.Coins...).
@@ -145,7 +152,10 @@ func GenerateGenesis(clientCtx client.Context,
 	bankGenState.Balances = genBalances
 	bankGenState.Supply = totalSupply
 	appGenState[banktypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(bankGenState)
-
+	//Snapshoter
+	snapshotGenState := snapshottypes.DefaultGenesisState()
+	snapshotGenState.ProxiedValidators = proxyValidators
+	appGenState[snapshottypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(snapshotGenState)
 	//set crisis constant fee coin denom
 	crisisGenState := crisistypes.DefaultGenesisState()
 	crisisGenState.ConstantFee.Denom = coinDenom
@@ -166,13 +176,16 @@ func GenerateGenesis(clientCtx client.Context,
 	govGenState.TallyParams.Quorum = sdk.NewDec(50)
 	//govGenState.TallyParams.Threshold = sdk.NewDec(50)
 	appGenState[govtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(govGenState)
-
 	//mint genesis coins denom
 	mintGenState := minttypes.DefaultGenesisState()
 	mintGenState.Params.MintDenom = coinDenom
 	appGenState[minttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(mintGenState)
 	// nexus
-	nexusGenState := generateNexusGenesis(supportedChainsPath, validatorInfos, coinDenom)
+	validatorAddrs := []sdk.ValAddress{}
+	for _, proxyValidator := range proxyValidators {
+		validatorAddrs = append(validatorAddrs, proxyValidator.Validator)
+	}
+	nexusGenState := generateNexusGenesis(supportedChainsPath, validatorAddrs, coinDenom)
 	appGenState[nexustypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(nexusGenState)
 	//pemission module
 	permissionGenState := permissiontypes.DefaultGenesisState()
@@ -286,7 +299,7 @@ func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *s
 	// }
 	return stakingGenState
 }
-func generateNexusGenesis(supportedChainsPath string, validatorInfos []ValidatorInfo, coinDenom string) *nexustypes.GenesisState {
+func generateNexusGenesis(supportedChainsPath string, validatorAddrs []sdk.ValAddress, coinDenom string) *nexustypes.GenesisState {
 	nexusGenState := nexustypes.DefaultGenesisState()
 	if supportedChainsPath != "" {
 		evmConfigs, err := ParseJsonArrayConfig[evmtypes.EVMConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
@@ -309,13 +322,10 @@ func generateNexusGenesis(supportedChainsPath string, validatorInfos []Validator
 				},
 				Activated:        true,
 				Assets:           []nexus.Asset{nexus.NewAsset(coinDenom, true)},
-				MaintainerStates: make([]nexustypes.MaintainerState, len(validatorInfos)),
+				MaintainerStates: make([]nexustypes.MaintainerState, len(validatorAddrs)),
 			}
-			for i, validator := range validatorInfos {
-				chainState.MaintainerStates[i] = nexustypes.MaintainerState{
-					Address: sdk.ValAddress(validator.ValPubKey.Bytes()),
-					Chain:   nexus.ChainName(evmConfig.Name),
-				}
+			for i, valAddr := range validatorAddrs {
+				chainState.MaintainerStates[i] = *nexustypes.NewMaintainerState(nexus.ChainName(evmConfig.Name), valAddr)
 			}
 			nexusGenState.ChainStates = append(nexusGenState.ChainStates, chainState)
 		}
@@ -326,27 +336,24 @@ func generateNexusGenesis(supportedChainsPath string, validatorInfos []Validator
 		for _, btcConfig := range btcConfigs {
 			fmt.Printf("btcConfig %v\n", btcConfig)
 			nexusGenState.Chains = append(nexusGenState.Chains, nexus.Chain{
-				Name:                  nexus.ChainName(btcConfig.Name),
+				Name:                  nexus.ChainName(btcConfig.ID),
 				SupportsForeignAssets: true,
 				KeyType:               tss.Multisig,
 				Module:                btctypes.ModuleName,
 			})
 			chainState := nexustypes.ChainState{
 				Chain: nexus.Chain{
-					Name:                  nexus.ChainName(btcConfig.Name),
+					Name:                  nexus.ChainName(btcConfig.ID),
 					SupportsForeignAssets: true,
 					KeyType:               tss.Multisig,
 					Module:                btctypes.ModuleName,
 				},
 				Activated:        true,
 				Assets:           []nexus.Asset{nexus.NewAsset(coinDenom, true)},
-				MaintainerStates: make([]nexustypes.MaintainerState, len(validatorInfos)),
+				MaintainerStates: make([]nexustypes.MaintainerState, len(validatorAddrs)),
 			}
-			for i, validator := range validatorInfos {
-				chainState.MaintainerStates[i] = nexustypes.MaintainerState{
-					Address: sdk.ValAddress(validator.ValPubKey.Bytes()),
-					Chain:   nexus.ChainName(btcConfig.Name),
-				}
+			for i, valAddr := range validatorAddrs {
+				chainState.MaintainerStates[i] = *nexustypes.NewMaintainerState(nexus.ChainName(btcConfig.ID), valAddr)
 			}
 			nexusGenState.ChainStates = append(nexusGenState.ChainStates, chainState)
 		}
@@ -422,14 +429,24 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 				VaultTag:            &vaultTag,
 				VaultVersion:        &vaultVersion,
 			}
-			btcGenState.Chains = append(btcGenState.Chains, btctypes.GenesisState_Chain{
-				Params:              params,
-				CommandQueue:        utils.QueueState{},
-				ConfirmedEventQueue: utils.QueueState{},
-				// Gateway: evmtypes.Gateway{
-				// 	Address: evmtypes.Address(common.HexToAddress(evmConfig.Gateway)),
-				// },
-			})
+			//Check if chainName is already in the genesis state
+			addChain := true
+			for _, chain := range btcGenState.Chains {
+				if chain.Params.ChainName == nexus.ChainName(btcConfig.ID) {
+					addChain = false
+					log.Debug().Msgf("chain name %s already exists", btcConfig.ID)
+				}
+			}
+			if addChain {
+				btcGenState.Chains = append(btcGenState.Chains, btctypes.GenesisState_Chain{
+					Params:              params,
+					CommandQueue:        utils.QueueState{},
+					ConfirmedEventQueue: utils.QueueState{},
+					ConfirmedStakingTxs: make([]btctypes.StakingTx, 0),
+					CommandBatches:      make([]btctypes.CommandBatchMetadata, 0),
+					Events:              make([]btctypes.Event, 0),
+				})
+			}
 		}
 		genesisState[btctypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&btcGenState)
 	}
