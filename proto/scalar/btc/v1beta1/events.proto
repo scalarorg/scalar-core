@@ -42,6 +42,34 @@ message Event {
 }
 
 message EventStakingTx {
+  message StakingTxMetadata {
+    bytes tag = 1
+        [ (gogoproto.nullable) = false, (gogoproto.customtype) = "VaultTag" ];
+    bytes version = 2 [
+      (gogoproto.nullable) = false,
+      (gogoproto.customtype) = "VaultVersion"
+    ];
+    NetworkKind network_id = 3;
+    uint32 flags = 4 [ (gogoproto.casttype) = "uint8" ];
+    bytes service_tag = 5;
+    bool have_only_covenants = 6;
+    uint32 covenant_quorum = 7 [ (gogoproto.casttype) = "uint8" ];
+    uint32 destination_chain_type = 8
+        [ (gogoproto.casttype) =
+              "github.com/scalarorg/bitcoin-vault/go-utils/chain.ChainType" ];
+    uint64 destination_chain_id = 9;
+    bytes destination_contract_address = 10 [
+      (gogoproto.nullable) = false,
+      (gogoproto.customtype) =
+          "github.com/scalarorg/scalar-core/x/evm/types.Address"
+    ];
+    bytes destination_recipient_address = 11 [
+      (gogoproto.nullable) = false,
+      (gogoproto.customtype) =
+          "github.com/scalarorg/scalar-core/x/evm/types.Address"
+    ];
+  }
+
   string sender = 1;
   uint64 amount = 2;
   string asset = 3;
@@ -51,4 +79,58 @@ message EventStakingTx {
     (gogoproto.nullable) = false
   ];
   StakingTxMetadata metadata = 5 [ (gogoproto.nullable) = false ];
+}
+
+message BTCEventCompleted {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string event_id = 2
+      [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
+  string type = 3;
+}
+
+message BTCEventFailed {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string event_id = 2
+      [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
+  string type = 3;
+}
+
+message BTCEventRetryFailed {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string event_id = 2
+      [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
+  string type = 3;
+}
+
+message BridgeCallApproved {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string event_id = 2
+      [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
+  bytes command_id = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "CommandID",
+    (gogoproto.customtype) = "CommandID"
+  ];
+  string sender = 4;
+  string destination_chain = 5
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string contract_address = 6;
+  bytes payload_hash = 7
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+}
+
+message BridgeCallFailed {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string message_id = 2 [ (gogoproto.customname) = "MessageID" ];
 }

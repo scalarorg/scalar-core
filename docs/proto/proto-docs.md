@@ -28,7 +28,6 @@
     - [CommandBatchMetadata](#scalar.btc.v1beta1.CommandBatchMetadata)
     - [Proof](#scalar.btc.v1beta1.Proof)
     - [StakingTx](#scalar.btc.v1beta1.StakingTx)
-    - [StakingTxMetadata](#scalar.btc.v1beta1.StakingTxMetadata)
   
     - [BatchedCommandsStatus](#scalar.btc.v1beta1.BatchedCommandsStatus)
     - [CommandType](#scalar.btc.v1beta1.CommandType)
@@ -36,8 +35,14 @@
     - [StakingTxStatus](#scalar.btc.v1beta1.StakingTxStatus)
   
 - [scalar/btc/v1beta1/events.proto](#scalar/btc/v1beta1/events.proto)
+    - [BTCEventCompleted](#scalar.btc.v1beta1.BTCEventCompleted)
+    - [BTCEventFailed](#scalar.btc.v1beta1.BTCEventFailed)
+    - [BTCEventRetryFailed](#scalar.btc.v1beta1.BTCEventRetryFailed)
+    - [BridgeCallApproved](#scalar.btc.v1beta1.BridgeCallApproved)
+    - [BridgeCallFailed](#scalar.btc.v1beta1.BridgeCallFailed)
     - [Event](#scalar.btc.v1beta1.Event)
     - [EventStakingTx](#scalar.btc.v1beta1.EventStakingTx)
+    - [EventStakingTx.StakingTxMetadata](#scalar.btc.v1beta1.EventStakingTx.StakingTxMetadata)
     - [VoteEvents](#scalar.btc.v1beta1.VoteEvents)
   
     - [Event.Status](#scalar.btc.v1beta1.Event.Status)
@@ -882,6 +887,7 @@ Msg defines the nexus Msg service.
 | `id` | [bytes](#bytes) |  |  |
 | `params` | [bytes](#bytes) |  |  |
 | `key_id` | [string](#string) |  |  |
+| `max_gas_cost` | [uint32](#uint32) |  |  |
 | `type` | [CommandType](#scalar.btc.v1beta1.CommandType) |  |  |
 
 
@@ -948,31 +954,6 @@ Msg defines the nexus Msg service.
 
 
 
-
-<a name="scalar.btc.v1beta1.StakingTxMetadata"></a>
-
-### StakingTxMetadata
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `tag` | [bytes](#bytes) |  |  |
-| `version` | [bytes](#bytes) |  |  |
-| `network_id` | [NetworkKind](#scalar.btc.v1beta1.NetworkKind) |  |  |
-| `flags` | [uint32](#uint32) |  |  |
-| `service_tag` | [bytes](#bytes) |  |  |
-| `have_only_covenants` | [bool](#bool) |  |  |
-| `covenant_quorum` | [uint32](#uint32) |  |  |
-| `destination_chain_type` | [uint32](#uint32) |  |  |
-| `destination_chain_id` | [uint64](#uint64) |  |  |
-| `destination_contract_address` | [bytes](#bytes) |  |  |
-| `destination_recipient_address` | [bytes](#bytes) |  |  |
-
-
-
-
-
  <!-- end messages -->
 
 
@@ -997,7 +978,7 @@ Msg defines the nexus Msg service.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| COMMAND_TYPE_APPROVE_CONTRACT_CALL | 0 |  |
+| COMMAND_TYPE_APPROVE_BRIDGE_CALL | 0 |  |
 
 
 
@@ -1041,6 +1022,94 @@ Msg defines the nexus Msg service.
 
 
 
+<a name="scalar.btc.v1beta1.BTCEventCompleted"></a>
+
+### BTCEventCompleted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+| `type` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.BTCEventFailed"></a>
+
+### BTCEventFailed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+| `type` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.BTCEventRetryFailed"></a>
+
+### BTCEventRetryFailed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+| `type` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.BridgeCallApproved"></a>
+
+### BridgeCallApproved
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+| `command_id` | [bytes](#bytes) |  |  |
+| `sender` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `contract_address` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.BridgeCallFailed"></a>
+
+### BridgeCallFailed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `message_id` | [string](#string) |  |  |
+
+
+
+
+
+
 <a name="scalar.btc.v1beta1.Event"></a>
 
 ### Event
@@ -1072,7 +1141,32 @@ Msg defines the nexus Msg service.
 | `amount` | [uint64](#uint64) |  |  |
 | `asset` | [string](#string) |  |  |
 | `payload_hash` | [bytes](#bytes) |  |  |
-| `metadata` | [StakingTxMetadata](#scalar.btc.v1beta1.StakingTxMetadata) |  |  |
+| `metadata` | [EventStakingTx.StakingTxMetadata](#scalar.btc.v1beta1.EventStakingTx.StakingTxMetadata) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.EventStakingTx.StakingTxMetadata"></a>
+
+### EventStakingTx.StakingTxMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tag` | [bytes](#bytes) |  |  |
+| `version` | [bytes](#bytes) |  |  |
+| `network_id` | [NetworkKind](#scalar.btc.v1beta1.NetworkKind) |  |  |
+| `flags` | [uint32](#uint32) |  |  |
+| `service_tag` | [bytes](#bytes) |  |  |
+| `have_only_covenants` | [bool](#bool) |  |  |
+| `covenant_quorum` | [uint32](#uint32) |  |  |
+| `destination_chain_type` | [uint32](#uint32) |  |  |
+| `destination_chain_id` | [uint64](#uint64) |  |  |
+| `destination_contract_address` | [bytes](#bytes) |  |  |
+| `destination_recipient_address` | [bytes](#bytes) |  |  |
 
 
 

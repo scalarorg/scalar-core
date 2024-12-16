@@ -9,6 +9,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/key"
@@ -19,6 +20,7 @@ import (
 var (
 	commandQueueName   = "command_queue"
 	commandBatchPrefix = "batched_commands"
+	commandPrefix      = "command"
 
 	unsignedBatchIDKey     = key.FromStr("unsigned_command_batch_id")
 	latestSignedBatchIDKey = key.FromStr("latest_signed_command_batch_id")
@@ -92,15 +94,35 @@ func (k chainKeeper) getEvents(ctx sdk.Context) []types.Event {
 	return events
 }
 
-// func (k chainKeeper) GetChainID(ctx sdk.Context) (sdk.Int, bool) {
-// 	network := k.GetNetwork(ctx)
-// 	return k.GetChainIDByNetwork(ctx, network)
-// }
+func (k chainKeeper) GetChainID(ctx sdk.Context) (sdk.Int, bool) {
+	network := k.GetNetwork(ctx)
+	return k.GetChainIDByNetwork(ctx, network)
+}
 
-// // GetNetwork returns the EVM network Scalar-Core is expected to connect to
-// func (k chainKeeper) GetNetwork(ctx sdk.Context) string {
-// 	return getParam[string](k, ctx, types.KeyNetwork)
-// }
+// GetNetwork returns the BTC network Scalar-Core is expected to connect to
+func (k chainKeeper) GetNetwork(ctx sdk.Context) string {
+	return getParam[string](k, ctx, types.KeyNetwork)
+}
+
+// GetChainIDByNetwork returns the chain ID for a given network name
+func (k chainKeeper) GetChainIDByNetwork(ctx sdk.Context, network string) (sdk.Int, bool) {
+	if network == "" {
+		return sdk.Int{}, false
+	}
+	p := k.GetParams(ctx)
+	// for _, n := range p.Networks {
+	// 	if n.Name == network {
+	// 		return n.Id, true
+	// 	}
+	// }
+	if network == p.ChainName.String() {
+		return sdk.NewInt(int64(p.ChainId)), true
+	}
+
+	clog.Red("GetChainIDByNetwork", "network", network, "chainName", p.ChainName, "chainID", p.ChainId)
+
+	return sdk.Int{}, false
+}
 
 func (k chainKeeper) GetRequiredConfirmationHeight(ctx sdk.Context) uint64 {
 	return getParam[uint64](k, ctx, types.KeyConfirmationHeight)
@@ -268,5 +290,79 @@ func (k chainKeeper) SetConfirmedEvent(ctx sdk.Context, event types.Event) error
 		Type:    event.GetEventType(),
 	})
 
+	return nil
+}
+
+// EnqueueConfirmedEvent enqueues the confirmed event
+func (k chainKeeper) EnqueueConfirmedEvent(ctx sdk.Context, id types.EventID) error {
+	event, ok := k.GetEvent(ctx, id)
+	if !ok {
+		return fmt.Errorf("event %s does not exist", id)
+	}
+	if event.Status != types.EventConfirmed {
+		return fmt.Errorf("event %s is not confirmed", id)
+	}
+
+	switch event.GetEvent().(type) {
+	case *types.Event_StakingTx:
+		k.GetConfirmedEventQueue(ctx).Enqueue(getEventKey(id), &event)
+	default:
+		return fmt.Errorf("unsupported event type %T", event)
+	}
+
+	return nil
+}
+
+// SetEventCompleted sets the event as completed
+func (k chainKeeper) SetEventCompleted(ctx sdk.Context, eventID types.EventID) error {
+	event, ok := k.GetEvent(ctx, eventID)
+	if !ok || event.Status != types.EventConfirmed {
+		return fmt.Errorf("event %s is not confirmed", eventID)
+	}
+
+	event.Status = types.EventCompleted
+	k.setEvent(ctx, event)
+
+	events.Emit(ctx,
+		&types.BTCEventCompleted{
+			Chain:   event.Chain,
+			EventID: event.GetID(),
+			Type:    event.GetEventType(),
+		})
+
+	return nil
+}
+
+// SetEventFailed sets the event as invalid
+func (k chainKeeper) SetEventFailed(ctx sdk.Context, eventID types.EventID) error {
+	event, ok := k.GetEvent(ctx, eventID)
+	if !ok || event.Status != types.EventConfirmed {
+		return fmt.Errorf("event %s is not confirmed", eventID)
+	}
+
+	event.Status = types.EventFailed
+	k.setEvent(ctx, event)
+
+	k.Logger(ctx).Debug("failed handling event",
+		"chain", event.Chain,
+		"eventID", event.GetID(),
+	)
+
+	events.Emit(ctx,
+		&types.BTCEventFailed{
+			Chain:   event.Chain,
+			EventID: event.GetID(),
+			Type:    event.GetEventType(),
+		})
+
+	return nil
+}
+
+func (k chainKeeper) EnqueueCommand(ctx sdk.Context, command types.Command) error {
+	if k.getStore(ctx).HasNew(key.FromStr(commandPrefix).Append(key.FromStr(command.ID.Hex()))) {
+		return fmt.Errorf("command %s already exists", command.ID.Hex())
+	}
+
+	k.getCommandQueue(ctx).Enqueue(utils.LowerCaseKey(commandPrefix).AppendStr(command.ID.Hex()), &command)
 	return nil
 }

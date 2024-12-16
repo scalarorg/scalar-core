@@ -97,7 +97,7 @@ message CommandBatchMetadata {
 enum CommandType {
   option (gogoproto.goproto_enum_prefix) = false;
   option (gogoproto.goproto_enum_stringer) = false;
-  COMMAND_TYPE_APPROVE_CONTRACT_CALL = 0;
+  COMMAND_TYPE_APPROVE_BRIDGE_CALL = 0;
 }
 
 message Command {
@@ -112,31 +112,8 @@ message Command {
     (gogoproto.casttype) =
         "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
-  CommandType type = 4;
+  uint32 max_gas_cost = 4;
+  CommandType type = 5;
 }
 
-message StakingTxMetadata {
-  bytes tag = 1
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "VaultTag" ];
-  bytes version = 2
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "VaultVersion" ];
-  NetworkKind network_id = 3;
-  uint32 flags = 4 [ (gogoproto.casttype) = "uint8" ];
-  bytes service_tag = 5;
-  bool have_only_covenants = 6;
-  uint32 covenant_quorum = 7 [ (gogoproto.casttype) = "uint8" ];
-  uint32 destination_chain_type = 8
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/bitcoin-vault/go-utils/chain.ChainType" ];
-  uint64 destination_chain_id = 9;
-  bytes destination_contract_address = 10 [
-    (gogoproto.nullable) = false,
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/evm/types.Address"
-  ];
-  bytes destination_recipient_address = 11 [
-    (gogoproto.nullable) = false,
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/evm/types.Address"
-  ];
-}
+

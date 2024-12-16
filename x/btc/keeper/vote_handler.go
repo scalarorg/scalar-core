@@ -2,14 +2,18 @@ package keeper
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/CosmWasm/wasmd/x/wasm"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/x/btc/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
@@ -44,8 +48,7 @@ func (v voteHandler) HandleFailedPoll(ctx sdk.Context, poll vote.Poll) error {
 }
 
 func (v voteHandler) IsFalsyResult(result codec.ProtoMarshaler) bool {
-	// return len(result.(*types.VoteEvents).Events) == 0
-	return false
+	return len(result.(*types.VoteEvents).Events) == 0
 }
 
 func (v voteHandler) HandleExpiredPoll(ctx sdk.Context, poll vote.Poll) error {
@@ -92,6 +95,9 @@ func (v voteHandler) HandleExpiredPoll(ctx sdk.Context, poll vote.Poll) error {
 }
 
 func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error {
+
+	clog.Red("HandleCompletedPoll", "poll", poll.GetID().String())
+
 	voteEvents := poll.GetResult().(*types.VoteEvents)
 
 	chain, ok := v.nexus.GetChain(ctx, voteEvents.Chain)
@@ -163,6 +169,8 @@ func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error 
 func (v voteHandler) HandleResult(ctx sdk.Context, result codec.ProtoMarshaler) error {
 	voteEvents := result.(*types.VoteEvents)
 
+	clog.Red("HandleResult", "voteEvents", voteEvents)
+
 	if v.IsFalsyResult(result) {
 		return nil
 	}
@@ -195,11 +203,11 @@ func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event ty
 	// which bypassed nexus routing
 	switch event.GetEvent().(type) {
 	case *types.Event_StakingTx:
-		if err := v.handleContractCall(ctx, ck, event); err != nil {
+		if err := v.handleStakingTx(ctx, ck, event); err != nil {
 			return err
 		}
 	default:
-		// funcs.MustNoErr(ck.EnqueueConfirmedEvent(ctx, event.GetID()))
+		funcs.MustNoErr(ck.EnqueueConfirmedEvent(ctx, event.GetID()))
 	}
 
 	ck.Logger(ctx).Info(fmt.Sprintf("confirmed %s event %s in transaction %s", chain.Name, event.GetID(), event.TxID.HexStr()))
@@ -207,37 +215,37 @@ func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event ty
 	return nil
 }
 
-func (v voteHandler) handleContractCall(ctx sdk.Context, ck types.ChainKeeper, event types.Event) error {
-	// msg := mustToGeneralMessage(ctx, v.nexus, event)
+func (v voteHandler) handleStakingTx(ctx sdk.Context, ck types.ChainKeeper, event types.Event) error {
+	msg := mustToGeneralMessage(ctx, v.nexus, event)
 
-	// if err := v.nexus.SetNewMessage(ctx, msg); err != nil {
-	// 	return err
-	// }
+	if err := v.nexus.SetNewMessage(ctx, msg); err != nil {
+		return err
+	}
 
-	// funcs.MustNoErr(v.nexus.EnqueueRouteMessage(ctx, msg.ID))
-	// funcs.MustNoErr(ck.SetEventCompleted(ctx, event.GetID()))
+	funcs.MustNoErr(v.nexus.EnqueueRouteMessage(ctx, msg.ID))
+	funcs.MustNoErr(ck.SetEventCompleted(ctx, event.GetID()))
 
 	return nil
 }
 
 func mustToGeneralMessage(ctx sdk.Context, n types.Nexus, event types.Event) nexus.GeneralMessage {
-	// id := string(event.GetID())
-	// stakingTx := event.GetEvent().(*types.Event_StakingTx).StakingTx
+	id := string(event.GetID())
+	stakingTx := event.GetEvent().(*types.Event_StakingTx).StakingTx
 
-	// sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
-	// sender := nexus.CrossChainAddress{Chain: sourceChain, Address: stakingTx.Sender.Hex()}
+	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
+	sender := nexus.CrossChainAddress{Chain: sourceChain, Address: stakingTx.Sender}
 
-	// destinationChain, ok := n.GetChain(ctx, contractCall.DestinationChain)
-	// if !ok {
-	// 	// try forwarding it to wasm router if destination chain is not registered
-	// 	// Wasm chain names are always lower case, so normalize it for consistency in core
-	// 	destChainName := nexus.ChainName(strings.ToLower(contractCall.DestinationChain.String()))
-	// 	destinationChain = nexus.Chain{Name: destChainName, SupportsForeignAssets: false, KeyType: tss.None, Module: wasm.ModuleName}
-	// }
-	// recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: contractCall.ContractAddress}
+	// TODO: GetChain should query by chain type and chain id for more network flexibility
+	destinationChain, ok := n.GetChain(ctx, HARDCODED_DESTINATIONCHAIN)
+	if !ok {
+		// try forwarding it to wasm router if destination chain is not registered
+		// Wasm chain names are always lower case, so normalize it for consistency in core
+		destChainName := nexus.ChainName(strings.ToLower(HARDCODED_DESTINATIONCHAIN.String()))
+		destinationChain = nexus.Chain{Name: destChainName, SupportsForeignAssets: false, KeyType: tss.None, Module: wasm.ModuleName}
+	}
+	recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: stakingTx.Metadata.DestinationContractAddress.String()}
 
-	// return nexus.NewGeneralMessage(id, sender, recipient, contractCall.PayloadHash.Bytes(), event.TxID.Bytes(), event.Index, nil)
-	return nexus.GeneralMessage{}
+	return nexus.NewGeneralMessage(id, sender, recipient, stakingTx.PayloadHash.Bytes(), event.TxID.Bytes(), event.Index, nil)
 }
 
 func mustGetMetadata(poll vote.Poll) types.PollMetadata {

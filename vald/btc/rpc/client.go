@@ -4,6 +4,7 @@ import (
 	"github.com/btcsuite/btcd/btcjson"
 	"github.com/btcsuite/btcd/rpcclient"
 	"github.com/btcsuite/btcd/wire"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/x/btc/types"
 )
@@ -20,7 +21,9 @@ type Client interface {
 }
 
 func NewClient(cfg *types.BTCConfig) (Client, error) {
-	client, error := NewBtcClient(mapBTCConfigToRPCConfig(cfg))
+	rpcConfig := mapBTCConfigToRPCConfig(cfg)
+	clog.Red("NewClient", "rpcConfig", rpcConfig)
+	client, error := NewBtcClient(rpcConfig)
 
 	if error != nil {
 		return nil, error
