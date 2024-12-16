@@ -51,7 +51,7 @@ func getCmdCreateConfirmGatewayTxs() *cobra.Command {
 				txIDs = append(txIDs, *txHash)
 			}
 
-			msg := types.NewConfirmStakingTxsRequest(cliCtx.GetFromAddress(), chain, txIDs)
+			msg := types.NewConfirmBridgeTxsRequest(cliCtx.GetFromAddress(), chain, txIDs)
 			if err := msg.ValidateBasic(); err != nil {
 				return fmt.Errorf("failed to validate message: %v", err)
 			}

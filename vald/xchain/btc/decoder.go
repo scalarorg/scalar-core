@@ -11,7 +11,7 @@ import (
 	evmUtils "github.com/scalarorg/bitcoin-vault/go-utils/evm"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/log"
-	"github.com/scalarorg/scalar-core/vald/btc/rpc"
+	"github.com/scalarorg/scalar-core/vald/xchain/rpc"
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 )

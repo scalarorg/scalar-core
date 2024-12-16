@@ -30,7 +30,7 @@ func CreateAccountFromKey(key string) (*secp256k1.PrivKey, types.AccAddress, err
 	return privKey, addr, nil
 }
 
-func ConfirmBtcTx(ctx context.Context, client *cosmos.NetworkClient, msg *btcTypes.ConfirmStakingTxsRequest) (*types.TxResponse, error) {
+func ConfirmBtcTx(ctx context.Context, client *cosmos.NetworkClient, msg *btcTypes.ConfirmBridgeTxsRequest) (*types.TxResponse, error) {
 	if client == nil {
 		return nil, fmt.Errorf("client is not initialized")
 	}

@@ -1,10 +1,9 @@
-package btc
+package xchain
 
 import (
-	"strings"
 	"sync"
 
-	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 )
 
 //go:generate moq -out ./mock/latest_finalized_block_cache.go -pkg mock . LatestFinalizedBlockCache
@@ -12,29 +11,29 @@ import (
 // LatestFinalizedBlockCache is a cache for the latest finalized block number for each chain
 type LatestFinalizedBlockCache interface {
 	// Get returns the latest finalized block number for chain
-	Get(chain nexus.ChainName) *uint64
+	Get(chainInfo chain.ChainInfoBytes) *uint64
 	// Set sets the latest finalized block number for chain, if the given block number is greater than the current latest finalized block number
-	Set(chain nexus.ChainName, blockNumber uint64)
+	Set(chainInfo chain.ChainInfoBytes, blockNumber uint64)
 }
 
 type latestFinalizedBlockCache struct {
-	cache map[string]uint64
+	cache map[chain.ChainInfoBytes]uint64
 	lock  sync.RWMutex
 }
 
 func NewLatestFinalizedBlockCache() LatestFinalizedBlockCache {
 	return &latestFinalizedBlockCache{
-		cache: make(map[string]uint64),
+		cache: make(map[chain.ChainInfoBytes]uint64),
 		lock:  sync.RWMutex{},
 	}
 }
 
 // Get returns the latest finalized block number for chain
-func (c *latestFinalizedBlockCache) Get(chain nexus.ChainName) *uint64 {
+func (c *latestFinalizedBlockCache) Get(chainInfo chain.ChainInfoBytes) *uint64 {
 	c.lock.RLock()
 	defer c.lock.RUnlock()
 
-	cachedBlockNumber, ok := c.cache[strings.ToLower(chain.String())]
+	cachedBlockNumber, ok := c.cache[chainInfo]
 	if !ok {
 		return nil
 	}
@@ -43,14 +42,12 @@ func (c *latestFinalizedBlockCache) Get(chain nexus.ChainName) *uint64 {
 }
 
 // Set sets the latest finalized block number for chain, if the given block number is greater than the current latest finalized block number
-func (c *latestFinalizedBlockCache) Set(chain nexus.ChainName, blockHeight uint64) {
+func (c *latestFinalizedBlockCache) Set(chainInfo chain.ChainInfoBytes, blockHeight uint64) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 
-	chainName := strings.ToLower(chain.String())
-
-	cachedBlockNumber, ok := c.cache[chainName]
+	cachedBlockNumber, ok := c.cache[chainInfo]
 	if !ok || blockHeight > cachedBlockNumber {
-		c.cache[chainName] = blockHeight
+		c.cache[chainInfo] = blockHeight
 	}
 }

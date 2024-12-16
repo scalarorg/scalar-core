@@ -8,16 +8,16 @@ import (
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
-// NewConfirmStakingTxsRequest creates a message of type ConfirmStakingTxsRequest
-func NewConfirmStakingTxsRequest(sender sdk.AccAddress, chain nexus.ChainName, txIDs []Hash) *ConfirmStakingTxsRequest {
-	return &ConfirmStakingTxsRequest{
+// NewConfirmBridgeTxsRequest creates a message of type ConfirmBridgeTxsRequest
+func NewConfirmBridgeTxsRequest(sender sdk.AccAddress, chain nexus.ChainName, txIDs []Hash) *ConfirmBridgeTxsRequest {
+	return &ConfirmBridgeTxsRequest{
 		Sender: sender,
 		Chain:  chain,
 		TxIDs:  txIDs,
 	}
 }
 
-func (msg *ConfirmStakingTxsRequest) ValidateBasic() error {
+func (msg *ConfirmBridgeTxsRequest) ValidateBasic() error {
 	// TODO: validate the txIDs
 	if err := sdk.VerifyAddressFormat(msg.Sender); err != nil {
 		return err
@@ -31,6 +31,6 @@ func (msg *ConfirmStakingTxsRequest) ValidateBasic() error {
 	return nil
 }
 
-func (m ConfirmStakingTxsRequest) GetSigners() []sdk.AccAddress {
+func (m ConfirmBridgeTxsRequest) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{m.Sender}
 }

@@ -10,12 +10,22 @@ import "scalar/btc/v1beta1/query.proto";
 
 option (gogoproto.goproto_registration) = true;
 
+// TODO: Refactor to ConfirmBridgeCall only
+
 // Msg defines the btc Msg service.
 service MsgService {
-  rpc ConfirmStakingTxs(ConfirmStakingTxsRequest)
-      returns (ConfirmStakingTxsResponse) {
+  rpc ConfirmStakingTxs(ConfirmBridgeTxsRequest)
+      returns (ConfirmBridgeTxsResponse) {
     option (google.api.http) = {
       post : "/scalar/btc/confirm_staking_txs"
+      body : "*"
+    };
+  }
+
+  rpc ConfirmUnstakingTxs(ConfirmBridgeTxsRequest)
+      returns (ConfirmBridgeTxsResponse) {
+    option (google.api.http) = {
+      post : "/scalar/btc/confirm_unstaking_txs"
       body : "*"
     };
   }

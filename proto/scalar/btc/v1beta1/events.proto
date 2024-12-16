@@ -8,9 +8,11 @@ option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
 option (gogoproto.goproto_getters_all) = false;
 
 message VoteEvents {
-  string chain = 1
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  bytes chain_info = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/bitcoin-vault/go-utils/chain.ChainInfoBytes"
+  ];
   repeated Event events = 2 [ (gogoproto.nullable) = false ];
 }
 

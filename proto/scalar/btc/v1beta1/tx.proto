@@ -10,7 +10,7 @@ option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
 
 option (gogoproto.goproto_getters_all) = false;
 
-message ConfirmStakingTxsRequest {
+message ConfirmBridgeTxsRequest {
   option (scalar.permission.exported.v1beta1.permission_role) =
       ROLE_UNRESTRICTED;
   bytes sender = 1 [ (gogoproto.casttype) =
@@ -25,9 +25,25 @@ message ConfirmStakingTxsRequest {
   ];
 }
 
-message ConfirmStakingTxsResponse {}
+message ConfirmBridgeTxsResponse {}
 
 message EventConfirmStakingTxsStarted {
+  repeated PollMapping poll_mappings = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "poll_mappings,omitempty"
+  ];
+  bytes chain_info = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/bitcoin-vault/go-utils/chain.ChainInfoBytes"
+  ];
+  uint64 confirmation_height = 3;
+  repeated bytes participants = 4
+      [ (gogoproto.casttype) =
+            "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
+}
+
+message EventConfirmUnstakingTxsStarted {
   repeated PollMapping poll_mappings = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.jsontag) = "poll_mappings,omitempty"
