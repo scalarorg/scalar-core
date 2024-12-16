@@ -8,12 +8,13 @@ import (
 const (
 	// ModuleName exposes scalarnet module name
 	ModuleName = "Scalarnet"
-)
-
-var (
 	// NativeAsset is the native asset on ScalarNet
 	NativeAsset = "scal"
 
+	BaseAsset = "ascal"
+)
+
+var (
 	Scalarnet = nexus.Chain{
 		Name:                  "ScalarNet",
 		SupportsForeignAssets: true,

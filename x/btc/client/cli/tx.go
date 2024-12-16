@@ -55,7 +55,6 @@ func getCmdCreateConfirmGatewayTxs() *cobra.Command {
 			if err := msg.ValidateBasic(); err != nil {
 				return fmt.Errorf("failed to validate message: %v", err)
 			}
-
 			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
 		},
 	}

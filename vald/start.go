@@ -112,7 +112,7 @@ func GetValdCommand() *cobra.Command {
 	utils.OverwriteFlagDefaults(cmd, map[string]string{
 		flags.FlagBroadcastMode:  flags.BroadcastSync,
 		flags.FlagChainID:        app.Name,
-		flags.FlagGasPrices:      "0.007" + scalarnet.NativeAsset,
+		flags.FlagGasPrices:      "0.007" + scalarnet.BaseAsset,
 		flags.FlagKeyringBackend: "file",
 	}, false)
 
@@ -513,16 +513,16 @@ func createBTCMgr(valdCfg config.ValdConfig, cliCtx sdkClient.Context, b broadca
 	})
 
 	slices.ForEach(bridgeConfigs, func(config btcTypes.BTCConfig) {
-		chainName := strings.ToLower(config.Name)
+		chainName := strings.ToLower(config.ID)
 		if _, ok := rpcs[chainName]; ok {
-			err := fmt.Errorf("duplicate bridge configuration found for BTC chain %s", config.Name)
+			err := fmt.Errorf("duplicate bridge configuration found for BTC chain %s", config.ID)
 			log.Error(err.Error())
 			panic(err)
 		}
 
 		client, err := btcRPC.NewClient(&config)
 		if err != nil {
-			err = sdkerrors.Wrap(err, fmt.Sprintf("failed to create an RPC connection for BTC chain %s. Verify your RPC config.", config.Name))
+			err = sdkerrors.Wrap(err, fmt.Sprintf("failed to create an RPC connection for BTC chain %s. Verify your RPC config.", config.ID))
 			log.Error(err.Error())
 			panic(err)
 		}

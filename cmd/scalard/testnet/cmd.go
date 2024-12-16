@@ -29,6 +29,7 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
+	scalarnetexported "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	"github.com/tendermint/tendermint/privval"
 
 	scalartypes "github.com/scalarorg/scalar-core/types"
@@ -110,12 +111,20 @@ type EnvKeys struct {
 // createValidatorMsgGasLimit is the gas limit used in the MsgCreateValidator included in genesis transactions.
 // This transaction consumes approximately 220,000 gas when executed in the genesis block.
 const createValidatorMsgGasLimit = 250_000
+const GenesisAsset = scalarnetexported.BaseAsset
+
+var (
+	ValidatorCoin   = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(scalartypes.ValidatorStaking))
+	BroadcasterCoin = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(scalartypes.BroadcasterTokens))
+	GovCoin         = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(scalartypes.GovTokens))
+	FaucetCoin      = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(scalartypes.FaucetTokens))
+)
 
 func addTestnetFlagsToCmd(cmd *cobra.Command) {
 	cmd.Flags().Int(flagNumValidators, 4, "Number of validators to initialize the testnet with")
 	cmd.Flags().StringP(flagOutputDir, "o", "./.testnets", "Directory to store initialization data for the testnet")
 	cmd.Flags().String(flags.FlagChainID, "", "genesis file chain-id, if left blank will be randomly created")
-	cmd.Flags().String(sdkserver.FlagMinGasPrices, fmt.Sprintf("0.000006%s", scalartypes.BaseDenom), "Minimum gas prices to accept for transactions; All fees in a tx must meet this minimum (e.g. 0.01photino,0.001stake)")
+	cmd.Flags().String(sdkserver.FlagMinGasPrices, fmt.Sprintf("0.007%s", scalarnetexported.BaseAsset), "Minimum gas prices to accept for transactions; All fees in a tx must meet this minimum (e.g. 0.01photino,0.001stake)")
 	cmd.Flags().String(flagKeyType, string(hd.Secp256k1Type), "Key signing algorithm to generate keys for")
 	cmd.Flags().String(flagBaseFee, strconv.Itoa(params.InitialBaseFee), "The params base_fee in the feemarket module in geneis")
 	cmd.Flags().String(flagMinGasPrice, "0.001", "The params min_gas_price in the feemarket module in geneis")
@@ -300,7 +309,7 @@ func initTestnetFiles(
 	}
 	if err := initGenFiles(clientCtx, mbm,
 		nodeConfig,
-		scalartypes.BaseDenom,
+		GenesisAsset,
 		validatorInfos,
 		args,
 	); err != nil {
@@ -395,6 +404,12 @@ func createKeyringAccountFromMnemonic(keybase keyring.Keyring,
 	// log.Debug().Str("keyName", keyName).Str("address", info.GetAddress().String()).Msg("Keyring account created")
 	return info.GetPubKey(), info.GetAddress(), nil
 }
+func storeValidatorAddress(valAddress sdk.ValAddress, keyName string, nodeDir string) error {
+	if err := utils.WriteFile(fmt.Sprintf("%v.json", keyName), nodeDir, []byte(valAddress.String())); err != nil {
+		return err
+	}
+	return nil
+}
 func storeValidatorInfo(pubkey cryptotypes.PubKey, keyName string, nodeDir string) error {
 	address := sdk.ValAddress(pubkey.Address())
 	info := map[string]string{
@@ -441,7 +456,7 @@ func genFaucet(kb keyring.Keyring, mnemonic string, algo keyring.SignatureAlgo, 
 		}
 		return &banktypes.Balance{
 			Address: address.String(),
-			Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, tokenAmount)},
+			Coins:   sdk.Coins{sdk.NewCoin(GenesisAsset, tokenAmount)},
 		}, nil
 	}
 	return nil, nil
@@ -483,7 +498,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		ValNodePubKey: valNodePubKey,
 		ValNodeBalance: banktypes.Balance{
 			Address: sdk.AccAddress(valNodePubKey.Address()).String(),
-			Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, scalartypes.ValidatorTokens)},
+			Coins:   sdk.Coins{ValidatorCoin},
 		},
 	}
 
@@ -510,10 +525,11 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		valPubKey = key.GetPubKey()
 		valAddress = key.GetAddress()
 	}
+	storeValidatorAddress(sdk.ValAddress(valPubKey.Address()), "validator_address", nodeDir)
 	validatorInfo.ValPubKey = valPubKey
 	validatorInfo.ValBalance = banktypes.Balance{
 		Address: valAddress.String(),
-		Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, scalartypes.ValidatorTokens)},
+		Coins:   sdk.Coins{ValidatorCoin},
 	}
 
 	if envKeys.BroadcasterMnemonic != "" {
@@ -545,9 +561,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		validatorInfo.Broadcaster = pubkey
 		validatorInfo.BroadcasterBalance = banktypes.Balance{
 			Address: address.String(),
-			Coins: sdk.Coins{
-				sdk.NewCoin(scalartypes.BaseDenom, scalartypes.BroadcasterTokens),
-			},
+			Coins:   sdk.Coins{BroadcasterCoin},
 		}
 	}
 	if envKeys.GovernanceMnemonic != "" {
@@ -581,7 +595,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		validatorInfo.GovPubKey = pubkey
 		validatorInfo.GovBalance = banktypes.Balance{
 			Address: address.String(),
-			Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, scalartypes.GovTokens)},
+			Coins:   sdk.Coins{GovCoin},
 		}
 	}
 	if envKeys.FaucetMnemonic != "" {
@@ -605,12 +619,12 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		validatorInfo.FaucetPubKey = pubKey
 		validatorInfo.FaucetBalance = banktypes.Balance{
 			Address: address.String(),
-			Coins:   sdk.Coins{sdk.NewCoin(scalartypes.BaseDenom, scalartypes.FaucetTokens)},
+			Coins:   sdk.Coins{FaucetCoin},
 		}
 	}
 
 	valPower := int64((index + 1) * (index + 1))
-	stakingPower := sdk.NewCoin(scalartypes.BaseDenom, sdk.TokensFromConsensusPower(valPower, scalartypes.ValidatorStaking))
+	stakingPower := sdk.NewCoin(GenesisAsset, sdk.TokensFromConsensusPower(valPower, scalartypes.ValidatorStaking))
 	senderKeyName := scalartypes.ValidatorKeyName
 	tmPubKey, err := cryptocodec.ToTmPubKeyInterface(validatorInfo.ValNodePubKey)
 	if err != nil {
@@ -621,7 +635,8 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		Name:    nodeDirName,
 		Address: tmPubKey.Address(),
 		PubKey:  tmPubKey,
-		Power:   sdk.NewInt(valPower).Mul(scalartypes.PowerReduction).Int64(),
+		Power:   valPower,
+		//Power:   sdk.NewInt(valPower).Mul(scalartypes.PowerReduction).Int64(),
 	}
 	// validatorInfo.NodeAccount = authtypes.NewBaseAccount(nodeAddr, nil, 0, 0)
 	// validatorInfo.BroadcasterAccount = authtypes.NewBaseAccount(sdk.AccAddress(validatorInfo.Broadcaster.Address()), validatorInfo.Broadcaster, 0, 0)
@@ -653,7 +668,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	// if sdk.NewDecFromInt(args.baseFee).GT(args.minGasPrice) {
 	// 	minGasPrice = sdk.NewDecFromInt(args.baseFee)
 	// }
-	feeAmount := sdk.NewCoin(scalartypes.BaseDenom, minGasPrice.MulInt64(createValidatorMsgGasLimit).Ceil().TruncateInt())
+	feeAmount := sdk.NewCoin(scalarnetexported.BaseAsset, minGasPrice.MulInt64(createValidatorMsgGasLimit).Ceil().TruncateInt())
 	txBuilder.SetMemo(validatorInfo.SeedAddress)
 	txBuilder.SetGasLimit(createValidatorMsgGasLimit)
 	txBuilder.SetFeeAmount(sdk.NewCoins(feeAmount))

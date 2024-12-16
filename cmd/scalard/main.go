@@ -29,7 +29,7 @@ import (
 func main() {
 	docs := flag.String("docs", "", "only generate documentation for the CLI commands into the specified folder")
 	flag.Parse()
-
+	app.RegisterDenoms()
 	rootCmd, _ := cmd.NewRootCmd()
 	// If run with the docs flag, generate documentation for all CLI commands
 	if *docs != "" {

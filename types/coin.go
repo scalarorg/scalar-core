@@ -2,7 +2,6 @@ package types
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 )
 
 const (
@@ -21,16 +20,10 @@ const (
 )
 
 var (
-	// DisplayDenom defines the denomination displayed to users in client applications.
-	DisplayDenom = scalarnet.NativeAsset
-	// BaseDenom defines to the default denomination used in Scalar (staking, EVM, governance, etc.)
-	BaseDenom = "a" + scalarnet.NativeAsset
-
+	ValidatorTokens   = sdk.NewInt(1e9)
+	ValidatorStaking  = sdk.NewInt(1e6)
+	BroadcasterTokens = sdk.NewInt(1e6)
+	GovTokens         = sdk.NewInt(1e9)
+	FaucetTokens      = sdk.NewInt(1e9)
 	PowerReduction    = sdk.NewInt(1e6)
-	ValidatorTokens   = sdk.NewInt(1e16)
-	ValidatorStaking  = sdk.NewInt(1e12)
-	BroadcasterTokens = sdk.NewInt(1e16)
-	GovTokens         = sdk.NewInt(1e16)
-	FaucetTokens      = sdk.NewInt(1e18)
-	DelegatorTokens   = sdk.NewInt(1e6)
 )
