@@ -7,6 +7,7 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
+	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
@@ -31,11 +32,23 @@ type ChainKeeper interface {
 
 	GetParams(ctx sdk.Context) Params
 
-	// GetNetwork(ctx sdk.Context) string
+	GetChainID(ctx sdk.Context) (sdk.Int, bool)
+
+	// GetGatewayAddress(ctx sdk.Context) (Address, bool)
+
+	EnqueueCommand(ctx sdk.Context, cmd Command) error
 
 	GetRequiredConfirmationHeight(ctx sdk.Context) uint64
 
+	GetConfirmedEventQueue(ctx sdk.Context) utils.KVQueue
+
 	SetConfirmedEvent(ctx sdk.Context, event Event) error
+
+	EnqueueConfirmedEvent(ctx sdk.Context, eventID EventID) error
+
+	SetEventCompleted(ctx sdk.Context, eventID EventID) error
+
+	SetEventFailed(ctx sdk.Context, eventID EventID) error
 }
 
 // ParamsKeeper represents a global paramstore
@@ -58,7 +71,8 @@ type Nexus interface {
 	// GetTransfersForChainPaginated(ctx sdk.Context, chain nexus.Chain, state nexus.TransferState, pageRequest *query.PageRequest) ([]nexus.CrossChainTransfer, *query.PageResponse, error)
 	// ArchivePendingTransfer(ctx sdk.Context, transfer nexus.CrossChainTransfer)
 	// SetChain(ctx sdk.Context, chain nexus.Chain)
-	// GetChains(ctx sdk.Context) []nexus.Chain
+	GetChains(ctx sdk.Context) []nexus.Chain
+
 	GetChain(ctx sdk.Context, chain nexus.ChainName) (nexus.Chain, bool)
 	// IsAssetRegistered(ctx sdk.Context, chain nexus.Chain, denom string) bool
 	// RegisterAsset(ctx sdk.Context, chain nexus.Chain, asset nexus.Asset, limit sdk.Uint, window time.Duration) error
@@ -70,11 +84,11 @@ type Nexus interface {
 	GetChainMaintainerState(ctx sdk.Context, chain nexus.Chain, address sdk.ValAddress) (nexus.MaintainerState, bool)
 	SetChainMaintainerState(ctx sdk.Context, maintainerState nexus.MaintainerState) error
 	// RateLimitTransfer(ctx sdk.Context, chain nexus.ChainName, asset sdk.Coin, direction nexus.TransferDirection) error
-	// SetNewMessage(ctx sdk.Context, m nexus.GeneralMessage) error
-	// GetProcessingMessages(ctx sdk.Context, chain nexus.ChainName, limit int64) []nexus.GeneralMessage
-	// SetMessageFailed(ctx sdk.Context, id string) error
-	// SetMessageExecuted(ctx sdk.Context, id string) error
-	// EnqueueRouteMessage(ctx sdk.Context, id string) error
+	SetNewMessage(ctx sdk.Context, m nexus.GeneralMessage) error
+	GetProcessingMessages(ctx sdk.Context, chain nexus.ChainName, limit int64) []nexus.GeneralMessage
+	SetMessageFailed(ctx sdk.Context, id string) error
+	SetMessageExecuted(ctx sdk.Context, id string) error
+	EnqueueRouteMessage(ctx sdk.Context, id string) error
 }
 
 // InitPoller is a minimal interface to start a poll. This must be a type alias instead of a type definition,
@@ -102,7 +116,7 @@ type SlashingKeeper interface {
 
 // MultisigKeeper provides functionality to the multisig module
 type MultisigKeeper interface {
-	// GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
+	GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
 	// GetNextKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
 	// GetKey(ctx sdk.Context, keyID multisig.KeyID) (multisig.Key, bool)
 	// AssignKey(ctx sdk.Context, chainName nexus.ChainName, keyID multisig.KeyID) error

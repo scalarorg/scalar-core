@@ -234,6 +234,7 @@ func (k Keeper) GetChains(ctx sdk.Context) (chains []exported.Chain) {
 	return chains
 }
 
+// TODO: GetChain should query by chain type and chain id for more network flexibility
 // GetChain retrieves the specification for a supported blockchain
 func (k Keeper) GetChain(ctx sdk.Context, chainName exported.ChainName) (chain exported.Chain, ok bool) {
 	return chain, k.getStore(ctx).Get(chainPrefix.Append(utils.LowerCaseKey(chainName.String())), &chain)

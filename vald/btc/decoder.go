@@ -85,7 +85,7 @@ func (mgr *Mgr) decodeStakingTransaction(tx *rpc.TxReceipt) (btcTypes.EventStaki
 	}, nil
 }
 
-func mapOutputToEventStakingTx(output *vault.VaultReturnTxOutput) (*btcTypes.StakingTxMetadata, error) {
+func mapOutputToEventStakingTx(output *vault.VaultReturnTxOutput) (*btcTypes.EventStakingTx_StakingTxMetadata, error) {
 
 	var vaultTag btcTypes.VaultTag
 	err := vaultTag.Unmarshal(output.Tag)
@@ -110,7 +110,7 @@ func mapOutputToEventStakingTx(output *vault.VaultReturnTxOutput) (*btcTypes.Sta
 		return nil, ErrInvalidDestinationChain
 	}
 
-	return &btcTypes.StakingTxMetadata{
+	return &btcTypes.EventStakingTx_StakingTxMetadata{
 		Tag:                         vaultTag,
 		Version:                     btcTypes.VersionFromInt(int(output.Version)),
 		NetworkId:                   btcTypes.NetworkKind(output.NetworkID),

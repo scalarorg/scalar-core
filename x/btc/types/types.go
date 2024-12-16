@@ -20,6 +20,10 @@ import (
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
+func IsBTCChain(chain nexus.Chain) bool {
+	return chain.Module == ModuleName
+}
+
 type VaultTag [6]byte
 
 func (VaultTag) Size() int {

@@ -291,6 +291,10 @@ func (a Address) Hex() string {
 	return common.Address(a).Hex()
 }
 
+func (a Address) String() string {
+	return common.Address(a).String()
+}
+
 // Marshal implements codec.ProtoMarshaler
 func (a Address) Marshal() ([]byte, error) {
 	return a[:], nil
