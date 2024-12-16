@@ -32,11 +32,9 @@ message EventConfirmStakingTxsStarted {
     (gogoproto.nullable) = false,
     (gogoproto.jsontag) = "poll_mappings,omitempty"
   ];
-  bytes chain_info = 2 [
-    (gogoproto.nullable) = false,
-    (gogoproto.customtype) =
-        "github.com/scalarorg/bitcoin-vault/go-utils/chain.ChainInfoBytes"
-  ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   uint64 confirmation_height = 3;
   repeated bytes participants = 4
       [ (gogoproto.casttype) =

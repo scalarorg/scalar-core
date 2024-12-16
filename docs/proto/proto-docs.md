@@ -1182,7 +1182,7 @@ Msg defines the nexus Msg service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `chain_info` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
 | `events` | [Event](#scalar.btc.v1beta1.Event) | repeated |  |
 
 
@@ -1543,7 +1543,7 @@ Msg defines the nexus Msg service.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `poll_mappings` | [PollMapping](#scalar.btc.v1beta1.PollMapping) | repeated |  |
-| `chain_info` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
 | `participants` | [bytes](#bytes) | repeated |  |
 
@@ -2101,7 +2101,7 @@ Chain represents the properties of a registered blockchain
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  |  |
+| `name` | [string](#string) |  | The descriptor of the chain, e.g. "evm|11155111" |
 | `supports_foreign_assets` | [bool](#bool) |  |  |
 | `key_type` | [scalar.tss.exported.v1beta1.KeyType](#scalar.tss.exported.v1beta1.KeyType) |  |  |
 | `module` | [string](#string) |  |  |

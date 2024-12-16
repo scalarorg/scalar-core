@@ -11,12 +11,11 @@ option (gogoproto.goproto_getters_all) = false;
 
 // Chain represents the properties of a registered blockchain
 message Chain {
-  reserved 2; // native_asset was removed in 0.14
-
+  // The descriptor of the chain, e.g. "evm|11155111"
   string name = 1 [ (gogoproto.casttype) = "ChainName" ];
-  bool supports_foreign_assets = 3;
-  scalar.tss.exported.v1beta1.KeyType key_type = 4;
-  string module = 5;
+  bool supports_foreign_assets = 2;
+  scalar.tss.exported.v1beta1.KeyType key_type = 3;
+  string module = 4;
 }
 
 // CrossChainAddress represents a generalized address on any registered chain
