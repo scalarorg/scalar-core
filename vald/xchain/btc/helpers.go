@@ -14,11 +14,12 @@ func (c *BtcClient) logger(keyvals ...any) log.Logger {
 func (client *BtcClient) isFinalized(txReceipt btcjson.TxRawResult, confHeight uint64) (bool, error) {
 	blockHeightCache := client.blockHeightCache.Get(txReceipt.BlockHash)
 	if blockHeightCache == nil {
-		clog.Redf("block_height_not_found, block_hash: %s, block_height: %d", txReceipt.BlockHash, confHeight)
 		blockHeight, err := client.GetBlockHeight(txReceipt.BlockHash)
 		if err != nil {
 			return false, err
 		}
+
+		clog.Redf("block_height_not_found, block_hash: %s, conf_block_height: %d, block_height: %d", txReceipt.BlockHash, confHeight, blockHeight)
 		client.blockHeightCache.Set(txReceipt.BlockHash, blockHeight)
 		blockHeightCache = &blockHeight
 	}

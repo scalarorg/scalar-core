@@ -70,7 +70,9 @@ func (v voteHandler) HandleExpiredPoll(ctx sdk.Context, poll vote.Poll) error {
 			maintainerState.MarkMissingVote(!hasVoted)
 			funcs.MustNoErr(v.nexus.SetChainMaintainerState(ctx, maintainerState))
 
-			v.keeper.Logger(ctx).Debug(fmt.Sprintf("marked voter %s behaviour", voter.String()),
+			msg := fmt.Sprintf("marked voter %s behaviour", voter.String())
+			clog.Red("HandleExpiredPoll", msg)
+			v.keeper.Logger(ctx).Debug(msg,
 				"voter", voter.String(),
 				"missing_vote", !hasVoted,
 				"poll", poll.GetID().String(),
@@ -79,7 +81,9 @@ func (v voteHandler) HandleExpiredPoll(ctx sdk.Context, poll vote.Poll) error {
 
 		if !hasVoted {
 			rewardPool.ClearRewards(voter)
-			v.keeper.Logger(ctx).Debug(fmt.Sprintf("penalized voter %s due to timeout", voter.String()),
+			msg := fmt.Sprintf("penalized voter %s due to timeout", voter.String())
+			clog.Red("HandleExpiredPoll", msg)
+			v.keeper.Logger(ctx).Debug(msg,
 				"voter", voter.String(),
 				"poll", poll.GetID().String())
 		}
@@ -125,7 +129,9 @@ func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error 
 		maintainerState.MarkIncorrectVote(hasVotedIncorrectly)
 		funcs.MustNoErr(v.nexus.SetChainMaintainerState(ctx, maintainerState))
 
-		v.keeper.Logger(ctx).Debug(fmt.Sprintf("marked voter %s behaviour", voter.String()),
+		msg := fmt.Sprintf("marked voter %s behaviour", voter.String())
+		clog.Red("HandleCompletedPoll", msg)
+		v.keeper.Logger(ctx).Debug(msg,
 			"voter", voter.String(),
 			"missing_vote", !hasVoted,
 			"incorrect_vote", hasVotedIncorrectly,
@@ -135,14 +141,18 @@ func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error 
 		switch {
 		case hasVotedIncorrectly, !hasVoted:
 			rewardPool.ClearRewards(voter)
-			v.keeper.Logger(ctx).Debug(fmt.Sprintf("penalized voter %s due to incorrect vote or missing vote", voter.String()),
+			msg := fmt.Sprintf("penalized voter %s due to incorrect vote or missing vote", voter.String())
+			clog.Red("HandleCompletedPoll", msg)
+			v.keeper.Logger(ctx).Debug(msg,
 				"voter", voter.String(),
 				"poll", poll.GetID().String())
 		default:
 			if err := rewardPool.ReleaseRewards(voter); err != nil {
 				return err
 			}
-			v.keeper.Logger(ctx).Debug(fmt.Sprintf("released rewards for voter %s", voter.String()),
+			msg := fmt.Sprintf("released rewards for voter %s", voter.String())
+			clog.Red("HandleCompletedPoll", msg)
+			v.keeper.Logger(ctx).Debug(msg,
 				"voter", voter.String(),
 				"poll", poll.GetID().String())
 		}
@@ -157,11 +167,15 @@ func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error 
 		})
 	}
 
-	events.Emit(ctx, &types.PollCompleted{
+	event := &types.PollCompleted{
 		TxID:   md.TxID,
 		Chain:  md.Chain,
 		PollID: poll.GetID(),
-	})
+	}
+
+	clog.Red("Poll Completed Event", event)
+
+	events.Emit(ctx, event)
 
 	return nil
 }

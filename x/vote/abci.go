@@ -7,6 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/x/vote/exported"
 	"github.com/scalarorg/scalar-core/x/vote/keeper"
 	"github.com/scalarorg/scalar-core/x/vote/types"
@@ -37,7 +38,9 @@ func handlePollsAtExpiry(ctx sdk.Context, k types.Voter) error {
 		logger := k.Logger(ctx).With("poll", pollID.String())
 
 		voteHandler := k.GetVoteRouter().GetHandler(poll.GetModule())
-		switch poll.GetState() {
+		pollState := poll.GetState()
+		clog.Red("pollState: ", pollState)
+		switch pollState {
 		case exported.Pending:
 			logger.Debug("poll expired")
 			if err := voteHandler.HandleExpiredPoll(ctx, poll); err != nil {
@@ -65,6 +68,8 @@ func handlePollsAtExpiry(ctx sdk.Context, k types.Voter) error {
 
 		k.DeletePoll(ctx, pollID)
 	}
+
+	clog.Red("handledPolls: ", handledPolls)
 
 	return nil
 }

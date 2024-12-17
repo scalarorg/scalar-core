@@ -239,7 +239,7 @@ cfst:
 	$(SCALAR_BIN_PATH) tx btc confirm-staking-txs $(ARGS) --from $(WALLET) --keyring-backend $(SCALAR_KEYRING_BACKEND) --home $(SCALAR_HOME_DIR) --chain-id $(SCALAR_CHAIN_ID) --gas 300000
 
 cfst2:
-	$(SCALAR_BIN_PATH) tx btc confirm-staking-txs "bitcoin|4" 07b50c84f889e2f1315da875fc91734e2bac8d0153ff9a98d9da14caa4fc7d57 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+	$(SCALAR_BIN_PATH) tx btc confirm-staking-txs "bitcoin|4" 18fa2be86b54d9ff7e35aba97d57483f05500cd9301547607f67ea5b47fa1c87 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
 
 .PHONY: open-docs
 open-docs:
