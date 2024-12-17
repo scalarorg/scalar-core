@@ -1,0 +1,17 @@
+[[scalar_bridge_btc]]
+id = "bitcoin|4"
+chain_id = 4
+name = "Bitcoin Testnet4"
+chain = "testnet3"
+network_kind = "NETWORK_KIND_TESTNET"
+tag = "SCALAR"
+version = 0
+with_bridge = false
+rpc_host = "testnet4.btc.scalar.org"
+rpc_port = 80
+rpc_user = "scalar"
+rpc_pass = "scalartestnet4"
+disable_tls = true
+disable_connect_on_new = true
+disable_auto_reconnect = false
+http_post_mode = true

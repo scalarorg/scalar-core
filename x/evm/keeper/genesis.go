@@ -1,8 +1,6 @@
 package keeper
 
 import (
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 
@@ -13,7 +11,6 @@ import (
 
 // InitGenesis initializes the state from a genesis file
 func (k BaseKeeper) InitGenesis(ctx sdk.Context, state types.GenesisState) {
-	fmt.Println("InitGenesis")
 	for _, chain := range state.Chains {
 		funcs.MustNoErr(k.CreateChain(ctx, chain.Params))
 		ck := funcs.Must(k.ForChain(ctx, chain.Params.Chain)).(chainKeeper)

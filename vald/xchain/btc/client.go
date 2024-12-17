@@ -2,6 +2,7 @@ package btc
 
 import (
 	"github.com/btcsuite/btcd/btcjson"
+	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcd/rpcclient"
 	"github.com/btcsuite/btcd/wire"
 	"github.com/scalarorg/scalar-core/utils/clog"
@@ -49,11 +50,20 @@ func NewClient(cfg *types.BTCConfig) (xchain.Client, error) {
 }
 
 func mapBTCConfigToRPCConfig(cfg *types.BTCConfig) *rpcclient.ConnConfig {
+	params := cfg.Chain.String()
+	if params == types.BtcChainName[types.Testnet4BtcChain] {
+		params = chaincfg.TestNet3Params.Name
+	}
+
 	return &rpcclient.ConnConfig{
-		Host:   cfg.RpcHost,
-		User:   cfg.RpcUser,
-		Pass:   cfg.RpcPass,
-		Params: cfg.Chain.String(),
+		Host:                 cfg.RpcHost,
+		User:                 cfg.RpcUser,
+		Pass:                 cfg.RpcPass,
+		Params:               params,
+		DisableTLS:           cfg.DisableTLS,
+		DisableConnectOnNew:  cfg.DisableConnectOnNew,
+		DisableAutoReconnect: cfg.DisableAutoReconnect,
+		HTTPPostMode:         cfg.HttpPostMode,
 	}
 }
 

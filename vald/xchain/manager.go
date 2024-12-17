@@ -7,6 +7,7 @@ import (
 
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/log"
 
 	sdkClient "github.com/cosmos/cosmos-sdk/client"
@@ -28,11 +29,10 @@ var ErrFailedToGetTransactions = goerrors.New("failed to get transactions")
 
 // Manager manages all communication with Ethereum
 type Manager struct {
-	rpcs                      map[chain.ChainInfoBytes]Client
-	broadcaster               broadcast.Broadcaster
-	validator                 sdk.ValAddress
-	proxy                     sdk.AccAddress
-	latestFinalizedBlockCache LatestFinalizedBlockCache
+	rpcs        map[chain.ChainInfoBytes]Client
+	broadcaster broadcast.Broadcaster
+	validator   sdk.ValAddress
+	proxy       sdk.AccAddress
 }
 
 // NewManager returns a new Manager instance
@@ -42,6 +42,7 @@ func NewManager(
 	broadcaster broadcast.Broadcaster,
 	valAddr sdk.ValAddress,
 ) *Manager {
+	clog.Bluef("rpcs %+v", rpcs)
 	return &Manager{
 		rpcs:        rpcs,
 		broadcaster: broadcaster,

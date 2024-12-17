@@ -20,3 +20,11 @@ func TestUnmarshalBtcChain(t *testing.T) {
 
 	t.Logf("%+v", result)
 }
+
+func TestUnmarshalBtcChainText(t *testing.T) {
+	var chain types.BtcChain
+	if err := chain.UnmarshalText([]byte("mainnet")); err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("%+v", chain)
+}

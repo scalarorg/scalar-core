@@ -79,9 +79,7 @@ func (k Keeper) InitializePoll(ctx sdk.Context, pollBuilder exported.PollBuilder
 	if err != nil {
 		return 0, err
 	}
-	fmt.Printf("Debug# InitializePoll# amount: %+v\n", voteCostPerMaintainer*uint64(len(pollMetadata.Snapshot.GetParticipantAddresses())))
-	gasMeterType := ctx.GasMeter().String()
-	fmt.Printf("Debug# InitializePoll# gasMeterType: %+v, limit: %+v, consumed: %+v\n", gasMeterType, ctx.GasMeter().Limit(), ctx.GasMeter().GasConsumed())
+
 	ctx.GasMeter().ConsumeGas(voteCostPerMaintainer*uint64(len(pollMetadata.Snapshot.GetParticipantAddresses())), "initialize poll")
 
 	k.GetPollQueue(ctx).Enqueue(utils.KeyFromStr(pollPrefix).AppendStr(pollMetadata.ID.String()), &pollMetadata)

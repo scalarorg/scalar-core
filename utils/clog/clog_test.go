@@ -56,4 +56,8 @@ func TestColorLog(t *testing.T) {
 	clog.Yellow("block_height_not_found", "block_hash:", 123)
 	clog.Yellowf("User %s logged in from %s", "John", "192.168.1.1")
 	clog.Yellowf("Test struct %+v", TestStruct{Value: 42, Text: "hello"})
+	clog.Bluef("RPCs %+v", map[string]interface{}{
+		"rpc1": "http://127.0.0.1:48332",
+		"rpc2": "http://127.0.0.1:48333",
+	})
 }

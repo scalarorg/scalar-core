@@ -33,6 +33,7 @@ import (
 	"github.com/tendermint/tendermint/privval"
 
 	scalartypes "github.com/scalarorg/scalar-core/types"
+	btctypes "github.com/scalarorg/scalar-core/x/btc/types"
 	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	"github.com/spf13/cobra"
 	tmconfig "github.com/tendermint/tendermint/config"
@@ -770,7 +771,7 @@ func appendBridgeConfig(configPath string, supportedChainsPath string) error {
 id = "%s"
 chain_id = %d
 rpc_addr = "%s"
-start-with-bridge = true
+with_bridge = true
 finality_override = "confirmation"
 # When using new chains (not Ethereum Mainnet), you may need to set the finality override to "confirmation" to avoid issues with the bridge
 # With finality override, scalar will create evm client using ethereum.go, not ethereum_2.go
@@ -779,30 +780,36 @@ finality_override = "confirmation"
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to write evm bridge config")
 		}
-		// btcConfigs, err := scalartypes.ParseJsonArrayConfig[scalartypes.BtcNetworkConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
-		// if err != nil {
-		// 	log.Error().Err(err).Msg("Failed to parse btc config")
-		// }
-		//Add btc bridge config after implement btc module
-		// 		for _, btcConfig := range btcConfigs {
-		// 			_, err = file.WriteString(fmt.Sprintf(`
-		// [[scalar_bridge_btc]]
-		// id = "%s"
-		// chain_id = %d
-		// name = "%s"
-		// Host = "%s"
-		// Port = %d
-		// User = "%s"
-		// Pass = "%s"
-		// DisableTLS = true
-		// DisableConnectOnNew = true
-		// DisableAutoReconnect = false
-		// HTTPPostMode = true
-		// 			`, btcConfig.ID, btcConfig.ChainID, btcConfig.Name, btcConfig.RpcHost, btcConfig.RpcPort, btcConfig.RpcUser, btcConfig.RpcPass))
-		// 		}
-		// 		if err != nil {
-		// 			log.Error().Err(err).Msg("Failed to write btc bridge config")
-		// 		}
+		btcConfigs, err := scalartypes.ParseJsonArrayConfig[btctypes.BTCConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to parse btc config")
+		}
+
+		// Add btc bridge config after implement btc module
+		for _, btcConfig := range btcConfigs {
+			_, err = file.WriteString(fmt.Sprintf(`
+[[scalar_bridge_btc]]
+id = "%s"
+chain_id = %d
+name = "%s"
+chain = "%s"
+network_kind = "%s"
+tag = "%s"
+version = %d
+with_bridge = true
+rpc_host = "%s"
+rpc_port = %d
+rpc_user = "%s"
+rpc_pass = "%s"
+disable_tls = true
+disable_connect_on_new = true
+disable_auto_reconnect = false
+http_post_mode = true
+					`, btcConfig.ID, btcConfig.ChainID, btcConfig.Name, btcConfig.Chain, btcConfig.NetworkKind, btcConfig.Tag, btcConfig.Version, btcConfig.RpcHost, btcConfig.RpcPort, btcConfig.RpcUser, btcConfig.RpcPass))
+		}
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to write btc bridge config")
+		}
 	}
 	return nil
 }

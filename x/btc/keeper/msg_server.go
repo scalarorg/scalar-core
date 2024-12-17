@@ -5,7 +5,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/funcs"
-	"github.com/scalarorg/scalar-core/utils/key"
 	"github.com/scalarorg/scalar-core/x/btc/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 
@@ -95,10 +94,6 @@ func (s msgServer) createSnapshot(ctx sdk.Context, chain nexus.Chain) (snapshot.
 	params := keeper.GetParams(ctx)
 
 	candidates := s.nexus.GetChainMaintainers(ctx, chain)
-	storeKeyPrefix := key.FromUInt(uint64(1)).Append(key.From(chain.Name))
-	fmt.Printf("storeKeyPrefix %v\n", storeKeyPrefix)
-	fmt.Printf("chain %v\n", chain.Name)
-	fmt.Printf("candidates %v\n", candidates)
 	return s.snapshotter.CreateSnapshot(
 		ctx,
 		candidates,

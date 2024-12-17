@@ -46,8 +46,6 @@ func (s msgServer) ConfirmUnstakingTxs(c context.Context, req *types.ConfirmUnst
 		Participants:       snapshot.GetParticipantAddresses(),
 	}
 
-	clog.Red("event", event)
-
 	events.Emit(ctx, event)
 
 	return &types.ConfirmUnstakingTxsResponse{}, nil

@@ -118,7 +118,7 @@ func logLevelf(event *zerolog.Event, format string, logs ...interface{}) {
 }
 
 func Green(msg string, fields ...interface{}) {
-	logLevel(logger.Info(), msg, fields...)
+	logLevel(logger.Info(), colorGreen+msg+colorReset, fields...)
 }
 
 func Greenf(format string, args ...interface{}) {
@@ -126,7 +126,7 @@ func Greenf(format string, args ...interface{}) {
 }
 
 func Yellow(msg string, fields ...interface{}) {
-	logLevel(logger.Warn(), msg, fields...)
+	logLevel(logger.Warn(), colorYellow+msg+colorReset, fields...)
 }
 
 func Yellowf(format string, args ...interface{}) {
@@ -134,25 +134,30 @@ func Yellowf(format string, args ...interface{}) {
 }
 
 func Red(msg string, fields ...interface{}) {
-	logLevel(logger.Error(), msg, fields...)
+	logLevel(logger.Error(), colorRed+msg+colorReset, fields...)
 }
 
 func Redf(format string, args ...interface{}) {
-	logLevelf(logger.Error(), format, args...)
+	msg := fmt.Sprintf(format, args...)
+	logLevelf(logger.Error(), colorRed+msg+colorReset)
 }
 
 func Blue(msg string, fields ...interface{}) {
+	msg = colorBlue + msg + colorReset
 	logLevel(logger.Debug(), msg, fields...)
 }
 
 func Bluef(format string, args ...interface{}) {
-	logLevelf(logger.Debug(), format, args...)
+	msg := fmt.Sprintf(format, args...)
+	logLevelf(logger.Debug(), colorBlue+msg+colorReset)
 }
 
 func Cyan(msg string, fields ...interface{}) {
+	msg = colorGray + msg + colorReset
 	logLevel(logger.Trace(), msg, fields...)
 }
 
 func Cyanf(format string, args ...interface{}) {
-	logLevelf(logger.Trace(), format, args...)
+	msg := fmt.Sprintf(format, args...)
+	logLevelf(logger.Trace(), colorGray+msg+colorReset)
 }

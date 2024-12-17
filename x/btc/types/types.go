@@ -166,6 +166,10 @@ func (nk *NetworkKind) FromString(s string) error {
 	return nil
 }
 
+func (nk *NetworkKind) UnmarshalText(text []byte) error {
+	return nk.FromString(string(text))
+}
+
 const commandIDSize = 32
 
 // CommandID represents the unique command identifier

@@ -47,7 +47,6 @@ func NewKeeper(cdc codec.BinaryCodec, storeKey sdk.StoreKey, paramsKeeper types.
 
 // InitChains initializes all existing EVM chains and their respective param subspaces
 func (k *BaseKeeper) InitChains(ctx sdk.Context) {
-	fmt.Println("InitChains")
 	if k.initialized {
 		panic("chains are already initialized")
 	}
@@ -56,7 +55,6 @@ func (k *BaseKeeper) InitChains(ctx sdk.Context) {
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 
 	for ; iter.Valid(); iter.Next() {
-		fmt.Println("InitChains iter.Value()", iter.Value())
 		_ = k.createSubspace(ctx, nexus.ChainName(iter.Value()))
 	}
 
@@ -65,7 +63,6 @@ func (k *BaseKeeper) InitChains(ctx sdk.Context) {
 
 // CreateChain creates the subspace for a new EVM chain. Returns an error if the chain already exists
 func (k BaseKeeper) CreateChain(ctx sdk.Context, params types.Params) (err error) {
-	fmt.Println("CreateChain")
 	defer func() {
 		err = sdkerrors.Wrap(err, "cannot create new EVM chain")
 	}()

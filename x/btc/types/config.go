@@ -19,12 +19,14 @@ const (
 	Testnet4BtcChain BtcChain = 4
 )
 
+const chaincfgTestnet4ParamsName = "testnet4"
+
 var BtcChainName = map[BtcChain]string{
 	MainnetBtcChain:  chaincfg.MainNetParams.Name,
 	Testnet3BtcChain: chaincfg.TestNet3Params.Name,
 	SignetBtcChain:   chaincfg.SigNetParams.Name,
 	RegtestBtcChain:  chaincfg.RegressionNetParams.Name,
-	Testnet4BtcChain: chaincfg.TestNet3Params.Name, // TODO: Add TestNet4Params
+	Testnet4BtcChain: chaincfgTestnet4ParamsName,
 }
 
 var BtcChainValue = map[string]BtcChain{
@@ -32,7 +34,7 @@ var BtcChainValue = map[string]BtcChain{
 	chaincfg.TestNet3Params.Name:      Testnet3BtcChain,
 	chaincfg.SigNetParams.Name:        SignetBtcChain,
 	chaincfg.RegressionNetParams.Name: RegtestBtcChain,
-	"testnet4":                        Testnet4BtcChain,
+	chaincfgTestnet4ParamsName:        Testnet4BtcChain,
 }
 
 func (c BtcChain) String() string {
@@ -60,12 +62,16 @@ func (c *BtcChain) UnmarshalJSON(data []byte) error {
 	return c.FromString(s)
 }
 
+func (c *BtcChain) UnmarshalText(text []byte) error {
+	return c.FromString(string(text))
+}
+
 type BTCConfig struct {
-	ChainID     uint64        `json:"chainID" mapstructure:"chainID"`
-	Chain       BtcChain      `json:"chain" mapstructure:"chain"`
-	NetworkKind NetworkKind   `json:"networkKind" mapstructure:"networkKind"`
+	ID          string        `json:"id" mapstructure:"id"`
+	ChainID     uint64        `json:"chainID" mapstructure:"chain_id"`
 	Name        string        `json:"name" mapstructure:"name"`
-	ID          string        `json:"id"`
+	Chain       BtcChain      `json:"chain" mapstructure:"chain"`
+	NetworkKind NetworkKind   `json:"networkKind" mapstructure:"network_kind"`
 	Gateway     string        `json:"gateway" mapstructure:"gateway"` //Taproot address
 	Finality    int           `json:"finality"`
 	LastBlock   uint64        `json:"lastBlock"`
@@ -75,12 +81,16 @@ type BTCConfig struct {
 	RetryDelay  time.Duration `json:"retryDelay"`
 	TxTimeout   time.Duration `json:"txTimeout"` //Timeout for send txs (~3s)
 	Tag         string        `json:"tag" mapstructure:"tag"`
-	Version     byte          `json:"version" mapstructure:"version"`
-	WithBridge  bool          `json:"withBridge" mapstructure:"withBridge"`
-	RpcHost     string        `json:"rpcHost" mapstructure:"rpcHost"`
-	RpcPort     int           `json:"rpcPort" mapstructure:"rpcPort"`
-	RpcUser     string        `json:"rpcUser" mapstructure:"rpcUser"`
-	RpcPass     string        `json:"rpcPass" mapstructure:"rpcPass"`
+	Version     uint8         `json:"version" mapstructure:"version"`
+	WithBridge  bool          `json:"withBridge" mapstructure:"with_bridge"`
+	RpcHost     string        `json:"rpcHost" mapstructure:"rpc_host"`
+	RpcPort     int           `json:"rpcPort" mapstructure:"rpc_port"`
+	RpcUser     string        `json:"rpcUser" mapstructure:"rpc_user"`
+	RpcPass     string        `json:"rpcPassword" mapstructure:"rpc_pass"`
+	DisableTLS  bool          `json:"disableTLS" mapstructure:"disable_tls"`
+	DisableConnectOnNew bool `json:"disableConnectOnNew" mapstructure:"disable_connect_on_new"`
+	DisableAutoReconnect bool `json:"disableAutoReconnect" mapstructure:"disable_auto_reconnect"`
+	HttpPostMode bool `json:"httpPostMode" mapstructure:"http_post_mode"`
 }
 
 // DefaultConfig returns a configuration populated with default values
@@ -105,6 +115,10 @@ func DefaultConfig() []BTCConfig {
 		Tag:         "SCALAR",
 		Version:     1,
 		WithBridge:  false,
+		DisableTLS:  true,
+		DisableConnectOnNew: true,
+		DisableAutoReconnect: false,
+		HttpPostMode: true,
 	}}
 }
 

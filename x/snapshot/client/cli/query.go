@@ -8,6 +8,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/spf13/cobra"
 
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/x/snapshot/keeper"
 	"github.com/scalarorg/scalar-core/x/snapshot/types"
 )
@@ -49,7 +50,7 @@ func GetCmdGetProxy(queryRoute string) *cobra.Command {
 				return sdkerrors.Wrapf(err, types.ErrFProxyAddress)
 			}
 
-			fmt.Println(string(res))
+			clog.Green(string(res))
 			return nil
 		},
 	}
@@ -74,7 +75,7 @@ func GetCmdGetOperator(queryRoute string) *cobra.Command {
 				return sdkerrors.Wrapf(err, types.ErrFOperatorAddress)
 			}
 
-			fmt.Println(string(res))
+			clog.Green(string(res))
 			return nil
 		},
 	}

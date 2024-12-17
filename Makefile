@@ -23,7 +23,7 @@ export CGO_ENABLED := 1
 
 SCALAR_BIN_PATH ?= bin/scalard
 SCALAR_BIN_NAME ?= scalard
-SCALAR_HOME_DIR ?= .scalar
+SCALAR_HOME_DIR ?= .scalar/scalar
 SCALAR_CHAIN_ID ?= scalar-testnet-1
 SCALAR_KEYRING_BACKEND ?= test
 LOCAL_LIB_PATH ?= $(shell pwd)/lib
@@ -121,7 +121,7 @@ dev:
 		SCALAR_HOME_DIR=${SCALAR_HOME_DIR} ./scripts/entrypoint.debug.sh; \
 	else \
 		echo "Running node ${N}"; \
-		export SCALAR_HOME_DIR=./.scalar/scalar/node${N}/scalard; \
+		export SCALAR_HOME_DIR=./.scalar/node${N}/scalard; \
 		./scripts/entrypoint.debug.sh; \
 	fi
 
@@ -236,7 +236,10 @@ cfst:
 		exit 1; \
 	fi
 
-	$(SCALAR_BIN_PATH) tx btc confirm-staking-txs $(ARGS) --from $(WALLET) --keyring-backend $(SCALAR_KEYRING_BACKEND) --home $(SCALAR_HOME_DIR) --chain-id $(SCALAR_CHAIN_ID)
+	$(SCALAR_BIN_PATH) tx btc confirm-staking-txs $(ARGS) --from $(WALLET) --keyring-backend $(SCALAR_KEYRING_BACKEND) --home $(SCALAR_HOME_DIR) --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+
+cfst2:
+	$(SCALAR_BIN_PATH) tx btc confirm-staking-txs "bitcoin|4" 07b50c84f889e2f1315da875fc91734e2bac8d0153ff9a98d9da14caa4fc7d57 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
 
 .PHONY: open-docs
 open-docs:

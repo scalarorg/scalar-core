@@ -1,8 +1,7 @@
-package codec 
+package codec
 
 import (
 	//Importing the types package is necessary to register the codec
-	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/types"
@@ -23,13 +22,10 @@ var interfaceRegistry types.InterfaceRegistry
 // The fix has been extracted into its own module in order to minimize the number of dependencies
 // that get imported before this init() function is called.
 func init() {
-	fmt.Println("protoCodec", protoCodec)
 	interfaceRegistry = types.NewInterfaceRegistry()
 	authtypes.RegisterInterfaces(interfaceRegistry)
 	//Register the secp256k1 pubkey type
 	interfaceRegistry.RegisterImplementations((*proto.Message)(nil), &secp256k1.PubKey{})
-	gogoCodec := GogoEnabled{Codec: encoding.GetCodec(encproto.Name)}
-	fmt.Println(gogoCodec.Name())
 	encoding.RegisterCodec(GogoEnabled{Codec: encoding.GetCodec(encproto.Name)})
 	protoCodec = codec.NewProtoCodec(interfaceRegistry)
 }

@@ -46,7 +46,7 @@ func (s msgServer) ConfirmStakingTxs(c context.Context, req *types.ConfirmStakin
 		Participants:       snapshot.GetParticipantAddresses(),
 	}
 
-	clog.Red("event", event)
+	clog.Green("ConfirmStakingTxsStarted", event)
 
 	events.Emit(ctx, event)
 
