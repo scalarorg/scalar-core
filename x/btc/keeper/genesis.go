@@ -17,7 +17,7 @@ func (k BaseKeeper) InitGenesis(ctx sdk.Context, state types.GenesisState) {
 	// TODO: add btc genesis
 	for _, chain := range state.Chains {
 		funcs.MustNoErr(k.CreateChain(ctx, chain.Params))
-		ck := funcs.Must(k.ForChain(ctx, chain.Params.ChainName)).(chainKeeper)
+		ck := funcs.Must(k.ForChain(ctx, chain.Params.Chain)).(chainKeeper)
 
 		if err := ck.validateCommandQueueState(chain.CommandQueue, commandQueueName); err != nil {
 			panic(err)

@@ -5,13 +5,11 @@ import (
 	"errors"
 
 	"github.com/btcsuite/btcd/txscript"
-	"github.com/ethereum/go-ethereum/common"
 	vault "github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	evmUtils "github.com/scalarorg/bitcoin-vault/go-utils/evm"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/log"
-	"github.com/scalarorg/scalar-core/vald/btc/rpc"
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 )
@@ -34,7 +32,7 @@ const (
 	MinNumberOfOutputs = 2
 )
 
-func (mgr *Mgr) decodeStakingTransaction(tx *rpc.TxReceipt) (btcTypes.EventStakingTx, error) {
+func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (btcTypes.EventStakingTx, error) {
 	log.Infof("Decoding BTC transaction %+v\n", tx)
 
 	if len(tx.MsgTx.TxOut) < MinNumberOfOutputs {
@@ -75,13 +73,17 @@ func (mgr *Mgr) decodeStakingTransaction(tx *rpc.TxReceipt) (btcTypes.EventStaki
 	clog.Redf("Payload hash %+v\n", payloadHash)
 	clog.Redf("Minting amount %+v\n", mintingAmount)
 	clog.Redf("Tx ID %+v\n", txId)
+	chainHash, err := btcTypes.HashFromBytes(payloadHash)
+	if err != nil {
+		return btcTypes.EventStakingTx{}, ErrInvalidPayloadHash
+	}
 
 	return btcTypes.EventStakingTx{
 		Sender:      tx.PrevTxOuts[0].ScriptPubKey.Address, // TODO: Fix hard coded
 		Amount:      uint64(mintingAmount),
 		Asset:       "satoshi", // TODO: Fix hard coded
 		Metadata:    *stakingMetadata,
-		PayloadHash: evmTypes.Hash(common.BytesToHash(payloadHash)),
+		PayloadHash: chainHash,
 	}, nil
 }
 
@@ -105,7 +107,7 @@ func mapOutputToEventStakingTx(output *vault.VaultReturnTxOutput) (*btcTypes.Eve
 		return nil, err
 	}
 
-	parsedDestinationChain := chain.NewDestinationChainFromBytes(output.DestinationChain)
+	parsedDestinationChain := chain.NewChainInfoFromBytes(output.DestinationChain)
 	if parsedDestinationChain == nil {
 		return nil, ErrInvalidDestinationChain
 	}
@@ -123,5 +125,4 @@ func mapOutputToEventStakingTx(output *vault.VaultReturnTxOutput) (*btcTypes.Eve
 		DestinationContractAddress:  destinationContractAddress,
 		DestinationRecipientAddress: destinationRecipientAddress,
 	}, nil
-
 }

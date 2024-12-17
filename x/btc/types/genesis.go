@@ -2,7 +2,7 @@ package types
 
 import (
 	utils "github.com/scalarorg/scalar-core/utils"
-	"github.com/scalarorg/scalar-core/x/nexus/exported"
+	"github.com/scalarorg/scalar-core/x/btc/exported"
 )
 
 const (
@@ -18,7 +18,7 @@ func DefaultGenesisState() GenesisState {
 			{
 				Params: Params{
 					ChainId:             TestnetChainId,
-					ChainName:           exported.ChainName("bitcoin-testnet4"),
+					Chain:               exported.Bitcoin.Name,
 					ConfirmationHeight:  2,
 					NetworkKind:         Testnet,
 					RevoteLockingPeriod: 50,

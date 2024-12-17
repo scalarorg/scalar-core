@@ -307,15 +307,19 @@ func generateNexusGenesis(supportedChainsPath string, validatorAddrs []sdk.ValAd
 			log.Error().Err(err).Msg("Failed to parse evm config")
 		}
 		for _, evmConfig := range evmConfigs {
+			err := evmConfig.ValidateBasic()
+			if err != nil {
+				log.Error().Err(err).Msg("Failed to validate evm config")
+			}
 			nexusGenState.Chains = append(nexusGenState.Chains, nexus.Chain{
-				Name:                  nexus.ChainName(evmConfig.Name),
+				Name:                  nexus.ChainName(evmConfig.ID),
 				SupportsForeignAssets: true,
 				KeyType:               tss.Multisig,
 				Module:                evmtypes.ModuleName,
 			})
 			chainState := nexustypes.ChainState{
 				Chain: nexus.Chain{
-					Name:                  nexus.ChainName(evmConfig.Name),
+					Name:                  nexus.ChainName(evmConfig.ID),
 					SupportsForeignAssets: true,
 					KeyType:               tss.Multisig,
 					Module:                evmtypes.ModuleName,
@@ -334,7 +338,10 @@ func generateNexusGenesis(supportedChainsPath string, validatorAddrs []sdk.ValAd
 			log.Error().Err(err).Msg("Failed to parse btc config")
 		}
 		for _, btcConfig := range btcConfigs {
-			fmt.Printf("btcConfig %v\n", btcConfig)
+			err := btcConfig.ValidateBasic()
+			if err != nil {
+				log.Error().Err(err).Msg("Failed to validate btc config")
+			}
 			nexusGenState.Chains = append(nexusGenState.Chains, nexus.Chain{
 				Name:                  nexus.ChainName(btcConfig.ID),
 				SupportsForeignAssets: true,
@@ -417,7 +424,7 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 			vaultVersion := btctypes.VaultVersion([1]byte{btcConfig.Version})
 			params := btctypes.Params{
 				ChainId:             btcConfig.ChainID,
-				ChainName:           nexus.ChainName(btcConfig.Name),
+				Chain:               nexus.ChainName(btcConfig.ID),
 				ConfirmationHeight:  2,
 				NetworkKind:         btcConfig.NetworkKind,
 				RevoteLockingPeriod: 50,
@@ -432,7 +439,7 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 			//Check if chainName is already in the genesis state
 			addChain := true
 			for _, chain := range btcGenState.Chains {
-				if chain.Params.ChainName == nexus.ChainName(btcConfig.ID) {
+				if chain.Params.Chain == nexus.ChainName(btcConfig.ID) {
 					addChain = false
 					log.Debug().Msgf("chain name %s already exists", btcConfig.ID)
 				}

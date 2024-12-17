@@ -72,7 +72,10 @@
 - [scalar/btc/v1beta1/tx.proto](#scalar/btc/v1beta1/tx.proto)
     - [ConfirmStakingTxsRequest](#scalar.btc.v1beta1.ConfirmStakingTxsRequest)
     - [ConfirmStakingTxsResponse](#scalar.btc.v1beta1.ConfirmStakingTxsResponse)
+    - [ConfirmUnstakingTxsRequest](#scalar.btc.v1beta1.ConfirmUnstakingTxsRequest)
+    - [ConfirmUnstakingTxsResponse](#scalar.btc.v1beta1.ConfirmUnstakingTxsResponse)
     - [EventConfirmStakingTxsStarted](#scalar.btc.v1beta1.EventConfirmStakingTxsStarted)
+    - [EventConfirmUnstakingTxsStarted](#scalar.btc.v1beta1.EventConfirmUnstakingTxsStarted)
   
 - [scalar/btc/v1beta1/query.proto](#scalar/btc/v1beta1/query.proto)
     - [BatchedCommandsRequest](#scalar.btc.v1beta1.BatchedCommandsRequest)
@@ -1322,7 +1325,7 @@ Msg defines the nexus Msg service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `chain_name` | [string](#string) |  |  |
+| `chain` | [string](#string) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
 | `network_kind` | [NetworkKind](#scalar.btc.v1beta1.NetworkKind) |  |  |
 | `revote_locking_period` | [int64](#int64) |  |  |
@@ -1533,9 +1536,54 @@ Msg defines the nexus Msg service.
 
 
 
+<a name="scalar.btc.v1beta1.ConfirmUnstakingTxsRequest"></a>
+
+### ConfirmUnstakingTxsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `tx_ids` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.ConfirmUnstakingTxsResponse"></a>
+
+### ConfirmUnstakingTxsResponse
+
+
+
+
+
+
+
 <a name="scalar.btc.v1beta1.EventConfirmStakingTxsStarted"></a>
 
 ### EventConfirmStakingTxsStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `poll_mappings` | [PollMapping](#scalar.btc.v1beta1.PollMapping) | repeated |  |
+| `chain` | [string](#string) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `participants` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.EventConfirmUnstakingTxsStarted"></a>
+
+### EventConfirmUnstakingTxsStarted
 
 
 
@@ -1635,6 +1683,7 @@ Msg defines the btc Msg service.
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `ConfirmStakingTxs` | [ConfirmStakingTxsRequest](#scalar.btc.v1beta1.ConfirmStakingTxsRequest) | [ConfirmStakingTxsResponse](#scalar.btc.v1beta1.ConfirmStakingTxsResponse) |  | POST|/scalar/btc/confirm_staking_txs|
+| `ConfirmUnstakingTxs` | [ConfirmUnstakingTxsRequest](#scalar.btc.v1beta1.ConfirmUnstakingTxsRequest) | [ConfirmUnstakingTxsResponse](#scalar.btc.v1beta1.ConfirmUnstakingTxsResponse) |  | POST|/scalar/btc/confirm_unstaking_txs|
 
 
 <a name="scalar.btc.v1beta1.QueryService"></a>
@@ -2081,7 +2130,7 @@ Chain represents the properties of a registered blockchain
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  |  |
+| `name` | [string](#string) |  | The descriptor of the chain, e.g. "evm|11155111" |
 | `supports_foreign_assets` | [bool](#bool) |  |  |
 | `key_type` | [scalar.tss.exported.v1beta1.KeyType](#scalar.tss.exported.v1beta1.KeyType) |  |  |
 | `module` | [string](#string) |  |  |

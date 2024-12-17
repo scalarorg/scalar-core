@@ -25,12 +25,13 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	btcTxCmd.AddCommand(getCmdCreateConfirmGatewayTxs())
+	btcTxCmd.AddCommand(getCmdCreateConfirmStakingTxs())
+	btcTxCmd.AddCommand(getCmdCreateConfirmUnstakingTxs())
 
 	return btcTxCmd
 }
 
-func getCmdCreateConfirmGatewayTxs() *cobra.Command {
+func getCmdCreateConfirmStakingTxs() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "confirm-staking-txs <chain> <txID>...",
 		Short: "Confirm staking transactions in an EVM chain",
@@ -41,7 +42,8 @@ func getCmdCreateConfirmGatewayTxs() *cobra.Command {
 				return err
 			}
 
-			chain := nexus.ChainName(utils.NormalizeString(args[0]))
+			chainName := utils.NormalizeString(args[0])
+
 			var txIDs []types.Hash
 			for _, arg := range args[1:] {
 				txHash, err := types.HashFromHexStr(arg)
@@ -51,7 +53,7 @@ func getCmdCreateConfirmGatewayTxs() *cobra.Command {
 				txIDs = append(txIDs, *txHash)
 			}
 
-			msg := types.NewConfirmStakingTxsRequest(cliCtx.GetFromAddress(), chain, txIDs)
+			msg := types.NewConfirmStakingTxsRequest(cliCtx.GetFromAddress(), nexus.ChainName(chainName), txIDs)
 			if err := msg.ValidateBasic(); err != nil {
 				return fmt.Errorf("failed to validate message: %v", err)
 			}
@@ -61,4 +63,37 @@ func getCmdCreateConfirmGatewayTxs() *cobra.Command {
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 
+}
+
+func getCmdCreateConfirmUnstakingTxs() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "confirm-unstaking-txs <chain> <txID>...",
+		Short: "Confirm unstaking transactions in an EVM chain",
+		Args:  cobra.MinimumNArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cliCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			chainName := utils.NormalizeString(args[0])
+
+			var txIDs []types.Hash
+			for _, arg := range args[1:] {
+				txHash, err := types.HashFromHexStr(arg)
+				if err != nil {
+					return fmt.Errorf("failed to parse txID %s: %v", arg, err)
+				}
+				txIDs = append(txIDs, *txHash)
+			}
+
+			msg := types.NewConfirmUnstakingTxsRequest(cliCtx.GetFromAddress(), nexus.ChainName(chainName), txIDs)
+			if err := msg.ValidateBasic(); err != nil {
+				return fmt.Errorf("failed to validate message: %v", err)
+			}
+			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
+		},
+	}
+	flags.AddTxFlagsToCmd(cmd)
+	return cmd
 }

@@ -54,19 +54,10 @@ func (k *BaseKeeper) InitChains(ctx sdk.Context) {
 		panic("chains are already initialized")
 	}
 
-	clog.Red("InitChains", "subspacePrefix", subspacePrefix)
-	clog.Red("InitChains", "key", key.FromStr(subspacePrefix))
-
 	baseStore := k.getBaseStore(ctx)
-	fmt.Printf("baseStore: %+v\n", baseStore)
 	iter := baseStore.IteratorNew(key.FromStr(subspacePrefix))
-	fmt.Printf("iter: %+v\n", iter)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
-
-	clog.Red("iter.Valid()", iter.Valid())
-
 	for ; iter.Valid(); iter.Next() {
-		clog.Red("iter.Value()", string(iter.Value()))
 		_ = k.createSubspace(ctx, nexus.ChainName(iter.Value()))
 	}
 
@@ -86,14 +77,14 @@ func (k BaseKeeper) CreateChain(ctx sdk.Context, params types.Params) (err error
 	if err := params.Validate(); err != nil {
 		return err
 	}
-	chainKey := key.FromStr(subspacePrefix).Append(key.FromStr(params.ChainName.String()))
+	chainKey := key.FromStr(subspacePrefix).Append(key.FromStr(params.Chain.String()))
 	if k.getBaseStore(ctx).HasNew(chainKey) {
-		return fmt.Errorf("chain %s already exists", params.ChainName)
+		return fmt.Errorf("chain %s already exists", params.Chain)
 	}
 
-	k.getBaseStore(ctx).SetRawNew(chainKey, []byte(params.ChainName.String()))
+	k.getBaseStore(ctx).SetRawNew(chainKey, []byte(params.Chain.String()))
 
-	k.createSubspace(ctx, params.ChainName).SetParamSet(ctx, &params)
+	k.createSubspace(ctx, params.Chain).SetParamSet(ctx, &params)
 
 	return nil
 }

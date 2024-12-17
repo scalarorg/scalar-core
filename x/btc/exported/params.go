@@ -8,7 +8,7 @@ import (
 var (
 	// Bitcoin defines properties of the Bitcoin chain
 	Bitcoin = exported.Chain{
-		Name:                  "Bitcoin",
+		Name:                  "bitcoin|1",
 		SupportsForeignAssets: true,
 		KeyType:               tss.Multisig,
 		Module:                "btc", // cannot use constant due to import cycle

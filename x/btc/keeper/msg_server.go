@@ -22,13 +22,17 @@ type msgServer struct {
 	snapshotter types.Snapshotter
 	slashing    types.SlashingKeeper
 	voter       types.Voter
+	staking     types.StakingKeeper
 }
 
 type MsgServerConstructArgs struct {
 	types.BaseKeeper
 	Nexus       types.Nexus
+	Voter       types.Voter
 	Snapshotter types.Snapshotter
+	Staking     types.StakingKeeper
 	Slashing    types.SlashingKeeper
+	Multisig    types.MultisigKeeper
 }
 
 func (args MsgServerConstructArgs) Validate() error {
@@ -36,16 +40,28 @@ func (args MsgServerConstructArgs) Validate() error {
 		return fmt.Errorf("BaseKeeper is nil")
 	}
 
-	if args.Slashing == nil {
-		return fmt.Errorf("Slashing keeper is nil")
+	if args.Nexus == nil {
+		return fmt.Errorf("nexus is nil")
+	}
+
+	if args.Voter == nil {
+		return fmt.Errorf("voter is nil")
 	}
 
 	if args.Snapshotter == nil {
-		return fmt.Errorf("Snapshotter is nil")
+		return fmt.Errorf("snapshotter is nil")
 	}
 
-	if args.Nexus == nil {
-		return fmt.Errorf("Nexus is nil")
+	if args.Staking == nil {
+		return fmt.Errorf("staking keeper is nil")
+	}
+
+	if args.Slashing == nil {
+		return fmt.Errorf("slashing keeper is nil")
+	}
+
+	if args.Multisig == nil {
+		return fmt.Errorf("multisig keeper is nil")
 	}
 
 	return nil
@@ -55,8 +71,10 @@ func NewMsgServerImpl(args MsgServerConstructArgs) types.MsgServiceServer {
 	return msgServer{
 		BaseKeeper:  args.BaseKeeper,
 		nexus:       args.Nexus,
+		voter:       args.Voter,
 		snapshotter: args.Snapshotter,
 		slashing:    args.Slashing,
+		staking:     args.Staking,
 	}
 }
 

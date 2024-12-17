@@ -93,6 +93,11 @@ BUILD_FLAGS := -tags $(BUILD_TAGS) -ldflags $(ldflags) -trimpath -buildvcs=false
 build: go.sum
 	@go build -o ./bin/scalard -mod=readonly $(BUILD_FLAGS) ./cmd/scalard
 
+# Build the project with release flags in a docker container
+.PHONY: docker-build
+docker-build: go.sum
+	@go build -o ./bin/docker/scalard -mod=readonly $(BUILD_FLAGS) ./cmd/scalard
+
 .PHONY: run
 run:
 	@HOME=$(PWD) ./entrypoint.sh
@@ -115,7 +120,9 @@ dev:
 	@if [ -z "$(N)" ]; then \
 		SCALAR_HOME_DIR=${SCALAR_HOME_DIR} ./scripts/entrypoint.debug.sh; \
 	else \
-		SCALAR_HOME_DIR=./.scalar/node${N}/scalard ./scripts/entrypoint.debug.sh; \
+		echo "Running node ${N}"; \
+		export SCALAR_HOME_DIR=./.scalar/scalar/node${N}/scalard; \
+		./scripts/entrypoint.debug.sh; \
 	fi
 
 .PHONY: dbg

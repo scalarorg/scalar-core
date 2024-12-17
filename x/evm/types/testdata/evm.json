@@ -1,8 +1,8 @@
 [
   {
     "chainId": 11155111,
-    "id": "ethereum-sepolia",
-    "name": "ethereum-sepolia",
+    "id": "evm|11155111",
+    "name": "Ethereum Sepolia",
     "rpcAddr": "https://eth-sepolia.g.alchemy.com/v2/nNbspp-yjKP9GtAcdKi8xcLnBTptR2Zx",
     "gateway": "0xc9c5EC5975070a5CF225656e36C53e77eEa318b5",
     "blockTime": 12000,

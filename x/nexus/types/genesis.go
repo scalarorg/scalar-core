@@ -6,6 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
+	btc "github.com/scalarorg/scalar-core/x/btc/exported"
 	evm "github.com/scalarorg/scalar-core/x/evm/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
@@ -47,7 +48,7 @@ func DefaultGenesisState() *GenesisState {
 	return NewGenesisState(
 		DefaultParams(),
 		0,
-		[]exported.Chain{evm.Ethereum, scalarnet.Scalarnet},
+		[]exported.Chain{evm.Ethereum, scalarnet.Scalarnet, btc.Bitcoin},
 		[]ChainState{{
 			Chain:  scalarnet.Scalarnet,
 			Assets: []exported.Asset{exported.NewAsset(scalarnet.NativeAsset, true)},

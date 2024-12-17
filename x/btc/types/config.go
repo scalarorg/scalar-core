@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/scalarorg/scalar-core/utils"
 )
 
 type BtcChain int32
@@ -89,7 +90,7 @@ func DefaultConfig() []BTCConfig {
 		Chain:       Testnet4BtcChain,
 		NetworkKind: Testnet,
 		Name:        "bitcoin-testnet4",
-		ID:          "bitcoin-testnet4",
+		ID:          "bitcoin|4",
 		Gateway:     "",
 		Finality:    10,
 		LastBlock:   0,
@@ -105,4 +106,12 @@ func DefaultConfig() []BTCConfig {
 		Version:     1,
 		WithBridge:  false,
 	}}
+}
+
+func (c *BTCConfig) ValidateBasic() error {
+	_, err := utils.ChainInfoBytesFromID(c.ID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

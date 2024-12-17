@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/scalarorg/scalar-core/client/rpc"
+	"github.com/scalarorg/scalar-core/utils"
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
-	"github.com/scalarorg/scalar-core/utils"
 )
 
 const (
@@ -22,7 +22,7 @@ func TestConfirmBtcTx(t *testing.T) {
 	chain := nexus.ChainName(utils.NormalizeString(chainNameBtcTestnet4))
 	txHash, err := btcTypes.HashFromHexStr(mockTxHash)
 	require.NoError(t, err)
-	msg := btcTypes.NewConfirmStakingTxsRequest(mockNetworkClient.GetAddress(), chain, []btcTypes.Hash{*txHash})
+	msg := btcTypes.NewConfirmBridgeTxsRequest(mockNetworkClient.GetAddress(), chain, []btcTypes.Hash{*txHash})
 
 	tx, err := rpc.ConfirmBtcTx(context.Background(), mockNetworkClient, msg)
 	require.NoError(t, err)

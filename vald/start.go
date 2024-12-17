@@ -25,25 +25,27 @@ import (
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 	"golang.org/x/sync/errgroup"
 
+	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
 	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
 	tmEvents "github.com/scalarorg/scalar-core/tm-events/events"
 	"github.com/scalarorg/scalar-core/tm-events/pubsub"
 	"github.com/scalarorg/scalar-core/tm-events/tendermint"
+	scalarUtils "github.com/scalarorg/scalar-core/utils"
 	errors2 "github.com/scalarorg/scalar-core/utils/errors"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/jobs"
 	"github.com/scalarorg/scalar-core/utils/log"
 	"github.com/scalarorg/scalar-core/utils/slices"
-	"github.com/scalarorg/scalar-core/vald/btc"
-	btcRPC "github.com/scalarorg/scalar-core/vald/btc/rpc"
 	"github.com/scalarorg/scalar-core/vald/config"
 	"github.com/scalarorg/scalar-core/vald/evm"
 	evmRPC "github.com/scalarorg/scalar-core/vald/evm/rpc"
 	"github.com/scalarorg/scalar-core/vald/multisig"
 	grpc "github.com/scalarorg/scalar-core/vald/tofnd_grpc"
 	"github.com/scalarorg/scalar-core/vald/tss"
+	"github.com/scalarorg/scalar-core/vald/xchain"
+	"github.com/scalarorg/scalar-core/vald/xchain/btc"
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
@@ -178,6 +180,23 @@ func setPersistentFlags(cmd *cobra.Command) {
 }
 
 func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdConfig, valAddr sdk.ValAddress, stateSource ReadWriter) {
+	btcConfigs := scalarCfg.BTCConfig
+	evmConfigs := scalarCfg.EVMConfig
+
+	for _, btcConfig := range btcConfigs {
+		err := btcConfig.ValidateBasic()
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	for _, evmConfig := range evmConfigs {
+		err := evmConfig.ValidateBasic()
+		if err != nil {
+			panic(err)
+		}
+	}
+
 	encCfg := app.MakeEncodingConfig()
 	cdc := encCfg.Amino
 	sender, err := clientCtx.Keyring.Key(clientCtx.From)
@@ -207,7 +226,7 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 
 	evmMgr := createEVMMgr(scalarCfg, clientCtx, bc, valAddr)
 
-	btcMgr := createBTCMgr(scalarCfg, clientCtx, bc, valAddr)
+	xMgr := createXChainMgr(scalarCfg, clientCtx, bc, valAddr)
 
 	multisigMgr := createMultisigMgr(bc, clientCtx, scalarCfg, valAddr)
 
@@ -246,10 +265,12 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 	evmGatewayTxConf := eventBus.Subscribe(tmEvents.Filter[*evmTypes.ConfirmGatewayTxStarted]())
 	evmGatewayTxsConf := eventBus.Subscribe(tmEvents.Filter[*evmTypes.ConfirmGatewayTxsStarted]())
 
-	btcDepConf := eventBus.Subscribe(tmEvents.Filter[*btcTypes.EventConfirmStakingTxsStarted]())
-
 	multisigKeygen := eventBus.Subscribe(tmEvents.Filter[*multisigTypes.KeygenStarted]())
 	multisigSigning := eventBus.Subscribe(tmEvents.Filter[*multisigTypes.SigningStarted]())
+
+	// TODO: Version2: handle staking and unstaking events for multiple chains, currently it uses type of btc, we need to change it to more generic type
+	v2StakingConf := eventBus.Subscribe(tmEvents.Filter[*btcTypes.EventConfirmStakingTxsStarted]())
+	v2UnstakingConf := eventBus.Subscribe(tmEvents.Filter[*btcTypes.EventConfirmUnstakingTxsStarted]())
 
 	eventCtx, cancelEventCtx := context.WithCancel(context.Background())
 	eGroup, eventCtx := errgroup.WithContext(eventCtx)
@@ -309,8 +330,12 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 		createJobTyped(evmGatewayTxsConf, evmMgr.ProcessGatewayTxsConfirmation, cancelEventCtx),
 		createJobTyped(multisigKeygen, multisigMgr.ProcessKeygenStarted, cancelEventCtx),
 		createJobTyped(multisigSigning, multisigMgr.ProcessSigningStarted, cancelEventCtx),
-		createJobTyped(btcDepConf, btcMgr.ProcessStakingTxsConfirmation, cancelEventCtx),
+
+		createJobTyped(v2StakingConf, xMgr.ProcessStakingTxsConfirmation, cancelEventCtx),
+		// createJobTyped(v2UnstakingConf, xMgr.ProcessUnstakingTxsConfirmation, cancelEventCtx),
 	}
+
+	_ = v2UnstakingConf
 
 	slices.ForEach(js, func(job jobs.Job) {
 		eGroup.Go(func() error { return job(eventCtx) })
@@ -505,24 +530,39 @@ func createEVMMgr(valdCfg config.ValdConfig, cliCtx sdkClient.Context, b broadca
 	return evm.NewMgr(rpcs, b, valAddr, cliCtx.FromAddress, evm.NewLatestFinalizedBlockCache())
 }
 
-func createBTCMgr(valdCfg config.ValdConfig, cliCtx sdkClient.Context, b broadcast.Broadcaster, valAddr sdk.ValAddress) *btc.Mgr {
-	rpcs := make(map[string]btcRPC.Client)
+// TODO: Refactor the name later, this mgr handles multiple chain confirmations
+func createXChainMgr(valdCfg config.ValdConfig, cliCtx sdkClient.Context, b broadcast.Broadcaster, valAddr sdk.ValAddress) *xchain.Manager {
+	rpcs := make(map[chain.ChainInfoBytes]xchain.Client)
 
-	bridgeConfigs := slices.Filter(valdCfg.BTCConfig, func(config btcTypes.BTCConfig) bool {
+	btcConfigs := slices.Filter(valdCfg.BTCConfig, func(config btcTypes.BTCConfig) bool {
 		return config.WithBridge
 	})
 
-	slices.ForEach(bridgeConfigs, func(config btcTypes.BTCConfig) {
-		chainName := strings.ToLower(config.ID)
-		if _, ok := rpcs[chainName]; ok {
-			err := fmt.Errorf("duplicate bridge configuration found for BTC chain %s", config.ID)
+	// TODO: Add more chains here
+
+	evmConfigs := slices.Filter(valdCfg.EVMConfig, func(config evmTypes.EVMConfig) bool {
+		return config.WithBridge
+	})
+
+	_ = evmConfigs
+
+	slices.ForEach(btcConfigs, func(config btcTypes.BTCConfig) {
+		chainInfoBytes, err := scalarUtils.ChainInfoBytesFromID(config.ID)
+		if err != nil {
+			err := fmt.Errorf("invalid chain ID %s", config.ID)
 			log.Error(err.Error())
 			panic(err)
 		}
 
-		client, err := btcRPC.NewClient(&config)
+		if _, ok := rpcs[chainInfoBytes]; ok {
+			err := fmt.Errorf("duplicate bridge configuration found for BTC chain %s", config.Name)
+			log.Error(err.Error())
+			panic(err)
+		}
+
+		client, err := btc.NewClient(&config)
 		if err != nil {
-			err = sdkerrors.Wrap(err, fmt.Sprintf("failed to create an RPC connection for BTC chain %s. Verify your RPC config.", config.ID))
+			err = sdkerrors.Wrap(err, fmt.Sprintf("failed to create an RPC connection for BTC chain %s. Verify your RPC config.", config.Name))
 			log.Error(err.Error())
 			panic(err)
 		}
@@ -530,12 +570,9 @@ func createBTCMgr(valdCfg config.ValdConfig, cliCtx sdkClient.Context, b broadca
 		log.WithKeyVals("chain", config.Name, "url", fmt.Sprintf("%s:%d", config.RpcHost, config.RpcPort)).
 			Debugf("created JSON-RPC client of type %T", client)
 
-		rpcs[chainName] = client
+		rpcs[chainInfoBytes] = client
 	})
-
-	blockHeightCache := btc.NewBlockHeightCache()
-	latestFinalizedBlockCache := btc.NewLatestFinalizedBlockCache()
-	return btc.NewMgr(cliCtx, rpcs, b, valAddr, latestFinalizedBlockCache, blockHeightCache)
+	return xchain.NewManager(cliCtx, rpcs, b, valAddr)
 }
 
 // RWFile implements the ReadWriter interface for an underlying file

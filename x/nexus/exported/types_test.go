@@ -19,11 +19,34 @@ func TestTransferStateFromString(t *testing.T) {
 }
 
 func TestChainName(t *testing.T) {
-	invalidName := exported.ChainName(rand.NormalizedStr(exported.ChainNameLengthMax + 1))
+	invalidName := exported.ChainName("kkkk|1")
 	assert.Error(t, invalidName.Validate())
 
-	validName := exported.ChainName(rand.NormalizedStr(exported.ChainNameLengthMax))
-	assert.NoError(t, validName.Validate())
+	// validName := exported.ChainName("evm|11155111")
+
+	validNames := []exported.ChainName{
+		"bitcoin|11155111",
+		"evm|11155111",
+		"solana|11155111",
+		"cosmos|4",
+		"solana|008",
+		"solana|18446744073709551615", // 2^64 - 1
+	}
+
+	for _, name := range validNames {
+		assert.NoError(t, name.Validate())
+	}
+
+	invalidNames := []exported.ChainName{
+		"bitcoin|9a999999",
+		"evm|-1",
+		"cosmos|",
+		"solana|18446744073709551616", // 2^64
+	}
+
+	for _, name := range invalidNames {
+		assert.Error(t, name.Validate())
+	}
 }
 
 func TestWasmBytes_MarshalJSON(t *testing.T) {
