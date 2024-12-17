@@ -11,7 +11,6 @@ import (
 	evmUtils "github.com/scalarorg/bitcoin-vault/go-utils/evm"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/log"
-	"github.com/scalarorg/scalar-core/vald/xchain/rpc"
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 )
@@ -34,7 +33,7 @@ const (
 	MinNumberOfOutputs = 2
 )
 
-func (mgr *Mgr) decodeStakingTransaction(tx *rpc.TxReceipt) (btcTypes.EventStakingTx, error) {
+func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (btcTypes.EventStakingTx, error) {
 	log.Infof("Decoding BTC transaction %+v\n", tx)
 
 	if len(tx.MsgTx.TxOut) < MinNumberOfOutputs {
@@ -105,7 +104,7 @@ func mapOutputToEventStakingTx(output *vault.VaultReturnTxOutput) (*btcTypes.Eve
 		return nil, err
 	}
 
-	parsedDestinationChain := chain.NewDestinationChainFromBytes(output.DestinationChain)
+	parsedDestinationChain := chain.NewChainInfoFromBytes(output.DestinationChain)
 	if parsedDestinationChain == nil {
 		return nil, ErrInvalidDestinationChain
 	}
@@ -123,5 +122,4 @@ func mapOutputToEventStakingTx(output *vault.VaultReturnTxOutput) (*btcTypes.Eve
 		DestinationContractAddress:  destinationContractAddress,
 		DestinationRecipientAddress: destinationRecipientAddress,
 	}, nil
-
 }

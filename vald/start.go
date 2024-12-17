@@ -44,6 +44,7 @@ import (
 	grpc "github.com/scalarorg/scalar-core/vald/tofnd_grpc"
 	"github.com/scalarorg/scalar-core/vald/tss"
 	"github.com/scalarorg/scalar-core/vald/xchain"
+	"github.com/scalarorg/scalar-core/vald/xchain/btc"
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
@@ -521,9 +522,11 @@ func createXChainMgr(valdCfg config.ValdConfig, cliCtx sdkClient.Context, b broa
 
 	// TODO: Add more chains here
 
-	// evmConfigs := slices.Filter(valdCfg.EVMConfig, func(config evmTypes.EVMConfig) bool {
-	// 	return config.WithBridge
-	// })
+	evmConfigs := slices.Filter(valdCfg.EVMConfig, func(config evmTypes.EVMConfig) bool {
+		return config.WithBridge
+	})
+
+	_ = evmConfigs
 
 	slices.ForEach(btcConfigs, func(config btcTypes.BTCConfig) {
 		if _, ok := rpcs[config.ChainInfo.ToBytes()]; ok {
@@ -532,17 +535,17 @@ func createXChainMgr(valdCfg config.ValdConfig, cliCtx sdkClient.Context, b broa
 			panic(err)
 		}
 
-		// client, err := btcRPC.NewClient(&config)
-		// if err != nil {
-		// 	err = sdkerrors.Wrap(err, fmt.Sprintf("failed to create an RPC connection for BTC chain %s. Verify your RPC config.", config.Name))
-		// 	log.Error(err.Error())
-		// 	panic(err)
-		// }
+		client, err := btc.NewClient(&config)
+		if err != nil {
+			err = sdkerrors.Wrap(err, fmt.Sprintf("failed to create an RPC connection for BTC chain %s. Verify your RPC config.", config.Name))
+			log.Error(err.Error())
+			panic(err)
+		}
 
-		// log.WithKeyVals("chain", config.Name, "url", fmt.Sprintf("%s:%d", config.RpcHost, config.RpcPort)).
-		// 	Debugf("created JSON-RPC client of type %T", client)
+		log.WithKeyVals("chain", config.Name, "url", fmt.Sprintf("%s:%d", config.RpcHost, config.RpcPort)).
+			Debugf("created JSON-RPC client of type %T", client)
 
-		// rpcs[chainName] = client
+		rpcs[config.ChainInfo.ToBytes()] = client
 	})
 	return xchain.NewManager(cliCtx, rpcs, b, valAddr)
 }

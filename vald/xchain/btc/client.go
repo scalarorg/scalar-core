@@ -1,17 +1,29 @@
 package btc
 
 import (
+	"github.com/btcsuite/btcd/btcjson"
 	"github.com/btcsuite/btcd/rpcclient"
+	"github.com/btcsuite/btcd/wire"
 	"github.com/scalarorg/scalar-core/utils/clog"
+	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/vald/xchain"
 	"github.com/scalarorg/scalar-core/x/btc/types"
 )
 
 type BtcClient struct {
-	client           *rpcclient.Client
-	cfg              *rpcclient.ConnConfig
-	blockHeightCache *BlockHeightCache
+	client                    *rpcclient.Client
+	cfg                       *rpcclient.ConnConfig
+	blockHeightCache          *BlockHeightCache
+	latestFinalizedBlockCache xchain.LatestFinalizedBlockCache
 }
+
+type BTCTxReceipt struct {
+	Raw        btcjson.TxRawResult
+	PrevTxOuts []*btcjson.GetTxOutResult
+	MsgTx      *wire.MsgTx
+}
+
+type BTCTxResult = results.Result[xchain.TxReceipt]
 
 var _ xchain.Client = &BtcClient{}
 
@@ -24,11 +36,13 @@ func NewClient(cfg *types.BTCConfig) (xchain.Client, error) {
 	}
 
 	blockHeightCache := NewBlockHeightCache()
+	latestFinalizedBlockCache := xchain.NewLatestFinalizedBlockCache()
 
 	client := &BtcClient{
-		client:           rpcClient,
-		cfg:              rpcConfig,
-		blockHeightCache: blockHeightCache,
+		client:                    rpcClient,
+		cfg:                       rpcConfig,
+		blockHeightCache:          blockHeightCache,
+		latestFinalizedBlockCache: latestFinalizedBlockCache,
 	}
 
 	return client, nil
