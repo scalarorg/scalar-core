@@ -580,36 +580,36 @@
     - [QueryService](#scalar.snapshot.v1beta1.QueryService)
   
 - [scalar/tss/tofnd/v1beta1/common.proto](#scalar/tss/tofnd/v1beta1/common.proto)
-    - [KeyPresenceRequest](#scalar.tss.tofnd.v1beta1.KeyPresenceRequest)
-    - [KeyPresenceResponse](#scalar.tss.tofnd.v1beta1.KeyPresenceResponse)
+    - [KeyPresenceRequest](#tofnd.KeyPresenceRequest)
+    - [KeyPresenceResponse](#tofnd.KeyPresenceResponse)
   
-    - [KeyPresenceResponse.Response](#scalar.tss.tofnd.v1beta1.KeyPresenceResponse.Response)
+    - [KeyPresenceResponse.Response](#tofnd.KeyPresenceResponse.Response)
   
 - [scalar/tss/tofnd/v1beta1/multisig.proto](#scalar/tss/tofnd/v1beta1/multisig.proto)
-    - [KeygenRequest](#scalar.tss.tofnd.v1beta1.KeygenRequest)
-    - [KeygenResponse](#scalar.tss.tofnd.v1beta1.KeygenResponse)
-    - [SignRequest](#scalar.tss.tofnd.v1beta1.SignRequest)
-    - [SignResponse](#scalar.tss.tofnd.v1beta1.SignResponse)
+    - [KeygenRequest](#tofnd.KeygenRequest)
+    - [KeygenResponse](#tofnd.KeygenResponse)
+    - [SignRequest](#tofnd.SignRequest)
+    - [SignResponse](#tofnd.SignResponse)
   
-    - [Multisig](#scalar.tss.tofnd.v1beta1.Multisig)
+    - [Multisig](#tofnd.Multisig)
   
 - [scalar/tss/tofnd/v1beta1/tofnd.proto](#scalar/tss/tofnd/v1beta1/tofnd.proto)
-    - [KeygenInit](#scalar.tss.tofnd.v1beta1.KeygenInit)
-    - [KeygenOutput](#scalar.tss.tofnd.v1beta1.KeygenOutput)
-    - [MessageIn](#scalar.tss.tofnd.v1beta1.MessageIn)
-    - [MessageOut](#scalar.tss.tofnd.v1beta1.MessageOut)
-    - [MessageOut.CriminalList](#scalar.tss.tofnd.v1beta1.MessageOut.CriminalList)
-    - [MessageOut.CriminalList.Criminal](#scalar.tss.tofnd.v1beta1.MessageOut.CriminalList.Criminal)
-    - [MessageOut.KeygenResult](#scalar.tss.tofnd.v1beta1.MessageOut.KeygenResult)
-    - [MessageOut.SignResult](#scalar.tss.tofnd.v1beta1.MessageOut.SignResult)
-    - [RecoverRequest](#scalar.tss.tofnd.v1beta1.RecoverRequest)
-    - [RecoverResponse](#scalar.tss.tofnd.v1beta1.RecoverResponse)
-    - [SignInit](#scalar.tss.tofnd.v1beta1.SignInit)
-    - [TrafficIn](#scalar.tss.tofnd.v1beta1.TrafficIn)
-    - [TrafficOut](#scalar.tss.tofnd.v1beta1.TrafficOut)
+    - [KeygenInit](#tofnd.KeygenInit)
+    - [KeygenOutput](#tofnd.KeygenOutput)
+    - [MessageIn](#tofnd.MessageIn)
+    - [MessageOut](#tofnd.MessageOut)
+    - [MessageOut.CriminalList](#tofnd.MessageOut.CriminalList)
+    - [MessageOut.CriminalList.Criminal](#tofnd.MessageOut.CriminalList.Criminal)
+    - [MessageOut.KeygenResult](#tofnd.MessageOut.KeygenResult)
+    - [MessageOut.SignResult](#tofnd.MessageOut.SignResult)
+    - [RecoverRequest](#tofnd.RecoverRequest)
+    - [RecoverResponse](#tofnd.RecoverResponse)
+    - [SignInit](#tofnd.SignInit)
+    - [TrafficIn](#tofnd.TrafficIn)
+    - [TrafficOut](#tofnd.TrafficOut)
   
-    - [MessageOut.CriminalList.Criminal.CrimeType](#scalar.tss.tofnd.v1beta1.MessageOut.CriminalList.Criminal.CrimeType)
-    - [RecoverResponse.Response](#scalar.tss.tofnd.v1beta1.RecoverResponse.Response)
+    - [MessageOut.CriminalList.Criminal.CrimeType](#tofnd.MessageOut.CriminalList.Criminal.CrimeType)
+    - [RecoverResponse.Response](#tofnd.RecoverResponse.Response)
   
 - [scalar/tss/v1beta1/params.proto](#scalar/tss/v1beta1/params.proto)
     - [Params](#scalar.tss.v1beta1.Params)
@@ -8538,7 +8538,7 @@ QueryService defines the gRPC querier service.
 File copied from golang tofnd with minor tweaks
 
 
-<a name="scalar.tss.tofnd.v1beta1.KeyPresenceRequest"></a>
+<a name="tofnd.KeyPresenceRequest"></a>
 
 ### KeyPresenceRequest
 Key presence check types
@@ -8554,7 +8554,7 @@ Key presence check types
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.KeyPresenceResponse"></a>
+<a name="tofnd.KeyPresenceResponse"></a>
 
 ### KeyPresenceResponse
 
@@ -8562,7 +8562,7 @@ Key presence check types
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `response` | [KeyPresenceResponse.Response](#scalar.tss.tofnd.v1beta1.KeyPresenceResponse.Response) |  |  |
+| `response` | [KeyPresenceResponse.Response](#tofnd.KeyPresenceResponse.Response) |  |  |
 
 
 
@@ -8571,7 +8571,7 @@ Key presence check types
  <!-- end messages -->
 
 
-<a name="scalar.tss.tofnd.v1beta1.KeyPresenceResponse.Response"></a>
+<a name="tofnd.KeyPresenceResponse.Response"></a>
 
 ### KeyPresenceResponse.Response
 
@@ -8599,7 +8599,7 @@ Key presence check types
 File copied from golang tofnd with minor tweaks
 
 
-<a name="scalar.tss.tofnd.v1beta1.KeygenRequest"></a>
+<a name="tofnd.KeygenRequest"></a>
 
 ### KeygenRequest
 
@@ -8615,7 +8615,7 @@ File copied from golang tofnd with minor tweaks
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.KeygenResponse"></a>
+<a name="tofnd.KeygenResponse"></a>
 
 ### KeygenResponse
 
@@ -8631,7 +8631,7 @@ File copied from golang tofnd with minor tweaks
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.SignRequest"></a>
+<a name="tofnd.SignRequest"></a>
 
 ### SignRequest
 
@@ -8649,7 +8649,7 @@ File copied from golang tofnd with minor tweaks
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.SignResponse"></a>
+<a name="tofnd.SignResponse"></a>
 
 ### SignResponse
 
@@ -8671,16 +8671,16 @@ File copied from golang tofnd with minor tweaks
  <!-- end HasExtensions -->
 
 
-<a name="scalar.tss.tofnd.v1beta1.Multisig"></a>
+<a name="tofnd.Multisig"></a>
 
 ### Multisig
 
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `KeyPresence` | [KeyPresenceRequest](#scalar.tss.tofnd.v1beta1.KeyPresenceRequest) | [KeyPresenceResponse](#scalar.tss.tofnd.v1beta1.KeyPresenceResponse) |  | |
-| `Keygen` | [KeygenRequest](#scalar.tss.tofnd.v1beta1.KeygenRequest) | [KeygenResponse](#scalar.tss.tofnd.v1beta1.KeygenResponse) |  | |
-| `Sign` | [SignRequest](#scalar.tss.tofnd.v1beta1.SignRequest) | [SignResponse](#scalar.tss.tofnd.v1beta1.SignResponse) |  | |
+| `KeyPresence` | [KeyPresenceRequest](#tofnd.KeyPresenceRequest) | [KeyPresenceResponse](#tofnd.KeyPresenceResponse) |  | |
+| `Keygen` | [KeygenRequest](#tofnd.KeygenRequest) | [KeygenResponse](#tofnd.KeygenResponse) |  | |
+| `Sign` | [SignRequest](#tofnd.SignRequest) | [SignResponse](#tofnd.SignResponse) |  | |
 
  <!-- end services -->
 
@@ -8693,7 +8693,7 @@ File copied from golang tofnd with minor tweaks
 File copied from golang tofnd with minor tweaks
 
 
-<a name="scalar.tss.tofnd.v1beta1.KeygenInit"></a>
+<a name="tofnd.KeygenInit"></a>
 
 ### KeygenInit
 
@@ -8712,7 +8712,7 @@ File copied from golang tofnd with minor tweaks
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.KeygenOutput"></a>
+<a name="tofnd.KeygenOutput"></a>
 
 ### KeygenOutput
 Keygen's success response
@@ -8729,7 +8729,7 @@ Keygen's success response
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.MessageIn"></a>
+<a name="tofnd.MessageIn"></a>
 
 ### MessageIn
 
@@ -8737,9 +8737,9 @@ Keygen's success response
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `keygen_init` | [KeygenInit](#scalar.tss.tofnd.v1beta1.KeygenInit) |  | first message only, Keygen |
-| `sign_init` | [SignInit](#scalar.tss.tofnd.v1beta1.SignInit) |  | first message only, Sign |
-| `traffic` | [TrafficIn](#scalar.tss.tofnd.v1beta1.TrafficIn) |  | all subsequent messages |
+| `keygen_init` | [KeygenInit](#tofnd.KeygenInit) |  | first message only, Keygen |
+| `sign_init` | [SignInit](#tofnd.SignInit) |  | first message only, Sign |
+| `traffic` | [TrafficIn](#tofnd.TrafficIn) |  | all subsequent messages |
 | `abort` | [bool](#bool) |  | abort the protocol, ignore the bool value |
 
 
@@ -8747,7 +8747,7 @@ Keygen's success response
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.MessageOut"></a>
+<a name="tofnd.MessageOut"></a>
 
 ### MessageOut
 
@@ -8755,9 +8755,9 @@ Keygen's success response
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `traffic` | [TrafficOut](#scalar.tss.tofnd.v1beta1.TrafficOut) |  | all but final message |
-| `keygen_result` | [MessageOut.KeygenResult](#scalar.tss.tofnd.v1beta1.MessageOut.KeygenResult) |  | final message only, Keygen |
-| `sign_result` | [MessageOut.SignResult](#scalar.tss.tofnd.v1beta1.MessageOut.SignResult) |  | final message only, Sign |
+| `traffic` | [TrafficOut](#tofnd.TrafficOut) |  | all but final message |
+| `keygen_result` | [MessageOut.KeygenResult](#tofnd.MessageOut.KeygenResult) |  | final message only, Keygen |
+| `sign_result` | [MessageOut.SignResult](#tofnd.MessageOut.SignResult) |  | final message only, Sign |
 | `need_recover` | [bool](#bool) |  | issue recover from client |
 
 
@@ -8765,7 +8765,7 @@ Keygen's success response
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.MessageOut.CriminalList"></a>
+<a name="tofnd.MessageOut.CriminalList"></a>
 
 ### MessageOut.CriminalList
 Keygen/Sign failure response message
@@ -8773,14 +8773,14 @@ Keygen/Sign failure response message
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `criminals` | [MessageOut.CriminalList.Criminal](#scalar.tss.tofnd.v1beta1.MessageOut.CriminalList.Criminal) | repeated |  |
+| `criminals` | [MessageOut.CriminalList.Criminal](#tofnd.MessageOut.CriminalList.Criminal) | repeated |  |
 
 
 
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.MessageOut.CriminalList.Criminal"></a>
+<a name="tofnd.MessageOut.CriminalList.Criminal"></a>
 
 ### MessageOut.CriminalList.Criminal
 
@@ -8789,14 +8789,14 @@ Keygen/Sign failure response message
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `party_uid` | [string](#string) |  |  |
-| `crime_type` | [MessageOut.CriminalList.Criminal.CrimeType](#scalar.tss.tofnd.v1beta1.MessageOut.CriminalList.Criminal.CrimeType) |  |  |
+| `crime_type` | [MessageOut.CriminalList.Criminal.CrimeType](#tofnd.MessageOut.CriminalList.Criminal.CrimeType) |  |  |
 
 
 
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.MessageOut.KeygenResult"></a>
+<a name="tofnd.MessageOut.KeygenResult"></a>
 
 ### MessageOut.KeygenResult
 Keygen's response types
@@ -8804,15 +8804,15 @@ Keygen's response types
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `data` | [KeygenOutput](#scalar.tss.tofnd.v1beta1.KeygenOutput) |  | Success response |
-| `criminals` | [MessageOut.CriminalList](#scalar.tss.tofnd.v1beta1.MessageOut.CriminalList) |  | Faiilure response |
+| `data` | [KeygenOutput](#tofnd.KeygenOutput) |  | Success response |
+| `criminals` | [MessageOut.CriminalList](#tofnd.MessageOut.CriminalList) |  | Faiilure response |
 
 
 
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.MessageOut.SignResult"></a>
+<a name="tofnd.MessageOut.SignResult"></a>
 
 ### MessageOut.SignResult
 Sign's response types
@@ -8821,14 +8821,14 @@ Sign's response types
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `signature` | [bytes](#bytes) |  | Success response |
-| `criminals` | [MessageOut.CriminalList](#scalar.tss.tofnd.v1beta1.MessageOut.CriminalList) |  | Failure response |
+| `criminals` | [MessageOut.CriminalList](#tofnd.MessageOut.CriminalList) |  | Failure response |
 
 
 
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.RecoverRequest"></a>
+<a name="tofnd.RecoverRequest"></a>
 
 ### RecoverRequest
 
@@ -8836,15 +8836,15 @@ Sign's response types
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `keygen_init` | [KeygenInit](#scalar.tss.tofnd.v1beta1.KeygenInit) |  |  |
-| `keygen_output` | [KeygenOutput](#scalar.tss.tofnd.v1beta1.KeygenOutput) |  |  |
+| `keygen_init` | [KeygenInit](#tofnd.KeygenInit) |  |  |
+| `keygen_output` | [KeygenOutput](#tofnd.KeygenOutput) |  |  |
 
 
 
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.RecoverResponse"></a>
+<a name="tofnd.RecoverResponse"></a>
 
 ### RecoverResponse
 
@@ -8852,14 +8852,14 @@ Sign's response types
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `response` | [RecoverResponse.Response](#scalar.tss.tofnd.v1beta1.RecoverResponse.Response) |  |  |
+| `response` | [RecoverResponse.Response](#tofnd.RecoverResponse.Response) |  |  |
 
 
 
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.SignInit"></a>
+<a name="tofnd.SignInit"></a>
 
 ### SignInit
 
@@ -8877,7 +8877,7 @@ Sign's response types
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.TrafficIn"></a>
+<a name="tofnd.TrafficIn"></a>
 
 ### TrafficIn
 
@@ -8894,7 +8894,7 @@ Sign's response types
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.TrafficOut"></a>
+<a name="tofnd.TrafficOut"></a>
 
 ### TrafficOut
 
@@ -8913,7 +8913,7 @@ Sign's response types
  <!-- end messages -->
 
 
-<a name="scalar.tss.tofnd.v1beta1.MessageOut.CriminalList.Criminal.CrimeType"></a>
+<a name="tofnd.MessageOut.CriminalList.Criminal.CrimeType"></a>
 
 ### MessageOut.CriminalList.Criminal.CrimeType
 
@@ -8926,7 +8926,7 @@ Sign's response types
 
 
 
-<a name="scalar.tss.tofnd.v1beta1.RecoverResponse.Response"></a>
+<a name="tofnd.RecoverResponse.Response"></a>
 
 ### RecoverResponse.Response
 
@@ -9250,7 +9250,7 @@ ProcessKeygenTrafficRequest protocol message
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `session_id` | [string](#string) |  |  |
-| `payload` | [scalar.tss.tofnd.v1beta1.TrafficOut](#scalar.tss.tofnd.v1beta1.TrafficOut) |  |  |
+| `payload` | [tofnd.TrafficOut](#tofnd.TrafficOut) |  |  |
 
 
 
@@ -9277,7 +9277,7 @@ ProcessSignTrafficRequest protocol message
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `session_id` | [string](#string) |  |  |
-| `payload` | [scalar.tss.tofnd.v1beta1.TrafficOut](#scalar.tss.tofnd.v1beta1.TrafficOut) |  |  |
+| `payload` | [tofnd.TrafficOut](#tofnd.TrafficOut) |  |  |
 
 
 
@@ -9455,7 +9455,7 @@ VotePubKeyRequest represents the message to vote on a public key
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `poll_key` | [scalar.vote.exported.v1beta1.PollKey](#scalar.vote.exported.v1beta1.PollKey) |  |  |
-| `result` | [scalar.tss.tofnd.v1beta1.MessageOut.KeygenResult](#scalar.tss.tofnd.v1beta1.MessageOut.KeygenResult) |  |  |
+| `result` | [tofnd.MessageOut.KeygenResult](#tofnd.MessageOut.KeygenResult) |  |  |
 
 
 
@@ -9487,7 +9487,7 @@ VoteSigRequest represents a message to vote for a signature
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `poll_key` | [scalar.vote.exported.v1beta1.PollKey](#scalar.vote.exported.v1beta1.PollKey) |  |  |
-| `result` | [scalar.tss.tofnd.v1beta1.MessageOut.SignResult](#scalar.tss.tofnd.v1beta1.MessageOut.SignResult) |  |  |
+| `result` | [tofnd.MessageOut.SignResult](#tofnd.MessageOut.SignResult) |  |  |
 
 
 

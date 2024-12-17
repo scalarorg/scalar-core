@@ -62,10 +62,13 @@ func (s msgServer) SubmitPubKey(c context.Context, req *types.SubmitPubKeyReques
 
 	err := keygenSession.AddKey(ctx.BlockHeight(), participant, req.PubKey)
 	if err != nil {
+		fmt.Printf("Debug# SubmitPubKey# err: %+v\n", err)
 		return nil, sdkerrors.Wrap(err, "unable to add public key for keygen")
 	}
 
 	s.setKeygenSession(ctx, keygenSession)
+	fmt.Printf("Debug# SubmitPubKey# keygenSession: %+v\n", keygenSession)
+	fmt.Printf("Debug# SubmitPubKey# keygenSession.State: %+v\n", keygenSession.State)
 
 	s.Logger(ctx).Debug("new public key submitted",
 		"key_id", keygenSession.GetKeyID(),
