@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
+	"github.com/scalarorg/scalar-core/utils"
 )
 
 type BtcChain int32
@@ -61,27 +61,26 @@ func (c *BtcChain) UnmarshalJSON(data []byte) error {
 }
 
 type BTCConfig struct {
-	ChainID     uint64          `json:"chainID" mapstructure:"chainID"`
-	ChainInfo   chain.ChainInfo `json:"chainInfo"`
-	Chain       BtcChain        `json:"chain" mapstructure:"chain"`
-	NetworkKind NetworkKind     `json:"networkKind" mapstructure:"networkKind"`
-	Name        string          `json:"name" mapstructure:"name"`
-	ID          string          `json:"id"`
-	Gateway     string          `json:"gateway" mapstructure:"gateway"` //Taproot address
-	Finality    int             `json:"finality"`
-	LastBlock   uint64          `json:"lastBlock"`
-	GasLimit    uint64          `json:"gasLimit"`
-	BlockTime   time.Duration   `json:"blockTime"` //Timeout im ms for pending txs
-	MaxRetry    int             `json:"maxRetry"`
-	RetryDelay  time.Duration   `json:"retryDelay"`
-	TxTimeout   time.Duration   `json:"txTimeout"` //Timeout for send txs (~3s)
-	Tag         string          `json:"tag" mapstructure:"tag"`
-	Version     byte            `json:"version" mapstructure:"version"`
-	WithBridge  bool            `json:"withBridge" mapstructure:"withBridge"`
-	RpcHost     string          `json:"rpcHost" mapstructure:"rpcHost"`
-	RpcPort     int             `json:"rpcPort" mapstructure:"rpcPort"`
-	RpcUser     string          `json:"rpcUser" mapstructure:"rpcUser"`
-	RpcPass     string          `json:"rpcPass" mapstructure:"rpcPass"`
+	ChainID     uint64        `json:"chainID" mapstructure:"chainID"`
+	Chain       BtcChain      `json:"chain" mapstructure:"chain"`
+	NetworkKind NetworkKind   `json:"networkKind" mapstructure:"networkKind"`
+	Name        string        `json:"name" mapstructure:"name"`
+	ID          string        `json:"id"`
+	Gateway     string        `json:"gateway" mapstructure:"gateway"` //Taproot address
+	Finality    int           `json:"finality"`
+	LastBlock   uint64        `json:"lastBlock"`
+	GasLimit    uint64        `json:"gasLimit"`
+	BlockTime   time.Duration `json:"blockTime"` //Timeout im ms for pending txs
+	MaxRetry    int           `json:"maxRetry"`
+	RetryDelay  time.Duration `json:"retryDelay"`
+	TxTimeout   time.Duration `json:"txTimeout"` //Timeout for send txs (~3s)
+	Tag         string        `json:"tag" mapstructure:"tag"`
+	Version     byte          `json:"version" mapstructure:"version"`
+	WithBridge  bool          `json:"withBridge" mapstructure:"withBridge"`
+	RpcHost     string        `json:"rpcHost" mapstructure:"rpcHost"`
+	RpcPort     int           `json:"rpcPort" mapstructure:"rpcPort"`
+	RpcUser     string        `json:"rpcUser" mapstructure:"rpcUser"`
+	RpcPass     string        `json:"rpcPass" mapstructure:"rpcPass"`
 }
 
 // DefaultConfig returns a configuration populated with default values
@@ -91,7 +90,7 @@ func DefaultConfig() []BTCConfig {
 		Chain:       Testnet4BtcChain,
 		NetworkKind: Testnet,
 		Name:        "bitcoin-testnet4",
-		ID:          "bitcoin-testnet4",
+		ID:          "bitcoin|4",
 		Gateway:     "",
 		Finality:    10,
 		LastBlock:   0,
@@ -107,4 +106,12 @@ func DefaultConfig() []BTCConfig {
 		Version:     1,
 		WithBridge:  false,
 	}}
+}
+
+func (c *BTCConfig) ValidateBasic() error {
+	_, err := utils.ChainInfoBytesFromID(c.ID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

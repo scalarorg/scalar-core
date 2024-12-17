@@ -70,8 +70,10 @@
     - [PollMetadata](#scalar.btc.v1beta1.PollMetadata)
   
 - [scalar/btc/v1beta1/tx.proto](#scalar/btc/v1beta1/tx.proto)
-    - [ConfirmBridgeTxsRequest](#scalar.btc.v1beta1.ConfirmBridgeTxsRequest)
-    - [ConfirmBridgeTxsResponse](#scalar.btc.v1beta1.ConfirmBridgeTxsResponse)
+    - [ConfirmStakingTxsRequest](#scalar.btc.v1beta1.ConfirmStakingTxsRequest)
+    - [ConfirmStakingTxsResponse](#scalar.btc.v1beta1.ConfirmStakingTxsResponse)
+    - [ConfirmUnstakingTxsRequest](#scalar.btc.v1beta1.ConfirmUnstakingTxsRequest)
+    - [ConfirmUnstakingTxsResponse](#scalar.btc.v1beta1.ConfirmUnstakingTxsResponse)
     - [EventConfirmStakingTxsStarted](#scalar.btc.v1beta1.EventConfirmStakingTxsStarted)
     - [EventConfirmUnstakingTxsStarted](#scalar.btc.v1beta1.EventConfirmUnstakingTxsStarted)
   
@@ -1323,7 +1325,7 @@ Msg defines the nexus Msg service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `chain_name` | [string](#string) |  |  |
+| `chain` | [string](#string) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
 | `network_kind` | [NetworkKind](#scalar.btc.v1beta1.NetworkKind) |  |  |
 | `revote_locking_period` | [int64](#int64) |  |  |
@@ -1507,9 +1509,9 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.ConfirmBridgeTxsRequest"></a>
+<a name="scalar.btc.v1beta1.ConfirmStakingTxsRequest"></a>
 
-### ConfirmBridgeTxsRequest
+### ConfirmStakingTxsRequest
 
 
 
@@ -1524,9 +1526,36 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.ConfirmBridgeTxsResponse"></a>
+<a name="scalar.btc.v1beta1.ConfirmStakingTxsResponse"></a>
 
-### ConfirmBridgeTxsResponse
+### ConfirmStakingTxsResponse
+
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.ConfirmUnstakingTxsRequest"></a>
+
+### ConfirmUnstakingTxsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `tx_ids` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.ConfirmUnstakingTxsResponse"></a>
+
+### ConfirmUnstakingTxsResponse
 
 
 
@@ -1653,8 +1682,8 @@ Msg defines the btc Msg service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `ConfirmStakingTxs` | [ConfirmBridgeTxsRequest](#scalar.btc.v1beta1.ConfirmBridgeTxsRequest) | [ConfirmBridgeTxsResponse](#scalar.btc.v1beta1.ConfirmBridgeTxsResponse) |  | POST|/scalar/btc/confirm_staking_txs|
-| `ConfirmUnstakingTxs` | [ConfirmBridgeTxsRequest](#scalar.btc.v1beta1.ConfirmBridgeTxsRequest) | [ConfirmBridgeTxsResponse](#scalar.btc.v1beta1.ConfirmBridgeTxsResponse) |  | POST|/scalar/btc/confirm_unstaking_txs|
+| `ConfirmStakingTxs` | [ConfirmStakingTxsRequest](#scalar.btc.v1beta1.ConfirmStakingTxsRequest) | [ConfirmStakingTxsResponse](#scalar.btc.v1beta1.ConfirmStakingTxsResponse) |  | POST|/scalar/btc/confirm_staking_txs|
+| `ConfirmUnstakingTxs` | [ConfirmUnstakingTxsRequest](#scalar.btc.v1beta1.ConfirmUnstakingTxsRequest) | [ConfirmUnstakingTxsResponse](#scalar.btc.v1beta1.ConfirmUnstakingTxsResponse) |  | POST|/scalar/btc/confirm_unstaking_txs|
 
 
 <a name="scalar.btc.v1beta1.QueryService"></a>

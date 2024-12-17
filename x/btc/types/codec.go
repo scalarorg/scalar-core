@@ -8,6 +8,7 @@ import (
 // RegisterInterfaces registers types and interfaces with the given registry
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&ConfirmBridgeTxsRequest{},
+		&ConfirmStakingTxsRequest{},
+		&ConfirmUnstakingTxsRequest{},
 	)
 }

@@ -10,7 +10,7 @@ import "scalar/utils/v1beta1/threshold.proto";
 option go_package = "github.com/scalarorg/scalar-core/x/btc/types";
 
 message Params {
-  string chain_name = 1
+  string chain = 1
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   uint64 confirmation_height = 2;

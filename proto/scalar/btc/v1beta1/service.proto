@@ -14,16 +14,16 @@ option (gogoproto.goproto_registration) = true;
 
 // Msg defines the btc Msg service.
 service MsgService {
-  rpc ConfirmStakingTxs(ConfirmBridgeTxsRequest)
-      returns (ConfirmBridgeTxsResponse) {
+  rpc ConfirmStakingTxs(ConfirmStakingTxsRequest)
+      returns (ConfirmStakingTxsResponse) {
     option (google.api.http) = {
       post : "/scalar/btc/confirm_staking_txs"
       body : "*"
     };
   }
 
-  rpc ConfirmUnstakingTxs(ConfirmBridgeTxsRequest)
-      returns (ConfirmBridgeTxsResponse) {
+  rpc ConfirmUnstakingTxs(ConfirmUnstakingTxsRequest)
+      returns (ConfirmUnstakingTxsResponse) {
     option (google.api.http) = {
       post : "/scalar/btc/confirm_unstaking_txs"
       body : "*"

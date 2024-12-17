@@ -90,6 +90,13 @@ func (h Hash) Bytes() []byte {
 	return h[:]
 }
 
+func HashFromBytes(data []byte) (Hash, error) {
+	if len(data) != chainhash.HashSize {
+		return Hash{}, fmt.Errorf("invalid hash length")
+	}
+	return Hash(chainhash.Hash(data)), nil
+}
+
 func (h Hash) IsZero() bool {
 	return bytes.Equal(h.Bytes(), ZeroHash.Bytes())
 }

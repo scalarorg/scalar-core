@@ -3,6 +3,7 @@ package types
 import (
 	"time"
 
+	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/vald/evm/rpc"
 )
 
@@ -31,7 +32,16 @@ type EVMConfig struct {
 func DefaultConfig() []EVMConfig {
 	return []EVMConfig{{
 		Name:       "Ethereum",
+		ID:         "evm|11155111",
 		RPCAddr:    "http://127.0.0.1:7545",
 		WithBridge: true,
 	}}
+}
+
+func (c *EVMConfig) ValidateBasic() error {
+	_, err := utils.ChainInfoBytesFromID(c.ID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

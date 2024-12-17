@@ -32,6 +32,7 @@ import (
 	tmEvents "github.com/scalarorg/scalar-core/tm-events/events"
 	"github.com/scalarorg/scalar-core/tm-events/pubsub"
 	"github.com/scalarorg/scalar-core/tm-events/tendermint"
+	scalarUtils "github.com/scalarorg/scalar-core/utils"
 	errors2 "github.com/scalarorg/scalar-core/utils/errors"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/jobs"
@@ -179,6 +180,23 @@ func setPersistentFlags(cmd *cobra.Command) {
 }
 
 func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdConfig, valAddr sdk.ValAddress, stateSource ReadWriter) {
+	btcConfigs := scalarCfg.BTCConfig
+	evmConfigs := scalarCfg.EVMConfig
+
+	for _, btcConfig := range btcConfigs {
+		err := btcConfig.ValidateBasic()
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	for _, evmConfig := range evmConfigs {
+		err := evmConfig.ValidateBasic()
+		if err != nil {
+			panic(err)
+		}
+	}
+
 	encCfg := app.MakeEncodingConfig()
 	cdc := encCfg.Amino
 	sender, err := clientCtx.Keyring.Key(clientCtx.From)
@@ -529,7 +547,14 @@ func createXChainMgr(valdCfg config.ValdConfig, cliCtx sdkClient.Context, b broa
 	_ = evmConfigs
 
 	slices.ForEach(btcConfigs, func(config btcTypes.BTCConfig) {
-		if _, ok := rpcs[config.ChainInfo.ToBytes()]; ok {
+		chainInfoBytes, err := scalarUtils.ChainInfoBytesFromID(config.ID)
+		if err != nil {
+			err := fmt.Errorf("invalid chain ID %s", config.ID)
+			log.Error(err.Error())
+			panic(err)
+		}
+
+		if _, ok := rpcs[chainInfoBytes]; ok {
 			err := fmt.Errorf("duplicate bridge configuration found for BTC chain %s", config.Name)
 			log.Error(err.Error())
 			panic(err)
@@ -545,7 +570,7 @@ func createXChainMgr(valdCfg config.ValdConfig, cliCtx sdkClient.Context, b broa
 		log.WithKeyVals("chain", config.Name, "url", fmt.Sprintf("%s:%d", config.RpcHost, config.RpcPort)).
 			Debugf("created JSON-RPC client of type %T", client)
 
-		rpcs[config.ChainInfo.ToBytes()] = client
+		rpcs[chainInfoBytes] = client
 	})
 	return xchain.NewManager(cliCtx, rpcs, b, valAddr)
 }

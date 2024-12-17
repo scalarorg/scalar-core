@@ -5,7 +5,6 @@ import (
 	"errors"
 
 	"github.com/btcsuite/btcd/txscript"
-	"github.com/ethereum/go-ethereum/common"
 	vault "github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	evmUtils "github.com/scalarorg/bitcoin-vault/go-utils/evm"
@@ -74,13 +73,17 @@ func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (btcTypes.Ev
 	clog.Redf("Payload hash %+v\n", payloadHash)
 	clog.Redf("Minting amount %+v\n", mintingAmount)
 	clog.Redf("Tx ID %+v\n", txId)
+	chainHash, err := btcTypes.HashFromBytes(payloadHash)
+	if err != nil {
+		return btcTypes.EventStakingTx{}, ErrInvalidPayloadHash
+	}
 
 	return btcTypes.EventStakingTx{
 		Sender:      tx.PrevTxOuts[0].ScriptPubKey.Address, // TODO: Fix hard coded
 		Amount:      uint64(mintingAmount),
 		Asset:       "satoshi", // TODO: Fix hard coded
 		Metadata:    *stakingMetadata,
-		PayloadHash: evmTypes.Hash(common.BytesToHash(payloadHash)),
+		PayloadHash: chainHash,
 	}, nil
 }
 

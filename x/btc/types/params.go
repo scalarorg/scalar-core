@@ -37,7 +37,7 @@ func (Params) Validate() error {
 
 func (m *Params) ParamSetPairs() params.ParamSetPairs {
 	return params.ParamSetPairs{
-		params.NewParamSetPair(KeyChainName, &m.ChainName, validateChainName),
+		params.NewParamSetPair(KeyChainName, &m.Chain, validateChainName),
 		params.NewParamSetPair(KeyConfirmationHeight, &m.ConfirmationHeight, validateConfirmationHeight),
 		params.NewParamSetPair(KeyNetworkKind, &m.NetworkKind, validateNetworkKind),
 		params.NewParamSetPair(KeyRevoteLockingPeriod, &m.RevoteLockingPeriod, validateRevoteLockingPeriod),

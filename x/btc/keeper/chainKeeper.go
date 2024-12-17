@@ -115,11 +115,11 @@ func (k chainKeeper) GetChainIDByNetwork(ctx sdk.Context, network string) (sdk.I
 	// 		return n.Id, true
 	// 	}
 	// }
-	if network == p.ChainName.String() {
+	if network == p.Chain.String() {
 		return sdk.NewInt(int64(p.ChainId)), true
 	}
 
-	clog.Red("GetChainIDByNetwork", "network", network, "chainName", p.ChainName, "chainID", p.ChainId)
+	clog.Red("GetChainIDByNetwork", "network", network, "chainName", p.Chain, "chainID", p.ChainId)
 
 	return sdk.Int{}, false
 }

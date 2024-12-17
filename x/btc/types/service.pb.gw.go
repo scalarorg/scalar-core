@@ -32,7 +32,7 @@ var _ = utilities.NewDoubleArray
 var _ = descriptor.ForMessage
 
 func request_MsgService_ConfirmStakingTxs_0(ctx context.Context, marshaler runtime.Marshaler, client MsgServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ConfirmBridgeTxsRequest
+	var protoReq ConfirmStakingTxsRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -49,7 +49,7 @@ func request_MsgService_ConfirmStakingTxs_0(ctx context.Context, marshaler runti
 }
 
 func local_request_MsgService_ConfirmStakingTxs_0(ctx context.Context, marshaler runtime.Marshaler, server MsgServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ConfirmBridgeTxsRequest
+	var protoReq ConfirmStakingTxsRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -66,7 +66,7 @@ func local_request_MsgService_ConfirmStakingTxs_0(ctx context.Context, marshaler
 }
 
 func request_MsgService_ConfirmUnstakingTxs_0(ctx context.Context, marshaler runtime.Marshaler, client MsgServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ConfirmBridgeTxsRequest
+	var protoReq ConfirmUnstakingTxsRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -83,7 +83,7 @@ func request_MsgService_ConfirmUnstakingTxs_0(ctx context.Context, marshaler run
 }
 
 func local_request_MsgService_ConfirmUnstakingTxs_0(ctx context.Context, marshaler runtime.Marshaler, server MsgServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ConfirmBridgeTxsRequest
+	var protoReq ConfirmUnstakingTxsRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)

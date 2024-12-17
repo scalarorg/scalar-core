@@ -16,7 +16,7 @@ const (
 
 var (
 	Scalarnet = nexus.Chain{
-		Name:                  "ScalarNet",
+		Name:                  "cosmos|73475",
 		SupportsForeignAssets: true,
 		KeyType:               tss.None,
 		Module:                ModuleName,

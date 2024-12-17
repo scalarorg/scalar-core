@@ -10,7 +10,7 @@ import (
 	"github.com/scalarorg/scalar-core/x/btc/types"
 )
 
-func (s msgServer) ConfirmUnstakingTxs(c context.Context, req *types.ConfirmBridgeTxsRequest) (*types.ConfirmBridgeTxsResponse, error) {
+func (s msgServer) ConfirmUnstakingTxs(c context.Context, req *types.ConfirmUnstakingTxsRequest) (*types.ConfirmUnstakingTxsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
 	chain, ok := s.nexus.GetChain(ctx, req.Chain)
@@ -50,5 +50,5 @@ func (s msgServer) ConfirmUnstakingTxs(c context.Context, req *types.ConfirmBrid
 
 	events.Emit(ctx, event)
 
-	return &types.ConfirmBridgeTxsResponse{}, nil
+	return &types.ConfirmUnstakingTxsResponse{}, nil
 }

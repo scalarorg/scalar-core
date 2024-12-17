@@ -1,14 +1,10 @@
 [
   {
     "chainID": 4,
-    "chainInfo": {
-      "chain_id": 4,
-      "chain_type": 0
-    },
     "chain": "testnet4",
     "networkKind": "NETWORK_KIND_TESTNET",
     "name": "Bitcoin Testnet4",
-    "id": "bitcoin-testnet4",
+    "id": "bitcoin|4",
     "gateway": "",
     "finality": 10,
     "lastBlock": 0,

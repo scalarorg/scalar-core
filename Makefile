@@ -120,7 +120,9 @@ dev:
 	@if [ -z "$(N)" ]; then \
 		SCALAR_HOME_DIR=${SCALAR_HOME_DIR} ./scripts/entrypoint.debug.sh; \
 	else \
-		SCALAR_HOME_DIR=./.scalar/node${N}/scalard ./scripts/entrypoint.debug.sh; \
+		echo "Running node ${N}"; \
+		export SCALAR_HOME_DIR=./.scalar/scalar/node${N}/scalard; \
+		./scripts/entrypoint.debug.sh; \
 	fi
 
 .PHONY: dbg
