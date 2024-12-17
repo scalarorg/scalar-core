@@ -109,6 +109,12 @@ type Rewarder interface {
 	GetPool(ctx sdk.Context, name string) reward.RewardPool
 }
 
+// StakingKeeper adopts the methods from "github.com/cosmos/cosmos-sdk/x/staking/exported" that are
+// actually used by this module
+type StakingKeeper interface {
+	PowerReduction(ctx sdk.Context) sdk.Int
+}
+
 // SlashingKeeper provides functionality to manage slashing info for a validator
 type SlashingKeeper interface {
 	IsTombstoned(ctx sdk.Context, consAddr sdk.ConsAddress) bool

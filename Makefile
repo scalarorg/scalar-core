@@ -93,6 +93,11 @@ BUILD_FLAGS := -tags $(BUILD_TAGS) -ldflags $(ldflags) -trimpath -buildvcs=false
 build: go.sum
 	@go build -o ./bin/scalard -mod=readonly $(BUILD_FLAGS) ./cmd/scalard
 
+# Build the project with release flags in a docker container
+.PHONY: docker-build
+docker-build: go.sum
+	@go build -o ./bin/docker/scalard -mod=readonly $(BUILD_FLAGS) ./cmd/scalard
+
 .PHONY: run
 run:
 	@HOME=$(PWD) ./entrypoint.sh

@@ -617,6 +617,7 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 			GetKeeper[nexusKeeper.Keeper](keepers),
 			GetKeeper[snapKeeper.Keeper](keepers),
 			GetKeeper[slashingkeeper.Keeper](keepers),
+			GetKeeper[stakingkeeper.Keeper](keepers),
 		),
 		scalarnetModule,
 		reward.NewAppModule(

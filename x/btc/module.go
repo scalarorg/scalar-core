@@ -70,9 +70,10 @@ type AppModule struct {
 	nexus       types.Nexus
 	snapshotter types.Snapshotter
 	slashing    types.SlashingKeeper
+	staking     types.StakingKeeper
 }
 
-func NewAppModule(keeper *keeper.BaseKeeper, voter types.Voter, nexus types.Nexus, snapshotter types.Snapshotter, slashing types.SlashingKeeper) AppModule {
+func NewAppModule(keeper *keeper.BaseKeeper, voter types.Voter, nexus types.Nexus, snapshotter types.Snapshotter, slashing types.SlashingKeeper, staking types.StakingKeeper) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
 		keeper:         keeper,
@@ -80,6 +81,7 @@ func NewAppModule(keeper *keeper.BaseKeeper, voter types.Voter, nexus types.Nexu
 		nexus:          nexus,
 		snapshotter:    snapshotter,
 		slashing:       slashing,
+		staking:        staking,
 	}
 }
 
@@ -89,8 +91,10 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 	params := keeper.MsgServerConstructArgs{
 		BaseKeeper:  am.keeper,
 		Nexus:       am.nexus,
+		Voter:       am.voter,
 		Snapshotter: am.snapshotter,
 		Slashing:    am.slashing,
+		Staking:     am.staking,
 	}
 	msgServer := keeper.NewMsgServerImpl(params)
 	types.RegisterMsgServiceServer(cfg.MsgServer(), msgServer)
