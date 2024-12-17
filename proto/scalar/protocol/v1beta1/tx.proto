@@ -8,28 +8,29 @@ import "gogoproto/gogo.proto";
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
 message CreateProtocolRequest {
-  string name = 1;        // e.g., "protocol-1"
-  string service_tag = 2; // e.g., "pools"
+  string name = 1; // e.g., "protocol-1"
+  bytes scalar_pk = 2;
+  string service_tag = 3; // e.g., "pools"
 
   // Btc chain
-  string btc_signer_name = 3;
+  string btc_signer_name = 4;
   string btc_signer_endpoint =
-      4; // e.g., "https://protocol.testnet.scalar.org/v1/sign-unbonding-tx"
+      5; // e.g., "https://protocol.testnet.scalar.org/v1/sign-unbonding-tx"
   string btc_signer_access_token =
-      5; // e.g., "616171bb-e71a-4d3f-a4a7-045de8f3cad0"
+      6; // e.g., "616171bb-e71a-4d3f-a4a7-045de8f3cad0"
   string btc_signer_address =
-      6; // e.g., "tb1q37dgjm7e7h385aykhd6gps7uqx0kv26w2ugu8c"
+      7; // e.g., "tb1q37dgjm7e7h385aykhd6gps7uqx0kv26w2ugu8c"
   bytes btc_signer_pk =
-      7; // e.g.,
+      8; // e.g.,
          // "0x021387aab21303782b17e760c670432559df3968e52cb82cc2d8f9be43a227d5dc"
-  string btc_network = 8; // e.g., "bitcoin-testnet4"
+  string btc_network = 9; // e.g., "bitcoin-testnet4"
 
   // Custodian group
-  string custodian_group_name = 9; // e.g., "All"
-  uint32 quorum = 10;              // e.g., 3
+  string custodian_group_name = 10; // e.g., "All"
+  uint32 quorum = 11;               // e.g., 3
 
-  bool is_custodian_only = 11; // e.g., true
-  ProtocolStatus status = 12;  // e.g., PROTOCOL_STATUS_ACTIVATED
+  bool is_custodian_only = 12; // e.g., true
+  ProtocolStatus status = 13;  // e.g., PROTOCOL_STATUS_ACTIVATED
 }
 
 message CreateProtocolResponse {}

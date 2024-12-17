@@ -8,12 +8,13 @@ option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
 message Protocol {
   string name = 1;
-  repeated DestinationChain dest_chains = 2;
-  string service_tag = 3;
-  BtcChain btc_chain = 4 [ (gogoproto.nullable) = false ];
-  CustodianGroup custodian_group = 5 [ (gogoproto.nullable) = false ];
-  bool is_custodian_only = 6;
-  ProtocolStatus status = 7;
+  bytes scalar_pk = 2;
+  repeated DestinationChain dest_chains = 3;
+  string service_tag = 4;
+  BtcChain btc_chain = 5 [ (gogoproto.nullable) = false ];
+  CustodianGroup custodian_group = 6 [ (gogoproto.nullable) = false ];
+  bool is_custodian_only = 7;
+  ProtocolStatus status = 8;
 }
 
 enum ProtocolStatus {
