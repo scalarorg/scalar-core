@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -213,14 +212,16 @@ func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event ty
 		return err
 	}
 
-	// Event_ContractCall is no longer directly handled by the EVM module,
+	// Event_StakingTx is no longer directly handled by the BTC module,
 	// which bypassed nexus routing
+
 	switch event.GetEvent().(type) {
 	case *types.Event_StakingTx:
 		if err := v.handleStakingTx(ctx, ck, event); err != nil {
 			return err
 		}
 	default:
+		clog.Red("Not found event type")
 		funcs.MustNoErr(ck.EnqueueConfirmedEvent(ctx, event.GetID()))
 	}
 
@@ -236,6 +237,8 @@ func (v voteHandler) handleStakingTx(ctx sdk.Context, ck types.ChainKeeper, even
 		return err
 	}
 
+	clog.Red("handleStakingTx, enqueueRouteMessage", "msg", msg.ID)
+	clog.Red("handleStakingTx, setEventCompleted", "event", event.GetID())
 	funcs.MustNoErr(v.nexus.EnqueueRouteMessage(ctx, msg.ID))
 	funcs.MustNoErr(ck.SetEventCompleted(ctx, event.GetID()))
 
@@ -250,11 +253,11 @@ func mustToGeneralMessage(ctx sdk.Context, n types.Nexus, event types.Event) nex
 	sender := nexus.CrossChainAddress{Chain: sourceChain, Address: stakingTx.Sender}
 
 	// TODO: GetChain should query by chain type and chain id for more network flexibility
-	destinationChain, ok := n.GetChain(ctx, HARDCODED_DESTINATIONCHAIN)
+	destinationChain, ok := n.GetChain(ctx, stakingTx.DestinationChain)
 	if !ok {
 		// try forwarding it to wasm router if destination chain is not registered
 		// Wasm chain names are always lower case, so normalize it for consistency in core
-		destChainName := nexus.ChainName(strings.ToLower(HARDCODED_DESTINATIONCHAIN.String()))
+		destChainName := nexus.ChainName(stakingTx.DestinationChain.String())
 		destinationChain = nexus.Chain{Name: destChainName, SupportsForeignAssets: false, KeyType: tss.None, Module: wasm.ModuleName}
 	}
 	recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: stakingTx.Metadata.DestinationContractAddress.String()}

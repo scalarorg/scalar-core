@@ -1141,6 +1141,7 @@ Msg defines the nexus Msg service.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `sender` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
 | `amount` | [uint64](#uint64) |  |  |
 | `asset` | [string](#string) |  |  |
 | `payload_hash` | [bytes](#bytes) |  |  |
