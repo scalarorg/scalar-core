@@ -1,11 +1,12 @@
 // File copied from golang tofnd with minor tweaks
 syntax = "proto3";
 
-option go_package = "github.com/scalarorg/scalar-core/x/tss/tofnd";
+package tofnd;
+
 import "gogoproto/gogo.proto";
 import "scalar/tss/tofnd/v1beta1/common.proto"; // import key presence request/response
 
-package scalar.tss.tofnd.v1beta1;
+option go_package = "github.com/scalarorg/scalar-core/x/tss/tofnd";
 
 // TODO: figure out why gogoproto produces unusable services
 // GG20 is the protocol https://eprint.iacr.org/2020/540
@@ -34,10 +35,8 @@ message RecoverResponse {
 // Keygen's success response
 message KeygenOutput {
   bytes pub_key = 1; // pub_key; common for all parties
-  bytes group_recover_info =
-      2; // recover info of all parties' shares; common for all parties
-  bytes private_recover_info =
-      3; // private recover info of this party's shares; unique for each party
+  bytes group_recover_info = 2; // recover info of all parties' shares; common for all parties
+  bytes private_recover_info = 3; // private recover info of this party's shares; unique for each party
 }
 
 // generic message types shared by Keygen, Sign
@@ -46,26 +45,26 @@ message KeygenOutput {
 // eg. KeygenInit, SignInit should be defined inside MessageIn, etc.
 
 message MessageIn {
-  oneof data {                  // TODO don't reuse `data`
+  oneof data { // TODO don't reuse `data`
     KeygenInit keygen_init = 1; // first message only, Keygen
-    SignInit sign_init = 2;     // first message only, Sign
-    TrafficIn traffic = 3;      // all subsequent messages
-    bool abort = 4;             // abort the protocol, ignore the bool value
+    SignInit sign_init = 2; // first message only, Sign
+    TrafficIn traffic = 3; // all subsequent messages
+    bool abort = 4; // abort the protocol, ignore the bool value
   }
 }
 
 message MessageOut {
-  oneof data {                      // TODO don't reuse `data`
-    TrafficOut traffic = 1;         // all but final message
+  oneof data { // TODO don't reuse `data`
+    TrafficOut traffic = 1; // all but final message
     KeygenResult keygen_result = 2; // final message only, Keygen
-    SignResult sign_result = 3;     // final message only, Sign
-    bool need_recover = 4;          // issue recover from client
+    SignResult sign_result = 3; // final message only, Sign
+    bool need_recover = 4; // issue recover from client
   }
 
   // Keygen's response types
   message KeygenResult {
     oneof keygen_result_data {
-      KeygenOutput data = 1;      // Success response
+      KeygenOutput data = 1; // Success response
       CriminalList criminals = 2; // Faiilure response
     }
   }
@@ -73,7 +72,7 @@ message MessageOut {
   // Sign's response types
   message SignResult {
     oneof sign_result_data {
-      bytes signature = 1;        // Success response
+      bytes signature = 1; // Success response
       CriminalList criminals = 2; // Failure response
     }
   }
