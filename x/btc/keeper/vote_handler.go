@@ -214,7 +214,7 @@ func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event ty
 	}
 
 	// Event_StakingTx is no longer directly handled by the BTC module,
-	// which bypassed nexus routing
+	// which bypassed nexus routing to destination chain, for example to evm module
 
 	eventType := event.GetEvent()
 	clog.Redf("[BTC] eventType: %+v", eventType)
@@ -238,13 +238,16 @@ func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event ty
 func (v voteHandler) handleStakingTx(ctx sdk.Context, ck types.ChainKeeper, event types.Event) error {
 	msg := mustToGeneralMessage(ctx, v.nexus, event)
 
+	clog.Bluef("msg: %+v", msg)
 	if err := v.nexus.SetNewMessage(ctx, msg); err != nil {
 		clog.Redf("[BTC] SetNewMessage error: %+v", err)
 		return err
 	}
 
-	clog.Red("handleStakingTx, enqueueRouteMessage", "msg", msg.ID)
-	clog.Red("handleStakingTx, setEventCompleted", "event", event.GetID())
+	clog.Blue("handleStakingTx, enqueueRouteMessage", "msg", msg.ID)
+	clog.Blue("handleStakingTx, setEventCompleted", "event", event.GetID())
+
+	// this enqueues the message to be routed to the destination chain, it will be handled at abci of the destination module, for example evm module
 	funcs.MustNoErr(v.nexus.EnqueueRouteMessage(ctx, msg.ID))
 	funcs.MustNoErr(ck.SetEventCompleted(ctx, event.GetID()))
 
@@ -255,11 +258,14 @@ func mustToGeneralMessage(ctx sdk.Context, n types.Nexus, event types.Event) nex
 	id := string(event.GetID())
 	stakingTx := event.GetEvent().(*types.Event_StakingTx).StakingTx
 
+	clog.Redf("stakingTx: %+v", stakingTx)
+
 	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
 	sender := nexus.CrossChainAddress{Chain: sourceChain, Address: stakingTx.Sender}
 
 	// TODO: GetChain should query by chain type and chain id for more network flexibility
 	destinationChain, ok := n.GetChain(ctx, stakingTx.DestinationChain)
+	clog.Redf("destinationChain: %+v", destinationChain)
 	if !ok {
 		// try forwarding it to wasm router if destination chain is not registered
 		// Wasm chain names are always lower case, so normalize it for consistency in core

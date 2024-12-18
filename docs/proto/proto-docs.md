@@ -1184,8 +1184,6 @@ Msg defines the nexus Msg service.
 | `service_tag` | [bytes](#bytes) |  |  |
 | `have_only_covenants` | [bool](#bool) |  |  |
 | `covenant_quorum` | [uint32](#uint32) |  |  |
-| `destination_chain_type` | [uint32](#uint32) |  |  |
-| `destination_chain_id` | [uint64](#uint64) |  |  |
 | `destination_contract_address` | [bytes](#bytes) |  |  |
 | `destination_recipient_address` | [bytes](#bytes) |  |  |
 | `staking_outpoint` | [OutPoint](#scalar.btc.v1beta1.OutPoint) |  |  |

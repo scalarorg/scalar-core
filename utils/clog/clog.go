@@ -118,11 +118,13 @@ func logLevelf(event *zerolog.Event, format string, logs ...interface{}) {
 }
 
 func Green(msg string, fields ...interface{}) {
-	logLevel(logger.Info(), colorGreen+msg+colorReset, fields...)
+	msg = colorGreen + msg + colorReset
+	logLevel(logger.Info(), msg, fields...)
 }
 
 func Greenf(format string, args ...interface{}) {
-	logLevelf(logger.Info(), format, args...)
+	msg := colorGreen + fmt.Sprintf(format, args...) + colorReset
+	logLevelf(logger.Info(), msg)
 }
 
 func Yellow(msg string, fields ...interface{}) {
@@ -130,16 +132,18 @@ func Yellow(msg string, fields ...interface{}) {
 }
 
 func Yellowf(format string, args ...interface{}) {
-	logLevelf(logger.Warn(), format, args...)
+	msg := colorYellow + fmt.Sprintf(format, args...) + colorReset
+	logLevelf(logger.Warn(), msg)
 }
 
 func Red(msg string, fields ...interface{}) {
-	logLevel(logger.Error(), colorRed+msg+colorReset, fields...)
+	msg = colorRed + msg + colorReset
+	logLevel(logger.Error(), msg, fields...)
 }
 
 func Redf(format string, args ...interface{}) {
-	msg := fmt.Sprintf(format, args...)
-	logLevelf(logger.Error(), colorRed+msg+colorReset)
+	msg := colorRed + fmt.Sprintf(format, args...) + colorReset
+	logLevelf(logger.Error(), msg)
 }
 
 func Blue(msg string, fields ...interface{}) {
@@ -148,8 +152,8 @@ func Blue(msg string, fields ...interface{}) {
 }
 
 func Bluef(format string, args ...interface{}) {
-	msg := fmt.Sprintf(format, args...)
-	logLevelf(logger.Debug(), colorBlue+msg+colorReset)
+	msg := colorBlue + fmt.Sprintf(format, args...) + colorReset
+	logLevelf(logger.Debug(), msg)
 }
 
 func Cyan(msg string, fields ...interface{}) {
@@ -158,6 +162,16 @@ func Cyan(msg string, fields ...interface{}) {
 }
 
 func Cyanf(format string, args ...interface{}) {
-	msg := fmt.Sprintf(format, args...)
-	logLevelf(logger.Trace(), colorGray+msg+colorReset)
+	msg := colorGray + fmt.Sprintf(format, args...) + colorReset
+	logLevelf(logger.Trace(), msg)
+}
+
+func Magenta(msg string, fields ...interface{}) {
+	msg = colorMagenta + msg + colorReset
+	logLevel(logger.Info(), msg, fields...)
+}
+
+func Magentaf(format string, args ...interface{}) {
+	msg := colorMagenta + fmt.Sprintf(format, args...) + colorReset
+	logLevelf(logger.Info(), msg)
 }
