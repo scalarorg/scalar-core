@@ -26,6 +26,7 @@
 - [scalar/btc/v1beta1/types.proto](#scalar/btc/v1beta1/types.proto)
     - [Command](#scalar.btc.v1beta1.Command)
     - [CommandBatchMetadata](#scalar.btc.v1beta1.CommandBatchMetadata)
+    - [OutPoint](#scalar.btc.v1beta1.OutPoint)
     - [Proof](#scalar.btc.v1beta1.Proof)
     - [StakingTx](#scalar.btc.v1beta1.StakingTx)
   
@@ -920,6 +921,22 @@ Msg defines the nexus Msg service.
 
 
 
+<a name="scalar.btc.v1beta1.OutPoint"></a>
+
+### OutPoint
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `hash` | [bytes](#bytes) |  |  |
+| `index` | [uint32](#uint32) |  |  |
+
+
+
+
+
+
 <a name="scalar.btc.v1beta1.Proof"></a>
 
 ### Proof
@@ -1141,6 +1158,7 @@ Msg defines the nexus Msg service.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `sender` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
 | `amount` | [uint64](#uint64) |  |  |
 | `asset` | [string](#string) |  |  |
 | `payload_hash` | [bytes](#bytes) |  |  |
@@ -1170,6 +1188,7 @@ Msg defines the nexus Msg service.
 | `destination_chain_id` | [uint64](#uint64) |  |  |
 | `destination_contract_address` | [bytes](#bytes) |  |  |
 | `destination_recipient_address` | [bytes](#bytes) |  |  |
+| `staking_outpoint` | [OutPoint](#scalar.btc.v1beta1.OutPoint) |  |  |
 
 
 

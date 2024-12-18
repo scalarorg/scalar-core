@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -70,7 +69,9 @@ func (v voteHandler) HandleExpiredPoll(ctx sdk.Context, poll vote.Poll) error {
 			maintainerState.MarkMissingVote(!hasVoted)
 			funcs.MustNoErr(v.nexus.SetChainMaintainerState(ctx, maintainerState))
 
-			v.keeper.Logger(ctx).Debug(fmt.Sprintf("marked voter %s behaviour", voter.String()),
+			msg := fmt.Sprintf("marked voter %s behaviour", voter.String())
+			clog.Red("HandleExpiredPoll", msg)
+			v.keeper.Logger(ctx).Debug(msg,
 				"voter", voter.String(),
 				"missing_vote", !hasVoted,
 				"poll", poll.GetID().String(),
@@ -79,7 +80,9 @@ func (v voteHandler) HandleExpiredPoll(ctx sdk.Context, poll vote.Poll) error {
 
 		if !hasVoted {
 			rewardPool.ClearRewards(voter)
-			v.keeper.Logger(ctx).Debug(fmt.Sprintf("penalized voter %s due to timeout", voter.String()),
+			msg := fmt.Sprintf("penalized voter %s due to timeout", voter.String())
+			clog.Red("HandleExpiredPoll", msg)
+			v.keeper.Logger(ctx).Debug(msg,
 				"voter", voter.String(),
 				"poll", poll.GetID().String())
 		}
@@ -125,7 +128,9 @@ func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error 
 		maintainerState.MarkIncorrectVote(hasVotedIncorrectly)
 		funcs.MustNoErr(v.nexus.SetChainMaintainerState(ctx, maintainerState))
 
-		v.keeper.Logger(ctx).Debug(fmt.Sprintf("marked voter %s behaviour", voter.String()),
+		msg := fmt.Sprintf("marked voter %s behaviour", voter.String())
+		clog.Red("HandleCompletedPoll", msg)
+		v.keeper.Logger(ctx).Debug(msg,
 			"voter", voter.String(),
 			"missing_vote", !hasVoted,
 			"incorrect_vote", hasVotedIncorrectly,
@@ -135,14 +140,18 @@ func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error 
 		switch {
 		case hasVotedIncorrectly, !hasVoted:
 			rewardPool.ClearRewards(voter)
-			v.keeper.Logger(ctx).Debug(fmt.Sprintf("penalized voter %s due to incorrect vote or missing vote", voter.String()),
+			msg := fmt.Sprintf("penalized voter %s due to incorrect vote or missing vote", voter.String())
+			clog.Red("HandleCompletedPoll", msg)
+			v.keeper.Logger(ctx).Debug(msg,
 				"voter", voter.String(),
 				"poll", poll.GetID().String())
 		default:
 			if err := rewardPool.ReleaseRewards(voter); err != nil {
 				return err
 			}
-			v.keeper.Logger(ctx).Debug(fmt.Sprintf("released rewards for voter %s", voter.String()),
+			msg := fmt.Sprintf("released rewards for voter %s", voter.String())
+			clog.Red("HandleCompletedPoll", msg)
+			v.keeper.Logger(ctx).Debug(msg,
 				"voter", voter.String(),
 				"poll", poll.GetID().String())
 		}
@@ -157,11 +166,15 @@ func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error 
 		})
 	}
 
-	events.Emit(ctx, &types.PollCompleted{
+	event := &types.PollCompleted{
 		TxID:   md.TxID,
 		Chain:  md.Chain,
 		PollID: poll.GetID(),
-	})
+	}
+
+	clog.Red("Poll Completed Event", event)
+
+	events.Emit(ctx, event)
 
 	return nil
 }
@@ -196,17 +209,24 @@ func (v voteHandler) HandleResult(ctx sdk.Context, result codec.ProtoMarshaler) 
 
 func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event types.Event, chain nexus.Chain) error {
 	if err := ck.SetConfirmedEvent(ctx, event); err != nil {
+		clog.Redf("[BTC] SetConfirmedEvent error: %+v", err)
 		return err
 	}
 
-	// Event_ContractCall is no longer directly handled by the EVM module,
+	// Event_StakingTx is no longer directly handled by the BTC module,
 	// which bypassed nexus routing
-	switch event.GetEvent().(type) {
+
+	eventType := event.GetEvent()
+	clog.Redf("[BTC] eventType: %+v", eventType)
+	clog.Redf("[BTC] event: %+v", event)
+
+	switch eventType.(type) {
 	case *types.Event_StakingTx:
 		if err := v.handleStakingTx(ctx, ck, event); err != nil {
 			return err
 		}
 	default:
+		clog.Red("Not found event type")
 		funcs.MustNoErr(ck.EnqueueConfirmedEvent(ctx, event.GetID()))
 	}
 
@@ -219,9 +239,12 @@ func (v voteHandler) handleStakingTx(ctx sdk.Context, ck types.ChainKeeper, even
 	msg := mustToGeneralMessage(ctx, v.nexus, event)
 
 	if err := v.nexus.SetNewMessage(ctx, msg); err != nil {
+		clog.Redf("[BTC] SetNewMessage error: %+v", err)
 		return err
 	}
 
+	clog.Red("handleStakingTx, enqueueRouteMessage", "msg", msg.ID)
+	clog.Red("handleStakingTx, setEventCompleted", "event", event.GetID())
 	funcs.MustNoErr(v.nexus.EnqueueRouteMessage(ctx, msg.ID))
 	funcs.MustNoErr(ck.SetEventCompleted(ctx, event.GetID()))
 
@@ -236,11 +259,11 @@ func mustToGeneralMessage(ctx sdk.Context, n types.Nexus, event types.Event) nex
 	sender := nexus.CrossChainAddress{Chain: sourceChain, Address: stakingTx.Sender}
 
 	// TODO: GetChain should query by chain type and chain id for more network flexibility
-	destinationChain, ok := n.GetChain(ctx, HARDCODED_DESTINATIONCHAIN)
+	destinationChain, ok := n.GetChain(ctx, stakingTx.DestinationChain)
 	if !ok {
 		// try forwarding it to wasm router if destination chain is not registered
 		// Wasm chain names are always lower case, so normalize it for consistency in core
-		destChainName := nexus.ChainName(strings.ToLower(HARDCODED_DESTINATIONCHAIN.String()))
+		destChainName := nexus.ChainName(stakingTx.DestinationChain.String())
 		destinationChain = nexus.Chain{Name: destChainName, SupportsForeignAssets: false, KeyType: tss.None, Module: wasm.ModuleName}
 	}
 	recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: stakingTx.Metadata.DestinationContractAddress.String()}

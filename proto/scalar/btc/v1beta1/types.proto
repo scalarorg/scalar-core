@@ -116,4 +116,7 @@ message Command {
   CommandType type = 5;
 }
 
-
+message OutPoint {
+  bytes hash = 1 [ (gogoproto.customtype) = "Hash" ];
+  uint32 index = 2;
+}

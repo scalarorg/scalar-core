@@ -7,6 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 	"github.com/scalarorg/scalar-core/x/vote/types"
@@ -53,7 +54,11 @@ func (s msgServer) Vote(c context.Context, req *types.VoteRequest) (*types.VoteR
 			})
 	}
 
-	switch poll.GetState() {
+	pollState := poll.GetState()
+
+	clog.Red("pollState in vote/keeper/msg_server.go: ", pollState)
+
+	switch pollState {
 	case vote.Pending:
 		return &types.VoteResponse{Log: fmt.Sprintf("not enough votes to confirm poll %s yet", req.PollID.String())}, nil
 	case vote.Failed:

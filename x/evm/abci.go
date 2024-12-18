@@ -9,6 +9,7 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
@@ -719,6 +720,7 @@ func BeginBlocker(sdk.Context, abci.RequestBeginBlock, types.BaseKeeper) {}
 
 // EndBlocker called every block, process inflation, update validator set.
 func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) ([]abci.ValidatorUpdate, error) {
+	clog.Yellow("EVM ABCI ENDBLOCKER")
 	handleConfirmedEvents(ctx, bk, n, m)
 	handleMessages(ctx, bk, n, m)
 

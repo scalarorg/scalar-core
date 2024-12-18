@@ -10,7 +10,6 @@ import (
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
-	"github.com/scalarorg/scalar-core/x/btc/keeper"
 	"github.com/scalarorg/scalar-core/x/btc/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -24,6 +23,7 @@ func BeginBlocker(sdk.Context, abci.RequestBeginBlock, types.BaseKeeper) {}
 
 // EndBlocker called every block, process inflation, update validator set.
 func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) ([]abci.ValidatorUpdate, error) {
+	clog.Yellow("BTC ABCI ENDBLOCKER")
 	handleConfirmedEvents(ctx, bk, n, m)
 	handleMessages(ctx, bk, n, m)
 
@@ -31,7 +31,6 @@ func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.BaseKeeper, n 
 }
 
 func handleConfirmedEvents(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) {
-	clog.Red("handleConfirmedEvents")
 	for _, chain := range slices.Filter(n.GetChains(ctx), types.IsBTCChain) {
 		handleConfirmedEventsForChain(ctx, chain, bk, n, m)
 	}
@@ -50,6 +49,7 @@ func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.
 	}
 
 	for _, event := range events {
+		clog.Redf("[BTC] handleConfirmedEvent: %+v", event)
 		success := utils.RunCached(ctx, bk, func(ctx sdk.Context) (bool, error) {
 			if err := handleConfirmedEvent(ctx, event, bk, n, m); err != nil {
 				ck.Logger(ctx).Debug(fmt.Sprintf("failed handling event: %s", err.Error()),
@@ -94,15 +94,14 @@ func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 	}
 }
 
-func validateEvent(ctx sdk.Context, event types.Event, _ types.BaseKeeper, n types.Nexus) error {
+func validateEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus) error {
 	clog.Red("validateEvent", "event", event.GetID())
 	var destinationChainName nexus.ChainName
 	var contractAddress string
 	switch event := event.GetEvent().(type) {
 	case *types.Event_StakingTx:
-		destinationChainName = keeper.HARDCODED_DESTINATIONCHAIN
+		destinationChainName = event.StakingTx.DestinationChain
 		contractAddress = event.StakingTx.Metadata.DestinationContractAddress.String()
-	// TODO: add other event types here
 	default:
 		panic(fmt.Errorf("unsupported event type %T", event))
 	}
@@ -118,27 +117,17 @@ func validateEvent(ctx sdk.Context, event types.Event, _ types.BaseKeeper, n typ
 		return fmt.Errorf("destination chain de-activated")
 	}
 
+	// TODO: Here is validate the contract address for EVM, need to handle more general cases
+	if len(contractAddress) != 0 && !common.IsHexAddress(contractAddress) {
+		return fmt.Errorf("invalid contract address")
+	}
+
 	// skip further destination chain keeper checks if it is not an evm chain
 	if !destinationChain.IsFrom(types.ModuleName) {
 		return nil
 	}
 
-	if len(contractAddress) != 0 && !common.IsHexAddress(contractAddress) {
-		return fmt.Errorf("invalid contract address")
-	}
-
-	// TODO: HOW TO CHECK IF DESTINATION CHAIN IS EVM-COMPATIBLE?
-	clog.Yellow("TODO: HOW TO CHECK EVM DESTINATION CHAIN AT BTC?")
-
-	// destinationCk, err := bk.ForChain(ctx, destinationChainName)
-	// if err != nil {
-	// 	return fmt.Errorf("destination chain not EVM-compatible")
-	// }
-
-	// skip if destination chain has not got gateway set yet
-	// if _, ok := destinationCk.GetGatewayAddress(ctx); !ok {
-	// 	return fmt.Errorf("destination chain gateway not deployed yet")
-	// }
+	// TODO: handle for the same btc chain
 
 	return nil
 }
@@ -150,17 +139,13 @@ func handleStakingTx(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 		panic(fmt.Errorf("event is nil"))
 	}
 
-	// destinationChain := funcs.MustOk(n.GetChain(ctx, e.DestinationChain))
-	destinationChainName := keeper.HARDCODED_DESTINATIONCHAIN
-	destinationChain, ok := n.GetChain(ctx, destinationChainName)
-	if !ok {
-		return fmt.Errorf("destination chain not found")
-	}
-
+	destinationChain := funcs.MustOk(n.GetChain(ctx, e.DestinationChain))
+	clog.Red("handleStakingTx", "destinationChain", destinationChain.Name.String())
 	switch destinationChain.Module {
 	case types.ModuleName:
 		// handleStakingTxToBTC(ctx, bk, multisig, n, destinationChain.Name, event)
 		// TODO: implement
+		clog.Red("handleStakingTx for the same btc chain", "destinationChain", destinationChain.Name.String())
 		return nil
 	default:
 		// set as general message in nexus, so the dest module can handle the message
@@ -170,7 +155,7 @@ func handleStakingTx(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 
 func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset *sdk.Coin) error {
 
-	clog.Red("setMessageToNexus", "event", event.GetID())
+	clog.Red("setMessageToNexus", "event", event)
 
 	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
 
@@ -182,14 +167,8 @@ func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset 
 			Address: e.StakingTx.Sender,
 		}
 
-		chainName := keeper.HARDCODED_DESTINATIONCHAIN
-		chain, ok := n.GetChain(ctx, chainName)
-		if !ok {
-			return fmt.Errorf("destination chain not found")
-		}
-
 		recipient := nexus.CrossChainAddress{
-			Chain:   chain,
+			Chain:   funcs.MustOk(n.GetChain(ctx, e.StakingTx.DestinationChain)),
 			Address: e.StakingTx.Metadata.DestinationContractAddress.String(),
 		}
 
@@ -315,6 +294,7 @@ func validateMessage(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, m typ
 
 func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID multisig.KeyID, msg nexus.GeneralMessage) {
 	cmd := types.NewApproveBridgeCallCommandGeneric(chainID, keyID, common.HexToAddress(msg.GetDestinationAddress()), common.BytesToHash(msg.PayloadHash), common.BytesToHash(msg.SourceTxID), msg.GetSourceChain(), msg.GetSourceAddress(), msg.SourceTxIndex, msg.ID)
+	clog.Redf("[BTC] EnqueueCommand: %+v", cmd)
 	funcs.MustNoErr(ck.EnqueueCommand(ctx, cmd))
 
 	events.Emit(ctx, &types.BridgeCallApproved{

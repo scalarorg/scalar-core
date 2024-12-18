@@ -68,14 +68,18 @@ message EventStakingTx {
       (gogoproto.customtype) =
           "github.com/scalarorg/scalar-core/x/evm/types.Address"
     ];
+    OutPoint staking_outpoint = 12 [ (gogoproto.nullable) = false ];
   }
 
   string sender = 1;
-  uint64 amount = 2;
-  string asset = 3;
-  bytes payload_hash = 4
+  string destination_chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  uint64 amount = 3;
+  string asset = 4;
+  bytes payload_hash = 5
       [ (gogoproto.customtype) = "Hash", (gogoproto.nullable) = false ];
-  StakingTxMetadata metadata = 5 [ (gogoproto.nullable) = false ];
+  StakingTxMetadata metadata = 6 [ (gogoproto.nullable) = false ];
 }
 
 message BTCEventCompleted {
