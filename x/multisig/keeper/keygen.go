@@ -144,7 +144,6 @@ func (k Keeper) getKey(ctx sdk.Context, id exported.KeyID) (key types.Key, ok bo
 }
 
 func (k Keeper) setKeygenSession(ctx sdk.Context, keygen types.KeygenSession) {
-	fmt.Printf("Debug# setKeygenSession# keygen: %+v\n", keygen)
 	// the deletion is necessary because we may update it to a different location depending on the current state of the session
 	k.getStore(ctx).Delete(expiryKeygenPrefix.Append(utils.KeyFromInt(keygen.ExpiresAt)).Append(utils.LowerCaseKey(keygen.GetKeyID().String())))
 	k.getStore(ctx).SetRaw(getKeygenSessionExpiryKey(keygen), []byte(keygen.GetKeyID()))

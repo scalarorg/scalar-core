@@ -10,17 +10,18 @@ import (
 // EVMConfig contains all EVM module configuration values
 
 type EVMConfig struct {
-	ChainID    uint64        `json:"chainId" mapstructure:"chain_id"`
-	ID         string        `json:"id" mapstructure:"id"`
-	Name       string        `json:"name" mapstructure:"name"`
-	Gateway    string        `json:"gateway" mapstructure:"gateway"`
-	Finality   int           `json:"finality" mapstructure:"finality"`
-	LastBlock  uint64        `json:"lastBlock" mapstructure:"last_block"`
-	GasLimit   uint64        `json:"gasLimit"`
-	BlockTime  time.Duration `json:"blockTime"`
-	MaxRetry   int           `json:"maxRetry"`
-	RetryDelay time.Duration `json:"retryDelay"`
-	TxTimeout  time.Duration `json:"txTimeout"`
+	ChainID      uint64        `json:"chainId"`
+	ID           string        `json:"id"`
+	Name         string        `json:"name" mapstructure:"name"`
+	Gateway      string        `json:"gateway"`
+	AuthWeighted string        `json:"authWeighted"`
+	Finality     int           `json:"finality"`
+	LastBlock    uint64        `json:"lastBlock"`
+	GasLimit     uint64        `json:"gasLimit"`
+	BlockTime    time.Duration `json:"blockTime"`
+	MaxRetry     int           `json:"maxRetry"`
+	RetryDelay   time.Duration `json:"retryDelay"`
+	TxTimeout    time.Duration `json:"txTimeout"`
 
 	RPCAddr          string               `json:"rpcAddr" mapstructure:"rpc_addr"`
 	WithBridge       bool                 `json:"withBridge" mapstructure:"with_bridge"`

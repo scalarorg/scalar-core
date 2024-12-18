@@ -308,21 +308,26 @@ func initTestnetFiles(
 		}
 		validatorInfos = append(validatorInfos, *validatorInfo)
 	}
-	if err := initGenFiles(clientCtx, mbm,
-		nodeConfig,
-		GenesisAsset,
-		validatorInfos,
-		args,
-	); err != nil {
+	if err := generateFiles(clientCtx, mbm, nodeConfig, validatorInfos, args, genBalIterator); err != nil {
 		cmd.PrintErrf("failed to initGenFiles: %s", err.Error())
 		return err
 	}
 
-	err := collectGenFiles(clientCtx, nodeConfig, args.chainID, validatorInfos, args.outputDir, genBalIterator)
-	if err != nil {
-		cmd.PrintErrf("failed to collect genesis files: %s", err.Error())
-		return err
-	}
+	// if err := initGenFiles(clientCtx, mbm,
+	// 	nodeConfig,
+	// 	GenesisAsset,
+	// 	validatorInfos,
+	// 	args,
+	// ); err != nil {
+	// 	cmd.PrintErrf("failed to initGenFiles: %s", err.Error())
+	// 	return err
+	// }
+
+	// err := collectGenFiles(clientCtx, nodeConfig, args.chainID, validatorInfos, args.outputDir, genBalIterator)
+	// if err != nil {
+	// 	cmd.PrintErrf("failed to collect genesis files: %s", err.Error())
+	// 	return err
+	// }
 
 	cmd.PrintErrf("Successfully initialized %d node directories\n", args.numValidators)
 	return nil
@@ -624,7 +629,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		}
 	}
 
-	valPower := int64((index + 1) * (index + 1))
+	valPower := int64((index + 1) * (index + 1) * 1000000)
 	stakingPower := sdk.NewCoin(GenesisAsset, sdk.TokensFromConsensusPower(valPower, scalartypes.ValidatorStaking))
 	senderKeyName := scalartypes.ValidatorKeyName
 	tmPubKey, err := cryptocodec.ToTmPubKeyInterface(validatorInfo.ValNodePubKey)
@@ -704,6 +709,93 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	}
 	return &validatorInfo, nil
 }
+
+func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig *tmconfig.Config,
+	validatorInfos []scalartypes.ValidatorInfo, args initArgs, genBalIterator banktypes.GenesisBalancesIterator,
+) error {
+	var appRawState json.RawMessage
+	var err error
+	validators := make([]tmtypes.GenesisValidator, len(validatorInfos))
+	for i, validatorInfo := range validatorInfos {
+		validators[i] = validatorInfo.GenesisValidator
+	}
+	appGenState, err := scalartypes.GenerateGenesis(clientCtx, mbm, GenesisAsset, validatorInfos, args.supportedChains)
+	if err != nil {
+		fmt.Printf("GenerateGenesis err: %s\n", err.Error())
+		return err
+	}
+
+	appRawState, err = json.MarshalIndent(appGenState, "", "  ")
+	if err != nil {
+		fmt.Printf("MarshalIndent err: %s\n", err.Error())
+		return err
+	}
+	genDoc := tmtypes.GenesisDoc{
+		GenesisTime: tmtime.Now(),
+		ChainID:     args.chainID,
+		AppState:    appRawState,
+		Validators:  validators,
+	}
+	for i, validatorInfo := range validatorInfos {
+		gentxsDir := filepath.Join(args.outputDir, "gentxs")
+		initCfg := genutiltypes.NewInitConfig(args.chainID, gentxsDir, validatorInfo.NodeID, validatorInfo.ValPubKey)
+		//Seed file
+		seeds, seedAddrs := createSeeds(validatorInfos, validatorInfo)
+		utils.WriteFile("seeds.toml", filepath.Join(validatorInfos[i].NodeDir, "config"), []byte(strings.Join(seeds, "\n")))
+		nodeConfig.Moniker = validatorInfos[i].Moniker
+		nodeConfig.SetRoot(validatorInfos[i].NodeDir)
+		nodeConfig.P2P.Seeds = strings.Join(seedAddrs, ",")
+		setConfigParams(nodeConfig, validatorInfo, i, args)
+		_, err := genutil.GenAppStateFromConfig(
+			clientCtx.Codec, clientCtx.TxConfig,
+			nodeConfig, initCfg, genDoc, genBalIterator)
+		if err != nil {
+			return err
+		}
+		createAppConfig(validatorInfo.NodeDir, args, i)
+		configPath := filepath.Join(validatorInfo.NodeDir, "config/config.toml")
+		appendBridgeConfig(configPath, args.supportedChains)
+	}
+
+	return nil
+}
+func createSeeds(validatorInfos []scalartypes.ValidatorInfo, validator scalartypes.ValidatorInfo) ([]string, []string) {
+	seeds := []string{}
+	seedAddrs := []string{}
+	for index, validatorInfo := range validatorInfos {
+		if validatorInfo.NodeID != validator.NodeID {
+			seed := fmt.Sprintf(`[[seed]]
+name = "validator%d"
+address = "%s"
+`, index+1, validatorInfo.SeedAddress)
+			seeds = append(seeds, seed)
+			seedAddrs = append(seedAddrs, validatorInfo.SeedAddress)
+		}
+	}
+	return seeds, seedAddrs
+}
+func setConfigParams(nodeConfig *tmconfig.Config, validator scalartypes.ValidatorInfo, index int, args initArgs) {
+	nodeConfig.ProxyApp = fmt.Sprintf("tcp://127.0.0.1:%d", 26658+index*args.portOffset)
+	nodeConfig.PrivValidatorListenAddr = ""
+	nodeConfig.RPC.ListenAddress = fmt.Sprintf("tcp://0.0.0.0:%d", 26657+index*args.portOffset)
+	nodeConfig.RPC.PprofListenAddress = fmt.Sprintf("0.0.0.0:%d", 6060+index*args.portOffset)
+
+	nodeConfig.P2P.ListenAddress = fmt.Sprintf("tcp://0.0.0.0:%d", 26656+index*args.portOffset)
+	nodeConfig.P2P.ExternalAddress = fmt.Sprintf("%s:%d", validator.Host, 26656+index*args.portOffset)
+}
+func createAppConfig(nodeDir string, args initArgs, index int) {
+	appConfig := sdkconfig.DefaultConfig()
+	appConfig.MinGasPrices = args.minGasPrices
+	appConfig.API.Enable = true
+	appConfig.API.Address = fmt.Sprintf("tcp://0.0.0.0:%d", 1317+index*args.portOffset)
+	appConfig.GRPC.Address = fmt.Sprintf("0.0.0.0:%d", 9090+index*args.portOffset)
+	appConfig.GRPCWeb.Address = fmt.Sprintf("0.0.0.0:%d", 9091+index*args.portOffset)
+	appConfig.Telemetry.Enabled = true
+	appConfig.Telemetry.PrometheusRetentionTime = 60
+	appConfig.Telemetry.EnableHostnameLabel = false
+	appConfig.Telemetry.GlobalLabels = [][]string{{"chain_id", args.chainID}}
+	sdkconfig.WriteConfigFile(filepath.Join(nodeDir, "config/app.toml"), appConfig)
+}
 func createConfigFiles(nodeConfig *tmconfig.Config, nodeDir string, args initArgs, host string, index int) error {
 	//Generate cosmos default app config
 	appConfig := sdkconfig.DefaultConfig()
@@ -726,14 +818,14 @@ func createConfigFiles(nodeConfig *tmconfig.Config, nodeDir string, args initArg
 
 	nodeConfig.P2P.ListenAddress = fmt.Sprintf("tcp://0.0.0.0:%d", 26656+index*args.portOffset)
 	nodeConfig.P2P.ExternalAddress = fmt.Sprintf("%s:%d", host, 26656+index*args.portOffset)
-	configPath := filepath.Join(nodeDir, "config/config.toml")
+	//configPath := filepath.Join(nodeDir, "config/config.toml")
 	//
-	tmconfig.WriteConfigFile(configPath, nodeConfig)
-	err := appendBridgeConfig(configPath, args.supportedChains)
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to append bridge config")
-	}
-	return err
+	//tmconfig.WriteConfigFile(configPath, nodeConfig)
+	// err := appendBridgeConfig(configPath, args.supportedChains)
+	// if err != nil {
+	// 	log.Error().Err(err).Msg("Failed to append bridge config")
+	// }
+	return nil
 }
 func appendBridgeConfig(configPath string, supportedChainsPath string) error {
 	//log.Info().Str("configPath", configPath).Str("supportedChainsPath", supportedChainsPath).Msg("Appending bridge config")
