@@ -5,7 +5,6 @@ import (
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcd/rpcclient"
 	"github.com/btcsuite/btcd/wire"
-	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/vald/xchain"
 	"github.com/scalarorg/scalar-core/x/btc/types"
@@ -20,7 +19,7 @@ type BtcClient struct {
 
 type BTCTxReceipt struct {
 	Raw        btcjson.TxRawResult
-	PrevTxOuts []*btcjson.GetTxOutResult
+	PrevTxOuts []*btcjson.Vout
 	MsgTx      *wire.MsgTx
 }
 
@@ -30,7 +29,6 @@ var _ xchain.Client = &BtcClient{}
 
 func NewClient(cfg *types.BTCConfig) (xchain.Client, error) {
 	rpcConfig := mapBTCConfigToRPCConfig(cfg)
-	clog.Red("NewClient", "rpcConfig", rpcConfig)
 	rpcClient, error := rpcclient.New(rpcConfig, nil)
 	if error != nil {
 		return nil, error

@@ -68,6 +68,7 @@ message EventStakingTx {
       (gogoproto.customtype) =
           "github.com/scalarorg/scalar-core/x/evm/types.Address"
     ];
+    OutPoint staking_outpoint = 12 [ (gogoproto.nullable) = false ];
   }
 
   string sender = 1;

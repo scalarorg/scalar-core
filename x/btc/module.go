@@ -11,6 +11,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/btc/client/cli"
 	"github.com/scalarorg/scalar-core/x/btc/keeper"
 	"github.com/scalarorg/scalar-core/x/btc/types"
@@ -70,10 +71,11 @@ type AppModule struct {
 	nexus       types.Nexus
 	snapshotter types.Snapshotter
 	slashing    types.SlashingKeeper
-	staking     types.StakingKeeper
+	// staking     types.StakingKeeper
+	multisig types.MultisigKeeper
 }
 
-func NewAppModule(keeper *keeper.BaseKeeper, voter types.Voter, nexus types.Nexus, snapshotter types.Snapshotter, slashing types.SlashingKeeper, staking types.StakingKeeper) AppModule {
+func NewAppModule(keeper *keeper.BaseKeeper, voter types.Voter, nexus types.Nexus, snapshotter types.Snapshotter, slashing types.SlashingKeeper, multisig types.MultisigKeeper) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
 		keeper:         keeper,
@@ -81,7 +83,7 @@ func NewAppModule(keeper *keeper.BaseKeeper, voter types.Voter, nexus types.Nexu
 		nexus:          nexus,
 		snapshotter:    snapshotter,
 		slashing:       slashing,
-		staking:        staking,
+		multisig:       multisig,
 	}
 }
 
@@ -94,7 +96,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 		Voter:       am.voter,
 		Snapshotter: am.snapshotter,
 		Slashing:    am.slashing,
-		Staking:     am.staking,
+		Multisig:    am.multisig,
 	}
 	msgServer := keeper.NewMsgServerImpl(params)
 	types.RegisterMsgServiceServer(cfg.MsgServer(), msgServer)
@@ -105,14 +107,17 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 	// TODO: add migration
 }
 
-func (am AppModule) BeginBlock(ctx sdk.Context) error {
-	return nil
+// BeginBlock executes all state transitions this module requires at the beginning of each new block
+func (am AppModule) BeginBlock(ctx sdk.Context, req abci.RequestBeginBlock) {
+	BeginBlocker(ctx, req, am.keeper)
 }
 
-func (am AppModule) EndBlock(ctx sdk.Context) error {
-	return nil
+// EndBlock executes all state transitions this module requires at the end of each new block
+func (am AppModule) EndBlock(ctx sdk.Context, req abci.RequestEndBlock) []abci.ValidatorUpdate {
+	return utils.RunCached(ctx, am.keeper, func(ctx sdk.Context) ([]abci.ValidatorUpdate, error) {
+		return EndBlocker(ctx, req, am.keeper, am.nexus, am.multisig)
+	})
 }
-
 func (am AppModule) ConsensusVersion() uint64 {
 	return 1
 }

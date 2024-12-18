@@ -209,13 +209,18 @@ func (v voteHandler) HandleResult(ctx sdk.Context, result codec.ProtoMarshaler) 
 
 func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event types.Event, chain nexus.Chain) error {
 	if err := ck.SetConfirmedEvent(ctx, event); err != nil {
+		clog.Redf("[BTC] SetConfirmedEvent error: %+v", err)
 		return err
 	}
 
 	// Event_StakingTx is no longer directly handled by the BTC module,
 	// which bypassed nexus routing
 
-	switch event.GetEvent().(type) {
+	eventType := event.GetEvent()
+	clog.Redf("[BTC] eventType: %+v", eventType)
+	clog.Redf("[BTC] event: %+v", event)
+
+	switch eventType.(type) {
 	case *types.Event_StakingTx:
 		if err := v.handleStakingTx(ctx, ck, event); err != nil {
 			return err
@@ -234,6 +239,7 @@ func (v voteHandler) handleStakingTx(ctx sdk.Context, ck types.ChainKeeper, even
 	msg := mustToGeneralMessage(ctx, v.nexus, event)
 
 	if err := v.nexus.SetNewMessage(ctx, msg); err != nil {
+		clog.Redf("[BTC] SetNewMessage error: %+v", err)
 		return err
 	}
 

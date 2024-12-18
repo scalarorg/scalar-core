@@ -10,6 +10,7 @@ import (
 	"github.com/btcsuite/btcd/wire"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/errors"
 	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/utils/slices"
@@ -20,29 +21,22 @@ import (
 )
 
 func (client *BtcClient) ProcessStakingTxsConfirmation(event *types.EventConfirmStakingTxsStarted, proxy sdk.AccAddress) ([]sdk.Msg, error) {
-	client.logger("event", event).Debug("processing staking txs confirmation poll")
 	txIDs := slices.Map(event.PollMappings, func(m types.PollMapping) xchain.Hash { return m.TxID })
-	txReceipts, err := client.GetTxReceiptsIfFinalized(txIDs, event.ConfirmationHeight)
-	if err != nil {
-		return nil, err
-	}
+	txReceipts, _ := client.GetTxReceiptsIfFinalized(txIDs, event.ConfirmationHeight)
+
+	clog.Redf("[BTC] txReceipts: %+v", txReceipts)
 
 	var votes []sdk.Msg
+	// TODO: handle multiple tx receipts
 	for i, txReceipt := range txReceipts {
 		pollID := event.PollMappings[i].PollID
-		txID := event.PollMappings[i].TxID
-
-		logger := client.logger("chain", event.Chain.String(), "poll_id", pollID.String(), "tx_id", txID.HexStr())
-
 		if txReceipt.Err() != nil {
 			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, types.NewVoteEvents(event.Chain)))
-
-			logger.Infof("broadcasting empty vote for poll %s: %s", pollID.String(), txReceipt.Err().Error())
+			clog.Redf("broadcasting empty vote for poll %s: %s", pollID.String(), txReceipt.Err().Error())
 		} else {
 			events := client.processStakingTxReceipt(event.Chain, txReceipt.Ok().(BTCTxReceipt))
 			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, types.NewVoteEvents(event.Chain, events...)))
-
-			logger.Infof("broadcasting vote %v for poll %s", events, pollID.String())
+			clog.Redf("broadcasting vote %v for poll %s", events, pollID.String())
 		}
 	}
 
@@ -145,7 +139,7 @@ func (c *BtcClient) GetTransaction(txID xchain.Hash) (BTCTxResult, error) {
 	chainHash := chainhash.Hash(txID)
 	txMetadata, err := c.client.GetRawTransactionVerbose(&chainHash)
 	if err != nil {
-		c.logger("failed to get BTC transaction", "txID", txID, "error", err)
+		clog.Cyanf("Failed to get BTC transaction %s: %+v", txID, err)
 		return BTCTxResult(results.FromErr[xchain.TxReceipt](err)), err
 	} else {
 		txRaw, err := hex.DecodeString(txMetadata.Hex)
@@ -164,6 +158,7 @@ func (c *BtcClient) GetTransaction(txID xchain.Hash) (BTCTxResult, error) {
 		prevTxOuts, err := c.GetTxOuts(slices.Map(msgTx.TxIn, func(txIn *wire.TxIn) wire.OutPoint {
 			return txIn.PreviousOutPoint
 		}))
+
 		if err != nil {
 			c.logger("failed to get BTC transaction", "txID", txID, "error", err)
 			return BTCTxResult(results.FromErr[xchain.TxReceipt](err)), err
@@ -177,8 +172,9 @@ func (c *BtcClient) GetTransaction(txID xchain.Hash) (BTCTxResult, error) {
 	return results.FromOk[xchain.TxReceipt](tx), nil
 }
 
-func (c *BtcClient) GetTxOuts(outpoints []wire.OutPoint) ([]*btcjson.GetTxOutResult, error) {
-	txOuts := make([]*btcjson.GetTxOutResult, len(outpoints))
+func (c *BtcClient) GetTxOuts(outpoints []wire.OutPoint) ([]*btcjson.Vout, error) {
+	txOuts := make([]*btcjson.Vout, len(outpoints))
+	errChan := make(chan error, len(outpoints))
 	var wg sync.WaitGroup
 
 	for i := range outpoints {
@@ -186,29 +182,39 @@ func (c *BtcClient) GetTxOuts(outpoints []wire.OutPoint) ([]*btcjson.GetTxOutRes
 		go func(index int) {
 			defer wg.Done()
 			txOut, err := c.GetTxOut(outpoints[index])
-			if err != nil {
-				txOuts[index] = nil
-			} else {
-				txOuts[index] = txOut
+			if err != nil || txOut == nil {
+				errChan <- err
+				return
 			}
+			txOuts[index] = txOut
 		}(i)
 	}
 
 	wg.Wait()
+	close(errChan)
+
+	if err := <-errChan; err != nil {
+		return nil, err
+	}
 	return txOuts, nil
 }
 
-func (c *BtcClient) GetTxOut(outpoint wire.OutPoint) (*btcjson.GetTxOutResult, error) {
-	return c.client.GetTxOut(&outpoint.Hash, outpoint.Index, false)
+func (c *BtcClient) GetTxOut(outpoint wire.OutPoint) (*btcjson.Vout, error) {
+	txResult, err := c.client.GetRawTransactionVerbose(&outpoint.Hash)
+	if err != nil {
+		return nil, err
+	}
+	txOut := txResult.Vout[outpoint.Index]
+	return &txOut, nil
 }
 
 func (c *BtcClient) LatestFinalizedBlockHeight(_ uint64) (uint64, error) {
-	_, height, err := c.client.GetBestBlock()
+	info, err := c.getBlockChainInfo()
 	if err != nil {
 		return 0, err
 	}
 
-	return uint64(height), nil
+	return uint64(info.Blocks), nil
 }
 
 func (c *BtcClient) GetBlockHeight(blockHash string) (uint64, error) {

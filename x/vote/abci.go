@@ -69,7 +69,7 @@ func handlePollsAtExpiry(ctx sdk.Context, k types.Voter) error {
 		k.DeletePoll(ctx, pollID)
 	}
 
-	clog.Red("handledPolls: ", handledPolls)
+	clog.Yellow("VOTE ABCI ENDBLOCKER, handledPolls: ", handledPolls)
 
 	return nil
 }

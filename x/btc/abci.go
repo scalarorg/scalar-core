@@ -31,7 +31,6 @@ func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.BaseKeeper, n 
 }
 
 func handleConfirmedEvents(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) {
-	clog.Red("handleConfirmedEvents")
 	for _, chain := range slices.Filter(n.GetChains(ctx), types.IsBTCChain) {
 		handleConfirmedEventsForChain(ctx, chain, bk, n, m)
 	}
@@ -50,6 +49,7 @@ func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.
 	}
 
 	for _, event := range events {
+		clog.Redf("[BTC] handleConfirmedEvent: %+v", event)
 		success := utils.RunCached(ctx, bk, func(ctx sdk.Context) (bool, error) {
 			if err := handleConfirmedEvent(ctx, event, bk, n, m); err != nil {
 				ck.Logger(ctx).Debug(fmt.Sprintf("failed handling event: %s", err.Error()),
@@ -294,6 +294,7 @@ func validateMessage(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, m typ
 
 func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID multisig.KeyID, msg nexus.GeneralMessage) {
 	cmd := types.NewApproveBridgeCallCommandGeneric(chainID, keyID, common.HexToAddress(msg.GetDestinationAddress()), common.BytesToHash(msg.PayloadHash), common.BytesToHash(msg.SourceTxID), msg.GetSourceChain(), msg.GetSourceAddress(), msg.SourceTxIndex, msg.ID)
+	clog.Redf("[BTC] EnqueueCommand: %+v", cmd)
 	funcs.MustNoErr(ck.EnqueueCommand(ctx, cmd))
 
 	events.Emit(ctx, &types.BridgeCallApproved{

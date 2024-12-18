@@ -329,7 +329,7 @@ func generateNexusGenesis(supportedChainsPath string, validatorAddrs []sdk.ValAd
 				MaintainerStates: make([]nexustypes.MaintainerState, len(validatorAddrs)),
 			}
 			for i, valAddr := range validatorAddrs {
-				chainState.MaintainerStates[i] = *nexustypes.NewMaintainerState(nexus.ChainName(evmConfig.Name), valAddr)
+				chainState.MaintainerStates[i] = *nexustypes.NewMaintainerState(nexus.ChainName(evmConfig.ID), valAddr)
 			}
 			nexusGenState.ChainStates = append(nexusGenState.ChainStates, chainState)
 		}

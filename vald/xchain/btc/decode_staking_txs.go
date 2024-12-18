@@ -1,7 +1,6 @@
 package btc
 
 import (
-	"encoding/hex"
 	"errors"
 
 	"github.com/btcsuite/btcd/txscript"
@@ -15,7 +14,7 @@ import (
 )
 
 var (
-	MintingOutputIndex      = 0
+	StakingOutputIndex      = 0
 	EmbeddedDataOutputIndex = 1
 )
 
@@ -54,33 +53,41 @@ func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (btcTypes.Ev
 		return btcTypes.EventStakingTx{}, err
 	}
 
-	var txIdBytes [32]byte
-	txId := tx.MsgTx.TxID()
-	txBytes, err := hex.DecodeString(txId)
-	if err != nil {
-		return btcTypes.EventStakingTx{}, ErrInvalidTxId
-	}
-	copy(txIdBytes[:], txBytes)
+	txHash := tx.MsgTx.TxHash()
+	txBytes := txHash.CloneBytes()
+	txBytes = txBytes[:32]
+	var copiedTxHash [32]byte
+	copy(copiedTxHash[:], txBytes)
 
-	var mintingAmount int64 = tx.MsgTx.TxOut[MintingOutputIndex].Value
+	var stakingAmount int64 = tx.MsgTx.TxOut[StakingOutputIndex].Value
 
-	_, payloadHash, err := evmUtils.CalculateStakingPayloadHash(stakingMetadata.DestinationRecipientAddress, mintingAmount, txIdBytes)
+	_, payloadHash, err := evmUtils.CalculateStakingPayloadHash(stakingMetadata.DestinationRecipientAddress, stakingAmount, copiedTxHash)
 	if err != nil {
 		return btcTypes.EventStakingTx{}, ErrInvalidPayloadHash
 	}
 
-	clog.Redf("Decoded BTC transaction %+v\n", stakingMetadata)
-	clog.Redf("Payload hash %+v\n", payloadHash)
-	clog.Redf("Minting amount %+v\n", mintingAmount)
-	clog.Redf("Tx ID %+v\n", txId)
 	chainHash, err := btcTypes.HashFromBytes(payloadHash)
 	if err != nil {
 		return btcTypes.EventStakingTx{}, ErrInvalidPayloadHash
 	}
 
+	clog.Redf("[VALD] Staking metadata %+v\n", stakingMetadata)
+	clog.Redf("[VALD] Payload hash %+v\n", payloadHash)
+	clog.Redf("[VALD] Minting amount %+v\n", stakingAmount)
+	clog.Redf("[VALD] Chain hash %+v\n", chainHash)
+	clog.Redf("[VALD] tx: %+v", tx)
+
+	// tx.MsgTx.TxHash()
+
+	h := btcTypes.FromChainHash(tx.MsgTx.TxHash())
+	stakingMetadata.StakingOutpoint = btcTypes.OutPoint{
+		Hash:  &h,
+		Index: uint32(StakingOutputIndex),
+	}
+
 	return btcTypes.EventStakingTx{
 		Sender:      tx.PrevTxOuts[0].ScriptPubKey.Address, // TODO: Fix hard coded
-		Amount:      uint64(mintingAmount),
+		Amount:      uint64(stakingAmount),
 		Asset:       "satoshi", // TODO: Fix hard coded
 		Metadata:    *stakingMetadata,
 		PayloadHash: chainHash,

@@ -29,7 +29,7 @@ require (
 	github.com/regen-network/cosmos-proto v0.3.1
 	github.com/rs/zerolog v1.33.0
 	github.com/scalarorg/bitcoin-vault/ffi/go-vault v0.0.0-20241211074929-89c4badcd3e2
-	github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20241216134144-bc24747a2df9
+	github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20241218084116-31524174623e
 	github.com/smallnest/chanx v1.0.1-0.20211205150931-349643806662
 	github.com/spf13/cast v1.7.0
 	github.com/spf13/cobra v1.8.1
