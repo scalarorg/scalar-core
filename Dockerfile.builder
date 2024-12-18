@@ -45,5 +45,5 @@ RUN if [[ "${WASM}" == "true" ]]; then \
 RUN addgroup -S -g ${GROUP_ID} scalard && adduser -S -u ${USER_ID} scalard -G scalard
 USER scalard
 WORKDIR /home/scalard
-ENTRYPOINT ["sleep", "infinity"]
+# ENTRYPOINT ["sleep", "infinity"]
 
