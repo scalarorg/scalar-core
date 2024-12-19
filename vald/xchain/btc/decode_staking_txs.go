@@ -11,6 +11,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/log"
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 var (
@@ -85,12 +86,18 @@ func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (btcTypes.Ev
 		Index: uint32(StakingOutputIndex),
 	}
 
+	destinationChain := chain.NewChainInfoFromBytes(output.DestinationChain)
+	if destinationChain == nil {
+		return btcTypes.EventStakingTx{}, ErrInvalidDestinationChain
+	}
+
 	return btcTypes.EventStakingTx{
-		Sender:      tx.PrevTxOuts[0].ScriptPubKey.Address, // TODO: Fix hard coded
-		Amount:      uint64(stakingAmount),
-		Asset:       "satoshi", // TODO: Fix hard coded
-		Metadata:    *stakingMetadata,
-		PayloadHash: chainHash,
+		Sender:           tx.PrevTxOuts[0].ScriptPubKey.Address, // TODO: Fix hard coded
+		Amount:           uint64(stakingAmount),
+		Asset:            "satoshi", // TODO: Fix hard coded
+		Metadata:         *stakingMetadata,
+		PayloadHash:      chainHash,
+		DestinationChain: nexus.ChainName(destinationChain.ToBytes().String()),
 	}, nil
 }
 
@@ -114,11 +121,6 @@ func mapOutputToEventStakingTx(output *vault.VaultReturnTxOutput) (*btcTypes.Eve
 		return nil, err
 	}
 
-	parsedDestinationChain := chain.NewChainInfoFromBytes(output.DestinationChain)
-	if parsedDestinationChain == nil {
-		return nil, ErrInvalidDestinationChain
-	}
-
 	return &btcTypes.EventStakingTx_StakingTxMetadata{
 		Tag:                         vaultTag,
 		Version:                     btcTypes.VersionFromInt(int(output.Version)),
@@ -127,8 +129,6 @@ func mapOutputToEventStakingTx(output *vault.VaultReturnTxOutput) (*btcTypes.Eve
 		ServiceTag:                  output.ServiceTag,
 		HaveOnlyCovenants:           output.HaveOnlyCovenants,
 		CovenantQuorum:              output.CovenantQuorum,
-		DestinationChainType:        parsedDestinationChain.ChainType,
-		DestinationChainId:          parsedDestinationChain.ChainID,
 		DestinationContractAddress:  destinationContractAddress,
 		DestinationRecipientAddress: destinationRecipientAddress,
 	}, nil

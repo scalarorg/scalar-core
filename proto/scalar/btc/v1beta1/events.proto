@@ -54,21 +54,17 @@ message EventStakingTx {
     bytes service_tag = 5;
     bool have_only_covenants = 6;
     uint32 covenant_quorum = 7 [ (gogoproto.casttype) = "uint8" ];
-    uint32 destination_chain_type = 8
-        [ (gogoproto.casttype) =
-              "github.com/scalarorg/bitcoin-vault/go-utils/chain.ChainType" ];
-    uint64 destination_chain_id = 9;
-    bytes destination_contract_address = 10 [
+    bytes destination_contract_address = 8 [
       (gogoproto.nullable) = false,
       (gogoproto.customtype) =
           "github.com/scalarorg/scalar-core/x/evm/types.Address"
     ];
-    bytes destination_recipient_address = 11 [
+    bytes destination_recipient_address = 9 [
       (gogoproto.nullable) = false,
       (gogoproto.customtype) =
           "github.com/scalarorg/scalar-core/x/evm/types.Address"
     ];
-    OutPoint staking_outpoint = 12 [ (gogoproto.nullable) = false ];
+    OutPoint staking_outpoint = 10 [ (gogoproto.nullable) = false ];
   }
 
   string sender = 1;
@@ -109,7 +105,7 @@ message BTCEventRetryFailed {
   string type = 3;
 }
 
-message BridgeCallApproved {
+message DestCallApproved {
   string chain = 1
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];

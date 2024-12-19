@@ -264,7 +264,7 @@ func validateMessage(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, m typ
 	// TODO refactor to do these checks earlier so we don't fail in the end blocker
 	_, ok := m.GetCurrentKeyID(ctx, chain.Name)
 	if !ok {
-		return fmt.Errorf("current key not set")
+		return fmt.Errorf("current key not set for chain %v", chain.Name)
 	}
 
 	if !n.IsChainActivated(ctx, chain) {
@@ -297,7 +297,7 @@ func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID
 	clog.Redf("[BTC] EnqueueCommand: %+v", cmd)
 	funcs.MustNoErr(ck.EnqueueCommand(ctx, cmd))
 
-	events.Emit(ctx, &types.BridgeCallApproved{
+	events.Emit(ctx, &types.DestCallApproved{
 		Chain:            msg.GetSourceChain(),
 		EventID:          types.EventID(msg.ID),
 		CommandID:        cmd.ID,

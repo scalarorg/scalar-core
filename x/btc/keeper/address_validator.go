@@ -7,12 +7,11 @@ import (
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
-// NewAddressValidator returns the callback for validating hex-encoded EVM addresses
+// NewAddressValidator returns the callback for validating BTC addresses
 func NewAddressValidator() nexus.AddressValidator {
 	return func(ctx sdk.Context, address nexus.CrossChainAddress) error {
 		// TODO: validate btc address
 		clog.Red("TODO: validate btc address", address)
-
 		return nil
 	}
 }

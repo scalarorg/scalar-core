@@ -29,6 +29,7 @@ func DefaultGenesisState() GenesisState {
 					TransferLimit:       1000,
 					VaultTag:            &tag,
 					VaultVersion:        &version,
+					Rbf:                 true,
 				},
 				CommandQueue:        utils.QueueState{},
 				ConfirmedStakingTxs: []StakingTx{},

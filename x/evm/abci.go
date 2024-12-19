@@ -609,7 +609,7 @@ func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID
 	cmd := types.NewApproveContractCallCommandGeneric(chainID, keyID, common.HexToAddress(msg.GetDestinationAddress()), common.BytesToHash(msg.PayloadHash), common.BytesToHash(msg.SourceTxID), msg.GetSourceChain(), msg.GetSourceAddress(), msg.SourceTxIndex, msg.ID)
 	funcs.MustNoErr(ck.EnqueueCommand(ctx, cmd))
 
-	events.Emit(ctx, &types.ContractCallApproved{
+	event := &types.ContractCallApproved{
 		Chain:            msg.GetSourceChain(),
 		EventID:          types.EventID(msg.ID),
 		CommandID:        cmd.ID,
@@ -617,7 +617,11 @@ func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID
 		DestinationChain: msg.GetDestinationChain(),
 		ContractAddress:  msg.GetDestinationAddress(),
 		PayloadHash:      types.Hash(common.BytesToHash(msg.PayloadHash)),
-	})
+	}
+
+	clog.Magentaf("Emit contract call approved: %+v", event)
+
+	events.Emit(ctx, event)
 
 	ck.Logger(ctx).Debug("completed handling general message",
 		types.AttributeKeyChain, msg.GetDestinationChain(),
@@ -657,18 +661,20 @@ func handleMessageWithToken(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus
 }
 
 func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) {
-	for _, chain := range slices.Filter(n.GetChains(ctx), types.IsEVMChain) {
+	allChains := n.GetChains(ctx)
+	clog.Magentaf("EVM handleMessages, allChains: %+v", allChains)
+	for _, chain := range slices.Filter(allChains, types.IsEVMChain) {
 		destCk := funcs.Must(bk.ForChain(ctx, chain.Name))
 		endBlockerLimit := destCk.GetParams(ctx).EndBlockerLimit
 		msgs := n.GetProcessingMessages(ctx, chain.Name, endBlockerLimit)
 
-		bk.Logger(ctx).Debug(fmt.Sprintf("handling %d general messages", len(msgs)), types.AttributeKeyChain, chain.Name)
+		bk.Logger(ctx).Info(fmt.Sprintf("handling %d general messages", len(msgs)), types.AttributeKeyChain, chain.Name)
 
 		for _, msg := range msgs {
 			success := false
 			_ = utils.RunCached(ctx, bk, func(ctx sdk.Context) (bool, error) {
 				if err := validateMessage(ctx, destCk, n, m, chain, msg); err != nil {
-					bk.Logger(ctx).Info(fmt.Sprintf("failed validating message: %s", err.Error()),
+					bk.Logger(ctx).Error(fmt.Sprintf("failed validating message: %s", err.Error()),
 						types.AttributeKeyChain, msg.GetDestinationChain(),
 						types.AttributeKeyMessageID, msg.ID,
 					)
@@ -680,6 +686,7 @@ func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types
 
 				switch msg.Type() {
 				case nexus.TypeGeneralMessage:
+					clog.Magentaf("EVM handleMessages, TypeGeneralMessage, msg: %+v", msg)
 					handleMessage(ctx, destCk, chainID, keyID, msg)
 				case nexus.TypeGeneralMessageWithToken:
 					if err := handleMessageWithToken(ctx, destCk, n, chainID, keyID, msg); err != nil {
