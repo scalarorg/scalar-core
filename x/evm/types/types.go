@@ -36,10 +36,7 @@ var _ codectypes.UnpackInterfacesMessage = CommandBatchMetadata{}
 // Ethereum network labels
 const (
 	Mainnet = "mainnet"
-	Ropsten = "ropsten"
-	Rinkeby = "rinkeby"
-	Goerli  = "goerli"
-	Ganache = "ganache"
+	Sepolia = "sepolia"
 )
 
 // Burner code hashes

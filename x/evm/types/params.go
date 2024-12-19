@@ -52,7 +52,7 @@ func DefaultParams() []Params {
 	return []Params{{
 		Chain:               exported.Ethereum.Name,
 		ConfirmationHeight:  1,
-		Network:             Ganache,
+		Network:             Mainnet,
 		TokenCode:           bzToken,
 		Burnable:            bzBurnable,
 		RevoteLockingPeriod: 50,
@@ -62,7 +62,7 @@ func DefaultParams() []Params {
 				Id:   sdk.NewIntFromBigInt(gethParams.MainnetChainConfig.ChainID),
 			},
 			{
-				Name: Ropsten,
+				Name: Sepolia,
 				Id:   sdk.NewIntFromBigInt(gethParams.SepoliaChainConfig.ChainID),
 			},
 		},
