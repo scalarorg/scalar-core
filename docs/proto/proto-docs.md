@@ -1354,6 +1354,7 @@ Msg defines the nexus Msg service.
 | `transfer_limit` | [uint64](#uint64) |  |  |
 | `vault_tag` | [bytes](#bytes) |  |  |
 | `vault_version` | [bytes](#bytes) |  |  |
+| `rbf` | [bool](#bool) |  |  |
 
 
 

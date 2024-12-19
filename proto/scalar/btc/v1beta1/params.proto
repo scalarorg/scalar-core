@@ -25,4 +25,5 @@ message Params {
   uint64 transfer_limit = 10;
   bytes vault_tag = 11 [ (gogoproto.customtype) = "VaultTag" ];
   bytes vault_version = 12 [ (gogoproto.customtype) = "VaultVersion" ];
+  bool rbf = 13;
 }

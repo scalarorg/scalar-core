@@ -435,6 +435,7 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 				TransferLimit:       1000,
 				VaultTag:            &vaultTag,
 				VaultVersion:        &vaultVersion,
+				Rbf:                 btcConfig.Rbf,
 			}
 			//Check if chainName is already in the genesis state
 			addChain := true

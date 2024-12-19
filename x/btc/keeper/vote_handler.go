@@ -182,7 +182,7 @@ func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error 
 func (v voteHandler) HandleResult(ctx sdk.Context, result codec.ProtoMarshaler) error {
 	voteEvents := result.(*types.VoteEvents)
 
-	clog.Red("HandleResult", "voteEvents", voteEvents)
+	clog.Red("btc vote handler, HandleResult", "voteEvents", voteEvents)
 
 	if v.IsFalsyResult(result) {
 		return nil
