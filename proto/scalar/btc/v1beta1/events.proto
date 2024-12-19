@@ -105,7 +105,7 @@ message BTCEventRetryFailed {
   string type = 3;
 }
 
-message BridgeCallApproved {
+message DestCallApproved {
   string chain = 1
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];

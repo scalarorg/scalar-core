@@ -297,7 +297,7 @@ func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID
 	clog.Redf("[BTC] EnqueueCommand: %+v", cmd)
 	funcs.MustNoErr(ck.EnqueueCommand(ctx, cmd))
 
-	events.Emit(ctx, &types.BridgeCallApproved{
+	events.Emit(ctx, &types.DestCallApproved{
 		Chain:            msg.GetSourceChain(),
 		EventID:          types.EventID(msg.ID),
 		CommandID:        cmd.ID,

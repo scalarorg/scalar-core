@@ -39,8 +39,8 @@
     - [BTCEventCompleted](#scalar.btc.v1beta1.BTCEventCompleted)
     - [BTCEventFailed](#scalar.btc.v1beta1.BTCEventFailed)
     - [BTCEventRetryFailed](#scalar.btc.v1beta1.BTCEventRetryFailed)
-    - [BridgeCallApproved](#scalar.btc.v1beta1.BridgeCallApproved)
     - [BridgeCallFailed](#scalar.btc.v1beta1.BridgeCallFailed)
+    - [DestCallApproved](#scalar.btc.v1beta1.DestCallApproved)
     - [Event](#scalar.btc.v1beta1.Event)
     - [EventStakingTx](#scalar.btc.v1beta1.EventStakingTx)
     - [EventStakingTx.StakingTxMetadata](#scalar.btc.v1beta1.EventStakingTx.StakingTxMetadata)
@@ -1093,9 +1093,25 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.BridgeCallApproved"></a>
+<a name="scalar.btc.v1beta1.BridgeCallFailed"></a>
 
-### BridgeCallApproved
+### BridgeCallFailed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `message_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.btc.v1beta1.DestCallApproved"></a>
+
+### DestCallApproved
 
 
 
@@ -1108,22 +1124,6 @@ Msg defines the nexus Msg service.
 | `destination_chain` | [string](#string) |  |  |
 | `contract_address` | [string](#string) |  |  |
 | `payload_hash` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.btc.v1beta1.BridgeCallFailed"></a>
-
-### BridgeCallFailed
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `message_id` | [string](#string) |  |  |
 
 
 
