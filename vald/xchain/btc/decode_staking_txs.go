@@ -6,7 +6,7 @@ import (
 	"github.com/btcsuite/btcd/txscript"
 	vault "github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
-	evmUtils "github.com/scalarorg/bitcoin-vault/go-utils/evm"
+	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/log"
 	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
@@ -62,7 +62,7 @@ func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (btcTypes.Ev
 
 	var stakingAmount int64 = tx.MsgTx.TxOut[StakingOutputIndex].Value
 
-	_, payloadHash, err := evmUtils.CalculateStakingPayloadHash(stakingMetadata.DestinationRecipientAddress, stakingAmount, copiedTxHash)
+	_, payloadHash, err := encode.CalculateStakingPayloadHash(stakingMetadata.DestinationRecipientAddress, uint64(stakingAmount), copiedTxHash)
 	if err != nil {
 		return btcTypes.EventStakingTx{}, ErrInvalidPayloadHash
 	}

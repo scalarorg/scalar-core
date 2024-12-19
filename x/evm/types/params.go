@@ -63,19 +63,7 @@ func DefaultParams() []Params {
 			},
 			{
 				Name: Ropsten,
-				Id:   sdk.NewIntFromBigInt(gethParams.RopstenChainConfig.ChainID),
-			},
-			{
-				Name: Rinkeby,
-				Id:   sdk.NewIntFromBigInt(gethParams.RinkebyChainConfig.ChainID),
-			},
-			{
-				Name: Goerli,
-				Id:   sdk.NewIntFromBigInt(gethParams.GoerliChainConfig.ChainID),
-			},
-			{
-				Name: Ganache,
-				Id:   sdk.NewIntFromBigInt(gethParams.AllCliqueProtocolChanges.ChainID),
+				Id:   sdk.NewIntFromBigInt(gethParams.SepoliaChainConfig.ChainID),
 			},
 		},
 		VotingThreshold:   utils.Threshold{Numerator: 51, Denominator: 100},
