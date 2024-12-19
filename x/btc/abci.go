@@ -264,7 +264,7 @@ func validateMessage(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, m typ
 	// TODO refactor to do these checks earlier so we don't fail in the end blocker
 	_, ok := m.GetCurrentKeyID(ctx, chain.Name)
 	if !ok {
-		return fmt.Errorf("current key not set")
+		return fmt.Errorf("current key not set for chain %v", chain.Name)
 	}
 
 	if !n.IsChainActivated(ctx, chain) {
