@@ -32,6 +32,14 @@ service QueryService {
     };
   }
 
+  // Get protocol by scalar pk
+  rpc GetProtocolByScalarPk(GetProtocolByScalarPkRequest)
+      returns (GetProtocolByScalarPkResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/protocols/scalar_pk/{scalar_pk}"
+    };
+  }
+
   // Get custodians
   rpc GetCustodians(GetCustodiansRequest) returns (GetCustodiansResponse) {
     option (google.api.http) = {
@@ -70,6 +78,23 @@ service QueryService {
     option (google.api.http) = {
       get : "/scalar/protocol/v1beta1/destination_chains/protocol/"
             "{protocol_name}"
+    };
+  }
+
+  // Get available btc networks
+  rpc GetAvailableBtcNetworks(GetAvailableBtcNetworksRequest)
+      returns (GetAvailableBtcNetworksResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/available_btc_networks"
+    };
+  }
+
+  rpc GetAvailableCustodianGroupsByBtcNetworkName(
+      GetAvailableCustodianGroupsByBtcNetworkNameRequest)
+      returns (GetAvailableCustodianGroupsByBtcNetworkNameResponse) {
+    option (google.api.http) = {
+      get : "/scalar/protocol/v1beta1/available_custodian_groups/btc_network/"
+            "{btc_network_name}"
     };
   }
 }

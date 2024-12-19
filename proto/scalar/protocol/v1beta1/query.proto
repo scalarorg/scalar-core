@@ -17,6 +17,10 @@ message GetProtocolsByStatusRequest { ProtocolStatus status = 1; }
 
 message GetProtocolsByStatusResponse { repeated Protocol protocols = 1; }
 
+message GetProtocolByScalarPkRequest { bytes scalar_pk = 1; }
+
+message GetProtocolByScalarPkResponse { Protocol protocol = 1; }
+
 message GetCustodiansRequest {}
 
 message GetCustodiansResponse { repeated Custodian custodians = 1; }
@@ -39,4 +43,16 @@ message GetDestinationChainsByProtocolNameRequest { string protocol_name = 1; }
 
 message GetDestinationChainsByProtocolNameResponse {
   repeated DestinationChain destination_chains = 1;
+}
+
+message GetAvailableBtcNetworksRequest {}
+
+message GetAvailableBtcNetworksResponse { repeated string btc_networks = 1; }
+
+message GetAvailableCustodianGroupsByBtcNetworkNameRequest {
+  string btc_network_name = 1;
+}
+
+message GetAvailableCustodianGroupsByBtcNetworkNameResponse {
+  repeated string custodian_group_names = 1;
 }
