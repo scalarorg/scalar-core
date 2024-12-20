@@ -8,7 +8,67 @@ option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
 message Protocol {
   string name = 1;
-  string covenant_group = 2;
-  repeated scalar.evm.v1beta1.ERC20TokenMetadata tokens = 3
+  bytes scalar_pk = 2;
+  repeated DestinationChain dest_chains = 3;
+  string service_tag = 4;
+  BtcChain btc_chain = 5 [ (gogoproto.nullable) = false ];
+  CustodianGroup custodian_group = 6 [ (gogoproto.nullable) = false ];
+  bool is_custodian_only = 7;
+  ProtocolStatus status = 8;
+}
+
+enum ProtocolStatus {
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  PROTOCOL_STATUS_UNSPECIFIED = 0
+      [ (gogoproto.enumvalue_customname) = "StatusUnspecified" ];
+  PROTOCOL_STATUS_ACTIVATED = 1
+      [ (gogoproto.enumvalue_customname) = "Activated" ];
+  PROTOCOL_STATUS_DEACTIVATED = 2
+      [ (gogoproto.enumvalue_customname) = "Deactivated" ];
+}
+
+// DestinationChain represents a blockchain where tokens can be sent
+message DestinationChain {
+  string chain_name = 1;                  // e.g., "ethereum-sepolia"
+  uint64 chain_id = 2;                    // e.g., "11155111"
+  string chain_type = 3;                  // Chain type
+  bytes chain_smart_contract_address = 4; // Contract address on the chain
+  axelar.evm.v1beta1.ERC20TokenMetadata token = 5
       [ (gogoproto.nullable) = false ];
+}
+
+// BtcChain represents Bitcoin chain configuration
+message BtcChain {
+  string btc_signer_endpoint =
+      1; // e.g., "https://protocol.testnet.scalar.org/v1/sign-unbonding-tx"
+  string btc_signer_access_token =
+      2; // e.g., "616171bb-e71a-4d3f-a4a7-045de8f3cad0"
+  string btc_signer_address =
+      3; // e.g., "tb1q37dgjm7e7h385aykhd6gps7uqx0kv26w2ugu8c"
+  bytes btc_signer_pk =
+      4; // e.g.,
+         // "0x021387aab21303782b17e760c670432559df3968e52cb82cc2d8f9be43a227d5dc"
+  string btc_network = 5; // e.g., "bitcoin-testnet4"
+}
+
+// CustodianGroup represents a group of custodians with their configuration
+message CustodianGroup {
+  string name = 1;        // e.g., "All"
+  string btc_network = 2; // Bitcoin network identifier
+  string btc_taproot_address =
+      3; // e.g.,
+         // "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
+  uint32 quorum = 4; // e.g., 3
+  repeated Custodian custodians = 5 [ (gogoproto.nullable) = false ];
+}
+
+// Custodian represents an individual custodian configuration
+message Custodian {
+  string name = 1; // e.g., "Custodian1"
+  bytes btc_pk =
+      2; // e.g.,
+         // "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
+  ProtocolStatus status = 3; // Whether the custodian is active
+  string description = 4;
 }

@@ -42,4 +42,10 @@ service QueryService {
     option (google.api.http).get =
         "/scalar/btc/v1beta1/batched_commands/{chain}/{id}";
   }
+
+  // Get tag and version
+  rpc GetTagAndVersion(GetTagAndVersionRequest)
+      returns (GetTagAndVersionResponse) {
+    option (google.api.http).get = "/scalar/btc/v1beta1/tag_and_version";
+  }
 }
