@@ -25,7 +25,7 @@ var (
 	uint256Type      = funcs.Must(abi.NewType("uint256", "uint256", nil))
 	uint256ArrayType = funcs.Must(abi.NewType("uint256[]", "uint256[]", nil))
 
-	approveBridgeCallArguments = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: addressType}, {Type: bytes32Type}, {Type: bytes32Type}, {Type: uint256Type}}
+	approveDestCallArguments = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: addressType}, {Type: bytes32Type}, {Type: bytes32Type}, {Type: uint256Type}}
 )
 
 // TODO: design for generic bridge call
@@ -59,7 +59,7 @@ func createApproveBridgeCallParamsGeneric(
 	sender string,
 	sourceEventIndex uint64) []byte {
 
-	return funcs.Must(approveBridgeCallArguments.Pack(
+	return funcs.Must(approveDestCallArguments.Pack(
 		sourceChain,
 		sender,
 		contractAddress,

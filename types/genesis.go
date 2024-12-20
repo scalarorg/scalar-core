@@ -36,6 +36,7 @@ import (
 const (
 	ValidatorKeyName   = "priv_validator"
 	BroadcasterKeyName = "broadcaster"
+	ScalarKeyName      = "scalar"
 	GovKeyName         = "govenance"
 	FaucetKeyName      = "faucet"
 )
@@ -50,8 +51,12 @@ type ValidatorInfo struct {
 	SeedAddress string
 	RPCPort     int
 
-	ValPubKey      cryptotypes.PubKey
-	ValBalance     banktypes.Balance
+	ScalarPubKey  cryptotypes.PubKey
+	ScalarBalance banktypes.Balance
+
+	ValPubKey  cryptotypes.PubKey
+	ValBalance banktypes.Balance
+
 	ValNodePubKey  cryptotypes.PubKey
 	ValNodeBalance banktypes.Balance
 	//Balance of broadcaster
@@ -99,10 +104,12 @@ func GenerateGenesis(clientCtx client.Context,
 	supportedChainsPath string,
 ) (GenesisState, error) {
 	appGenState := mbm.DefaultGenesis(clientCtx.Codec)
-	genBalances := []banktypes.Balance{}
-	genAccounts := []authtypes.GenesisAccount{}
+	firstValidator := validatorInfos[0]
+	genBalances := []banktypes.Balance{firstValidator.ScalarBalance}
+	genAccounts := []authtypes.GenesisAccount{authtypes.NewBaseAccount(sdk.AccAddress(firstValidator.ScalarPubKey.Address()), firstValidator.ScalarPubKey, 0, 0)}
 	//allValAmount := sdk.NewCoins()
 	proxyValidators := []snapshottypes.ProxiedValidator{}
+
 	for _, info := range validatorInfos {
 		valBalances := sdk.NewCoins()
 		//Validator balance must be set and greater than deligation amount

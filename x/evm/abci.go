@@ -662,7 +662,6 @@ func handleMessageWithToken(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus
 
 func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) {
 	allChains := n.GetChains(ctx)
-	clog.Magentaf("EVM handleMessages, allChains: %+v", allChains)
 	for _, chain := range slices.Filter(allChains, types.IsEVMChain) {
 		destCk := funcs.Must(bk.ForChain(ctx, chain.Name))
 		endBlockerLimit := destCk.GetParams(ctx).EndBlockerLimit

@@ -17,7 +17,8 @@ import (
 	"github.com/scalarorg/scalar-core/x/reward/keeper"
 	"github.com/scalarorg/scalar-core/x/reward/types"
 	"github.com/scalarorg/scalar-core/x/reward/types/mock"
-	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/types"
+	scalarnetexported "github.com/scalarorg/scalar-core/x/scalarnet/exported"
+	scalarnettypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
 	tsstypes "github.com/scalarorg/scalar-core/x/tss/types"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 	votetypes "github.com/scalarorg/scalar-core/x/vote/types"
@@ -36,7 +37,7 @@ func TestHandleMsgRefundRequest(t *testing.T) {
 		refundKeeper = &mock.RefunderMock{
 			LoggerFunc: func(ctx sdk.Context) log.Logger { return log.TestingLogger() },
 			GetPendingRefundFunc: func(sdk.Context, types.RefundMsgRequest) (types.Refund, bool) {
-				return types.Refund{Payer: rand2.AccAddr(), Fees: sdk.NewCoins(sdk.Coin{Denom: "uaxl", Amount: sdk.NewInt(1000)})}, true
+				return types.Refund{Payer: rand2.AccAddr(), Fees: sdk.NewCoins(sdk.Coin{Denom: scalarnetexported.BaseAsset, Amount: sdk.NewInt(1000)})}, true
 			},
 			DeletePendingRefundFunc: func(sdk.Context, types.RefundMsgRequest) {},
 		}
@@ -122,8 +123,8 @@ func TestHandleMsgRefundRequest(t *testing.T) {
 	}).Repeat(repeatCount))
 }
 
-func randomMsgLink() *scalarnet.LinkRequest {
-	return scalarnet.NewLinkRequest(
+func randomMsgLink() *scalarnettypes.LinkRequest {
+	return scalarnettypes.NewLinkRequest(
 		rand2.AccAddr(),
 		rand.StrBetween(5, 100),
 		rand.StrBetween(5, 100),

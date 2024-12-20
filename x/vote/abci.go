@@ -69,13 +69,12 @@ func handlePollsAtExpiry(ctx sdk.Context, k types.Voter) error {
 		k.DeletePoll(ctx, pollID)
 	}
 
-	clog.Yellow("VOTE ABCI ENDBLOCKER, handledPolls: ", handledPolls)
-
 	return nil
 }
 
 // EndBlocker called every block, process inflation, update validator set.
 func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, k types.Voter) ([]abci.ValidatorUpdate, error) {
+	clog.Yellow("VOTE ABCI ENDBLOCKER, ctx.BlockHeight(): ", ctx.BlockHeight())
 	if err := handlePollsAtExpiry(ctx, k); err != nil {
 		return nil, err
 	}

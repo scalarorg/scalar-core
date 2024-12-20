@@ -23,6 +23,7 @@ var (
 	ValidatorTokens   = sdk.NewInt(1e9)
 	ValidatorStaking  = sdk.NewInt(1e6)
 	BroadcasterTokens = sdk.NewInt(1e6)
+	ScalarTokens      = sdk.NewInt(1e9)
 	GovTokens         = sdk.NewInt(1e9)
 	FaucetTokens      = sdk.NewInt(1e9)
 	PowerReduction    = sdk.NewInt(1e6)

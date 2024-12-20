@@ -180,7 +180,7 @@ func Distr(n int) DistrGen {
 	var resolution int64 = 10
 
 	// Ensure the total stays in int64
-	if resolution*int64(n) > math.MaxInt32 {
+	if resolution*int64(n) > math.MaxBig256.Int64() {
 		panic("decrease either number of states or resolution")
 	}
 	for _, n := range I64GenBetween(1, resolution*int64(n)).Take(n) {

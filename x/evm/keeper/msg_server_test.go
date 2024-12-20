@@ -49,8 +49,8 @@ import (
 
 var (
 	evmChain    = exported.Ethereum.Name
-	network     = types.Rinkeby
-	networkConf = evmParams.RinkebyChainConfig
+	network     = types.Sepolia
+	networkConf = evmParams.SepoliaChainConfig
 	tokenBC     = rand.Bytes(64)
 	burnerBC    = common.Hex2Bytes(types.Burnable)
 	gateway     = "0x37CC4B7E8f9f505CA8126Db8a9d070566ed5DAE7"

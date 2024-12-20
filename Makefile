@@ -241,6 +241,9 @@ cfst:
 cfst2:
 	$(SCALAR_BIN_PATH) tx btc confirm-staking-txs "bitcoin|4" 18fa2be86b54d9ff7e35aba97d57483f05500cd9301547607f67ea5b47fa1c87 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
 
+cfust2:
+	$(SCALAR_BIN_PATH) tx btc confirm-unstaking-txs "evm|11155111" 18fa2be86b54d9ff7e35aba97d57483f05500cd9301547607f67ea5b47fa1c87 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+
 .PHONY: open-docs
 open-docs:
 	open client/docs/static/openapi/index.html

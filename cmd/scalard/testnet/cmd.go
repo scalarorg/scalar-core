@@ -17,6 +17,7 @@ import (
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	hd "github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
+	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdkserver "github.com/cosmos/cosmos-sdk/server"
 	sdkconfig "github.com/cosmos/cosmos-sdk/server/config"
@@ -26,6 +27,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/cosmos/go-bip39"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
@@ -50,6 +52,7 @@ const (
 )
 
 var (
+	flagScalarMnemonic      = "SCALAR_MNEMONIC"
 	flagValidatorMnemonic   = "VALIDATOR_MNEMONIC"
 	flagBroadcasterMnemonic = "BROADCASTER_MNEMONIC"
 	flagGovernanceMnemonic  = "GOV_MNEMONIC"
@@ -101,7 +104,7 @@ type startArgs struct {
 }
 
 type EnvKeys struct {
-	NodeMnemonic        string
+	ScalarMnemonic      string
 	ValidatorMnemonic   string
 	BroadcasterMnemonic string
 	GovernanceMnemonic  string
@@ -117,6 +120,7 @@ const GenesisAsset = scalarnetexported.BaseAsset
 var (
 	ValidatorCoin   = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(scalartypes.ValidatorStaking))
 	BroadcasterCoin = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(scalartypes.BroadcasterTokens))
+	ScalarCoin      = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(scalartypes.ScalarTokens))
 	GovCoin         = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(scalartypes.GovTokens))
 	FaucetCoin      = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(scalartypes.FaucetTokens))
 )
@@ -265,6 +269,7 @@ func readEnvKeys(index int) EnvKeys {
 		validatorMnemonic = os.Getenv(flagValidatorMnemonic)
 	}
 	envKeys := EnvKeys{
+		ScalarMnemonic:      os.Getenv(flagScalarMnemonic),
 		ValidatorMnemonic:   validatorMnemonic,
 		BroadcasterMnemonic: os.Getenv(flagBroadcasterMnemonic),
 		GovernanceMnemonic:  os.Getenv(flagGovernanceMnemonic),
@@ -381,13 +386,12 @@ func createNodeID(config *tmconfig.Config) (string, error) {
 func createKeyringAccountFromMnemonic(keybase keyring.Keyring,
 	keyName string,
 	mnemonic string,
-	bip44Path string,
 	algo keyring.SignatureAlgo,
+	bip44Path string,
 ) (cryptotypes.PubKey, sdk.AccAddress, error) {
-	fmt.Println("keyname", keyName)
-	fmt.Println("mnemonic", mnemonic)
-	fmt.Println("bip44Path", bip44Path)
-	fmt.Println("algo", algo)
+	if bip44Path == "" {
+		bip44Path = "m/44'/118'/0'/0/0"
+	}
 	info, err := keybase.NewAccount(
 		keyName,
 		mnemonic,
@@ -453,8 +457,8 @@ func genFaucet(kb keyring.Keyring, mnemonic string, algo keyring.SignatureAlgo, 
 		_, address, err := createKeyringAccountFromMnemonic(kb,
 			scalartypes.BroadcasterKeyName,
 			mnemonic,
-			bip44Path,
 			algo,
+			bip44Path,
 		)
 		if err != nil {
 			log.Error().Err(err).Msg("[getFaucet] Create keyring account from mnemonic")
@@ -518,9 +522,9 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	valPubKey, valAddress, err := createKeyringAccountFromMnemonic(kb,
 		scalartypes.ValidatorKeyName,
 		envKeys.ValidatorMnemonic,
+		algo,
 		fmt.Sprintf("m/%d'/%d'/0'/0/0",
-			scalartypes.PurposeValidator, uint32(index)),
-		algo)
+			scalartypes.PurposeValidator, uint32(index)))
 	if err != nil {
 		log.Error().Err(err).Msg("[initValidatorConfig] Create faucet keyring account from mnemonic")
 		key, err := kb.Key(scalartypes.ValidatorKeyName)
@@ -537,33 +541,24 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		Address: valAddress.String(),
 		Coins:   sdk.Coins{ValidatorCoin},
 	}
-
+	if envKeys.ScalarMnemonic != "" {
+		privKey, address, err := createScalarAccount(envKeys.ScalarMnemonic)
+		if err != nil {
+			log.Debug().Err(err).Msg("Create scalar account with error")
+		}
+		validatorInfo.ScalarPubKey = privKey.PubKey()
+		validatorInfo.ScalarBalance = banktypes.Balance{
+			Address: address.String(),
+			Coins:   sdk.Coins{ScalarCoin},
+		}
+	}
 	if envKeys.BroadcasterMnemonic != "" {
 		//broadcasterPubKey, err := createPubkeyFromMnemonic(nodeConfig, envKeys.BroadcasterMnemonic, kb, algo, scalartypes.BroadcasterKeyName)
 		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeBroadcaster, uint32(index))
-		pubkey, address, err := createKeyringAccountFromMnemonic(kb,
-			scalartypes.BroadcasterKeyName,
-			envKeys.BroadcasterMnemonic,
-			bip44Path,
-			algo,
-		)
+		pubkey, address, err := generateAccount(kb, algo, scalartypes.BroadcasterKeyName, envKeys.BroadcasterMnemonic, bip44Path)
 		if err != nil {
-			log.Error().Err(err).Msg("[initValidatorConfig] Create broadcaster keyring account from mnemonic")
-			key, err := kb.Key(scalartypes.BroadcasterKeyName)
-			if err != nil {
-				log.Error().Err(err).Msg("[initValidatorConfig] Get broadcaster keyring account")
-				return nil, err
-			}
-			address = key.GetAddress()
-			validatorInfo.Broadcaster = key.GetPubKey()
+			log.Debug().Err(err).Msg("Generate account error")
 		}
-		log.Debug().
-			Str("mnemonic", envKeys.BroadcasterMnemonic).
-			Str("bip44path", bip44Path).
-			Str("keyName", scalartypes.BroadcasterKeyName).
-			Str("broadcasterPubKey", pubkey.String()).
-			Str("broadcasterAddress", address.String()).
-			Msg("Broadcaster public key")
 		validatorInfo.Broadcaster = pubkey
 		validatorInfo.BroadcasterBalance = banktypes.Balance{
 			Address: address.String(),
@@ -573,54 +568,24 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	if envKeys.GovernanceMnemonic != "" {
 		//validatorInfo.GovPubKey, err = createPubkeyFromMnemonic(nodeConfig, envKeys.GovernanceMnemonic, kb, algo, scalartypes.GovKeyName)
 		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeGovernance, uint32(index))
-		pubkey, address, err := createKeyringAccountFromMnemonic(kb,
-			scalartypes.GovKeyName,
-			envKeys.GovernanceMnemonic,
-			bip44Path,
-			algo,
-		)
-		//For testnet
-		// inMemkr := keyring.NewInMemory()
-		// info, err := inMemkr.NewAccount(scalartypes.GovKeyName, envKeys.GovernanceMnemonic, "", bip44Path, algo)
-		log.Debug().
-			Str("keyName", scalartypes.GovKeyName).
-			Str("mnemonic", envKeys.GovernanceMnemonic).
-			Str("bip44Path", bip44Path).
-			Str("krAddress", address.String()).
-			Str("pubkeyAddress", sdk.AccAddress(pubkey.Address()).String()).Msg("Keyring account created")
+		pubkey, address, err := generateAccount(kb, algo, scalartypes.GovKeyName, envKeys.GovernanceMnemonic, bip44Path)
 		if err != nil {
-			log.Error().Err(err).Msg("[initValidatorConfig] Create governance keyring account from mnemonic")
-			key, err := kb.Key(scalartypes.GovKeyName)
-			if err != nil {
-				log.Error().Err(err).Msg("[initValidatorConfig] Get governance keyring account")
-				return nil, err
-			}
-			address = key.GetAddress()
-			validatorInfo.GovPubKey = key.GetPubKey()
+			log.Debug().Err(err).Msg("Generate account error")
 		}
 		validatorInfo.GovPubKey = pubkey
 		validatorInfo.GovBalance = banktypes.Balance{
 			Address: address.String(),
-			Coins:   sdk.Coins{GovCoin},
+			Coins:   sdk.Coins{FaucetCoin},
 		}
 	}
 	if envKeys.FaucetMnemonic != "" {
-		pubKey, address, err := createKeyringAccountFromMnemonic(kb,
+		pubKey, address, err := generateAccount(kb, algo,
 			scalartypes.FaucetKeyName,
 			envKeys.FaucetMnemonic,
 			fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeFaucetAccount, uint32(index)),
-			algo,
 		)
 		if err != nil {
-			log.Error().Err(err).Msg("[initValidatorConfig] Create faucet keyring account from mnemonic")
-			key, err := kb.Key(scalartypes.FaucetKeyName)
-			if err != nil {
-				log.Error().Err(err).Msg("[initValidatorConfig] Get faucet keyring account")
-				return nil, err
-			}
-			pubKey = key.GetPubKey()
-			address = key.GetAddress()
-			validatorInfo.FaucetPubKey = key.GetPubKey()
+			log.Debug().Err(err).Msg("Generate account error")
 		}
 		validatorInfo.FaucetPubKey = pubKey
 		validatorInfo.FaucetBalance = banktypes.Balance{
@@ -710,6 +675,52 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	return &validatorInfo, nil
 }
 
+// Create scalar account for using in relayer
+func createScalarAccount(mnemonic string) (*secp256k1.PrivKey, sdk.AccAddress, error) {
+	// Derive the seed from mnemonic
+	seed := bip39.NewSeed(mnemonic, "")
+	path := "m/44'/118'/0'/0/0"
+	// Create master key and derive the private key
+	// Using "m/44'/118'/0'/0/0" for Cosmos
+	master, ch := hd.ComputeMastersFromSeed(seed)
+	privKeyBytes, err := hd.DerivePrivateKeyForPath(master, ch, path)
+	if err != nil {
+		return nil, nil, err
+	}
+	// Create private key and get address
+	privKey := &secp256k1.PrivKey{Key: privKeyBytes}
+	addr := sdk.AccAddress(privKey.PubKey().Address())
+	return privKey, addr, nil
+}
+
+func generateAccount(kr keyring.Keyring, algo keyring.SignatureAlgo, keyName string, mnemonic string, bip44Path string) (cryptotypes.PubKey, sdk.AccAddress, error) {
+	pubkey, address, err := createKeyringAccountFromMnemonic(kr,
+		keyName,
+		mnemonic,
+		algo,
+		bip44Path,
+	)
+	//For testnet
+	// inMemkr := keyring.NewInMemory()
+	// info, err := inMemkr.NewAccount(keyName, mnemonic, "", bip44Path, algo)
+	log.Debug().
+		Str("keyName", keyName).
+		Str("mnemonic", mnemonic).
+		Str("bip44Path", bip44Path).
+		Str("krAddress", address.String()).
+		Str("pubkeyAddress", sdk.AccAddress(pubkey.Address()).String()).Msg("Keyring account created")
+	if err != nil {
+		log.Error().Err(err).Msg("[initValidatorConfig] Create governance keyring account from mnemonic")
+		key, err := kr.Key(keyName)
+		if err != nil {
+			log.Error().Err(err).Msg("[initValidatorConfig] Get governance keyring account")
+			return nil, nil, err
+		}
+		address = key.GetAddress()
+		pubkey = key.GetPubKey()
+	}
+	return pubkey, address, nil
+}
 func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig *tmconfig.Config,
 	validatorInfos []scalartypes.ValidatorInfo, args initArgs, genBalIterator banktypes.GenesisBalancesIterator,
 ) error {

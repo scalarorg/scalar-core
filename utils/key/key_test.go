@@ -22,7 +22,7 @@ func TestFromInt(t *testing.T) {
 	k1 := key.FromUInt[uint64](0)
 	k2 := key.FromUInt[uint64](17)
 	k3 := key.FromUInt[uint64](17)
-	k4 := key.FromUInt[uint64](math.MaxUint64)
+	k4 := key.FromUInt[uint64](math.MaxBig256.Uint64())
 
 	assert.True(t, bytes.Compare(k1.Bytes(), k2.Bytes()) < 0)
 	assert.True(t, bytes.Compare(k2.Bytes(), k3.Bytes()) == 0)
