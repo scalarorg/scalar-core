@@ -8,7 +8,7 @@ import (
 
 	"github.com/scalarorg/scalar-core/client/rpc"
 	"github.com/scalarorg/scalar-core/utils"
-	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
+	btcTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 

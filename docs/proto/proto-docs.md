@@ -23,30 +23,30 @@
 - [scalar/auxiliary/v1beta1/service.proto](#scalar/auxiliary/v1beta1/service.proto)
     - [MsgService](#scalar.auxiliary.v1beta1.MsgService)
   
-- [scalar/btc/v1beta1/types.proto](#scalar/btc/v1beta1/types.proto)
-    - [Command](#scalar.btc.v1beta1.Command)
-    - [CommandBatchMetadata](#scalar.btc.v1beta1.CommandBatchMetadata)
-    - [OutPoint](#scalar.btc.v1beta1.OutPoint)
-    - [Proof](#scalar.btc.v1beta1.Proof)
-    - [StakingTx](#scalar.btc.v1beta1.StakingTx)
+- [scalar/chains/v1beta1/types.proto](#scalar/chains/v1beta1/types.proto)
+    - [Command](#scalar.chains.v1beta1.Command)
+    - [CommandBatchMetadata](#scalar.chains.v1beta1.CommandBatchMetadata)
+    - [Proof](#scalar.chains.v1beta1.Proof)
+    - [StakingTx](#scalar.chains.v1beta1.StakingTx)
   
-    - [BatchedCommandsStatus](#scalar.btc.v1beta1.BatchedCommandsStatus)
-    - [CommandType](#scalar.btc.v1beta1.CommandType)
-    - [NetworkKind](#scalar.btc.v1beta1.NetworkKind)
-    - [StakingTxStatus](#scalar.btc.v1beta1.StakingTxStatus)
+    - [BatchedCommandsStatus](#scalar.chains.v1beta1.BatchedCommandsStatus)
+    - [CommandType](#scalar.chains.v1beta1.CommandType)
+    - [NetworkKind](#scalar.chains.v1beta1.NetworkKind)
+    - [StakingTxStatus](#scalar.chains.v1beta1.StakingTxStatus)
   
-- [scalar/btc/v1beta1/events.proto](#scalar/btc/v1beta1/events.proto)
-    - [BTCEventCompleted](#scalar.btc.v1beta1.BTCEventCompleted)
-    - [BTCEventFailed](#scalar.btc.v1beta1.BTCEventFailed)
-    - [BTCEventRetryFailed](#scalar.btc.v1beta1.BTCEventRetryFailed)
-    - [BridgeCallFailed](#scalar.btc.v1beta1.BridgeCallFailed)
-    - [DestCallApproved](#scalar.btc.v1beta1.DestCallApproved)
-    - [Event](#scalar.btc.v1beta1.Event)
-    - [EventStakingTx](#scalar.btc.v1beta1.EventStakingTx)
-    - [EventStakingTx.StakingTxMetadata](#scalar.btc.v1beta1.EventStakingTx.StakingTxMetadata)
-    - [VoteEvents](#scalar.btc.v1beta1.VoteEvents)
+- [scalar/chains/v1beta1/events.proto](#scalar/chains/v1beta1/events.proto)
+    - [ChainEventCompleted](#scalar.chains.v1beta1.ChainEventCompleted)
+    - [ChainEventConfirmed](#scalar.chains.v1beta1.ChainEventConfirmed)
+    - [ChainEventFailed](#scalar.chains.v1beta1.ChainEventFailed)
+    - [ChainEventRetryFailed](#scalar.chains.v1beta1.ChainEventRetryFailed)
+    - [ConfirmationEvent](#scalar.chains.v1beta1.ConfirmationEvent)
+    - [DestCallApproved](#scalar.chains.v1beta1.DestCallApproved)
+    - [DestCallFailed](#scalar.chains.v1beta1.DestCallFailed)
+    - [Event](#scalar.chains.v1beta1.Event)
+    - [NoEventsConfirmed](#scalar.chains.v1beta1.NoEventsConfirmed)
+    - [VoteEvents](#scalar.chains.v1beta1.VoteEvents)
   
-    - [Event.Status](#scalar.btc.v1beta1.Event.Status)
+    - [Event.Status](#scalar.chains.v1beta1.Event.Status)
   
 - [scalar/utils/v1beta1/queuer.proto](#scalar/utils/v1beta1/queuer.proto)
     - [QueueState](#scalar.utils.v1beta1.QueueState)
@@ -56,39 +56,35 @@
 - [scalar/utils/v1beta1/threshold.proto](#scalar/utils/v1beta1/threshold.proto)
     - [Threshold](#scalar.utils.v1beta1.Threshold)
   
-- [scalar/btc/v1beta1/params.proto](#scalar/btc/v1beta1/params.proto)
-    - [Params](#scalar.btc.v1beta1.Params)
+- [scalar/chains/v1beta1/params.proto](#scalar/chains/v1beta1/params.proto)
+    - [Params](#scalar.chains.v1beta1.Params)
   
-- [scalar/btc/v1beta1/genesis.proto](#scalar/btc/v1beta1/genesis.proto)
-    - [GenesisState](#scalar.btc.v1beta1.GenesisState)
-    - [GenesisState.Chain](#scalar.btc.v1beta1.GenesisState.Chain)
+- [scalar/chains/v1beta1/genesis.proto](#scalar/chains/v1beta1/genesis.proto)
+    - [GenesisState](#scalar.chains.v1beta1.GenesisState)
+    - [GenesisState.Chain](#scalar.chains.v1beta1.GenesisState.Chain)
   
-- [scalar/btc/v1beta1/poll.proto](#scalar/btc/v1beta1/poll.proto)
-    - [PollCompleted](#scalar.btc.v1beta1.PollCompleted)
-    - [PollExpired](#scalar.btc.v1beta1.PollExpired)
-    - [PollFailed](#scalar.btc.v1beta1.PollFailed)
-    - [PollMapping](#scalar.btc.v1beta1.PollMapping)
-    - [PollMetadata](#scalar.btc.v1beta1.PollMetadata)
+- [scalar/chains/v1beta1/poll.proto](#scalar/chains/v1beta1/poll.proto)
+    - [PollCompleted](#scalar.chains.v1beta1.PollCompleted)
+    - [PollExpired](#scalar.chains.v1beta1.PollExpired)
+    - [PollFailed](#scalar.chains.v1beta1.PollFailed)
+    - [PollMapping](#scalar.chains.v1beta1.PollMapping)
+    - [PollMetadata](#scalar.chains.v1beta1.PollMetadata)
   
-- [scalar/btc/v1beta1/tx.proto](#scalar/btc/v1beta1/tx.proto)
-    - [ConfirmStakingTxsRequest](#scalar.btc.v1beta1.ConfirmStakingTxsRequest)
-    - [ConfirmStakingTxsResponse](#scalar.btc.v1beta1.ConfirmStakingTxsResponse)
-    - [ConfirmUnstakingTxsRequest](#scalar.btc.v1beta1.ConfirmUnstakingTxsRequest)
-    - [ConfirmUnstakingTxsResponse](#scalar.btc.v1beta1.ConfirmUnstakingTxsResponse)
-    - [EventConfirmStakingTxsStarted](#scalar.btc.v1beta1.EventConfirmStakingTxsStarted)
-    - [EventConfirmUnstakingTxsStarted](#scalar.btc.v1beta1.EventConfirmUnstakingTxsStarted)
+- [scalar/chains/v1beta1/tx.proto](#scalar/chains/v1beta1/tx.proto)
+    - [ConfirmDestTxsRequest](#scalar.chains.v1beta1.ConfirmDestTxsRequest)
+    - [ConfirmDestTxsResponse](#scalar.chains.v1beta1.ConfirmDestTxsResponse)
+    - [ConfirmSourceTxsRequest](#scalar.chains.v1beta1.ConfirmSourceTxsRequest)
+    - [ConfirmSourceTxsResponse](#scalar.chains.v1beta1.ConfirmSourceTxsResponse)
+    - [EventConfirmDestTxsStarted](#scalar.chains.v1beta1.EventConfirmDestTxsStarted)
+    - [EventConfirmSourceTxsStarted](#scalar.chains.v1beta1.EventConfirmSourceTxsStarted)
   
-- [scalar/btc/v1beta1/query.proto](#scalar/btc/v1beta1/query.proto)
-    - [BatchedCommandsRequest](#scalar.btc.v1beta1.BatchedCommandsRequest)
-    - [BatchedCommandsResponse](#scalar.btc.v1beta1.BatchedCommandsResponse)
+- [scalar/chains/v1beta1/query.proto](#scalar/chains/v1beta1/query.proto)
+    - [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest)
+    - [BatchedCommandsResponse](#scalar.chains.v1beta1.BatchedCommandsResponse)
   
-- [scalar/btc/v1beta1/service.proto](#scalar/btc/v1beta1/service.proto)
-    - [MsgService](#scalar.btc.v1beta1.MsgService)
-    - [QueryService](#scalar.btc.v1beta1.QueryService)
-  
-- [scalar/btc/v1beta1/vote.proto](#scalar/btc/v1beta1/vote.proto)
-    - [BTCEventConfirmed](#scalar.btc.v1beta1.BTCEventConfirmed)
-    - [NoEventsConfirmed](#scalar.btc.v1beta1.NoEventsConfirmed)
+- [scalar/chains/v1beta1/service.proto](#scalar/chains/v1beta1/service.proto)
+    - [MsgService](#scalar.chains.v1beta1.MsgService)
+    - [QueryService](#scalar.chains.v1beta1.QueryService)
   
 - [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
     - [Covenant](#scalar.covenant.v1beta1.Covenant)
@@ -873,14 +869,14 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar/btc/v1beta1/types.proto"></a>
+<a name="scalar/chains/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## scalar/btc/v1beta1/types.proto
+## scalar/chains/v1beta1/types.proto
 
 
 
-<a name="scalar.btc.v1beta1.Command"></a>
+<a name="scalar.chains.v1beta1.Command"></a>
 
 ### Command
 
@@ -892,14 +888,14 @@ Msg defines the nexus Msg service.
 | `params` | [bytes](#bytes) |  |  |
 | `key_id` | [string](#string) |  |  |
 | `max_gas_cost` | [uint32](#uint32) |  |  |
-| `type` | [CommandType](#scalar.btc.v1beta1.CommandType) |  |  |
+| `type` | [CommandType](#scalar.chains.v1beta1.CommandType) |  |  |
 
 
 
 
 
 
-<a name="scalar.btc.v1beta1.CommandBatchMetadata"></a>
+<a name="scalar.chains.v1beta1.CommandBatchMetadata"></a>
 
 ### CommandBatchMetadata
 
@@ -911,7 +907,7 @@ Msg defines the nexus Msg service.
 | `command_ids` | [bytes](#bytes) | repeated |  |
 | `data` | [bytes](#bytes) |  |  |
 | `sig_hash` | [bytes](#bytes) |  |  |
-| `status` | [BatchedCommandsStatus](#scalar.btc.v1beta1.BatchedCommandsStatus) |  |  |
+| `status` | [BatchedCommandsStatus](#scalar.chains.v1beta1.BatchedCommandsStatus) |  |  |
 | `key_id` | [string](#string) |  |  |
 | `prev_batched_commands_id` | [bytes](#bytes) |  |  |
 | `signature` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
@@ -921,23 +917,7 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.OutPoint"></a>
-
-### OutPoint
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `hash` | [bytes](#bytes) |  |  |
-| `index` | [uint32](#uint32) |  |  |
-
-
-
-
-
-
-<a name="scalar.btc.v1beta1.Proof"></a>
+<a name="scalar.chains.v1beta1.Proof"></a>
 
 ### Proof
 
@@ -955,7 +935,7 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.StakingTx"></a>
+<a name="scalar.chains.v1beta1.StakingTx"></a>
 
 ### StakingTx
 
@@ -977,7 +957,7 @@ Msg defines the nexus Msg service.
  <!-- end messages -->
 
 
-<a name="scalar.btc.v1beta1.BatchedCommandsStatus"></a>
+<a name="scalar.chains.v1beta1.BatchedCommandsStatus"></a>
 
 ### BatchedCommandsStatus
 
@@ -991,7 +971,7 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.CommandType"></a>
+<a name="scalar.chains.v1beta1.CommandType"></a>
 
 ### CommandType
 
@@ -1002,7 +982,7 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.NetworkKind"></a>
+<a name="scalar.chains.v1beta1.NetworkKind"></a>
 
 ### NetworkKind
 
@@ -1014,7 +994,7 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.StakingTxStatus"></a>
+<a name="scalar.chains.v1beta1.StakingTxStatus"></a>
 
 ### StakingTxStatus
 
@@ -1035,33 +1015,16 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar/btc/v1beta1/events.proto"></a>
+<a name="scalar/chains/v1beta1/events.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## scalar/btc/v1beta1/events.proto
+## scalar/chains/v1beta1/events.proto
 
 
 
-<a name="scalar.btc.v1beta1.BTCEventCompleted"></a>
+<a name="scalar.chains.v1beta1.ChainEventCompleted"></a>
 
-### BTCEventCompleted
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `event_id` | [string](#string) |  |  |
-| `type` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.btc.v1beta1.BTCEventFailed"></a>
-
-### BTCEventFailed
+### ChainEventCompleted
 
 
 
@@ -1076,9 +1039,9 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.BTCEventRetryFailed"></a>
+<a name="scalar.chains.v1beta1.ChainEventConfirmed"></a>
 
-### BTCEventRetryFailed
+### ChainEventConfirmed
 
 
 
@@ -1093,23 +1056,62 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.BridgeCallFailed"></a>
+<a name="scalar.chains.v1beta1.ChainEventFailed"></a>
 
-### BridgeCallFailed
+### ChainEventFailed
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
-| `message_id` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+| `type` | [string](#string) |  |  |
 
 
 
 
 
 
-<a name="scalar.btc.v1beta1.DestCallApproved"></a>
+<a name="scalar.chains.v1beta1.ChainEventRetryFailed"></a>
+
+### ChainEventRetryFailed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+| `type` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmationEvent"></a>
+
+### ConfirmationEvent
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `amount` | [uint64](#uint64) |  |  |
+| `asset` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `destination_contract_address` | [bytes](#bytes) |  |  |
+| `destination_recipient_address` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.DestCallApproved"></a>
 
 ### DestCallApproved
 
@@ -1130,7 +1132,23 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.Event"></a>
+<a name="scalar.chains.v1beta1.DestCallFailed"></a>
+
+### DestCallFailed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `message_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.Event"></a>
 
 ### Event
 
@@ -1140,60 +1158,33 @@ Msg defines the nexus Msg service.
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
 | `tx_id` | [bytes](#bytes) |  |  |
-| `status` | [Event.Status](#scalar.btc.v1beta1.Event.Status) |  |  |
+| `status` | [Event.Status](#scalar.chains.v1beta1.Event.Status) |  |  |
 | `index` | [uint64](#uint64) |  |  |
-| `staking_tx` | [EventStakingTx](#scalar.btc.v1beta1.EventStakingTx) |  |  |
+| `confirmation_event` | [ConfirmationEvent](#scalar.chains.v1beta1.ConfirmationEvent) |  |  |
 
 
 
 
 
 
-<a name="scalar.btc.v1beta1.EventStakingTx"></a>
+<a name="scalar.chains.v1beta1.NoEventsConfirmed"></a>
 
-### EventStakingTx
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `sender` | [string](#string) |  |  |
-| `destination_chain` | [string](#string) |  |  |
-| `amount` | [uint64](#uint64) |  |  |
-| `asset` | [string](#string) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `metadata` | [EventStakingTx.StakingTxMetadata](#scalar.btc.v1beta1.EventStakingTx.StakingTxMetadata) |  |  |
-
-
-
-
-
-
-<a name="scalar.btc.v1beta1.EventStakingTx.StakingTxMetadata"></a>
-
-### EventStakingTx.StakingTxMetadata
+### NoEventsConfirmed
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `tag` | [bytes](#bytes) |  |  |
-| `version` | [bytes](#bytes) |  |  |
-| `network_id` | [NetworkKind](#scalar.btc.v1beta1.NetworkKind) |  |  |
-| `flags` | [uint32](#uint32) |  |  |
-| `service_tag` | [bytes](#bytes) |  |  |
-| `have_only_covenants` | [bool](#bool) |  |  |
-| `covenant_quorum` | [uint32](#uint32) |  |  |
-| `destination_contract_address` | [bytes](#bytes) |  |  |
-| `destination_recipient_address` | [bytes](#bytes) |  |  |
-| `staking_outpoint` | [OutPoint](#scalar.btc.v1beta1.OutPoint) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
 
 
 
 
 
 
-<a name="scalar.btc.v1beta1.VoteEvents"></a>
+<a name="scalar.chains.v1beta1.VoteEvents"></a>
 
 ### VoteEvents
 
@@ -1202,7 +1193,7 @@ Msg defines the nexus Msg service.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
-| `events` | [Event](#scalar.btc.v1beta1.Event) | repeated |  |
+| `events` | [Event](#scalar.chains.v1beta1.Event) | repeated |  |
 
 
 
@@ -1211,7 +1202,7 @@ Msg defines the nexus Msg service.
  <!-- end messages -->
 
 
-<a name="scalar.btc.v1beta1.Event.Status"></a>
+<a name="scalar.chains.v1beta1.Event.Status"></a>
 
 ### Event.Status
 
@@ -1327,14 +1318,14 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar/btc/v1beta1/params.proto"></a>
+<a name="scalar/chains/v1beta1/params.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## scalar/btc/v1beta1/params.proto
+## scalar/chains/v1beta1/params.proto
 
 
 
-<a name="scalar.btc.v1beta1.Params"></a>
+<a name="scalar.chains.v1beta1.Params"></a>
 
 ### Params
 
@@ -1344,7 +1335,7 @@ Msg defines the nexus Msg service.
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
-| `network_kind` | [NetworkKind](#scalar.btc.v1beta1.NetworkKind) |  |  |
+| `network_kind` | [NetworkKind](#scalar.chains.v1beta1.NetworkKind) |  |  |
 | `revote_locking_period` | [int64](#int64) |  |  |
 | `chain_id` | [uint64](#uint64) |  |  |
 | `voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
@@ -1352,9 +1343,6 @@ Msg defines the nexus Msg service.
 | `voting_grace_period` | [int64](#int64) |  |  |
 | `end_blocker_limit` | [int64](#int64) |  |  |
 | `transfer_limit` | [uint64](#uint64) |  |  |
-| `vault_tag` | [bytes](#bytes) |  |  |
-| `vault_version` | [bytes](#bytes) |  |  |
-| `rbf` | [bool](#bool) |  |  |
 
 
 
@@ -1370,14 +1358,14 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar/btc/v1beta1/genesis.proto"></a>
+<a name="scalar/chains/v1beta1/genesis.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## scalar/btc/v1beta1/genesis.proto
+## scalar/chains/v1beta1/genesis.proto
 
 
 
-<a name="scalar.btc.v1beta1.GenesisState"></a>
+<a name="scalar.chains.v1beta1.GenesisState"></a>
 
 ### GenesisState
 
@@ -1385,14 +1373,14 @@ Msg defines the nexus Msg service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `chains` | [GenesisState.Chain](#scalar.btc.v1beta1.GenesisState.Chain) | repeated |  |
+| `chains` | [GenesisState.Chain](#scalar.chains.v1beta1.GenesisState.Chain) | repeated |  |
 
 
 
 
 
 
-<a name="scalar.btc.v1beta1.GenesisState.Chain"></a>
+<a name="scalar.chains.v1beta1.GenesisState.Chain"></a>
 
 ### GenesisState.Chain
 
@@ -1400,11 +1388,11 @@ Msg defines the nexus Msg service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `params` | [Params](#scalar.btc.v1beta1.Params) |  |  |
+| `params` | [Params](#scalar.chains.v1beta1.Params) |  |  |
 | `command_queue` | [scalar.utils.v1beta1.QueueState](#scalar.utils.v1beta1.QueueState) |  |  |
-| `confirmed_staking_txs` | [StakingTx](#scalar.btc.v1beta1.StakingTx) | repeated |  |
-| `command_batches` | [CommandBatchMetadata](#scalar.btc.v1beta1.CommandBatchMetadata) | repeated |  |
-| `events` | [Event](#scalar.btc.v1beta1.Event) | repeated |  |
+| `confirmed_staking_txs` | [StakingTx](#scalar.chains.v1beta1.StakingTx) | repeated |  |
+| `command_batches` | [CommandBatchMetadata](#scalar.chains.v1beta1.CommandBatchMetadata) | repeated |  |
+| `events` | [Event](#scalar.chains.v1beta1.Event) | repeated |  |
 | `confirmed_event_queue` | [scalar.utils.v1beta1.QueueState](#scalar.utils.v1beta1.QueueState) |  |  |
 
 
@@ -1421,14 +1409,14 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar/btc/v1beta1/poll.proto"></a>
+<a name="scalar/chains/v1beta1/poll.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## scalar/btc/v1beta1/poll.proto
+## scalar/chains/v1beta1/poll.proto
 
 
 
-<a name="scalar.btc.v1beta1.PollCompleted"></a>
+<a name="scalar.chains.v1beta1.PollCompleted"></a>
 
 ### PollCompleted
 
@@ -1445,7 +1433,7 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.PollExpired"></a>
+<a name="scalar.chains.v1beta1.PollExpired"></a>
 
 ### PollExpired
 
@@ -1462,7 +1450,7 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.PollFailed"></a>
+<a name="scalar.chains.v1beta1.PollFailed"></a>
 
 ### PollFailed
 
@@ -1479,7 +1467,7 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.PollMapping"></a>
+<a name="scalar.chains.v1beta1.PollMapping"></a>
 
 ### PollMapping
 
@@ -1495,7 +1483,7 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.PollMetadata"></a>
+<a name="scalar.chains.v1beta1.PollMetadata"></a>
 
 ### PollMetadata
 
@@ -1520,43 +1508,16 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar/btc/v1beta1/tx.proto"></a>
+<a name="scalar/chains/v1beta1/tx.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## scalar/btc/v1beta1/tx.proto
+## scalar/chains/v1beta1/tx.proto
 
 
 
-<a name="scalar.btc.v1beta1.ConfirmStakingTxsRequest"></a>
+<a name="scalar.chains.v1beta1.ConfirmDestTxsRequest"></a>
 
-### ConfirmStakingTxsRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `sender` | [bytes](#bytes) |  |  |
-| `chain` | [string](#string) |  |  |
-| `tx_ids` | [bytes](#bytes) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.btc.v1beta1.ConfirmStakingTxsResponse"></a>
-
-### ConfirmStakingTxsResponse
-
-
-
-
-
-
-
-<a name="scalar.btc.v1beta1.ConfirmUnstakingTxsRequest"></a>
-
-### ConfirmUnstakingTxsRequest
+### ConfirmDestTxsRequest
 
 
 
@@ -1571,25 +1532,52 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.ConfirmUnstakingTxsResponse"></a>
+<a name="scalar.chains.v1beta1.ConfirmDestTxsResponse"></a>
 
-### ConfirmUnstakingTxsResponse
-
-
+### ConfirmDestTxsResponse
 
 
 
 
 
-<a name="scalar.btc.v1beta1.EventConfirmStakingTxsStarted"></a>
 
-### EventConfirmStakingTxsStarted
+
+<a name="scalar.chains.v1beta1.ConfirmSourceTxsRequest"></a>
+
+### ConfirmSourceTxsRequest
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `poll_mappings` | [PollMapping](#scalar.btc.v1beta1.PollMapping) | repeated |  |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `tx_ids` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmSourceTxsResponse"></a>
+
+### ConfirmSourceTxsResponse
+
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventConfirmDestTxsStarted"></a>
+
+### EventConfirmDestTxsStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `poll_mappings` | [PollMapping](#scalar.chains.v1beta1.PollMapping) | repeated |  |
 | `chain` | [string](#string) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
 | `participants` | [bytes](#bytes) | repeated |  |
@@ -1599,15 +1587,15 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.EventConfirmUnstakingTxsStarted"></a>
+<a name="scalar.chains.v1beta1.EventConfirmSourceTxsStarted"></a>
 
-### EventConfirmUnstakingTxsStarted
+### EventConfirmSourceTxsStarted
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `poll_mappings` | [PollMapping](#scalar.btc.v1beta1.PollMapping) | repeated |  |
+| `poll_mappings` | [PollMapping](#scalar.chains.v1beta1.PollMapping) | repeated |  |
 | `chain` | [string](#string) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
 | `participants` | [bytes](#bytes) | repeated |  |
@@ -1626,14 +1614,14 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar/btc/v1beta1/query.proto"></a>
+<a name="scalar/chains/v1beta1/query.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## scalar/btc/v1beta1/query.proto
+## scalar/chains/v1beta1/query.proto
 
 
 
-<a name="scalar.btc.v1beta1.BatchedCommandsRequest"></a>
+<a name="scalar.chains.v1beta1.BatchedCommandsRequest"></a>
 
 ### BatchedCommandsRequest
 
@@ -1649,7 +1637,7 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.btc.v1beta1.BatchedCommandsResponse"></a>
+<a name="scalar.chains.v1beta1.BatchedCommandsResponse"></a>
 
 ### BatchedCommandsResponse
 
@@ -1659,12 +1647,12 @@ Msg defines the nexus Msg service.
 | ----- | ---- | ----- | ----------- |
 | `id` | [string](#string) |  |  |
 | `data` | [string](#string) |  |  |
-| `status` | [BatchedCommandsStatus](#scalar.btc.v1beta1.BatchedCommandsStatus) |  |  |
+| `status` | [BatchedCommandsStatus](#scalar.chains.v1beta1.BatchedCommandsStatus) |  |  |
 | `key_id` | [string](#string) |  |  |
 | `execute_data` | [string](#string) |  |  |
 | `prev_batched_commands_id` | [string](#string) |  |  |
 | `command_ids` | [string](#string) | repeated |  |
-| `proof` | [Proof](#scalar.btc.v1beta1.Proof) |  |  |
+| `proof` | [Proof](#scalar.chains.v1beta1.Proof) |  |  |
 
 
 
@@ -1680,10 +1668,10 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar/btc/v1beta1/service.proto"></a>
+<a name="scalar/chains/v1beta1/service.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## scalar/btc/v1beta1/service.proto
+## scalar/chains/v1beta1/service.proto
 
 
  <!-- end messages -->
@@ -1693,75 +1681,25 @@ Msg defines the nexus Msg service.
  <!-- end HasExtensions -->
 
 
-<a name="scalar.btc.v1beta1.MsgService"></a>
+<a name="scalar.chains.v1beta1.MsgService"></a>
 
 ### MsgService
 Msg defines the btc Msg service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `ConfirmStakingTxs` | [ConfirmStakingTxsRequest](#scalar.btc.v1beta1.ConfirmStakingTxsRequest) | [ConfirmStakingTxsResponse](#scalar.btc.v1beta1.ConfirmStakingTxsResponse) |  | POST|/scalar/btc/confirm_staking_txs|
-| `ConfirmUnstakingTxs` | [ConfirmUnstakingTxsRequest](#scalar.btc.v1beta1.ConfirmUnstakingTxsRequest) | [ConfirmUnstakingTxsResponse](#scalar.btc.v1beta1.ConfirmUnstakingTxsResponse) |  | POST|/scalar/btc/confirm_unstaking_txs|
+| `ConfirmSourceTxs` | [ConfirmSourceTxsRequest](#scalar.chains.v1beta1.ConfirmSourceTxsRequest) | [ConfirmSourceTxsResponse](#scalar.chains.v1beta1.ConfirmSourceTxsResponse) |  | POST|/scalar/btc/confirm_source_txs|
+| `ConfirmDestTxs` | [ConfirmDestTxsRequest](#scalar.chains.v1beta1.ConfirmDestTxsRequest) | [ConfirmDestTxsResponse](#scalar.chains.v1beta1.ConfirmDestTxsResponse) |  | POST|/scalar/btc/confirm_dest_txs|
 
 
-<a name="scalar.btc.v1beta1.QueryService"></a>
+<a name="scalar.chains.v1beta1.QueryService"></a>
 
 ### QueryService
 QueryService defines the gRPC querier service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `BatchedCommands` | [BatchedCommandsRequest](#scalar.btc.v1beta1.BatchedCommandsRequest) | [BatchedCommandsResponse](#scalar.btc.v1beta1.BatchedCommandsResponse) | BatchedCommands queries the batched commands for a specified chain and BatchedCommandsID if no BatchedCommandsID is specified, then it returns the latest batched commands | GET|/scalar/btc/v1beta1/batched_commands/{chain}/{id}|
-
- <!-- end services -->
-
-
-
-<a name="scalar/btc/v1beta1/vote.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/btc/v1beta1/vote.proto
-
-
-
-<a name="scalar.btc.v1beta1.BTCEventConfirmed"></a>
-
-### BTCEventConfirmed
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `event_id` | [string](#string) |  |  |
-| `type` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.btc.v1beta1.NoEventsConfirmed"></a>
-
-### NoEventsConfirmed
-Vote handler
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `tx_id` | [bytes](#bytes) |  |  |
-| `chain` | [string](#string) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
+| `BatchedCommands` | [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest) | [BatchedCommandsResponse](#scalar.chains.v1beta1.BatchedCommandsResponse) | BatchedCommands queries the batched commands for a specified chain and BatchedCommandsID if no BatchedCommandsID is specified, then it returns the latest batched commands | GET|/scalar/btc/v1beta1/batched_commands/{chain}/{id}|
 
  <!-- end services -->
 
@@ -2151,7 +2089,7 @@ Chain represents the properties of a registered blockchain
 | `name` | [string](#string) |  | The descriptor of the chain, e.g. "evm|11155111" |
 | `supports_foreign_assets` | [bool](#bool) |  |  |
 | `key_type` | [scalar.tss.exported.v1beta1.KeyType](#scalar.tss.exported.v1beta1.KeyType) |  |  |
-| `module` | [string](#string) |  |  |
+| `module` | [string](#string) |  | the module has two types: chains and scalarnet |
 
 
 

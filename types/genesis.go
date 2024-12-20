@@ -20,9 +20,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/utils"
-	btctypes "github.com/scalarorg/scalar-core/x/btc/types"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
-	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
 	permissionexported "github.com/scalarorg/scalar-core/x/permission/exported"
@@ -31,6 +29,9 @@ import (
 	snapshottypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 	tmtypes "github.com/tendermint/tendermint/types"
+
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 )
 
 const (
@@ -309,65 +310,34 @@ func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *s
 func generateNexusGenesis(supportedChainsPath string, validatorAddrs []sdk.ValAddress, coinDenom string) *nexustypes.GenesisState {
 	nexusGenState := nexustypes.DefaultGenesisState()
 	if supportedChainsPath != "" {
-		evmConfigs, err := ParseJsonArrayConfig[evmtypes.EVMConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
+		chainConfigs, err := ParseJsonArrayConfig[chainsTypes.ChainConfig](fmt.Sprintf("%s/chains.json", supportedChainsPath))
 		if err != nil {
-			log.Error().Err(err).Msg("Failed to parse evm config")
+			log.Error().Err(err).Msg("Failed to parse chains config")
 		}
-		for _, evmConfig := range evmConfigs {
-			err := evmConfig.ValidateBasic()
+		for _, chainConfig := range chainConfigs {
+			err := chainConfig.ValidateBasic()
 			if err != nil {
-				log.Error().Err(err).Msg("Failed to validate evm config")
+				log.Error().Err(err).Msg("Failed to validate chains config")
 			}
 			nexusGenState.Chains = append(nexusGenState.Chains, nexus.Chain{
-				Name:                  nexus.ChainName(evmConfig.ID),
+				Name:                  nexus.ChainName(chainConfig.ID),
 				SupportsForeignAssets: true,
 				KeyType:               tss.Multisig,
-				Module:                evmtypes.ModuleName,
+				Module:                chainsTypes.ModuleName,
 			})
 			chainState := nexustypes.ChainState{
 				Chain: nexus.Chain{
-					Name:                  nexus.ChainName(evmConfig.ID),
+					Name:                  nexus.ChainName(chainConfig.ID),
 					SupportsForeignAssets: true,
 					KeyType:               tss.Multisig,
-					Module:                evmtypes.ModuleName,
+					Module:                chainsTypes.ModuleName,
 				},
 				Activated:        true,
 				Assets:           []nexus.Asset{nexus.NewAsset(coinDenom, true)},
 				MaintainerStates: make([]nexustypes.MaintainerState, len(validatorAddrs)),
 			}
 			for i, valAddr := range validatorAddrs {
-				chainState.MaintainerStates[i] = *nexustypes.NewMaintainerState(nexus.ChainName(evmConfig.ID), valAddr)
-			}
-			nexusGenState.ChainStates = append(nexusGenState.ChainStates, chainState)
-		}
-		btcConfigs, err := ParseJsonArrayConfig[btctypes.BTCConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
-		if err != nil {
-			log.Error().Err(err).Msg("Failed to parse btc config")
-		}
-		for _, btcConfig := range btcConfigs {
-			err := btcConfig.ValidateBasic()
-			if err != nil {
-				log.Error().Err(err).Msg("Failed to validate btc config")
-			}
-			nexusGenState.Chains = append(nexusGenState.Chains, nexus.Chain{
-				Name:                  nexus.ChainName(btcConfig.ID),
-				SupportsForeignAssets: true,
-				KeyType:               tss.Multisig,
-				Module:                btctypes.ModuleName,
-			})
-			chainState := nexustypes.ChainState{
-				Chain: nexus.Chain{
-					Name:                  nexus.ChainName(btcConfig.ID),
-					SupportsForeignAssets: true,
-					KeyType:               tss.Multisig,
-					Module:                btctypes.ModuleName,
-				},
-				Activated:        true,
-				Assets:           []nexus.Asset{nexus.NewAsset(coinDenom, true)},
-				MaintainerStates: make([]nexustypes.MaintainerState, len(validatorAddrs)),
-			}
-			for i, valAddr := range validatorAddrs {
-				chainState.MaintainerStates[i] = *nexustypes.NewMaintainerState(nexus.ChainName(btcConfig.ID), valAddr)
+				chainState.MaintainerStates[i] = *nexustypes.NewMaintainerState(nexus.ChainName(chainConfig.ID), valAddr)
 			}
 			nexusGenState.ChainStates = append(nexusGenState.ChainStates, chainState)
 		}
@@ -376,94 +346,44 @@ func generateNexusGenesis(supportedChainsPath string, validatorAddrs []sdk.ValAd
 }
 func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath string, genesisState map[string]json.RawMessage) error {
 	if supportedChainsPath != "" {
-		evmConfigs, err := ParseJsonArrayConfig[evmtypes.EVMConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
+		chainConfigs, err := ParseJsonArrayConfig[chainsTypes.ChainConfig](fmt.Sprintf("%s/chains.json", supportedChainsPath))
 		if err != nil {
-			log.Error().Err(err).Msg("Failed to parse evm config")
+			log.Error().Err(err).Msg("Failed to parse chains config")
 		}
-		evmGenState := evmtypes.DefaultGenesisState()
-		for _, evmConfig := range evmConfigs {
-			//Todo: get token code and burnable
-			tokenCode, err := utils.HexDecode(evmtypes.Token)
-			if err != nil {
-				return err
-			}
-			bzToken, err := utils.HexDecode(evmtypes.Burnable)
-			if err != nil {
-				return err
-			}
-			params := evmtypes.Params{
-				Chain:               nexus.ChainName(evmConfig.ID),
-				ConfirmationHeight:  1,
-				Network:             evmConfig.ID,
-				TokenCode:           tokenCode,
-				Burnable:            bzToken,
-				RevoteLockingPeriod: 50,
-				Networks: []evmtypes.NetworkInfo{
-					{
-						Name: evmConfig.ID,
-						Id:   sdk.NewIntFromUint64(evmConfig.ChainID),
-					},
-				},
-				VotingThreshold:   utils.Threshold{Numerator: 51, Denominator: 100},
-				VotingGracePeriod: 3,
-				MinVoterCount:     1,
-				CommandsGasLimit:  5000000,
-				EndBlockerLimit:   50,
-				TransferLimit:     50,
-			}
-			evmGenState.Chains = append(evmGenState.Chains, evmtypes.GenesisState_Chain{
-				Params:              params,
-				CommandQueue:        utils.QueueState{},
-				ConfirmedEventQueue: utils.QueueState{},
-				Gateway: evmtypes.Gateway{
-					Address: evmtypes.Address(common.HexToAddress(evmConfig.Gateway)),
-				},
-			})
-		}
-		genesisState[evmtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&evmGenState)
-		btcConfigs, err := ParseJsonArrayConfig[btctypes.BTCConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
-		if err != nil {
-			log.Error().Err(err).Msg("Failed to parse btc config")
-		}
-		btcGenState := btctypes.DefaultGenesisState()
-		for _, btcConfig := range btcConfigs {
-			vaultTag := btctypes.VaultTag([]byte(btcConfig.Tag)[:6])
-			vaultVersion := btctypes.VaultVersion([1]byte{btcConfig.Version})
-			params := btctypes.Params{
-				ChainId:             btcConfig.ChainID,
-				Chain:               nexus.ChainName(btcConfig.ID),
+		state := chainsTypes.DefaultGenesisState()
+		for _, chainConfig := range chainConfigs {
+			params := chainsTypes.Params{
+				ChainID:             chainConfig.ChainID,
+				Chain:               nexus.ChainName(chainConfig.ID),
 				ConfirmationHeight:  2,
-				NetworkKind:         btcConfig.NetworkKind,
+				NetworkKind:         chainConfig.NetworkKind,
 				RevoteLockingPeriod: 50,
 				VotingThreshold:     utils.Threshold{Numerator: 51, Denominator: 100},
 				MinVoterCount:       1,
 				VotingGracePeriod:   50,
 				EndBlockerLimit:     50,
 				TransferLimit:       1000,
-				VaultTag:            &vaultTag,
-				VaultVersion:        &vaultVersion,
-				Rbf:                 btcConfig.Rbf,
 			}
 			//Check if chainName is already in the genesis state
 			addChain := true
-			for _, chain := range btcGenState.Chains {
-				if chain.Params.Chain == nexus.ChainName(btcConfig.ID) {
+			for _, chain := range state.Chains {
+				if chain.Params.Chain == nexus.ChainName(chainConfig.ID) {
 					addChain = false
-					log.Debug().Msgf("chain name %s already exists", btcConfig.ID)
+					log.Debug().Msgf("chain name %s already exists", chainConfig.ID)
 				}
 			}
 			if addChain {
-				btcGenState.Chains = append(btcGenState.Chains, btctypes.GenesisState_Chain{
+				state.Chains = append(state.Chains, chainsTypes.GenesisState_Chain{
 					Params:              params,
 					CommandQueue:        utils.QueueState{},
 					ConfirmedEventQueue: utils.QueueState{},
-					ConfirmedStakingTxs: make([]btctypes.StakingTx, 0),
-					CommandBatches:      make([]btctypes.CommandBatchMetadata, 0),
-					Events:              make([]btctypes.Event, 0),
+					ConfirmedStakingTxs: make([]chainsTypes.StakingTx, 0),
+					CommandBatches:      make([]chainsTypes.CommandBatchMetadata, 0),
+					Events:              make([]chainsTypes.Event, 0),
 				})
 			}
 		}
-		genesisState[btctypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&btcGenState)
+		genesisState[chainsTypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&state)
 	}
 	return nil
 }

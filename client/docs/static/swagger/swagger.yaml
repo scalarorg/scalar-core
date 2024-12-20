@@ -233,6 +233,7 @@ paths:
                     default: KEY_TYPE_UNSPECIFIED
                   module:
                     type: string
+                    title: 'the module has two types: chains and scalarnet'
                 title: Chain represents the properties of a registered blockchain
               addr_prefix:
                 type: string
@@ -13861,6 +13862,7 @@ paths:
                         default: KEY_TYPE_UNSPECIFIED
                       module:
                         type: string
+                        title: 'the module has two types: chains and scalarnet'
                     title: Chain represents the properties of a registered blockchain
                   activated:
                     type: boolean
@@ -15263,6 +15265,7 @@ paths:
                             default: KEY_TYPE_UNSPECIFIED
                           module:
                             type: string
+                            title: 'the module has two types: chains and scalarnet'
                         title: >-
                           Chain represents the properties of a registered
                           blockchain
@@ -15293,6 +15296,7 @@ paths:
                             default: KEY_TYPE_UNSPECIFIED
                           module:
                             type: string
+                            title: 'the module has two types: chains and scalarnet'
                         title: >-
                           Chain represents the properties of a registered
                           blockchain
@@ -16753,6 +16757,7 @@ paths:
                               default: KEY_TYPE_UNSPECIFIED
                             module:
                               type: string
+                              title: 'the module has two types: chains and scalarnet'
                           title: >-
                             Chain represents the properties of a registered
                             blockchain
@@ -54179,6 +54184,7 @@ definitions:
         default: KEY_TYPE_UNSPECIFIED
       module:
         type: string
+        title: 'the module has two types: chains and scalarnet'
     title: Chain represents the properties of a registered blockchain
   scalar.scalarnet.v1beta1.AddCosmosBasedChainRequest:
     type: object
@@ -54205,6 +54211,7 @@ definitions:
             default: KEY_TYPE_UNSPECIFIED
           module:
             type: string
+            title: 'the module has two types: chains and scalarnet'
         title: Chain represents the properties of a registered blockchain
       addr_prefix:
         type: string
@@ -55996,6 +56003,7 @@ definitions:
             default: KEY_TYPE_UNSPECIFIED
           module:
             type: string
+            title: 'the module has two types: chains and scalarnet'
         title: Chain represents the properties of a registered blockchain
       address:
         type: string
@@ -56025,6 +56033,7 @@ definitions:
                 default: KEY_TYPE_UNSPECIFIED
               module:
                 type: string
+                title: 'the module has two types: chains and scalarnet'
             title: Chain represents the properties of a registered blockchain
           address:
             type: string
@@ -56101,6 +56110,7 @@ definitions:
                 default: KEY_TYPE_UNSPECIFIED
               module:
                 type: string
+                title: 'the module has two types: chains and scalarnet'
             title: Chain represents the properties of a registered blockchain
           address:
             type: string
@@ -56129,6 +56139,7 @@ definitions:
                 default: KEY_TYPE_UNSPECIFIED
               module:
                 type: string
+                title: 'the module has two types: chains and scalarnet'
             title: Chain represents the properties of a registered blockchain
           address:
             type: string
@@ -56233,6 +56244,7 @@ definitions:
             default: KEY_TYPE_UNSPECIFIED
           module:
             type: string
+            title: 'the module has two types: chains and scalarnet'
         title: Chain represents the properties of a registered blockchain
       activated:
         type: boolean
@@ -56317,6 +56329,7 @@ definitions:
                 default: KEY_TYPE_UNSPECIFIED
               module:
                 type: string
+                title: 'the module has two types: chains and scalarnet'
             title: Chain represents the properties of a registered blockchain
           activated:
             type: boolean
@@ -56518,6 +56531,7 @@ definitions:
                     default: KEY_TYPE_UNSPECIFIED
                   module:
                     type: string
+                    title: 'the module has two types: chains and scalarnet'
                 title: Chain represents the properties of a registered blockchain
               address:
                 type: string
@@ -56546,6 +56560,7 @@ definitions:
                     default: KEY_TYPE_UNSPECIFIED
                   module:
                     type: string
+                    title: 'the module has two types: chains and scalarnet'
                 title: Chain represents the properties of a registered blockchain
               address:
                 type: string
@@ -56865,6 +56880,7 @@ definitions:
                       default: KEY_TYPE_UNSPECIFIED
                     module:
                       type: string
+                      title: 'the module has two types: chains and scalarnet'
                   title: Chain represents the properties of a registered blockchain
                 address:
                   type: string

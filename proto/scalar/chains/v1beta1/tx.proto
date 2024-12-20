@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package scalar.chains.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "scalar/permission/exported/v1beta1/types.proto";
+import "scalar/chains/v1beta1/poll.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
+
+option (gogoproto.goproto_getters_all) = false;
+
+message ConfirmSourceTxsRequest {
+  option (scalar.permission.exported.v1beta1.permission_role) =
+      ROLE_UNRESTRICTED;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  repeated bytes tx_ids = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "Hash",
+    (gogoproto.customname) = "TxIDs"
+  ];
+}
+
+message ConfirmSourceTxsResponse {}
+
+message ConfirmDestTxsRequest {
+  option (scalar.permission.exported.v1beta1.permission_role) =
+      ROLE_UNRESTRICTED;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  repeated bytes tx_ids = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "Hash",
+    (gogoproto.customname) = "TxIDs"
+  ];
+}
+
+message ConfirmDestTxsResponse {}
+
+message EventConfirmSourceTxsStarted {
+  repeated PollMapping poll_mappings = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "poll_mappings,omitempty"
+  ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  uint64 confirmation_height = 3;
+  repeated bytes participants = 4
+      [ (gogoproto.casttype) =
+            "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
+}
+
+message EventConfirmDestTxsStarted {
+  repeated PollMapping poll_mappings = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "poll_mappings,omitempty"
+  ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  uint64 confirmation_height = 4;
+  repeated bytes participants = 5
+      [ (gogoproto.casttype) =
+            "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
+}

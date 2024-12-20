@@ -12,8 +12,7 @@ import (
 	sdkClient "github.com/cosmos/cosmos-sdk/client"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/slices"
-	"github.com/scalarorg/scalar-core/x/btc/types"
-	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
+	"github.com/scalarorg/scalar-core/x/chains/types"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
@@ -49,7 +48,7 @@ func NewManager(
 	}
 }
 
-func (mgr Manager) ProcessStakingTxsConfirmation(event *types.EventConfirmStakingTxsStarted) error {
+func (mgr Manager) ProcessSourceTxsConfirmation(event *types.EventConfirmSourceTxsStarted) error {
 	if !mgr.isParticipantOf(event.Participants) {
 		pollIDs := slices.Map(event.PollMappings, func(m types.PollMapping) vote.PollID { return m.PollID })
 		mgr.logger("poll_ids", pollIDs).Debug("ignoring staking txs confirmation poll: not a participant")
@@ -70,7 +69,7 @@ func (mgr Manager) ProcessStakingTxsConfirmation(event *types.EventConfirmStakin
 		return fmt.Errorf("rpc client not found for chain %s", event.Chain.String())
 	}
 
-	votes, err := client.ProcessStakingTxsConfirmation(event, mgr.proxy)
+	votes, err := client.ProcessSourceTxsConfirmation(event, mgr.proxy)
 	if err != nil {
 		return err
 	}
@@ -81,7 +80,7 @@ func (mgr Manager) ProcessStakingTxsConfirmation(event *types.EventConfirmStakin
 
 }
 
-func (mgr Manager) ProcessUnstakingTxsConfirmation(event *btcTypes.EventConfirmUnstakingTxsStarted) error {
+func (mgr Manager) ProcessDestinationTxsConfirmation(event *types.EventConfirmDestTxsStarted) error {
 
 	if !mgr.isParticipantOf(event.Participants) {
 		pollIDs := slices.Map(event.PollMappings, func(m types.PollMapping) vote.PollID { return m.PollID })
@@ -103,7 +102,7 @@ func (mgr Manager) ProcessUnstakingTxsConfirmation(event *btcTypes.EventConfirmU
 		return fmt.Errorf("rpc client not found for chain %s", event.Chain.String())
 	}
 
-	votes, err := client.ProcessUnstakingTxsConfirmation(event, mgr.proxy)
+	votes, err := client.ProcessDestinationTxsConfirmation(event, mgr.proxy)
 	if err != nil {
 		return err
 	}
