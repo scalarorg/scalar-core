@@ -40,8 +40,8 @@ func Test_createKeyringAccountFromMnemonic(t *testing.T) {
 	pubkey, address, _ := createKeyringAccountFromMnemonic(kb,
 		keyName,
 		mnemonic,
-		bip44Path,
 		algo,
+		bip44Path,
 	)
 	pkType := pubkey.Type()
 	fmt.Println("PK Type:", pkType)
