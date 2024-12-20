@@ -1,0 +1,10 @@
+syntax = "proto3";
+package scalar.protocol.v1beta1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Params represent the genesis parameters for the module
+message Params {}

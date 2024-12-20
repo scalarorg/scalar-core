@@ -5,3 +5,25 @@ import "gogoproto/gogo.proto";
 import "scalar/covenant/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
+
+message CustodiansRequest {
+  string name = 1;
+  bytes pubkey = 2;
+  Status status = 3;
+}
+
+message CustodiansResponse {
+  repeated Custodian custodians = 1;
+}
+
+message CustodianGroupsRequest {
+  string uid = 1;
+  string name = 2;
+  bytes group_pubkey = 3;
+  bytes custodian_pubkey = 4;
+  Status status = 5;
+}
+
+message CustodianGroupsResponse {
+  repeated CustodianGroup groups = 1;
+}

@@ -1,0 +1,70 @@
+syntax = "proto3";
+package scalar.chains.evm.v1beta1;
+
+option go_package = "github.com/scalarorg/scalar-core/x/chains/evm/types";
+
+import "google/protobuf/any.proto";
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+import "scalar/nexus/exported/v1beta1/types.proto";
+
+// ERC20Deposit contains information for an ERC20 deposit
+message ERC20Deposit {
+  bytes tx_id = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "Hash",
+    (gogoproto.customname) = "TxID"
+  ];
+  bytes amount = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
+  string asset = 3;
+  string destination_chain = 4
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  bytes burner_address = 5
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
+  uint64 log_index = 6;
+}
+
+// ERC20TokenMetadata describes information about an ERC20 token
+message ERC20TokenMetadata {
+  string asset = 1;
+  bytes chain_id = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customname) = "ChainID",
+    (gogoproto.nullable) = false
+  ];
+  TokenDetails details = 3 [ (gogoproto.nullable) = false ];
+  string token_address = 4
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
+  string tx_hash = 5
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+  reserved 6; // min_amount was removed in v0.15
+  Status status = 7;
+  bool is_external = 8;
+  bytes burner_code = 9;
+}
+
+message TokenDetails {
+  string token_name = 1;
+  string symbol = 2;
+  uint32 decimals = 3 [ (gogoproto.casttype) = "uint8" ];
+  bytes capacity = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+enum Status {
+  option (gogoproto.goproto_enum_prefix) = false;
+  option (gogoproto.goproto_enum_stringer) = true;
+
+  // these enum values are used for bitwise operations, therefore they need to
+  // be powers of 2
+  STATUS_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "NonExistent" ];
+  STATUS_INITIALIZED = 1 [ (gogoproto.enumvalue_customname) = "Initialized" ];
+  STATUS_PENDING = 2 [ (gogoproto.enumvalue_customname) = "Pending" ];
+  STATUS_CONFIRMED = 4 [ (gogoproto.enumvalue_customname) = "Confirmed" ];
+}
