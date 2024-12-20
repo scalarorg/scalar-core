@@ -31,83 +31,33 @@ func init() {
 }
 
 var fileDescriptor_8e6380763574b912 = []byte{
-	// 1216 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x97, 0x4d, 0x6f, 0xdc, 0x44,
-	0x18, 0xc7, 0x33, 0x3d, 0x70, 0x18, 0x95, 0xa2, 0x0e, 0x29, 0x11, 0x51, 0xbb, 0x02, 0x97, 0x4a,
-	0xb4, 0x69, 0xec, 0x6e, 0xde, 0x1b, 0x91, 0x94, 0x38, 0xa1, 0x51, 0x69, 0xa9, 0x4a, 0x13, 0x2e,
-	0xbd, 0x58, 0x5e, 0x7b, 0xb2, 0xb5, 0xb2, 0xf1, 0x6c, 0x3d, 0xb3, 0xa1, 0xab, 0x55, 0x2e, 0x7c,
-	0x02, 0x24, 0x0e, 0x1c, 0xb8, 0x22, 0x90, 0x38, 0x21, 0x90, 0x38, 0x21, 0x55, 0x1c, 0x90, 0x2a,
-	0xc1, 0xa1, 0x12, 0x1c, 0xb8, 0x01, 0x09, 0x1c, 0xf8, 0x00, 0x1c, 0x10, 0x07, 0x90, 0xc7, 0x33,
-	0x7e, 0xdb, 0xb5, 0x3d, 0x4e, 0x7b, 0x49, 0xbc, 0xbb, 0xcf, 0xff, 0x99, 0xdf, 0x7f, 0x5e, 0x9e,
-	0x79, 0x0c, 0x2f, 0x50, 0xc7, 0xee, 0xd8, 0x81, 0xd1, 0x0d, 0x08, 0x23, 0x0e, 0xe9, 0x18, 0xfb,
-	0xcd, 0x16, 0x66, 0x76, 0xd3, 0xa0, 0x38, 0xd8, 0xf7, 0x1c, 0xac, 0xf3, 0x1f, 0xd0, 0x44, 0x14,
-	0xa6, 0xcb, 0x30, 0x5d, 0x84, 0x4d, 0x9e, 0x2f, 0xd2, 0x3f, 0xe8, 0xe1, 0xa0, 0x1f, 0xc5, 0x4f,
-	0xbe, 0x52, 0x14, 0xc4, 0x1e, 0x8a, 0x88, 0xb3, 0x6d, 0x42, 0xda, 0x1d, 0x6c, 0xd8, 0x5d, 0xcf,
-	0xb0, 0x7d, 0x9f, 0x30, 0x9b, 0x79, 0xc4, 0xa7, 0xd1, 0xaf, 0x33, 0xbf, 0x8e, 0xc3, 0x93, 0xef,
-	0x86, 0xf9, 0xb6, 0x22, 0x28, 0xf4, 0x31, 0x80, 0x27, 0x37, 0x31, 0xbb, 0x23, 0xf2, 0x51, 0x74,
-	0x59, 0x2f, 0x00, 0xd4, 0xd3, 0x61, 0x77, 0xf1, 0x83, 0x1e, 0xa6, 0x6c, 0x72, 0x5a, 0x31, 0x9a,
-	0x76, 0x89, 0x4f, 0xb1, 0x76, 0xe9, 0x83, 0x9f, 0xfe, 0xf8, 0xe8, 0xc4, 0x6b, 0x48, 0x33, 0x8a,
-	0x7c, 0x74, 0x63, 0x90, 0x47, 0x00, 0x8e, 0xa7, 0x93, 0x98, 0xfd, 0x2d, 0x66, 0xb3, 0x1e, 0x45,
-	0x73, 0x4a, 0x63, 0xca, 0x70, 0x49, 0x3a, 0x5f, 0x53, 0x25, 0x88, 0x97, 0x39, 0xf1, 0x1c, 0x9a,
-	0xa9, 0x26, 0x36, 0x28, 0x97, 0x1a, 0x83, 0xe8, 0xff, 0x01, 0xfa, 0x0a, 0xc0, 0xd3, 0xa9, 0xe4,
-	0x66, 0xff, 0xb6, 0xbd, 0x87, 0x51, 0x53, 0x05, 0x24, 0x8a, 0x95, 0xec, 0x33, 0x75, 0x24, 0x02,
-	0x7c, 0x81, 0x83, 0x5f, 0x41, 0xba, 0x02, 0xb8, 0x6f, 0xef, 0x61, 0x63, 0x10, 0xfe, 0x3d, 0x40,
-	0x8f, 0x01, 0x3c, 0x93, 0xc9, 0xba, 0xc5, 0xe5, 0x77, 0x76, 0xd1, 0xbc, 0x1a, 0x85, 0x8c, 0x97,
-	0xf0, 0x0b, 0x75, 0x65, 0xc2, 0xc0, 0x9b, 0xdc, 0xc0, 0x32, 0x5a, 0x52, 0x99, 0x79, 0x1e, 0x61,
-	0x75, 0x77, 0x8d, 0x41, 0xfc, 0x78, 0x80, 0x3e, 0x01, 0xf0, 0xf9, 0x4d, 0xcc, 0xd6, 0x7b, 0x94,
-	0x11, 0xd7, 0xb3, 0x7d, 0x8a, 0x4a, 0xb7, 0x6b, 0x12, 0x27, 0xd1, 0x75, 0xd5, 0x70, 0x81, 0x3c,
-	0xc5, 0x91, 0x2f, 0xa0, 0xf3, 0x85, 0xc8, 0x4e, 0xc2, 0xf2, 0x0d, 0x80, 0x28, 0x9d, 0x46, 0x6c,
-	0x8f, 0x19, 0xa5, 0x31, 0xb3, 0xfb, 0x63, 0xb6, 0x96, 0x46, 0xc0, 0x2e, 0x72, 0xd8, 0x26, 0x32,
-	0x14, 0x60, 0x33, 0x3b, 0xe4, 0xcb, 0x1c, 0xf8, 0x66, 0x40, 0x7a, 0x5d, 0xaa, 0x08, 0x1e, 0x05,
-	0xd7, 0x03, 0x97, 0x1a, 0x01, 0xde, 0xe4, 0xe0, 0x53, 0xe8, 0x62, 0x35, 0xb8, 0xd5, 0x8e, 0xd8,
-	0x7e, 0x00, 0x70, 0x62, 0x28, 0xa3, 0x98, 0xf0, 0x45, 0x75, 0x86, 0xec, 0xac, 0x2f, 0xd5, 0x17,
-	0x0a, 0x07, 0x2b, 0xdc, 0xc1, 0x22, 0x9a, 0x57, 0x76, 0x90, 0x59, 0x80, 0x7f, 0x01, 0xd4, 0x36,
-	0x31, 0xdb, 0xc0, 0x94, 0x79, 0x3e, 0x2f, 0xef, 0xeb, 0xf7, 0x6d, 0xcf, 0xa7, 0x66, 0x5f, 0x1e,
-	0x27, 0x6e, 0xcc, 0x2c, 0xe3, 0xab, 0x10, 0x4b, 0x8f, 0xeb, 0x4f, 0x95, 0x43, 0xd8, 0xbd, 0xc5,
-	0xed, 0x5e, 0x47, 0x1b, 0x85, 0x76, 0xdd, 0x24, 0x93, 0xe5, 0xf0, 0x54, 0x49, 0xcc, 0x40, 0x3e,
-	0x59, 0x91, 0xfb, 0xef, 0xa3, 0xb5, 0x5c, 0xdb, 0xb7, 0xbd, 0x8e, 0xdd, 0xea, 0x60, 0x93, 0x39,
-	0xb7, 0x31, 0x7b, 0x9f, 0x04, 0xbb, 0xb4, 0x7c, 0x2d, 0x47, 0x29, 0x94, 0xd6, 0x72, 0xb4, 0x50,
-	0xf9, 0x18, 0xd9, 0x52, 0x6e, 0xb5, 0x98, 0x63, 0xf9, 0x92, 0xf5, 0xd3, 0x13, 0x70, 0x2a, 0x9d,
-	0x3c, 0xb7, 0xdd, 0xcd, 0x7e, 0x32, 0x1a, 0x5f, 0xce, 0x9b, 0x4a, 0x88, 0x15, 0x59, 0xa4, 0xdf,
-	0x5b, 0xcf, 0x26, 0x99, 0x98, 0x83, 0x7b, 0x7c, 0x0e, 0xb6, 0xd1, 0x5d, 0x85, 0x39, 0x18, 0xda,
-	0xd9, 0xa9, 0x49, 0x31, 0x06, 0xa9, 0x0f, 0x62, 0xb9, 0xbf, 0x03, 0xf0, 0xa5, 0x0c, 0x53, 0xb8,
-	0x3d, 0xb6, 0xfb, 0x5d, 0x4c, 0xd1, 0x82, 0x9a, 0x89, 0x58, 0x20, 0xcd, 0x2f, 0xd6, 0xd6, 0x29,
-	0xdf, 0xa9, 0x29, 0x9f, 0xa1, 0xdc, 0x62, 0x1c, 0xf4, 0x2f, 0x00, 0xcf, 0x0d, 0xa5, 0xa6, 0x66,
-	0x3f, 0x1e, 0x02, 0xad, 0xa8, 0x23, 0xa5, 0x75, 0xd2, 0xd1, 0xea, 0x71, 0xe5, 0xc2, 0xd8, 0x0d,
-	0x6e, 0x6c, 0x1d, 0xad, 0xa9, 0x1a, 0xa3, 0x46, 0xe2, 0xcf, 0x18, 0x24, 0xcf, 0x07, 0x33, 0xff,
-	0x9d, 0x81, 0xf0, 0x1d, 0xda, 0x96, 0xfd, 0xe5, 0x67, 0x00, 0x9e, 0x5a, 0x0f, 0xb0, 0xcd, 0xb0,
-	0x2c, 0x0d, 0xa8, 0xf8, 0x56, 0xcd, 0x06, 0x4a, 0x73, 0x86, 0x72, 0xbc, 0x70, 0x33, 0xcb, 0xdd,
-	0x4c, 0x6b, 0xaf, 0x17, 0x97, 0x57, 0x2e, 0xb4, 0xe4, 0xf7, 0xcb, 0xe0, 0x12, 0x07, 0xdd, 0xc0,
-	0x1d, 0xac, 0x04, 0x9a, 0x0d, 0xac, 0x06, 0xcd, 0xc7, 0x2b, 0x83, 0xba, 0x5c, 0x98, 0x01, 0xfd,
-	0x11, 0xc0, 0x89, 0xf7, 0xba, 0x6e, 0xca, 0xb8, 0x69, 0x53, 0xcf, 0xb9, 0xe1, 0xef, 0x90, 0x92,
-	0xfa, 0x57, 0xa0, 0xa8, 0xae, 0x7f, 0x85, 0x42, 0xe1, 0x61, 0x95, 0x7b, 0x58, 0xd2, 0x66, 0x0b,
-	0x3d, 0xf4, 0x78, 0x86, 0xd8, 0x83, 0xd5, 0x0a, 0x73, 0x58, 0x9e, 0xbf, 0x43, 0x42, 0x3b, 0x5f,
-	0x03, 0x78, 0x7a, 0x2b, 0x69, 0x04, 0x45, 0x8f, 0x5f, 0xdc, 0x24, 0x0f, 0xc5, 0x56, 0x37, 0xc9,
-	0x23, 0x24, 0xd9, 0xe2, 0xad, 0x5d, 0x36, 0x8a, 0x5f, 0xde, 0x58, 0x42, 0x1e, 0x35, 0xf6, 0x21,
-	0xf5, 0xcf, 0x00, 0xbe, 0x9c, 0x4a, 0x9b, 0x2d, 0x94, 0xe8, 0xaa, 0x0a, 0x4a, 0x56, 0x23, 0x5d,
-	0x2c, 0x1f, 0x47, 0x9a, 0xed, 0x98, 0xb5, 0x79, 0x35, 0x37, 0xb9, 0x4a, 0x1c, 0xda, 0xfa, 0x16,
-	0xc0, 0x17, 0x53, 0xe3, 0x98, 0xcc, 0xe1, 0xb5, 0x02, 0xcd, 0xaa, 0x50, 0xc9, 0x68, 0x69, 0x65,
-	0xae, 0x9e, 0x28, 0xfb, 0xc2, 0xa5, 0x19, 0x6a, 0x26, 0xc2, 0x0b, 0x83, 0x97, 0x9f, 0x10, 0xff,
-	0x4f, 0x00, 0xcf, 0xad, 0xb9, 0x6e, 0xbe, 0x2f, 0xd9, 0x26, 0xf1, 0x91, 0x2e, 0xae, 0xb3, 0xa5,
-	0xba, 0xea, 0x3a, 0x5b, 0x21, 0x17, 0xe6, 0xde, 0xe2, 0xe6, 0xae, 0x69, 0xcb, 0xc5, 0x75, 0xd6,
-	0x75, 0xad, 0xa1, 0x6e, 0xc8, 0x62, 0x24, 0x53, 0x02, 0xfe, 0x01, 0x50, 0x8b, 0x4a, 0x4a, 0x7e,
-	0xcc, 0xeb, 0x01, 0xd9, 0x8b, 0xcd, 0x9a, 0x15, 0xf5, 0xa8, 0x4c, 0x5c, 0xdd, 0x00, 0xaa, 0xe4,
-	0x10, 0xb6, 0xdf, 0xe6, 0xb6, 0x37, 0xb4, 0x6b, 0x55, 0x75, 0x6e, 0xd8, 0xf9, 0x4e, 0x40, 0xf6,
-	0x32, 0xde, 0x7f, 0x07, 0xf0, 0xec, 0x9a, 0xeb, 0xc6, 0x47, 0x60, 0x9b, 0xe4, 0x0e, 0xdf, 0x1b,
-	0x65, 0x6b, 0x54, 0x28, 0x93, 0x7e, 0x57, 0x8e, 0xa9, 0x16, 0x4e, 0x37, 0xb8, 0xd3, 0x55, 0xed,
-	0x6a, 0xe9, 0x02, 0x27, 0x27, 0x8f, 0x91, 0x51, 0xc7, 0xf0, 0x6f, 0x00, 0x5f, 0x8d, 0xa6, 0x37,
-	0x1e, 0x26, 0x9c, 0xd7, 0x9c, 0xd1, 0xb5, 0x8a, 0xa5, 0x29, 0xd1, 0x4a, 0xb7, 0xe6, 0xd3, 0xa4,
-	0xc8, 0xf6, 0x0e, 0xda, 0x6a, 0xd5, 0xe2, 0x26, 0x46, 0xf9, 0xa2, 0x8e, 0xf0, 0xfd, 0x08, 0xc0,
-	0xf1, 0xe8, 0xbe, 0xc9, 0x59, 0x9d, 0xab, 0xb8, 0x9e, 0x46, 0xbb, 0x9b, 0xaf, 0xa9, 0x52, 0xae,
-	0x40, 0xe2, 0x46, 0x1b, 0xe1, 0xe0, 0x0b, 0x00, 0x5f, 0x88, 0xba, 0x92, 0x38, 0x39, 0xaa, 0xea,
-	0x5f, 0xe2, 0x48, 0xc9, 0x7d, 0x45, 0x5d, 0x20, 0x90, 0xe7, 0x38, 0xb2, 0xae, 0x5d, 0xac, 0xea,
-	0x78, 0x62, 0x64, 0x09, 0x9b, 0x9b, 0x89, 0x12, 0xd8, 0x5c, 0x64, 0x35, 0xec, 0x90, 0x40, 0x19,
-	0x36, 0x3f, 0xbf, 0x21, 0xec, 0xe7, 0x00, 0x9e, 0x8a, 0x32, 0xc6, 0xb7, 0x92, 0x5e, 0x31, 0x74,
-	0xfe, 0x42, 0x32, 0x94, 0xe3, 0xeb, 0x92, 0xa6, 0x6f, 0x21, 0xf3, 0xe6, 0xe3, 0xc3, 0x06, 0x78,
-	0x72, 0xd8, 0x00, 0xbf, 0x1d, 0x36, 0xc0, 0x87, 0x47, 0x8d, 0xb1, 0x27, 0x47, 0x8d, 0xb1, 0x5f,
-	0x8e, 0x1a, 0x63, 0xf7, 0x9a, 0x6d, 0x8f, 0xdd, 0xef, 0xb5, 0x74, 0x87, 0xec, 0x89, 0x8c, 0x24,
-	0x68, 0x8b, 0xa7, 0x69, 0x87, 0x04, 0xd8, 0x78, 0x98, 0x0c, 0xc1, 0x5f, 0x1d, 0x5a, 0xcf, 0xf1,
-	0xcf, 0xb3, 0xff, 0x07, 0x00, 0x00, 0xff, 0xff, 0x6a, 0xc5, 0x18, 0xd0, 0x5e, 0x16, 0x00, 0x00,
+	// 403 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0xd3, 0xcf, 0x4a, 0xe3, 0x40,
+	0x00, 0xc7, 0xf1, 0xce, 0xc2, 0x2e, 0xec, 0xb0, 0x2c, 0x6c, 0x58, 0x50, 0x82, 0x84, 0x12, 0x11,
+	0xb4, 0xd8, 0x0c, 0x69, 0x2b, 0x42, 0x6f, 0xda, 0xa3, 0x08, 0x6a, 0xf1, 0xe2, 0xa5, 0x4c, 0x93,
+	0x21, 0x0d, 0xd4, 0x4c, 0x3a, 0x33, 0x29, 0xed, 0x55, 0x7c, 0x00, 0x41, 0x7c, 0x05, 0x5f, 0xc0,
+	0x07, 0xf0, 0xea, 0xb1, 0x20, 0x88, 0x47, 0x69, 0x7d, 0x10, 0xe9, 0x64, 0xa2, 0xb4, 0x75, 0x68,
+	0x7a, 0xeb, 0x9f, 0xef, 0x2f, 0xfd, 0x74, 0xda, 0xc0, 0x2d, 0xee, 0xe1, 0x2e, 0x66, 0x28, 0x66,
+	0x54, 0x50, 0x8f, 0x76, 0x51, 0xdf, 0x6d, 0x13, 0x81, 0x5d, 0xc4, 0x09, 0xeb, 0x87, 0x1e, 0x71,
+	0xe4, 0x1b, 0xc6, 0x5a, 0x9a, 0x39, 0x59, 0xe6, 0xa8, 0xcc, 0xdc, 0x08, 0x28, 0x0d, 0xba, 0x04,
+	0xe1, 0x38, 0x44, 0x38, 0x8a, 0xa8, 0xc0, 0x22, 0xa4, 0x11, 0x4f, 0x43, 0x73, 0x53, 0x77, 0xf5,
+	0x5e, 0x42, 0xd8, 0x50, 0x45, 0x45, 0x5d, 0x24, 0x06, 0x69, 0x51, 0x79, 0xf9, 0x09, 0xe1, 0x31,
+	0x0f, 0x9a, 0x29, 0xc9, 0xb8, 0x07, 0xf0, 0x6f, 0x83, 0x11, 0x2c, 0xc8, 0x89, 0x9a, 0x18, 0x8e,
+	0xa3, 0x01, 0x3a, 0xb3, 0xe1, 0x19, 0xe9, 0x25, 0x84, 0x0b, 0x13, 0xe5, 0xee, 0x79, 0x4c, 0x23,
+	0x4e, 0xec, 0xea, 0xd5, 0xf3, 0xfb, 0xed, 0x8f, 0xb2, 0xbd, 0x8d, 0x74, 0x5a, 0x4f, 0x0e, 0x5b,
+	0xd9, 0xeb, 0x75, 0x50, 0x92, 0xd0, 0xf3, 0xd8, 0xcf, 0x07, 0x9d, 0x0d, 0x97, 0x43, 0xe7, 0xfb,
+	0xdc, 0xd0, 0x44, 0x0e, 0x67, 0xa0, 0x0f, 0x00, 0xfe, 0x3b, 0xf0, 0xfd, 0x66, 0x12, 0xc7, 0x94,
+	0x09, 0xe2, 0x37, 0x3a, 0x38, 0x8c, 0x0c, 0x57, 0xfb, 0xd9, 0x0b, 0x6d, 0xc6, 0xad, 0xac, 0x32,
+	0x51, 0xe2, 0x7d, 0x29, 0x76, 0xed, 0x5d, 0xad, 0x18, 0xfb, 0x7e, 0x8b, 0x67, 0xe3, 0x96, 0x37,
+	0x5d, 0x4f, 0xd5, 0x8f, 0x00, 0xfe, 0x4f, 0x4f, 0x61, 0x0e, 0x5e, 0x5b, 0x72, 0x68, 0xdf, 0xdb,
+	0xf7, 0x56, 0x5c, 0x29, 0x7e, 0x5d, 0xf2, 0x6b, 0x36, 0x5a, 0x76, 0xe0, 0x8b, 0xdf, 0xa0, 0x72,
+	0x07, 0xe0, 0x9f, 0xd3, 0xe9, 0xad, 0x90, 0xfd, 0xb5, 0xaf, 0x01, 0xfc, 0x9d, 0xfd, 0xa4, 0xdc,
+	0xd8, 0xd1, 0x8a, 0x3e, 0x9b, 0x0c, 0x5f, 0xca, 0x93, 0x2a, 0x71, 0x51, 0x8a, 0x4d, 0x63, 0x5d,
+	0x27, 0x3e, 0x3c, 0x7a, 0x1a, 0x5b, 0x60, 0x34, 0xb6, 0xc0, 0xdb, 0xd8, 0x02, 0x37, 0x13, 0xab,
+	0x30, 0x9a, 0x58, 0x85, 0xd7, 0x89, 0x55, 0xb8, 0x70, 0x83, 0x50, 0x74, 0x92, 0xb6, 0xe3, 0xd1,
+	0x4b, 0xb5, 0xa6, 0x2c, 0x50, 0x8f, 0xca, 0x1e, 0x65, 0x04, 0x0d, 0xbe, 0x2e, 0x27, 0x86, 0x31,
+	0xe1, 0xed, 0x5f, 0xf2, 0x79, 0xf5, 0x23, 0x00, 0x00, 0xff, 0xff, 0x09, 0xcc, 0x10, 0xb2, 0x6b,
+	0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -118,569 +68,17 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// QueryServiceClient is the client API for QueryService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type QueryServiceClient interface {
-	// GetProtocols returns all Protocol
-	GetProtocols(ctx context.Context, in *GetProtocolsRequest, opts ...grpc.CallOption) (*GetProtocolsResponse, error)
-	// GetProtocolsByStatus returns protocols based on status
-	GetProtocolsByStatus(ctx context.Context, in *GetProtocolsByStatusRequest, opts ...grpc.CallOption) (*GetProtocolsByStatusResponse, error)
-	// Get protocols by name
-	GetProtocolByName(ctx context.Context, in *GetProtocolByNameRequest, opts ...grpc.CallOption) (*GetProtocolByNameResponse, error)
-	// Get protocol by scalar pk
-	GetProtocolByScalarPk(ctx context.Context, in *GetProtocolByScalarPkRequest, opts ...grpc.CallOption) (*GetProtocolByScalarPkResponse, error)
-	// Get custodians
-	GetCustodians(ctx context.Context, in *GetCustodiansRequest, opts ...grpc.CallOption) (*GetCustodiansResponse, error)
-	// Get custodian by name
-	GetCustodianByName(ctx context.Context, in *GetCustodianByNameRequest, opts ...grpc.CallOption) (*GetCustodianByNameResponse, error)
-	// Get custodian groups
-	GetCustodianGroups(ctx context.Context, in *GetCustodianGroupsRequest, opts ...grpc.CallOption) (*GetCustodianGroupsResponse, error)
-	// Get custodian group by name
-	GetCustodianGroupByName(ctx context.Context, in *GetCustodianGroupByNameRequest, opts ...grpc.CallOption) (*GetCustodianGroupByNameResponse, error)
-	// Get DestinationChains
-	GetDestinationChainsByProtocolName(ctx context.Context, in *GetDestinationChainsByProtocolNameRequest, opts ...grpc.CallOption) (*GetDestinationChainsByProtocolNameResponse, error)
-	// Get available btc networks
-	GetAvailableBtcNetworks(ctx context.Context, in *GetAvailableBtcNetworksRequest, opts ...grpc.CallOption) (*GetAvailableBtcNetworksResponse, error)
-	GetAvailableCustodianGroupsByBtcNetworkName(ctx context.Context, in *GetAvailableCustodianGroupsByBtcNetworkNameRequest, opts ...grpc.CallOption) (*GetAvailableCustodianGroupsByBtcNetworkNameResponse, error)
-	// Get available chain types
-	GetAvailableChainTypes(ctx context.Context, in *GetAvailableChainTypesRequest, opts ...grpc.CallOption) (*GetAvailableChainTypesResponse, error)
-	// Get available chains by chain type
-	GetAvailableChainsByChainType(ctx context.Context, in *GetAvailableChainsByChainTypeRequest, opts ...grpc.CallOption) (*GetAvailableChainsByChainTypeResponse, error)
-}
-
-type queryServiceClient struct {
-	cc grpc1.ClientConn
-}
-
-func NewQueryServiceClient(cc grpc1.ClientConn) QueryServiceClient {
-	return &queryServiceClient{cc}
-}
-
-func (c *queryServiceClient) GetProtocols(ctx context.Context, in *GetProtocolsRequest, opts ...grpc.CallOption) (*GetProtocolsResponse, error) {
-	out := new(GetProtocolsResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/GetProtocols", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryServiceClient) GetProtocolsByStatus(ctx context.Context, in *GetProtocolsByStatusRequest, opts ...grpc.CallOption) (*GetProtocolsByStatusResponse, error) {
-	out := new(GetProtocolsByStatusResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/GetProtocolsByStatus", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryServiceClient) GetProtocolByName(ctx context.Context, in *GetProtocolByNameRequest, opts ...grpc.CallOption) (*GetProtocolByNameResponse, error) {
-	out := new(GetProtocolByNameResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/GetProtocolByName", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryServiceClient) GetProtocolByScalarPk(ctx context.Context, in *GetProtocolByScalarPkRequest, opts ...grpc.CallOption) (*GetProtocolByScalarPkResponse, error) {
-	out := new(GetProtocolByScalarPkResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/GetProtocolByScalarPk", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryServiceClient) GetCustodians(ctx context.Context, in *GetCustodiansRequest, opts ...grpc.CallOption) (*GetCustodiansResponse, error) {
-	out := new(GetCustodiansResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/GetCustodians", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryServiceClient) GetCustodianByName(ctx context.Context, in *GetCustodianByNameRequest, opts ...grpc.CallOption) (*GetCustodianByNameResponse, error) {
-	out := new(GetCustodianByNameResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/GetCustodianByName", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryServiceClient) GetCustodianGroups(ctx context.Context, in *GetCustodianGroupsRequest, opts ...grpc.CallOption) (*GetCustodianGroupsResponse, error) {
-	out := new(GetCustodianGroupsResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/GetCustodianGroups", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryServiceClient) GetCustodianGroupByName(ctx context.Context, in *GetCustodianGroupByNameRequest, opts ...grpc.CallOption) (*GetCustodianGroupByNameResponse, error) {
-	out := new(GetCustodianGroupByNameResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/GetCustodianGroupByName", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryServiceClient) GetDestinationChainsByProtocolName(ctx context.Context, in *GetDestinationChainsByProtocolNameRequest, opts ...grpc.CallOption) (*GetDestinationChainsByProtocolNameResponse, error) {
-	out := new(GetDestinationChainsByProtocolNameResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/GetDestinationChainsByProtocolName", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryServiceClient) GetAvailableBtcNetworks(ctx context.Context, in *GetAvailableBtcNetworksRequest, opts ...grpc.CallOption) (*GetAvailableBtcNetworksResponse, error) {
-	out := new(GetAvailableBtcNetworksResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/GetAvailableBtcNetworks", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryServiceClient) GetAvailableCustodianGroupsByBtcNetworkName(ctx context.Context, in *GetAvailableCustodianGroupsByBtcNetworkNameRequest, opts ...grpc.CallOption) (*GetAvailableCustodianGroupsByBtcNetworkNameResponse, error) {
-	out := new(GetAvailableCustodianGroupsByBtcNetworkNameResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/GetAvailableCustodianGroupsByBtcNetworkName", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryServiceClient) GetAvailableChainTypes(ctx context.Context, in *GetAvailableChainTypesRequest, opts ...grpc.CallOption) (*GetAvailableChainTypesResponse, error) {
-	out := new(GetAvailableChainTypesResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/GetAvailableChainTypes", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryServiceClient) GetAvailableChainsByChainType(ctx context.Context, in *GetAvailableChainsByChainTypeRequest, opts ...grpc.CallOption) (*GetAvailableChainsByChainTypeResponse, error) {
-	out := new(GetAvailableChainsByChainTypeResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/GetAvailableChainsByChainType", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// QueryServiceServer is the server API for QueryService service.
-type QueryServiceServer interface {
-	// GetProtocols returns all Protocol
-	GetProtocols(context.Context, *GetProtocolsRequest) (*GetProtocolsResponse, error)
-	// GetProtocolsByStatus returns protocols based on status
-	GetProtocolsByStatus(context.Context, *GetProtocolsByStatusRequest) (*GetProtocolsByStatusResponse, error)
-	// Get protocols by name
-	GetProtocolByName(context.Context, *GetProtocolByNameRequest) (*GetProtocolByNameResponse, error)
-	// Get protocol by scalar pk
-	GetProtocolByScalarPk(context.Context, *GetProtocolByScalarPkRequest) (*GetProtocolByScalarPkResponse, error)
-	// Get custodians
-	GetCustodians(context.Context, *GetCustodiansRequest) (*GetCustodiansResponse, error)
-	// Get custodian by name
-	GetCustodianByName(context.Context, *GetCustodianByNameRequest) (*GetCustodianByNameResponse, error)
-	// Get custodian groups
-	GetCustodianGroups(context.Context, *GetCustodianGroupsRequest) (*GetCustodianGroupsResponse, error)
-	// Get custodian group by name
-	GetCustodianGroupByName(context.Context, *GetCustodianGroupByNameRequest) (*GetCustodianGroupByNameResponse, error)
-	// Get DestinationChains
-	GetDestinationChainsByProtocolName(context.Context, *GetDestinationChainsByProtocolNameRequest) (*GetDestinationChainsByProtocolNameResponse, error)
-	// Get available btc networks
-	GetAvailableBtcNetworks(context.Context, *GetAvailableBtcNetworksRequest) (*GetAvailableBtcNetworksResponse, error)
-	GetAvailableCustodianGroupsByBtcNetworkName(context.Context, *GetAvailableCustodianGroupsByBtcNetworkNameRequest) (*GetAvailableCustodianGroupsByBtcNetworkNameResponse, error)
-	// Get available chain types
-	GetAvailableChainTypes(context.Context, *GetAvailableChainTypesRequest) (*GetAvailableChainTypesResponse, error)
-	// Get available chains by chain type
-	GetAvailableChainsByChainType(context.Context, *GetAvailableChainsByChainTypeRequest) (*GetAvailableChainsByChainTypeResponse, error)
-}
-
-// UnimplementedQueryServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedQueryServiceServer struct {
-}
-
-func (*UnimplementedQueryServiceServer) GetProtocols(ctx context.Context, req *GetProtocolsRequest) (*GetProtocolsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetProtocols not implemented")
-}
-func (*UnimplementedQueryServiceServer) GetProtocolsByStatus(ctx context.Context, req *GetProtocolsByStatusRequest) (*GetProtocolsByStatusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetProtocolsByStatus not implemented")
-}
-func (*UnimplementedQueryServiceServer) GetProtocolByName(ctx context.Context, req *GetProtocolByNameRequest) (*GetProtocolByNameResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetProtocolByName not implemented")
-}
-func (*UnimplementedQueryServiceServer) GetProtocolByScalarPk(ctx context.Context, req *GetProtocolByScalarPkRequest) (*GetProtocolByScalarPkResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetProtocolByScalarPk not implemented")
-}
-func (*UnimplementedQueryServiceServer) GetCustodians(ctx context.Context, req *GetCustodiansRequest) (*GetCustodiansResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCustodians not implemented")
-}
-func (*UnimplementedQueryServiceServer) GetCustodianByName(ctx context.Context, req *GetCustodianByNameRequest) (*GetCustodianByNameResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCustodianByName not implemented")
-}
-func (*UnimplementedQueryServiceServer) GetCustodianGroups(ctx context.Context, req *GetCustodianGroupsRequest) (*GetCustodianGroupsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCustodianGroups not implemented")
-}
-func (*UnimplementedQueryServiceServer) GetCustodianGroupByName(ctx context.Context, req *GetCustodianGroupByNameRequest) (*GetCustodianGroupByNameResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCustodianGroupByName not implemented")
-}
-func (*UnimplementedQueryServiceServer) GetDestinationChainsByProtocolName(ctx context.Context, req *GetDestinationChainsByProtocolNameRequest) (*GetDestinationChainsByProtocolNameResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetDestinationChainsByProtocolName not implemented")
-}
-func (*UnimplementedQueryServiceServer) GetAvailableBtcNetworks(ctx context.Context, req *GetAvailableBtcNetworksRequest) (*GetAvailableBtcNetworksResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAvailableBtcNetworks not implemented")
-}
-func (*UnimplementedQueryServiceServer) GetAvailableCustodianGroupsByBtcNetworkName(ctx context.Context, req *GetAvailableCustodianGroupsByBtcNetworkNameRequest) (*GetAvailableCustodianGroupsByBtcNetworkNameResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAvailableCustodianGroupsByBtcNetworkName not implemented")
-}
-func (*UnimplementedQueryServiceServer) GetAvailableChainTypes(ctx context.Context, req *GetAvailableChainTypesRequest) (*GetAvailableChainTypesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAvailableChainTypes not implemented")
-}
-func (*UnimplementedQueryServiceServer) GetAvailableChainsByChainType(ctx context.Context, req *GetAvailableChainsByChainTypeRequest) (*GetAvailableChainsByChainTypeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAvailableChainsByChainType not implemented")
-}
-
-func RegisterQueryServiceServer(s grpc1.Server, srv QueryServiceServer) {
-	s.RegisterService(&_QueryService_serviceDesc, srv)
-}
-
-func _QueryService_GetProtocols_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetProtocolsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServiceServer).GetProtocols(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.QueryService/GetProtocols",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).GetProtocols(ctx, req.(*GetProtocolsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _QueryService_GetProtocolsByStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetProtocolsByStatusRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServiceServer).GetProtocolsByStatus(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.QueryService/GetProtocolsByStatus",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).GetProtocolsByStatus(ctx, req.(*GetProtocolsByStatusRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _QueryService_GetProtocolByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetProtocolByNameRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServiceServer).GetProtocolByName(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.QueryService/GetProtocolByName",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).GetProtocolByName(ctx, req.(*GetProtocolByNameRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _QueryService_GetProtocolByScalarPk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetProtocolByScalarPkRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServiceServer).GetProtocolByScalarPk(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.QueryService/GetProtocolByScalarPk",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).GetProtocolByScalarPk(ctx, req.(*GetProtocolByScalarPkRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _QueryService_GetCustodians_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCustodiansRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServiceServer).GetCustodians(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.QueryService/GetCustodians",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).GetCustodians(ctx, req.(*GetCustodiansRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _QueryService_GetCustodianByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCustodianByNameRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServiceServer).GetCustodianByName(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.QueryService/GetCustodianByName",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).GetCustodianByName(ctx, req.(*GetCustodianByNameRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _QueryService_GetCustodianGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCustodianGroupsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServiceServer).GetCustodianGroups(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.QueryService/GetCustodianGroups",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).GetCustodianGroups(ctx, req.(*GetCustodianGroupsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _QueryService_GetCustodianGroupByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCustodianGroupByNameRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServiceServer).GetCustodianGroupByName(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.QueryService/GetCustodianGroupByName",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).GetCustodianGroupByName(ctx, req.(*GetCustodianGroupByNameRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _QueryService_GetDestinationChainsByProtocolName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDestinationChainsByProtocolNameRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServiceServer).GetDestinationChainsByProtocolName(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.QueryService/GetDestinationChainsByProtocolName",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).GetDestinationChainsByProtocolName(ctx, req.(*GetDestinationChainsByProtocolNameRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _QueryService_GetAvailableBtcNetworks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAvailableBtcNetworksRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServiceServer).GetAvailableBtcNetworks(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.QueryService/GetAvailableBtcNetworks",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).GetAvailableBtcNetworks(ctx, req.(*GetAvailableBtcNetworksRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _QueryService_GetAvailableCustodianGroupsByBtcNetworkName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAvailableCustodianGroupsByBtcNetworkNameRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServiceServer).GetAvailableCustodianGroupsByBtcNetworkName(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.QueryService/GetAvailableCustodianGroupsByBtcNetworkName",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).GetAvailableCustodianGroupsByBtcNetworkName(ctx, req.(*GetAvailableCustodianGroupsByBtcNetworkNameRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _QueryService_GetAvailableChainTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAvailableChainTypesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServiceServer).GetAvailableChainTypes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.QueryService/GetAvailableChainTypes",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).GetAvailableChainTypes(ctx, req.(*GetAvailableChainTypesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _QueryService_GetAvailableChainsByChainType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAvailableChainsByChainTypeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServiceServer).GetAvailableChainsByChainType(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.QueryService/GetAvailableChainsByChainType",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).GetAvailableChainsByChainType(ctx, req.(*GetAvailableChainsByChainTypeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-var _QueryService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "scalar.protocol.v1beta1.QueryService",
-	HandlerType: (*QueryServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetProtocols",
-			Handler:    _QueryService_GetProtocols_Handler,
-		},
-		{
-			MethodName: "GetProtocolsByStatus",
-			Handler:    _QueryService_GetProtocolsByStatus_Handler,
-		},
-		{
-			MethodName: "GetProtocolByName",
-			Handler:    _QueryService_GetProtocolByName_Handler,
-		},
-		{
-			MethodName: "GetProtocolByScalarPk",
-			Handler:    _QueryService_GetProtocolByScalarPk_Handler,
-		},
-		{
-			MethodName: "GetCustodians",
-			Handler:    _QueryService_GetCustodians_Handler,
-		},
-		{
-			MethodName: "GetCustodianByName",
-			Handler:    _QueryService_GetCustodianByName_Handler,
-		},
-		{
-			MethodName: "GetCustodianGroups",
-			Handler:    _QueryService_GetCustodianGroups_Handler,
-		},
-		{
-			MethodName: "GetCustodianGroupByName",
-			Handler:    _QueryService_GetCustodianGroupByName_Handler,
-		},
-		{
-			MethodName: "GetDestinationChainsByProtocolName",
-			Handler:    _QueryService_GetDestinationChainsByProtocolName_Handler,
-		},
-		{
-			MethodName: "GetAvailableBtcNetworks",
-			Handler:    _QueryService_GetAvailableBtcNetworks_Handler,
-		},
-		{
-			MethodName: "GetAvailableCustodianGroupsByBtcNetworkName",
-			Handler:    _QueryService_GetAvailableCustodianGroupsByBtcNetworkName_Handler,
-		},
-		{
-			MethodName: "GetAvailableChainTypes",
-			Handler:    _QueryService_GetAvailableChainTypes_Handler,
-		},
-		{
-			MethodName: "GetAvailableChainsByChainType",
-			Handler:    _QueryService_GetAvailableChainsByChainType_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "scalar/protocol/v1beta1/service.proto",
-}
-
 // MsgServiceClient is the client API for MsgService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgServiceClient interface {
 	// Create protocol
 	CreateProtocol(ctx context.Context, in *CreateProtocolRequest, opts ...grpc.CallOption) (*CreateProtocolResponse, error)
-	// Delete protocol
-	DeleteProtocol(ctx context.Context, in *DeleteProtocolRequest, opts ...grpc.CallOption) (*DeleteProtocolResponse, error)
-	// Update protocol basic info
-	UpdateProtocolBasicInfo(ctx context.Context, in *UpdateProtocolBasicInfoRequest, opts ...grpc.CallOption) (*UpdateProtocolBasicInfoResponse, error)
-	// Set protocol status
-	SetProtocolStatus(ctx context.Context, in *SetProtocolStatusRequest, opts ...grpc.CallOption) (*SetProtocolStatusResponse, error)
-	// Set protocol custodian group
-	SetProtocolCustodianGroup(ctx context.Context, in *SetProtocolCustodianGroupRequest, opts ...grpc.CallOption) (*SetProtocolCustodianGroupResponse, error)
-	// Set protocol BTC chain
-	SetProtocolBtcChain(ctx context.Context, in *SetProtocolBtcChainRequest, opts ...grpc.CallOption) (*SetProtocolBtcChainResponse, error)
+	UpdateProtocol(ctx context.Context, in *UpdateProtocolRequest, opts ...grpc.CallOption) (*UpdateProtocolResponse, error)
 	// Add DestinationChain into protocol
-	AddDestinationChainToProtocol(ctx context.Context, in *AddDestinationChainToProtocolRequest, opts ...grpc.CallOption) (*AddDestinationChainToProtocolResponse, error)
+	AddSupportedChain(ctx context.Context, in *AddSupportedChainRequest, opts ...grpc.CallOption) (*AddSupportedChainResponse, error)
 	// Delete DestinationChain from protocol
-	DeleteDestinationChainFromProtocol(ctx context.Context, in *DeleteDestinationChainFromProtocolRequest, opts ...grpc.CallOption) (*DeleteDestinationChainFromProtocolResponse, error)
-	// Add Custodian to custodian group
-	// TODO: recalculate taproot address when adding custodian to custodian group
-	AddCustodianToCustodianGroup(ctx context.Context, in *AddCustodianToCustodianGroupRequest, opts ...grpc.CallOption) (*AddCustodianToCustodianGroupResponse, error)
-	// Delete Custodian from custodian group
-	// TODO: recalculate taproot address when deleting custodian from custodian
-	// group
-	DeleteCustodianFromCustodianGroup(ctx context.Context, in *DeleteCustodianFromCustodianGroupRequest, opts ...grpc.CallOption) (*DeleteCustodianFromCustodianGroupResponse, error)
-	// Update Custodian group
-	UpdateCustodianGroup(ctx context.Context, in *UpdateCustodianGroupRequest, opts ...grpc.CallOption) (*UpdateCustodianGroupResponse, error)
-	// Create custodian
-	CreateCustodian(ctx context.Context, in *CreateCustodianRequest, opts ...grpc.CallOption) (*CreateCustodianResponse, error)
-	// Update custodian
-	UpdateCustodian(ctx context.Context, in *UpdateCustodianRequest, opts ...grpc.CallOption) (*UpdateCustodianResponse, error)
-	// Update BTC chain
-	UpdateBtcChain(ctx context.Context, in *UpdateBtcChainRequest, opts ...grpc.CallOption) (*UpdateBtcChainResponse, error)
+	UpdateSupportedChain(ctx context.Context, in *UpdateSupportedChainRequest, opts ...grpc.CallOption) (*UpdateSupportedChainResponse, error)
 }
 
 type msgServiceClient struct {
@@ -700,117 +98,27 @@ func (c *msgServiceClient) CreateProtocol(ctx context.Context, in *CreateProtoco
 	return out, nil
 }
 
-func (c *msgServiceClient) DeleteProtocol(ctx context.Context, in *DeleteProtocolRequest, opts ...grpc.CallOption) (*DeleteProtocolResponse, error) {
-	out := new(DeleteProtocolResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/DeleteProtocol", in, out, opts...)
+func (c *msgServiceClient) UpdateProtocol(ctx context.Context, in *UpdateProtocolRequest, opts ...grpc.CallOption) (*UpdateProtocolResponse, error) {
+	out := new(UpdateProtocolResponse)
+	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/UpdateProtocol", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgServiceClient) UpdateProtocolBasicInfo(ctx context.Context, in *UpdateProtocolBasicInfoRequest, opts ...grpc.CallOption) (*UpdateProtocolBasicInfoResponse, error) {
-	out := new(UpdateProtocolBasicInfoResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/UpdateProtocolBasicInfo", in, out, opts...)
+func (c *msgServiceClient) AddSupportedChain(ctx context.Context, in *AddSupportedChainRequest, opts ...grpc.CallOption) (*AddSupportedChainResponse, error) {
+	out := new(AddSupportedChainResponse)
+	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/AddSupportedChain", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgServiceClient) SetProtocolStatus(ctx context.Context, in *SetProtocolStatusRequest, opts ...grpc.CallOption) (*SetProtocolStatusResponse, error) {
-	out := new(SetProtocolStatusResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/SetProtocolStatus", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgServiceClient) SetProtocolCustodianGroup(ctx context.Context, in *SetProtocolCustodianGroupRequest, opts ...grpc.CallOption) (*SetProtocolCustodianGroupResponse, error) {
-	out := new(SetProtocolCustodianGroupResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/SetProtocolCustodianGroup", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgServiceClient) SetProtocolBtcChain(ctx context.Context, in *SetProtocolBtcChainRequest, opts ...grpc.CallOption) (*SetProtocolBtcChainResponse, error) {
-	out := new(SetProtocolBtcChainResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/SetProtocolBtcChain", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgServiceClient) AddDestinationChainToProtocol(ctx context.Context, in *AddDestinationChainToProtocolRequest, opts ...grpc.CallOption) (*AddDestinationChainToProtocolResponse, error) {
-	out := new(AddDestinationChainToProtocolResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/AddDestinationChainToProtocol", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgServiceClient) DeleteDestinationChainFromProtocol(ctx context.Context, in *DeleteDestinationChainFromProtocolRequest, opts ...grpc.CallOption) (*DeleteDestinationChainFromProtocolResponse, error) {
-	out := new(DeleteDestinationChainFromProtocolResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/DeleteDestinationChainFromProtocol", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgServiceClient) AddCustodianToCustodianGroup(ctx context.Context, in *AddCustodianToCustodianGroupRequest, opts ...grpc.CallOption) (*AddCustodianToCustodianGroupResponse, error) {
-	out := new(AddCustodianToCustodianGroupResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/AddCustodianToCustodianGroup", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgServiceClient) DeleteCustodianFromCustodianGroup(ctx context.Context, in *DeleteCustodianFromCustodianGroupRequest, opts ...grpc.CallOption) (*DeleteCustodianFromCustodianGroupResponse, error) {
-	out := new(DeleteCustodianFromCustodianGroupResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/DeleteCustodianFromCustodianGroup", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgServiceClient) UpdateCustodianGroup(ctx context.Context, in *UpdateCustodianGroupRequest, opts ...grpc.CallOption) (*UpdateCustodianGroupResponse, error) {
-	out := new(UpdateCustodianGroupResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/UpdateCustodianGroup", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgServiceClient) CreateCustodian(ctx context.Context, in *CreateCustodianRequest, opts ...grpc.CallOption) (*CreateCustodianResponse, error) {
-	out := new(CreateCustodianResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/CreateCustodian", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgServiceClient) UpdateCustodian(ctx context.Context, in *UpdateCustodianRequest, opts ...grpc.CallOption) (*UpdateCustodianResponse, error) {
-	out := new(UpdateCustodianResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/UpdateCustodian", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgServiceClient) UpdateBtcChain(ctx context.Context, in *UpdateBtcChainRequest, opts ...grpc.CallOption) (*UpdateBtcChainResponse, error) {
-	out := new(UpdateBtcChainResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/UpdateBtcChain", in, out, opts...)
+func (c *msgServiceClient) UpdateSupportedChain(ctx context.Context, in *UpdateSupportedChainRequest, opts ...grpc.CallOption) (*UpdateSupportedChainResponse, error) {
+	out := new(UpdateSupportedChainResponse)
+	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/UpdateSupportedChain", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -821,35 +129,11 @@ func (c *msgServiceClient) UpdateBtcChain(ctx context.Context, in *UpdateBtcChai
 type MsgServiceServer interface {
 	// Create protocol
 	CreateProtocol(context.Context, *CreateProtocolRequest) (*CreateProtocolResponse, error)
-	// Delete protocol
-	DeleteProtocol(context.Context, *DeleteProtocolRequest) (*DeleteProtocolResponse, error)
-	// Update protocol basic info
-	UpdateProtocolBasicInfo(context.Context, *UpdateProtocolBasicInfoRequest) (*UpdateProtocolBasicInfoResponse, error)
-	// Set protocol status
-	SetProtocolStatus(context.Context, *SetProtocolStatusRequest) (*SetProtocolStatusResponse, error)
-	// Set protocol custodian group
-	SetProtocolCustodianGroup(context.Context, *SetProtocolCustodianGroupRequest) (*SetProtocolCustodianGroupResponse, error)
-	// Set protocol BTC chain
-	SetProtocolBtcChain(context.Context, *SetProtocolBtcChainRequest) (*SetProtocolBtcChainResponse, error)
+	UpdateProtocol(context.Context, *UpdateProtocolRequest) (*UpdateProtocolResponse, error)
 	// Add DestinationChain into protocol
-	AddDestinationChainToProtocol(context.Context, *AddDestinationChainToProtocolRequest) (*AddDestinationChainToProtocolResponse, error)
+	AddSupportedChain(context.Context, *AddSupportedChainRequest) (*AddSupportedChainResponse, error)
 	// Delete DestinationChain from protocol
-	DeleteDestinationChainFromProtocol(context.Context, *DeleteDestinationChainFromProtocolRequest) (*DeleteDestinationChainFromProtocolResponse, error)
-	// Add Custodian to custodian group
-	// TODO: recalculate taproot address when adding custodian to custodian group
-	AddCustodianToCustodianGroup(context.Context, *AddCustodianToCustodianGroupRequest) (*AddCustodianToCustodianGroupResponse, error)
-	// Delete Custodian from custodian group
-	// TODO: recalculate taproot address when deleting custodian from custodian
-	// group
-	DeleteCustodianFromCustodianGroup(context.Context, *DeleteCustodianFromCustodianGroupRequest) (*DeleteCustodianFromCustodianGroupResponse, error)
-	// Update Custodian group
-	UpdateCustodianGroup(context.Context, *UpdateCustodianGroupRequest) (*UpdateCustodianGroupResponse, error)
-	// Create custodian
-	CreateCustodian(context.Context, *CreateCustodianRequest) (*CreateCustodianResponse, error)
-	// Update custodian
-	UpdateCustodian(context.Context, *UpdateCustodianRequest) (*UpdateCustodianResponse, error)
-	// Update BTC chain
-	UpdateBtcChain(context.Context, *UpdateBtcChainRequest) (*UpdateBtcChainResponse, error)
+	UpdateSupportedChain(context.Context, *UpdateSupportedChainRequest) (*UpdateSupportedChainResponse, error)
 }
 
 // UnimplementedMsgServiceServer can be embedded to have forward compatible implementations.
@@ -859,44 +143,14 @@ type UnimplementedMsgServiceServer struct {
 func (*UnimplementedMsgServiceServer) CreateProtocol(ctx context.Context, req *CreateProtocolRequest) (*CreateProtocolResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProtocol not implemented")
 }
-func (*UnimplementedMsgServiceServer) DeleteProtocol(ctx context.Context, req *DeleteProtocolRequest) (*DeleteProtocolResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteProtocol not implemented")
+func (*UnimplementedMsgServiceServer) UpdateProtocol(ctx context.Context, req *UpdateProtocolRequest) (*UpdateProtocolResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateProtocol not implemented")
 }
-func (*UnimplementedMsgServiceServer) UpdateProtocolBasicInfo(ctx context.Context, req *UpdateProtocolBasicInfoRequest) (*UpdateProtocolBasicInfoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateProtocolBasicInfo not implemented")
+func (*UnimplementedMsgServiceServer) AddSupportedChain(ctx context.Context, req *AddSupportedChainRequest) (*AddSupportedChainResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSupportedChain not implemented")
 }
-func (*UnimplementedMsgServiceServer) SetProtocolStatus(ctx context.Context, req *SetProtocolStatusRequest) (*SetProtocolStatusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetProtocolStatus not implemented")
-}
-func (*UnimplementedMsgServiceServer) SetProtocolCustodianGroup(ctx context.Context, req *SetProtocolCustodianGroupRequest) (*SetProtocolCustodianGroupResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetProtocolCustodianGroup not implemented")
-}
-func (*UnimplementedMsgServiceServer) SetProtocolBtcChain(ctx context.Context, req *SetProtocolBtcChainRequest) (*SetProtocolBtcChainResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetProtocolBtcChain not implemented")
-}
-func (*UnimplementedMsgServiceServer) AddDestinationChainToProtocol(ctx context.Context, req *AddDestinationChainToProtocolRequest) (*AddDestinationChainToProtocolResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddDestinationChainToProtocol not implemented")
-}
-func (*UnimplementedMsgServiceServer) DeleteDestinationChainFromProtocol(ctx context.Context, req *DeleteDestinationChainFromProtocolRequest) (*DeleteDestinationChainFromProtocolResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteDestinationChainFromProtocol not implemented")
-}
-func (*UnimplementedMsgServiceServer) AddCustodianToCustodianGroup(ctx context.Context, req *AddCustodianToCustodianGroupRequest) (*AddCustodianToCustodianGroupResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddCustodianToCustodianGroup not implemented")
-}
-func (*UnimplementedMsgServiceServer) DeleteCustodianFromCustodianGroup(ctx context.Context, req *DeleteCustodianFromCustodianGroupRequest) (*DeleteCustodianFromCustodianGroupResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteCustodianFromCustodianGroup not implemented")
-}
-func (*UnimplementedMsgServiceServer) UpdateCustodianGroup(ctx context.Context, req *UpdateCustodianGroupRequest) (*UpdateCustodianGroupResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateCustodianGroup not implemented")
-}
-func (*UnimplementedMsgServiceServer) CreateCustodian(ctx context.Context, req *CreateCustodianRequest) (*CreateCustodianResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateCustodian not implemented")
-}
-func (*UnimplementedMsgServiceServer) UpdateCustodian(ctx context.Context, req *UpdateCustodianRequest) (*UpdateCustodianResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateCustodian not implemented")
-}
-func (*UnimplementedMsgServiceServer) UpdateBtcChain(ctx context.Context, req *UpdateBtcChainRequest) (*UpdateBtcChainResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateBtcChain not implemented")
+func (*UnimplementedMsgServiceServer) UpdateSupportedChain(ctx context.Context, req *UpdateSupportedChainRequest) (*UpdateSupportedChainResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSupportedChain not implemented")
 }
 
 func RegisterMsgServiceServer(s grpc1.Server, srv MsgServiceServer) {
@@ -921,236 +175,56 @@ func _MsgService_CreateProtocol_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MsgService_DeleteProtocol_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteProtocolRequest)
+func _MsgService_UpdateProtocol_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateProtocolRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServiceServer).DeleteProtocol(ctx, in)
+		return srv.(MsgServiceServer).UpdateProtocol(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/DeleteProtocol",
+		FullMethod: "/scalar.protocol.v1beta1.MsgService/UpdateProtocol",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).DeleteProtocol(ctx, req.(*DeleteProtocolRequest))
+		return srv.(MsgServiceServer).UpdateProtocol(ctx, req.(*UpdateProtocolRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MsgService_UpdateProtocolBasicInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateProtocolBasicInfoRequest)
+func _MsgService_AddSupportedChain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddSupportedChainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServiceServer).UpdateProtocolBasicInfo(ctx, in)
+		return srv.(MsgServiceServer).AddSupportedChain(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/UpdateProtocolBasicInfo",
+		FullMethod: "/scalar.protocol.v1beta1.MsgService/AddSupportedChain",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).UpdateProtocolBasicInfo(ctx, req.(*UpdateProtocolBasicInfoRequest))
+		return srv.(MsgServiceServer).AddSupportedChain(ctx, req.(*AddSupportedChainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MsgService_SetProtocolStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetProtocolStatusRequest)
+func _MsgService_UpdateSupportedChain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSupportedChainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServiceServer).SetProtocolStatus(ctx, in)
+		return srv.(MsgServiceServer).UpdateSupportedChain(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/SetProtocolStatus",
+		FullMethod: "/scalar.protocol.v1beta1.MsgService/UpdateSupportedChain",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).SetProtocolStatus(ctx, req.(*SetProtocolStatusRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MsgService_SetProtocolCustodianGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetProtocolCustodianGroupRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServiceServer).SetProtocolCustodianGroup(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/SetProtocolCustodianGroup",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).SetProtocolCustodianGroup(ctx, req.(*SetProtocolCustodianGroupRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MsgService_SetProtocolBtcChain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetProtocolBtcChainRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServiceServer).SetProtocolBtcChain(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/SetProtocolBtcChain",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).SetProtocolBtcChain(ctx, req.(*SetProtocolBtcChainRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MsgService_AddDestinationChainToProtocol_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddDestinationChainToProtocolRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServiceServer).AddDestinationChainToProtocol(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/AddDestinationChainToProtocol",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).AddDestinationChainToProtocol(ctx, req.(*AddDestinationChainToProtocolRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MsgService_DeleteDestinationChainFromProtocol_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteDestinationChainFromProtocolRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServiceServer).DeleteDestinationChainFromProtocol(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/DeleteDestinationChainFromProtocol",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).DeleteDestinationChainFromProtocol(ctx, req.(*DeleteDestinationChainFromProtocolRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MsgService_AddCustodianToCustodianGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddCustodianToCustodianGroupRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServiceServer).AddCustodianToCustodianGroup(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/AddCustodianToCustodianGroup",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).AddCustodianToCustodianGroup(ctx, req.(*AddCustodianToCustodianGroupRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MsgService_DeleteCustodianFromCustodianGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteCustodianFromCustodianGroupRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServiceServer).DeleteCustodianFromCustodianGroup(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/DeleteCustodianFromCustodianGroup",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).DeleteCustodianFromCustodianGroup(ctx, req.(*DeleteCustodianFromCustodianGroupRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MsgService_UpdateCustodianGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateCustodianGroupRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServiceServer).UpdateCustodianGroup(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/UpdateCustodianGroup",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).UpdateCustodianGroup(ctx, req.(*UpdateCustodianGroupRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MsgService_CreateCustodian_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateCustodianRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServiceServer).CreateCustodian(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/CreateCustodian",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).CreateCustodian(ctx, req.(*CreateCustodianRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MsgService_UpdateCustodian_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateCustodianRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServiceServer).UpdateCustodian(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/UpdateCustodian",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).UpdateCustodian(ctx, req.(*UpdateCustodianRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MsgService_UpdateBtcChain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateBtcChainRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServiceServer).UpdateBtcChain(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/UpdateBtcChain",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).UpdateBtcChain(ctx, req.(*UpdateBtcChainRequest))
+		return srv.(MsgServiceServer).UpdateSupportedChain(ctx, req.(*UpdateSupportedChainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1164,56 +238,90 @@ var _MsgService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _MsgService_CreateProtocol_Handler,
 		},
 		{
-			MethodName: "DeleteProtocol",
-			Handler:    _MsgService_DeleteProtocol_Handler,
+			MethodName: "UpdateProtocol",
+			Handler:    _MsgService_UpdateProtocol_Handler,
 		},
 		{
-			MethodName: "UpdateProtocolBasicInfo",
-			Handler:    _MsgService_UpdateProtocolBasicInfo_Handler,
+			MethodName: "AddSupportedChain",
+			Handler:    _MsgService_AddSupportedChain_Handler,
 		},
 		{
-			MethodName: "SetProtocolStatus",
-			Handler:    _MsgService_SetProtocolStatus_Handler,
+			MethodName: "UpdateSupportedChain",
+			Handler:    _MsgService_UpdateSupportedChain_Handler,
 		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "scalar/protocol/v1beta1/service.proto",
+}
+
+// QueryServiceClient is the client API for QueryService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type QueryServiceClient interface {
+	// GetProtocols returns all Protocol
+	Protocols(ctx context.Context, in *ProtocolsRequest, opts ...grpc.CallOption) (*ProtocolsResponse, error)
+}
+
+type queryServiceClient struct {
+	cc grpc1.ClientConn
+}
+
+func NewQueryServiceClient(cc grpc1.ClientConn) QueryServiceClient {
+	return &queryServiceClient{cc}
+}
+
+func (c *queryServiceClient) Protocols(ctx context.Context, in *ProtocolsRequest, opts ...grpc.CallOption) (*ProtocolsResponse, error) {
+	out := new(ProtocolsResponse)
+	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/Protocols", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// QueryServiceServer is the server API for QueryService service.
+type QueryServiceServer interface {
+	// GetProtocols returns all Protocol
+	Protocols(context.Context, *ProtocolsRequest) (*ProtocolsResponse, error)
+}
+
+// UnimplementedQueryServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedQueryServiceServer struct {
+}
+
+func (*UnimplementedQueryServiceServer) Protocols(ctx context.Context, req *ProtocolsRequest) (*ProtocolsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Protocols not implemented")
+}
+
+func RegisterQueryServiceServer(s grpc1.Server, srv QueryServiceServer) {
+	s.RegisterService(&_QueryService_serviceDesc, srv)
+}
+
+func _QueryService_Protocols_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProtocolsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServiceServer).Protocols(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.protocol.v1beta1.QueryService/Protocols",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServiceServer).Protocols(ctx, req.(*ProtocolsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _QueryService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "scalar.protocol.v1beta1.QueryService",
+	HandlerType: (*QueryServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SetProtocolCustodianGroup",
-			Handler:    _MsgService_SetProtocolCustodianGroup_Handler,
-		},
-		{
-			MethodName: "SetProtocolBtcChain",
-			Handler:    _MsgService_SetProtocolBtcChain_Handler,
-		},
-		{
-			MethodName: "AddDestinationChainToProtocol",
-			Handler:    _MsgService_AddDestinationChainToProtocol_Handler,
-		},
-		{
-			MethodName: "DeleteDestinationChainFromProtocol",
-			Handler:    _MsgService_DeleteDestinationChainFromProtocol_Handler,
-		},
-		{
-			MethodName: "AddCustodianToCustodianGroup",
-			Handler:    _MsgService_AddCustodianToCustodianGroup_Handler,
-		},
-		{
-			MethodName: "DeleteCustodianFromCustodianGroup",
-			Handler:    _MsgService_DeleteCustodianFromCustodianGroup_Handler,
-		},
-		{
-			MethodName: "UpdateCustodianGroup",
-			Handler:    _MsgService_UpdateCustodianGroup_Handler,
-		},
-		{
-			MethodName: "CreateCustodian",
-			Handler:    _MsgService_CreateCustodian_Handler,
-		},
-		{
-			MethodName: "UpdateCustodian",
-			Handler:    _MsgService_UpdateCustodian_Handler,
-		},
-		{
-			MethodName: "UpdateBtcChain",
-			Handler:    _MsgService_UpdateBtcChain_Handler,
+			MethodName: "Protocols",
+			Handler:    _QueryService_Protocols_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
