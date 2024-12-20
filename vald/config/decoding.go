@@ -6,7 +6,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/scalarorg/scalar-core/vald/evm/rpc"
-	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
 )
 
 func stringToEnumType(
@@ -19,22 +18,6 @@ func stringToEnumType(
 
 	if t == reflect.TypeOf(rpc.FinalityOverride(0)) {
 		return rpc.ParseFinalityOverride(data.(string))
-	}
-
-	if t == reflect.TypeOf(btcTypes.MainnetBtcChain) {
-		var chain btcTypes.BtcChain
-		if err := chain.UnmarshalText([]byte(data.(string))); err != nil {
-			return nil, err
-		}
-		return chain, nil
-	}
-
-	if t == reflect.TypeOf(btcTypes.NetworkKind(0)) {
-		var kind btcTypes.NetworkKind
-		if err := kind.UnmarshalText([]byte(data.(string))); err != nil {
-			return nil, err
-		}
-		return kind, nil
 	}
 
 	return data, nil

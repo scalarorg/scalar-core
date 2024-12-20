@@ -15,6 +15,7 @@ message Chain {
   string name = 1 [ (gogoproto.casttype) = "ChainName" ];
   bool supports_foreign_assets = 2;
   scalar.tss.exported.v1beta1.KeyType key_type = 3;
+  // the module has two types: chains and scalarnet
   string module = 4;
 }
 

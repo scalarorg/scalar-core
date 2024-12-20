@@ -103,10 +103,8 @@ import (
 	"github.com/scalarorg/scalar-core/x/auxiliary"
 	auxiliarytypes "github.com/scalarorg/scalar-core/x/auxiliary/types"
 	bankKepper "github.com/scalarorg/scalar-core/x/bank/keeper"
-	"github.com/scalarorg/scalar-core/x/btc"
-	"github.com/scalarorg/scalar-core/x/evm"
-	evmKeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
-	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
+	"github.com/scalarorg/scalar-core/x/chains"
+
 	"github.com/scalarorg/scalar-core/x/multisig"
 	multisigKeeper "github.com/scalarorg/scalar-core/x/multisig/keeper"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
@@ -133,8 +131,11 @@ import (
 	voteKeeper "github.com/scalarorg/scalar-core/x/vote/keeper"
 	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
 
-	btcKeeper "github.com/scalarorg/scalar-core/x/btc/keeper"
-	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
+	// evmKeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
+	// evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
+
+	chainsKeeper "github.com/scalarorg/scalar-core/x/chains/keeper"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 
 	// Override with generated statik docs
 	_ "github.com/scalarorg/scalar-core/client/docs/statik"
@@ -243,8 +244,8 @@ func NewScalarApp(
 
 	// set up custom  keepers
 	SetKeeper(keepers, initscalarnetKeeper(appCodec, keys, keepers))
-	SetKeeper(keepers, initEvmKeeper(appCodec, keys, keepers))
-	SetKeeper(keepers, initBtcKeeper(appCodec, keys, keepers))
+	// SetKeeper(keepers, initEvmKeeper(appCodec, keys, keepers))
+	SetKeeper(keepers, initChainsKeeper(appCodec, keys, keepers))
 	SetKeeper(keepers, initNexusKeeper(appCodec, keys, keepers))
 	SetKeeper(keepers, initRewardKeeper(appCodec, keys, keepers))
 	SetKeeper(keepers, initMultisigKeeper(appCodec, keys, keepers))
@@ -373,8 +374,10 @@ func NewScalarApp(
 
 	// we need to ensure that all chain subspaces are loaded at start-up to prevent unexpected consensus failures
 	// when the params keeper is used outside the evm module's context
-	GetKeeper[btcKeeper.BaseKeeper](keepers).InitChains(app.NewContext(true, tmproto.Header{}))
-	GetKeeper[evmKeeper.BaseKeeper](keepers).InitChains(app.NewContext(true, tmproto.Header{}))
+
+	// GetKeeper[evmKeeper.BaseKeeper](keepers).InitChains(app.NewContext(true, tmproto.Header{}))
+
+	GetKeeper[chainsKeeper.BaseKeeper](keepers).InitChains(app.NewContext(true, tmproto.Header{}))
 	return app
 }
 
@@ -443,8 +446,8 @@ func initIBCRouter(keepers *KeeperCache, scalarnetModule porttypes.IBCModule) *p
 
 func initMessageRouter(keepers *KeeperCache) nexusTypes.MessageRouter {
 	messageRouter := nexusTypes.NewMessageRouter().
-		AddRoute(evmTypes.ModuleName, evmKeeper.NewMessageRoute()).
-		AddRoute(btcTypes.ModuleName, btcKeeper.NewMessageRoute()).
+		// AddRoute(evmTypes.ModuleName, evmKeeper.NewMessageRoute()).
+		AddRoute(chainsTypes.ModuleName, chainsKeeper.NewMessageRoute()).
 		AddRoute(scalarnetTypes.ModuleName, scalarnetKeeper.NewMessageRoute(
 			GetKeeper[scalarnetKeeper.IBCKeeper](keepers),
 			GetKeeper[feegrantkeeper.Keeper](keepers),
@@ -602,21 +605,22 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 			GetKeeper[bankkeeper.BaseKeeper](keepers),
 			GetKeeper[authkeeper.AccountKeeper](keepers),
 		),
-		evm.NewAppModule(
-			GetKeeper[evmKeeper.BaseKeeper](keepers),
+		// evm.NewAppModule(
+		// 	GetKeeper[evmKeeper.BaseKeeper](keepers),
+		// 	GetKeeper[voteKeeper.Keeper](keepers),
+		// 	GetKeeper[nexusKeeper.Keeper](keepers),
+		// 	GetKeeper[snapKeeper.Keeper](keepers),
+		// 	GetKeeper[stakingkeeper.Keeper](keepers),
+		// 	GetKeeper[slashingkeeper.Keeper](keepers),
+		// 	GetKeeper[multisigKeeper.Keeper](keepers),
+		// ),
+		chains.NewAppModule(
+			GetKeeper[chainsKeeper.BaseKeeper](keepers),
 			GetKeeper[voteKeeper.Keeper](keepers),
 			GetKeeper[nexusKeeper.Keeper](keepers),
 			GetKeeper[snapKeeper.Keeper](keepers),
+			GetKeeper[slashingkeeper.Keeper](keepers),
 			GetKeeper[stakingkeeper.Keeper](keepers),
-			GetKeeper[slashingkeeper.Keeper](keepers),
-			GetKeeper[multisigKeeper.Keeper](keepers),
-		),
-		btc.NewAppModule(
-			GetKeeper[btcKeeper.BaseKeeper](keepers),
-			GetKeeper[voteKeeper.Keeper](keepers),
-			GetKeeper[nexusKeeper.Keeper](keepers),
-			GetKeeper[snapKeeper.Keeper](keepers),
-			GetKeeper[slashingkeeper.Keeper](keepers),
 			GetKeeper[multisigKeeper.Keeper](keepers),
 		),
 		scalarnetModule,
@@ -773,8 +777,8 @@ func orderMigrations() []string {
 		tssTypes.ModuleName,
 		rewardTypes.ModuleName,
 		voteTypes.ModuleName,
-		evmTypes.ModuleName,
-		btcTypes.ModuleName,
+		// evmTypes.ModuleName,
+		chainsTypes.ModuleName,
 		nexusTypes.ModuleName,
 		permissionTypes.ModuleName,
 		snapTypes.ModuleName,
@@ -826,8 +830,8 @@ func orderBeginBlockers() []string {
 		permissionTypes.ModuleName,
 		multisigTypes.ModuleName,
 		tssTypes.ModuleName,
-		evmTypes.ModuleName,
-		btcTypes.ModuleName,
+		// evmTypes.ModuleName,
+		chainsTypes.ModuleName,
 		snapTypes.ModuleName,
 		scalarnetTypes.ModuleName,
 		voteTypes.ModuleName,
@@ -870,8 +874,8 @@ func orderEndBlockers() []string {
 	endBlockerOrder = append(endBlockerOrder,
 		multisigTypes.ModuleName,
 		tssTypes.ModuleName,
-		evmTypes.ModuleName,
-		btcTypes.ModuleName,
+		// evmTypes.ModuleName,
+		chainsTypes.ModuleName,
 		nexusTypes.ModuleName,
 		rewardTypes.ModuleName,
 		snapTypes.ModuleName,
@@ -922,8 +926,8 @@ func orderModulesForGenesis() []string {
 		multisigTypes.ModuleName,
 		tssTypes.ModuleName,
 		nexusTypes.ModuleName,
-		evmTypes.ModuleName, // Run evm end blocker after nexus so GMP calls routed to EVM get processed within the same block
-		btcTypes.ModuleName,
+		// evmTypes.ModuleName, // Run evm end blocker after nexus so GMP calls routed to EVM get processed within the same block
+		chainsTypes.ModuleName,
 		voteTypes.ModuleName,
 		scalarnetTypes.ModuleName,
 		rewardTypes.ModuleName,
@@ -949,8 +953,8 @@ func CreateStoreKeys() map[string]*sdk.KVStoreKey {
 		capabilitytypes.StoreKey,
 		feegrant.StoreKey,
 		voteTypes.StoreKey,
-		evmTypes.StoreKey,
-		btcTypes.StoreKey,
+		// evmTypes.StoreKey,
+		chainsTypes.StoreKey,
 		snapTypes.StoreKey,
 		multisigTypes.StoreKey,
 		tssTypes.StoreKey,
@@ -1092,8 +1096,8 @@ func GetModuleBasics() module.BasicManager {
 		multisig.AppModuleBasic{},
 		tss.AppModuleBasic{},
 		vote.AppModuleBasic{},
-		evm.AppModuleBasic{},
-		btc.AppModuleBasic{},
+		// evm.AppModuleBasic{},
+		chains.AppModuleBasic{},
 		snapshot.AppModuleBasic{},
 		nexus.AppModuleBasic{},
 		scalarnet.AppModuleBasic{},

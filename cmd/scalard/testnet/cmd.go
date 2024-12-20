@@ -31,12 +31,11 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
+	"github.com/scalarorg/scalar-core/vald/config"
 	scalarnetexported "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	"github.com/tendermint/tendermint/privval"
 
 	scalartypes "github.com/scalarorg/scalar-core/types"
-	btctypes "github.com/scalarorg/scalar-core/x/btc/types"
-	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	"github.com/spf13/cobra"
 	tmconfig "github.com/tendermint/tendermint/config"
 	tmed25519 "github.com/tendermint/tendermint/crypto/ed25519"
@@ -862,7 +861,7 @@ func appendBridgeConfig(configPath string, supportedChainsPath string) error {
 
 	if supportedChainsPath != "" {
 		// Add evm bridge config
-		evmConfigs, err := scalartypes.ParseJsonArrayConfig[evmtypes.EVMConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
+		evmConfigs, err := scalartypes.ParseJsonArrayConfig[config.EVMConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to parse evm config")
 		}
@@ -872,18 +871,18 @@ func appendBridgeConfig(configPath string, supportedChainsPath string) error {
 			_, err = file.WriteString(fmt.Sprintf(`
 [[scalar_bridge_evm]]
 id = "%s"
-chain_id = %d
 rpc_addr = "%s"
 with_bridge = true
 finality_override = "confirmation"
 # When using new chains (not Ethereum Mainnet), you may need to set the finality override to "confirmation" to avoid issues with the bridge
 # With finality override, scalar will create evm client using ethereum.go, not ethereum_2.go
-			`, evmConfig.ID, evmConfig.ChainID, evmConfig.RPCAddr))
+			`, evmConfig.ID, evmConfig.RPCAddr))
 		}
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to write evm bridge config")
 		}
-		btcConfigs, err := scalartypes.ParseJsonArrayConfig[btctypes.BTCConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
+
+		btcConfigs, err := scalartypes.ParseJsonArrayConfig[config.BTCConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to parse btc config")
 		}
@@ -893,10 +892,7 @@ finality_override = "confirmation"
 			_, err = file.WriteString(fmt.Sprintf(`
 [[scalar_bridge_btc]]
 id = "%s"
-chain_id = %d
-name = "%s"
 chain = "%s"
-network_kind = "%s"
 tag = "%s"
 version = %d
 with_bridge = true
@@ -908,7 +904,7 @@ disable_tls = true
 disable_connect_on_new = true
 disable_auto_reconnect = false
 http_post_mode = true
-					`, btcConfig.ID, btcConfig.ChainID, btcConfig.Name, btcConfig.Chain, btcConfig.NetworkKind, btcConfig.Tag, btcConfig.Version, btcConfig.RpcHost, btcConfig.RpcPort, btcConfig.RpcUser, btcConfig.RpcPass))
+					`, btcConfig.ID, btcConfig.Chain, btcConfig.Tag, btcConfig.Version, btcConfig.RPCHost, btcConfig.RPCPort, btcConfig.RPCUser, btcConfig.RPCPass))
 		}
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to write btc bridge config")

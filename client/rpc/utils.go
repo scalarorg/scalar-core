@@ -9,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/client/rpc/cosmos"
-	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
+	btcTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 const (

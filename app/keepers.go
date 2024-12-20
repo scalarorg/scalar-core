@@ -73,8 +73,8 @@ import (
 	voteKeeper "github.com/scalarorg/scalar-core/x/vote/keeper"
 	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
 
-	btcKeeper "github.com/scalarorg/scalar-core/x/btc/keeper"
-	btcTypes "github.com/scalarorg/scalar-core/x/btc/types"
+	chainsKeeper "github.com/scalarorg/scalar-core/x/chains/keeper"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 type KeeperCache struct {
@@ -247,21 +247,21 @@ func initPermissionKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey,
 
 func initVoteKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *voteKeeper.Keeper {
 	voteRouter := voteTypes.NewRouter()
-	voteRouter.AddHandler(
-		evmTypes.ModuleName,
-		evmKeeper.NewVoteHandler(
-			appCodec,
-			GetKeeper[evmKeeper.BaseKeeper](keepers),
-			GetKeeper[nexusKeeper.Keeper](keepers),
-			GetKeeper[rewardKeeper.Keeper](keepers),
-		),
-	)
+	// voteRouter.AddHandler(
+	// 	evmTypes.ModuleName,
+	// 	evmKeeper.NewVoteHandler(
+	// 		appCodec,
+	// 		GetKeeper[evmKeeper.BaseKeeper](keepers),
+	// 		GetKeeper[nexusKeeper.Keeper](keepers),
+	// 		GetKeeper[rewardKeeper.Keeper](keepers),
+	// 	),
+	// )
 
 	voteRouter.AddHandler(
-		btcTypes.ModuleName,
-		btcKeeper.NewVoteHandler(
+		chainsTypes.ModuleName,
+		chainsKeeper.NewVoteHandler(
 			appCodec,
-			GetKeeper[btcKeeper.BaseKeeper](keepers),
+			GetKeeper[chainsKeeper.BaseKeeper](keepers),
 			GetKeeper[nexusKeeper.Keeper](keepers),
 			GetKeeper[rewardKeeper.Keeper](keepers),
 		),
@@ -298,10 +298,10 @@ func initTssKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keeper
 
 func initMultisigKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *multisigKeeper.Keeper {
 	multisigRouter := multisigTypes.NewSigRouter()
-	multisigRouter.AddHandler(evmTypes.ModuleName, evmKeeper.NewSigHandler(appCodec, GetKeeper[evmKeeper.BaseKeeper](keepers)))
+	// multisigRouter.AddHandler(evmTypes.ModuleName, evmKeeper.NewSigHandler(appCodec, GetKeeper[evmKeeper.BaseKeeper](keepers)))
 
-	// TODO: Add btc handler
-	// multisigRouter.AddHandler(btcTypes.ModuleName, btcKeeper.NewSigHandler(appCodec, GetKeeper[btcKeeper.BaseKeeper](keepers)))
+	// TODO: Add chains handler
+	// multisigRouter.AddHandler(chainsTypes.ModuleName, chainsKeeper.NewSigHandler(appCodec, GetKeeper[chainsKeeper.BaseKeeper](keepers)))
 
 	multisigK := multisigKeeper.NewKeeper(appCodec, keys[multisigTypes.StoreKey], keepers.getSubspace(multisigTypes.ModuleName))
 	multisigK.SetSigRouter(multisigRouter)
@@ -368,19 +368,17 @@ func initEvmKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keeper
 	return evmKeeper.NewKeeper(appCodec, keys[evmTypes.StoreKey], GetKeeper[paramskeeper.Keeper](keepers))
 }
 
-func initBtcKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *btcKeeper.BaseKeeper {
-	return btcKeeper.NewKeeper(appCodec, keys[btcTypes.StoreKey], GetKeeper[paramskeeper.Keeper](keepers))
+func initChainsKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *chainsKeeper.BaseKeeper {
+	return chainsKeeper.NewKeeper(appCodec, keys[chainsTypes.StoreKey], GetKeeper[paramskeeper.Keeper](keepers))
 }
 
 func initNexusKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *nexusKeeper.Keeper {
 	// setting validator will finalize all by sealing it
 	// no more validators can be added
 	addressValidators := nexusTypes.NewAddressValidators().
-		AddAddressValidator(evmTypes.ModuleName, evmKeeper.NewAddressValidator()).
-		AddAddressValidator(btcTypes.ModuleName, btcKeeper.NewAddressValidator()).
+		// AddAddressValidator(evmTypes.ModuleName, evmKeeper.NewAddressValidator()).
+		AddAddressValidator(chainsTypes.ModuleName, chainsKeeper.NewAddressValidator()).
 		AddAddressValidator(scalarnetTypes.ModuleName, scalarnetKeeper.NewAddressValidator(GetKeeper[scalarnetKeeper.Keeper](keepers)))
-
-	// TODO: Add btc validator
 
 	addressValidators.Seal()
 

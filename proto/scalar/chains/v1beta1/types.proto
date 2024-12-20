@@ -1,0 +1,117 @@
+syntax = "proto3";
+package scalar.chains.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/any.proto";
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
+
+option (gogoproto.goproto_getters_all) = false;
+
+enum NetworkKind {
+  option (gogoproto.goproto_enum_prefix) = false;
+  option (gogoproto.goproto_enum_stringer) = true;
+
+  NETWORK_KIND_MAINNET = 0 [ (gogoproto.enumvalue_customname) = "Mainnet" ];
+  NETWORK_KIND_TESTNET = 1 [ (gogoproto.enumvalue_customname) = "Testnet" ];
+}
+
+enum BatchedCommandsStatus {
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  BATCHED_COMMANDS_STATUS_UNSPECIFIED = 0
+      [ (gogoproto.enumvalue_customname) = "BatchNonExistent" ];
+  BATCHED_COMMANDS_STATUS_SIGNING = 1
+      [ (gogoproto.enumvalue_customname) = "BatchSigning" ];
+  BATCHED_COMMANDS_STATUS_ABORTED = 2
+      [ (gogoproto.enumvalue_customname) = "BatchAborted" ];
+  BATCHED_COMMANDS_STATUS_SIGNED = 3
+      [ (gogoproto.enumvalue_customname) = "BatchSigned" ];
+}
+
+message Proof {
+  repeated string addresses = 1;
+  repeated string weights = 2;
+  string threshold = 3;
+  repeated string signatures = 4;
+}
+
+enum StakingTxStatus {
+  option (gogoproto.goproto_enum_prefix) = true;
+  option (gogoproto.goproto_enum_stringer) = true;
+
+  STAKING_TX_STATUS_UNSPECIFIED = 0
+      [ (gogoproto.enumvalue_customname) = "None" ];
+  STAKING_TX_STATUS_PENDING = 1
+      [ (gogoproto.enumvalue_customname) = "Pending" ];
+  STAKING_TX_STATUS_CONFIRMED = 2
+      [ (gogoproto.enumvalue_customname) = "Confirmed" ];
+  STAKING_TX_STATUS_COMPLETED = 3
+      [ (gogoproto.enumvalue_customname) = "Completed" ];
+}
+
+message StakingTx {
+  bytes tx_id = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "Hash",
+    (gogoproto.customname) = "TxID"
+  ];
+  bytes amount = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
+  string asset = 3; // TODO: change to asset type: sats, runes, btc, etc
+  string destination_chain = 4
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  bytes destination_recipient_address = 5
+      [ (gogoproto.customtype) =
+            "github.com/scalarorg/scalar-core/x/evm/types.Address" ];
+  uint64 log_index = 6;
+}
+
+message CommandBatchMetadata {
+  bytes id = 1 [ (gogoproto.customname) = "ID" ];
+  repeated bytes command_ids = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "CommandIDs",
+    (gogoproto.customtype) = "CommandID"
+  ];
+  bytes data = 3;
+  bytes sig_hash = 4
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+  BatchedCommandsStatus status = 5;
+  string key_id = 6 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+  ];
+  bytes prev_batched_commands_id = 7
+      [ (gogoproto.customname) = "PrevBatchedCommandsID" ];
+  google.protobuf.Any signature = 8
+      [ (cosmos_proto.accepts_interface) =
+            "github.com/cosmos/codec/ProtoMarshaler" ];
+}
+
+enum CommandType {
+  option (gogoproto.goproto_enum_prefix) = false;
+  option (gogoproto.goproto_enum_stringer) = false;
+  COMMAND_TYPE_APPROVE_BRIDGE_CALL = 0;
+}
+
+message Command {
+  bytes id = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "ID",
+    (gogoproto.customtype) = "CommandID"
+  ];
+  bytes params = 2;
+  string key_id = 3 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+  ];
+  uint32 max_gas_cost = 4;
+  CommandType type = 5;
+}

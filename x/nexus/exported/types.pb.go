@@ -128,7 +128,8 @@ type Chain struct {
 	Name                  ChainName        `protobuf:"bytes,1,opt,name=name,proto3,casttype=ChainName" json:"name,omitempty"`
 	SupportsForeignAssets bool             `protobuf:"varint,2,opt,name=supports_foreign_assets,json=supportsForeignAssets,proto3" json:"supports_foreign_assets,omitempty"`
 	KeyType               exported.KeyType `protobuf:"varint,3,opt,name=key_type,json=keyType,proto3,enum=scalar.tss.exported.v1beta1.KeyType" json:"key_type,omitempty"`
-	Module                string           `protobuf:"bytes,4,opt,name=module,proto3" json:"module,omitempty"`
+	// the module has two types: chains and scalarnet
+	Module string `protobuf:"bytes,4,opt,name=module,proto3" json:"module,omitempty"`
 }
 
 func (m *Chain) Reset()         { *m = Chain{} }
