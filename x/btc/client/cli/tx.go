@@ -7,6 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/spf13/cobra"
 
 	"github.com/scalarorg/scalar-core/x/btc/types"
@@ -89,6 +90,7 @@ func getCmdCreateConfirmUnstakingTxs() *cobra.Command {
 
 			msg := types.NewConfirmUnstakingTxsRequest(cliCtx.GetFromAddress(), nexus.ChainName(chainName), txIDs)
 			if err := msg.ValidateBasic(); err != nil {
+				clog.Red("getCmdCreateConfirmUnstakingTxs", "err", err)
 				return fmt.Errorf("failed to validate message: %v", err)
 			}
 			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)

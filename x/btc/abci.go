@@ -37,7 +37,6 @@ func handleConfirmedEvents(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, 
 }
 
 func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) {
-	clog.Red("handleConfirmedEventsForChain", "chain", chain.Name.String())
 	ck := funcs.Must(bk.ForChain(ctx, chain.Name))
 	queue := ck.GetConfirmedEventQueue(ctx)
 	endBlockerLimit := ck.GetParams(ctx).EndBlockerLimit

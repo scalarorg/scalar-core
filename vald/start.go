@@ -332,10 +332,8 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 		createJobTyped(multisigSigning, multisigMgr.ProcessSigningStarted, cancelEventCtx),
 
 		createJobTyped(v2StakingConf, xMgr.ProcessStakingTxsConfirmation, cancelEventCtx),
-		// createJobTyped(v2UnstakingConf, xMgr.ProcessUnstakingTxsConfirmation, cancelEventCtx),
+		createJobTyped(v2UnstakingConf, xMgr.ProcessUnstakingTxsConfirmation, cancelEventCtx),
 	}
-
-	_ = v2UnstakingConf
 
 	slices.ForEach(js, func(job jobs.Job) {
 		eGroup.Go(func() error { return job(eventCtx) })
