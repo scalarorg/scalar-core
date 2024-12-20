@@ -89,14 +89,16 @@ func DefaultProtocol() protocoltypes.Protocol {
 			Capacity:  sdk.NewInt(100000000),
 		},
 	}
-	protocol := protocoltypes.Protocol{
-		Name:          protocoltypes.DefaultProtocolName,
-		CovenantGroup: covenanttypes.DefaultCovenantGroupName,
-		Tokens: []evmtypes.ERC20TokenMetadata{
-			token,
-		},
-	}
-	return protocol
+	// protocol := protocoltypes.Protocol{
+	// 	Name:          protocoltypes.DefaultProtocolName,
+	// 	CovenantGroup: covenanttypes.DefaultCovenantGroupName,
+	// 	Tokens: []evmtypes.ERC20TokenMetadata{
+	// 		token,
+	// 	},
+	// }
+	// return protocol
+	_ = token
+	return protocoltypes.Protocol{}
 }
 func GenerateGenesis(clientCtx client.Context,
 	mbm module.BasicManager,
@@ -353,7 +355,7 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 		state := chainsTypes.DefaultGenesisState()
 		for _, chainConfig := range chainConfigs {
 			params := chainsTypes.Params{
-				ChainID:             chainConfig.ChainID,
+				ChainID:             sdk.NewInt(int64(chainConfig.ChainID)),
 				Chain:               nexus.ChainName(chainConfig.ID),
 				ConfirmationHeight:  2,
 				NetworkKind:         chainConfig.NetworkKind,

@@ -5,8 +5,12 @@ package types
 
 import (
 	fmt "fmt"
+	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
+	types "github.com/scalarorg/scalar-core/x/evm/types"
+	io "io"
 	math "math"
+	math_bits "math/bits"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -20,17 +24,6529 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+type CreateProtocolRequest struct {
+	Name       string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	ScalarPk   []byte `protobuf:"bytes,2,opt,name=scalar_pk,json=scalarPk,proto3" json:"scalar_pk,omitempty"`
+	ServiceTag string `protobuf:"bytes,3,opt,name=service_tag,json=serviceTag,proto3" json:"service_tag,omitempty"`
+	// Btc chain
+	BtcSignerEndpoint    string `protobuf:"bytes,4,opt,name=btc_signer_endpoint,json=btcSignerEndpoint,proto3" json:"btc_signer_endpoint,omitempty"`
+	BtcSignerAccessToken string `protobuf:"bytes,5,opt,name=btc_signer_access_token,json=btcSignerAccessToken,proto3" json:"btc_signer_access_token,omitempty"`
+	BtcSignerAddress     string `protobuf:"bytes,6,opt,name=btc_signer_address,json=btcSignerAddress,proto3" json:"btc_signer_address,omitempty"`
+	BtcSignerPk          []byte `protobuf:"bytes,7,opt,name=btc_signer_pk,json=btcSignerPk,proto3" json:"btc_signer_pk,omitempty"`
+	// "0x021387aab21303782b17e760c670432559df3968e52cb82cc2d8f9be43a227d5dc"
+	BtcNetwork string `protobuf:"bytes,8,opt,name=btc_network,json=btcNetwork,proto3" json:"btc_network,omitempty"`
+	// Custodian group
+	CustodianGroupName string         `protobuf:"bytes,9,opt,name=custodian_group_name,json=custodianGroupName,proto3" json:"custodian_group_name,omitempty"`
+	IsCustodianOnly    bool           `protobuf:"varint,10,opt,name=is_custodian_only,json=isCustodianOnly,proto3" json:"is_custodian_only,omitempty"`
+	Status             ProtocolStatus `protobuf:"varint,11,opt,name=status,proto3,enum=scalar.protocol.v1beta1.ProtocolStatus" json:"status,omitempty"`
+}
+
+func (m *CreateProtocolRequest) Reset()         { *m = CreateProtocolRequest{} }
+func (m *CreateProtocolRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateProtocolRequest) ProtoMessage()    {}
+func (*CreateProtocolRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{0}
+}
+func (m *CreateProtocolRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CreateProtocolRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CreateProtocolRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *CreateProtocolRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateProtocolRequest.Merge(m, src)
+}
+func (m *CreateProtocolRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *CreateProtocolRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateProtocolRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateProtocolRequest proto.InternalMessageInfo
+
+func (m *CreateProtocolRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *CreateProtocolRequest) GetScalarPk() []byte {
+	if m != nil {
+		return m.ScalarPk
+	}
+	return nil
+}
+
+func (m *CreateProtocolRequest) GetServiceTag() string {
+	if m != nil {
+		return m.ServiceTag
+	}
+	return ""
+}
+
+func (m *CreateProtocolRequest) GetBtcSignerEndpoint() string {
+	if m != nil {
+		return m.BtcSignerEndpoint
+	}
+	return ""
+}
+
+func (m *CreateProtocolRequest) GetBtcSignerAccessToken() string {
+	if m != nil {
+		return m.BtcSignerAccessToken
+	}
+	return ""
+}
+
+func (m *CreateProtocolRequest) GetBtcSignerAddress() string {
+	if m != nil {
+		return m.BtcSignerAddress
+	}
+	return ""
+}
+
+func (m *CreateProtocolRequest) GetBtcSignerPk() []byte {
+	if m != nil {
+		return m.BtcSignerPk
+	}
+	return nil
+}
+
+func (m *CreateProtocolRequest) GetBtcNetwork() string {
+	if m != nil {
+		return m.BtcNetwork
+	}
+	return ""
+}
+
+func (m *CreateProtocolRequest) GetCustodianGroupName() string {
+	if m != nil {
+		return m.CustodianGroupName
+	}
+	return ""
+}
+
+func (m *CreateProtocolRequest) GetIsCustodianOnly() bool {
+	if m != nil {
+		return m.IsCustodianOnly
+	}
+	return false
+}
+
+func (m *CreateProtocolRequest) GetStatus() ProtocolStatus {
+	if m != nil {
+		return m.Status
+	}
+	return StatusUnspecified
+}
+
+type CreateProtocolResponse struct {
+}
+
+func (m *CreateProtocolResponse) Reset()         { *m = CreateProtocolResponse{} }
+func (m *CreateProtocolResponse) String() string { return proto.CompactTextString(m) }
+func (*CreateProtocolResponse) ProtoMessage()    {}
+func (*CreateProtocolResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{1}
+}
+func (m *CreateProtocolResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CreateProtocolResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CreateProtocolResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *CreateProtocolResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateProtocolResponse.Merge(m, src)
+}
+func (m *CreateProtocolResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *CreateProtocolResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateProtocolResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateProtocolResponse proto.InternalMessageInfo
+
+type DeleteProtocolRequest struct {
+	ProtocolName string `protobuf:"bytes,1,opt,name=protocol_name,json=protocolName,proto3" json:"protocol_name,omitempty"`
+}
+
+func (m *DeleteProtocolRequest) Reset()         { *m = DeleteProtocolRequest{} }
+func (m *DeleteProtocolRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteProtocolRequest) ProtoMessage()    {}
+func (*DeleteProtocolRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{2}
+}
+func (m *DeleteProtocolRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *DeleteProtocolRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_DeleteProtocolRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *DeleteProtocolRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteProtocolRequest.Merge(m, src)
+}
+func (m *DeleteProtocolRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *DeleteProtocolRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteProtocolRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteProtocolRequest proto.InternalMessageInfo
+
+func (m *DeleteProtocolRequest) GetProtocolName() string {
+	if m != nil {
+		return m.ProtocolName
+	}
+	return ""
+}
+
+type DeleteProtocolResponse struct {
+}
+
+func (m *DeleteProtocolResponse) Reset()         { *m = DeleteProtocolResponse{} }
+func (m *DeleteProtocolResponse) String() string { return proto.CompactTextString(m) }
+func (*DeleteProtocolResponse) ProtoMessage()    {}
+func (*DeleteProtocolResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{3}
+}
+func (m *DeleteProtocolResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *DeleteProtocolResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_DeleteProtocolResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *DeleteProtocolResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteProtocolResponse.Merge(m, src)
+}
+func (m *DeleteProtocolResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *DeleteProtocolResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteProtocolResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteProtocolResponse proto.InternalMessageInfo
+
+type UpdateProtocolBasicInfoRequest struct {
+	ProtocolName string `protobuf:"bytes,1,opt,name=protocol_name,json=protocolName,proto3" json:"protocol_name,omitempty"`
+	ServiceTag   string `protobuf:"bytes,2,opt,name=service_tag,json=serviceTag,proto3" json:"service_tag,omitempty"`
+}
+
+func (m *UpdateProtocolBasicInfoRequest) Reset()         { *m = UpdateProtocolBasicInfoRequest{} }
+func (m *UpdateProtocolBasicInfoRequest) String() string { return proto.CompactTextString(m) }
+func (*UpdateProtocolBasicInfoRequest) ProtoMessage()    {}
+func (*UpdateProtocolBasicInfoRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{4}
+}
+func (m *UpdateProtocolBasicInfoRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *UpdateProtocolBasicInfoRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_UpdateProtocolBasicInfoRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *UpdateProtocolBasicInfoRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateProtocolBasicInfoRequest.Merge(m, src)
+}
+func (m *UpdateProtocolBasicInfoRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *UpdateProtocolBasicInfoRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateProtocolBasicInfoRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateProtocolBasicInfoRequest proto.InternalMessageInfo
+
+func (m *UpdateProtocolBasicInfoRequest) GetProtocolName() string {
+	if m != nil {
+		return m.ProtocolName
+	}
+	return ""
+}
+
+func (m *UpdateProtocolBasicInfoRequest) GetServiceTag() string {
+	if m != nil {
+		return m.ServiceTag
+	}
+	return ""
+}
+
+type UpdateProtocolBasicInfoResponse struct {
+}
+
+func (m *UpdateProtocolBasicInfoResponse) Reset()         { *m = UpdateProtocolBasicInfoResponse{} }
+func (m *UpdateProtocolBasicInfoResponse) String() string { return proto.CompactTextString(m) }
+func (*UpdateProtocolBasicInfoResponse) ProtoMessage()    {}
+func (*UpdateProtocolBasicInfoResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{5}
+}
+func (m *UpdateProtocolBasicInfoResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *UpdateProtocolBasicInfoResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_UpdateProtocolBasicInfoResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *UpdateProtocolBasicInfoResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateProtocolBasicInfoResponse.Merge(m, src)
+}
+func (m *UpdateProtocolBasicInfoResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *UpdateProtocolBasicInfoResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateProtocolBasicInfoResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateProtocolBasicInfoResponse proto.InternalMessageInfo
+
+type SetProtocolStatusRequest struct {
+	ProtocolName string         `protobuf:"bytes,1,opt,name=protocol_name,json=protocolName,proto3" json:"protocol_name,omitempty"`
+	Status       ProtocolStatus `protobuf:"varint,2,opt,name=status,proto3,enum=scalar.protocol.v1beta1.ProtocolStatus" json:"status,omitempty"`
+}
+
+func (m *SetProtocolStatusRequest) Reset()         { *m = SetProtocolStatusRequest{} }
+func (m *SetProtocolStatusRequest) String() string { return proto.CompactTextString(m) }
+func (*SetProtocolStatusRequest) ProtoMessage()    {}
+func (*SetProtocolStatusRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{6}
+}
+func (m *SetProtocolStatusRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *SetProtocolStatusRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_SetProtocolStatusRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *SetProtocolStatusRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetProtocolStatusRequest.Merge(m, src)
+}
+func (m *SetProtocolStatusRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *SetProtocolStatusRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetProtocolStatusRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetProtocolStatusRequest proto.InternalMessageInfo
+
+func (m *SetProtocolStatusRequest) GetProtocolName() string {
+	if m != nil {
+		return m.ProtocolName
+	}
+	return ""
+}
+
+func (m *SetProtocolStatusRequest) GetStatus() ProtocolStatus {
+	if m != nil {
+		return m.Status
+	}
+	return StatusUnspecified
+}
+
+type SetProtocolStatusResponse struct {
+	Protocol *Protocol `protobuf:"bytes,1,opt,name=protocol,proto3" json:"protocol,omitempty"`
+}
+
+func (m *SetProtocolStatusResponse) Reset()         { *m = SetProtocolStatusResponse{} }
+func (m *SetProtocolStatusResponse) String() string { return proto.CompactTextString(m) }
+func (*SetProtocolStatusResponse) ProtoMessage()    {}
+func (*SetProtocolStatusResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{7}
+}
+func (m *SetProtocolStatusResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *SetProtocolStatusResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_SetProtocolStatusResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *SetProtocolStatusResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetProtocolStatusResponse.Merge(m, src)
+}
+func (m *SetProtocolStatusResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *SetProtocolStatusResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetProtocolStatusResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetProtocolStatusResponse proto.InternalMessageInfo
+
+func (m *SetProtocolStatusResponse) GetProtocol() *Protocol {
+	if m != nil {
+		return m.Protocol
+	}
+	return nil
+}
+
+type SetProtocolCustodianGroupRequest struct {
+	ProtocolName       string `protobuf:"bytes,1,opt,name=protocol_name,json=protocolName,proto3" json:"protocol_name,omitempty"`
+	BtcNetwork         string `protobuf:"bytes,2,opt,name=btc_network,json=btcNetwork,proto3" json:"btc_network,omitempty"`
+	CustodianGroupName string `protobuf:"bytes,3,opt,name=custodian_group_name,json=custodianGroupName,proto3" json:"custodian_group_name,omitempty"`
+}
+
+func (m *SetProtocolCustodianGroupRequest) Reset()         { *m = SetProtocolCustodianGroupRequest{} }
+func (m *SetProtocolCustodianGroupRequest) String() string { return proto.CompactTextString(m) }
+func (*SetProtocolCustodianGroupRequest) ProtoMessage()    {}
+func (*SetProtocolCustodianGroupRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{8}
+}
+func (m *SetProtocolCustodianGroupRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *SetProtocolCustodianGroupRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_SetProtocolCustodianGroupRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *SetProtocolCustodianGroupRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetProtocolCustodianGroupRequest.Merge(m, src)
+}
+func (m *SetProtocolCustodianGroupRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *SetProtocolCustodianGroupRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetProtocolCustodianGroupRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetProtocolCustodianGroupRequest proto.InternalMessageInfo
+
+func (m *SetProtocolCustodianGroupRequest) GetProtocolName() string {
+	if m != nil {
+		return m.ProtocolName
+	}
+	return ""
+}
+
+func (m *SetProtocolCustodianGroupRequest) GetBtcNetwork() string {
+	if m != nil {
+		return m.BtcNetwork
+	}
+	return ""
+}
+
+func (m *SetProtocolCustodianGroupRequest) GetCustodianGroupName() string {
+	if m != nil {
+		return m.CustodianGroupName
+	}
+	return ""
+}
+
+type SetProtocolCustodianGroupResponse struct {
+}
+
+func (m *SetProtocolCustodianGroupResponse) Reset()         { *m = SetProtocolCustodianGroupResponse{} }
+func (m *SetProtocolCustodianGroupResponse) String() string { return proto.CompactTextString(m) }
+func (*SetProtocolCustodianGroupResponse) ProtoMessage()    {}
+func (*SetProtocolCustodianGroupResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{9}
+}
+func (m *SetProtocolCustodianGroupResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *SetProtocolCustodianGroupResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_SetProtocolCustodianGroupResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *SetProtocolCustodianGroupResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetProtocolCustodianGroupResponse.Merge(m, src)
+}
+func (m *SetProtocolCustodianGroupResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *SetProtocolCustodianGroupResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetProtocolCustodianGroupResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetProtocolCustodianGroupResponse proto.InternalMessageInfo
+
+type SetProtocolBtcChainRequest struct {
+	ProtocolName         string `protobuf:"bytes,1,opt,name=protocol_name,json=protocolName,proto3" json:"protocol_name,omitempty"`
+	BtcSignerEndpoint    string `protobuf:"bytes,2,opt,name=btc_signer_endpoint,json=btcSignerEndpoint,proto3" json:"btc_signer_endpoint,omitempty"`
+	BtcSignerAccessToken string `protobuf:"bytes,3,opt,name=btc_signer_access_token,json=btcSignerAccessToken,proto3" json:"btc_signer_access_token,omitempty"`
+	BtcSignerAddress     string `protobuf:"bytes,4,opt,name=btc_signer_address,json=btcSignerAddress,proto3" json:"btc_signer_address,omitempty"`
+	BtcSignerPk          []byte `protobuf:"bytes,5,opt,name=btc_signer_pk,json=btcSignerPk,proto3" json:"btc_signer_pk,omitempty"`
+}
+
+func (m *SetProtocolBtcChainRequest) Reset()         { *m = SetProtocolBtcChainRequest{} }
+func (m *SetProtocolBtcChainRequest) String() string { return proto.CompactTextString(m) }
+func (*SetProtocolBtcChainRequest) ProtoMessage()    {}
+func (*SetProtocolBtcChainRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{10}
+}
+func (m *SetProtocolBtcChainRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *SetProtocolBtcChainRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_SetProtocolBtcChainRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *SetProtocolBtcChainRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetProtocolBtcChainRequest.Merge(m, src)
+}
+func (m *SetProtocolBtcChainRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *SetProtocolBtcChainRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetProtocolBtcChainRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetProtocolBtcChainRequest proto.InternalMessageInfo
+
+func (m *SetProtocolBtcChainRequest) GetProtocolName() string {
+	if m != nil {
+		return m.ProtocolName
+	}
+	return ""
+}
+
+func (m *SetProtocolBtcChainRequest) GetBtcSignerEndpoint() string {
+	if m != nil {
+		return m.BtcSignerEndpoint
+	}
+	return ""
+}
+
+func (m *SetProtocolBtcChainRequest) GetBtcSignerAccessToken() string {
+	if m != nil {
+		return m.BtcSignerAccessToken
+	}
+	return ""
+}
+
+func (m *SetProtocolBtcChainRequest) GetBtcSignerAddress() string {
+	if m != nil {
+		return m.BtcSignerAddress
+	}
+	return ""
+}
+
+func (m *SetProtocolBtcChainRequest) GetBtcSignerPk() []byte {
+	if m != nil {
+		return m.BtcSignerPk
+	}
+	return nil
+}
+
+type SetProtocolBtcChainResponse struct {
+}
+
+func (m *SetProtocolBtcChainResponse) Reset()         { *m = SetProtocolBtcChainResponse{} }
+func (m *SetProtocolBtcChainResponse) String() string { return proto.CompactTextString(m) }
+func (*SetProtocolBtcChainResponse) ProtoMessage()    {}
+func (*SetProtocolBtcChainResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{11}
+}
+func (m *SetProtocolBtcChainResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *SetProtocolBtcChainResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_SetProtocolBtcChainResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *SetProtocolBtcChainResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetProtocolBtcChainResponse.Merge(m, src)
+}
+func (m *SetProtocolBtcChainResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *SetProtocolBtcChainResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetProtocolBtcChainResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetProtocolBtcChainResponse proto.InternalMessageInfo
+
+type AddDestinationChainToProtocolRequest struct {
+	ProtocolName              string `protobuf:"bytes,1,opt,name=protocol_name,json=protocolName,proto3" json:"protocol_name,omitempty"`
+	ChainName                 string `protobuf:"bytes,2,opt,name=chain_name,json=chainName,proto3" json:"chain_name,omitempty"`
+	ChainId                   uint64 `protobuf:"varint,3,opt,name=chain_id,json=chainId,proto3" json:"chain_id,omitempty"`
+	ChainType                 string `protobuf:"bytes,4,opt,name=chain_type,json=chainType,proto3" json:"chain_type,omitempty"`
+	ChainSmartContractAddress []byte `protobuf:"bytes,5,opt,name=chain_smart_contract_address,json=chainSmartContractAddress,proto3" json:"chain_smart_contract_address,omitempty"`
+	// Fields for ERC20 token
+	Token types.ERC20TokenMetadata `protobuf:"bytes,6,opt,name=token,proto3" json:"token"`
+}
+
+func (m *AddDestinationChainToProtocolRequest) Reset()         { *m = AddDestinationChainToProtocolRequest{} }
+func (m *AddDestinationChainToProtocolRequest) String() string { return proto.CompactTextString(m) }
+func (*AddDestinationChainToProtocolRequest) ProtoMessage()    {}
+func (*AddDestinationChainToProtocolRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{12}
+}
+func (m *AddDestinationChainToProtocolRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *AddDestinationChainToProtocolRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_AddDestinationChainToProtocolRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *AddDestinationChainToProtocolRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddDestinationChainToProtocolRequest.Merge(m, src)
+}
+func (m *AddDestinationChainToProtocolRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *AddDestinationChainToProtocolRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddDestinationChainToProtocolRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddDestinationChainToProtocolRequest proto.InternalMessageInfo
+
+func (m *AddDestinationChainToProtocolRequest) GetProtocolName() string {
+	if m != nil {
+		return m.ProtocolName
+	}
+	return ""
+}
+
+func (m *AddDestinationChainToProtocolRequest) GetChainName() string {
+	if m != nil {
+		return m.ChainName
+	}
+	return ""
+}
+
+func (m *AddDestinationChainToProtocolRequest) GetChainId() uint64 {
+	if m != nil {
+		return m.ChainId
+	}
+	return 0
+}
+
+func (m *AddDestinationChainToProtocolRequest) GetChainType() string {
+	if m != nil {
+		return m.ChainType
+	}
+	return ""
+}
+
+func (m *AddDestinationChainToProtocolRequest) GetChainSmartContractAddress() []byte {
+	if m != nil {
+		return m.ChainSmartContractAddress
+	}
+	return nil
+}
+
+func (m *AddDestinationChainToProtocolRequest) GetToken() types.ERC20TokenMetadata {
+	if m != nil {
+		return m.Token
+	}
+	return types.ERC20TokenMetadata{}
+}
+
+type AddDestinationChainToProtocolResponse struct {
+}
+
+func (m *AddDestinationChainToProtocolResponse) Reset()         { *m = AddDestinationChainToProtocolResponse{} }
+func (m *AddDestinationChainToProtocolResponse) String() string { return proto.CompactTextString(m) }
+func (*AddDestinationChainToProtocolResponse) ProtoMessage()    {}
+func (*AddDestinationChainToProtocolResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{13}
+}
+func (m *AddDestinationChainToProtocolResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *AddDestinationChainToProtocolResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_AddDestinationChainToProtocolResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *AddDestinationChainToProtocolResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddDestinationChainToProtocolResponse.Merge(m, src)
+}
+func (m *AddDestinationChainToProtocolResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *AddDestinationChainToProtocolResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddDestinationChainToProtocolResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddDestinationChainToProtocolResponse proto.InternalMessageInfo
+
+type DeleteDestinationChainFromProtocolRequest struct {
+	ProtocolName              string `protobuf:"bytes,1,opt,name=protocol_name,json=protocolName,proto3" json:"protocol_name,omitempty"`
+	ChainId                   uint64 `protobuf:"varint,2,opt,name=chain_id,json=chainId,proto3" json:"chain_id,omitempty"`
+	ChainType                 string `protobuf:"bytes,3,opt,name=chain_type,json=chainType,proto3" json:"chain_type,omitempty"`
+	ChainSmartContractAddress []byte `protobuf:"bytes,4,opt,name=chain_smart_contract_address,json=chainSmartContractAddress,proto3" json:"chain_smart_contract_address,omitempty"`
+}
+
+func (m *DeleteDestinationChainFromProtocolRequest) Reset() {
+	*m = DeleteDestinationChainFromProtocolRequest{}
+}
+func (m *DeleteDestinationChainFromProtocolRequest) String() string {
+	return proto.CompactTextString(m)
+}
+func (*DeleteDestinationChainFromProtocolRequest) ProtoMessage() {}
+func (*DeleteDestinationChainFromProtocolRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{14}
+}
+func (m *DeleteDestinationChainFromProtocolRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *DeleteDestinationChainFromProtocolRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_DeleteDestinationChainFromProtocolRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *DeleteDestinationChainFromProtocolRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteDestinationChainFromProtocolRequest.Merge(m, src)
+}
+func (m *DeleteDestinationChainFromProtocolRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *DeleteDestinationChainFromProtocolRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteDestinationChainFromProtocolRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteDestinationChainFromProtocolRequest proto.InternalMessageInfo
+
+func (m *DeleteDestinationChainFromProtocolRequest) GetProtocolName() string {
+	if m != nil {
+		return m.ProtocolName
+	}
+	return ""
+}
+
+func (m *DeleteDestinationChainFromProtocolRequest) GetChainId() uint64 {
+	if m != nil {
+		return m.ChainId
+	}
+	return 0
+}
+
+func (m *DeleteDestinationChainFromProtocolRequest) GetChainType() string {
+	if m != nil {
+		return m.ChainType
+	}
+	return ""
+}
+
+func (m *DeleteDestinationChainFromProtocolRequest) GetChainSmartContractAddress() []byte {
+	if m != nil {
+		return m.ChainSmartContractAddress
+	}
+	return nil
+}
+
+type DeleteDestinationChainFromProtocolResponse struct {
+}
+
+func (m *DeleteDestinationChainFromProtocolResponse) Reset() {
+	*m = DeleteDestinationChainFromProtocolResponse{}
+}
+func (m *DeleteDestinationChainFromProtocolResponse) String() string {
+	return proto.CompactTextString(m)
+}
+func (*DeleteDestinationChainFromProtocolResponse) ProtoMessage() {}
+func (*DeleteDestinationChainFromProtocolResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{15}
+}
+func (m *DeleteDestinationChainFromProtocolResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *DeleteDestinationChainFromProtocolResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_DeleteDestinationChainFromProtocolResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *DeleteDestinationChainFromProtocolResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteDestinationChainFromProtocolResponse.Merge(m, src)
+}
+func (m *DeleteDestinationChainFromProtocolResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *DeleteDestinationChainFromProtocolResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteDestinationChainFromProtocolResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteDestinationChainFromProtocolResponse proto.InternalMessageInfo
+
+type AddCustodianToCustodianGroupRequest struct {
+	ProtocolName       string `protobuf:"bytes,1,opt,name=protocol_name,json=protocolName,proto3" json:"protocol_name,omitempty"`
+	CustodianGroupName string `protobuf:"bytes,2,opt,name=custodian_group_name,json=custodianGroupName,proto3" json:"custodian_group_name,omitempty"`
+	Name               string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	BtcPk              []byte `protobuf:"bytes,4,opt,name=btc_pk,json=btcPk,proto3" json:"btc_pk,omitempty"`
+	// "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
+	Status      ProtocolStatus `protobuf:"varint,5,opt,name=status,proto3,enum=scalar.protocol.v1beta1.ProtocolStatus" json:"status,omitempty"`
+	Description string         `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
+}
+
+func (m *AddCustodianToCustodianGroupRequest) Reset()         { *m = AddCustodianToCustodianGroupRequest{} }
+func (m *AddCustodianToCustodianGroupRequest) String() string { return proto.CompactTextString(m) }
+func (*AddCustodianToCustodianGroupRequest) ProtoMessage()    {}
+func (*AddCustodianToCustodianGroupRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{16}
+}
+func (m *AddCustodianToCustodianGroupRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *AddCustodianToCustodianGroupRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_AddCustodianToCustodianGroupRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *AddCustodianToCustodianGroupRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddCustodianToCustodianGroupRequest.Merge(m, src)
+}
+func (m *AddCustodianToCustodianGroupRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *AddCustodianToCustodianGroupRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddCustodianToCustodianGroupRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddCustodianToCustodianGroupRequest proto.InternalMessageInfo
+
+func (m *AddCustodianToCustodianGroupRequest) GetProtocolName() string {
+	if m != nil {
+		return m.ProtocolName
+	}
+	return ""
+}
+
+func (m *AddCustodianToCustodianGroupRequest) GetCustodianGroupName() string {
+	if m != nil {
+		return m.CustodianGroupName
+	}
+	return ""
+}
+
+func (m *AddCustodianToCustodianGroupRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *AddCustodianToCustodianGroupRequest) GetBtcPk() []byte {
+	if m != nil {
+		return m.BtcPk
+	}
+	return nil
+}
+
+func (m *AddCustodianToCustodianGroupRequest) GetStatus() ProtocolStatus {
+	if m != nil {
+		return m.Status
+	}
+	return StatusUnspecified
+}
+
+func (m *AddCustodianToCustodianGroupRequest) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+type AddCustodianToCustodianGroupResponse struct {
+}
+
+func (m *AddCustodianToCustodianGroupResponse) Reset()         { *m = AddCustodianToCustodianGroupResponse{} }
+func (m *AddCustodianToCustodianGroupResponse) String() string { return proto.CompactTextString(m) }
+func (*AddCustodianToCustodianGroupResponse) ProtoMessage()    {}
+func (*AddCustodianToCustodianGroupResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{17}
+}
+func (m *AddCustodianToCustodianGroupResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *AddCustodianToCustodianGroupResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_AddCustodianToCustodianGroupResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *AddCustodianToCustodianGroupResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddCustodianToCustodianGroupResponse.Merge(m, src)
+}
+func (m *AddCustodianToCustodianGroupResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *AddCustodianToCustodianGroupResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddCustodianToCustodianGroupResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddCustodianToCustodianGroupResponse proto.InternalMessageInfo
+
+type DeleteCustodianFromCustodianGroupRequest struct {
+	ProtocolName       string `protobuf:"bytes,1,opt,name=protocol_name,json=protocolName,proto3" json:"protocol_name,omitempty"`
+	CustodianGroupName string `protobuf:"bytes,2,opt,name=custodian_group_name,json=custodianGroupName,proto3" json:"custodian_group_name,omitempty"`
+	CustodianName      string `protobuf:"bytes,3,opt,name=custodian_name,json=custodianName,proto3" json:"custodian_name,omitempty"`
+}
+
+func (m *DeleteCustodianFromCustodianGroupRequest) Reset() {
+	*m = DeleteCustodianFromCustodianGroupRequest{}
+}
+func (m *DeleteCustodianFromCustodianGroupRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteCustodianFromCustodianGroupRequest) ProtoMessage()    {}
+func (*DeleteCustodianFromCustodianGroupRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{18}
+}
+func (m *DeleteCustodianFromCustodianGroupRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *DeleteCustodianFromCustodianGroupRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_DeleteCustodianFromCustodianGroupRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *DeleteCustodianFromCustodianGroupRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteCustodianFromCustodianGroupRequest.Merge(m, src)
+}
+func (m *DeleteCustodianFromCustodianGroupRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *DeleteCustodianFromCustodianGroupRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteCustodianFromCustodianGroupRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteCustodianFromCustodianGroupRequest proto.InternalMessageInfo
+
+func (m *DeleteCustodianFromCustodianGroupRequest) GetProtocolName() string {
+	if m != nil {
+		return m.ProtocolName
+	}
+	return ""
+}
+
+func (m *DeleteCustodianFromCustodianGroupRequest) GetCustodianGroupName() string {
+	if m != nil {
+		return m.CustodianGroupName
+	}
+	return ""
+}
+
+func (m *DeleteCustodianFromCustodianGroupRequest) GetCustodianName() string {
+	if m != nil {
+		return m.CustodianName
+	}
+	return ""
+}
+
+type DeleteCustodianFromCustodianGroupResponse struct {
+}
+
+func (m *DeleteCustodianFromCustodianGroupResponse) Reset() {
+	*m = DeleteCustodianFromCustodianGroupResponse{}
+}
+func (m *DeleteCustodianFromCustodianGroupResponse) String() string {
+	return proto.CompactTextString(m)
+}
+func (*DeleteCustodianFromCustodianGroupResponse) ProtoMessage() {}
+func (*DeleteCustodianFromCustodianGroupResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{19}
+}
+func (m *DeleteCustodianFromCustodianGroupResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *DeleteCustodianFromCustodianGroupResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_DeleteCustodianFromCustodianGroupResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *DeleteCustodianFromCustodianGroupResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteCustodianFromCustodianGroupResponse.Merge(m, src)
+}
+func (m *DeleteCustodianFromCustodianGroupResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *DeleteCustodianFromCustodianGroupResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteCustodianFromCustodianGroupResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteCustodianFromCustodianGroupResponse proto.InternalMessageInfo
+
+type UpdateCustodianGroupRequest struct {
+	Name       string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	BtcNetwork string `protobuf:"bytes,2,opt,name=btc_network,json=btcNetwork,proto3" json:"btc_network,omitempty"`
+	Quorum     uint32 `protobuf:"varint,3,opt,name=quorum,proto3" json:"quorum,omitempty"`
+}
+
+func (m *UpdateCustodianGroupRequest) Reset()         { *m = UpdateCustodianGroupRequest{} }
+func (m *UpdateCustodianGroupRequest) String() string { return proto.CompactTextString(m) }
+func (*UpdateCustodianGroupRequest) ProtoMessage()    {}
+func (*UpdateCustodianGroupRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{20}
+}
+func (m *UpdateCustodianGroupRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *UpdateCustodianGroupRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_UpdateCustodianGroupRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *UpdateCustodianGroupRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateCustodianGroupRequest.Merge(m, src)
+}
+func (m *UpdateCustodianGroupRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *UpdateCustodianGroupRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateCustodianGroupRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateCustodianGroupRequest proto.InternalMessageInfo
+
+func (m *UpdateCustodianGroupRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *UpdateCustodianGroupRequest) GetBtcNetwork() string {
+	if m != nil {
+		return m.BtcNetwork
+	}
+	return ""
+}
+
+func (m *UpdateCustodianGroupRequest) GetQuorum() uint32 {
+	if m != nil {
+		return m.Quorum
+	}
+	return 0
+}
+
+type UpdateCustodianGroupResponse struct {
+}
+
+func (m *UpdateCustodianGroupResponse) Reset()         { *m = UpdateCustodianGroupResponse{} }
+func (m *UpdateCustodianGroupResponse) String() string { return proto.CompactTextString(m) }
+func (*UpdateCustodianGroupResponse) ProtoMessage()    {}
+func (*UpdateCustodianGroupResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{21}
+}
+func (m *UpdateCustodianGroupResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *UpdateCustodianGroupResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_UpdateCustodianGroupResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *UpdateCustodianGroupResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateCustodianGroupResponse.Merge(m, src)
+}
+func (m *UpdateCustodianGroupResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *UpdateCustodianGroupResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateCustodianGroupResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateCustodianGroupResponse proto.InternalMessageInfo
+
+type CreateCustodianRequest struct {
+	Name        string         `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	BtcPk       []byte         `protobuf:"bytes,2,opt,name=btc_pk,json=btcPk,proto3" json:"btc_pk,omitempty"`
+	Status      ProtocolStatus `protobuf:"varint,3,opt,name=status,proto3,enum=scalar.protocol.v1beta1.ProtocolStatus" json:"status,omitempty"`
+	Description string         `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+}
+
+func (m *CreateCustodianRequest) Reset()         { *m = CreateCustodianRequest{} }
+func (m *CreateCustodianRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateCustodianRequest) ProtoMessage()    {}
+func (*CreateCustodianRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{22}
+}
+func (m *CreateCustodianRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CreateCustodianRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CreateCustodianRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *CreateCustodianRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateCustodianRequest.Merge(m, src)
+}
+func (m *CreateCustodianRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *CreateCustodianRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateCustodianRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateCustodianRequest proto.InternalMessageInfo
+
+func (m *CreateCustodianRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *CreateCustodianRequest) GetBtcPk() []byte {
+	if m != nil {
+		return m.BtcPk
+	}
+	return nil
+}
+
+func (m *CreateCustodianRequest) GetStatus() ProtocolStatus {
+	if m != nil {
+		return m.Status
+	}
+	return StatusUnspecified
+}
+
+func (m *CreateCustodianRequest) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+type CreateCustodianResponse struct {
+}
+
+func (m *CreateCustodianResponse) Reset()         { *m = CreateCustodianResponse{} }
+func (m *CreateCustodianResponse) String() string { return proto.CompactTextString(m) }
+func (*CreateCustodianResponse) ProtoMessage()    {}
+func (*CreateCustodianResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{23}
+}
+func (m *CreateCustodianResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CreateCustodianResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CreateCustodianResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *CreateCustodianResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateCustodianResponse.Merge(m, src)
+}
+func (m *CreateCustodianResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *CreateCustodianResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateCustodianResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateCustodianResponse proto.InternalMessageInfo
+
+type UpdateCustodianRequest struct {
+	Name        string         `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	BtcPk       []byte         `protobuf:"bytes,2,opt,name=btc_pk,json=btcPk,proto3" json:"btc_pk,omitempty"`
+	Status      ProtocolStatus `protobuf:"varint,3,opt,name=status,proto3,enum=scalar.protocol.v1beta1.ProtocolStatus" json:"status,omitempty"`
+	Description string         `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+}
+
+func (m *UpdateCustodianRequest) Reset()         { *m = UpdateCustodianRequest{} }
+func (m *UpdateCustodianRequest) String() string { return proto.CompactTextString(m) }
+func (*UpdateCustodianRequest) ProtoMessage()    {}
+func (*UpdateCustodianRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{24}
+}
+func (m *UpdateCustodianRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *UpdateCustodianRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_UpdateCustodianRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *UpdateCustodianRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateCustodianRequest.Merge(m, src)
+}
+func (m *UpdateCustodianRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *UpdateCustodianRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateCustodianRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateCustodianRequest proto.InternalMessageInfo
+
+func (m *UpdateCustodianRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *UpdateCustodianRequest) GetBtcPk() []byte {
+	if m != nil {
+		return m.BtcPk
+	}
+	return nil
+}
+
+func (m *UpdateCustodianRequest) GetStatus() ProtocolStatus {
+	if m != nil {
+		return m.Status
+	}
+	return StatusUnspecified
+}
+
+func (m *UpdateCustodianRequest) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+type UpdateCustodianResponse struct {
+}
+
+func (m *UpdateCustodianResponse) Reset()         { *m = UpdateCustodianResponse{} }
+func (m *UpdateCustodianResponse) String() string { return proto.CompactTextString(m) }
+func (*UpdateCustodianResponse) ProtoMessage()    {}
+func (*UpdateCustodianResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{25}
+}
+func (m *UpdateCustodianResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *UpdateCustodianResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_UpdateCustodianResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *UpdateCustodianResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateCustodianResponse.Merge(m, src)
+}
+func (m *UpdateCustodianResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *UpdateCustodianResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateCustodianResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateCustodianResponse proto.InternalMessageInfo
+
+type UpdateBtcChainRequest struct {
+	ProtocolName         string `protobuf:"bytes,1,opt,name=protocol_name,json=protocolName,proto3" json:"protocol_name,omitempty"`
+	BtcSignerEndpoint    string `protobuf:"bytes,2,opt,name=btc_signer_endpoint,json=btcSignerEndpoint,proto3" json:"btc_signer_endpoint,omitempty"`
+	BtcSignerAccessToken string `protobuf:"bytes,3,opt,name=btc_signer_access_token,json=btcSignerAccessToken,proto3" json:"btc_signer_access_token,omitempty"`
+	BtcSignerAddress     string `protobuf:"bytes,4,opt,name=btc_signer_address,json=btcSignerAddress,proto3" json:"btc_signer_address,omitempty"`
+	BtcSignerPk          []byte `protobuf:"bytes,5,opt,name=btc_signer_pk,json=btcSignerPk,proto3" json:"btc_signer_pk,omitempty"`
+	BtcNetwork           string `protobuf:"bytes,6,opt,name=btc_network,json=btcNetwork,proto3" json:"btc_network,omitempty"`
+}
+
+func (m *UpdateBtcChainRequest) Reset()         { *m = UpdateBtcChainRequest{} }
+func (m *UpdateBtcChainRequest) String() string { return proto.CompactTextString(m) }
+func (*UpdateBtcChainRequest) ProtoMessage()    {}
+func (*UpdateBtcChainRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{26}
+}
+func (m *UpdateBtcChainRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *UpdateBtcChainRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_UpdateBtcChainRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *UpdateBtcChainRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateBtcChainRequest.Merge(m, src)
+}
+func (m *UpdateBtcChainRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *UpdateBtcChainRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateBtcChainRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateBtcChainRequest proto.InternalMessageInfo
+
+func (m *UpdateBtcChainRequest) GetProtocolName() string {
+	if m != nil {
+		return m.ProtocolName
+	}
+	return ""
+}
+
+func (m *UpdateBtcChainRequest) GetBtcSignerEndpoint() string {
+	if m != nil {
+		return m.BtcSignerEndpoint
+	}
+	return ""
+}
+
+func (m *UpdateBtcChainRequest) GetBtcSignerAccessToken() string {
+	if m != nil {
+		return m.BtcSignerAccessToken
+	}
+	return ""
+}
+
+func (m *UpdateBtcChainRequest) GetBtcSignerAddress() string {
+	if m != nil {
+		return m.BtcSignerAddress
+	}
+	return ""
+}
+
+func (m *UpdateBtcChainRequest) GetBtcSignerPk() []byte {
+	if m != nil {
+		return m.BtcSignerPk
+	}
+	return nil
+}
+
+func (m *UpdateBtcChainRequest) GetBtcNetwork() string {
+	if m != nil {
+		return m.BtcNetwork
+	}
+	return ""
+}
+
+type UpdateBtcChainResponse struct {
+}
+
+func (m *UpdateBtcChainResponse) Reset()         { *m = UpdateBtcChainResponse{} }
+func (m *UpdateBtcChainResponse) String() string { return proto.CompactTextString(m) }
+func (*UpdateBtcChainResponse) ProtoMessage()    {}
+func (*UpdateBtcChainResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_138d22862e0063c2, []int{27}
+}
+func (m *UpdateBtcChainResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *UpdateBtcChainResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_UpdateBtcChainResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *UpdateBtcChainResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateBtcChainResponse.Merge(m, src)
+}
+func (m *UpdateBtcChainResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *UpdateBtcChainResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateBtcChainResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateBtcChainResponse proto.InternalMessageInfo
+
+func init() {
+	proto.RegisterType((*CreateProtocolRequest)(nil), "scalar.protocol.v1beta1.CreateProtocolRequest")
+	proto.RegisterType((*CreateProtocolResponse)(nil), "scalar.protocol.v1beta1.CreateProtocolResponse")
+	proto.RegisterType((*DeleteProtocolRequest)(nil), "scalar.protocol.v1beta1.DeleteProtocolRequest")
+	proto.RegisterType((*DeleteProtocolResponse)(nil), "scalar.protocol.v1beta1.DeleteProtocolResponse")
+	proto.RegisterType((*UpdateProtocolBasicInfoRequest)(nil), "scalar.protocol.v1beta1.UpdateProtocolBasicInfoRequest")
+	proto.RegisterType((*UpdateProtocolBasicInfoResponse)(nil), "scalar.protocol.v1beta1.UpdateProtocolBasicInfoResponse")
+	proto.RegisterType((*SetProtocolStatusRequest)(nil), "scalar.protocol.v1beta1.SetProtocolStatusRequest")
+	proto.RegisterType((*SetProtocolStatusResponse)(nil), "scalar.protocol.v1beta1.SetProtocolStatusResponse")
+	proto.RegisterType((*SetProtocolCustodianGroupRequest)(nil), "scalar.protocol.v1beta1.SetProtocolCustodianGroupRequest")
+	proto.RegisterType((*SetProtocolCustodianGroupResponse)(nil), "scalar.protocol.v1beta1.SetProtocolCustodianGroupResponse")
+	proto.RegisterType((*SetProtocolBtcChainRequest)(nil), "scalar.protocol.v1beta1.SetProtocolBtcChainRequest")
+	proto.RegisterType((*SetProtocolBtcChainResponse)(nil), "scalar.protocol.v1beta1.SetProtocolBtcChainResponse")
+	proto.RegisterType((*AddDestinationChainToProtocolRequest)(nil), "scalar.protocol.v1beta1.AddDestinationChainToProtocolRequest")
+	proto.RegisterType((*AddDestinationChainToProtocolResponse)(nil), "scalar.protocol.v1beta1.AddDestinationChainToProtocolResponse")
+	proto.RegisterType((*DeleteDestinationChainFromProtocolRequest)(nil), "scalar.protocol.v1beta1.DeleteDestinationChainFromProtocolRequest")
+	proto.RegisterType((*DeleteDestinationChainFromProtocolResponse)(nil), "scalar.protocol.v1beta1.DeleteDestinationChainFromProtocolResponse")
+	proto.RegisterType((*AddCustodianToCustodianGroupRequest)(nil), "scalar.protocol.v1beta1.AddCustodianToCustodianGroupRequest")
+	proto.RegisterType((*AddCustodianToCustodianGroupResponse)(nil), "scalar.protocol.v1beta1.AddCustodianToCustodianGroupResponse")
+	proto.RegisterType((*DeleteCustodianFromCustodianGroupRequest)(nil), "scalar.protocol.v1beta1.DeleteCustodianFromCustodianGroupRequest")
+	proto.RegisterType((*DeleteCustodianFromCustodianGroupResponse)(nil), "scalar.protocol.v1beta1.DeleteCustodianFromCustodianGroupResponse")
+	proto.RegisterType((*UpdateCustodianGroupRequest)(nil), "scalar.protocol.v1beta1.UpdateCustodianGroupRequest")
+	proto.RegisterType((*UpdateCustodianGroupResponse)(nil), "scalar.protocol.v1beta1.UpdateCustodianGroupResponse")
+	proto.RegisterType((*CreateCustodianRequest)(nil), "scalar.protocol.v1beta1.CreateCustodianRequest")
+	proto.RegisterType((*CreateCustodianResponse)(nil), "scalar.protocol.v1beta1.CreateCustodianResponse")
+	proto.RegisterType((*UpdateCustodianRequest)(nil), "scalar.protocol.v1beta1.UpdateCustodianRequest")
+	proto.RegisterType((*UpdateCustodianResponse)(nil), "scalar.protocol.v1beta1.UpdateCustodianResponse")
+	proto.RegisterType((*UpdateBtcChainRequest)(nil), "scalar.protocol.v1beta1.UpdateBtcChainRequest")
+	proto.RegisterType((*UpdateBtcChainResponse)(nil), "scalar.protocol.v1beta1.UpdateBtcChainResponse")
+}
+
 func init() { proto.RegisterFile("scalar/protocol/v1beta1/tx.proto", fileDescriptor_138d22862e0063c2) }
 
 var fileDescriptor_138d22862e0063c2 = []byte{
-	// 131 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x52, 0x28, 0x4e, 0x4e, 0xcc,
-	0x49, 0x2c, 0xd2, 0x2f, 0x28, 0xca, 0x2f, 0xc9, 0x4f, 0xce, 0xcf, 0xd1, 0x2f, 0x33, 0x4c, 0x4a,
-	0x2d, 0x49, 0x34, 0xd4, 0x2f, 0xa9, 0xd0, 0x03, 0x8b, 0x09, 0x89, 0x43, 0x54, 0xe8, 0xc1, 0x54,
-	0xe8, 0x41, 0x55, 0x38, 0x79, 0x9f, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3, 0x83, 0x47,
-	0x72, 0x8c, 0x13, 0x1e, 0xcb, 0x31, 0x5c, 0x78, 0x2c, 0xc7, 0x70, 0xe3, 0xb1, 0x1c, 0x43, 0x94,
-	0x61, 0x7a, 0x66, 0x49, 0x46, 0x69, 0x92, 0x5e, 0x72, 0x7e, 0xae, 0x3e, 0x44, 0x77, 0x7e, 0x51,
-	0x3a, 0x94, 0xa5, 0x9b, 0x9c, 0x5f, 0x94, 0xaa, 0x5f, 0x81, 0xb0, 0xb0, 0xa4, 0xb2, 0x20, 0xb5,
-	0x38, 0x89, 0x0d, 0xcc, 0x37, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0xc0, 0x8e, 0x88, 0xc3, 0x90,
-	0x00, 0x00, 0x00,
+	// 1002 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe4, 0x57, 0x4f, 0x73, 0xdb, 0x44,
+	0x14, 0x8f, 0x64, 0xc7, 0x75, 0x9e, 0x9b, 0x42, 0x45, 0xd2, 0x28, 0x49, 0xab, 0x38, 0x0a, 0x6d,
+	0x4d, 0x29, 0x76, 0x13, 0x86, 0x1b, 0x0c, 0x13, 0xbb, 0x85, 0xe9, 0x30, 0x94, 0x8c, 0x62, 0x2e,
+	0xbd, 0x68, 0xd6, 0xab, 0xad, 0x2b, 0x6c, 0x6b, 0x55, 0xed, 0x3a, 0x34, 0x37, 0xce, 0x9c, 0x38,
+	0x71, 0xe0, 0x03, 0x30, 0xf0, 0x4d, 0x3a, 0xc3, 0xa5, 0x47, 0x4e, 0x0c, 0x93, 0x7c, 0x0b, 0x4e,
+	0x8c, 0x76, 0x57, 0xb2, 0x90, 0xff, 0x24, 0x36, 0x0c, 0xc3, 0x0c, 0xb7, 0xd5, 0x7b, 0xbf, 0xb7,
+	0xfb, 0xde, 0x6f, 0x7f, 0xfb, 0x76, 0x05, 0x55, 0x86, 0x51, 0x1f, 0x45, 0x8d, 0x30, 0xa2, 0x9c,
+	0x62, 0xda, 0x6f, 0x9c, 0xec, 0x77, 0x08, 0x47, 0xfb, 0x0d, 0xfe, 0xb2, 0x2e, 0x6c, 0xc6, 0x86,
+	0x44, 0xd4, 0x13, 0x44, 0x5d, 0x21, 0xb6, 0xf6, 0xa6, 0x86, 0x9e, 0x86, 0x84, 0x49, 0xfc, 0x96,
+	0xa5, 0x40, 0xe4, 0x64, 0x30, 0xd1, 0xbf, 0xd6, 0xa5, 0x5d, 0x2a, 0x86, 0x8d, 0x78, 0x24, 0xad,
+	0xf6, 0x59, 0x01, 0xd6, 0x5b, 0x11, 0x41, 0x9c, 0x1c, 0xa9, 0xc9, 0x1d, 0xf2, 0x62, 0x48, 0x18,
+	0x37, 0x0c, 0x28, 0x06, 0x68, 0x40, 0x4c, 0xad, 0xaa, 0xd5, 0x56, 0x1c, 0x31, 0x36, 0xb6, 0x61,
+	0x45, 0xae, 0xe2, 0x86, 0x3d, 0x53, 0xaf, 0x6a, 0xb5, 0xab, 0x4e, 0x59, 0x1a, 0x8e, 0x7a, 0xc6,
+	0x0e, 0x54, 0x18, 0x89, 0x4e, 0x7c, 0x4c, 0x5c, 0x8e, 0xba, 0x66, 0x41, 0xc4, 0x81, 0x32, 0xb5,
+	0x51, 0xd7, 0xa8, 0xc3, 0x5b, 0x1d, 0x8e, 0x5d, 0xe6, 0x77, 0x03, 0x12, 0xb9, 0x24, 0xf0, 0x42,
+	0xea, 0x07, 0xdc, 0x2c, 0x0a, 0xe0, 0xf5, 0x0e, 0xc7, 0xc7, 0xc2, 0xf3, 0x48, 0x39, 0x8c, 0x0f,
+	0x60, 0x23, 0x83, 0x47, 0x18, 0x13, 0xc6, 0x5c, 0x4e, 0x7b, 0x24, 0x30, 0x97, 0x45, 0xcc, 0x5a,
+	0x1a, 0x73, 0x28, 0x9c, 0xed, 0xd8, 0x67, 0xdc, 0x07, 0x23, 0x1b, 0xe6, 0x79, 0x11, 0x61, 0xcc,
+	0x2c, 0x89, 0x88, 0x37, 0x47, 0x11, 0xd2, 0x6e, 0xd8, 0xb0, 0x9a, 0x41, 0x87, 0x3d, 0xf3, 0x8a,
+	0x28, 0xab, 0x92, 0x02, 0x65, 0x65, 0x31, 0x26, 0x20, 0xfc, 0x6b, 0x1a, 0xf5, 0xcc, 0xb2, 0xac,
+	0xac, 0xc3, 0xf1, 0x13, 0x69, 0x31, 0x1e, 0xc0, 0x1a, 0x1e, 0x32, 0x4e, 0x3d, 0x1f, 0x05, 0x6e,
+	0x37, 0xa2, 0xc3, 0xd0, 0x15, 0xdc, 0xad, 0x08, 0xa4, 0x91, 0xfa, 0x3e, 0x8d, 0x5d, 0x4f, 0x62,
+	0x26, 0xef, 0xc1, 0x75, 0x9f, 0xb9, 0xa3, 0x20, 0x1a, 0xf4, 0x4f, 0x4d, 0xa8, 0x6a, 0xb5, 0xb2,
+	0xf3, 0x86, 0xcf, 0x5a, 0x89, 0xfd, 0x8b, 0xa0, 0x7f, 0x6a, 0x7c, 0x0c, 0x25, 0xc6, 0x11, 0x1f,
+	0x32, 0xb3, 0x52, 0xd5, 0x6a, 0xd7, 0x0e, 0xee, 0xd6, 0xa7, 0x08, 0xa5, 0x9e, 0xec, 0xe1, 0xb1,
+	0x80, 0x3b, 0x2a, 0xcc, 0x36, 0xe1, 0x46, 0x7e, 0x8f, 0x59, 0x48, 0x03, 0x46, 0xec, 0x0f, 0x61,
+	0xfd, 0x21, 0xe9, 0x93, 0xf1, 0xdd, 0xdf, 0x83, 0xd5, 0x64, 0x76, 0x37, 0x23, 0x83, 0xab, 0x89,
+	0x31, 0x2e, 0x22, 0x9e, 0x37, 0x1f, 0xad, 0xe6, 0x7d, 0x06, 0xd6, 0x97, 0xa1, 0x97, 0x59, 0xb1,
+	0x89, 0x98, 0x8f, 0x1f, 0x07, 0xcf, 0xe8, 0x3c, 0x0b, 0xe4, 0x25, 0xa5, 0xe7, 0x25, 0x65, 0xef,
+	0xc2, 0xce, 0xd4, 0x75, 0x54, 0x2a, 0xdf, 0x68, 0x60, 0x1e, 0x13, 0x9e, 0xa3, 0x66, 0x9e, 0x2c,
+	0x46, 0xfc, 0xeb, 0x8b, 0xf1, 0xff, 0x14, 0x36, 0x27, 0x64, 0x20, 0xf3, 0x33, 0x3e, 0x82, 0x72,
+	0x32, 0x8f, 0x58, 0xbd, 0x72, 0xb0, 0x7b, 0xe1, 0xfc, 0x4e, 0x1a, 0x62, 0xff, 0xa0, 0x41, 0x35,
+	0x33, 0x79, 0xeb, 0x2f, 0x52, 0x9b, 0x97, 0xec, 0xac, 0xca, 0xf5, 0x4b, 0xab, 0xbc, 0x30, 0x4d,
+	0xe5, 0xf6, 0x1e, 0xec, 0xce, 0xc8, 0x4d, 0x6d, 0xd0, 0x1f, 0x1a, 0x6c, 0x65, 0x50, 0x4d, 0x8e,
+	0x5b, 0xcf, 0x91, 0x1f, 0xcc, 0x95, 0xfb, 0x94, 0xd6, 0xa2, 0x2f, 0xd0, 0x5a, 0x0a, 0x73, 0xb7,
+	0x96, 0xe2, 0x65, 0x5b, 0xcb, 0xf2, 0x58, 0x6b, 0xb1, 0x6f, 0xc1, 0xf6, 0xc4, 0xda, 0x15, 0x37,
+	0x3f, 0xeb, 0xf0, 0xf6, 0xa1, 0xe7, 0x3d, 0x24, 0x8c, 0xfb, 0x01, 0xe2, 0x3e, 0x0d, 0x84, 0xbf,
+	0x4d, 0x17, 0x39, 0xaf, 0xc6, 0x2d, 0x00, 0x1c, 0x87, 0x4b, 0x84, 0x24, 0x67, 0x45, 0x58, 0x84,
+	0x7b, 0x13, 0xca, 0xd2, 0xed, 0x7b, 0x82, 0x85, 0xa2, 0x73, 0x45, 0x7c, 0x3f, 0xf6, 0x46, 0x91,
+	0xf1, 0x8d, 0xa2, 0x0a, 0x96, 0x91, 0xed, 0xd3, 0x30, 0x3e, 0x21, 0x37, 0xa5, 0x9b, 0x0d, 0x50,
+	0xc4, 0x5d, 0x4c, 0x03, 0x1e, 0x21, 0xcc, 0x53, 0x86, 0x64, 0xe1, 0x9b, 0x02, 0x73, 0x1c, 0x43,
+	0x5a, 0x0a, 0x91, 0x50, 0xd5, 0x84, 0x65, 0xc9, 0x7e, 0x49, 0x9c, 0x80, 0x3b, 0xc9, 0x09, 0x20,
+	0x27, 0x83, 0x54, 0xfc, 0x8f, 0x9c, 0xd6, 0xc1, 0x03, 0xb1, 0x0f, 0x9f, 0x13, 0x8e, 0x3c, 0xc4,
+	0x51, 0xb3, 0xf8, 0xea, 0xb7, 0x9d, 0x25, 0x47, 0x86, 0xda, 0x77, 0xe1, 0xf6, 0x05, 0x54, 0x29,
+	0x52, 0x7f, 0xd1, 0xe0, 0x1d, 0xd9, 0xb7, 0xf2, 0xe0, 0x4f, 0x22, 0x3a, 0x58, 0x88, 0xd9, 0x2c,
+	0x75, 0xfa, 0x2c, 0xea, 0x0a, 0xf3, 0x52, 0x57, 0xbc, 0x80, 0x3a, 0xfb, 0x3e, 0xdc, 0xbb, 0x4c,
+	0x31, 0xaa, 0xf6, 0x6f, 0x75, 0xd8, 0x3b, 0xf4, 0xbc, 0xf4, 0x28, 0xb6, 0xe9, 0xdf, 0xe8, 0x18,
+	0xd3, 0x1a, 0x82, 0x3e, 0xf5, 0xda, 0x4b, 0x1e, 0x15, 0x85, 0xcc, 0xa3, 0x62, 0x1d, 0x4a, 0xf1,
+	0x31, 0x09, 0x7b, 0xaa, 0xd6, 0xe5, 0x0e, 0xc7, 0x47, 0xbd, 0x4c, 0xd7, 0x5d, 0x5e, 0xa8, 0xeb,
+	0x1a, 0x55, 0xa8, 0x78, 0x84, 0xe1, 0xc8, 0x0f, 0x63, 0x4a, 0xd4, 0x03, 0x20, 0x6b, 0xb2, 0xef,
+	0x88, 0xc3, 0x35, 0x83, 0x0b, 0x45, 0xda, 0x4f, 0x1a, 0xd4, 0x24, 0xc7, 0x29, 0x20, 0x26, 0xf7,
+	0x5f, 0x65, 0xee, 0x36, 0x5c, 0x1b, 0x45, 0x64, 0x38, 0x5c, 0x4d, 0xad, 0xa2, 0xe3, 0xbe, 0x9b,
+	0x48, 0x7b, 0x66, 0xa6, 0xaa, 0xae, 0xaf, 0x60, 0x5b, 0xde, 0x9e, 0x93, 0x2b, 0x99, 0xf4, 0x02,
+	0xbc, 0xf0, 0x92, 0xb8, 0x01, 0xa5, 0x17, 0x43, 0x1a, 0x0d, 0x07, 0x22, 0xbf, 0x55, 0x47, 0x7d,
+	0xd9, 0x16, 0xdc, 0x9c, 0xbc, 0x96, 0xca, 0xe5, 0x47, 0x2d, 0x79, 0xa4, 0xa4, 0x80, 0x59, 0x79,
+	0x8c, 0x44, 0xa3, 0x4f, 0x16, 0x4d, 0xe1, 0x1f, 0x11, 0x4d, 0x71, 0x5c, 0x34, 0x9b, 0xb0, 0x31,
+	0x96, 0x67, 0xa6, 0x86, 0x5c, 0x91, 0xff, 0xd9, 0x1a, 0xc6, 0xf2, 0x54, 0x35, 0x7c, 0xaf, 0xc3,
+	0xba, 0xf4, 0xfd, 0xaf, 0x2e, 0xe2, 0xbc, 0xb0, 0x4b, 0x79, 0x61, 0xc7, 0x8f, 0xdd, 0x3c, 0x2f,
+	0x92, 0xb2, 0xe6, 0x67, 0xaf, 0xce, 0x2c, 0xed, 0xf5, 0x99, 0xa5, 0xfd, 0x7e, 0x66, 0x69, 0xdf,
+	0x9d, 0x5b, 0x4b, 0xaf, 0xcf, 0xad, 0xa5, 0x5f, 0xcf, 0xad, 0xa5, 0xa7, 0xfb, 0x5d, 0x9f, 0x3f,
+	0x1f, 0x76, 0xea, 0x98, 0x0e, 0x1a, 0x72, 0x13, 0x69, 0xd4, 0x55, 0xa3, 0xf7, 0x30, 0x8d, 0x48,
+	0xe3, 0xe5, 0xe8, 0xa7, 0x4e, 0xfc, 0xac, 0x75, 0x4a, 0xe2, 0xfb, 0xfd, 0x3f, 0x03, 0x00, 0x00,
+	0xff, 0xff, 0x3e, 0x6f, 0xde, 0x83, 0x2f, 0x0e, 0x00, 0x00,
 }
+
+func (m *CreateProtocolRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *CreateProtocolRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *CreateProtocolRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Status != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Status))
+		i--
+		dAtA[i] = 0x58
+	}
+	if m.IsCustodianOnly {
+		i--
+		if m.IsCustodianOnly {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x50
+	}
+	if len(m.CustodianGroupName) > 0 {
+		i -= len(m.CustodianGroupName)
+		copy(dAtA[i:], m.CustodianGroupName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.CustodianGroupName)))
+		i--
+		dAtA[i] = 0x4a
+	}
+	if len(m.BtcNetwork) > 0 {
+		i -= len(m.BtcNetwork)
+		copy(dAtA[i:], m.BtcNetwork)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcNetwork)))
+		i--
+		dAtA[i] = 0x42
+	}
+	if len(m.BtcSignerPk) > 0 {
+		i -= len(m.BtcSignerPk)
+		copy(dAtA[i:], m.BtcSignerPk)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcSignerPk)))
+		i--
+		dAtA[i] = 0x3a
+	}
+	if len(m.BtcSignerAddress) > 0 {
+		i -= len(m.BtcSignerAddress)
+		copy(dAtA[i:], m.BtcSignerAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcSignerAddress)))
+		i--
+		dAtA[i] = 0x32
+	}
+	if len(m.BtcSignerAccessToken) > 0 {
+		i -= len(m.BtcSignerAccessToken)
+		copy(dAtA[i:], m.BtcSignerAccessToken)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcSignerAccessToken)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.BtcSignerEndpoint) > 0 {
+		i -= len(m.BtcSignerEndpoint)
+		copy(dAtA[i:], m.BtcSignerEndpoint)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcSignerEndpoint)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.ServiceTag) > 0 {
+		i -= len(m.ServiceTag)
+		copy(dAtA[i:], m.ServiceTag)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ServiceTag)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.ScalarPk) > 0 {
+		i -= len(m.ScalarPk)
+		copy(dAtA[i:], m.ScalarPk)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ScalarPk)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *CreateProtocolResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *CreateProtocolResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *CreateProtocolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *DeleteProtocolRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *DeleteProtocolRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *DeleteProtocolRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ProtocolName) > 0 {
+		i -= len(m.ProtocolName)
+		copy(dAtA[i:], m.ProtocolName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ProtocolName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *DeleteProtocolResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *DeleteProtocolResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *DeleteProtocolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *UpdateProtocolBasicInfoRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *UpdateProtocolBasicInfoRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *UpdateProtocolBasicInfoRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ServiceTag) > 0 {
+		i -= len(m.ServiceTag)
+		copy(dAtA[i:], m.ServiceTag)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ServiceTag)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ProtocolName) > 0 {
+		i -= len(m.ProtocolName)
+		copy(dAtA[i:], m.ProtocolName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ProtocolName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *UpdateProtocolBasicInfoResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *UpdateProtocolBasicInfoResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *UpdateProtocolBasicInfoResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *SetProtocolStatusRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *SetProtocolStatusRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *SetProtocolStatusRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Status != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Status))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.ProtocolName) > 0 {
+		i -= len(m.ProtocolName)
+		copy(dAtA[i:], m.ProtocolName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ProtocolName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *SetProtocolStatusResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *SetProtocolStatusResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *SetProtocolStatusResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Protocol != nil {
+		{
+			size, err := m.Protocol.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTx(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *SetProtocolCustodianGroupRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *SetProtocolCustodianGroupRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *SetProtocolCustodianGroupRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.CustodianGroupName) > 0 {
+		i -= len(m.CustodianGroupName)
+		copy(dAtA[i:], m.CustodianGroupName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.CustodianGroupName)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.BtcNetwork) > 0 {
+		i -= len(m.BtcNetwork)
+		copy(dAtA[i:], m.BtcNetwork)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcNetwork)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ProtocolName) > 0 {
+		i -= len(m.ProtocolName)
+		copy(dAtA[i:], m.ProtocolName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ProtocolName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *SetProtocolCustodianGroupResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *SetProtocolCustodianGroupResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *SetProtocolCustodianGroupResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *SetProtocolBtcChainRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *SetProtocolBtcChainRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *SetProtocolBtcChainRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.BtcSignerPk) > 0 {
+		i -= len(m.BtcSignerPk)
+		copy(dAtA[i:], m.BtcSignerPk)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcSignerPk)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.BtcSignerAddress) > 0 {
+		i -= len(m.BtcSignerAddress)
+		copy(dAtA[i:], m.BtcSignerAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcSignerAddress)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.BtcSignerAccessToken) > 0 {
+		i -= len(m.BtcSignerAccessToken)
+		copy(dAtA[i:], m.BtcSignerAccessToken)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcSignerAccessToken)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.BtcSignerEndpoint) > 0 {
+		i -= len(m.BtcSignerEndpoint)
+		copy(dAtA[i:], m.BtcSignerEndpoint)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcSignerEndpoint)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ProtocolName) > 0 {
+		i -= len(m.ProtocolName)
+		copy(dAtA[i:], m.ProtocolName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ProtocolName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *SetProtocolBtcChainResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *SetProtocolBtcChainResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *SetProtocolBtcChainResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *AddDestinationChainToProtocolRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *AddDestinationChainToProtocolRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *AddDestinationChainToProtocolRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.Token.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x32
+	if len(m.ChainSmartContractAddress) > 0 {
+		i -= len(m.ChainSmartContractAddress)
+		copy(dAtA[i:], m.ChainSmartContractAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChainSmartContractAddress)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.ChainType) > 0 {
+		i -= len(m.ChainType)
+		copy(dAtA[i:], m.ChainType)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChainType)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if m.ChainId != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.ChainId))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.ChainName) > 0 {
+		i -= len(m.ChainName)
+		copy(dAtA[i:], m.ChainName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChainName)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ProtocolName) > 0 {
+		i -= len(m.ProtocolName)
+		copy(dAtA[i:], m.ProtocolName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ProtocolName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *AddDestinationChainToProtocolResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *AddDestinationChainToProtocolResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *AddDestinationChainToProtocolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *DeleteDestinationChainFromProtocolRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *DeleteDestinationChainFromProtocolRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *DeleteDestinationChainFromProtocolRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ChainSmartContractAddress) > 0 {
+		i -= len(m.ChainSmartContractAddress)
+		copy(dAtA[i:], m.ChainSmartContractAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChainSmartContractAddress)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.ChainType) > 0 {
+		i -= len(m.ChainType)
+		copy(dAtA[i:], m.ChainType)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChainType)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if m.ChainId != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.ChainId))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.ProtocolName) > 0 {
+		i -= len(m.ProtocolName)
+		copy(dAtA[i:], m.ProtocolName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ProtocolName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *DeleteDestinationChainFromProtocolResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *DeleteDestinationChainFromProtocolResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *DeleteDestinationChainFromProtocolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *AddCustodianToCustodianGroupRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *AddCustodianToCustodianGroupRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *AddCustodianToCustodianGroupRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Description) > 0 {
+		i -= len(m.Description)
+		copy(dAtA[i:], m.Description)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Description)))
+		i--
+		dAtA[i] = 0x32
+	}
+	if m.Status != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Status))
+		i--
+		dAtA[i] = 0x28
+	}
+	if len(m.BtcPk) > 0 {
+		i -= len(m.BtcPk)
+		copy(dAtA[i:], m.BtcPk)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcPk)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.CustodianGroupName) > 0 {
+		i -= len(m.CustodianGroupName)
+		copy(dAtA[i:], m.CustodianGroupName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.CustodianGroupName)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ProtocolName) > 0 {
+		i -= len(m.ProtocolName)
+		copy(dAtA[i:], m.ProtocolName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ProtocolName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *AddCustodianToCustodianGroupResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *AddCustodianToCustodianGroupResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *AddCustodianToCustodianGroupResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *DeleteCustodianFromCustodianGroupRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *DeleteCustodianFromCustodianGroupRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *DeleteCustodianFromCustodianGroupRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.CustodianName) > 0 {
+		i -= len(m.CustodianName)
+		copy(dAtA[i:], m.CustodianName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.CustodianName)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.CustodianGroupName) > 0 {
+		i -= len(m.CustodianGroupName)
+		copy(dAtA[i:], m.CustodianGroupName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.CustodianGroupName)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ProtocolName) > 0 {
+		i -= len(m.ProtocolName)
+		copy(dAtA[i:], m.ProtocolName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ProtocolName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *DeleteCustodianFromCustodianGroupResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *DeleteCustodianFromCustodianGroupResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *DeleteCustodianFromCustodianGroupResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *UpdateCustodianGroupRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *UpdateCustodianGroupRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *UpdateCustodianGroupRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Quorum != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Quorum))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.BtcNetwork) > 0 {
+		i -= len(m.BtcNetwork)
+		copy(dAtA[i:], m.BtcNetwork)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcNetwork)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *UpdateCustodianGroupResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *UpdateCustodianGroupResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *UpdateCustodianGroupResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *CreateCustodianRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *CreateCustodianRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *CreateCustodianRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Description) > 0 {
+		i -= len(m.Description)
+		copy(dAtA[i:], m.Description)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Description)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if m.Status != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Status))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.BtcPk) > 0 {
+		i -= len(m.BtcPk)
+		copy(dAtA[i:], m.BtcPk)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcPk)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *CreateCustodianResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *CreateCustodianResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *CreateCustodianResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *UpdateCustodianRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *UpdateCustodianRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *UpdateCustodianRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Description) > 0 {
+		i -= len(m.Description)
+		copy(dAtA[i:], m.Description)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Description)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if m.Status != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Status))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.BtcPk) > 0 {
+		i -= len(m.BtcPk)
+		copy(dAtA[i:], m.BtcPk)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcPk)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *UpdateCustodianResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *UpdateCustodianResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *UpdateCustodianResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *UpdateBtcChainRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *UpdateBtcChainRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *UpdateBtcChainRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.BtcNetwork) > 0 {
+		i -= len(m.BtcNetwork)
+		copy(dAtA[i:], m.BtcNetwork)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcNetwork)))
+		i--
+		dAtA[i] = 0x32
+	}
+	if len(m.BtcSignerPk) > 0 {
+		i -= len(m.BtcSignerPk)
+		copy(dAtA[i:], m.BtcSignerPk)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcSignerPk)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.BtcSignerAddress) > 0 {
+		i -= len(m.BtcSignerAddress)
+		copy(dAtA[i:], m.BtcSignerAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcSignerAddress)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.BtcSignerAccessToken) > 0 {
+		i -= len(m.BtcSignerAccessToken)
+		copy(dAtA[i:], m.BtcSignerAccessToken)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcSignerAccessToken)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.BtcSignerEndpoint) > 0 {
+		i -= len(m.BtcSignerEndpoint)
+		copy(dAtA[i:], m.BtcSignerEndpoint)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BtcSignerEndpoint)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ProtocolName) > 0 {
+		i -= len(m.ProtocolName)
+		copy(dAtA[i:], m.ProtocolName)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ProtocolName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *UpdateBtcChainResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *UpdateBtcChainResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *UpdateBtcChainResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
+	offset -= sovTx(v)
+	base := offset
+	for v >= 1<<7 {
+		dAtA[offset] = uint8(v&0x7f | 0x80)
+		v >>= 7
+		offset++
+	}
+	dAtA[offset] = uint8(v)
+	return base
+}
+func (m *CreateProtocolRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ScalarPk)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ServiceTag)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcSignerEndpoint)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcSignerAccessToken)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcSignerAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcSignerPk)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcNetwork)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.CustodianGroupName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.IsCustodianOnly {
+		n += 2
+	}
+	if m.Status != 0 {
+		n += 1 + sovTx(uint64(m.Status))
+	}
+	return n
+}
+
+func (m *CreateProtocolResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *DeleteProtocolRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ProtocolName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *DeleteProtocolResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *UpdateProtocolBasicInfoRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ProtocolName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ServiceTag)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *UpdateProtocolBasicInfoResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *SetProtocolStatusRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ProtocolName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.Status != 0 {
+		n += 1 + sovTx(uint64(m.Status))
+	}
+	return n
+}
+
+func (m *SetProtocolStatusResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Protocol != nil {
+		l = m.Protocol.Size()
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *SetProtocolCustodianGroupRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ProtocolName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcNetwork)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.CustodianGroupName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *SetProtocolCustodianGroupResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *SetProtocolBtcChainRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ProtocolName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcSignerEndpoint)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcSignerAccessToken)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcSignerAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcSignerPk)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *SetProtocolBtcChainResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *AddDestinationChainToProtocolRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ProtocolName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ChainName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.ChainId != 0 {
+		n += 1 + sovTx(uint64(m.ChainId))
+	}
+	l = len(m.ChainType)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ChainSmartContractAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.Token.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *AddDestinationChainToProtocolResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *DeleteDestinationChainFromProtocolRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ProtocolName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.ChainId != 0 {
+		n += 1 + sovTx(uint64(m.ChainId))
+	}
+	l = len(m.ChainType)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ChainSmartContractAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *DeleteDestinationChainFromProtocolResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *AddCustodianToCustodianGroupRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ProtocolName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.CustodianGroupName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcPk)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.Status != 0 {
+		n += 1 + sovTx(uint64(m.Status))
+	}
+	l = len(m.Description)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *AddCustodianToCustodianGroupResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *DeleteCustodianFromCustodianGroupRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ProtocolName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.CustodianGroupName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.CustodianName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *DeleteCustodianFromCustodianGroupResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *UpdateCustodianGroupRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcNetwork)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.Quorum != 0 {
+		n += 1 + sovTx(uint64(m.Quorum))
+	}
+	return n
+}
+
+func (m *UpdateCustodianGroupResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *CreateCustodianRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcPk)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.Status != 0 {
+		n += 1 + sovTx(uint64(m.Status))
+	}
+	l = len(m.Description)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *CreateCustodianResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *UpdateCustodianRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcPk)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.Status != 0 {
+		n += 1 + sovTx(uint64(m.Status))
+	}
+	l = len(m.Description)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *UpdateCustodianResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *UpdateBtcChainRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ProtocolName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcSignerEndpoint)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcSignerAccessToken)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcSignerAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcSignerPk)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.BtcNetwork)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *UpdateBtcChainResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func sovTx(x uint64) (n int) {
+	return (math_bits.Len64(x|1) + 6) / 7
+}
+func sozTx(x uint64) (n int) {
+	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *CreateProtocolRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: CreateProtocolRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: CreateProtocolRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ScalarPk", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ScalarPk = append(m.ScalarPk[:0], dAtA[iNdEx:postIndex]...)
+			if m.ScalarPk == nil {
+				m.ScalarPk = []byte{}
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ServiceTag", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ServiceTag = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcSignerEndpoint", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcSignerEndpoint = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcSignerAccessToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcSignerAccessToken = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcSignerAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcSignerAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcSignerPk", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcSignerPk = append(m.BtcSignerPk[:0], dAtA[iNdEx:postIndex]...)
+			if m.BtcSignerPk == nil {
+				m.BtcSignerPk = []byte{}
+			}
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcNetwork", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcNetwork = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CustodianGroupName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CustodianGroupName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 10:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field IsCustodianOnly", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.IsCustodianOnly = bool(v != 0)
+		case 11:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= ProtocolStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *CreateProtocolResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: CreateProtocolResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: CreateProtocolResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *DeleteProtocolRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: DeleteProtocolRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: DeleteProtocolRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProtocolName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ProtocolName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *DeleteProtocolResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: DeleteProtocolResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: DeleteProtocolResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *UpdateProtocolBasicInfoRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UpdateProtocolBasicInfoRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UpdateProtocolBasicInfoRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProtocolName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ProtocolName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ServiceTag", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ServiceTag = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *UpdateProtocolBasicInfoResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UpdateProtocolBasicInfoResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UpdateProtocolBasicInfoResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *SetProtocolStatusRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: SetProtocolStatusRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: SetProtocolStatusRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProtocolName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ProtocolName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= ProtocolStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *SetProtocolStatusResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: SetProtocolStatusResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: SetProtocolStatusResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Protocol", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Protocol == nil {
+				m.Protocol = &Protocol{}
+			}
+			if err := m.Protocol.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *SetProtocolCustodianGroupRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: SetProtocolCustodianGroupRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: SetProtocolCustodianGroupRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProtocolName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ProtocolName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcNetwork", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcNetwork = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CustodianGroupName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CustodianGroupName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *SetProtocolCustodianGroupResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: SetProtocolCustodianGroupResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: SetProtocolCustodianGroupResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *SetProtocolBtcChainRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: SetProtocolBtcChainRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: SetProtocolBtcChainRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProtocolName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ProtocolName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcSignerEndpoint", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcSignerEndpoint = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcSignerAccessToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcSignerAccessToken = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcSignerAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcSignerAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcSignerPk", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcSignerPk = append(m.BtcSignerPk[:0], dAtA[iNdEx:postIndex]...)
+			if m.BtcSignerPk == nil {
+				m.BtcSignerPk = []byte{}
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *SetProtocolBtcChainResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: SetProtocolBtcChainResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: SetProtocolBtcChainResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *AddDestinationChainToProtocolRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: AddDestinationChainToProtocolRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: AddDestinationChainToProtocolRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProtocolName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ProtocolName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChainName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainId", wireType)
+			}
+			m.ChainId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ChainId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainType", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChainType = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainSmartContractAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChainSmartContractAddress = append(m.ChainSmartContractAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.ChainSmartContractAddress == nil {
+				m.ChainSmartContractAddress = []byte{}
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Token.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *AddDestinationChainToProtocolResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: AddDestinationChainToProtocolResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: AddDestinationChainToProtocolResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *DeleteDestinationChainFromProtocolRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: DeleteDestinationChainFromProtocolRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: DeleteDestinationChainFromProtocolRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProtocolName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ProtocolName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainId", wireType)
+			}
+			m.ChainId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ChainId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainType", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChainType = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainSmartContractAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChainSmartContractAddress = append(m.ChainSmartContractAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.ChainSmartContractAddress == nil {
+				m.ChainSmartContractAddress = []byte{}
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *DeleteDestinationChainFromProtocolResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: DeleteDestinationChainFromProtocolResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: DeleteDestinationChainFromProtocolResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *AddCustodianToCustodianGroupRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: AddCustodianToCustodianGroupRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: AddCustodianToCustodianGroupRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProtocolName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ProtocolName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CustodianGroupName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CustodianGroupName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcPk", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcPk = append(m.BtcPk[:0], dAtA[iNdEx:postIndex]...)
+			if m.BtcPk == nil {
+				m.BtcPk = []byte{}
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= ProtocolStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Description", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Description = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *AddCustodianToCustodianGroupResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: AddCustodianToCustodianGroupResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: AddCustodianToCustodianGroupResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *DeleteCustodianFromCustodianGroupRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: DeleteCustodianFromCustodianGroupRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: DeleteCustodianFromCustodianGroupRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProtocolName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ProtocolName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CustodianGroupName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CustodianGroupName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CustodianName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CustodianName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *DeleteCustodianFromCustodianGroupResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: DeleteCustodianFromCustodianGroupResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: DeleteCustodianFromCustodianGroupResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *UpdateCustodianGroupRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UpdateCustodianGroupRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UpdateCustodianGroupRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcNetwork", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcNetwork = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Quorum", wireType)
+			}
+			m.Quorum = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Quorum |= uint32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *UpdateCustodianGroupResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UpdateCustodianGroupResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UpdateCustodianGroupResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *CreateCustodianRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: CreateCustodianRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: CreateCustodianRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcPk", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcPk = append(m.BtcPk[:0], dAtA[iNdEx:postIndex]...)
+			if m.BtcPk == nil {
+				m.BtcPk = []byte{}
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= ProtocolStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Description", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Description = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *CreateCustodianResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: CreateCustodianResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: CreateCustodianResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *UpdateCustodianRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UpdateCustodianRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UpdateCustodianRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcPk", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcPk = append(m.BtcPk[:0], dAtA[iNdEx:postIndex]...)
+			if m.BtcPk == nil {
+				m.BtcPk = []byte{}
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= ProtocolStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Description", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Description = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *UpdateCustodianResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UpdateCustodianResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UpdateCustodianResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *UpdateBtcChainRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UpdateBtcChainRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UpdateBtcChainRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProtocolName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ProtocolName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcSignerEndpoint", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcSignerEndpoint = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcSignerAccessToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcSignerAccessToken = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcSignerAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcSignerAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcSignerPk", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcSignerPk = append(m.BtcSignerPk[:0], dAtA[iNdEx:postIndex]...)
+			if m.BtcSignerPk == nil {
+				m.BtcSignerPk = []byte{}
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcNetwork", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcNetwork = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *UpdateBtcChainResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UpdateBtcChainResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UpdateBtcChainResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func skipTx(dAtA []byte) (n int, err error) {
+	l := len(dAtA)
+	iNdEx := 0
+	depth := 0
+	for iNdEx < l {
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return 0, ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return 0, io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		wireType := int(wire & 0x7)
+		switch wireType {
+		case 0:
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				iNdEx++
+				if dAtA[iNdEx-1] < 0x80 {
+					break
+				}
+			}
+		case 1:
+			iNdEx += 8
+		case 2:
+			var length int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				length |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if length < 0 {
+				return 0, ErrInvalidLengthTx
+			}
+			iNdEx += length
+		case 3:
+			depth++
+		case 4:
+			if depth == 0 {
+				return 0, ErrUnexpectedEndOfGroupTx
+			}
+			depth--
+		case 5:
+			iNdEx += 4
+		default:
+			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
+		}
+		if iNdEx < 0 {
+			return 0, ErrInvalidLengthTx
+		}
+		if depth == 0 {
+			return iNdEx, nil
+		}
+	}
+	return 0, io.ErrUnexpectedEOF
+}
+
+var (
+	ErrInvalidLengthTx        = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowTx          = fmt.Errorf("proto: integer overflow")
+	ErrUnexpectedEndOfGroupTx = fmt.Errorf("proto: unexpected end of group")
+)

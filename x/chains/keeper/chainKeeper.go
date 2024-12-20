@@ -9,7 +9,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/scalarorg/scalar-core/utils"
-	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/key"
@@ -29,9 +28,8 @@ var (
 
 	confirmedEventQueueName = "confirmed_event_queue"
 
-	destinationRecipientAddressPrefix = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 1)
-	confirmedStakingTxPrefix          = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 2)
-	completedStakingTxPrefix          = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 3)
+	confirmedStakingTxPrefix = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 2)
+	completedStakingTxPrefix = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 3)
 )
 
 var _ types.ChainKeeper = chainKeeper{}
@@ -95,33 +93,11 @@ func (k chainKeeper) getEvents(ctx sdk.Context) []types.Event {
 }
 
 func (k chainKeeper) GetChainID(ctx sdk.Context) (sdk.Int, bool) {
-	network := k.GetNetwork(ctx)
-	return k.GetChainIDByNetwork(ctx, network)
-}
-
-// GetNetwork returns the BTC network Scalar-Core is expected to connect to
-func (k chainKeeper) GetNetwork(ctx sdk.Context) string {
-	return getParam[string](k, ctx, types.KeyNetwork)
-}
-
-// GetChainIDByNetwork returns the chain ID for a given network name
-func (k chainKeeper) GetChainIDByNetwork(ctx sdk.Context, network string) (sdk.Int, bool) {
-	if network == "" {
+	chainId := getParam[sdk.Int](k, ctx, types.KeyChainID)
+	if chainId.IsNil() {
 		return sdk.Int{}, false
 	}
-	p := k.GetParams(ctx)
-	// for _, n := range p.Networks {
-	// 	if n.Name == network {
-	// 		return n.Id, true
-	// 	}
-	// }
-	if network == p.Chain.String() {
-		return sdk.NewInt(int64(p.ChainID)), true
-	}
-
-	clog.Red("GetChainIDByNetwork", "network", network, "chainName", p.Chain, "chainID", p.ChainID)
-
-	return sdk.Int{}, false
+	return chainId, true
 }
 
 func (k chainKeeper) GetRequiredConfirmationHeight(ctx sdk.Context) uint64 {
@@ -316,7 +292,7 @@ func (k chainKeeper) EnqueueConfirmedEvent(ctx sdk.Context, id types.EventID) er
 // SetEventCompleted sets the event as completed
 func (k chainKeeper) SetEventCompleted(ctx sdk.Context, eventID types.EventID) error {
 	event, ok := k.GetEvent(ctx, eventID)
-	if !ok || event.Status != types.EventCompleted {
+	if !ok || event.Status != types.EventConfirmed {
 		return fmt.Errorf("event %s is not confirmed", eventID)
 	}
 

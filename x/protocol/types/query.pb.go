@@ -5,7 +5,6 @@ package types
 
 import (
 	fmt "fmt"
-	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
@@ -23,50 +22,21 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type ProtocolStatus int32
-
-const (
-	StatusUnspecified ProtocolStatus = 0
-	Activated         ProtocolStatus = 1
-	Deactivated       ProtocolStatus = 2
-)
-
-var ProtocolStatus_name = map[int32]string{
-	0: "PROTOCOL_STATUS_UNSPECIFIED",
-	1: "PROTOCOL_STATUS_ACTIVATED",
-	2: "PROTOCOL_STATUS_DEACTIVATED",
+type GetProtocolsRequest struct {
 }
 
-var ProtocolStatus_value = map[string]int32{
-	"PROTOCOL_STATUS_UNSPECIFIED": 0,
-	"PROTOCOL_STATUS_ACTIVATED":   1,
-	"PROTOCOL_STATUS_DEACTIVATED": 2,
-}
-
-func (x ProtocolStatus) String() string {
-	return proto.EnumName(ProtocolStatus_name, int32(x))
-}
-
-func (ProtocolStatus) EnumDescriptor() ([]byte, []int) {
+func (m *GetProtocolsRequest) Reset()         { *m = GetProtocolsRequest{} }
+func (m *GetProtocolsRequest) String() string { return proto.CompactTextString(m) }
+func (*GetProtocolsRequest) ProtoMessage()    {}
+func (*GetProtocolsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_17e7473aa0548727, []int{0}
 }
-
-type ProtocolRequest struct {
-	Status ProtocolStatus `protobuf:"varint,1,opt,name=status,proto3,enum=scalar.protocol.v1beta1.ProtocolStatus" json:"status,omitempty"`
-}
-
-func (m *ProtocolRequest) Reset()         { *m = ProtocolRequest{} }
-func (m *ProtocolRequest) String() string { return proto.CompactTextString(m) }
-func (*ProtocolRequest) ProtoMessage()    {}
-func (*ProtocolRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_17e7473aa0548727, []int{0}
-}
-func (m *ProtocolRequest) XXX_Unmarshal(b []byte) error {
+func (m *GetProtocolsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *ProtocolRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *GetProtocolsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_ProtocolRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_GetProtocolsRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -76,41 +46,34 @@ func (m *ProtocolRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 		return b[:n], nil
 	}
 }
-func (m *ProtocolRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ProtocolRequest.Merge(m, src)
+func (m *GetProtocolsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetProtocolsRequest.Merge(m, src)
 }
-func (m *ProtocolRequest) XXX_Size() int {
+func (m *GetProtocolsRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *ProtocolRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_ProtocolRequest.DiscardUnknown(m)
+func (m *GetProtocolsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetProtocolsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ProtocolRequest proto.InternalMessageInfo
+var xxx_messageInfo_GetProtocolsRequest proto.InternalMessageInfo
 
-func (m *ProtocolRequest) GetStatus() ProtocolStatus {
-	if m != nil {
-		return m.Status
-	}
-	return StatusUnspecified
-}
-
-type ProtocolResponse struct {
+type GetProtocolsResponse struct {
 	Protocols []*Protocol `protobuf:"bytes,1,rep,name=protocols,proto3" json:"protocols,omitempty"`
 }
 
-func (m *ProtocolResponse) Reset()         { *m = ProtocolResponse{} }
-func (m *ProtocolResponse) String() string { return proto.CompactTextString(m) }
-func (*ProtocolResponse) ProtoMessage()    {}
-func (*ProtocolResponse) Descriptor() ([]byte, []int) {
+func (m *GetProtocolsResponse) Reset()         { *m = GetProtocolsResponse{} }
+func (m *GetProtocolsResponse) String() string { return proto.CompactTextString(m) }
+func (*GetProtocolsResponse) ProtoMessage()    {}
+func (*GetProtocolsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_17e7473aa0548727, []int{1}
 }
-func (m *ProtocolResponse) XXX_Unmarshal(b []byte) error {
+func (m *GetProtocolsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *ProtocolResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *GetProtocolsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_ProtocolResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_GetProtocolsResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -120,29 +83,1149 @@ func (m *ProtocolResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, er
 		return b[:n], nil
 	}
 }
-func (m *ProtocolResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ProtocolResponse.Merge(m, src)
+func (m *GetProtocolsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetProtocolsResponse.Merge(m, src)
 }
-func (m *ProtocolResponse) XXX_Size() int {
+func (m *GetProtocolsResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *ProtocolResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_ProtocolResponse.DiscardUnknown(m)
+func (m *GetProtocolsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetProtocolsResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ProtocolResponse proto.InternalMessageInfo
+var xxx_messageInfo_GetProtocolsResponse proto.InternalMessageInfo
 
-func (m *ProtocolResponse) GetProtocols() []*Protocol {
+func (m *GetProtocolsResponse) GetProtocols() []*Protocol {
 	if m != nil {
 		return m.Protocols
 	}
 	return nil
 }
 
+type GetProtocolByNameRequest struct {
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (m *GetProtocolByNameRequest) Reset()         { *m = GetProtocolByNameRequest{} }
+func (m *GetProtocolByNameRequest) String() string { return proto.CompactTextString(m) }
+func (*GetProtocolByNameRequest) ProtoMessage()    {}
+func (*GetProtocolByNameRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{2}
+}
+func (m *GetProtocolByNameRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetProtocolByNameRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetProtocolByNameRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetProtocolByNameRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetProtocolByNameRequest.Merge(m, src)
+}
+func (m *GetProtocolByNameRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetProtocolByNameRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetProtocolByNameRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetProtocolByNameRequest proto.InternalMessageInfo
+
+func (m *GetProtocolByNameRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type GetProtocolByNameResponse struct {
+	Protocol *Protocol `protobuf:"bytes,1,opt,name=protocol,proto3" json:"protocol,omitempty"`
+}
+
+func (m *GetProtocolByNameResponse) Reset()         { *m = GetProtocolByNameResponse{} }
+func (m *GetProtocolByNameResponse) String() string { return proto.CompactTextString(m) }
+func (*GetProtocolByNameResponse) ProtoMessage()    {}
+func (*GetProtocolByNameResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{3}
+}
+func (m *GetProtocolByNameResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetProtocolByNameResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetProtocolByNameResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetProtocolByNameResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetProtocolByNameResponse.Merge(m, src)
+}
+func (m *GetProtocolByNameResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetProtocolByNameResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetProtocolByNameResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetProtocolByNameResponse proto.InternalMessageInfo
+
+func (m *GetProtocolByNameResponse) GetProtocol() *Protocol {
+	if m != nil {
+		return m.Protocol
+	}
+	return nil
+}
+
+type GetProtocolsByStatusRequest struct {
+	Status ProtocolStatus `protobuf:"varint,1,opt,name=status,proto3,enum=scalar.protocol.v1beta1.ProtocolStatus" json:"status,omitempty"`
+}
+
+func (m *GetProtocolsByStatusRequest) Reset()         { *m = GetProtocolsByStatusRequest{} }
+func (m *GetProtocolsByStatusRequest) String() string { return proto.CompactTextString(m) }
+func (*GetProtocolsByStatusRequest) ProtoMessage()    {}
+func (*GetProtocolsByStatusRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{4}
+}
+func (m *GetProtocolsByStatusRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetProtocolsByStatusRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetProtocolsByStatusRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetProtocolsByStatusRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetProtocolsByStatusRequest.Merge(m, src)
+}
+func (m *GetProtocolsByStatusRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetProtocolsByStatusRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetProtocolsByStatusRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetProtocolsByStatusRequest proto.InternalMessageInfo
+
+func (m *GetProtocolsByStatusRequest) GetStatus() ProtocolStatus {
+	if m != nil {
+		return m.Status
+	}
+	return StatusUnspecified
+}
+
+type GetProtocolsByStatusResponse struct {
+	Protocols []*Protocol `protobuf:"bytes,1,rep,name=protocols,proto3" json:"protocols,omitempty"`
+}
+
+func (m *GetProtocolsByStatusResponse) Reset()         { *m = GetProtocolsByStatusResponse{} }
+func (m *GetProtocolsByStatusResponse) String() string { return proto.CompactTextString(m) }
+func (*GetProtocolsByStatusResponse) ProtoMessage()    {}
+func (*GetProtocolsByStatusResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{5}
+}
+func (m *GetProtocolsByStatusResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetProtocolsByStatusResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetProtocolsByStatusResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetProtocolsByStatusResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetProtocolsByStatusResponse.Merge(m, src)
+}
+func (m *GetProtocolsByStatusResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetProtocolsByStatusResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetProtocolsByStatusResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetProtocolsByStatusResponse proto.InternalMessageInfo
+
+func (m *GetProtocolsByStatusResponse) GetProtocols() []*Protocol {
+	if m != nil {
+		return m.Protocols
+	}
+	return nil
+}
+
+type GetProtocolByScalarPkRequest struct {
+	ScalarPk []byte `protobuf:"bytes,1,opt,name=scalar_pk,json=scalarPk,proto3" json:"scalar_pk,omitempty"`
+}
+
+func (m *GetProtocolByScalarPkRequest) Reset()         { *m = GetProtocolByScalarPkRequest{} }
+func (m *GetProtocolByScalarPkRequest) String() string { return proto.CompactTextString(m) }
+func (*GetProtocolByScalarPkRequest) ProtoMessage()    {}
+func (*GetProtocolByScalarPkRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{6}
+}
+func (m *GetProtocolByScalarPkRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetProtocolByScalarPkRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetProtocolByScalarPkRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetProtocolByScalarPkRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetProtocolByScalarPkRequest.Merge(m, src)
+}
+func (m *GetProtocolByScalarPkRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetProtocolByScalarPkRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetProtocolByScalarPkRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetProtocolByScalarPkRequest proto.InternalMessageInfo
+
+func (m *GetProtocolByScalarPkRequest) GetScalarPk() []byte {
+	if m != nil {
+		return m.ScalarPk
+	}
+	return nil
+}
+
+type GetProtocolByScalarPkResponse struct {
+	Protocol *Protocol `protobuf:"bytes,1,opt,name=protocol,proto3" json:"protocol,omitempty"`
+}
+
+func (m *GetProtocolByScalarPkResponse) Reset()         { *m = GetProtocolByScalarPkResponse{} }
+func (m *GetProtocolByScalarPkResponse) String() string { return proto.CompactTextString(m) }
+func (*GetProtocolByScalarPkResponse) ProtoMessage()    {}
+func (*GetProtocolByScalarPkResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{7}
+}
+func (m *GetProtocolByScalarPkResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetProtocolByScalarPkResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetProtocolByScalarPkResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetProtocolByScalarPkResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetProtocolByScalarPkResponse.Merge(m, src)
+}
+func (m *GetProtocolByScalarPkResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetProtocolByScalarPkResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetProtocolByScalarPkResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetProtocolByScalarPkResponse proto.InternalMessageInfo
+
+func (m *GetProtocolByScalarPkResponse) GetProtocol() *Protocol {
+	if m != nil {
+		return m.Protocol
+	}
+	return nil
+}
+
+type GetCustodiansRequest struct {
+}
+
+func (m *GetCustodiansRequest) Reset()         { *m = GetCustodiansRequest{} }
+func (m *GetCustodiansRequest) String() string { return proto.CompactTextString(m) }
+func (*GetCustodiansRequest) ProtoMessage()    {}
+func (*GetCustodiansRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{8}
+}
+func (m *GetCustodiansRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetCustodiansRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetCustodiansRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetCustodiansRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCustodiansRequest.Merge(m, src)
+}
+func (m *GetCustodiansRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetCustodiansRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCustodiansRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetCustodiansRequest proto.InternalMessageInfo
+
+type GetCustodiansResponse struct {
+	Custodians []*Custodian `protobuf:"bytes,1,rep,name=custodians,proto3" json:"custodians,omitempty"`
+}
+
+func (m *GetCustodiansResponse) Reset()         { *m = GetCustodiansResponse{} }
+func (m *GetCustodiansResponse) String() string { return proto.CompactTextString(m) }
+func (*GetCustodiansResponse) ProtoMessage()    {}
+func (*GetCustodiansResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{9}
+}
+func (m *GetCustodiansResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetCustodiansResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetCustodiansResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetCustodiansResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCustodiansResponse.Merge(m, src)
+}
+func (m *GetCustodiansResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetCustodiansResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCustodiansResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetCustodiansResponse proto.InternalMessageInfo
+
+func (m *GetCustodiansResponse) GetCustodians() []*Custodian {
+	if m != nil {
+		return m.Custodians
+	}
+	return nil
+}
+
+type GetCustodianByNameRequest struct {
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (m *GetCustodianByNameRequest) Reset()         { *m = GetCustodianByNameRequest{} }
+func (m *GetCustodianByNameRequest) String() string { return proto.CompactTextString(m) }
+func (*GetCustodianByNameRequest) ProtoMessage()    {}
+func (*GetCustodianByNameRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{10}
+}
+func (m *GetCustodianByNameRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetCustodianByNameRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetCustodianByNameRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetCustodianByNameRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCustodianByNameRequest.Merge(m, src)
+}
+func (m *GetCustodianByNameRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetCustodianByNameRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCustodianByNameRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetCustodianByNameRequest proto.InternalMessageInfo
+
+func (m *GetCustodianByNameRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type GetCustodianByNameResponse struct {
+	Custodian *Custodian `protobuf:"bytes,1,opt,name=custodian,proto3" json:"custodian,omitempty"`
+}
+
+func (m *GetCustodianByNameResponse) Reset()         { *m = GetCustodianByNameResponse{} }
+func (m *GetCustodianByNameResponse) String() string { return proto.CompactTextString(m) }
+func (*GetCustodianByNameResponse) ProtoMessage()    {}
+func (*GetCustodianByNameResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{11}
+}
+func (m *GetCustodianByNameResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetCustodianByNameResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetCustodianByNameResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetCustodianByNameResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCustodianByNameResponse.Merge(m, src)
+}
+func (m *GetCustodianByNameResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetCustodianByNameResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCustodianByNameResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetCustodianByNameResponse proto.InternalMessageInfo
+
+func (m *GetCustodianByNameResponse) GetCustodian() *Custodian {
+	if m != nil {
+		return m.Custodian
+	}
+	return nil
+}
+
+type GetCustodianGroupsRequest struct {
+}
+
+func (m *GetCustodianGroupsRequest) Reset()         { *m = GetCustodianGroupsRequest{} }
+func (m *GetCustodianGroupsRequest) String() string { return proto.CompactTextString(m) }
+func (*GetCustodianGroupsRequest) ProtoMessage()    {}
+func (*GetCustodianGroupsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{12}
+}
+func (m *GetCustodianGroupsRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetCustodianGroupsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetCustodianGroupsRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetCustodianGroupsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCustodianGroupsRequest.Merge(m, src)
+}
+func (m *GetCustodianGroupsRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetCustodianGroupsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCustodianGroupsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetCustodianGroupsRequest proto.InternalMessageInfo
+
+type GetCustodianGroupsResponse struct {
+	CustodianGroups []*CustodianGroup `protobuf:"bytes,1,rep,name=custodian_groups,json=custodianGroups,proto3" json:"custodian_groups,omitempty"`
+}
+
+func (m *GetCustodianGroupsResponse) Reset()         { *m = GetCustodianGroupsResponse{} }
+func (m *GetCustodianGroupsResponse) String() string { return proto.CompactTextString(m) }
+func (*GetCustodianGroupsResponse) ProtoMessage()    {}
+func (*GetCustodianGroupsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{13}
+}
+func (m *GetCustodianGroupsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetCustodianGroupsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetCustodianGroupsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetCustodianGroupsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCustodianGroupsResponse.Merge(m, src)
+}
+func (m *GetCustodianGroupsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetCustodianGroupsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCustodianGroupsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetCustodianGroupsResponse proto.InternalMessageInfo
+
+func (m *GetCustodianGroupsResponse) GetCustodianGroups() []*CustodianGroup {
+	if m != nil {
+		return m.CustodianGroups
+	}
+	return nil
+}
+
+type GetCustodianGroupByNameRequest struct {
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (m *GetCustodianGroupByNameRequest) Reset()         { *m = GetCustodianGroupByNameRequest{} }
+func (m *GetCustodianGroupByNameRequest) String() string { return proto.CompactTextString(m) }
+func (*GetCustodianGroupByNameRequest) ProtoMessage()    {}
+func (*GetCustodianGroupByNameRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{14}
+}
+func (m *GetCustodianGroupByNameRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetCustodianGroupByNameRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetCustodianGroupByNameRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetCustodianGroupByNameRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCustodianGroupByNameRequest.Merge(m, src)
+}
+func (m *GetCustodianGroupByNameRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetCustodianGroupByNameRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCustodianGroupByNameRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetCustodianGroupByNameRequest proto.InternalMessageInfo
+
+func (m *GetCustodianGroupByNameRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type GetCustodianGroupByNameResponse struct {
+	CustodianGroup *CustodianGroup `protobuf:"bytes,1,opt,name=custodian_group,json=custodianGroup,proto3" json:"custodian_group,omitempty"`
+}
+
+func (m *GetCustodianGroupByNameResponse) Reset()         { *m = GetCustodianGroupByNameResponse{} }
+func (m *GetCustodianGroupByNameResponse) String() string { return proto.CompactTextString(m) }
+func (*GetCustodianGroupByNameResponse) ProtoMessage()    {}
+func (*GetCustodianGroupByNameResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{15}
+}
+func (m *GetCustodianGroupByNameResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetCustodianGroupByNameResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetCustodianGroupByNameResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetCustodianGroupByNameResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCustodianGroupByNameResponse.Merge(m, src)
+}
+func (m *GetCustodianGroupByNameResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetCustodianGroupByNameResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCustodianGroupByNameResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetCustodianGroupByNameResponse proto.InternalMessageInfo
+
+func (m *GetCustodianGroupByNameResponse) GetCustodianGroup() *CustodianGroup {
+	if m != nil {
+		return m.CustodianGroup
+	}
+	return nil
+}
+
+type GetDestinationChainsByProtocolNameRequest struct {
+	ProtocolName string `protobuf:"bytes,1,opt,name=protocol_name,json=protocolName,proto3" json:"protocol_name,omitempty"`
+}
+
+func (m *GetDestinationChainsByProtocolNameRequest) Reset() {
+	*m = GetDestinationChainsByProtocolNameRequest{}
+}
+func (m *GetDestinationChainsByProtocolNameRequest) String() string {
+	return proto.CompactTextString(m)
+}
+func (*GetDestinationChainsByProtocolNameRequest) ProtoMessage() {}
+func (*GetDestinationChainsByProtocolNameRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{16}
+}
+func (m *GetDestinationChainsByProtocolNameRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetDestinationChainsByProtocolNameRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetDestinationChainsByProtocolNameRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetDestinationChainsByProtocolNameRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDestinationChainsByProtocolNameRequest.Merge(m, src)
+}
+func (m *GetDestinationChainsByProtocolNameRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetDestinationChainsByProtocolNameRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDestinationChainsByProtocolNameRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDestinationChainsByProtocolNameRequest proto.InternalMessageInfo
+
+func (m *GetDestinationChainsByProtocolNameRequest) GetProtocolName() string {
+	if m != nil {
+		return m.ProtocolName
+	}
+	return ""
+}
+
+type GetDestinationChainsByProtocolNameResponse struct {
+	DestinationChains []*DestinationChain `protobuf:"bytes,1,rep,name=destination_chains,json=destinationChains,proto3" json:"destination_chains,omitempty"`
+}
+
+func (m *GetDestinationChainsByProtocolNameResponse) Reset() {
+	*m = GetDestinationChainsByProtocolNameResponse{}
+}
+func (m *GetDestinationChainsByProtocolNameResponse) String() string {
+	return proto.CompactTextString(m)
+}
+func (*GetDestinationChainsByProtocolNameResponse) ProtoMessage() {}
+func (*GetDestinationChainsByProtocolNameResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{17}
+}
+func (m *GetDestinationChainsByProtocolNameResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetDestinationChainsByProtocolNameResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetDestinationChainsByProtocolNameResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetDestinationChainsByProtocolNameResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDestinationChainsByProtocolNameResponse.Merge(m, src)
+}
+func (m *GetDestinationChainsByProtocolNameResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetDestinationChainsByProtocolNameResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDestinationChainsByProtocolNameResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDestinationChainsByProtocolNameResponse proto.InternalMessageInfo
+
+func (m *GetDestinationChainsByProtocolNameResponse) GetDestinationChains() []*DestinationChain {
+	if m != nil {
+		return m.DestinationChains
+	}
+	return nil
+}
+
+type GetAvailableBtcNetworksRequest struct {
+}
+
+func (m *GetAvailableBtcNetworksRequest) Reset()         { *m = GetAvailableBtcNetworksRequest{} }
+func (m *GetAvailableBtcNetworksRequest) String() string { return proto.CompactTextString(m) }
+func (*GetAvailableBtcNetworksRequest) ProtoMessage()    {}
+func (*GetAvailableBtcNetworksRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{18}
+}
+func (m *GetAvailableBtcNetworksRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetAvailableBtcNetworksRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetAvailableBtcNetworksRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetAvailableBtcNetworksRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAvailableBtcNetworksRequest.Merge(m, src)
+}
+func (m *GetAvailableBtcNetworksRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetAvailableBtcNetworksRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAvailableBtcNetworksRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAvailableBtcNetworksRequest proto.InternalMessageInfo
+
+type GetAvailableBtcNetworksResponse struct {
+	BtcNetworks []string `protobuf:"bytes,1,rep,name=btc_networks,json=btcNetworks,proto3" json:"btc_networks,omitempty"`
+}
+
+func (m *GetAvailableBtcNetworksResponse) Reset()         { *m = GetAvailableBtcNetworksResponse{} }
+func (m *GetAvailableBtcNetworksResponse) String() string { return proto.CompactTextString(m) }
+func (*GetAvailableBtcNetworksResponse) ProtoMessage()    {}
+func (*GetAvailableBtcNetworksResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{19}
+}
+func (m *GetAvailableBtcNetworksResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetAvailableBtcNetworksResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetAvailableBtcNetworksResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetAvailableBtcNetworksResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAvailableBtcNetworksResponse.Merge(m, src)
+}
+func (m *GetAvailableBtcNetworksResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetAvailableBtcNetworksResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAvailableBtcNetworksResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAvailableBtcNetworksResponse proto.InternalMessageInfo
+
+func (m *GetAvailableBtcNetworksResponse) GetBtcNetworks() []string {
+	if m != nil {
+		return m.BtcNetworks
+	}
+	return nil
+}
+
+type GetAvailableCustodianGroupsByBtcNetworkNameRequest struct {
+	BtcNetworkName string `protobuf:"bytes,1,opt,name=btc_network_name,json=btcNetworkName,proto3" json:"btc_network_name,omitempty"`
+}
+
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameRequest) Reset() {
+	*m = GetAvailableCustodianGroupsByBtcNetworkNameRequest{}
+}
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameRequest) String() string {
+	return proto.CompactTextString(m)
+}
+func (*GetAvailableCustodianGroupsByBtcNetworkNameRequest) ProtoMessage() {}
+func (*GetAvailableCustodianGroupsByBtcNetworkNameRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{20}
+}
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetAvailableCustodianGroupsByBtcNetworkNameRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAvailableCustodianGroupsByBtcNetworkNameRequest.Merge(m, src)
+}
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAvailableCustodianGroupsByBtcNetworkNameRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAvailableCustodianGroupsByBtcNetworkNameRequest proto.InternalMessageInfo
+
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameRequest) GetBtcNetworkName() string {
+	if m != nil {
+		return m.BtcNetworkName
+	}
+	return ""
+}
+
+type GetAvailableCustodianGroupsByBtcNetworkNameResponse struct {
+	CustodianGroupNames []string `protobuf:"bytes,1,rep,name=custodian_group_names,json=custodianGroupNames,proto3" json:"custodian_group_names,omitempty"`
+}
+
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameResponse) Reset() {
+	*m = GetAvailableCustodianGroupsByBtcNetworkNameResponse{}
+}
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameResponse) String() string {
+	return proto.CompactTextString(m)
+}
+func (*GetAvailableCustodianGroupsByBtcNetworkNameResponse) ProtoMessage() {}
+func (*GetAvailableCustodianGroupsByBtcNetworkNameResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{21}
+}
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetAvailableCustodianGroupsByBtcNetworkNameResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAvailableCustodianGroupsByBtcNetworkNameResponse.Merge(m, src)
+}
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAvailableCustodianGroupsByBtcNetworkNameResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAvailableCustodianGroupsByBtcNetworkNameResponse proto.InternalMessageInfo
+
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameResponse) GetCustodianGroupNames() []string {
+	if m != nil {
+		return m.CustodianGroupNames
+	}
+	return nil
+}
+
+type GetAvailableChainTypesRequest struct {
+}
+
+func (m *GetAvailableChainTypesRequest) Reset()         { *m = GetAvailableChainTypesRequest{} }
+func (m *GetAvailableChainTypesRequest) String() string { return proto.CompactTextString(m) }
+func (*GetAvailableChainTypesRequest) ProtoMessage()    {}
+func (*GetAvailableChainTypesRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{22}
+}
+func (m *GetAvailableChainTypesRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetAvailableChainTypesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetAvailableChainTypesRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetAvailableChainTypesRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAvailableChainTypesRequest.Merge(m, src)
+}
+func (m *GetAvailableChainTypesRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetAvailableChainTypesRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAvailableChainTypesRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAvailableChainTypesRequest proto.InternalMessageInfo
+
+type GetAvailableChainTypesResponse struct {
+	ChainTypes []string `protobuf:"bytes,1,rep,name=chain_types,json=chainTypes,proto3" json:"chain_types,omitempty"`
+}
+
+func (m *GetAvailableChainTypesResponse) Reset()         { *m = GetAvailableChainTypesResponse{} }
+func (m *GetAvailableChainTypesResponse) String() string { return proto.CompactTextString(m) }
+func (*GetAvailableChainTypesResponse) ProtoMessage()    {}
+func (*GetAvailableChainTypesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{23}
+}
+func (m *GetAvailableChainTypesResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetAvailableChainTypesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetAvailableChainTypesResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetAvailableChainTypesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAvailableChainTypesResponse.Merge(m, src)
+}
+func (m *GetAvailableChainTypesResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetAvailableChainTypesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAvailableChainTypesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAvailableChainTypesResponse proto.InternalMessageInfo
+
+func (m *GetAvailableChainTypesResponse) GetChainTypes() []string {
+	if m != nil {
+		return m.ChainTypes
+	}
+	return nil
+}
+
+type GetAvailableChainsByChainTypeRequest struct {
+	ChainType string `protobuf:"bytes,1,opt,name=chain_type,json=chainType,proto3" json:"chain_type,omitempty"`
+}
+
+func (m *GetAvailableChainsByChainTypeRequest) Reset()         { *m = GetAvailableChainsByChainTypeRequest{} }
+func (m *GetAvailableChainsByChainTypeRequest) String() string { return proto.CompactTextString(m) }
+func (*GetAvailableChainsByChainTypeRequest) ProtoMessage()    {}
+func (*GetAvailableChainsByChainTypeRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{24}
+}
+func (m *GetAvailableChainsByChainTypeRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetAvailableChainsByChainTypeRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetAvailableChainsByChainTypeRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetAvailableChainsByChainTypeRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAvailableChainsByChainTypeRequest.Merge(m, src)
+}
+func (m *GetAvailableChainsByChainTypeRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetAvailableChainsByChainTypeRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAvailableChainsByChainTypeRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAvailableChainsByChainTypeRequest proto.InternalMessageInfo
+
+func (m *GetAvailableChainsByChainTypeRequest) GetChainType() string {
+	if m != nil {
+		return m.ChainType
+	}
+	return ""
+}
+
+type GetAvailableChainsByChainTypeResponse struct {
+	ShortenedChains []*GetAvailableChainsByChainTypeResponse_ShortenedChain `protobuf:"bytes,1,rep,name=shortened_chains,json=shortenedChains,proto3" json:"shortened_chains,omitempty"`
+}
+
+func (m *GetAvailableChainsByChainTypeResponse) Reset()         { *m = GetAvailableChainsByChainTypeResponse{} }
+func (m *GetAvailableChainsByChainTypeResponse) String() string { return proto.CompactTextString(m) }
+func (*GetAvailableChainsByChainTypeResponse) ProtoMessage()    {}
+func (*GetAvailableChainsByChainTypeResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{25}
+}
+func (m *GetAvailableChainsByChainTypeResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetAvailableChainsByChainTypeResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetAvailableChainsByChainTypeResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetAvailableChainsByChainTypeResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAvailableChainsByChainTypeResponse.Merge(m, src)
+}
+func (m *GetAvailableChainsByChainTypeResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetAvailableChainsByChainTypeResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAvailableChainsByChainTypeResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAvailableChainsByChainTypeResponse proto.InternalMessageInfo
+
+func (m *GetAvailableChainsByChainTypeResponse) GetShortenedChains() []*GetAvailableChainsByChainTypeResponse_ShortenedChain {
+	if m != nil {
+		return m.ShortenedChains
+	}
+	return nil
+}
+
+type GetAvailableChainsByChainTypeResponse_ShortenedChain struct {
+	ChainName string `protobuf:"bytes,1,opt,name=chain_name,json=chainName,proto3" json:"chain_name,omitempty"`
+	ChainId   uint64 `protobuf:"varint,2,opt,name=chain_id,json=chainId,proto3" json:"chain_id,omitempty"`
+}
+
+func (m *GetAvailableChainsByChainTypeResponse_ShortenedChain) Reset() {
+	*m = GetAvailableChainsByChainTypeResponse_ShortenedChain{}
+}
+func (m *GetAvailableChainsByChainTypeResponse_ShortenedChain) String() string {
+	return proto.CompactTextString(m)
+}
+func (*GetAvailableChainsByChainTypeResponse_ShortenedChain) ProtoMessage() {}
+func (*GetAvailableChainsByChainTypeResponse_ShortenedChain) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{25, 0}
+}
+func (m *GetAvailableChainsByChainTypeResponse_ShortenedChain) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetAvailableChainsByChainTypeResponse_ShortenedChain) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetAvailableChainsByChainTypeResponse_ShortenedChain.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetAvailableChainsByChainTypeResponse_ShortenedChain) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAvailableChainsByChainTypeResponse_ShortenedChain.Merge(m, src)
+}
+func (m *GetAvailableChainsByChainTypeResponse_ShortenedChain) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetAvailableChainsByChainTypeResponse_ShortenedChain) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAvailableChainsByChainTypeResponse_ShortenedChain.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAvailableChainsByChainTypeResponse_ShortenedChain proto.InternalMessageInfo
+
+func (m *GetAvailableChainsByChainTypeResponse_ShortenedChain) GetChainName() string {
+	if m != nil {
+		return m.ChainName
+	}
+	return ""
+}
+
+func (m *GetAvailableChainsByChainTypeResponse_ShortenedChain) GetChainId() uint64 {
+	if m != nil {
+		return m.ChainId
+	}
+	return 0
+}
+
 func init() {
-	proto.RegisterEnum("scalar.protocol.v1beta1.ProtocolStatus", ProtocolStatus_name, ProtocolStatus_value)
-	proto.RegisterType((*ProtocolRequest)(nil), "scalar.protocol.v1beta1.ProtocolRequest")
-	proto.RegisterType((*ProtocolResponse)(nil), "scalar.protocol.v1beta1.ProtocolResponse")
+	proto.RegisterType((*GetProtocolsRequest)(nil), "scalar.protocol.v1beta1.GetProtocolsRequest")
+	proto.RegisterType((*GetProtocolsResponse)(nil), "scalar.protocol.v1beta1.GetProtocolsResponse")
+	proto.RegisterType((*GetProtocolByNameRequest)(nil), "scalar.protocol.v1beta1.GetProtocolByNameRequest")
+	proto.RegisterType((*GetProtocolByNameResponse)(nil), "scalar.protocol.v1beta1.GetProtocolByNameResponse")
+	proto.RegisterType((*GetProtocolsByStatusRequest)(nil), "scalar.protocol.v1beta1.GetProtocolsByStatusRequest")
+	proto.RegisterType((*GetProtocolsByStatusResponse)(nil), "scalar.protocol.v1beta1.GetProtocolsByStatusResponse")
+	proto.RegisterType((*GetProtocolByScalarPkRequest)(nil), "scalar.protocol.v1beta1.GetProtocolByScalarPkRequest")
+	proto.RegisterType((*GetProtocolByScalarPkResponse)(nil), "scalar.protocol.v1beta1.GetProtocolByScalarPkResponse")
+	proto.RegisterType((*GetCustodiansRequest)(nil), "scalar.protocol.v1beta1.GetCustodiansRequest")
+	proto.RegisterType((*GetCustodiansResponse)(nil), "scalar.protocol.v1beta1.GetCustodiansResponse")
+	proto.RegisterType((*GetCustodianByNameRequest)(nil), "scalar.protocol.v1beta1.GetCustodianByNameRequest")
+	proto.RegisterType((*GetCustodianByNameResponse)(nil), "scalar.protocol.v1beta1.GetCustodianByNameResponse")
+	proto.RegisterType((*GetCustodianGroupsRequest)(nil), "scalar.protocol.v1beta1.GetCustodianGroupsRequest")
+	proto.RegisterType((*GetCustodianGroupsResponse)(nil), "scalar.protocol.v1beta1.GetCustodianGroupsResponse")
+	proto.RegisterType((*GetCustodianGroupByNameRequest)(nil), "scalar.protocol.v1beta1.GetCustodianGroupByNameRequest")
+	proto.RegisterType((*GetCustodianGroupByNameResponse)(nil), "scalar.protocol.v1beta1.GetCustodianGroupByNameResponse")
+	proto.RegisterType((*GetDestinationChainsByProtocolNameRequest)(nil), "scalar.protocol.v1beta1.GetDestinationChainsByProtocolNameRequest")
+	proto.RegisterType((*GetDestinationChainsByProtocolNameResponse)(nil), "scalar.protocol.v1beta1.GetDestinationChainsByProtocolNameResponse")
+	proto.RegisterType((*GetAvailableBtcNetworksRequest)(nil), "scalar.protocol.v1beta1.GetAvailableBtcNetworksRequest")
+	proto.RegisterType((*GetAvailableBtcNetworksResponse)(nil), "scalar.protocol.v1beta1.GetAvailableBtcNetworksResponse")
+	proto.RegisterType((*GetAvailableCustodianGroupsByBtcNetworkNameRequest)(nil), "scalar.protocol.v1beta1.GetAvailableCustodianGroupsByBtcNetworkNameRequest")
+	proto.RegisterType((*GetAvailableCustodianGroupsByBtcNetworkNameResponse)(nil), "scalar.protocol.v1beta1.GetAvailableCustodianGroupsByBtcNetworkNameResponse")
+	proto.RegisterType((*GetAvailableChainTypesRequest)(nil), "scalar.protocol.v1beta1.GetAvailableChainTypesRequest")
+	proto.RegisterType((*GetAvailableChainTypesResponse)(nil), "scalar.protocol.v1beta1.GetAvailableChainTypesResponse")
+	proto.RegisterType((*GetAvailableChainsByChainTypeRequest)(nil), "scalar.protocol.v1beta1.GetAvailableChainsByChainTypeRequest")
+	proto.RegisterType((*GetAvailableChainsByChainTypeResponse)(nil), "scalar.protocol.v1beta1.GetAvailableChainsByChainTypeResponse")
+	proto.RegisterType((*GetAvailableChainsByChainTypeResponse_ShortenedChain)(nil), "scalar.protocol.v1beta1.GetAvailableChainsByChainTypeResponse.ShortenedChain")
 }
 
 func init() {
@@ -150,32 +1233,56 @@ func init() {
 }
 
 var fileDescriptor_17e7473aa0548727 = []byte{
-	// 348 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x52, 0x2e, 0x4e, 0x4e, 0xcc,
-	0x49, 0x2c, 0xd2, 0x2f, 0x28, 0xca, 0x2f, 0xc9, 0x4f, 0xce, 0xcf, 0xd1, 0x2f, 0x33, 0x4c, 0x4a,
-	0x2d, 0x49, 0x34, 0xd4, 0x2f, 0x2c, 0x4d, 0x2d, 0xaa, 0xd4, 0x03, 0x0b, 0x0b, 0x89, 0x43, 0x14,
-	0xe9, 0xc1, 0x14, 0xe9, 0x41, 0x15, 0x49, 0x89, 0xa4, 0xe7, 0xa7, 0xe7, 0x83, 0x45, 0xf5, 0x41,
-	0x2c, 0x88, 0x02, 0x29, 0x9c, 0x66, 0x96, 0x54, 0x16, 0xa4, 0x16, 0x43, 0x14, 0x29, 0x05, 0x71,
-	0xf1, 0x07, 0x40, 0xe5, 0x83, 0x52, 0x0b, 0x4b, 0x53, 0x8b, 0x4b, 0x84, 0xec, 0xb9, 0xd8, 0x8a,
-	0x4b, 0x12, 0x4b, 0x4a, 0x8b, 0x25, 0x18, 0x15, 0x18, 0x35, 0xf8, 0x8c, 0xd4, 0xf5, 0x70, 0xd8,
-	0xab, 0x07, 0xd3, 0x19, 0x0c, 0x56, 0x1e, 0x04, 0xd5, 0xa6, 0x14, 0xcc, 0x25, 0x80, 0x30, 0xb3,
-	0xb8, 0x20, 0x3f, 0xaf, 0x38, 0x55, 0xc8, 0x9e, 0x8b, 0x13, 0xa6, 0x1d, 0x64, 0x2e, 0xb3, 0x06,
-	0xb7, 0x91, 0x22, 0x41, 0x73, 0x83, 0x10, 0x7a, 0xb4, 0xd6, 0x31, 0x72, 0xf1, 0xa1, 0xda, 0x27,
-	0x64, 0xc6, 0x25, 0x1d, 0x10, 0xe4, 0x1f, 0xe2, 0xef, 0xec, 0xef, 0x13, 0x1f, 0x1c, 0xe2, 0x18,
-	0x12, 0x1a, 0x1c, 0x1f, 0xea, 0x17, 0x1c, 0xe0, 0xea, 0xec, 0xe9, 0xe6, 0xe9, 0xea, 0x22, 0xc0,
-	0x20, 0x25, 0xda, 0x35, 0x57, 0x41, 0x10, 0xa2, 0x38, 0x34, 0xaf, 0xb8, 0x20, 0x35, 0x39, 0x33,
-	0x2d, 0x33, 0x35, 0x45, 0x48, 0x87, 0x4b, 0x12, 0x5d, 0x9f, 0xa3, 0x73, 0x88, 0x67, 0x98, 0x63,
-	0x88, 0xab, 0x8b, 0x00, 0xa3, 0x14, 0x6f, 0xd7, 0x5c, 0x05, 0x4e, 0xc7, 0xe4, 0x92, 0xcc, 0xb2,
-	0xc4, 0x92, 0xd4, 0x14, 0x21, 0x03, 0x4c, 0x5b, 0x5c, 0x5c, 0x11, 0xea, 0x99, 0xa4, 0xf8, 0xbb,
-	0xe6, 0x2a, 0x70, 0xbb, 0xa4, 0x26, 0xc2, 0x74, 0x48, 0xb1, 0x74, 0x2c, 0x96, 0x63, 0x70, 0xf2,
-	0x3e, 0xf1, 0x48, 0x8e, 0xf1, 0xc2, 0x23, 0x39, 0xc6, 0x07, 0x8f, 0xe4, 0x18, 0x27, 0x3c, 0x96,
-	0x63, 0xb8, 0xf0, 0x58, 0x8e, 0xe1, 0xc6, 0x63, 0x39, 0x86, 0x28, 0xc3, 0xf4, 0xcc, 0x92, 0x8c,
-	0xd2, 0x24, 0xbd, 0xe4, 0xfc, 0x5c, 0x7d, 0x48, 0x10, 0xe4, 0x17, 0xa5, 0x43, 0x59, 0xba, 0xc9,
-	0xf9, 0x45, 0xa9, 0xfa, 0x15, 0x88, 0x48, 0x03, 0x47, 0x56, 0x12, 0x1b, 0x98, 0x6f, 0x0c, 0x08,
-	0x00, 0x00, 0xff, 0xff, 0x59, 0xb0, 0xbe, 0x5d, 0x28, 0x02, 0x00, 0x00,
+	// 735 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0x5f, 0x4f, 0xd3, 0x5e,
+	0x18, 0xa6, 0xbf, 0x1f, 0x41, 0xf6, 0x82, 0x03, 0x8b, 0xe8, 0x00, 0x29, 0xe3, 0xa0, 0x61, 0x98,
+	0xd8, 0x85, 0xe1, 0x9d, 0x31, 0x48, 0xc1, 0x10, 0x35, 0x92, 0xa5, 0x98, 0x68, 0x30, 0x59, 0xd3,
+	0x76, 0x27, 0xd0, 0x30, 0xda, 0xd2, 0x73, 0x86, 0xf4, 0x0b, 0x78, 0xed, 0xc7, 0xf2, 0x92, 0x4b,
+	0x2f, 0x0d, 0x5c, 0xfb, 0x1d, 0xcc, 0x4e, 0xdf, 0xfe, 0x1b, 0x6b, 0x36, 0x13, 0xee, 0xda, 0x73,
+	0x9e, 0xe7, 0x79, 0x9f, 0xf7, 0x79, 0xdf, 0xac, 0x83, 0x35, 0x66, 0x9b, 0x1d, 0x33, 0xa8, 0xfb,
+	0x81, 0xc7, 0x3d, 0xdb, 0xeb, 0xd4, 0x2f, 0x36, 0x2d, 0xca, 0xcd, 0xcd, 0xfa, 0x79, 0x97, 0x06,
+	0xa1, 0x2a, 0x8e, 0xe5, 0xc7, 0x11, 0x48, 0x8d, 0x41, 0x2a, 0x82, 0x16, 0x0b, 0xd9, 0x3c, 0xf4,
+	0x29, 0x8b, 0xf0, 0x64, 0x1e, 0xe6, 0xf6, 0x29, 0x6f, 0x22, 0x84, 0xe9, 0xf4, 0xbc, 0x4b, 0x19,
+	0x27, 0x9f, 0xe1, 0x61, 0xfe, 0x98, 0xf9, 0x9e, 0xcb, 0xa8, 0xbc, 0x0d, 0xa5, 0x58, 0x8e, 0x55,
+	0xa4, 0xea, 0xff, 0xb5, 0xa9, 0xc6, 0xaa, 0x5a, 0x60, 0x40, 0x8d, 0xe9, 0x7a, 0xca, 0x21, 0x2a,
+	0x54, 0x32, 0xc2, 0x5a, 0x78, 0x60, 0x9e, 0x51, 0x2c, 0x2a, 0xcb, 0x30, 0xee, 0x9a, 0x67, 0xb4,
+	0x22, 0x55, 0xa5, 0x5a, 0x49, 0x17, 0xcf, 0xe4, 0x08, 0x16, 0x06, 0xe0, 0xd1, 0xcd, 0x6b, 0x98,
+	0x8c, 0x95, 0x05, 0x69, 0x24, 0x33, 0x09, 0x85, 0xb4, 0x60, 0x29, 0xdb, 0xa4, 0x16, 0x1e, 0x72,
+	0x93, 0x77, 0xe3, 0x0c, 0xe4, 0x6d, 0x98, 0x60, 0xe2, 0x40, 0x68, 0x97, 0x1b, 0xeb, 0x43, 0xb5,
+	0x91, 0x8f, 0x34, 0x62, 0xc0, 0x93, 0xc1, 0xfa, 0x77, 0x15, 0xe6, 0xab, 0x5c, 0x01, 0x2d, 0x3c,
+	0x14, 0xdc, 0xe6, 0x69, 0xdc, 0xc1, 0x12, 0x94, 0x22, 0x39, 0xc3, 0x3f, 0x15, 0x4d, 0x4c, 0xeb,
+	0x93, 0x0c, 0x31, 0xa4, 0x05, 0xcb, 0x05, 0xe4, 0xbb, 0x49, 0xf7, 0x91, 0x58, 0xa1, 0xdd, 0x2e,
+	0xe3, 0x5e, 0xdb, 0x31, 0xdd, 0x64, 0xb5, 0xbe, 0xc2, 0x7c, 0xdf, 0x39, 0xd6, 0xd3, 0x00, 0xec,
+	0xe4, 0x14, 0xf3, 0x20, 0x85, 0x15, 0x13, 0x01, 0x3d, 0xc3, 0x22, 0x75, 0xb1, 0x2e, 0xc9, 0xdd,
+	0xf0, 0xfd, 0x6a, 0xc1, 0xe2, 0x20, 0x02, 0x5a, 0x7a, 0x03, 0xa5, 0x44, 0x1c, 0x33, 0x18, 0xc5,
+	0x51, 0x4a, 0x22, 0x4b, 0x79, 0x43, 0xfb, 0x81, 0xd7, 0xf5, 0x93, 0x28, 0xfc, 0x7c, 0xf1, 0xf8,
+	0x12, 0x8b, 0xeb, 0x30, 0x9b, 0xe8, 0x18, 0xc7, 0xe2, 0x0e, 0x53, 0x59, 0x1f, 0xee, 0x41, 0x68,
+	0xe9, 0x33, 0x76, 0x5e, 0x9b, 0xbc, 0x04, 0xe5, 0x56, 0xc5, 0xe1, 0x21, 0x31, 0x58, 0x29, 0x64,
+	0xa1, 0xd9, 0x26, 0xcc, 0xf4, 0x99, 0xc5, 0xbc, 0x46, 0xf6, 0x5a, 0xce, 0x7b, 0x25, 0x4d, 0xd8,
+	0xd8, 0xa7, 0x7c, 0x8f, 0x32, 0xee, 0xb8, 0x26, 0x77, 0x3c, 0x77, 0xf7, 0xc4, 0x74, 0x5c, 0xa6,
+	0x85, 0xf1, 0xae, 0x65, 0x5d, 0xaf, 0xc1, 0xfd, 0x58, 0xdf, 0xc8, 0xd8, 0x9f, 0xf6, 0x33, 0x58,
+	0xf2, 0x5d, 0x82, 0xe7, 0xa3, 0x48, 0x62, 0x4b, 0x5f, 0x40, 0x6e, 0xa7, 0x50, 0xc3, 0x16, 0x58,
+	0x9c, 0xc0, 0x46, 0x61, 0x57, 0xfd, 0xea, 0xfa, 0x83, 0x76, 0x7f, 0x3d, 0x52, 0x15, 0x53, 0xd8,
+	0xb9, 0x30, 0x9d, 0x8e, 0x69, 0x75, 0xa8, 0xc6, 0xed, 0x03, 0xca, 0xbf, 0x79, 0xc1, 0x69, 0xb2,
+	0x19, 0x7b, 0x22, 0xf1, 0xc1, 0x08, 0xb4, 0xb7, 0x0a, 0xd3, 0x16, 0xb7, 0x0d, 0x17, 0xcf, 0x85,
+	0xb1, 0x92, 0x3e, 0x65, 0xa5, 0x50, 0xd2, 0x82, 0x46, 0x56, 0xa5, 0x6f, 0xd1, 0xb4, 0x30, 0x95,
+	0xcd, 0x66, 0x59, 0x83, 0xd9, 0x8c, 0x70, 0x36, 0xce, 0xb2, 0x95, 0x23, 0x10, 0x07, 0xb6, 0xfe,
+	0x49, 0x1f, 0x9d, 0x37, 0x60, 0xbe, 0x6f, 0x57, 0x44, 0x91, 0xb8, 0x85, 0xb9, 0xfc, 0x22, 0xf4,
+	0xa8, 0x8c, 0xac, 0x88, 0x5f, 0xab, 0xb4, 0x54, 0x2f, 0xc8, 0x4f, 0xbd, 0xef, 0x58, 0x9c, 0xd8,
+	0x4e, 0x3e, 0xd3, 0x2c, 0x00, 0xcb, 0xae, 0xc0, 0x94, 0x98, 0xa1, 0x21, 0xbe, 0x7f, 0x58, 0x0c,
+	0xec, 0x04, 0x48, 0xde, 0xc2, 0xd3, 0x5b, 0x12, 0x4c, 0x0b, 0x13, 0xa9, 0x38, 0xa0, 0x65, 0x80,
+	0x54, 0x08, 0xa3, 0x29, 0x25, 0x3a, 0xe4, 0x8f, 0x04, 0xcf, 0x86, 0xe8, 0xa0, 0xa3, 0x4b, 0x98,
+	0x65, 0x27, 0x5e, 0xc0, 0xa9, 0x4b, 0xdb, 0xf9, 0xfd, 0xfa, 0x58, 0xb8, 0x5f, 0x23, 0x29, 0xab,
+	0x87, 0xb1, 0x6c, 0xb4, 0x83, 0x33, 0x2c, 0xf7, 0xce, 0x16, 0xdf, 0x43, 0x39, 0x0f, 0x49, 0x9b,
+	0xca, 0xcc, 0x3b, 0x6a, 0xaa, 0x37, 0x00, 0x79, 0x01, 0x26, 0xa3, 0x6b, 0xa7, 0x5d, 0xf9, 0xaf,
+	0x2a, 0xd5, 0xc6, 0xf5, 0x7b, 0xe2, 0xfd, 0x5d, 0x5b, 0xfb, 0xf0, 0xf3, 0x5a, 0x91, 0xae, 0xae,
+	0x15, 0xe9, 0xf7, 0xb5, 0x22, 0xfd, 0xb8, 0x51, 0xc6, 0xae, 0x6e, 0x94, 0xb1, 0x5f, 0x37, 0xca,
+	0xd8, 0xd1, 0xe6, 0xb1, 0xc3, 0x4f, 0xba, 0x96, 0x6a, 0x7b, 0x67, 0xf5, 0xa8, 0x1f, 0x2f, 0x38,
+	0xc6, 0xa7, 0x17, 0xb6, 0x17, 0xd0, 0xfa, 0x65, 0xfa, 0xef, 0x44, 0x4c, 0xc5, 0x9a, 0x10, 0xef,
+	0x5b, 0x7f, 0x03, 0x00, 0x00, 0xff, 0xff, 0x2e, 0x73, 0xe1, 0x74, 0xfb, 0x08, 0x00, 0x00,
 }
 
-func (m *ProtocolRequest) Marshal() (dAtA []byte, err error) {
+func (m *GetProtocolsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -185,25 +1292,20 @@ func (m *ProtocolRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *ProtocolRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *GetProtocolsRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *ProtocolRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *GetProtocolsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if m.Status != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.Status))
-		i--
-		dAtA[i] = 0x8
-	}
 	return len(dAtA) - i, nil
 }
 
-func (m *ProtocolResponse) Marshal() (dAtA []byte, err error) {
+func (m *GetProtocolsResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -213,12 +1315,12 @@ func (m *ProtocolResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *ProtocolResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *GetProtocolsResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *ProtocolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *GetProtocolsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -240,6 +1342,792 @@ func (m *ProtocolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *GetProtocolByNameRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetProtocolByNameRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetProtocolByNameRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetProtocolByNameResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetProtocolByNameResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetProtocolByNameResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Protocol != nil {
+		{
+			size, err := m.Protocol.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetProtocolsByStatusRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetProtocolsByStatusRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetProtocolsByStatusRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Status != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.Status))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetProtocolsByStatusResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetProtocolsByStatusResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetProtocolsByStatusResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Protocols) > 0 {
+		for iNdEx := len(m.Protocols) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Protocols[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetProtocolByScalarPkRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetProtocolByScalarPkRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetProtocolByScalarPkRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ScalarPk) > 0 {
+		i -= len(m.ScalarPk)
+		copy(dAtA[i:], m.ScalarPk)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.ScalarPk)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetProtocolByScalarPkResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetProtocolByScalarPkResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetProtocolByScalarPkResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Protocol != nil {
+		{
+			size, err := m.Protocol.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetCustodiansRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetCustodiansRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetCustodiansRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *GetCustodiansResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetCustodiansResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetCustodiansResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Custodians) > 0 {
+		for iNdEx := len(m.Custodians) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Custodians[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetCustodianByNameRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetCustodianByNameRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetCustodianByNameRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetCustodianByNameResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetCustodianByNameResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetCustodianByNameResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Custodian != nil {
+		{
+			size, err := m.Custodian.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetCustodianGroupsRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetCustodianGroupsRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetCustodianGroupsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *GetCustodianGroupsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetCustodianGroupsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetCustodianGroupsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.CustodianGroups) > 0 {
+		for iNdEx := len(m.CustodianGroups) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.CustodianGroups[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetCustodianGroupByNameRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetCustodianGroupByNameRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetCustodianGroupByNameRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetCustodianGroupByNameResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetCustodianGroupByNameResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetCustodianGroupByNameResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.CustodianGroup != nil {
+		{
+			size, err := m.CustodianGroup.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetDestinationChainsByProtocolNameRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetDestinationChainsByProtocolNameRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetDestinationChainsByProtocolNameRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ProtocolName) > 0 {
+		i -= len(m.ProtocolName)
+		copy(dAtA[i:], m.ProtocolName)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.ProtocolName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetDestinationChainsByProtocolNameResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetDestinationChainsByProtocolNameResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetDestinationChainsByProtocolNameResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.DestinationChains) > 0 {
+		for iNdEx := len(m.DestinationChains) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.DestinationChains[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetAvailableBtcNetworksRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetAvailableBtcNetworksRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetAvailableBtcNetworksRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *GetAvailableBtcNetworksResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetAvailableBtcNetworksResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetAvailableBtcNetworksResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.BtcNetworks) > 0 {
+		for iNdEx := len(m.BtcNetworks) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.BtcNetworks[iNdEx])
+			copy(dAtA[i:], m.BtcNetworks[iNdEx])
+			i = encodeVarintQuery(dAtA, i, uint64(len(m.BtcNetworks[iNdEx])))
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.BtcNetworkName) > 0 {
+		i -= len(m.BtcNetworkName)
+		copy(dAtA[i:], m.BtcNetworkName)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.BtcNetworkName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.CustodianGroupNames) > 0 {
+		for iNdEx := len(m.CustodianGroupNames) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.CustodianGroupNames[iNdEx])
+			copy(dAtA[i:], m.CustodianGroupNames[iNdEx])
+			i = encodeVarintQuery(dAtA, i, uint64(len(m.CustodianGroupNames[iNdEx])))
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetAvailableChainTypesRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetAvailableChainTypesRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetAvailableChainTypesRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *GetAvailableChainTypesResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetAvailableChainTypesResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetAvailableChainTypesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ChainTypes) > 0 {
+		for iNdEx := len(m.ChainTypes) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.ChainTypes[iNdEx])
+			copy(dAtA[i:], m.ChainTypes[iNdEx])
+			i = encodeVarintQuery(dAtA, i, uint64(len(m.ChainTypes[iNdEx])))
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetAvailableChainsByChainTypeRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetAvailableChainsByChainTypeRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetAvailableChainsByChainTypeRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ChainType) > 0 {
+		i -= len(m.ChainType)
+		copy(dAtA[i:], m.ChainType)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.ChainType)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetAvailableChainsByChainTypeResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetAvailableChainsByChainTypeResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetAvailableChainsByChainTypeResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ShortenedChains) > 0 {
+		for iNdEx := len(m.ShortenedChains) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.ShortenedChains[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *GetAvailableChainsByChainTypeResponse_ShortenedChain) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetAvailableChainsByChainTypeResponse_ShortenedChain) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetAvailableChainsByChainTypeResponse_ShortenedChain) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.ChainId != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.ChainId))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.ChainName) > 0 {
+		i -= len(m.ChainName)
+		copy(dAtA[i:], m.ChainName)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.ChainName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -251,19 +2139,16 @@ func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *ProtocolRequest) Size() (n int) {
+func (m *GetProtocolsRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.Status != 0 {
-		n += 1 + sovQuery(uint64(m.Status))
-	}
 	return n
 }
 
-func (m *ProtocolResponse) Size() (n int) {
+func (m *GetProtocolsResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -278,13 +2163,340 @@ func (m *ProtocolResponse) Size() (n int) {
 	return n
 }
 
+func (m *GetProtocolByNameRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *GetProtocolByNameResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Protocol != nil {
+		l = m.Protocol.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *GetProtocolsByStatusRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Status != 0 {
+		n += 1 + sovQuery(uint64(m.Status))
+	}
+	return n
+}
+
+func (m *GetProtocolsByStatusResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Protocols) > 0 {
+		for _, e := range m.Protocols {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *GetProtocolByScalarPkRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ScalarPk)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *GetProtocolByScalarPkResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Protocol != nil {
+		l = m.Protocol.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *GetCustodiansRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *GetCustodiansResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Custodians) > 0 {
+		for _, e := range m.Custodians {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *GetCustodianByNameRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *GetCustodianByNameResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Custodian != nil {
+		l = m.Custodian.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *GetCustodianGroupsRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *GetCustodianGroupsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.CustodianGroups) > 0 {
+		for _, e := range m.CustodianGroups {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *GetCustodianGroupByNameRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *GetCustodianGroupByNameResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.CustodianGroup != nil {
+		l = m.CustodianGroup.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *GetDestinationChainsByProtocolNameRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ProtocolName)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *GetDestinationChainsByProtocolNameResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.DestinationChains) > 0 {
+		for _, e := range m.DestinationChains {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *GetAvailableBtcNetworksRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *GetAvailableBtcNetworksResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.BtcNetworks) > 0 {
+		for _, s := range m.BtcNetworks {
+			l = len(s)
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.BtcNetworkName)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.CustodianGroupNames) > 0 {
+		for _, s := range m.CustodianGroupNames {
+			l = len(s)
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *GetAvailableChainTypesRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *GetAvailableChainTypesResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.ChainTypes) > 0 {
+		for _, s := range m.ChainTypes {
+			l = len(s)
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *GetAvailableChainsByChainTypeRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ChainType)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *GetAvailableChainsByChainTypeResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.ShortenedChains) > 0 {
+		for _, e := range m.ShortenedChains {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *GetAvailableChainsByChainTypeResponse_ShortenedChain) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ChainName)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	if m.ChainId != 0 {
+		n += 1 + sovQuery(uint64(m.ChainId))
+	}
+	return n
+}
+
 func sovQuery(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
 func sozQuery(x uint64) (n int) {
 	return sovQuery(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *ProtocolRequest) Unmarshal(dAtA []byte) error {
+func (m *GetProtocolsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -307,10 +2519,312 @@ func (m *ProtocolRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ProtocolRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: GetProtocolsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ProtocolRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: GetProtocolsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetProtocolsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetProtocolsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetProtocolsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Protocols", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Protocols = append(m.Protocols, &Protocol{})
+			if err := m.Protocols[len(m.Protocols)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetProtocolByNameRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetProtocolByNameRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetProtocolByNameRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetProtocolByNameResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetProtocolByNameResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetProtocolByNameResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Protocol", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Protocol == nil {
+				m.Protocol = &Protocol{}
+			}
+			if err := m.Protocol.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetProtocolsByStatusRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetProtocolsByStatusRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetProtocolsByStatusRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -353,7 +2867,7 @@ func (m *ProtocolRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *ProtocolResponse) Unmarshal(dAtA []byte) error {
+func (m *GetProtocolsByStatusResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -376,10 +2890,10 @@ func (m *ProtocolResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ProtocolResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: GetProtocolsByStatusResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ProtocolResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: GetProtocolsByStatusResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -416,6 +2930,1641 @@ func (m *ProtocolResponse) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetProtocolByScalarPkRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetProtocolByScalarPkRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetProtocolByScalarPkRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ScalarPk", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ScalarPk = append(m.ScalarPk[:0], dAtA[iNdEx:postIndex]...)
+			if m.ScalarPk == nil {
+				m.ScalarPk = []byte{}
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetProtocolByScalarPkResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetProtocolByScalarPkResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetProtocolByScalarPkResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Protocol", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Protocol == nil {
+				m.Protocol = &Protocol{}
+			}
+			if err := m.Protocol.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetCustodiansRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetCustodiansRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetCustodiansRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetCustodiansResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetCustodiansResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetCustodiansResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Custodians", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Custodians = append(m.Custodians, &Custodian{})
+			if err := m.Custodians[len(m.Custodians)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetCustodianByNameRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetCustodianByNameRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetCustodianByNameRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetCustodianByNameResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetCustodianByNameResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetCustodianByNameResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Custodian", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Custodian == nil {
+				m.Custodian = &Custodian{}
+			}
+			if err := m.Custodian.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetCustodianGroupsRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetCustodianGroupsRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetCustodianGroupsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetCustodianGroupsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetCustodianGroupsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetCustodianGroupsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CustodianGroups", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CustodianGroups = append(m.CustodianGroups, &CustodianGroup{})
+			if err := m.CustodianGroups[len(m.CustodianGroups)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetCustodianGroupByNameRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetCustodianGroupByNameRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetCustodianGroupByNameRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetCustodianGroupByNameResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetCustodianGroupByNameResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetCustodianGroupByNameResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CustodianGroup", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.CustodianGroup == nil {
+				m.CustodianGroup = &CustodianGroup{}
+			}
+			if err := m.CustodianGroup.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetDestinationChainsByProtocolNameRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetDestinationChainsByProtocolNameRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetDestinationChainsByProtocolNameRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProtocolName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ProtocolName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetDestinationChainsByProtocolNameResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetDestinationChainsByProtocolNameResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetDestinationChainsByProtocolNameResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DestinationChains", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DestinationChains = append(m.DestinationChains, &DestinationChain{})
+			if err := m.DestinationChains[len(m.DestinationChains)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetAvailableBtcNetworksRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetAvailableBtcNetworksRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetAvailableBtcNetworksRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetAvailableBtcNetworksResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetAvailableBtcNetworksResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetAvailableBtcNetworksResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcNetworks", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcNetworks = append(m.BtcNetworks, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetAvailableCustodianGroupsByBtcNetworkNameRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetAvailableCustodianGroupsByBtcNetworkNameRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BtcNetworkName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BtcNetworkName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetAvailableCustodianGroupsByBtcNetworkNameResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetAvailableCustodianGroupsByBtcNetworkNameResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetAvailableCustodianGroupsByBtcNetworkNameResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CustodianGroupNames", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CustodianGroupNames = append(m.CustodianGroupNames, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetAvailableChainTypesRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetAvailableChainTypesRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetAvailableChainTypesRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetAvailableChainTypesResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetAvailableChainTypesResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetAvailableChainTypesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainTypes", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChainTypes = append(m.ChainTypes, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetAvailableChainsByChainTypeRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetAvailableChainsByChainTypeRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetAvailableChainsByChainTypeRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainType", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChainType = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetAvailableChainsByChainTypeResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetAvailableChainsByChainTypeResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetAvailableChainsByChainTypeResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ShortenedChains", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ShortenedChains = append(m.ShortenedChains, &GetAvailableChainsByChainTypeResponse_ShortenedChain{})
+			if err := m.ShortenedChains[len(m.ShortenedChains)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetAvailableChainsByChainTypeResponse_ShortenedChain) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ShortenedChain: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ShortenedChain: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChainName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainId", wireType)
+			}
+			m.ChainId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ChainId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipQuery(dAtA[iNdEx:])

@@ -226,8 +226,13 @@ func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types
 					return false, err
 				}
 
+				clog.Green("validateMessage passed")
+
 				chainID := funcs.MustOk(destCk.GetChainID(ctx))
 				keyID := funcs.MustOk(m.GetCurrentKeyID(ctx, chain.Name))
+
+				clog.Green("chainID", chainID)
+				clog.Green("keyID", keyID)
 
 				switch msg.Type() {
 				case nexus.TypeGeneralMessage:
@@ -303,10 +308,10 @@ func validateMessage(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, m typ
 
 func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID multisig.KeyID, msg nexus.GeneralMessage) {
 	cmd := types.NewApproveBridgeCallCommandGeneric(chainID, keyID, common.HexToAddress(msg.GetDestinationAddress()), common.BytesToHash(msg.PayloadHash), common.BytesToHash(msg.SourceTxID), msg.GetSourceChain(), msg.GetSourceAddress(), msg.SourceTxIndex, msg.ID)
-	clog.Redf("[BTC] EnqueueCommand: %+v", cmd)
+	clog.Redf("[Chains] EnqueueCommand: %+v", cmd)
 	funcs.MustNoErr(ck.EnqueueCommand(ctx, cmd))
 
-	events.Emit(ctx, &types.DestCallApproved{
+	destCallApproved := &types.DestCallApproved{
 		Chain:            msg.GetSourceChain(),
 		EventID:          types.EventID(msg.ID),
 		CommandID:        cmd.ID,
@@ -314,7 +319,11 @@ func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID
 		DestinationChain: msg.GetDestinationChain(),
 		ContractAddress:  msg.GetDestinationAddress(),
 		PayloadHash:      types.Hash(common.BytesToHash(msg.PayloadHash)),
-	})
+	}
+
+	clog.Redf("[Chains] destCallApproved: %+v", destCallApproved)
+
+	events.Emit(ctx, destCallApproved)
 
 	ck.Logger(ctx).Debug("completed handling general message",
 		types.AttributeKeyChain, msg.GetDestinationChain(),

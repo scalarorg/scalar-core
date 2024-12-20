@@ -258,14 +258,11 @@ func mustToGeneralMessage(ctx sdk.Context, n types.Nexus, event types.Event) nex
 	id := string(event.GetID())
 	confirmationEvent := event.GetEvent().(*types.Event_ConfirmationEvent).ConfirmationEvent
 
-	clog.Redf("handleConfirmationEvent: %+v", confirmationEvent)
-
 	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
 	sender := nexus.CrossChainAddress{Chain: sourceChain, Address: confirmationEvent.Sender}
 
 	// TODO: GetChain should query by chain type and chain id for more network flexibility
 	destinationChain, ok := n.GetChain(ctx, confirmationEvent.DestinationChain)
-	clog.Redf("destinationChain: %+v", destinationChain)
 	if !ok {
 		// try forwarding it to wasm router if destination chain is not registered
 		// Wasm chain names are always lower case, so normalize it for consistency in core

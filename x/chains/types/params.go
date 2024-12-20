@@ -7,6 +7,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/log"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
@@ -16,13 +17,12 @@ var (
 	KeyConfirmationHeight  = []byte("confirmationHeight")
 	KeyNetworkKind         = []byte("networkKind")
 	KeyRevoteLockingPeriod = []byte("revoteLockingPeriod")
-	KeyChainId             = []byte("chainId")
+	KeyChainID             = []byte("chainId")
 	KeyVotingThreshold     = []byte("votingThreshold")
 	KeyMinVoterCount       = []byte("minVoterCount")
 	KeyVotingGracePeriod   = []byte("votingGracePeriod")
 	KeyEndBlockerLimit     = []byte("endBlockerLimit")
 	KeyTransferLimit       = []byte("transferLimit")
-	KeyNetwork             = []byte("network")
 )
 
 func KeyTable() params.KeyTable {
@@ -41,7 +41,7 @@ func (m *Params) ParamSetPairs() params.ParamSetPairs {
 		params.NewParamSetPair(KeyConfirmationHeight, &m.ConfirmationHeight, validateConfirmationHeight),
 		params.NewParamSetPair(KeyNetworkKind, &m.NetworkKind, validateNetworkKind),
 		params.NewParamSetPair(KeyRevoteLockingPeriod, &m.RevoteLockingPeriod, validateRevoteLockingPeriod),
-		params.NewParamSetPair(KeyChainId, &m.ChainID, validateChainId),
+		params.NewParamSetPair(KeyChainID, &m.ChainID, validateChainId),
 		params.NewParamSetPair(KeyVotingThreshold, &m.VotingThreshold, validateVotingThreshold),
 		params.NewParamSetPair(KeyMinVoterCount, &m.MinVoterCount, validateMinVoterCount),
 		params.NewParamSetPair(KeyVotingGracePeriod, &m.VotingGracePeriod, validateVotingGracePeriod),
@@ -88,11 +88,14 @@ func validateRevoteLockingPeriod(i interface{}) error {
 }
 
 func validateChainId(i interface{}) error {
-	chainId, ok := i.(ChainID)
+	chainId, ok := i.(sdk.Int)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
-	return ValidateChainID(chainId)
+	if !chainId.IsPositive() {
+		return fmt.Errorf("chain id must be positive")
+	}
+	return nil
 }
 
 func validateVotingThreshold(i interface{}) error {
