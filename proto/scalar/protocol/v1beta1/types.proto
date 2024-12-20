@@ -34,7 +34,7 @@ message DestinationChain {
   uint64 chain_id = 2;                    // e.g., "11155111"
   string chain_type = 3;                  // Chain type
   bytes chain_smart_contract_address = 4; // Contract address on the chain
-  axelar.evm.v1beta1.ERC20TokenMetadata token = 5
+  scalar.evm.v1beta1.ERC20TokenMetadata token = 5
       [ (gogoproto.nullable) = false ];
 }
 

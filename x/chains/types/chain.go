@@ -1,14 +1,7 @@
 package types
 
-type ChainID = uint64
+import sdk "github.com/cosmos/cosmos-sdk/types"
 
-const (
-	BTCMainnetChainID ChainID = iota
-	BTCTestnetChainID
-	BTCLitecoinChainID
-	BTCDogecoinChainID
+var (
+	BTCMainnetChainID = sdk.NewInt(1)
 )
-
-func ValidateChainID(c ChainID) error {
-	return nil
-}

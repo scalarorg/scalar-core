@@ -33,10 +33,3 @@ message BatchedCommandsResponse {
   repeated string command_ids = 8 [ (gogoproto.customname) = "CommandIDs" ];
   Proof proof = 9;
 }
-
-message GetTagAndVersionRequest {}
-
-message GetTagAndVersionResponse {
-  bytes tag = 1;
-  bytes version = 2;
-}

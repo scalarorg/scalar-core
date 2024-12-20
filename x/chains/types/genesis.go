@@ -1,6 +1,7 @@
 package types
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	gethParams "github.com/ethereum/go-ethereum/params"
 	utils "github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
@@ -31,7 +32,7 @@ func DefaultGenesisState() GenesisState {
 			{
 				Params: Params{
 					Chain:               exported.Ethereum.Name,
-					ChainID:             gethParams.MainnetChainConfig.ChainID.Uint64(),
+					ChainID:             sdk.NewIntFromBigInt(gethParams.MainnetChainConfig.ChainID),
 					RevoteLockingPeriod: 50,
 					VotingThreshold:     utils.Threshold{Numerator: 51, Denominator: 100},
 					VotingGracePeriod:   3,
