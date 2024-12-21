@@ -87,13 +87,39 @@
     - [QueryService](#scalar.chains.v1beta1.QueryService)
   
 - [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
-    - [Covenant](#scalar.covenant.v1beta1.Covenant)
-    - [CovenantGroup](#scalar.covenant.v1beta1.CovenantGroup)
+    - [Custodian](#scalar.covenant.v1beta1.Custodian)
+    - [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup)
+  
+    - [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus)
   
 - [scalar/covenant/v1beta1/genesis.proto](#scalar/covenant/v1beta1/genesis.proto)
     - [GenesisState](#scalar.covenant.v1beta1.GenesisState)
   
+- [scalar/covenant/v1beta1/params.proto](#scalar/covenant/v1beta1/params.proto)
+    - [Params](#scalar.covenant.v1beta1.Params)
+  
 - [scalar/covenant/v1beta1/query.proto](#scalar/covenant/v1beta1/query.proto)
+    - [CustodianGroupsRequest](#scalar.covenant.v1beta1.CustodianGroupsRequest)
+    - [CustodianGroupsResponse](#scalar.covenant.v1beta1.CustodianGroupsResponse)
+    - [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest)
+    - [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse)
+  
+- [scalar/covenant/v1beta1/tx.proto](#scalar/covenant/v1beta1/tx.proto)
+    - [CreateCustodianGroupRequest](#scalar.covenant.v1beta1.CreateCustodianGroupRequest)
+    - [CreateCustodianGroupResponse](#scalar.covenant.v1beta1.CreateCustodianGroupResponse)
+    - [CreateCustodianRequest](#scalar.covenant.v1beta1.CreateCustodianRequest)
+    - [CreateCustodianResponse](#scalar.covenant.v1beta1.CreateCustodianResponse)
+    - [CustodianToGroupRequest](#scalar.covenant.v1beta1.CustodianToGroupRequest)
+    - [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse)
+    - [UpdateCustodianGroupRequest](#scalar.covenant.v1beta1.UpdateCustodianGroupRequest)
+    - [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse)
+    - [UpdateCustodianRequest](#scalar.covenant.v1beta1.UpdateCustodianRequest)
+    - [UpdateCustodianResponse](#scalar.covenant.v1beta1.UpdateCustodianResponse)
+  
+- [scalar/covenant/v1beta1/service.proto](#scalar/covenant/v1beta1/service.proto)
+    - [MsgService](#scalar.covenant.v1beta1.MsgService)
+    - [QueryService](#scalar.covenant.v1beta1.QueryService)
+  
 - [scalar/tss/exported/v1beta1/types.proto](#scalar/tss/exported/v1beta1/types.proto)
     - [KeyRequirement](#scalar.tss.exported.v1beta1.KeyRequirement)
     - [SigKeyPair](#scalar.tss.exported.v1beta1.SigKeyPair)
@@ -441,75 +467,32 @@
     - [Query](#scalar.permission.v1beta1.Query)
   
 - [scalar/protocol/v1beta1/types.proto](#scalar/protocol/v1beta1/types.proto)
-    - [BtcChain](#scalar.protocol.v1beta1.BtcChain)
-    - [Custodian](#scalar.protocol.v1beta1.Custodian)
-    - [CustodianGroup](#scalar.protocol.v1beta1.CustodianGroup)
-    - [DestinationChain](#scalar.protocol.v1beta1.DestinationChain)
     - [Protocol](#scalar.protocol.v1beta1.Protocol)
+    - [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute)
+    - [SupportedChain](#scalar.protocol.v1beta1.SupportedChain)
   
-    - [ProtocolStatus](#scalar.protocol.v1beta1.ProtocolStatus)
+    - [LiquidityModel](#scalar.protocol.v1beta1.LiquidityModel)
+    - [Status](#scalar.protocol.v1beta1.Status)
   
 - [scalar/protocol/v1beta1/genesis.proto](#scalar/protocol/v1beta1/genesis.proto)
     - [GenesisState](#scalar.protocol.v1beta1.GenesisState)
   
+- [scalar/protocol/v1beta1/params.proto](#scalar/protocol/v1beta1/params.proto)
+    - [Params](#scalar.protocol.v1beta1.Params)
+  
 - [scalar/protocol/v1beta1/query.proto](#scalar/protocol/v1beta1/query.proto)
-    - [GetAvailableBtcNetworksRequest](#scalar.protocol.v1beta1.GetAvailableBtcNetworksRequest)
-    - [GetAvailableBtcNetworksResponse](#scalar.protocol.v1beta1.GetAvailableBtcNetworksResponse)
-    - [GetAvailableChainTypesRequest](#scalar.protocol.v1beta1.GetAvailableChainTypesRequest)
-    - [GetAvailableChainTypesResponse](#scalar.protocol.v1beta1.GetAvailableChainTypesResponse)
-    - [GetAvailableChainsByChainTypeRequest](#scalar.protocol.v1beta1.GetAvailableChainsByChainTypeRequest)
-    - [GetAvailableChainsByChainTypeResponse](#scalar.protocol.v1beta1.GetAvailableChainsByChainTypeResponse)
-    - [GetAvailableChainsByChainTypeResponse.ShortenedChain](#scalar.protocol.v1beta1.GetAvailableChainsByChainTypeResponse.ShortenedChain)
-    - [GetAvailableCustodianGroupsByBtcNetworkNameRequest](#scalar.protocol.v1beta1.GetAvailableCustodianGroupsByBtcNetworkNameRequest)
-    - [GetAvailableCustodianGroupsByBtcNetworkNameResponse](#scalar.protocol.v1beta1.GetAvailableCustodianGroupsByBtcNetworkNameResponse)
-    - [GetCustodianByNameRequest](#scalar.protocol.v1beta1.GetCustodianByNameRequest)
-    - [GetCustodianByNameResponse](#scalar.protocol.v1beta1.GetCustodianByNameResponse)
-    - [GetCustodianGroupByNameRequest](#scalar.protocol.v1beta1.GetCustodianGroupByNameRequest)
-    - [GetCustodianGroupByNameResponse](#scalar.protocol.v1beta1.GetCustodianGroupByNameResponse)
-    - [GetCustodianGroupsRequest](#scalar.protocol.v1beta1.GetCustodianGroupsRequest)
-    - [GetCustodianGroupsResponse](#scalar.protocol.v1beta1.GetCustodianGroupsResponse)
-    - [GetCustodiansRequest](#scalar.protocol.v1beta1.GetCustodiansRequest)
-    - [GetCustodiansResponse](#scalar.protocol.v1beta1.GetCustodiansResponse)
-    - [GetDestinationChainsByProtocolNameRequest](#scalar.protocol.v1beta1.GetDestinationChainsByProtocolNameRequest)
-    - [GetDestinationChainsByProtocolNameResponse](#scalar.protocol.v1beta1.GetDestinationChainsByProtocolNameResponse)
-    - [GetProtocolByNameRequest](#scalar.protocol.v1beta1.GetProtocolByNameRequest)
-    - [GetProtocolByNameResponse](#scalar.protocol.v1beta1.GetProtocolByNameResponse)
-    - [GetProtocolByScalarPkRequest](#scalar.protocol.v1beta1.GetProtocolByScalarPkRequest)
-    - [GetProtocolByScalarPkResponse](#scalar.protocol.v1beta1.GetProtocolByScalarPkResponse)
-    - [GetProtocolsByStatusRequest](#scalar.protocol.v1beta1.GetProtocolsByStatusRequest)
-    - [GetProtocolsByStatusResponse](#scalar.protocol.v1beta1.GetProtocolsByStatusResponse)
-    - [GetProtocolsRequest](#scalar.protocol.v1beta1.GetProtocolsRequest)
-    - [GetProtocolsResponse](#scalar.protocol.v1beta1.GetProtocolsResponse)
+    - [ProtocolsRequest](#scalar.protocol.v1beta1.ProtocolsRequest)
+    - [ProtocolsResponse](#scalar.protocol.v1beta1.ProtocolsResponse)
   
 - [scalar/protocol/v1beta1/tx.proto](#scalar/protocol/v1beta1/tx.proto)
-    - [AddCustodianToCustodianGroupRequest](#scalar.protocol.v1beta1.AddCustodianToCustodianGroupRequest)
-    - [AddCustodianToCustodianGroupResponse](#scalar.protocol.v1beta1.AddCustodianToCustodianGroupResponse)
-    - [AddDestinationChainToProtocolRequest](#scalar.protocol.v1beta1.AddDestinationChainToProtocolRequest)
-    - [AddDestinationChainToProtocolResponse](#scalar.protocol.v1beta1.AddDestinationChainToProtocolResponse)
-    - [CreateCustodianRequest](#scalar.protocol.v1beta1.CreateCustodianRequest)
-    - [CreateCustodianResponse](#scalar.protocol.v1beta1.CreateCustodianResponse)
+    - [AddSupportedChainRequest](#scalar.protocol.v1beta1.AddSupportedChainRequest)
+    - [AddSupportedChainResponse](#scalar.protocol.v1beta1.AddSupportedChainResponse)
     - [CreateProtocolRequest](#scalar.protocol.v1beta1.CreateProtocolRequest)
     - [CreateProtocolResponse](#scalar.protocol.v1beta1.CreateProtocolResponse)
-    - [DeleteCustodianFromCustodianGroupRequest](#scalar.protocol.v1beta1.DeleteCustodianFromCustodianGroupRequest)
-    - [DeleteCustodianFromCustodianGroupResponse](#scalar.protocol.v1beta1.DeleteCustodianFromCustodianGroupResponse)
-    - [DeleteDestinationChainFromProtocolRequest](#scalar.protocol.v1beta1.DeleteDestinationChainFromProtocolRequest)
-    - [DeleteDestinationChainFromProtocolResponse](#scalar.protocol.v1beta1.DeleteDestinationChainFromProtocolResponse)
-    - [DeleteProtocolRequest](#scalar.protocol.v1beta1.DeleteProtocolRequest)
-    - [DeleteProtocolResponse](#scalar.protocol.v1beta1.DeleteProtocolResponse)
-    - [SetProtocolBtcChainRequest](#scalar.protocol.v1beta1.SetProtocolBtcChainRequest)
-    - [SetProtocolBtcChainResponse](#scalar.protocol.v1beta1.SetProtocolBtcChainResponse)
-    - [SetProtocolCustodianGroupRequest](#scalar.protocol.v1beta1.SetProtocolCustodianGroupRequest)
-    - [SetProtocolCustodianGroupResponse](#scalar.protocol.v1beta1.SetProtocolCustodianGroupResponse)
-    - [SetProtocolStatusRequest](#scalar.protocol.v1beta1.SetProtocolStatusRequest)
-    - [SetProtocolStatusResponse](#scalar.protocol.v1beta1.SetProtocolStatusResponse)
-    - [UpdateBtcChainRequest](#scalar.protocol.v1beta1.UpdateBtcChainRequest)
-    - [UpdateBtcChainResponse](#scalar.protocol.v1beta1.UpdateBtcChainResponse)
-    - [UpdateCustodianGroupRequest](#scalar.protocol.v1beta1.UpdateCustodianGroupRequest)
-    - [UpdateCustodianGroupResponse](#scalar.protocol.v1beta1.UpdateCustodianGroupResponse)
-    - [UpdateCustodianRequest](#scalar.protocol.v1beta1.UpdateCustodianRequest)
-    - [UpdateCustodianResponse](#scalar.protocol.v1beta1.UpdateCustodianResponse)
-    - [UpdateProtocolBasicInfoRequest](#scalar.protocol.v1beta1.UpdateProtocolBasicInfoRequest)
-    - [UpdateProtocolBasicInfoResponse](#scalar.protocol.v1beta1.UpdateProtocolBasicInfoResponse)
+    - [UpdateProtocolRequest](#scalar.protocol.v1beta1.UpdateProtocolRequest)
+    - [UpdateProtocolResponse](#scalar.protocol.v1beta1.UpdateProtocolResponse)
+    - [UpdateSupportedChainRequest](#scalar.protocol.v1beta1.UpdateSupportedChainRequest)
+    - [UpdateSupportedChainResponse](#scalar.protocol.v1beta1.UpdateSupportedChainResponse)
   
 - [scalar/protocol/v1beta1/service.proto](#scalar/protocol/v1beta1/service.proto)
     - [MsgService](#scalar.protocol.v1beta1.MsgService)
@@ -1773,39 +1756,63 @@ QueryService defines the gRPC querier service.
 
 
 
-<a name="scalar.covenant.v1beta1.Covenant"></a>
+<a name="scalar.covenant.v1beta1.Custodian"></a>
 
-### Covenant
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `btcpubkey` | [string](#string) |  |  |
-| `name` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.CovenantGroup"></a>
-
-### CovenantGroup
-
+### Custodian
+Custodian represents an individual custodian configuration
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `group_hash` | [string](#string) |  |  |
-| `name` | [string](#string) |  |  |
-| `covenants` | [Covenant](#scalar.covenant.v1beta1.Covenant) | repeated |  |
+| `name` | [string](#string) |  | e.g., "Custodian1" |
+| `btc_pubkey` | [bytes](#bytes) |  | e.g., |
+| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  | "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
+
+Whether the custodian is active |
+| `description` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.CustodianGroup"></a>
+
+### CustodianGroup
+CustodianGroup represents a group of custodians with their configuration
+uid is used as identity of the group, btc_pubkey is change by list of custodians
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `uid` | [string](#string) |  |  |
+| `name` | [string](#string) |  | e.g., "All" |
+| `btc_pubkey` | [string](#string) |  | e.g., |
+| `quorum` | [uint32](#uint32) |  | "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
+
+quorum threshold e.g.,3 |
+| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  | Whether the custodian is active |
+| `description` | [string](#string) |  |  |
+| `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
 
 
 
 
 
  <!-- end messages -->
+
+
+<a name="scalar.covenant.v1beta1.CustodianStatus"></a>
+
+### CustodianStatus
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| CUSTODIAN_STATUS_UNSPECIFIED | 0 |  |
+| CUSTODIAN_STATUS_ACTIVATED | 1 |  |
+| CUSTODIAN_STATUS_DEACTIVATED | 2 |  |
+
 
  <!-- end enums -->
 
@@ -1830,8 +1837,34 @@ QueryService defines the gRPC querier service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `covenants` | [Covenant](#scalar.covenant.v1beta1.Covenant) | repeated |  |
-| `groups` | [CovenantGroup](#scalar.covenant.v1beta1.CovenantGroup) | repeated |  |
+| `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
+| `groups` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/covenant/v1beta1/params.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/covenant/v1beta1/params.proto
+
+
+
+<a name="scalar.covenant.v1beta1.Params"></a>
+
+### Params
+Params represent the genesis parameters for the module
 
 
 
@@ -1853,11 +1886,307 @@ QueryService defines the gRPC querier service.
 ## scalar/covenant/v1beta1/query.proto
 
 
+
+<a name="scalar.covenant.v1beta1.CustodianGroupsRequest"></a>
+
+### CustodianGroupsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `uid` | [string](#string) |  |  |
+| `name` | [string](#string) |  |  |
+| `group_pubkey` | [bytes](#bytes) |  |  |
+| `custodian_pubkey` | [bytes](#bytes) |  |  |
+| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.CustodianGroupsResponse"></a>
+
+### CustodianGroupsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `groups` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.CustodiansRequest"></a>
+
+### CustodiansRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `name` | [string](#string) |  |  |
+| `pubkey` | [bytes](#bytes) |  |  |
+| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.CustodiansResponse"></a>
+
+### CustodiansResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
+
+
+
+
+
  <!-- end messages -->
 
  <!-- end enums -->
 
  <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/covenant/v1beta1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/covenant/v1beta1/tx.proto
+
+
+
+<a name="scalar.covenant.v1beta1.CreateCustodianGroupRequest"></a>
+
+### CreateCustodianGroupRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `uid` | [string](#string) |  |  |
+| `name` | [string](#string) |  |  |
+| `quorum` | [uint32](#uint32) |  |  |
+| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  |  |
+| `description` | [string](#string) |  |  |
+| `custodian` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.CreateCustodianGroupResponse"></a>
+
+### CreateCustodianGroupResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `group` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.CreateCustodianRequest"></a>
+
+### CreateCustodianRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `name` | [string](#string) |  |  |
+| `btc_pubkey` | [bytes](#bytes) |  |  |
+| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  |  |
+| `description` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.CreateCustodianResponse"></a>
+
+### CreateCustodianResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `custodian` | [Custodian](#scalar.covenant.v1beta1.Custodian) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.CustodianToGroupRequest"></a>
+
+### CustodianToGroupRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `guid` | [string](#string) |  | CustodianGroup uid |
+| `custodian_pubkey` | [bytes](#bytes) |  |  |
+| `description` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.CustodianToGroupResponse"></a>
+
+### CustodianToGroupResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `group` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UpdateCustodianGroupRequest"></a>
+
+### UpdateCustodianGroupRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `uid` | [string](#string) |  |  |
+| `name` | [string](#string) |  |  |
+| `quorum` | [uint32](#uint32) |  |  |
+| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  |  |
+| `description` | [string](#string) |  |  |
+| `custodian` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UpdateCustodianGroupResponse"></a>
+
+### UpdateCustodianGroupResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `group` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UpdateCustodianRequest"></a>
+
+### UpdateCustodianRequest
+Pubkey used as key for lookup custodian to update other values
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `btc_pubkey` | [bytes](#bytes) |  |  |
+| `name` | [string](#string) |  |  |
+| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  |  |
+| `description` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UpdateCustodianResponse"></a>
+
+### UpdateCustodianResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `custodian` | [Custodian](#scalar.covenant.v1beta1.Custodian) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/covenant/v1beta1/service.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/covenant/v1beta1/service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="scalar.covenant.v1beta1.MsgService"></a>
+
+### MsgService
+
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `CreateCustodian` | [CreateCustodianRequest](#scalar.covenant.v1beta1.CreateCustodianRequest) | [CreateCustodianResponse](#scalar.covenant.v1beta1.CreateCustodianResponse) | Create custodian | POST|/scalar/covenant/v1beta1/create_custodian|
+| `UpdateCustodian` | [UpdateCustodianRequest](#scalar.covenant.v1beta1.UpdateCustodianRequest) | [UpdateCustodianResponse](#scalar.covenant.v1beta1.UpdateCustodianResponse) | Update custodian | POST|/scalar/covenant/v1beta1/update_custodian|
+| `CreateCustodianGroup` | [CreateCustodianGroupRequest](#scalar.covenant.v1beta1.CreateCustodianGroupRequest) | [CreateCustodianGroupResponse](#scalar.covenant.v1beta1.CreateCustodianGroupResponse) | Create custodian group | POST|/scalar/covenant/v1beta1/create_custodian_group|
+| `UpdateCustodianGroup` | [UpdateCustodianGroupRequest](#scalar.covenant.v1beta1.UpdateCustodianGroupRequest) | [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse) | Update Custodian group | POST|/scalar/covenant/v1beta1/update_custodian_group|
+| `AddCustodianToGroup` | [CustodianToGroupRequest](#scalar.covenant.v1beta1.CustodianToGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Add Custodian to custodian group recalculate taproot pubkey when adding custodian to custodian group | POST|/scalar/covenant/v1beta1/add_custodian_to_group|
+| `RemoveCustodianFromGroup` | [CustodianToGroupRequest](#scalar.covenant.v1beta1.CustodianToGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Remove Custodian from custodian group recalculate taproot address when deleting custodian from custodian group | POST|/scalar/covenant/v1beta1/remove_custodian_from_group|
+
+
+<a name="scalar.covenant.v1beta1.QueryService"></a>
+
+### QueryService
+
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `GetCustodians` | [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest) | [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse) | Get custodians | GET|/scalar/convenant/v1beta1/custodians|
+| `CustodianGroups` | [CustodianGroupsRequest](#scalar.covenant.v1beta1.CustodianGroupsRequest) | [CustodianGroupsResponse](#scalar.covenant.v1beta1.CustodianGroupsResponse) | Get custodian groups | GET|/scalar/covenant/v1beta1/custodian_groups|
 
  <!-- end services -->
 
@@ -6828,71 +7157,45 @@ Query defines the gRPC querier service.
 
 
 
-<a name="scalar.protocol.v1beta1.BtcChain"></a>
+<a name="scalar.protocol.v1beta1.Protocol"></a>
 
-### BtcChain
-BtcChain represents Bitcoin chain configuration
+### Protocol
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `btc_signer_endpoint` | [string](#string) |  | e.g., "https://protocol.testnet.scalar.org/v1/sign-unbonding-tx" |
-| `btc_signer_access_token` | [string](#string) |  | e.g., "616171bb-e71a-4d3f-a4a7-045de8f3cad0" |
-| `btc_signer_address` | [string](#string) |  | e.g., "tb1q37dgjm7e7h385aykhd6gps7uqx0kv26w2ugu8c" |
-| `btc_signer_pk` | [bytes](#bytes) |  | e.g., |
-| `btc_network` | [string](#string) |  | "0x021387aab21303782b17e760c670432559df3968e52cb82cc2d8f9be43a227d5dc"
-
-e.g., "bitcoin-testnet4" |
-
-
+| `pubkey` | [bytes](#bytes) |  |  |
+| `name` | [string](#string) |  |  |
+| `tag` | [string](#string) |  |  |
+| `attribute` | [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute) |  |  |
+| `status` | [Status](#scalar.protocol.v1beta1.Status) |  |  |
+| `custodian_group` | [scalar.covenant.v1beta1.CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
+| `chains` | [SupportedChain](#scalar.protocol.v1beta1.SupportedChain) | repeated |  |
 
 
 
 
-<a name="scalar.protocol.v1beta1.Custodian"></a>
 
-### Custodian
-Custodian represents an individual custodian configuration
+
+<a name="scalar.protocol.v1beta1.ProtocolAttribute"></a>
+
+### ProtocolAttribute
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  | e.g., "Custodian1" |
-| `btc_pk` | [bytes](#bytes) |  | e.g., |
-| `status` | [ProtocolStatus](#scalar.protocol.v1beta1.ProtocolStatus) |  | "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-
-Whether the custodian is active |
-| `description` | [string](#string) |  |  |
+| `model` | [LiquidityModel](#scalar.protocol.v1beta1.LiquidityModel) |  |  |
 
 
 
 
 
 
-<a name="scalar.protocol.v1beta1.CustodianGroup"></a>
+<a name="scalar.protocol.v1beta1.SupportedChain"></a>
 
-### CustodianGroup
-CustodianGroup represents a group of custodians with their configuration
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  | e.g., "All" |
-| `btc_network` | [string](#string) |  | Bitcoin network identifier |
-| `btc_taproot_address` | [string](#string) |  | e.g., |
-| `quorum` | [uint32](#uint32) |  | "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
-
-e.g., 3 |
-| `custodians` | [Custodian](#scalar.protocol.v1beta1.Custodian) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.DestinationChain"></a>
-
-### DestinationChain
+### SupportedChain
 DestinationChain represents a blockchain where tokens can be sent
 
 
@@ -6908,41 +7211,31 @@ DestinationChain represents a blockchain where tokens can be sent
 
 
 
-
-<a name="scalar.protocol.v1beta1.Protocol"></a>
-
-### Protocol
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  |  |
-| `scalar_pk` | [bytes](#bytes) |  |  |
-| `dest_chains` | [DestinationChain](#scalar.protocol.v1beta1.DestinationChain) | repeated |  |
-| `service_tag` | [string](#string) |  |  |
-| `btc_chain` | [BtcChain](#scalar.protocol.v1beta1.BtcChain) |  |  |
-| `custodian_group` | [CustodianGroup](#scalar.protocol.v1beta1.CustodianGroup) |  |  |
-| `is_custodian_only` | [bool](#bool) |  |  |
-| `status` | [ProtocolStatus](#scalar.protocol.v1beta1.ProtocolStatus) |  |  |
-
-
-
-
-
  <!-- end messages -->
 
 
-<a name="scalar.protocol.v1beta1.ProtocolStatus"></a>
+<a name="scalar.protocol.v1beta1.LiquidityModel"></a>
 
-### ProtocolStatus
+### LiquidityModel
 
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| PROTOCOL_STATUS_UNSPECIFIED | 0 |  |
-| PROTOCOL_STATUS_ACTIVATED | 1 |  |
-| PROTOCOL_STATUS_DEACTIVATED | 2 |  |
+| LIQUIDITY_MODEL_POOLING | 0 |  |
+| LIQUIDITY_MODEL_TRANSACTIONAL | 1 |  |
+
+
+
+<a name="scalar.protocol.v1beta1.Status"></a>
+
+### Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNSPECIFIED | 0 |  |
+| STATUS_ACTIVATED | 1 |  |
+| STATUS_DEACTIVATED | 2 |  |
 
 
  <!-- end enums -->
@@ -6984,6 +7277,32 @@ DestinationChain represents a blockchain where tokens can be sent
 
 
 
+<a name="scalar/protocol/v1beta1/params.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/protocol/v1beta1/params.proto
+
+
+
+<a name="scalar.protocol.v1beta1.Params"></a>
+
+### Params
+Params represent the genesis parameters for the module
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/protocol/v1beta1/query.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -6991,375 +7310,26 @@ DestinationChain represents a blockchain where tokens can be sent
 
 
 
-<a name="scalar.protocol.v1beta1.GetAvailableBtcNetworksRequest"></a>
+<a name="scalar.protocol.v1beta1.ProtocolsRequest"></a>
 
-### GetAvailableBtcNetworksRequest
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetAvailableBtcNetworksResponse"></a>
-
-### GetAvailableBtcNetworksResponse
+### ProtocolsRequest
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `btc_networks` | [string](#string) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetAvailableChainTypesRequest"></a>
-
-### GetAvailableChainTypesRequest
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetAvailableChainTypesResponse"></a>
-
-### GetAvailableChainTypesResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain_types` | [string](#string) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetAvailableChainsByChainTypeRequest"></a>
-
-### GetAvailableChainsByChainTypeRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain_type` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetAvailableChainsByChainTypeResponse"></a>
-
-### GetAvailableChainsByChainTypeResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `shortened_chains` | [GetAvailableChainsByChainTypeResponse.ShortenedChain](#scalar.protocol.v1beta1.GetAvailableChainsByChainTypeResponse.ShortenedChain) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetAvailableChainsByChainTypeResponse.ShortenedChain"></a>
-
-### GetAvailableChainsByChainTypeResponse.ShortenedChain
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain_name` | [string](#string) |  |  |
-| `chain_id` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetAvailableCustodianGroupsByBtcNetworkNameRequest"></a>
-
-### GetAvailableCustodianGroupsByBtcNetworkNameRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `btc_network_name` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetAvailableCustodianGroupsByBtcNetworkNameResponse"></a>
-
-### GetAvailableCustodianGroupsByBtcNetworkNameResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `custodian_group_names` | [string](#string) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetCustodianByNameRequest"></a>
-
-### GetCustodianByNameRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
+| `pubkey` | [string](#string) |  |  |
 | `name` | [string](#string) |  |  |
+| `status` | [Status](#scalar.protocol.v1beta1.Status) |  |  |
 
 
 
 
 
 
-<a name="scalar.protocol.v1beta1.GetCustodianByNameResponse"></a>
+<a name="scalar.protocol.v1beta1.ProtocolsResponse"></a>
 
-### GetCustodianByNameResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `custodian` | [Custodian](#scalar.protocol.v1beta1.Custodian) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetCustodianGroupByNameRequest"></a>
-
-### GetCustodianGroupByNameRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetCustodianGroupByNameResponse"></a>
-
-### GetCustodianGroupByNameResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `custodian_group` | [CustodianGroup](#scalar.protocol.v1beta1.CustodianGroup) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetCustodianGroupsRequest"></a>
-
-### GetCustodianGroupsRequest
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetCustodianGroupsResponse"></a>
-
-### GetCustodianGroupsResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `custodian_groups` | [CustodianGroup](#scalar.protocol.v1beta1.CustodianGroup) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetCustodiansRequest"></a>
-
-### GetCustodiansRequest
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetCustodiansResponse"></a>
-
-### GetCustodiansResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `custodians` | [Custodian](#scalar.protocol.v1beta1.Custodian) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetDestinationChainsByProtocolNameRequest"></a>
-
-### GetDestinationChainsByProtocolNameRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `protocol_name` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetDestinationChainsByProtocolNameResponse"></a>
-
-### GetDestinationChainsByProtocolNameResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `destination_chains` | [DestinationChain](#scalar.protocol.v1beta1.DestinationChain) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetProtocolByNameRequest"></a>
-
-### GetProtocolByNameRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetProtocolByNameResponse"></a>
-
-### GetProtocolByNameResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `protocol` | [Protocol](#scalar.protocol.v1beta1.Protocol) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetProtocolByScalarPkRequest"></a>
-
-### GetProtocolByScalarPkRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `scalar_pk` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetProtocolByScalarPkResponse"></a>
-
-### GetProtocolByScalarPkResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `protocol` | [Protocol](#scalar.protocol.v1beta1.Protocol) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetProtocolsByStatusRequest"></a>
-
-### GetProtocolsByStatusRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `status` | [ProtocolStatus](#scalar.protocol.v1beta1.ProtocolStatus) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetProtocolsByStatusResponse"></a>
-
-### GetProtocolsByStatusResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `protocols` | [Protocol](#scalar.protocol.v1beta1.Protocol) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetProtocolsRequest"></a>
-
-### GetProtocolsRequest
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.GetProtocolsResponse"></a>
-
-### GetProtocolsResponse
+### ProtocolsResponse
 
 
 
@@ -7388,88 +7358,31 @@ DestinationChain represents a blockchain where tokens can be sent
 
 
 
-<a name="scalar.protocol.v1beta1.AddCustodianToCustodianGroupRequest"></a>
+<a name="scalar.protocol.v1beta1.AddSupportedChainRequest"></a>
 
-### AddCustodianToCustodianGroupRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `protocol_name` | [string](#string) |  |  |
-| `custodian_group_name` | [string](#string) |  |  |
-| `name` | [string](#string) |  |  |
-| `btc_pk` | [bytes](#bytes) |  | e.g., |
-| `status` | [ProtocolStatus](#scalar.protocol.v1beta1.ProtocolStatus) |  | "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488" |
-| `description` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.AddCustodianToCustodianGroupResponse"></a>
-
-### AddCustodianToCustodianGroupResponse
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.AddDestinationChainToProtocolRequest"></a>
-
-### AddDestinationChainToProtocolRequest
+### AddSupportedChainRequest
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `protocol_name` | [string](#string) |  |  |
-| `chain_name` | [string](#string) |  | e.g., "ethereum-sepolia" |
-| `chain_id` | [uint64](#uint64) |  | e.g., "11155111" |
-| `chain_type` | [string](#string) |  | Chain type |
-| `chain_smart_contract_address` | [bytes](#bytes) |  | Contract address on the chain |
-| `token` | [scalar.evm.v1beta1.ERC20TokenMetadata](#scalar.evm.v1beta1.ERC20TokenMetadata) |  | Fields for ERC20 token |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [SupportedChain](#scalar.protocol.v1beta1.SupportedChain) |  |  |
 
 
 
 
 
 
-<a name="scalar.protocol.v1beta1.AddDestinationChainToProtocolResponse"></a>
+<a name="scalar.protocol.v1beta1.AddSupportedChainResponse"></a>
 
-### AddDestinationChainToProtocolResponse
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.CreateCustodianRequest"></a>
-
-### CreateCustodianRequest
+### AddSupportedChainResponse
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  |  |
-| `btc_pk` | [bytes](#bytes) |  |  |
-| `status` | [ProtocolStatus](#scalar.protocol.v1beta1.ProtocolStatus) |  |  |
-| `description` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.CreateCustodianResponse"></a>
-
-### CreateCustodianResponse
-
+| `protocol` | [Protocol](#scalar.protocol.v1beta1.Protocol) |  |  |
 
 
 
@@ -7484,23 +7397,12 @@ DestinationChain represents a blockchain where tokens can be sent
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
 | `name` | [string](#string) |  | e.g., "protocol-1" |
-| `scalar_pk` | [bytes](#bytes) |  |  |
-| `service_tag` | [string](#string) |  | e.g., "pools" |
-| `btc_signer_endpoint` | [string](#string) |  | Btc chain
-
-e.g., "https://protocol.testnet.scalar.org/v1/sign-unbonding-tx" |
-| `btc_signer_access_token` | [string](#string) |  | e.g., "616171bb-e71a-4d3f-a4a7-045de8f3cad0" |
-| `btc_signer_address` | [string](#string) |  | e.g., "tb1q37dgjm7e7h385aykhd6gps7uqx0kv26w2ugu8c" |
-| `btc_signer_pk` | [bytes](#bytes) |  | e.g., |
-| `btc_network` | [string](#string) |  | "0x021387aab21303782b17e760c670432559df3968e52cb82cc2d8f9be43a227d5dc"
-
-e.g., "bitcoin-testnet4" |
-| `custodian_group_name` | [string](#string) |  | Custodian group
-
-e.g., "All" |
-| `is_custodian_only` | [bool](#bool) |  | e.g., true |
-| `status` | [ProtocolStatus](#scalar.protocol.v1beta1.ProtocolStatus) |  | e.g., PROTOCOL_STATUS_ACTIVATED |
+| `tag` | [string](#string) |  | e.g., "pools" |
+| `attribute` | [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute) |  |  |
+| `custodian_group` | [scalar.covenant.v1beta1.CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
+| `chains` | [SupportedChain](#scalar.protocol.v1beta1.SupportedChain) | repeated |  |
 
 
 
@@ -7513,165 +7415,35 @@ e.g., "All" |
 
 
 
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `protocol` | [Protocol](#scalar.protocol.v1beta1.Protocol) |  |  |
 
 
 
 
-<a name="scalar.protocol.v1beta1.DeleteCustodianFromCustodianGroupRequest"></a>
 
-### DeleteCustodianFromCustodianGroupRequest
 
+<a name="scalar.protocol.v1beta1.UpdateProtocolRequest"></a>
+
+### UpdateProtocolRequest
+pubkey used as protocol unique id
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `protocol_name` | [string](#string) |  |  |
-| `custodian_group_name` | [string](#string) |  |  |
-| `custodian_name` | [string](#string) |  |  |
+| `sender` | [bytes](#bytes) |  |  |
+| `name` | [string](#string) |  |  |
+| `tag` | [string](#string) |  | e.g., "pools" |
 
 
 
 
 
 
-<a name="scalar.protocol.v1beta1.DeleteCustodianFromCustodianGroupResponse"></a>
+<a name="scalar.protocol.v1beta1.UpdateProtocolResponse"></a>
 
-### DeleteCustodianFromCustodianGroupResponse
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.DeleteDestinationChainFromProtocolRequest"></a>
-
-### DeleteDestinationChainFromProtocolRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `protocol_name` | [string](#string) |  |  |
-| `chain_id` | [uint64](#uint64) |  |  |
-| `chain_type` | [string](#string) |  |  |
-| `chain_smart_contract_address` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.DeleteDestinationChainFromProtocolResponse"></a>
-
-### DeleteDestinationChainFromProtocolResponse
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.DeleteProtocolRequest"></a>
-
-### DeleteProtocolRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `protocol_name` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.DeleteProtocolResponse"></a>
-
-### DeleteProtocolResponse
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.SetProtocolBtcChainRequest"></a>
-
-### SetProtocolBtcChainRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `protocol_name` | [string](#string) |  |  |
-| `btc_signer_endpoint` | [string](#string) |  |  |
-| `btc_signer_access_token` | [string](#string) |  |  |
-| `btc_signer_address` | [string](#string) |  |  |
-| `btc_signer_pk` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.SetProtocolBtcChainResponse"></a>
-
-### SetProtocolBtcChainResponse
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.SetProtocolCustodianGroupRequest"></a>
-
-### SetProtocolCustodianGroupRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `protocol_name` | [string](#string) |  |  |
-| `btc_network` | [string](#string) |  |  |
-| `custodian_group_name` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.SetProtocolCustodianGroupResponse"></a>
-
-### SetProtocolCustodianGroupResponse
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.SetProtocolStatusRequest"></a>
-
-### SetProtocolStatusRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `protocol_name` | [string](#string) |  |  |
-| `status` | [ProtocolStatus](#scalar.protocol.v1beta1.ProtocolStatus) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.SetProtocolStatusResponse"></a>
-
-### SetProtocolStatusResponse
+### UpdateProtocolResponse
 
 
 
@@ -7684,111 +7456,33 @@ e.g., "All" |
 
 
 
-<a name="scalar.protocol.v1beta1.UpdateBtcChainRequest"></a>
+<a name="scalar.protocol.v1beta1.UpdateSupportedChainRequest"></a>
 
-### UpdateBtcChainRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `protocol_name` | [string](#string) |  |  |
-| `btc_signer_endpoint` | [string](#string) |  |  |
-| `btc_signer_access_token` | [string](#string) |  |  |
-| `btc_signer_address` | [string](#string) |  |  |
-| `btc_signer_pk` | [bytes](#bytes) |  |  |
-| `btc_network` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.UpdateBtcChainResponse"></a>
-
-### UpdateBtcChainResponse
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.UpdateCustodianGroupRequest"></a>
-
-### UpdateCustodianGroupRequest
+### UpdateSupportedChainRequest
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  |  |
-| `btc_network` | [string](#string) |  |  |
-| `quorum` | [uint32](#uint32) |  |  |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain_family` | [string](#string) |  |  |
+| `chain_id` | [uint64](#uint64) |  |  |
+| `status` | [Status](#scalar.protocol.v1beta1.Status) |  |  |
 
 
 
 
 
 
-<a name="scalar.protocol.v1beta1.UpdateCustodianGroupResponse"></a>
+<a name="scalar.protocol.v1beta1.UpdateSupportedChainResponse"></a>
 
-### UpdateCustodianGroupResponse
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.UpdateCustodianRequest"></a>
-
-### UpdateCustodianRequest
+### UpdateSupportedChainResponse
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  |  |
-| `btc_pk` | [bytes](#bytes) |  |  |
-| `status` | [ProtocolStatus](#scalar.protocol.v1beta1.ProtocolStatus) |  |  |
-| `description` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.UpdateCustodianResponse"></a>
-
-### UpdateCustodianResponse
-
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.UpdateProtocolBasicInfoRequest"></a>
-
-### UpdateProtocolBasicInfoRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `protocol_name` | [string](#string) |  |  |
-| `service_tag` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.UpdateProtocolBasicInfoResponse"></a>
-
-### UpdateProtocolBasicInfoResponse
-
+| `protocol` | [Protocol](#scalar.protocol.v1beta1.Protocol) |  |  |
 
 
 
@@ -7825,19 +7519,9 @@ e.g., "All" |
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `CreateProtocol` | [CreateProtocolRequest](#scalar.protocol.v1beta1.CreateProtocolRequest) | [CreateProtocolResponse](#scalar.protocol.v1beta1.CreateProtocolResponse) | Create protocol | POST|/scalar/protocol/v1beta1/create_protocol|
-| `DeleteProtocol` | [DeleteProtocolRequest](#scalar.protocol.v1beta1.DeleteProtocolRequest) | [DeleteProtocolResponse](#scalar.protocol.v1beta1.DeleteProtocolResponse) | Delete protocol | POST|/scalar/protocol/v1beta1/delete_protocol|
-| `UpdateProtocolBasicInfo` | [UpdateProtocolBasicInfoRequest](#scalar.protocol.v1beta1.UpdateProtocolBasicInfoRequest) | [UpdateProtocolBasicInfoResponse](#scalar.protocol.v1beta1.UpdateProtocolBasicInfoResponse) | Update protocol basic info | POST|/scalar/protocol/v1beta1/update_protocol_basic_info|
-| `SetProtocolStatus` | [SetProtocolStatusRequest](#scalar.protocol.v1beta1.SetProtocolStatusRequest) | [SetProtocolStatusResponse](#scalar.protocol.v1beta1.SetProtocolStatusResponse) | Set protocol status | POST|/scalar/protocol/v1beta1/set_protocol_status|
-| `SetProtocolCustodianGroup` | [SetProtocolCustodianGroupRequest](#scalar.protocol.v1beta1.SetProtocolCustodianGroupRequest) | [SetProtocolCustodianGroupResponse](#scalar.protocol.v1beta1.SetProtocolCustodianGroupResponse) | Set protocol custodian group | POST|/scalar/protocol/v1beta1/set_protocol_custodian_group|
-| `SetProtocolBtcChain` | [SetProtocolBtcChainRequest](#scalar.protocol.v1beta1.SetProtocolBtcChainRequest) | [SetProtocolBtcChainResponse](#scalar.protocol.v1beta1.SetProtocolBtcChainResponse) | Set protocol BTC chain | POST|/scalar/protocol/v1beta1/set_protocol_btc_chain|
-| `AddDestinationChainToProtocol` | [AddDestinationChainToProtocolRequest](#scalar.protocol.v1beta1.AddDestinationChainToProtocolRequest) | [AddDestinationChainToProtocolResponse](#scalar.protocol.v1beta1.AddDestinationChainToProtocolResponse) | Add DestinationChain into protocol | POST|/scalar/protocol/v1beta1/add_destination_chain_to_protocol|
-| `DeleteDestinationChainFromProtocol` | [DeleteDestinationChainFromProtocolRequest](#scalar.protocol.v1beta1.DeleteDestinationChainFromProtocolRequest) | [DeleteDestinationChainFromProtocolResponse](#scalar.protocol.v1beta1.DeleteDestinationChainFromProtocolResponse) | Delete DestinationChain from protocol | POST|/scalar/protocol/v1beta1/delete_destination_chain_from_protocol|
-| `AddCustodianToCustodianGroup` | [AddCustodianToCustodianGroupRequest](#scalar.protocol.v1beta1.AddCustodianToCustodianGroupRequest) | [AddCustodianToCustodianGroupResponse](#scalar.protocol.v1beta1.AddCustodianToCustodianGroupResponse) | Add Custodian to custodian group TODO: recalculate taproot address when adding custodian to custodian group | POST|/scalar/protocol/v1beta1/add_custodian_to_custodian_group|
-| `DeleteCustodianFromCustodianGroup` | [DeleteCustodianFromCustodianGroupRequest](#scalar.protocol.v1beta1.DeleteCustodianFromCustodianGroupRequest) | [DeleteCustodianFromCustodianGroupResponse](#scalar.protocol.v1beta1.DeleteCustodianFromCustodianGroupResponse) | Delete Custodian from custodian group TODO: recalculate taproot address when deleting custodian from custodian group | POST|/scalar/protocol/v1beta1/delete_custodian_from_custodian_group|
-| `UpdateCustodianGroup` | [UpdateCustodianGroupRequest](#scalar.protocol.v1beta1.UpdateCustodianGroupRequest) | [UpdateCustodianGroupResponse](#scalar.protocol.v1beta1.UpdateCustodianGroupResponse) | Update Custodian group | POST|/scalar/protocol/v1beta1/update_custodian_group|
-| `CreateCustodian` | [CreateCustodianRequest](#scalar.protocol.v1beta1.CreateCustodianRequest) | [CreateCustodianResponse](#scalar.protocol.v1beta1.CreateCustodianResponse) | Create custodian | POST|/scalar/protocol/v1beta1/create_custodian|
-| `UpdateCustodian` | [UpdateCustodianRequest](#scalar.protocol.v1beta1.UpdateCustodianRequest) | [UpdateCustodianResponse](#scalar.protocol.v1beta1.UpdateCustodianResponse) | Update custodian | POST|/scalar/protocol/v1beta1/update_custodian|
-| `UpdateBtcChain` | [UpdateBtcChainRequest](#scalar.protocol.v1beta1.UpdateBtcChainRequest) | [UpdateBtcChainResponse](#scalar.protocol.v1beta1.UpdateBtcChainResponse) | Update BTC chain | POST|/scalar/protocol/v1beta1/update_btc_chain|
+| `UpdateProtocol` | [UpdateProtocolRequest](#scalar.protocol.v1beta1.UpdateProtocolRequest) | [UpdateProtocolResponse](#scalar.protocol.v1beta1.UpdateProtocolResponse) |  | POST|/scalar/protocol/v1beta1/update_protocol|
+| `AddSupportedChain` | [AddSupportedChainRequest](#scalar.protocol.v1beta1.AddSupportedChainRequest) | [AddSupportedChainResponse](#scalar.protocol.v1beta1.AddSupportedChainResponse) | Add DestinationChain into protocol | POST|/scalar/protocol/v1beta1/add_supported_chain|
+| `UpdateSupportedChain` | [UpdateSupportedChainRequest](#scalar.protocol.v1beta1.UpdateSupportedChainRequest) | [UpdateSupportedChainResponse](#scalar.protocol.v1beta1.UpdateSupportedChainResponse) | Delete DestinationChain from protocol | POST|/scalar/protocol/v1beta1/update_supported_chain|
 
 
 <a name="scalar.protocol.v1beta1.QueryService"></a>
@@ -7847,19 +7531,7 @@ Query defines the gRPC querier service
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `GetProtocols` | [GetProtocolsRequest](#scalar.protocol.v1beta1.GetProtocolsRequest) | [GetProtocolsResponse](#scalar.protocol.v1beta1.GetProtocolsResponse) | GetProtocols returns all Protocol | GET|/scalar/protocol/v1beta1/protocols|
-| `GetProtocolsByStatus` | [GetProtocolsByStatusRequest](#scalar.protocol.v1beta1.GetProtocolsByStatusRequest) | [GetProtocolsByStatusResponse](#scalar.protocol.v1beta1.GetProtocolsByStatusResponse) | GetProtocolsByStatus returns protocols based on status | GET|/scalar/protocol/v1beta1/protocols/status/{status}|
-| `GetProtocolByName` | [GetProtocolByNameRequest](#scalar.protocol.v1beta1.GetProtocolByNameRequest) | [GetProtocolByNameResponse](#scalar.protocol.v1beta1.GetProtocolByNameResponse) | Get protocols by name | GET|/scalar/protocol/v1beta1/protocols/name/{name}|
-| `GetProtocolByScalarPk` | [GetProtocolByScalarPkRequest](#scalar.protocol.v1beta1.GetProtocolByScalarPkRequest) | [GetProtocolByScalarPkResponse](#scalar.protocol.v1beta1.GetProtocolByScalarPkResponse) | Get protocol by scalar pk | GET|/scalar/protocol/v1beta1/protocols/scalar_pk/{scalar_pk}|
-| `GetCustodians` | [GetCustodiansRequest](#scalar.protocol.v1beta1.GetCustodiansRequest) | [GetCustodiansResponse](#scalar.protocol.v1beta1.GetCustodiansResponse) | Get custodians | GET|/scalar/protocol/v1beta1/custodians|
-| `GetCustodianByName` | [GetCustodianByNameRequest](#scalar.protocol.v1beta1.GetCustodianByNameRequest) | [GetCustodianByNameResponse](#scalar.protocol.v1beta1.GetCustodianByNameResponse) | Get custodian by name | GET|/scalar/protocol/v1beta1/custodians/name/{name}|
-| `GetCustodianGroups` | [GetCustodianGroupsRequest](#scalar.protocol.v1beta1.GetCustodianGroupsRequest) | [GetCustodianGroupsResponse](#scalar.protocol.v1beta1.GetCustodianGroupsResponse) | Get custodian groups | GET|/scalar/protocol/v1beta1/custodian_groups|
-| `GetCustodianGroupByName` | [GetCustodianGroupByNameRequest](#scalar.protocol.v1beta1.GetCustodianGroupByNameRequest) | [GetCustodianGroupByNameResponse](#scalar.protocol.v1beta1.GetCustodianGroupByNameResponse) | Get custodian group by name | GET|/scalar/protocol/v1beta1/custodian_groups/name/{name}|
-| `GetDestinationChainsByProtocolName` | [GetDestinationChainsByProtocolNameRequest](#scalar.protocol.v1beta1.GetDestinationChainsByProtocolNameRequest) | [GetDestinationChainsByProtocolNameResponse](#scalar.protocol.v1beta1.GetDestinationChainsByProtocolNameResponse) | Get DestinationChains | GET|/scalar/protocol/v1beta1/destination_chains/protocol/{protocol_name}|
-| `GetAvailableBtcNetworks` | [GetAvailableBtcNetworksRequest](#scalar.protocol.v1beta1.GetAvailableBtcNetworksRequest) | [GetAvailableBtcNetworksResponse](#scalar.protocol.v1beta1.GetAvailableBtcNetworksResponse) | Get available btc networks | GET|/scalar/protocol/v1beta1/available_btc_networks|
-| `GetAvailableCustodianGroupsByBtcNetworkName` | [GetAvailableCustodianGroupsByBtcNetworkNameRequest](#scalar.protocol.v1beta1.GetAvailableCustodianGroupsByBtcNetworkNameRequest) | [GetAvailableCustodianGroupsByBtcNetworkNameResponse](#scalar.protocol.v1beta1.GetAvailableCustodianGroupsByBtcNetworkNameResponse) |  | GET|/scalar/protocol/v1beta1/available_custodian_groups/btc_network/{btc_network_name}|
-| `GetAvailableChainTypes` | [GetAvailableChainTypesRequest](#scalar.protocol.v1beta1.GetAvailableChainTypesRequest) | [GetAvailableChainTypesResponse](#scalar.protocol.v1beta1.GetAvailableChainTypesResponse) | Get available chain types | GET|/scalar/protocol/v1beta1/available_chain_types|
-| `GetAvailableChainsByChainType` | [GetAvailableChainsByChainTypeRequest](#scalar.protocol.v1beta1.GetAvailableChainsByChainTypeRequest) | [GetAvailableChainsByChainTypeResponse](#scalar.protocol.v1beta1.GetAvailableChainsByChainTypeResponse) | Get available chains by chain type | GET|/scalar/protocol/v1beta1/available_chains/chain_type/{chain_type}|
+| `Protocols` | [ProtocolsRequest](#scalar.protocol.v1beta1.ProtocolsRequest) | [ProtocolsResponse](#scalar.protocol.v1beta1.ProtocolsResponse) | GetProtocols returns all Protocol | GET|/scalar/protocol/v1beta1|
 
  <!-- end services -->
 

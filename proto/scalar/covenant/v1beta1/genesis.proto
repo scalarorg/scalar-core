@@ -1,9 +1,9 @@
 syntax = "proto3";
 package scalar.covenant.v1beta1;
 
-import "scalar/utils/v1beta1/queuer.proto";
 import "gogoproto/gogo.proto";
 import "scalar/covenant/v1beta1/types.proto";
+import "scalar/utils/v1beta1/queuer.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 option (gogoproto.goproto_getters_all) = false;
@@ -11,6 +11,6 @@ option (gogoproto.goproto_getters_all) = false;
 message GenesisState {
   option (gogoproto.stable_marshaler) = true;
 
-  repeated Covenant covenants = 1 [ (gogoproto.nullable) = false ];
-  repeated CovenantGroup groups = 2 [ (gogoproto.nullable) = false ];
+  repeated Custodian custodians = 1;
+  repeated CustodianGroup groups = 2;
 }

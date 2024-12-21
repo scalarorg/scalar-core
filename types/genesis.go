@@ -1,6 +1,7 @@
 package types
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -236,21 +237,26 @@ func GenerateGenesis(clientCtx client.Context,
 		log.Error().Err(err).Msg("Failed to generate supported chains")
 	}
 	//Covenant
-	covenants := make([]covenanttypes.Covenant, len(validatorInfos))
-	covenantGroup := covenanttypes.CovenantGroup{
-		Name:      "scalar",
-		Covenants: covenants,
+	custodians := make([]*covenanttypes.Custodian, len(validatorInfos))
+	custodianGroup := covenanttypes.CustodianGroup{
+		Name:       "scalar",
+		Custodians: custodians,
 	}
 	for i, validator := range validatorInfos {
-		covenants[i] = covenanttypes.Covenant{
+		btcPubkey, err := hex.DecodeString(validator.BtcPubkey)
+		if err != nil {
+			return appGenState, err
+		}
+		custodians[i] = &covenanttypes.Custodian{
 			Name:      validator.Host,
-			Btcpubkey: validator.BtcPubkey,
+			BtcPubkey: btcPubkey,
 		}
 	}
-	covnantGenState := covenanttypes.NewGenesisState(covenants, covenantGroup)
-	appGenState[covenanttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(covnantGenState)
+	covnantGenState := covenanttypes.NewGenesisState(custodians, &custodianGroup)
+	appGenState[covenanttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&covnantGenState)
 	//Protocol
-	protocolGenState := protocoltypes.NewGenesisState(DefaultProtocol())
+	protocol := DefaultProtocol()
+	protocolGenState := protocoltypes.NewGenesisState([]*protocoltypes.Protocol{&protocol})
 	appGenState[protocoltypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(protocolGenState)
 	// //evm chains
 	// var evmGenState evmtypes.GenesisState
@@ -355,7 +361,7 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 		state := chainsTypes.DefaultGenesisState()
 		for _, chainConfig := range chainConfigs {
 			params := chainsTypes.Params{
-				ChainID:             sdk.NewInt(int64(chainConfig.ChainID)),
+				ChainId:             sdk.NewInt(int64(chainConfig.ChainID)),
 				Chain:               nexus.ChainName(chainConfig.ID),
 				ConfirmationHeight:  2,
 				NetworkKind:         chainConfig.NetworkKind,

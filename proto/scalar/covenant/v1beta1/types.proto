@@ -5,13 +5,32 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
-message Covenant {
-  string btcpubkey = 1;
-  string name = 2;
+// Custodian represents an individual custodian configuration
+message Custodian {
+  string name = 1; // e.g., "Custodian1"
+  bytes btc_pubkey = 2; // e.g.,
+  // "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
+  CustodianStatus status = 3; // Whether the custodian is active
+  string description = 4;
 }
 
-message CovenantGroup {
-  string group_hash = 1;
-  string name = 2;
-  repeated Covenant covenants = 3 [(gogoproto.nullable) = false];
+// CustodianGroup represents a group of custodians with their configuration
+// uid is used as identity of the group, btc_pubkey is change by list of custodians
+message CustodianGroup {
+  string uid = 1;
+  string name = 2; // e.g., "All"
+  string btc_pubkey = 3; // e.g.,
+  // "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
+  uint32 quorum = 4; // quorum threshold  e.g.,3
+  CustodianStatus status = 5; // Whether the custodian is active
+  string description = 6;
+  repeated Custodian custodians = 7;
+}
+
+enum CustodianStatus {
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  CUSTODIAN_STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Unspecified"];
+  CUSTODIAN_STATUS_ACTIVATED = 1 [(gogoproto.enumvalue_customname) = "Activated"];
+  CUSTODIAN_STATUS_DEACTIVATED = 2 [(gogoproto.enumvalue_customname) = "Deactivated"];
 }
