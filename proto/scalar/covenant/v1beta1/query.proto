@@ -9,7 +9,7 @@ option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 message CustodiansRequest {
   string name = 1;
   bytes pubkey = 2;
-  CustodianStatus status = 3;
+  Status status = 3;
 }
 
 message CustodiansResponse {
@@ -21,7 +21,7 @@ message CustodianGroupsRequest {
   string name = 2;
   bytes group_pubkey = 3;
   bytes custodian_pubkey = 4;
-  CustodianStatus status = 5;
+  Status status = 5;
 }
 
 message CustodianGroupsResponse {

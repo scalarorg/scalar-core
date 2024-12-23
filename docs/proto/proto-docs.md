@@ -122,7 +122,7 @@
     - [Custodian](#scalar.covenant.v1beta1.Custodian)
     - [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup)
   
-    - [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus)
+    - [Status](#scalar.covenant.v1beta1.Status)
   
 - [scalar/covenant/v1beta1/genesis.proto](#scalar/covenant/v1beta1/genesis.proto)
     - [GenesisState](#scalar.covenant.v1beta1.GenesisState)
@@ -2198,7 +2198,7 @@ Custodian represents an individual custodian configuration
 | ----- | ---- | ----- | ----------- |
 | `name` | [string](#string) |  | e.g., "Custodian1" |
 | `btc_pubkey` | [bytes](#bytes) |  | e.g., |
-| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  | "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
+| `status` | [Status](#scalar.covenant.v1beta1.Status) |  | "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
 
 Whether the custodian is active |
 | `description` | [string](#string) |  |  |
@@ -2223,7 +2223,7 @@ uid is used as identity of the group, btc_pubkey is change by list of custodians
 | `quorum` | [uint32](#uint32) |  | "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
 
 quorum threshold e.g.,3 |
-| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  | Whether the custodian is active |
+| `status` | [Status](#scalar.covenant.v1beta1.Status) |  | Whether the custodian is active |
 | `description` | [string](#string) |  |  |
 | `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
 
@@ -2234,16 +2234,16 @@ quorum threshold e.g.,3 |
  <!-- end messages -->
 
 
-<a name="scalar.covenant.v1beta1.CustodianStatus"></a>
+<a name="scalar.covenant.v1beta1.Status"></a>
 
-### CustodianStatus
+### Status
 
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| CUSTODIAN_STATUS_UNSPECIFIED | 0 |  |
-| CUSTODIAN_STATUS_ACTIVATED | 1 |  |
-| CUSTODIAN_STATUS_DEACTIVATED | 2 |  |
+| STATUS_UNSPECIFIED | 0 |  |
+| STATUS_ACTIVATED | 1 |  |
+| STATUS_DEACTIVATED | 2 |  |
 
 
  <!-- end enums -->
@@ -2331,7 +2331,7 @@ Params represent the genesis parameters for the module
 | `name` | [string](#string) |  |  |
 | `group_pubkey` | [bytes](#bytes) |  |  |
 | `custodian_pubkey` | [bytes](#bytes) |  |  |
-| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  |  |
+| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
 
 
 
@@ -2363,7 +2363,7 @@ Params represent the genesis parameters for the module
 | ----- | ---- | ----- | ----------- |
 | `name` | [string](#string) |  |  |
 | `pubkey` | [bytes](#bytes) |  |  |
-| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  |  |
+| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
 
 
 
@@ -2431,7 +2431,7 @@ Params represent the genesis parameters for the module
 | `uid` | [string](#string) |  |  |
 | `name` | [string](#string) |  |  |
 | `quorum` | [uint32](#uint32) |  |  |
-| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  |  |
+| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
 | `description` | [string](#string) |  |  |
 | `custodian` | [bytes](#bytes) | repeated |  |
 
@@ -2466,7 +2466,7 @@ Params represent the genesis parameters for the module
 | `sender` | [bytes](#bytes) |  |  |
 | `name` | [string](#string) |  |  |
 | `btc_pubkey` | [bytes](#bytes) |  |  |
-| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  |  |
+| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
 | `description` | [string](#string) |  |  |
 
 
@@ -2534,7 +2534,7 @@ Params represent the genesis parameters for the module
 | `uid` | [string](#string) |  |  |
 | `name` | [string](#string) |  |  |
 | `quorum` | [uint32](#uint32) |  |  |
-| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  |  |
+| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
 | `description` | [string](#string) |  |  |
 | `custodian` | [bytes](#bytes) | repeated |  |
 
@@ -2569,7 +2569,7 @@ Pubkey used as key for lookup custodian to update other values
 | `sender` | [bytes](#bytes) |  |  |
 | `btc_pubkey` | [bytes](#bytes) |  |  |
 | `name` | [string](#string) |  |  |
-| `status` | [CustodianStatus](#scalar.covenant.v1beta1.CustodianStatus) |  |  |
+| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
 | `description` | [string](#string) |  |  |
 
 

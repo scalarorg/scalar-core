@@ -3,7 +3,6 @@ package testnet
 import (
 	"bufio"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -31,7 +30,6 @@ import (
 	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/app/params"
 	"github.com/scalarorg/scalar-core/config"
-	scalartypes "github.com/scalarorg/scalar-core/types"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	tmconfig "github.com/tendermint/tendermint/config"
 	tmrand "github.com/tendermint/tendermint/libs/rand"
@@ -45,8 +43,6 @@ func DefaultOption(options *keyring.Options) {
 	options.SupportedAlgos = keyring.SigningAlgoList{hd.Secp256k1}
 	options.SupportedAlgosLedger = keyring.SigningAlgoList{hd.Secp256k1}
 }
-
-type GenesisState map[string]json.RawMessage
 
 var (
 	minGasPrice = "0.007" + scalarnet.NativeAsset
@@ -107,9 +103,9 @@ func DefaultConfig() Config {
 		ChainID:           chainID,
 		BondDenom:         scalarnet.NativeAsset,
 		MinGasPrices:      fmt.Sprintf("0.007%s", scalarnet.BaseAsset),
-		AccountTokens:     sdk.TokensFromConsensusPower(10, scalartypes.PowerReduction),
-		StakingTokens:     sdk.TokensFromConsensusPower(5, scalartypes.PowerReduction),
-		BondedTokens:      sdk.TokensFromConsensusPower(1, scalartypes.PowerReduction),
+		AccountTokens:     sdk.TokensFromConsensusPower(10, PowerReduction),
+		StakingTokens:     sdk.TokensFromConsensusPower(5, PowerReduction),
+		BondedTokens:      sdk.TokensFromConsensusPower(1, PowerReduction),
 		CleanupDir:        true,
 		SigningAlgo:       string(hd.Secp256k1Type),
 		KeyringOptions:    []keyring.Option{DefaultOption},
