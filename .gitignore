@@ -1,7 +1,6 @@
 bin
 .venv
 .scalar
-config/*
 !config/.gitkeep
 
 **/.DS_Store
