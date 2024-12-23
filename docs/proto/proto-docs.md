@@ -39,11 +39,11 @@
     - [ChainEventConfirmed](#scalar.chains.v1beta1.ChainEventConfirmed)
     - [ChainEventFailed](#scalar.chains.v1beta1.ChainEventFailed)
     - [ChainEventRetryFailed](#scalar.chains.v1beta1.ChainEventRetryFailed)
-    - [ConfirmationEvent](#scalar.chains.v1beta1.ConfirmationEvent)
     - [DestCallApproved](#scalar.chains.v1beta1.DestCallApproved)
     - [DestCallFailed](#scalar.chains.v1beta1.DestCallFailed)
     - [Event](#scalar.chains.v1beta1.Event)
     - [NoEventsConfirmed](#scalar.chains.v1beta1.NoEventsConfirmed)
+    - [TxConfirmationEvent](#scalar.chains.v1beta1.TxConfirmationEvent)
     - [VoteEvents](#scalar.chains.v1beta1.VoteEvents)
   
     - [Event.Status](#scalar.chains.v1beta1.Event.Status)
@@ -1151,27 +1151,6 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.chains.v1beta1.ConfirmationEvent"></a>
-
-### ConfirmationEvent
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `sender` | [string](#string) |  |  |
-| `destination_chain` | [string](#string) |  |  |
-| `amount` | [uint64](#uint64) |  |  |
-| `asset` | [string](#string) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `destination_contract_address` | [string](#string) |  |  |
-| `destination_recipient_address` | [string](#string) |  |  |
-
-
-
-
-
-
 <a name="scalar.chains.v1beta1.DestCallApproved"></a>
 
 ### DestCallApproved
@@ -1221,7 +1200,8 @@ Msg defines the nexus Msg service.
 | `tx_id` | [bytes](#bytes) |  |  |
 | `status` | [Event.Status](#scalar.chains.v1beta1.Event.Status) |  |  |
 | `index` | [uint64](#uint64) |  |  |
-| `confirmation_event` | [ConfirmationEvent](#scalar.chains.v1beta1.ConfirmationEvent) |  |  |
+| `source_tx_confirmation_event` | [TxConfirmationEvent](#scalar.chains.v1beta1.TxConfirmationEvent) |  |  |
+| `dest_tx_confirmation_event` | [TxConfirmationEvent](#scalar.chains.v1beta1.TxConfirmationEvent) |  |  |
 
 
 
@@ -1239,6 +1219,27 @@ Msg defines the nexus Msg service.
 | `tx_id` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
 | `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.TxConfirmationEvent"></a>
+
+### TxConfirmationEvent
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `amount` | [uint64](#uint64) |  |  |
+| `asset` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `destination_contract_address` | [string](#string) |  |  |
+| `destination_recipient_address` | [string](#string) |  |  |
 
 
 

@@ -1,6 +1,8 @@
 package btc
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/slices"
@@ -13,5 +15,5 @@ func (client *BtcClient) ProcessDestinationTxsConfirmation(event *types.EventCon
 
 	clog.Blue("[BTC] ProcessDestinationTxsConfirmation", "txIDs", txIDs)
 
-	return nil, nil
+	return nil, fmt.Errorf("not implemented")
 }

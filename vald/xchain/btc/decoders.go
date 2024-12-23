@@ -30,19 +30,19 @@ const (
 	MinNumberOfOutputs = 2
 )
 
-func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (chainsTypes.ConfirmationEvent, error) {
+func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (*chainsTypes.TxConfirmationEvent, error) {
 	if len(tx.MsgTx.TxOut) < MinNumberOfOutputs {
-		return chainsTypes.ConfirmationEvent{}, ErrInvalidTxOutCount
+		return nil, ErrInvalidTxOutCount
 	}
 
 	embeddedDataTxOut := tx.MsgTx.TxOut[EmbeddedDataOutputIndex]
 	if embeddedDataTxOut == nil || embeddedDataTxOut.PkScript == nil || embeddedDataTxOut.PkScript[0] != txscript.OP_RETURN {
-		return chainsTypes.ConfirmationEvent{}, ErrInvalidOpReturn
+		return nil, ErrInvalidOpReturn
 	}
 
 	output, err := vault.ParseVaultEmbeddedData(embeddedDataTxOut.PkScript)
 	if err != nil || output == nil {
-		return chainsTypes.ConfirmationEvent{}, ErrInvalidOpReturnData
+		return nil, ErrInvalidOpReturnData
 	}
 
 	txHash := tx.MsgTx.TxHash()
@@ -55,24 +55,24 @@ func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (chainsTypes
 
 	destinationChain := chain.NewChainInfoFromBytes(output.DestinationChain)
 	if destinationChain == nil {
-		return chainsTypes.ConfirmationEvent{}, ErrInvalidDestinationChain
+		return nil, ErrInvalidDestinationChain
 	}
 
 	var destinationContractAddress chainsTypes.Address
 	err = destinationContractAddress.Unmarshal(output.DestinationContractAddress)
 	if err != nil {
-		return chainsTypes.ConfirmationEvent{}, err
+		return nil, err
 	}
 
 	var destinationRecipientAddress chainsTypes.Address
 	err = destinationRecipientAddress.Unmarshal(output.DestinationRecipientAddress)
 	if err != nil {
-		return chainsTypes.ConfirmationEvent{}, err
+		return nil, err
 	}
 
 	_, payloadHash, err := encode.CalculateStakingPayloadHash(destinationRecipientAddress, uint64(stakingAmount), copiedTxHash)
 	if err != nil {
-		return chainsTypes.ConfirmationEvent{}, ErrInvalidPayloadHash
+		return nil, ErrInvalidPayloadHash
 	}
 
 	// , err := chainsTypes.HashFromBytes(payloadHash)
@@ -85,7 +85,7 @@ func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (chainsTypes
 	// clog.Redf("[VALD] Chain hash %+v\n", chainHash)
 	clog.Redf("[VALD] tx: %+v", tx)
 
-	return chainsTypes.ConfirmationEvent{
+	return &chainsTypes.TxConfirmationEvent{
 		Sender:                      tx.PrevTxOuts[0].ScriptPubKey.Address, // TODO: Fix hard coded
 		DestinationChain:            nexus.ChainName(destinationChain.ToBytes().String()),
 		Amount:                      uint64(stakingAmount),

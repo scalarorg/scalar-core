@@ -280,7 +280,7 @@ func (k chainKeeper) EnqueueConfirmedEvent(ctx sdk.Context, id types.EventID) er
 	}
 
 	switch event.GetEvent().(type) {
-	case *types.Event_ConfirmationEvent:
+	case *types.Event_SourceTxConfirmationEvent:
 		k.GetConfirmedEventQueue(ctx).Enqueue(getEventKey(id), &event)
 	default:
 		return fmt.Errorf("unsupported event type %T", event)

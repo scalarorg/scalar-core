@@ -14,6 +14,20 @@ message VoteEvents {
   repeated Event events = 2 [ (gogoproto.nullable) = false ];
 }
 
+message TxConfirmationEvent {
+  string sender = 1;
+  string destination_chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  uint64 amount = 3;
+  string asset = 4;
+  bytes payload_hash = 5
+      [ (gogoproto.customtype) = "Hash", (gogoproto.nullable) = false ];
+
+  string destination_contract_address = 6;
+  string destination_recipient_address = 7;
+}
+
 message Event {
   enum Status {
     option (gogoproto.goproto_enum_prefix) = false;
@@ -38,21 +52,10 @@ message Event {
   ];
   Status status = 3;
   uint64 index = 4;
-  oneof event { ConfirmationEvent confirmation_event = 5; }
-}
-
-message ConfirmationEvent {
-  string sender = 1;
-  string destination_chain = 2
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  uint64 amount = 3;
-  string asset = 4;
-  bytes payload_hash = 5
-      [ (gogoproto.customtype) = "Hash", (gogoproto.nullable) = false ];
-
-  string destination_contract_address = 6;
-  string destination_recipient_address = 7;
+  oneof event {
+    TxConfirmationEvent source_tx_confirmation_event = 5;
+    TxConfirmationEvent dest_tx_confirmation_event = 6;
+  }
 }
 
 message NoEventsConfirmed {

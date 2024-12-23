@@ -21,7 +21,7 @@ var (
 	ContractCallSig = crypto.Keccak256Hash([]byte("ContractCall(address,string,string,bytes32,bytes)"))
 )
 
-func (client *EthereumClient) decodeEventContractCall(log *geth.Log) (chainsTypes.ConfirmationEvent, error) {
+func (client *EthereumClient) decodeEventContractCall(log *geth.Log) (*chainsTypes.TxConfirmationEvent, error) {
 	arguments := abi.Arguments{
 		{Type: stringType},
 		{Type: stringType},
@@ -30,10 +30,10 @@ func (client *EthereumClient) decodeEventContractCall(log *geth.Log) (chainsType
 
 	params, err := chainsTypes.StrictDecode(arguments, log.Data)
 	if err != nil {
-		return chainsTypes.ConfirmationEvent{}, err
+		return nil, err
 	}
 
-	return chainsTypes.ConfirmationEvent{
+	return &chainsTypes.TxConfirmationEvent{
 		Sender:           chainsTypes.Address(common.BytesToAddress(log.Topics[1].Bytes())).Hex(),
 		DestinationChain: nexus.ChainName(params[0].(string)),
 		Amount:           0,          // TODO: Fix hard coded

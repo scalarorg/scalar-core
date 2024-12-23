@@ -6,8 +6,10 @@ import (
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/errors"
 	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/utils/slices"
@@ -52,10 +54,12 @@ func (c *EthereumClient) GetTransactions(txIDs []xchain.Hash) ([]ETHTxResult, er
 		var receipt *types.Receipt
 		return rpc.BatchElem{
 			Method: "eth_getTransactionReceipt",
-			Args:   []interface{}{txHash},
+			Args:   []interface{}{common.Hash(txHash)},
 			Result: &receipt,
 		}
 	})
+
+	clog.Redf("[ETH] batch: %+v", batch)
 
 	if err := c.rpc.BatchCallContext(ctx, batch); err != nil {
 		return nil, fmt.Errorf("unable to send batch request: %v", err)
@@ -71,7 +75,7 @@ func (c *EthereumClient) GetTransactions(txIDs []xchain.Hash) ([]ETHTxResult, er
 			return ETHTxResult(results.FromErr[xchain.TxReceipt](ethereum.NotFound))
 		}
 
-		return ETHTxResult(results.FromOk(xchain.TxReceipt(*receipt)))
+		return ETHTxResult(results.FromOk(xchain.TxReceipt(**receipt)))
 	}), nil
 }
 

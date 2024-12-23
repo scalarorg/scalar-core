@@ -53,7 +53,7 @@ func (x Event_Status) String() string {
 }
 
 func (Event_Status) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_76dc996153ba2dae, []int{1, 0}
+	return fileDescriptor_76dc996153ba2dae, []int{2, 0}
 }
 
 type VoteEvents struct {
@@ -94,13 +94,57 @@ func (m *VoteEvents) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_VoteEvents proto.InternalMessageInfo
 
+type TxConfirmationEvent struct {
+	Sender                      string                                                      `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
+	DestinationChain            github_com_scalarorg_scalar_core_x_nexus_exported.ChainName `protobuf:"bytes,2,opt,name=destination_chain,json=destinationChain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"destination_chain,omitempty"`
+	Amount                      uint64                                                      `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
+	Asset                       string                                                      `protobuf:"bytes,4,opt,name=asset,proto3" json:"asset,omitempty"`
+	PayloadHash                 Hash                                                        `protobuf:"bytes,5,opt,name=payload_hash,json=payloadHash,proto3,customtype=Hash" json:"payload_hash"`
+	DestinationContractAddress  string                                                      `protobuf:"bytes,6,opt,name=destination_contract_address,json=destinationContractAddress,proto3" json:"destination_contract_address,omitempty"`
+	DestinationRecipientAddress string                                                      `protobuf:"bytes,7,opt,name=destination_recipient_address,json=destinationRecipientAddress,proto3" json:"destination_recipient_address,omitempty"`
+}
+
+func (m *TxConfirmationEvent) Reset()         { *m = TxConfirmationEvent{} }
+func (m *TxConfirmationEvent) String() string { return proto.CompactTextString(m) }
+func (*TxConfirmationEvent) ProtoMessage()    {}
+func (*TxConfirmationEvent) Descriptor() ([]byte, []int) {
+	return fileDescriptor_76dc996153ba2dae, []int{1}
+}
+func (m *TxConfirmationEvent) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *TxConfirmationEvent) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_TxConfirmationEvent.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *TxConfirmationEvent) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TxConfirmationEvent.Merge(m, src)
+}
+func (m *TxConfirmationEvent) XXX_Size() int {
+	return m.Size()
+}
+func (m *TxConfirmationEvent) XXX_DiscardUnknown() {
+	xxx_messageInfo_TxConfirmationEvent.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TxConfirmationEvent proto.InternalMessageInfo
+
 type Event struct {
 	Chain  github_com_scalarorg_scalar_core_x_nexus_exported.ChainName `protobuf:"bytes,1,opt,name=chain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"chain,omitempty"`
 	TxID   Hash                                                        `protobuf:"bytes,2,opt,name=tx_id,json=txId,proto3,customtype=Hash" json:"tx_id"`
 	Status Event_Status                                                `protobuf:"varint,3,opt,name=status,proto3,enum=scalar.chains.v1beta1.Event_Status" json:"status,omitempty"`
 	Index  uint64                                                      `protobuf:"varint,4,opt,name=index,proto3" json:"index,omitempty"`
 	// Types that are valid to be assigned to Event:
-	//	*Event_ConfirmationEvent
+	//	*Event_SourceTxConfirmationEvent
+	//	*Event_DestTxConfirmationEvent
 	Event isEvent_Event `protobuf_oneof:"event"`
 }
 
@@ -108,7 +152,7 @@ func (m *Event) Reset()         { *m = Event{} }
 func (m *Event) String() string { return proto.CompactTextString(m) }
 func (*Event) ProtoMessage()    {}
 func (*Event) Descriptor() ([]byte, []int) {
-	return fileDescriptor_76dc996153ba2dae, []int{1}
+	return fileDescriptor_76dc996153ba2dae, []int{2}
 }
 func (m *Event) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -143,11 +187,15 @@ type isEvent_Event interface {
 	Size() int
 }
 
-type Event_ConfirmationEvent struct {
-	ConfirmationEvent *ConfirmationEvent `protobuf:"bytes,5,opt,name=confirmation_event,json=confirmationEvent,proto3,oneof" json:"confirmation_event,omitempty"`
+type Event_SourceTxConfirmationEvent struct {
+	SourceTxConfirmationEvent *TxConfirmationEvent `protobuf:"bytes,5,opt,name=source_tx_confirmation_event,json=sourceTxConfirmationEvent,proto3,oneof" json:"source_tx_confirmation_event,omitempty"`
+}
+type Event_DestTxConfirmationEvent struct {
+	DestTxConfirmationEvent *TxConfirmationEvent `protobuf:"bytes,6,opt,name=dest_tx_confirmation_event,json=destTxConfirmationEvent,proto3,oneof" json:"dest_tx_confirmation_event,omitempty"`
 }
 
-func (*Event_ConfirmationEvent) isEvent_Event() {}
+func (*Event_SourceTxConfirmationEvent) isEvent_Event() {}
+func (*Event_DestTxConfirmationEvent) isEvent_Event()   {}
 
 func (m *Event) GetEvent() isEvent_Event {
 	if m != nil {
@@ -156,9 +204,16 @@ func (m *Event) GetEvent() isEvent_Event {
 	return nil
 }
 
-func (m *Event) GetConfirmationEvent() *ConfirmationEvent {
-	if x, ok := m.GetEvent().(*Event_ConfirmationEvent); ok {
-		return x.ConfirmationEvent
+func (m *Event) GetSourceTxConfirmationEvent() *TxConfirmationEvent {
+	if x, ok := m.GetEvent().(*Event_SourceTxConfirmationEvent); ok {
+		return x.SourceTxConfirmationEvent
+	}
+	return nil
+}
+
+func (m *Event) GetDestTxConfirmationEvent() *TxConfirmationEvent {
+	if x, ok := m.GetEvent().(*Event_DestTxConfirmationEvent); ok {
+		return x.DestTxConfirmationEvent
 	}
 	return nil
 }
@@ -166,52 +221,10 @@ func (m *Event) GetConfirmationEvent() *ConfirmationEvent {
 // XXX_OneofWrappers is for the internal use of the proto package.
 func (*Event) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
-		(*Event_ConfirmationEvent)(nil),
+		(*Event_SourceTxConfirmationEvent)(nil),
+		(*Event_DestTxConfirmationEvent)(nil),
 	}
 }
-
-type ConfirmationEvent struct {
-	Sender                      string                                                      `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
-	DestinationChain            github_com_scalarorg_scalar_core_x_nexus_exported.ChainName `protobuf:"bytes,2,opt,name=destination_chain,json=destinationChain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"destination_chain,omitempty"`
-	Amount                      uint64                                                      `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
-	Asset                       string                                                      `protobuf:"bytes,4,opt,name=asset,proto3" json:"asset,omitempty"`
-	PayloadHash                 Hash                                                        `protobuf:"bytes,5,opt,name=payload_hash,json=payloadHash,proto3,customtype=Hash" json:"payload_hash"`
-	DestinationContractAddress  string                                                      `protobuf:"bytes,6,opt,name=destination_contract_address,json=destinationContractAddress,proto3" json:"destination_contract_address,omitempty"`
-	DestinationRecipientAddress string                                                      `protobuf:"bytes,7,opt,name=destination_recipient_address,json=destinationRecipientAddress,proto3" json:"destination_recipient_address,omitempty"`
-}
-
-func (m *ConfirmationEvent) Reset()         { *m = ConfirmationEvent{} }
-func (m *ConfirmationEvent) String() string { return proto.CompactTextString(m) }
-func (*ConfirmationEvent) ProtoMessage()    {}
-func (*ConfirmationEvent) Descriptor() ([]byte, []int) {
-	return fileDescriptor_76dc996153ba2dae, []int{2}
-}
-func (m *ConfirmationEvent) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *ConfirmationEvent) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_ConfirmationEvent.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *ConfirmationEvent) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ConfirmationEvent.Merge(m, src)
-}
-func (m *ConfirmationEvent) XXX_Size() int {
-	return m.Size()
-}
-func (m *ConfirmationEvent) XXX_DiscardUnknown() {
-	xxx_messageInfo_ConfirmationEvent.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ConfirmationEvent proto.InternalMessageInfo
 
 type NoEventsConfirmed struct {
 	TxID   Hash                                                        `protobuf:"bytes,1,opt,name=tx_id,json=txId,proto3,customtype=Hash" json:"tx_id"`
@@ -492,8 +505,8 @@ var xxx_messageInfo_DestCallFailed proto.InternalMessageInfo
 func init() {
 	proto.RegisterEnum("scalar.chains.v1beta1.Event_Status", Event_Status_name, Event_Status_value)
 	proto.RegisterType((*VoteEvents)(nil), "scalar.chains.v1beta1.VoteEvents")
+	proto.RegisterType((*TxConfirmationEvent)(nil), "scalar.chains.v1beta1.TxConfirmationEvent")
 	proto.RegisterType((*Event)(nil), "scalar.chains.v1beta1.Event")
-	proto.RegisterType((*ConfirmationEvent)(nil), "scalar.chains.v1beta1.ConfirmationEvent")
 	proto.RegisterType((*NoEventsConfirmed)(nil), "scalar.chains.v1beta1.NoEventsConfirmed")
 	proto.RegisterType((*ChainEventConfirmed)(nil), "scalar.chains.v1beta1.ChainEventConfirmed")
 	proto.RegisterType((*ChainEventCompleted)(nil), "scalar.chains.v1beta1.ChainEventCompleted")
@@ -508,65 +521,66 @@ func init() {
 }
 
 var fileDescriptor_76dc996153ba2dae = []byte{
-	// 915 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x56, 0x4f, 0x6f, 0x1b, 0x45,
-	0x1c, 0xf5, 0xd8, 0x6b, 0xbb, 0x9e, 0xb8, 0xe9, 0x66, 0x48, 0x2b, 0xcb, 0x94, 0xf5, 0xb2, 0x5c,
-	0x5c, 0xa9, 0x78, 0x95, 0x70, 0x40, 0xa2, 0x42, 0x90, 0xb5, 0x1d, 0x75, 0xa5, 0xc6, 0x44, 0x9b,
-	0x04, 0x09, 0x2e, 0xd6, 0x64, 0x77, 0xb0, 0x57, 0x5a, 0xef, 0xac, 0x76, 0x26, 0x91, 0xf3, 0x0d,
-	0x50, 0x4e, 0x5c, 0x38, 0x46, 0x1c, 0xe0, 0xc0, 0x11, 0x09, 0x21, 0x71, 0xe1, 0x9e, 0x63, 0x8f,
-	0x88, 0x83, 0x05, 0xce, 0xa7, 0xa0, 0x48, 0x08, 0xed, 0xcc, 0xb8, 0x76, 0xd2, 0x96, 0xf4, 0x90,
-	0x48, 0xe9, 0x6d, 0x66, 0xf6, 0xcd, 0xfb, 0xbd, 0xdf, 0xdf, 0x59, 0x68, 0x31, 0x1f, 0x47, 0x38,
-	0xb5, 0xfd, 0x21, 0x0e, 0x63, 0x66, 0x1f, 0xae, 0xed, 0x13, 0x8e, 0xd7, 0x6c, 0x72, 0x48, 0x62,
-	0xce, 0x5a, 0x49, 0x4a, 0x39, 0x45, 0x77, 0x25, 0xa6, 0x25, 0x31, 0x2d, 0x85, 0xa9, 0xaf, 0x0e,
-	0xe8, 0x80, 0x0a, 0x84, 0x9d, 0xad, 0x24, 0xb8, 0xfe, 0xee, 0xcb, 0x09, 0xf9, 0x51, 0x42, 0x14,
-	0x9f, 0xf5, 0x1d, 0x80, 0xf0, 0x73, 0xca, 0x49, 0x57, 0x18, 0x41, 0x7b, 0xb0, 0x28, 0xc0, 0x35,
-	0x60, 0x82, 0x66, 0xc5, 0xf9, 0xe4, 0xd9, 0xa4, 0xf1, 0x68, 0x10, 0xf2, 0xe1, 0xc1, 0x7e, 0xcb,
-	0xa7, 0x23, 0x5b, 0xf2, 0xd1, 0x74, 0xa0, 0x56, 0xef, 0xfb, 0x34, 0x25, 0xf6, 0xd8, 0x8e, 0xc9,
-	0xf8, 0x80, 0xd9, 0x64, 0x9c, 0xd0, 0x94, 0x93, 0xa0, 0xd5, 0xce, 0x28, 0x7a, 0x78, 0x44, 0x3c,
-	0xc9, 0x86, 0x3e, 0x82, 0x25, 0xe9, 0x45, 0x2d, 0x6f, 0x16, 0x9a, 0x4b, 0xeb, 0xf7, 0x5b, 0x2f,
-	0x75, 0xa3, 0x25, 0x54, 0x38, 0xda, 0xe9, 0xa4, 0x91, 0xf3, 0xd4, 0x0d, 0xeb, 0x9f, 0x02, 0x2c,
-	0x8a, 0xf3, 0xeb, 0x12, 0xf7, 0x00, 0x16, 0xf9, 0xb8, 0x1f, 0x06, 0xb5, 0xbc, 0x09, 0x9a, 0x55,
-	0x67, 0x35, 0xb3, 0xfe, 0xc7, 0xa4, 0xa1, 0x3d, 0xc6, 0x6c, 0x38, 0x9d, 0x34, 0xb4, 0xdd, 0xb1,
-	0xdb, 0xf1, 0x34, 0x3e, 0x76, 0x03, 0xf4, 0x08, 0x96, 0x18, 0xc7, 0xfc, 0x80, 0xd5, 0x0a, 0x26,
-	0x68, 0x2e, 0xaf, 0xbf, 0xf7, 0x7f, 0x7e, 0xb4, 0x76, 0x04, 0xd4, 0x53, 0x57, 0xd0, 0x2a, 0x2c,
-	0x86, 0x71, 0x40, 0xc6, 0x35, 0xcd, 0x04, 0x4d, 0xcd, 0x93, 0x1b, 0xf4, 0x05, 0x44, 0x3e, 0x8d,
-	0xbf, 0x0a, 0xd3, 0x11, 0xe6, 0x21, 0x8d, 0xfb, 0xc2, 0xeb, 0x5a, 0xd1, 0x04, 0xcd, 0xa5, 0xf5,
-	0xe6, 0x2b, 0xe8, 0xdb, 0x0b, 0x17, 0x84, 0xa9, 0xc7, 0x39, 0x6f, 0xc5, 0xbf, 0x78, 0x68, 0xfd,
-	0x0a, 0x60, 0x49, 0x6a, 0x40, 0x0f, 0x21, 0xda, 0xd9, 0xdd, 0xd8, 0xdd, 0xdb, 0xe9, 0xef, 0xf5,
-	0x76, 0xb6, 0xbb, 0x6d, 0x77, 0xd3, 0xed, 0x76, 0xf4, 0x5c, 0x7d, 0xf5, 0xf8, 0xc4, 0xd4, 0x05,
-	0xba, 0x47, 0xe3, 0xee, 0x38, 0x64, 0x3c, 0x0b, 0x74, 0x13, 0xea, 0x0a, 0xdd, 0xfe, 0xac, 0xb7,
-	0xe9, 0x7a, 0x5b, 0xdd, 0x8e, 0x0e, 0xea, 0xe8, 0xf8, 0xc4, 0x5c, 0x16, 0x58, 0x65, 0x9f, 0x04,
-	0xe7, 0x90, 0x5b, 0xdb, 0x4f, 0xba, 0xbb, 0xdd, 0x8e, 0x9e, 0x3f, 0x87, 0x1c, 0x25, 0x11, 0xe1,
-	0x24, 0x40, 0x16, 0xbc, 0xad, 0x90, 0x9b, 0x1b, 0xee, 0x93, 0x6e, 0x47, 0x2f, 0xd4, 0xef, 0x1c,
-	0x9f, 0x98, 0x4b, 0x02, 0xb6, 0x89, 0xc3, 0x88, 0x04, 0xf5, 0x5b, 0x5f, 0x7f, 0x6f, 0xe4, 0x7e,
-	0xfc, 0xc1, 0x00, 0x4e, 0x19, 0x16, 0x45, 0x20, 0xac, 0x7f, 0xf3, 0x70, 0xe5, 0x05, 0x77, 0xd1,
-	0x3d, 0x58, 0x62, 0x24, 0x0e, 0x48, 0x2a, 0x4b, 0xc1, 0x53, 0x3b, 0x14, 0xc1, 0x95, 0x80, 0x30,
-	0x1e, 0xc6, 0x32, 0x96, 0xb2, 0x5a, 0xf2, 0x57, 0x53, 0x2d, 0xfa, 0x02, 0xb3, 0x38, 0xcd, 0x54,
-	0xe0, 0x11, 0x3d, 0x88, 0xb9, 0xa8, 0x06, 0xcd, 0x53, 0xbb, 0x2c, 0xd1, 0x98, 0x31, 0xc2, 0x45,
-	0xa2, 0x2b, 0x9e, 0xdc, 0x20, 0x1b, 0x56, 0x13, 0x7c, 0x14, 0x51, 0x1c, 0xf4, 0x87, 0x98, 0x0d,
-	0x45, 0x8a, 0xab, 0x4e, 0x75, 0xb1, 0xda, 0xbc, 0x25, 0x85, 0xc8, 0x36, 0xe8, 0x53, 0x78, 0xff,
-	0x9c, 0x33, 0x34, 0xe6, 0x29, 0xf6, 0x79, 0x1f, 0x07, 0x41, 0x4a, 0x18, 0xab, 0x95, 0x04, 0x7b,
-	0x7d, 0x51, 0x96, 0x82, 0x6c, 0x48, 0x04, 0x72, 0xe0, 0x3b, 0x8b, 0x0c, 0x29, 0xf1, 0xc3, 0x24,
-	0x24, 0xf1, 0x9c, 0xa2, 0x2c, 0x28, 0xde, 0x5e, 0x00, 0x79, 0x33, 0x8c, 0xe2, 0xb0, 0xfe, 0x06,
-	0x70, 0xa5, 0x47, 0xe5, 0x78, 0x98, 0xe7, 0xfd, 0x79, 0xcf, 0x80, 0x4b, 0x7b, 0xe6, 0x79, 0xd7,
-	0xe6, 0xaf, 0xb4, 0x6b, 0xf7, 0x61, 0x39, 0xa1, 0x51, 0x94, 0x69, 0x10, 0xd1, 0x77, 0x5c, 0xa5,
-	0xe1, 0xc3, 0xd7, 0x20, 0x3f, 0xa4, 0x9c, 0xcc, 0xb9, 0xb7, 0x69, 0x14, 0xb9, 0x9d, 0xe9, 0xa4,
-	0x51, 0x92, 0x2b, 0xaf, 0x94, 0x31, 0xbb, 0x81, 0xf5, 0x33, 0x80, 0x6f, 0x09, 0xc3, 0x17, 0xaa,
-	0xfe, 0x9a, 0x06, 0xd1, 0x1a, 0xbc, 0x25, 0x8a, 0x7e, 0x36, 0x8b, 0x2a, 0xce, 0xbd, 0xe9, 0xa4,
-	0x51, 0x16, 0xc6, 0xdd, 0xce, 0xb3, 0xf9, 0xd2, 0x2b, 0x0b, 0x9c, 0x1b, 0x20, 0x04, 0xb5, 0x6c,
-	0x9a, 0x8b, 0x10, 0x54, 0x3c, 0xb1, 0x7e, 0x41, 0xf5, 0xac, 0x03, 0x6f, 0xb6, 0xea, 0x9f, 0x00,
-	0xd4, 0xe7, 0xaa, 0xe5, 0x40, 0xb8, 0xe1, 0x92, 0x7f, 0x01, 0xf0, 0xee, 0x5c, 0xb2, 0x47, 0x78,
-	0x7a, 0xf4, 0x46, 0xe8, 0xfe, 0xad, 0x00, 0xf5, 0x0e, 0x61, 0xbc, 0x8d, 0xa3, 0x68, 0x23, 0x49,
-	0x52, 0x7a, 0x78, 0xa3, 0x24, 0x7f, 0x0c, 0xa1, 0x4f, 0x47, 0x23, 0x1c, 0x07, 0xb3, 0xe6, 0xae,
-	0x3a, 0x86, 0x6a, 0xee, 0x4a, 0x5b, 0x7e, 0x11, 0xed, 0x3a, 0xdf, 0x78, 0x15, 0x75, 0xc3, 0x0d,
-	0x16, 0xde, 0x06, 0xed, 0xf2, 0xb7, 0xa1, 0x78, 0x5d, 0x6f, 0xc3, 0x03, 0xa8, 0xbf, 0x62, 0x60,
-	0xdf, 0xf1, 0x2f, 0x4c, 0xe9, 0x8b, 0x0f, 0x43, 0xf9, 0x92, 0x87, 0xc1, 0xfa, 0x16, 0xc0, 0xe5,
-	0x59, 0xfe, 0xae, 0xb7, 0xe0, 0x1e, 0x42, 0x38, 0x22, 0x8c, 0xe1, 0x01, 0x99, 0xe7, 0xef, 0x76,
-	0x16, 0xf9, 0x2d, 0x79, 0x9a, 0x45, 0x5e, 0x01, 0xdc, 0xc0, 0xd9, 0x3a, 0xfd, 0xcb, 0xc8, 0x9d,
-	0x4e, 0x0d, 0xf0, 0x74, 0x6a, 0x80, 0x3f, 0xa7, 0x06, 0xf8, 0xe6, 0xcc, 0xc8, 0x3d, 0x3d, 0x33,
-	0x72, 0xbf, 0x9f, 0x19, 0xb9, 0x2f, 0xed, 0xd7, 0xd0, 0xa3, 0x7e, 0x54, 0xc5, 0x0f, 0xea, 0x7e,
-	0x49, 0xfc, 0xa1, 0x7e, 0xf0, 0x5f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xf0, 0xdc, 0x15, 0x8a, 0x17,
-	0x0b, 0x00, 0x00,
+	// 937 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x56, 0x41, 0x6f, 0xe3, 0x44,
+	0x14, 0x8e, 0x1b, 0x27, 0xd9, 0xbc, 0x66, 0xbb, 0x5e, 0x6f, 0x77, 0x09, 0xa1, 0x38, 0x21, 0x5c,
+	0xb2, 0x68, 0x89, 0xd5, 0x72, 0x40, 0x62, 0x85, 0xa0, 0x4e, 0x52, 0xad, 0xa5, 0x6d, 0xa8, 0xdc,
+	0x94, 0x03, 0x97, 0x68, 0x1a, 0x0f, 0x89, 0x25, 0xc7, 0x63, 0x79, 0x26, 0x95, 0x7b, 0xe3, 0x88,
+	0x7a, 0xe2, 0xc2, 0xb1, 0xe2, 0x00, 0x07, 0x8e, 0x48, 0x08, 0x89, 0x0b, 0xf7, 0x1e, 0xf7, 0x88,
+	0x38, 0x44, 0x90, 0xfe, 0x0a, 0x7a, 0x42, 0x9e, 0x99, 0x34, 0x69, 0x49, 0xe9, 0x0a, 0x6d, 0xa5,
+	0xee, 0x6d, 0xc6, 0xfe, 0xfc, 0xbd, 0xef, 0xbd, 0xf7, 0xbd, 0xe4, 0x41, 0x95, 0xf6, 0x90, 0x8f,
+	0x22, 0xb3, 0x37, 0x40, 0x5e, 0x40, 0xcd, 0x83, 0xf5, 0x7d, 0xcc, 0xd0, 0xba, 0x89, 0x0f, 0x70,
+	0xc0, 0x68, 0x3d, 0x8c, 0x08, 0x23, 0xfa, 0x43, 0x81, 0xa9, 0x0b, 0x4c, 0x5d, 0x62, 0x4a, 0xab,
+	0x7d, 0xd2, 0x27, 0x1c, 0x61, 0x26, 0x27, 0x01, 0x2e, 0xbd, 0xb3, 0x98, 0x90, 0x1d, 0x86, 0x58,
+	0xf2, 0x55, 0xbf, 0x53, 0x00, 0x3e, 0x27, 0x0c, 0xb7, 0x78, 0x10, 0x7d, 0x0f, 0x32, 0x1c, 0x5c,
+	0x54, 0x2a, 0x4a, 0x2d, 0x6f, 0x7d, 0x72, 0x36, 0x2e, 0x3f, 0xed, 0x7b, 0x6c, 0x30, 0xda, 0xaf,
+	0xf7, 0xc8, 0xd0, 0x14, 0x7c, 0x24, 0xea, 0xcb, 0xd3, 0xfb, 0x3d, 0x12, 0x61, 0x33, 0x36, 0x03,
+	0x1c, 0x8f, 0xa8, 0x89, 0xe3, 0x90, 0x44, 0x0c, 0xbb, 0xf5, 0x46, 0x42, 0xd1, 0x46, 0x43, 0xec,
+	0x08, 0x36, 0xfd, 0x23, 0xc8, 0x8a, 0x2c, 0x8a, 0x4b, 0x95, 0x74, 0x6d, 0x79, 0x63, 0xad, 0xbe,
+	0x30, 0x8d, 0x3a, 0x57, 0x61, 0xa9, 0x27, 0xe3, 0x72, 0xca, 0x91, 0x5f, 0x54, 0xbf, 0x4a, 0xc3,
+	0x83, 0x4e, 0xdc, 0x20, 0xc1, 0x97, 0x5e, 0x34, 0x44, 0xcc, 0x23, 0x01, 0x47, 0xe9, 0x8f, 0x20,
+	0x4b, 0x71, 0xe0, 0xe2, 0x48, 0x68, 0x75, 0xe4, 0x4d, 0xf7, 0xe1, 0xbe, 0x8b, 0x29, 0xf3, 0x02,
+	0x8e, 0xed, 0x8a, 0x74, 0x96, 0x5e, 0x4d, 0x3a, 0xda, 0x1c, 0x33, 0x7f, 0x9a, 0xa8, 0x40, 0x43,
+	0x32, 0x0a, 0x58, 0x31, 0x5d, 0x51, 0x6a, 0xaa, 0x23, 0x6f, 0xfa, 0x2a, 0x64, 0x10, 0xa5, 0x98,
+	0x15, 0x55, 0x2e, 0x4e, 0x5c, 0x74, 0x13, 0x0a, 0x21, 0x3a, 0xf4, 0x09, 0x72, 0xbb, 0x03, 0x44,
+	0x07, 0xc5, 0x4c, 0x45, 0xa9, 0x15, 0xac, 0x42, 0x92, 0xef, 0x1f, 0xe3, 0xb2, 0xfa, 0x0c, 0xd1,
+	0x81, 0xb3, 0x2c, 0x11, 0xc9, 0x45, 0xff, 0x14, 0xd6, 0x2e, 0x24, 0x43, 0x02, 0x16, 0xa1, 0x1e,
+	0xeb, 0x22, 0xd7, 0x8d, 0x30, 0xa5, 0xc5, 0x2c, 0x67, 0x2f, 0xcd, 0xcb, 0x92, 0x90, 0x4d, 0x81,
+	0xd0, 0x2d, 0x78, 0x7b, 0x9e, 0x21, 0xc2, 0x3d, 0x2f, 0xf4, 0x70, 0x30, 0xa3, 0xc8, 0x71, 0x8a,
+	0xb7, 0xe6, 0x40, 0xce, 0x14, 0x23, 0x39, 0xaa, 0x67, 0x2a, 0x64, 0x44, 0xd1, 0x6f, 0xc8, 0x1f,
+	0x8f, 0x21, 0xc3, 0xe2, 0xae, 0xe7, 0xf2, 0x3e, 0x15, 0xac, 0xd5, 0xf9, 0x82, 0x4c, 0xc6, 0x65,
+	0xb5, 0x13, 0xdb, 0x4d, 0x47, 0x65, 0xb1, 0xed, 0xea, 0x4f, 0x21, 0x4b, 0x19, 0x62, 0x23, 0xca,
+	0x0b, 0xbe, 0xb2, 0xf1, 0xee, 0x7f, 0x59, 0xa9, 0xbe, 0xcb, 0xa1, 0x8e, 0xfc, 0x24, 0xe9, 0x8a,
+	0x17, 0xb8, 0x38, 0xe6, 0x5d, 0x51, 0x1d, 0x71, 0xd1, 0x87, 0xb0, 0x46, 0xc9, 0x28, 0xea, 0xe1,
+	0x2e, 0x8b, 0x93, 0x12, 0x9f, 0x1b, 0xad, 0xcb, 0x2d, 0xc8, 0xbb, 0xb4, 0xbc, 0xf1, 0xde, 0x15,
+	0x81, 0x16, 0x78, 0xf3, 0x59, 0xca, 0x79, 0x53, 0x30, 0x2e, 0x32, 0xae, 0x07, 0xbc, 0x5f, 0x57,
+	0x04, 0xcb, 0xfe, 0x8f, 0x60, 0x6f, 0x24, 0x7c, 0x0b, 0x5e, 0x55, 0x7f, 0x55, 0x20, 0x2b, 0x4a,
+	0xa0, 0x3f, 0x01, 0x7d, 0xb7, 0xb3, 0xd9, 0xd9, 0xdb, 0xed, 0xee, 0xb5, 0x77, 0x77, 0x5a, 0x0d,
+	0x7b, 0xcb, 0x6e, 0x35, 0xb5, 0x54, 0x69, 0xf5, 0xe8, 0xb8, 0xa2, 0x71, 0x74, 0x9b, 0x04, 0xad,
+	0xd8, 0xa3, 0x2c, 0xd1, 0x58, 0x03, 0x4d, 0xa2, 0x1b, 0x9f, 0xb5, 0xb7, 0x6c, 0x67, 0xbb, 0xd5,
+	0xd4, 0x94, 0x92, 0x7e, 0x74, 0x5c, 0x59, 0xe1, 0x58, 0x19, 0x0a, 0xbb, 0x17, 0x90, 0xdb, 0x3b,
+	0xcf, 0x5b, 0x9d, 0x56, 0x53, 0x5b, 0xba, 0x80, 0x1c, 0x86, 0x3e, 0x66, 0xd8, 0xd5, 0xab, 0x70,
+	0x57, 0x22, 0xb7, 0x36, 0xed, 0xe7, 0xad, 0xa6, 0x96, 0x2e, 0xdd, 0x3b, 0x3a, 0xae, 0x2c, 0x73,
+	0xd8, 0x16, 0xf2, 0x7c, 0xec, 0x96, 0xee, 0x7c, 0xfd, 0xbd, 0x91, 0xfa, 0xf1, 0x07, 0x43, 0xb1,
+	0x72, 0x90, 0xe1, 0x05, 0xa9, 0xfe, 0xad, 0xc0, 0xfd, 0x36, 0x11, 0xbf, 0x4f, 0xb3, 0xb0, 0xe7,
+	0x8e, 0x51, 0xae, 0x75, 0xcc, 0xb9, 0x67, 0x97, 0x5e, 0xa9, 0x67, 0xf7, 0x21, 0x17, 0x12, 0xdf,
+	0x4f, 0x34, 0xf0, 0xd1, 0xb7, 0x6c, 0xa9, 0xe1, 0xc3, 0x97, 0x20, 0x3f, 0x20, 0x0c, 0xcf, 0xb8,
+	0x77, 0x88, 0xef, 0xdb, 0xcd, 0xc9, 0xb8, 0x9c, 0x15, 0x27, 0x27, 0x9b, 0x30, 0xdb, 0x6e, 0xf5,
+	0x67, 0x05, 0x1e, 0xf0, 0xc0, 0x97, 0x8a, 0x7e, 0x43, 0x63, 0xb8, 0x0e, 0x77, 0x78, 0xcd, 0xa7,
+	0x93, 0x98, 0xb7, 0x1e, 0x4d, 0xc6, 0xe5, 0x1c, 0x0f, 0x6e, 0x37, 0xcf, 0x66, 0x47, 0x27, 0xc7,
+	0x71, 0xb6, 0xab, 0xeb, 0xa0, 0x26, 0x7f, 0x27, 0xbc, 0x04, 0x79, 0x87, 0x9f, 0xff, 0xa5, 0x7a,
+	0x6a, 0x80, 0xdb, 0xad, 0xfa, 0x27, 0x05, 0xb4, 0x99, 0x6a, 0xe1, 0xc7, 0x5b, 0x2e, 0xf9, 0x17,
+	0x05, 0x1e, 0xce, 0x24, 0x3b, 0x98, 0x45, 0x87, 0xaf, 0x85, 0xee, 0xdf, 0xd2, 0xa0, 0x35, 0x31,
+	0x65, 0x0d, 0xe4, 0xfb, 0x9b, 0x61, 0x18, 0x91, 0x83, 0x5b, 0x25, 0xf9, 0x63, 0x80, 0x1e, 0x19,
+	0x0e, 0x51, 0xe0, 0x4e, 0x87, 0xbb, 0x60, 0x19, 0x72, 0xb8, 0xf3, 0x0d, 0xf1, 0x86, 0x8f, 0xeb,
+	0xec, 0xe2, 0xe4, 0xe5, 0x17, 0xb6, 0x3b, 0xb7, 0x98, 0xa8, 0xd7, 0x2f, 0x26, 0x99, 0x9b, 0x5a,
+	0x4c, 0x1e, 0x83, 0x76, 0xc5, 0xb6, 0x70, 0xaf, 0x77, 0x69, 0x45, 0xb8, 0xbc, 0x95, 0xe4, 0xae,
+	0xd9, 0x4a, 0xaa, 0xdf, 0x2a, 0xb0, 0x32, 0xed, 0xdf, 0xcd, 0x1a, 0xee, 0x09, 0xc0, 0x10, 0x53,
+	0x8a, 0xfa, 0x78, 0xd6, 0xbf, 0xbb, 0x49, 0xe5, 0xb7, 0xc5, 0xd3, 0xa4, 0xf2, 0x12, 0x60, 0xbb,
+	0xd6, 0xf6, 0xc9, 0x5f, 0x46, 0xea, 0x64, 0x62, 0x28, 0x2f, 0x26, 0x86, 0xf2, 0xe7, 0xc4, 0x50,
+	0xbe, 0x39, 0x35, 0x52, 0x2f, 0x4e, 0x8d, 0xd4, 0xef, 0xa7, 0x46, 0xea, 0x0b, 0xf3, 0x25, 0xf4,
+	0xc8, 0x4d, 0x99, 0x6f, 0xc8, 0xfb, 0x59, 0xbe, 0x22, 0x7f, 0xf0, 0x4f, 0x00, 0x00, 0x00, 0xff,
+	0xff, 0x38, 0x82, 0x64, 0xeb, 0x98, 0x0b, 0x00, 0x00,
 }
 
 func (m *VoteEvents) Marshal() (dAtA []byte, err error) {
@@ -607,6 +621,79 @@ func (m *VoteEvents) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i -= len(m.Chain)
 		copy(dAtA[i:], m.Chain)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.Chain)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *TxConfirmationEvent) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *TxConfirmationEvent) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *TxConfirmationEvent) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.DestinationRecipientAddress) > 0 {
+		i -= len(m.DestinationRecipientAddress)
+		copy(dAtA[i:], m.DestinationRecipientAddress)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.DestinationRecipientAddress)))
+		i--
+		dAtA[i] = 0x3a
+	}
+	if len(m.DestinationContractAddress) > 0 {
+		i -= len(m.DestinationContractAddress)
+		copy(dAtA[i:], m.DestinationContractAddress)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.DestinationContractAddress)))
+		i--
+		dAtA[i] = 0x32
+	}
+	{
+		size := m.PayloadHash.Size()
+		i -= size
+		if _, err := m.PayloadHash.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintEvents(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x2a
+	if len(m.Asset) > 0 {
+		i -= len(m.Asset)
+		copy(dAtA[i:], m.Asset)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Asset)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if m.Amount != 0 {
+		i = encodeVarintEvents(dAtA, i, uint64(m.Amount))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.DestinationChain) > 0 {
+		i -= len(m.DestinationChain)
+		copy(dAtA[i:], m.DestinationChain)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.DestinationChain)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Sender) > 0 {
+		i -= len(m.Sender)
+		copy(dAtA[i:], m.Sender)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Sender)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -672,16 +759,16 @@ func (m *Event) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *Event_ConfirmationEvent) MarshalTo(dAtA []byte) (int, error) {
+func (m *Event_SourceTxConfirmationEvent) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *Event_ConfirmationEvent) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *Event_SourceTxConfirmationEvent) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
-	if m.ConfirmationEvent != nil {
+	if m.SourceTxConfirmationEvent != nil {
 		{
-			size, err := m.ConfirmationEvent.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.SourceTxConfirmationEvent.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -693,79 +780,27 @@ func (m *Event_ConfirmationEvent) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	}
 	return len(dAtA) - i, nil
 }
-func (m *ConfirmationEvent) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *ConfirmationEvent) MarshalTo(dAtA []byte) (int, error) {
+func (m *Event_DestTxConfirmationEvent) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *ConfirmationEvent) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *Event_DestTxConfirmationEvent) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.DestinationRecipientAddress) > 0 {
-		i -= len(m.DestinationRecipientAddress)
-		copy(dAtA[i:], m.DestinationRecipientAddress)
-		i = encodeVarintEvents(dAtA, i, uint64(len(m.DestinationRecipientAddress)))
-		i--
-		dAtA[i] = 0x3a
-	}
-	if len(m.DestinationContractAddress) > 0 {
-		i -= len(m.DestinationContractAddress)
-		copy(dAtA[i:], m.DestinationContractAddress)
-		i = encodeVarintEvents(dAtA, i, uint64(len(m.DestinationContractAddress)))
+	if m.DestTxConfirmationEvent != nil {
+		{
+			size, err := m.DestTxConfirmationEvent.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintEvents(dAtA, i, uint64(size))
+		}
 		i--
 		dAtA[i] = 0x32
 	}
-	{
-		size := m.PayloadHash.Size()
-		i -= size
-		if _, err := m.PayloadHash.MarshalTo(dAtA[i:]); err != nil {
-			return 0, err
-		}
-		i = encodeVarintEvents(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x2a
-	if len(m.Asset) > 0 {
-		i -= len(m.Asset)
-		copy(dAtA[i:], m.Asset)
-		i = encodeVarintEvents(dAtA, i, uint64(len(m.Asset)))
-		i--
-		dAtA[i] = 0x22
-	}
-	if m.Amount != 0 {
-		i = encodeVarintEvents(dAtA, i, uint64(m.Amount))
-		i--
-		dAtA[i] = 0x18
-	}
-	if len(m.DestinationChain) > 0 {
-		i -= len(m.DestinationChain)
-		copy(dAtA[i:], m.DestinationChain)
-		i = encodeVarintEvents(dAtA, i, uint64(len(m.DestinationChain)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Sender) > 0 {
-		i -= len(m.Sender)
-		copy(dAtA[i:], m.Sender)
-		i = encodeVarintEvents(dAtA, i, uint64(len(m.Sender)))
-		i--
-		dAtA[i] = 0xa
-	}
 	return len(dAtA) - i, nil
 }
-
 func (m *NoEventsConfirmed) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -1132,43 +1167,7 @@ func (m *VoteEvents) Size() (n int) {
 	return n
 }
 
-func (m *Event) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Chain)
-	if l > 0 {
-		n += 1 + l + sovEvents(uint64(l))
-	}
-	l = m.TxID.Size()
-	n += 1 + l + sovEvents(uint64(l))
-	if m.Status != 0 {
-		n += 1 + sovEvents(uint64(m.Status))
-	}
-	if m.Index != 0 {
-		n += 1 + sovEvents(uint64(m.Index))
-	}
-	if m.Event != nil {
-		n += m.Event.Size()
-	}
-	return n
-}
-
-func (m *Event_ConfirmationEvent) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if m.ConfirmationEvent != nil {
-		l = m.ConfirmationEvent.Size()
-		n += 1 + l + sovEvents(uint64(l))
-	}
-	return n
-}
-func (m *ConfirmationEvent) Size() (n int) {
+func (m *TxConfirmationEvent) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1202,6 +1201,54 @@ func (m *ConfirmationEvent) Size() (n int) {
 	return n
 }
 
+func (m *Event) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Chain)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	l = m.TxID.Size()
+	n += 1 + l + sovEvents(uint64(l))
+	if m.Status != 0 {
+		n += 1 + sovEvents(uint64(m.Status))
+	}
+	if m.Index != 0 {
+		n += 1 + sovEvents(uint64(m.Index))
+	}
+	if m.Event != nil {
+		n += m.Event.Size()
+	}
+	return n
+}
+
+func (m *Event_SourceTxConfirmationEvent) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.SourceTxConfirmationEvent != nil {
+		l = m.SourceTxConfirmationEvent.Size()
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	return n
+}
+func (m *Event_DestTxConfirmationEvent) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.DestTxConfirmationEvent != nil {
+		l = m.DestTxConfirmationEvent.Size()
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	return n
+}
 func (m *NoEventsConfirmed) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1476,7 +1523,7 @@ func (m *VoteEvents) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *Event) Unmarshal(dAtA []byte) error {
+func (m *TxConfirmationEvent) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1499,198 +1546,10 @@ func (m *Event) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: Event: wiretype end group for non-group")
+			return fmt.Errorf("proto: TxConfirmationEvent: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: Event: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Chain", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthEvents
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthEvents
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Chain = github_com_scalarorg_scalar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TxID", wireType)
-			}
-			var byteLen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				byteLen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if byteLen < 0 {
-				return ErrInvalidLengthEvents
-			}
-			postIndex := iNdEx + byteLen
-			if postIndex < 0 {
-				return ErrInvalidLengthEvents
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.TxID.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
-			}
-			m.Status = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Status |= Event_Status(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 4:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Index", wireType)
-			}
-			m.Index = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Index |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 5:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ConfirmationEvent", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthEvents
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthEvents
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			v := &ConfirmationEvent{}
-			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			m.Event = &Event_ConfirmationEvent{v}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipEvents(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthEvents
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *ConfirmationEvent) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowEvents
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ConfirmationEvent: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ConfirmationEvent: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: TxConfirmationEvent: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1904,6 +1763,229 @@ func (m *ConfirmationEvent) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.DestinationRecipientAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipEvents(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Event) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowEvents
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Event: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Event: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Chain", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Chain = github_com_scalarorg_scalar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TxID", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.TxID.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= Event_Status(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Index", wireType)
+			}
+			m.Index = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Index |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SourceTxConfirmationEvent", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &TxConfirmationEvent{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Event = &Event_SourceTxConfirmationEvent{v}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DestTxConfirmationEvent", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &TxConfirmationEvent{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Event = &Event_DestTxConfirmationEvent{v}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

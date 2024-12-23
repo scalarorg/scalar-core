@@ -209,24 +209,24 @@ func (v voteHandler) HandleResult(ctx sdk.Context, result codec.ProtoMarshaler) 
 
 func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event types.Event, chain nexus.Chain) error {
 	if err := ck.SetConfirmedEvent(ctx, event); err != nil {
-		clog.Redf("[BTC] SetConfirmedEvent error: %+v", err)
 		return err
 	}
 
-	// Event_StakingTx is no longer directly handled by the BTC module,
-	// which bypassed nexus routing to destination chain, for example to evm module
+	// if not match the event type, the event also set confirmed in the abci of this module, and also enqueued to the nexus message
+	// but it was not routed to the destination chain in the nexus keeper, so it will be ignored in this module
 
 	eventType := event.GetEvent()
-	clog.Redf("[BTC] eventType: %+v", eventType)
-	clog.Redf("[BTC] event: %+v", event)
-
 	switch eventType.(type) {
-	case *types.Event_ConfirmationEvent:
-		if err := v.handleConfirmationEvent(ctx, ck, event); err != nil {
+	case *types.Event_SourceTxConfirmationEvent:
+		if err := v.handleSourceConfirmationEvent(ctx, ck, event); err != nil {
 			return err
 		}
+	case *types.Event_DestTxConfirmationEvent:
+		clog.Red("handleEvent, DestTxConfirmationEvent", "event", event)
+		// if err := v.handleDestConfirmationEvent(ctx, ck, event); err != nil {
+		// 	return err
+		// }
 	default:
-		clog.Red("Not found event type")
 		funcs.MustNoErr(ck.EnqueueConfirmedEvent(ctx, event.GetID()))
 	}
 
@@ -235,7 +235,7 @@ func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event ty
 	return nil
 }
 
-func (v voteHandler) handleConfirmationEvent(ctx sdk.Context, ck types.ChainKeeper, event types.Event) error {
+func (v voteHandler) handleSourceConfirmationEvent(ctx sdk.Context, ck types.ChainKeeper, event types.Event) error {
 	msg := mustToGeneralMessage(ctx, v.nexus, event)
 
 	clog.Bluef("msg: %+v", msg)
@@ -256,7 +256,7 @@ func (v voteHandler) handleConfirmationEvent(ctx sdk.Context, ck types.ChainKeep
 
 func mustToGeneralMessage(ctx sdk.Context, n types.Nexus, event types.Event) nexus.GeneralMessage {
 	id := string(event.GetID())
-	confirmationEvent := event.GetEvent().(*types.Event_ConfirmationEvent).ConfirmationEvent
+	confirmationEvent := event.GetEvent().(*types.Event_SourceTxConfirmationEvent).SourceTxConfirmationEvent
 
 	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
 	sender := nexus.CrossChainAddress{Chain: sourceChain, Address: confirmationEvent.Sender}

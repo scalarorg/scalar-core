@@ -55,8 +55,8 @@ func (client *BtcClient) processSrcTxReceipt(chain nexus.ChainName, receipt BTCT
 	events = append(events, types.Event{
 		Chain: chain,
 		TxID:  txID,
-		Event: &types.Event_ConfirmationEvent{
-			ConfirmationEvent: &btcEvent,
+		Event: &types.Event_SourceTxConfirmationEvent{
+			SourceTxConfirmationEvent: btcEvent,
 		},
 		Index: 0, // TODO: fix this hardcoded index, this is used to identify the staking tx in the event
 	})

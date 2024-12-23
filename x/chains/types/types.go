@@ -396,7 +396,7 @@ func (m VoteEvents) ValidateBasic() error {
 	return nil
 }
 
-func (m *ConfirmationEvent) ValidateBasic() error {
+func (m *TxConfirmationEvent) ValidateBasic() error {
 	if m.Sender == "" {
 		return fmt.Errorf("invalid sender")
 	}
