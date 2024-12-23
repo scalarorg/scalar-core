@@ -7312,6 +7312,7 @@ Query defines the gRPC querier service.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `pubkey` | [bytes](#bytes) |  |  |
+| `address` | [bytes](#bytes) |  |  |
 | `name` | [string](#string) |  |  |
 | `tag` | [string](#string) |  |  |
 | `attribute` | [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute) |  |  |
@@ -7348,6 +7349,7 @@ DestinationChain represents a blockchain where tokens can be sent
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `params` | [scalar.chains.v1beta1.Params](#scalar.chains.v1beta1.Params) |  | Chain params |
+| `pubkey` | [string](#string) |  |  |
 | `erc20` | [scalar.chains.evm.v1beta1.ERC20TokenMetadata](#scalar.chains.evm.v1beta1.ERC20TokenMetadata) |  |  |
 | `btc` | [scalar.chains.btc.v1beta1.BtcToken](#scalar.chains.btc.v1beta1.BtcToken) |  |  |
 

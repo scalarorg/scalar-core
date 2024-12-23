@@ -16,7 +16,7 @@ var _ types.QueryServer = Keeper{}
 func (k Keeper) Protocols(c context.Context, req *types.ProtocolsRequest) (*types.ProtocolsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	protocols, ok := k.GetProtocols(ctx)
+	protocols, ok := k.findProtocols(ctx, req)
 	if !ok {
 		return nil, status.Errorf(codes.NotFound, "protocols not found")
 	}

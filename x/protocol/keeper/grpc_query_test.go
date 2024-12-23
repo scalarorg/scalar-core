@@ -22,7 +22,6 @@ func TestGrpcQuery(t *testing.T) {
 		ctx            sdk.Context
 		initialGenesis *types.GenesisState
 		protocols      []*types.Protocol
-		//params         types.Params
 	)
 
 	Given("a keeper",
