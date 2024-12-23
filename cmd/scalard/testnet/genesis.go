@@ -18,9 +18,10 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/utils"
+	evmtypes "github.com/scalarorg/scalar-core/x/chains/evm/types"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
@@ -30,9 +31,6 @@ import (
 	snapshottypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 	tmtypes "github.com/tendermint/tendermint/types"
-
-	evmtypes "github.com/scalarorg/scalar-core/x/chains/evm/types"
-	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 const (
@@ -48,7 +46,7 @@ type GenesisState map[string]json.RawMessage
 type ScalarProtocol struct {
 	ScalarPubKey  cryptotypes.PubKey
 	ScalarBalance banktypes.Balance
-	EvmPubKey     string
+	EvmAddress    string
 }
 
 type ValidatorInfo struct {
@@ -82,10 +80,10 @@ type ValidatorInfo struct {
 // DefaultProtocol returns the default chains for a genesis state
 func DefaultProtocol(scalarProtocol ScalarProtocol, custodianGroup covenanttypes.CustodianGroup) protocoltypes.Protocol {
 	token := evmtypes.ERC20TokenMetadata{
-		Asset:        "pBtc",
-		ChainID:      sdk.NewInt(1115511),
-		TokenAddress: evmtypes.Address(common.HexToAddress("0x5f214989a5f49ab3c56fd5003c2858e24959c018")),
-		Status:       evmtypes.Confirmed,
+		Asset:   "pBtc",
+		ChainID: sdk.NewInt(1115511),
+		//TokenAddress: evmtypes.Address(common.HexToAddress("0x25F23D37861210cdc3c694112cFa64bBca6D7143")),
+		Status: evmtypes.Confirmed,
 		Details: evmtypes.TokenDetails{
 			TokenName: "pBtc",
 			Symbol:    "pBtc",
@@ -93,11 +91,16 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, custodianGroup covenanttypes
 			Capacity:  sdk.NewInt(100000000),
 		},
 	}
+
+	params := chainsTypes.Params{
+		Chain: "evm|11155111",
+	}
 	chain := protocoltypes.SupportedChain{
+		Params: &params,
 		Token: &protocoltypes.SupportedChain_Erc20{
 			Erc20: &token,
 		},
-		Pubkey: scalarProtocol.EvmPubKey,
+		Address: scalarProtocol.EvmAddress,
 	}
 	protocol := protocoltypes.Protocol{
 		Pubkey:         scalarProtocol.ScalarPubKey.Bytes(),

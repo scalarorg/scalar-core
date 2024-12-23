@@ -17,7 +17,7 @@ message ProtocolAttribute {
 // DestinationChain represents a blockchain where tokens can be sent
 message SupportedChain {
   scalar.chains.v1beta1.Params params = 1; //Chain params
-  string pubkey = 2;
+  string address = 2;
   oneof token {
     scalar.chains.evm.v1beta1.ERC20TokenMetadata erc20 = 3;
     scalar.chains.btc.v1beta1.BtcToken btc = 4;
