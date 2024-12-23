@@ -25,7 +25,7 @@ func (client *BtcClient) ProcessSourceTxsConfirmation(event *types.EventConfirmS
 			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, types.NewVoteEvents(event.Chain)))
 			clog.Redf("broadcasting empty vote for poll %s: %s", pollID.String(), txReceipt.Err().Error())
 		} else {
-			events := client.processStakingTxReceipt(event.Chain, txReceipt.Ok().(BTCTxReceipt))
+			events := client.processSrcTxReceipt(event.Chain, txReceipt.Ok().(BTCTxReceipt))
 			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, types.NewVoteEvents(event.Chain, events...)))
 			clog.Redf("broadcasting vote %v for poll %s", events, pollID.String())
 		}
@@ -34,11 +34,11 @@ func (client *BtcClient) ProcessSourceTxsConfirmation(event *types.EventConfirmS
 	return votes, nil
 }
 
-func (client *BtcClient) processStakingTxReceipt(chain nexus.ChainName, receipt BTCTxReceipt) []types.Event {
+func (client *BtcClient) processSrcTxReceipt(chain nexus.ChainName, receipt BTCTxReceipt) []types.Event {
 
 	var events []types.Event
 
-	btcEvent, err := client.decodeStakingTransaction(&receipt)
+	btcEvent, err := client.decodeSourceTxConfirmationEvent(&receipt)
 	if err != nil {
 		client.logger().Debug(sdkerrors.Wrap(err, "decode event ContractCall failed").Error())
 	}
@@ -47,16 +47,16 @@ func (client *BtcClient) processStakingTxReceipt(chain nexus.ChainName, receipt 
 		client.logger().Debug(sdkerrors.Wrap(err, "invalid event ContractCall").Error())
 	}
 
-	txID, err := types.HashFromHexStr(receipt.Raw.Txid)
+	txID, err := types.HashFromHex(receipt.Raw.Txid)
 	if err != nil {
 		client.logger().Debug(sdkerrors.Wrap(err, "invalid tx id").Error())
 	}
 
 	events = append(events, types.Event{
 		Chain: chain,
-		TxID:  *txID,
-		Event: &types.Event_ConfirmationEvent{
-			ConfirmationEvent: &btcEvent,
+		TxID:  txID,
+		Event: &types.Event_SourceTxConfirmationEvent{
+			SourceTxConfirmationEvent: btcEvent,
 		},
 		Index: 0, // TODO: fix this hardcoded index, this is used to identify the staking tx in the event
 	})

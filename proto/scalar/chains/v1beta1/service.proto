@@ -10,21 +10,102 @@ import "scalar/chains/v1beta1/query.proto";
 
 option (gogoproto.goproto_registration) = true;
 
-// TODO: Refactor to ConfirmBridgeCall only
-
 // Msg defines the btc Msg service.
 service MsgService {
   rpc ConfirmSourceTxs(ConfirmSourceTxsRequest)
       returns (ConfirmSourceTxsResponse) {
     option (google.api.http) = {
-      post : "/scalar/btc/confirm_source_txs"
+      post : "/scalar/chains/confirm_source_txs"
       body : "*"
     };
   }
 
-  rpc ConfirmDestTxs(ConfirmDestTxsRequest) returns (ConfirmDestTxsResponse) {
+  rpc SetGateway(SetGatewayRequest) returns (SetGatewayResponse) {
     option (google.api.http) = {
-      post : "/scalar/btc/confirm_dest_txs"
+      post : "/scalar/chains/set_gateway"
+      body : "*"
+    };
+  }
+
+  rpc Link(LinkRequest) returns (LinkResponse) {
+    option (google.api.http) = {
+      post : "/scalar/chains/link"
+      body : "*"
+    };
+  }
+
+  rpc ConfirmToken(ConfirmTokenRequest) returns (ConfirmTokenResponse) {
+    option (google.api.http) = {
+      post : "/scalar/chains/confirm_token"
+      body : "*"
+    };
+  }
+
+  rpc ConfirmDeposit(ConfirmDepositRequest) returns (ConfirmDepositResponse) {
+    option (google.api.http) = {
+      post : "/scalar/chains/confirm_deposit"
+      body : "*"
+    };
+  }
+
+  rpc ConfirmTransferKey(ConfirmTransferKeyRequest)
+      returns (ConfirmTransferKeyResponse) {
+    option (google.api.http) = {
+      post : "/scalar/chains/confirm_transfer_key"
+      body : "*"
+    };
+  }
+
+  rpc CreateDeployToken(CreateDeployTokenRequest)
+      returns (CreateDeployTokenResponse) {
+    option (google.api.http) = {
+      post : "/scalar/chains/create_deploy_token"
+      body : "*"
+    };
+  }
+
+  rpc CreateBurnTokens(CreateBurnTokensRequest)
+      returns (CreateBurnTokensResponse) {
+    option (google.api.http) = {
+      post : "/scalar/chains/create_burn_tokens"
+      body : "*"
+    };
+  }
+
+  rpc CreatePendingTransfers(CreatePendingTransfersRequest)
+      returns (CreatePendingTransfersResponse) {
+    option (google.api.http) = {
+      post : "/scalar/chains/create_pending_transfers"
+      body : "*"
+    };
+  }
+
+  rpc CreateTransferOperatorship(CreateTransferOperatorshipRequest)
+      returns (CreateTransferOperatorshipResponse) {
+    option (google.api.http) = {
+      post : "/scalar/chains/create_transfer_operatorship"
+      body : "*"
+    };
+  }
+
+  rpc SignCommands(SignCommandsRequest) returns (SignCommandsResponse) {
+    option (google.api.http) = {
+      post : "/scalar/chains/sign_commands"
+      body : "*"
+    };
+  }
+
+  rpc AddChain(AddChainRequest) returns (AddChainResponse) {
+    option (google.api.http) = {
+      post : "/scalar/chains/add_chain"
+      body : "*"
+    };
+  }
+
+  rpc RetryFailedEvent(RetryFailedEventRequest)
+      returns (RetryFailedEventResponse) {
+    option (google.api.http) = {
+      post : "/scalar/chains/retry-failed-event"
       body : "*"
     };
   }
@@ -39,6 +120,74 @@ service QueryService {
   rpc BatchedCommands(BatchedCommandsRequest)
       returns (BatchedCommandsResponse) {
     option (google.api.http).get =
-        "/scalar/btc/v1beta1/batched_commands/{chain}/{id}";
+        "/scalar/chains/v1beta1/batched_commands/{chain}/{id}";
+  }
+
+  rpc BurnerInfo(BurnerInfoRequest) returns (BurnerInfoResponse) {
+    option (google.api.http).get = "/scalar/chains/v1beta1/burner_info";
+  }
+
+  // ConfirmationHeight queries the confirmation height for the specified chain
+  rpc ConfirmationHeight(ConfirmationHeightRequest)
+      returns (ConfirmationHeightResponse) {
+    option (google.api.http).get =
+        "/scalar/chains/v1beta1/confirmation_height/{chain}";
+  }
+
+  // PendingCommands queries the pending commands for the specified chain
+  rpc PendingCommands(PendingCommandsRequest)
+      returns (PendingCommandsResponse) {
+    option (google.api.http).get =
+        "/scalar/chains/v1beta1/pending_commands/{chain}";
+  }
+
+  // Chains queries the available chains
+  rpc Chains(ChainsRequest) returns (ChainsResponse) {
+    option (google.api.http).get = "/scalar/chains/v1beta1/chains";
+  }
+
+  // Command queries the command of a chain provided the command id
+  rpc Command(CommandRequest) returns (CommandResponse) {
+    option (google.api.http).get = "/scalar/chains/v1beta1/command_request";
+  }
+
+  // KeyAddress queries the address of key of a chain
+  rpc KeyAddress(KeyAddressRequest) returns (KeyAddressResponse) {
+    option (google.api.http).get = "/scalar/chains/v1beta1/key_address/{chain}";
+  }
+
+  // GatewayAddress queries the address of scalar gateway at the specified
+  // chain
+  rpc GatewayAddress(GatewayAddressRequest) returns (GatewayAddressResponse) {
+    option (google.api.http).get =
+        "/scalar/chains/v1beta1/gateway_address/{chain}";
+  }
+
+  // Bytecode queries the bytecode of a specified gateway at the specified
+  // chain
+  rpc Bytecode(BytecodeRequest) returns (BytecodeResponse) {
+    option (google.api.http).get =
+        "/scalar/chains/v1beta1/bytecode/{chain}/{contract}";
+  }
+
+  // Event queries an event at the specified chain
+  rpc Event(EventRequest) returns (EventResponse) {
+    option (google.api.http).get =
+        "/scalar/chains/v1beta1/event/{chain}/{event_id}";
+  }
+
+  // ERC20Tokens queries the ERC20 tokens registered for a chain
+  rpc ERC20Tokens(ERC20TokensRequest) returns (ERC20TokensResponse) {
+    option (google.api.http).get =
+        "/scalar/chains/v1beta1/erc20_tokens/{chain}";
+  }
+
+  // TokenInfo queries the token info for a registered ERC20 Token
+  rpc TokenInfo(TokenInfoRequest) returns (TokenInfoResponse) {
+    option (google.api.http).get = "/scalar/chains/v1beta1/token_info/{chain}";
+  }
+
+  rpc Params(ParamsRequest) returns (ParamsResponse) {
+    option (google.api.http).get = "/scalar/chains/v1beta1/params/{chain}";
   }
 }

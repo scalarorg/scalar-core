@@ -4,7 +4,7 @@ package scalar.chains.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "scalar/permission/exported/v1beta1/types.proto";
-import "scalar/chains/v1beta1/poll.proto";
+import "scalar/chains/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
 
@@ -27,47 +27,212 @@ message ConfirmSourceTxsRequest {
 
 message ConfirmSourceTxsResponse {}
 
-message ConfirmDestTxsRequest {
-  option (scalar.permission.exported.v1beta1.permission_role) =
-      ROLE_UNRESTRICTED;
+message SetGatewayRequest {
+  option (permission.exported.v1beta1.permission_role) = ROLE_ACCESS_CONTROL;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  repeated bytes tx_ids = 3 [
+  bytes address = 3
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
+}
+
+message SetGatewayResponse {}
+
+// MsgConfirmDeposit represents an erc20 deposit confirmation message
+message ConfirmDepositRequest {
+  option (permission.exported.v1beta1.permission_role) = ROLE_UNRESTRICTED;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  bytes tx_id = 3 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "Hash",
-    (gogoproto.customname) = "TxIDs"
+    (gogoproto.customname) = "TxID"
   ];
+  bytes amount = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false,
+    deprecated = true
+  ];
+  bytes burner_address = 5
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
 }
 
-message ConfirmDestTxsResponse {}
+message ConfirmDepositResponse {}
 
-message EventConfirmSourceTxsStarted {
-  repeated PollMapping poll_mappings = 1 [
-    (gogoproto.nullable) = false,
-    (gogoproto.jsontag) = "poll_mappings,omitempty"
-  ];
+// MsgConfirmToken represents a token deploy confirmation message
+message ConfirmTokenRequest {
+  option (permission.exported.v1beta1.permission_role) = ROLE_UNRESTRICTED;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  uint64 confirmation_height = 3;
-  repeated bytes participants = 4
-      [ (gogoproto.casttype) =
-            "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
+  bytes tx_id = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "Hash",
+    (gogoproto.customname) = "TxID"
+  ];
+  Asset asset = 4 [ (gogoproto.nullable) = false ];
 }
 
-message EventConfirmDestTxsStarted {
-  repeated PollMapping poll_mappings = 1 [
-    (gogoproto.nullable) = false,
-    (gogoproto.jsontag) = "poll_mappings,omitempty"
-  ];
+message ConfirmTokenResponse {}
+
+message ConfirmTransferKeyRequest {
+  reserved 4, 5; // transfer_type and key_id were deleted in v0.20
+
+  option (permission.exported.v1beta1.permission_role) = ROLE_UNRESTRICTED;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  uint64 confirmation_height = 4;
-  repeated bytes participants = 5
-      [ (gogoproto.casttype) =
-            "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
+  bytes tx_id = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "Hash",
+    (gogoproto.customname) = "TxID"
+  ];
 }
+
+message ConfirmTransferKeyResponse {}
+
+// MsgLink represents the message that links a cross chain address to a burner
+// address
+message LinkRequest {
+  option (permission.exported.v1beta1.permission_role) = ROLE_UNRESTRICTED;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string recipient_addr = 3;
+  string asset = 4;
+  string recipient_chain = 5
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+}
+
+message LinkResponse { string deposit_addr = 1; }
+
+// CreateBurnTokensRequest represents the message to create commands to burn
+// tokens with scalarGateway
+message CreateBurnTokensRequest {
+  option (permission.exported.v1beta1.permission_role) = ROLE_UNRESTRICTED;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+}
+
+message CreateBurnTokensResponse {}
+
+// CreateDeployTokenRequest represents the message to create a deploy token
+// command for scalarGateway
+message CreateDeployTokenRequest {
+  option (permission.exported.v1beta1.permission_role) = ROLE_CHAIN_MANAGEMENT;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  Asset asset = 3 [ (gogoproto.nullable) = false ];
+  TokenDetails token_details = 4 [ (gogoproto.nullable) = false ];
+  reserved 5; // min_amount was removed in v0.15
+  bytes address = 6
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
+  string daily_mint_limit = 7;
+}
+
+message CreateDeployTokenResponse {}
+
+// CreatePendingTransfersRequest represents a message to trigger the creation of
+// commands handling all pending transfers
+message CreatePendingTransfersRequest {
+  option (permission.exported.v1beta1.permission_role) = ROLE_UNRESTRICTED;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+}
+
+message CreatePendingTransfersResponse {}
+
+message CreateTransferOwnershipRequest {
+  option deprecated = true;
+  option (permission.exported.v1beta1.permission_role) = ROLE_CHAIN_MANAGEMENT;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string key_id = 3 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+  ];
+}
+
+message CreateTransferOwnershipResponse { option deprecated = true; }
+
+message CreateTransferOperatorshipRequest {
+  option (permission.exported.v1beta1.permission_role) = ROLE_CHAIN_MANAGEMENT;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string key_id = 3 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+  ];
+}
+
+message CreateTransferOperatorshipResponse {}
+
+message SignCommandsRequest {
+  option (permission.exported.v1beta1.permission_role) = ROLE_UNRESTRICTED;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+}
+
+message SignCommandsResponse {
+  bytes batched_commands_id = 1
+      [ (gogoproto.customname) = "BatchedCommandsID" ];
+  uint32 command_count = 2;
+}
+
+message AddChainRequest {
+  option (permission.exported.v1beta1.permission_role) = ROLE_ACCESS_CONTROL;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string name = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  bytes params = 3
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Params" ];
+}
+
+message AddChainResponse {}
+
+message RetryFailedEventRequest {
+  option (permission.exported.v1beta1.permission_role) = ROLE_UNRESTRICTED;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string event_id = 3
+      [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
+}
+
+message RetryFailedEventResponse {}
