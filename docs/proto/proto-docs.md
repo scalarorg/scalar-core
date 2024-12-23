@@ -7349,7 +7349,7 @@ DestinationChain represents a blockchain where tokens can be sent
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `params` | [scalar.chains.v1beta1.Params](#scalar.chains.v1beta1.Params) |  | Chain params |
-| `pubkey` | [string](#string) |  |  |
+| `address` | [string](#string) |  |  |
 | `erc20` | [scalar.chains.evm.v1beta1.ERC20TokenMetadata](#scalar.chains.evm.v1beta1.ERC20TokenMetadata) |  |  |
 | `btc` | [scalar.chains.btc.v1beta1.BtcToken](#scalar.chains.btc.v1beta1.BtcToken) |  |  |
 
