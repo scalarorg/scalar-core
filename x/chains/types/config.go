@@ -90,11 +90,12 @@ import (
 // }
 
 type ChainConfig struct {
-	ID          string      `json:"id"`
-	ChainID     uint64      `json:"chain_id"`
-	Name        string      `json:"name"`
-	NetworkKind NetworkKind `json:"network_kind"`
-	Gateway     string      `json:"gateway"`
+	ID           string      `json:"id"`
+	ChainID      uint64      `json:"chain_id"`
+	Name         string      `json:"name"`
+	NetworkKind  NetworkKind `json:"network_kind"`
+	Gateway      string      `json:"gateway"`
+	AuthWeighted string      `json:"authWeighted"`
 }
 
 // DefaultConfig returns a configuration populated with default values

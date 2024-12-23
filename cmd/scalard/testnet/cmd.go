@@ -35,7 +35,6 @@ import (
 	scalarnetexported "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	"github.com/tendermint/tendermint/privval"
 
-	scalartypes "github.com/scalarorg/scalar-core/types"
 	"github.com/spf13/cobra"
 	tmconfig "github.com/tendermint/tendermint/config"
 	tmed25519 "github.com/tendermint/tendermint/crypto/ed25519"
@@ -103,7 +102,6 @@ type startArgs struct {
 }
 
 type EnvKeys struct {
-	ScalarMnemonic      string
 	ValidatorMnemonic   string
 	BroadcasterMnemonic string
 	GovernanceMnemonic  string
@@ -117,11 +115,11 @@ const createValidatorMsgGasLimit = 250_000
 const GenesisAsset = scalarnetexported.BaseAsset
 
 var (
-	ValidatorCoin   = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(scalartypes.ValidatorStaking))
-	BroadcasterCoin = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(scalartypes.BroadcasterTokens))
-	ScalarCoin      = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(scalartypes.ScalarTokens))
-	GovCoin         = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(scalartypes.GovTokens))
-	FaucetCoin      = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(scalartypes.FaucetTokens))
+	ValidatorCoin   = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(ValidatorStaking))
+	BroadcasterCoin = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(BroadcasterTokens))
+	ScalarCoin      = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(ScalarTokens))
+	GovCoin         = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(GovTokens))
+	FaucetCoin      = sdk.NewCoin(GenesisAsset, sdk.NewIntWithDecimal(1, sdk.Precision).Mul(FaucetTokens))
 )
 
 func addTestnetFlagsToCmd(cmd *cobra.Command) {
@@ -267,14 +265,18 @@ func readEnvKeys(index int) EnvKeys {
 	if validatorMnemonic == "" {
 		validatorMnemonic = os.Getenv(flagValidatorMnemonic)
 	}
+	btcPubKey := os.Getenv(flagBtcPubkey + strconv.Itoa(index))
+	if btcPubKey == "" {
+		btcPubKey = os.Getenv(flagBtcPubkey)
+	}
 	envKeys := EnvKeys{
-		ScalarMnemonic:      os.Getenv(flagScalarMnemonic),
 		ValidatorMnemonic:   validatorMnemonic,
 		BroadcasterMnemonic: os.Getenv(flagBroadcasterMnemonic),
 		GovernanceMnemonic:  os.Getenv(flagGovernanceMnemonic),
 		FaucetMnemonic:      os.Getenv(flagFaucetMnemonic),
-		BtcPubkey:           os.Getenv(flagBtcPubkey),
+		BtcPubkey:           btcPubKey,
 	}
+	fmt.Printf("%+v", envKeys)
 	return envKeys
 }
 
@@ -292,7 +294,7 @@ func initTestnetFiles(
 	}
 	fmt.Printf("nodeConfig: %v\n", nodeConfig)
 	var (
-		validatorInfos []scalartypes.ValidatorInfo
+		validatorInfos []ValidatorInfo
 	)
 	// generate private keys, node IDs, and initial transactions
 	for i := 0; i < args.numValidators; i++ {
@@ -312,7 +314,20 @@ func initTestnetFiles(
 		}
 		validatorInfos = append(validatorInfos, *validatorInfo)
 	}
-	if err := generateFiles(clientCtx, mbm, nodeConfig, validatorInfos, args, genBalIterator); err != nil {
+	scalarMnemonic := os.Getenv(flagScalarMnemonic)
+	scalarProtocol := ScalarProtocol{}
+	if scalarMnemonic != "" {
+		privKey, address, err := createScalarAccount(scalarMnemonic)
+		if err != nil {
+			log.Debug().Err(err).Msg("Create scalar account with error")
+		}
+		scalarProtocol.ScalarPubKey = privKey.PubKey()
+		scalarProtocol.ScalarBalance = banktypes.Balance{
+			Address: address.String(),
+			Coins:   sdk.Coins{ScalarCoin},
+		}
+	}
+	if err := generateFiles(clientCtx, mbm, nodeConfig, validatorInfos, scalarProtocol, args, genBalIterator); err != nil {
 		cmd.PrintErrf("failed to initGenFiles: %s", err.Error())
 		return err
 	}
@@ -350,7 +365,7 @@ func createPubkeyFromSecret(config *tmconfig.Config, secret []byte, pvKeyName st
 		if err := tmos.EnsureDir(filepath.Dir(pvStateFile), 0o777); err != nil {
 			return nil, err
 		}
-		pvKeyName = scalartypes.ValidatorKeyName
+		pvKeyName = ValidatorKeyName
 	} else {
 		pvKeyFile = filepath.Join(config.RootDir, "config", fmt.Sprintf("%s_key.json", pvKeyName))
 		pvStateFile = filepath.Join(config.RootDir, "data", fmt.Sprintf("%s_state.json", pvKeyName))
@@ -452,9 +467,9 @@ func createKeyring(inBuf *bufio.Reader, args initArgs, nodeDir string) (keyring.
 }
 func genFaucet(kb keyring.Keyring, mnemonic string, algo keyring.SignatureAlgo, tokenAmount sdk.Int) (*banktypes.Balance, error) {
 	if mnemonic != "" {
-		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeFaucetAccount, 0)
+		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", PurposeFaucetAccount, 0)
 		_, address, err := createKeyringAccountFromMnemonic(kb,
-			scalartypes.BroadcasterKeyName,
+			BroadcasterKeyName,
 			mnemonic,
 			algo,
 			bip44Path,
@@ -477,7 +492,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	args initArgs,
 	envKeys EnvKeys,
 	index int, //index starts from 0
-) (*scalartypes.ValidatorInfo, error) {
+) (*ValidatorInfo, error) {
 	var err error
 	nodeDir := filepath.Join(args.outputDir, nodeDirName, args.nodeDaemonHome)
 	nodeConfig.SetRoot(nodeDir)
@@ -495,7 +510,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	if err != nil {
 		return nil, err
 	}
-	validatorInfo := scalartypes.ValidatorInfo{
+	validatorInfo := ValidatorInfo{
 		Host:          host,
 		NodeID:        valNodeID,
 		SeedAddress:   fmt.Sprintf("%s@%s:%d", valNodeID, host, 26656+index*args.portOffset),
@@ -519,14 +534,14 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	}
 	//This account is used to sign the MsgCreateValidator
 	valPubKey, valAddress, err := createKeyringAccountFromMnemonic(kb,
-		scalartypes.ValidatorKeyName,
+		ValidatorKeyName,
 		envKeys.ValidatorMnemonic,
 		algo,
 		fmt.Sprintf("m/%d'/%d'/0'/0/0",
-			scalartypes.PurposeValidator, uint32(index)))
+			PurposeValidator, uint32(index)))
 	if err != nil {
 		log.Error().Err(err).Msg("[initValidatorConfig] Create faucet keyring account from mnemonic")
-		key, err := kb.Key(scalartypes.ValidatorKeyName)
+		key, err := kb.Key(ValidatorKeyName)
 		if err != nil {
 			log.Error().Err(err).Msg("[initValidatorConfig] Get faucet keyring account")
 			return nil, err
@@ -540,21 +555,10 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		Address: valAddress.String(),
 		Coins:   sdk.Coins{ValidatorCoin},
 	}
-	if envKeys.ScalarMnemonic != "" {
-		privKey, address, err := createScalarAccount(envKeys.ScalarMnemonic)
-		if err != nil {
-			log.Debug().Err(err).Msg("Create scalar account with error")
-		}
-		validatorInfo.ScalarPubKey = privKey.PubKey()
-		validatorInfo.ScalarBalance = banktypes.Balance{
-			Address: address.String(),
-			Coins:   sdk.Coins{ScalarCoin},
-		}
-	}
 	if envKeys.BroadcasterMnemonic != "" {
-		//broadcasterPubKey, err := createPubkeyFromMnemonic(nodeConfig, envKeys.BroadcasterMnemonic, kb, algo, scalartypes.BroadcasterKeyName)
-		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeBroadcaster, uint32(index))
-		pubkey, address, err := generateAccount(kb, algo, scalartypes.BroadcasterKeyName, envKeys.BroadcasterMnemonic, bip44Path)
+		//broadcasterPubKey, err := createPubkeyFromMnemonic(nodeConfig, envKeys.BroadcasterMnemonic, kb, algo, BroadcasterKeyName)
+		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", PurposeBroadcaster, uint32(index))
+		pubkey, address, err := generateAccount(kb, algo, BroadcasterKeyName, envKeys.BroadcasterMnemonic, bip44Path)
 		if err != nil {
 			log.Debug().Err(err).Msg("Generate account error")
 		}
@@ -565,9 +569,9 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		}
 	}
 	if envKeys.GovernanceMnemonic != "" {
-		//validatorInfo.GovPubKey, err = createPubkeyFromMnemonic(nodeConfig, envKeys.GovernanceMnemonic, kb, algo, scalartypes.GovKeyName)
-		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeGovernance, uint32(index))
-		pubkey, address, err := generateAccount(kb, algo, scalartypes.GovKeyName, envKeys.GovernanceMnemonic, bip44Path)
+		//validatorInfo.GovPubKey, err = createPubkeyFromMnemonic(nodeConfig, envKeys.GovernanceMnemonic, kb, algo, GovKeyName)
+		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", PurposeGovernance, uint32(index))
+		pubkey, address, err := generateAccount(kb, algo, GovKeyName, envKeys.GovernanceMnemonic, bip44Path)
 		if err != nil {
 			log.Debug().Err(err).Msg("Generate account error")
 		}
@@ -579,9 +583,9 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	}
 	if envKeys.FaucetMnemonic != "" {
 		pubKey, address, err := generateAccount(kb, algo,
-			scalartypes.FaucetKeyName,
+			FaucetKeyName,
 			envKeys.FaucetMnemonic,
-			fmt.Sprintf("m/%d'/%d'/0'/0/0", scalartypes.PurposeFaucetAccount, uint32(index)),
+			fmt.Sprintf("m/%d'/%d'/0'/0/0", PurposeFaucetAccount, uint32(index)),
 		)
 		if err != nil {
 			log.Debug().Err(err).Msg("Generate account error")
@@ -594,8 +598,8 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	}
 
 	valPower := int64((index + 1) * (index + 1) * 1000000)
-	stakingPower := sdk.NewCoin(GenesisAsset, sdk.TokensFromConsensusPower(valPower, scalartypes.ValidatorStaking))
-	senderKeyName := scalartypes.ValidatorKeyName
+	stakingPower := sdk.NewCoin(GenesisAsset, sdk.TokensFromConsensusPower(valPower, ValidatorStaking))
+	senderKeyName := ValidatorKeyName
 	tmPubKey, err := cryptocodec.ToTmPubKeyInterface(validatorInfo.ValNodePubKey)
 	if err != nil {
 		fmt.Printf("ToTmPubKeyInterface Err: %s\n", err.Error())
@@ -606,7 +610,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		Address: tmPubKey.Address(),
 		PubKey:  tmPubKey,
 		Power:   valPower,
-		//Power:   sdk.NewInt(valPower).Mul(scalartypes.PowerReduction).Int64(),
+		//Power:   sdk.NewInt(valPower).Mul(PowerReduction).Int64(),
 	}
 	// validatorInfo.NodeAccount = authtypes.NewBaseAccount(nodeAddr, nil, 0, 0)
 	// validatorInfo.BroadcasterAccount = authtypes.NewBaseAccount(sdk.AccAddress(validatorInfo.Broadcaster.Address()), validatorInfo.Broadcaster, 0, 0)
@@ -721,7 +725,7 @@ func generateAccount(kr keyring.Keyring, algo keyring.SignatureAlgo, keyName str
 	return pubkey, address, nil
 }
 func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig *tmconfig.Config,
-	validatorInfos []scalartypes.ValidatorInfo, args initArgs, genBalIterator banktypes.GenesisBalancesIterator,
+	validatorInfos []ValidatorInfo, scalarProtocol ScalarProtocol, args initArgs, genBalIterator banktypes.GenesisBalancesIterator,
 ) error {
 	var appRawState json.RawMessage
 	var err error
@@ -729,7 +733,7 @@ func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig
 	for i, validatorInfo := range validatorInfos {
 		validators[i] = validatorInfo.GenesisValidator
 	}
-	appGenState, err := scalartypes.GenerateGenesis(clientCtx, mbm, GenesisAsset, validatorInfos, args.supportedChains)
+	appGenState, err := GenerateGenesis(clientCtx, mbm, GenesisAsset, validatorInfos, scalarProtocol, args.supportedChains)
 	if err != nil {
 		fmt.Printf("GenerateGenesis err: %s\n", err.Error())
 		return err
@@ -769,7 +773,7 @@ func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig
 
 	return nil
 }
-func createSeeds(validatorInfos []scalartypes.ValidatorInfo, validator scalartypes.ValidatorInfo) ([]string, []string) {
+func createSeeds(validatorInfos []ValidatorInfo, validator ValidatorInfo) ([]string, []string) {
 	seeds := []string{}
 	seedAddrs := []string{}
 	for index, validatorInfo := range validatorInfos {
@@ -784,7 +788,7 @@ address = "%s"
 	}
 	return seeds, seedAddrs
 }
-func setConfigParams(nodeConfig *tmconfig.Config, validator scalartypes.ValidatorInfo, index int, args initArgs) {
+func setConfigParams(nodeConfig *tmconfig.Config, validator ValidatorInfo, index int, args initArgs) {
 	nodeConfig.ProxyApp = fmt.Sprintf("tcp://127.0.0.1:%d", 26658+index*args.portOffset)
 	nodeConfig.PrivValidatorListenAddr = ""
 	nodeConfig.RPC.ListenAddress = fmt.Sprintf("tcp://0.0.0.0:%d", 26657+index*args.portOffset)
@@ -861,7 +865,7 @@ func appendBridgeConfig(configPath string, supportedChainsPath string) error {
 
 	if supportedChainsPath != "" {
 		// Add evm bridge config
-		evmConfigs, err := scalartypes.ParseJsonArrayConfig[config.EVMConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
+		evmConfigs, err := ParseJsonArrayConfig[config.EVMConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to parse evm config")
 		}
@@ -882,7 +886,7 @@ finality_override = "confirmation"
 			log.Error().Err(err).Msg("Failed to write evm bridge config")
 		}
 
-		btcConfigs, err := scalartypes.ParseJsonArrayConfig[config.BTCConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
+		btcConfigs, err := ParseJsonArrayConfig[config.BTCConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to parse btc config")
 		}
@@ -915,7 +919,7 @@ http_post_mode = true
 
 func setCustomAppConfig(cmd *cobra.Command) error {
 	// Todo: add custom app config if needed
-	// customAppTemplate, customAppConfig := createCustomAppConfig(scalartypes.BaseDenom)
+	// customAppTemplate, customAppConfig := createCustomAppConfig(BaseDenom)
 	customAppTemplate, customAppConfig := sdkconfig.DefaultConfigTemplate, sdkconfig.DefaultConfig()
 	sdkconfig.SetConfigTemplate(customAppTemplate)
 
@@ -926,10 +930,11 @@ func initGenFiles(
 	mbm module.BasicManager,
 	nodeConfig *tmconfig.Config,
 	coinDenom string,
-	validatorInfos []scalartypes.ValidatorInfo,
+	validatorInfos []ValidatorInfo,
+	scalarProtocol ScalarProtocol,
 	args initArgs,
 ) error {
-	appGenState, err := scalartypes.GenerateGenesis(clientCtx, mbm, coinDenom, validatorInfos, args.supportedChains)
+	appGenState, err := GenerateGenesis(clientCtx, mbm, coinDenom, validatorInfos, scalarProtocol, args.supportedChains)
 	if err != nil {
 		fmt.Printf("GenerateGenesis err: %s\n", err.Error())
 		return err
@@ -987,7 +992,7 @@ address = "%s"
 
 func collectGenFiles(
 	clientCtx client.Context, nodeConfig *tmconfig.Config, chainID string,
-	validatorInfos []scalartypes.ValidatorInfo,
+	validatorInfos []ValidatorInfo,
 	outputDir string, genBalIterator banktypes.GenesisBalancesIterator,
 ) error {
 	var appState json.RawMessage

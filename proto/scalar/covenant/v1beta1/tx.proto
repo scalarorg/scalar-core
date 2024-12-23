@@ -11,7 +11,7 @@ message CreateCustodianRequest {
 
   string name = 2;
   bytes btc_pubkey = 3;
-  CustodianStatus status = 4;
+  Status status = 4;
   string description = 5;
 }
 
@@ -24,7 +24,7 @@ message UpdateCustodianRequest {
   bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
   bytes btc_pubkey = 2;
   string name = 3;
-  CustodianStatus status = 4;
+  Status status = 4;
   string description = 5;
 }
 
@@ -37,7 +37,7 @@ message CreateCustodianGroupRequest {
   string uid = 2;
   string name = 3;
   uint32 quorum = 4;
-  CustodianStatus status = 5;
+  Status status = 5;
   string description = 6;
   repeated bytes custodian = 7;
 }
@@ -51,7 +51,7 @@ message UpdateCustodianGroupRequest {
   string uid = 2;
   string name = 3;
   uint32 quorum = 4;
-  CustodianStatus status = 5;
+  Status status = 5;
   string description = 6;
   repeated bytes custodian = 7;
 }

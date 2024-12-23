@@ -1,4 +1,4 @@
-package types
+package testnet
 
 import (
 	"encoding/hex"
@@ -31,8 +31,8 @@ import (
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 	tmtypes "github.com/tendermint/tendermint/types"
 
+	evmtypes "github.com/scalarorg/scalar-core/x/chains/evm/types"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
-	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 )
 
 const (
@@ -45,6 +45,12 @@ const (
 
 type GenesisState map[string]json.RawMessage
 
+type ScalarProtocol struct {
+	ScalarPubKey  cryptotypes.PubKey
+	ScalarBalance banktypes.Balance
+	EvmPubKey     string
+}
+
 type ValidatorInfo struct {
 	Host        string
 	Moniker     string
@@ -52,9 +58,6 @@ type ValidatorInfo struct {
 	NodeDir     string
 	SeedAddress string
 	RPCPort     int
-
-	ScalarPubKey  cryptotypes.PubKey
-	ScalarBalance banktypes.Balance
 
 	ValPubKey  cryptotypes.PubKey
 	ValBalance banktypes.Balance
@@ -77,7 +80,7 @@ type ValidatorInfo struct {
 }
 
 // DefaultProtocol returns the default chains for a genesis state
-func DefaultProtocol() protocoltypes.Protocol {
+func DefaultProtocol(scalarProtocol ScalarProtocol, custodianGroup covenanttypes.CustodianGroup) protocoltypes.Protocol {
 	token := evmtypes.ERC20TokenMetadata{
 		Asset:        "pBtc",
 		ChainID:      sdk.NewInt(1115511),
@@ -90,27 +93,33 @@ func DefaultProtocol() protocoltypes.Protocol {
 			Capacity:  sdk.NewInt(100000000),
 		},
 	}
-	// protocol := protocoltypes.Protocol{
-	// 	Name:          protocoltypes.DefaultProtocolName,
-	// 	CovenantGroup: covenanttypes.DefaultCovenantGroupName,
-	// 	Tokens: []evmtypes.ERC20TokenMetadata{
-	// 		token,
-	// 	},
-	// }
-	// return protocol
-	_ = token
-	return protocoltypes.Protocol{}
+	chain := protocoltypes.SupportedChain{
+		Token: &protocoltypes.SupportedChain_Erc20{
+			Erc20: &token,
+		},
+		Pubkey: scalarProtocol.EvmPubKey,
+	}
+	protocol := protocoltypes.Protocol{
+		Pubkey:         scalarProtocol.ScalarPubKey.Bytes(),
+		Address:        sdk.AccAddress(scalarProtocol.ScalarPubKey.Address()),
+		Name:           protocoltypes.DefaultProtocolName,
+		Tag:            "pools",
+		Status:         protocoltypes.Activated,
+		CustodianGroup: &custodianGroup,
+		Chains:         []*protocoltypes.SupportedChain{&chain},
+	}
+	return protocol
 }
 func GenerateGenesis(clientCtx client.Context,
 	mbm module.BasicManager,
 	coinDenom string,
 	validatorInfos []ValidatorInfo,
+	scalarProtocol ScalarProtocol,
 	supportedChainsPath string,
 ) (GenesisState, error) {
 	appGenState := mbm.DefaultGenesis(clientCtx.Codec)
-	firstValidator := validatorInfos[0]
-	genBalances := []banktypes.Balance{firstValidator.ScalarBalance}
-	genAccounts := []authtypes.GenesisAccount{authtypes.NewBaseAccount(sdk.AccAddress(firstValidator.ScalarPubKey.Address()), firstValidator.ScalarPubKey, 0, 0)}
+	genBalances := []banktypes.Balance{scalarProtocol.ScalarBalance}
+	genAccounts := []authtypes.GenesisAccount{authtypes.NewBaseAccount(sdk.AccAddress(scalarProtocol.ScalarPubKey.Address()), scalarProtocol.ScalarPubKey, 0, 0)}
 	//allValAmount := sdk.NewCoins()
 	proxyValidators := []snapshottypes.ProxiedValidator{}
 
@@ -239,23 +248,29 @@ func GenerateGenesis(clientCtx client.Context,
 	//Covenant
 	custodians := make([]*covenanttypes.Custodian, len(validatorInfos))
 	custodianGroup := covenanttypes.CustodianGroup{
-		Name:       "scalar",
-		Custodians: custodians,
+		Uid:         "1c92b906-d5f8-477d-98c7-0d70d94ebb36",
+		Name:        "scalar",
+		Custodians:  custodians,
+		Quorum:      3,
+		Status:      covenanttypes.Activated,
+		Description: "Default custodial group, which contains all custodians",
 	}
 	for i, validator := range validatorInfos {
 		btcPubkey, err := hex.DecodeString(validator.BtcPubkey)
 		if err != nil {
 			return appGenState, err
 		}
+		fmt.Printf("% x", btcPubkey)
 		custodians[i] = &covenanttypes.Custodian{
 			Name:      validator.Host,
+			Status:    covenanttypes.Activated,
 			BtcPubkey: btcPubkey,
 		}
 	}
 	covnantGenState := covenanttypes.NewGenesisState(custodians, &custodianGroup)
 	appGenState[covenanttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&covnantGenState)
 	//Protocol
-	protocol := DefaultProtocol()
+	protocol := DefaultProtocol(scalarProtocol, custodianGroup)
 	protocolGenState := protocoltypes.NewGenesisState([]*protocoltypes.Protocol{&protocol})
 	appGenState[protocoltypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(protocolGenState)
 	// //evm chains
