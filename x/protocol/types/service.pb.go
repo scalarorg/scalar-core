@@ -31,33 +31,32 @@ func init() {
 }
 
 var fileDescriptor_8e6380763574b912 = []byte{
-	// 403 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0xd3, 0xcf, 0x4a, 0xe3, 0x40,
-	0x00, 0xc7, 0xf1, 0xce, 0xc2, 0x2e, 0xec, 0xb0, 0x2c, 0x6c, 0x58, 0x50, 0x82, 0x84, 0x12, 0x11,
-	0xb4, 0xd8, 0x0c, 0x69, 0x2b, 0x42, 0x6f, 0xda, 0xa3, 0x08, 0x6a, 0xf1, 0xe2, 0xa5, 0x4c, 0x93,
-	0x21, 0x0d, 0xd4, 0x4c, 0x3a, 0x33, 0x29, 0xed, 0x55, 0x7c, 0x00, 0x41, 0x7c, 0x05, 0x5f, 0xc0,
-	0x07, 0xf0, 0xea, 0xb1, 0x20, 0x88, 0x47, 0x69, 0x7d, 0x10, 0xe9, 0x64, 0xa2, 0xb4, 0x75, 0x68,
-	0x7a, 0xeb, 0x9f, 0xef, 0x2f, 0xfd, 0x74, 0xda, 0xc0, 0x2d, 0xee, 0xe1, 0x2e, 0x66, 0x28, 0x66,
-	0x54, 0x50, 0x8f, 0x76, 0x51, 0xdf, 0x6d, 0x13, 0x81, 0x5d, 0xc4, 0x09, 0xeb, 0x87, 0x1e, 0x71,
-	0xe4, 0x1b, 0xc6, 0x5a, 0x9a, 0x39, 0x59, 0xe6, 0xa8, 0xcc, 0xdc, 0x08, 0x28, 0x0d, 0xba, 0x04,
-	0xe1, 0x38, 0x44, 0x38, 0x8a, 0xa8, 0xc0, 0x22, 0xa4, 0x11, 0x4f, 0x43, 0x73, 0x53, 0x77, 0xf5,
-	0x5e, 0x42, 0xd8, 0x50, 0x45, 0x45, 0x5d, 0x24, 0x06, 0x69, 0x51, 0x79, 0xf9, 0x09, 0xe1, 0x31,
-	0x0f, 0x9a, 0x29, 0xc9, 0xb8, 0x07, 0xf0, 0x6f, 0x83, 0x11, 0x2c, 0xc8, 0x89, 0x9a, 0x18, 0x8e,
-	0xa3, 0x01, 0x3a, 0xb3, 0xe1, 0x19, 0xe9, 0x25, 0x84, 0x0b, 0x13, 0xe5, 0xee, 0x79, 0x4c, 0x23,
-	0x4e, 0xec, 0xea, 0xd5, 0xf3, 0xfb, 0xed, 0x8f, 0xb2, 0xbd, 0x8d, 0x74, 0x5a, 0x4f, 0x0e, 0x5b,
-	0xd9, 0xeb, 0x75, 0x50, 0x92, 0xd0, 0xf3, 0xd8, 0xcf, 0x07, 0x9d, 0x0d, 0x97, 0x43, 0xe7, 0xfb,
-	0xdc, 0xd0, 0x44, 0x0e, 0x67, 0xa0, 0x0f, 0x00, 0xfe, 0x3b, 0xf0, 0xfd, 0x66, 0x12, 0xc7, 0x94,
-	0x09, 0xe2, 0x37, 0x3a, 0x38, 0x8c, 0x0c, 0x57, 0xfb, 0xd9, 0x0b, 0x6d, 0xc6, 0xad, 0xac, 0x32,
-	0x51, 0xe2, 0x7d, 0x29, 0x76, 0xed, 0x5d, 0xad, 0x18, 0xfb, 0x7e, 0x8b, 0x67, 0xe3, 0x96, 0x37,
-	0x5d, 0x4f, 0xd5, 0x8f, 0x00, 0xfe, 0x4f, 0x4f, 0x61, 0x0e, 0x5e, 0x5b, 0x72, 0x68, 0xdf, 0xdb,
-	0xf7, 0x56, 0x5c, 0x29, 0x7e, 0x5d, 0xf2, 0x6b, 0x36, 0x5a, 0x76, 0xe0, 0x8b, 0xdf, 0xa0, 0x72,
-	0x07, 0xe0, 0x9f, 0xd3, 0xe9, 0xad, 0x90, 0xfd, 0xb5, 0xaf, 0x01, 0xfc, 0x9d, 0xfd, 0xa4, 0xdc,
-	0xd8, 0xd1, 0x8a, 0x3e, 0x9b, 0x0c, 0x5f, 0xca, 0x93, 0x2a, 0x71, 0x51, 0x8a, 0x4d, 0x63, 0x5d,
-	0x27, 0x3e, 0x3c, 0x7a, 0x1a, 0x5b, 0x60, 0x34, 0xb6, 0xc0, 0xdb, 0xd8, 0x02, 0x37, 0x13, 0xab,
-	0x30, 0x9a, 0x58, 0x85, 0xd7, 0x89, 0x55, 0xb8, 0x70, 0x83, 0x50, 0x74, 0x92, 0xb6, 0xe3, 0xd1,
-	0x4b, 0xb5, 0xa6, 0x2c, 0x50, 0x8f, 0xca, 0x1e, 0x65, 0x04, 0x0d, 0xbe, 0x2e, 0x27, 0x86, 0x31,
-	0xe1, 0xed, 0x5f, 0xf2, 0x79, 0xf5, 0x23, 0x00, 0x00, 0xff, 0xff, 0x09, 0xcc, 0x10, 0xb2, 0x6b,
-	0x04, 0x00, 0x00,
+	// 395 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0xd3, 0xcf, 0x4a, 0xc3, 0x30,
+	0x1c, 0xc0, 0xf1, 0x45, 0x99, 0x60, 0x0f, 0x82, 0x45, 0x50, 0x8a, 0x94, 0x51, 0x11, 0x74, 0xb8,
+	0x86, 0x6e, 0x13, 0x61, 0x37, 0xdd, 0x51, 0x04, 0xff, 0xe0, 0xc5, 0xcb, 0xc8, 0xda, 0xd0, 0x15,
+	0x66, 0xd3, 0x25, 0xe9, 0xd8, 0xae, 0xe2, 0x59, 0x04, 0xdf, 0xc1, 0x17, 0xf0, 0x01, 0xbc, 0x7a,
+	0x73, 0xe0, 0xc5, 0xa3, 0x6c, 0x3e, 0x88, 0x2c, 0x4d, 0x95, 0x6d, 0x86, 0x75, 0xb7, 0xfe, 0xf9,
+	0xfe, 0xd2, 0x4f, 0x53, 0xaa, 0xed, 0x32, 0x17, 0xb5, 0x11, 0x85, 0x11, 0x25, 0x9c, 0xb8, 0xa4,
+	0x0d, 0xbb, 0x4e, 0x13, 0x73, 0xe4, 0x40, 0x86, 0x69, 0x37, 0x70, 0xb1, 0x2d, 0x6e, 0xe8, 0x9b,
+	0x49, 0x66, 0xa7, 0x99, 0x2d, 0x33, 0x63, 0xdb, 0x27, 0xc4, 0x6f, 0x63, 0x88, 0xa2, 0x00, 0xa2,
+	0x30, 0x24, 0x1c, 0xf1, 0x80, 0x84, 0x2c, 0x09, 0x8d, 0x1d, 0xd5, 0xea, 0x9d, 0x18, 0xd3, 0xbe,
+	0x8c, 0x0a, 0xaa, 0x88, 0xf7, 0x92, 0xa2, 0xfc, 0x9e, 0xd7, 0x96, 0xcf, 0x98, 0xaf, 0x3f, 0x03,
+	0x6d, 0xad, 0x4e, 0x31, 0xe2, 0xf8, 0x5c, 0xb6, 0xba, 0x6d, 0x2b, 0x64, 0xf6, 0x64, 0x78, 0x89,
+	0x3b, 0x31, 0x66, 0xdc, 0x80, 0x99, 0x7b, 0x16, 0x91, 0x90, 0x61, 0xab, 0x72, 0xf7, 0xf1, 0xfd,
+	0xb4, 0x54, 0xb2, 0xf6, 0xa0, 0x8a, 0xe9, 0x8a, 0xc1, 0x46, 0x7a, 0xbd, 0x06, 0x8a, 0x02, 0x7a,
+	0x1d, 0x79, 0xd9, 0xa0, 0x93, 0xe1, 0x7c, 0xe8, 0x74, 0x9f, 0x19, 0x1a, 0x8b, 0xc1, 0x09, 0xe8,
+	0x0b, 0xd0, 0xd6, 0x8f, 0x3d, 0xef, 0x2a, 0x8e, 0x22, 0x42, 0x39, 0xf6, 0xea, 0x2d, 0x14, 0x84,
+	0xba, 0xa3, 0x7c, 0xf6, 0x4c, 0x9b, 0x72, 0xcb, 0x8b, 0x8c, 0x48, 0xf1, 0x91, 0x10, 0x3b, 0xd6,
+	0x81, 0x52, 0x8c, 0x3c, 0xaf, 0xc1, 0xd2, 0xe1, 0x86, 0x3b, 0x9e, 0x1e, 0xab, 0x5f, 0x81, 0xb6,
+	0x91, 0xec, 0xc2, 0x14, 0xbc, 0x3a, 0x67, 0xd3, 0xfe, 0xb7, 0x1f, 0x2e, 0x38, 0x25, 0xf9, 0x35,
+	0xc1, 0xaf, 0x5a, 0x70, 0xde, 0x86, 0xcf, 0xbe, 0x41, 0xf9, 0x01, 0x68, 0xf9, 0x8b, 0xf1, 0x3f,
+	0xa0, 0xdf, 0x03, 0x6d, 0x35, 0xfd, 0x96, 0x4c, 0xdf, 0x57, 0x52, 0x7e, 0x9b, 0x54, 0x5d, 0xcc,
+	0x92, 0x4a, 0x6a, 0x41, 0x50, 0x0d, 0x7d, 0x4b, 0x45, 0x3d, 0x39, 0x7d, 0x1b, 0x9a, 0x60, 0x30,
+	0x34, 0xc1, 0xd7, 0xd0, 0x04, 0x8f, 0x23, 0x33, 0x37, 0x18, 0x99, 0xb9, 0xcf, 0x91, 0x99, 0xbb,
+	0x71, 0xfc, 0x80, 0xb7, 0xe2, 0xa6, 0xed, 0x92, 0x5b, 0x39, 0x4d, 0xa8, 0x2f, 0x8f, 0x4a, 0x2e,
+	0xa1, 0x18, 0xf6, 0xfe, 0x96, 0xe3, 0xfd, 0x08, 0xb3, 0xe6, 0x8a, 0x38, 0xaf, 0xfc, 0x04, 0x00,
+	0x00, 0xff, 0xff, 0x57, 0xb5, 0xcc, 0x5e, 0x5d, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -68,10 +67,10 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// MsgServiceClient is the client API for MsgService service.
+// MsgClient is the client API for Msg service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type MsgServiceClient interface {
+type MsgClient interface {
 	// Create protocol
 	CreateProtocol(ctx context.Context, in *CreateProtocolRequest, opts ...grpc.CallOption) (*CreateProtocolResponse, error)
 	UpdateProtocol(ctx context.Context, in *UpdateProtocolRequest, opts ...grpc.CallOption) (*UpdateProtocolResponse, error)
@@ -81,52 +80,52 @@ type MsgServiceClient interface {
 	UpdateSupportedChain(ctx context.Context, in *UpdateSupportedChainRequest, opts ...grpc.CallOption) (*UpdateSupportedChainResponse, error)
 }
 
-type msgServiceClient struct {
+type msgClient struct {
 	cc grpc1.ClientConn
 }
 
-func NewMsgServiceClient(cc grpc1.ClientConn) MsgServiceClient {
-	return &msgServiceClient{cc}
+func NewMsgClient(cc grpc1.ClientConn) MsgClient {
+	return &msgClient{cc}
 }
 
-func (c *msgServiceClient) CreateProtocol(ctx context.Context, in *CreateProtocolRequest, opts ...grpc.CallOption) (*CreateProtocolResponse, error) {
+func (c *msgClient) CreateProtocol(ctx context.Context, in *CreateProtocolRequest, opts ...grpc.CallOption) (*CreateProtocolResponse, error) {
 	out := new(CreateProtocolResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/CreateProtocol", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.Msg/CreateProtocol", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgServiceClient) UpdateProtocol(ctx context.Context, in *UpdateProtocolRequest, opts ...grpc.CallOption) (*UpdateProtocolResponse, error) {
+func (c *msgClient) UpdateProtocol(ctx context.Context, in *UpdateProtocolRequest, opts ...grpc.CallOption) (*UpdateProtocolResponse, error) {
 	out := new(UpdateProtocolResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/UpdateProtocol", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.Msg/UpdateProtocol", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgServiceClient) AddSupportedChain(ctx context.Context, in *AddSupportedChainRequest, opts ...grpc.CallOption) (*AddSupportedChainResponse, error) {
+func (c *msgClient) AddSupportedChain(ctx context.Context, in *AddSupportedChainRequest, opts ...grpc.CallOption) (*AddSupportedChainResponse, error) {
 	out := new(AddSupportedChainResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/AddSupportedChain", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.Msg/AddSupportedChain", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgServiceClient) UpdateSupportedChain(ctx context.Context, in *UpdateSupportedChainRequest, opts ...grpc.CallOption) (*UpdateSupportedChainResponse, error) {
+func (c *msgClient) UpdateSupportedChain(ctx context.Context, in *UpdateSupportedChainRequest, opts ...grpc.CallOption) (*UpdateSupportedChainResponse, error) {
 	out := new(UpdateSupportedChainResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.MsgService/UpdateSupportedChain", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.Msg/UpdateSupportedChain", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// MsgServiceServer is the server API for MsgService service.
-type MsgServiceServer interface {
+// MsgServer is the server API for Msg service.
+type MsgServer interface {
 	// Create protocol
 	CreateProtocol(context.Context, *CreateProtocolRequest) (*CreateProtocolResponse, error)
 	UpdateProtocol(context.Context, *UpdateProtocolRequest) (*UpdateProtocolResponse, error)
@@ -136,192 +135,192 @@ type MsgServiceServer interface {
 	UpdateSupportedChain(context.Context, *UpdateSupportedChainRequest) (*UpdateSupportedChainResponse, error)
 }
 
-// UnimplementedMsgServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedMsgServiceServer struct {
+// UnimplementedMsgServer can be embedded to have forward compatible implementations.
+type UnimplementedMsgServer struct {
 }
 
-func (*UnimplementedMsgServiceServer) CreateProtocol(ctx context.Context, req *CreateProtocolRequest) (*CreateProtocolResponse, error) {
+func (*UnimplementedMsgServer) CreateProtocol(ctx context.Context, req *CreateProtocolRequest) (*CreateProtocolResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProtocol not implemented")
 }
-func (*UnimplementedMsgServiceServer) UpdateProtocol(ctx context.Context, req *UpdateProtocolRequest) (*UpdateProtocolResponse, error) {
+func (*UnimplementedMsgServer) UpdateProtocol(ctx context.Context, req *UpdateProtocolRequest) (*UpdateProtocolResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProtocol not implemented")
 }
-func (*UnimplementedMsgServiceServer) AddSupportedChain(ctx context.Context, req *AddSupportedChainRequest) (*AddSupportedChainResponse, error) {
+func (*UnimplementedMsgServer) AddSupportedChain(ctx context.Context, req *AddSupportedChainRequest) (*AddSupportedChainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddSupportedChain not implemented")
 }
-func (*UnimplementedMsgServiceServer) UpdateSupportedChain(ctx context.Context, req *UpdateSupportedChainRequest) (*UpdateSupportedChainResponse, error) {
+func (*UnimplementedMsgServer) UpdateSupportedChain(ctx context.Context, req *UpdateSupportedChainRequest) (*UpdateSupportedChainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSupportedChain not implemented")
 }
 
-func RegisterMsgServiceServer(s grpc1.Server, srv MsgServiceServer) {
-	s.RegisterService(&_MsgService_serviceDesc, srv)
+func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
+	s.RegisterService(&_Msg_serviceDesc, srv)
 }
 
-func _MsgService_CreateProtocol_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Msg_CreateProtocol_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateProtocolRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServiceServer).CreateProtocol(ctx, in)
+		return srv.(MsgServer).CreateProtocol(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/CreateProtocol",
+		FullMethod: "/scalar.protocol.v1beta1.Msg/CreateProtocol",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).CreateProtocol(ctx, req.(*CreateProtocolRequest))
+		return srv.(MsgServer).CreateProtocol(ctx, req.(*CreateProtocolRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MsgService_UpdateProtocol_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Msg_UpdateProtocol_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateProtocolRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServiceServer).UpdateProtocol(ctx, in)
+		return srv.(MsgServer).UpdateProtocol(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/UpdateProtocol",
+		FullMethod: "/scalar.protocol.v1beta1.Msg/UpdateProtocol",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).UpdateProtocol(ctx, req.(*UpdateProtocolRequest))
+		return srv.(MsgServer).UpdateProtocol(ctx, req.(*UpdateProtocolRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MsgService_AddSupportedChain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Msg_AddSupportedChain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddSupportedChainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServiceServer).AddSupportedChain(ctx, in)
+		return srv.(MsgServer).AddSupportedChain(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/AddSupportedChain",
+		FullMethod: "/scalar.protocol.v1beta1.Msg/AddSupportedChain",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).AddSupportedChain(ctx, req.(*AddSupportedChainRequest))
+		return srv.(MsgServer).AddSupportedChain(ctx, req.(*AddSupportedChainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MsgService_UpdateSupportedChain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Msg_UpdateSupportedChain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateSupportedChainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServiceServer).UpdateSupportedChain(ctx, in)
+		return srv.(MsgServer).UpdateSupportedChain(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.MsgService/UpdateSupportedChain",
+		FullMethod: "/scalar.protocol.v1beta1.Msg/UpdateSupportedChain",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).UpdateSupportedChain(ctx, req.(*UpdateSupportedChainRequest))
+		return srv.(MsgServer).UpdateSupportedChain(ctx, req.(*UpdateSupportedChainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _MsgService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "scalar.protocol.v1beta1.MsgService",
-	HandlerType: (*MsgServiceServer)(nil),
+var _Msg_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "scalar.protocol.v1beta1.Msg",
+	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateProtocol",
-			Handler:    _MsgService_CreateProtocol_Handler,
+			Handler:    _Msg_CreateProtocol_Handler,
 		},
 		{
 			MethodName: "UpdateProtocol",
-			Handler:    _MsgService_UpdateProtocol_Handler,
+			Handler:    _Msg_UpdateProtocol_Handler,
 		},
 		{
 			MethodName: "AddSupportedChain",
-			Handler:    _MsgService_AddSupportedChain_Handler,
+			Handler:    _Msg_AddSupportedChain_Handler,
 		},
 		{
 			MethodName: "UpdateSupportedChain",
-			Handler:    _MsgService_UpdateSupportedChain_Handler,
+			Handler:    _Msg_UpdateSupportedChain_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "scalar/protocol/v1beta1/service.proto",
 }
 
-// QueryServiceClient is the client API for QueryService service.
+// QueryClient is the client API for Query service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type QueryServiceClient interface {
+type QueryClient interface {
 	// GetProtocols returns all Protocol
 	Protocols(ctx context.Context, in *ProtocolsRequest, opts ...grpc.CallOption) (*ProtocolsResponse, error)
 }
 
-type queryServiceClient struct {
+type queryClient struct {
 	cc grpc1.ClientConn
 }
 
-func NewQueryServiceClient(cc grpc1.ClientConn) QueryServiceClient {
-	return &queryServiceClient{cc}
+func NewQueryClient(cc grpc1.ClientConn) QueryClient {
+	return &queryClient{cc}
 }
 
-func (c *queryServiceClient) Protocols(ctx context.Context, in *ProtocolsRequest, opts ...grpc.CallOption) (*ProtocolsResponse, error) {
+func (c *queryClient) Protocols(ctx context.Context, in *ProtocolsRequest, opts ...grpc.CallOption) (*ProtocolsResponse, error) {
 	out := new(ProtocolsResponse)
-	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.QueryService/Protocols", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/scalar.protocol.v1beta1.Query/Protocols", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// QueryServiceServer is the server API for QueryService service.
-type QueryServiceServer interface {
+// QueryServer is the server API for Query service.
+type QueryServer interface {
 	// GetProtocols returns all Protocol
 	Protocols(context.Context, *ProtocolsRequest) (*ProtocolsResponse, error)
 }
 
-// UnimplementedQueryServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedQueryServiceServer struct {
+// UnimplementedQueryServer can be embedded to have forward compatible implementations.
+type UnimplementedQueryServer struct {
 }
 
-func (*UnimplementedQueryServiceServer) Protocols(ctx context.Context, req *ProtocolsRequest) (*ProtocolsResponse, error) {
+func (*UnimplementedQueryServer) Protocols(ctx context.Context, req *ProtocolsRequest) (*ProtocolsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Protocols not implemented")
 }
 
-func RegisterQueryServiceServer(s grpc1.Server, srv QueryServiceServer) {
-	s.RegisterService(&_QueryService_serviceDesc, srv)
+func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
+	s.RegisterService(&_Query_serviceDesc, srv)
 }
 
-func _QueryService_Protocols_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Query_Protocols_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ProtocolsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServiceServer).Protocols(ctx, in)
+		return srv.(QueryServer).Protocols(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.protocol.v1beta1.QueryService/Protocols",
+		FullMethod: "/scalar.protocol.v1beta1.Query/Protocols",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).Protocols(ctx, req.(*ProtocolsRequest))
+		return srv.(QueryServer).Protocols(ctx, req.(*ProtocolsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _QueryService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "scalar.protocol.v1beta1.QueryService",
-	HandlerType: (*QueryServiceServer)(nil),
+var _Query_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "scalar.protocol.v1beta1.Query",
+	HandlerType: (*QueryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Protocols",
-			Handler:    _QueryService_Protocols_Handler,
+			Handler:    _Query_Protocols_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

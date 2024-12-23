@@ -23,6 +23,41 @@
 - [scalar/auxiliary/v1beta1/service.proto](#scalar/auxiliary/v1beta1/service.proto)
     - [MsgService](#scalar.auxiliary.v1beta1.MsgService)
   
+- [scalar/chains/btc/v1beta1/types.proto](#scalar/chains/btc/v1beta1/types.proto)
+    - [BtcToken](#scalar.chains.btc.v1beta1.BtcToken)
+  
+- [scalar/utils/v1beta1/threshold.proto](#scalar/utils/v1beta1/threshold.proto)
+    - [Threshold](#scalar.utils.v1beta1.Threshold)
+  
+- [scalar/tss/exported/v1beta1/types.proto](#scalar/tss/exported/v1beta1/types.proto)
+    - [KeyRequirement](#scalar.tss.exported.v1beta1.KeyRequirement)
+    - [SigKeyPair](#scalar.tss.exported.v1beta1.SigKeyPair)
+  
+    - [KeyRole](#scalar.tss.exported.v1beta1.KeyRole)
+    - [KeyShareDistributionPolicy](#scalar.tss.exported.v1beta1.KeyShareDistributionPolicy)
+    - [KeyType](#scalar.tss.exported.v1beta1.KeyType)
+  
+- [scalar/nexus/exported/v1beta1/types.proto](#scalar/nexus/exported/v1beta1/types.proto)
+    - [Asset](#scalar.nexus.exported.v1beta1.Asset)
+    - [Chain](#scalar.nexus.exported.v1beta1.Chain)
+    - [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress)
+    - [CrossChainTransfer](#scalar.nexus.exported.v1beta1.CrossChainTransfer)
+    - [FeeInfo](#scalar.nexus.exported.v1beta1.FeeInfo)
+    - [GeneralMessage](#scalar.nexus.exported.v1beta1.GeneralMessage)
+    - [TransferFee](#scalar.nexus.exported.v1beta1.TransferFee)
+    - [WasmMessage](#scalar.nexus.exported.v1beta1.WasmMessage)
+  
+    - [GeneralMessage.Status](#scalar.nexus.exported.v1beta1.GeneralMessage.Status)
+    - [TransferDirection](#scalar.nexus.exported.v1beta1.TransferDirection)
+    - [TransferState](#scalar.nexus.exported.v1beta1.TransferState)
+  
+- [scalar/chains/evm/v1beta1/types.proto](#scalar/chains/evm/v1beta1/types.proto)
+    - [ERC20Deposit](#scalar.chains.evm.v1beta1.ERC20Deposit)
+    - [ERC20TokenMetadata](#scalar.chains.evm.v1beta1.ERC20TokenMetadata)
+    - [TokenDetails](#scalar.chains.evm.v1beta1.TokenDetails)
+  
+    - [Status](#scalar.chains.evm.v1beta1.Status)
+  
 - [scalar/chains/v1beta1/types.proto](#scalar/chains/v1beta1/types.proto)
     - [Command](#scalar.chains.v1beta1.Command)
     - [CommandBatchMetadata](#scalar.chains.v1beta1.CommandBatchMetadata)
@@ -52,9 +87,6 @@
     - [QueueState](#scalar.utils.v1beta1.QueueState)
     - [QueueState.Item](#scalar.utils.v1beta1.QueueState.Item)
     - [QueueState.ItemsEntry](#scalar.utils.v1beta1.QueueState.ItemsEntry)
-  
-- [scalar/utils/v1beta1/threshold.proto](#scalar/utils/v1beta1/threshold.proto)
-    - [Threshold](#scalar.utils.v1beta1.Threshold)
   
 - [scalar/chains/v1beta1/params.proto](#scalar/chains/v1beta1/params.proto)
     - [Params](#scalar.chains.v1beta1.Params)
@@ -105,28 +137,21 @@
     - [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse)
   
 - [scalar/covenant/v1beta1/tx.proto](#scalar/covenant/v1beta1/tx.proto)
+    - [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest)
     - [CreateCustodianGroupRequest](#scalar.covenant.v1beta1.CreateCustodianGroupRequest)
     - [CreateCustodianGroupResponse](#scalar.covenant.v1beta1.CreateCustodianGroupResponse)
     - [CreateCustodianRequest](#scalar.covenant.v1beta1.CreateCustodianRequest)
     - [CreateCustodianResponse](#scalar.covenant.v1beta1.CreateCustodianResponse)
-    - [CustodianToGroupRequest](#scalar.covenant.v1beta1.CustodianToGroupRequest)
     - [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse)
+    - [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest)
     - [UpdateCustodianGroupRequest](#scalar.covenant.v1beta1.UpdateCustodianGroupRequest)
     - [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse)
     - [UpdateCustodianRequest](#scalar.covenant.v1beta1.UpdateCustodianRequest)
     - [UpdateCustodianResponse](#scalar.covenant.v1beta1.UpdateCustodianResponse)
   
 - [scalar/covenant/v1beta1/service.proto](#scalar/covenant/v1beta1/service.proto)
-    - [MsgService](#scalar.covenant.v1beta1.MsgService)
-    - [QueryService](#scalar.covenant.v1beta1.QueryService)
-  
-- [scalar/tss/exported/v1beta1/types.proto](#scalar/tss/exported/v1beta1/types.proto)
-    - [KeyRequirement](#scalar.tss.exported.v1beta1.KeyRequirement)
-    - [SigKeyPair](#scalar.tss.exported.v1beta1.SigKeyPair)
-  
-    - [KeyRole](#scalar.tss.exported.v1beta1.KeyRole)
-    - [KeyShareDistributionPolicy](#scalar.tss.exported.v1beta1.KeyShareDistributionPolicy)
-    - [KeyType](#scalar.tss.exported.v1beta1.KeyType)
+    - [Msg](#scalar.covenant.v1beta1.Msg)
+    - [Query](#scalar.covenant.v1beta1.Query)
   
 - [scalar/snapshot/exported/v1beta1/types.proto](#scalar/snapshot/exported/v1beta1/types.proto)
     - [Participant](#scalar.snapshot.exported.v1beta1.Participant)
@@ -139,20 +164,6 @@
     - [PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants)
   
     - [PollState](#scalar.vote.exported.v1beta1.PollState)
-  
-- [scalar/nexus/exported/v1beta1/types.proto](#scalar/nexus/exported/v1beta1/types.proto)
-    - [Asset](#scalar.nexus.exported.v1beta1.Asset)
-    - [Chain](#scalar.nexus.exported.v1beta1.Chain)
-    - [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress)
-    - [CrossChainTransfer](#scalar.nexus.exported.v1beta1.CrossChainTransfer)
-    - [FeeInfo](#scalar.nexus.exported.v1beta1.FeeInfo)
-    - [GeneralMessage](#scalar.nexus.exported.v1beta1.GeneralMessage)
-    - [TransferFee](#scalar.nexus.exported.v1beta1.TransferFee)
-    - [WasmMessage](#scalar.nexus.exported.v1beta1.WasmMessage)
-  
-    - [GeneralMessage.Status](#scalar.nexus.exported.v1beta1.GeneralMessage.Status)
-    - [TransferDirection](#scalar.nexus.exported.v1beta1.TransferDirection)
-    - [TransferState](#scalar.nexus.exported.v1beta1.TransferState)
   
 - [scalar/multisig/exported/v1beta1/types.proto](#scalar/multisig/exported/v1beta1/types.proto)
     - [KeyState](#scalar.multisig.exported.v1beta1.KeyState)
@@ -495,8 +506,8 @@
     - [UpdateSupportedChainResponse](#scalar.protocol.v1beta1.UpdateSupportedChainResponse)
   
 - [scalar/protocol/v1beta1/service.proto](#scalar/protocol/v1beta1/service.proto)
-    - [MsgService](#scalar.protocol.v1beta1.MsgService)
-    - [QueryService](#scalar.protocol.v1beta1.QueryService)
+    - [Msg](#scalar.protocol.v1beta1.Msg)
+    - [Query](#scalar.protocol.v1beta1.Query)
   
 - [scalar/reward/v1beta1/params.proto](#scalar/reward/v1beta1/params.proto)
     - [Params](#scalar.reward.v1beta1.Params)
@@ -913,6 +924,459 @@ Msg defines the nexus Msg service.
 
 
 
+<a name="scalar/chains/btc/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/chains/btc/v1beta1/types.proto
+
+
+
+<a name="scalar.chains.btc.v1beta1.BtcToken"></a>
+
+### BtcToken
+
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/utils/v1beta1/threshold.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/utils/v1beta1/threshold.proto
+
+
+
+<a name="scalar.utils.v1beta1.Threshold"></a>
+
+### Threshold
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `numerator` | [int64](#int64) |  | split threshold into Numerator and denominator to avoid floating point errors down the line |
+| `denominator` | [int64](#int64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/tss/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/tss/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.tss.exported.v1beta1.KeyRequirement"></a>
+
+### KeyRequirement
+KeyRequirement defines requirements for keys
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_role` | [KeyRole](#scalar.tss.exported.v1beta1.KeyRole) |  |  |
+| `key_type` | [KeyType](#scalar.tss.exported.v1beta1.KeyType) |  |  |
+| `min_keygen_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `safety_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `key_share_distribution_policy` | [KeyShareDistributionPolicy](#scalar.tss.exported.v1beta1.KeyShareDistributionPolicy) |  |  |
+| `max_total_share_count` | [int64](#int64) |  |  |
+| `min_total_share_count` | [int64](#int64) |  |  |
+| `keygen_voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `sign_voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `keygen_timeout` | [int64](#int64) |  |  |
+| `sign_timeout` | [int64](#int64) |  |  |
+
+
+
+
+
+
+<a name="scalar.tss.exported.v1beta1.SigKeyPair"></a>
+
+### SigKeyPair
+PubKeyInfo holds a pubkey and a signature
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `pub_key` | [bytes](#bytes) |  |  |
+| `signature` | [bytes](#bytes) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.tss.exported.v1beta1.KeyRole"></a>
+
+### KeyRole
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| KEY_ROLE_UNSPECIFIED | 0 |  |
+| KEY_ROLE_MASTER_KEY | 1 |  |
+| KEY_ROLE_SECONDARY_KEY | 2 |  |
+| KEY_ROLE_EXTERNAL_KEY | 3 |  |
+
+
+
+<a name="scalar.tss.exported.v1beta1.KeyShareDistributionPolicy"></a>
+
+### KeyShareDistributionPolicy
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| KEY_SHARE_DISTRIBUTION_POLICY_UNSPECIFIED | 0 |  |
+| KEY_SHARE_DISTRIBUTION_POLICY_WEIGHTED_BY_STAKE | 1 |  |
+| KEY_SHARE_DISTRIBUTION_POLICY_ONE_PER_VALIDATOR | 2 |  |
+
+
+
+<a name="scalar.tss.exported.v1beta1.KeyType"></a>
+
+### KeyType
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| KEY_TYPE_UNSPECIFIED | 0 |  |
+| KEY_TYPE_NONE | 1 |  |
+| KEY_TYPE_THRESHOLD | 2 |  |
+| KEY_TYPE_MULTISIG | 3 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/nexus/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/nexus/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.nexus.exported.v1beta1.Asset"></a>
+
+### Asset
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom` | [string](#string) |  |  |
+| `is_native_asset` | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.Chain"></a>
+
+### Chain
+Chain represents the properties of a registered blockchain
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `name` | [string](#string) |  | The descriptor of the chain, e.g. "evm|11155111" |
+| `supports_foreign_assets` | [bool](#bool) |  |  |
+| `key_type` | [scalar.tss.exported.v1beta1.KeyType](#scalar.tss.exported.v1beta1.KeyType) |  |  |
+| `module` | [string](#string) |  | the module has two types: chains and scalarnet |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.CrossChainAddress"></a>
+
+### CrossChainAddress
+CrossChainAddress represents a generalized address on any registered chain
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [Chain](#scalar.nexus.exported.v1beta1.Chain) |  |  |
+| `address` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.CrossChainTransfer"></a>
+
+### CrossChainTransfer
+CrossChainTransfer represents a generalized transfer of some asset to a
+registered blockchain
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `recipient` | [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress) |  |  |
+| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `id` | [uint64](#uint64) |  |  |
+| `state` | [TransferState](#scalar.nexus.exported.v1beta1.TransferState) |  |  |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.FeeInfo"></a>
+
+### FeeInfo
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `asset` | [string](#string) |  |  |
+| `fee_rate` | [bytes](#bytes) |  |  |
+| `min_fee` | [bytes](#bytes) |  |  |
+| `max_fee` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.GeneralMessage"></a>
+
+### GeneralMessage
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `sender` | [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress) |  |  |
+| `recipient` | [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `status` | [GeneralMessage.Status](#scalar.nexus.exported.v1beta1.GeneralMessage.Status) |  |  |
+| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `source_tx_id` | [bytes](#bytes) |  |  |
+| `source_tx_index` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.TransferFee"></a>
+
+### TransferFee
+TransferFee represents accumulated fees generated by the network
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `coins` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.WasmMessage"></a>
+
+### WasmMessage
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `source_chain` | [string](#string) |  |  |
+| `source_address` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `destination_address` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `source_tx_id` | [bytes](#bytes) |  |  |
+| `source_tx_index` | [uint64](#uint64) |  |  |
+| `sender` | [bytes](#bytes) |  |  |
+| `id` | [string](#string) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.nexus.exported.v1beta1.GeneralMessage.Status"></a>
+
+### GeneralMessage.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNSPECIFIED | 0 |  |
+| STATUS_APPROVED | 1 |  |
+| STATUS_PROCESSING | 2 |  |
+| STATUS_EXECUTED | 3 |  |
+| STATUS_FAILED | 4 |  |
+
+
+
+<a name="scalar.nexus.exported.v1beta1.TransferDirection"></a>
+
+### TransferDirection
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TRANSFER_DIRECTION_UNSPECIFIED | 0 |  |
+| TRANSFER_DIRECTION_FROM | 1 |  |
+| TRANSFER_DIRECTION_TO | 2 |  |
+
+
+
+<a name="scalar.nexus.exported.v1beta1.TransferState"></a>
+
+### TransferState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TRANSFER_STATE_UNSPECIFIED | 0 |  |
+| TRANSFER_STATE_PENDING | 1 |  |
+| TRANSFER_STATE_ARCHIVED | 2 |  |
+| TRANSFER_STATE_INSUFFICIENT_AMOUNT | 3 |  |
+| TRANSFER_STATE_FAILED | 4 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/chains/evm/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/chains/evm/v1beta1/types.proto
+
+
+
+<a name="scalar.chains.evm.v1beta1.ERC20Deposit"></a>
+
+### ERC20Deposit
+ERC20Deposit contains information for an ERC20 deposit
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `amount` | [bytes](#bytes) |  |  |
+| `asset` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `burner_address` | [bytes](#bytes) |  |  |
+| `log_index` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.evm.v1beta1.ERC20TokenMetadata"></a>
+
+### ERC20TokenMetadata
+ERC20TokenMetadata describes information about an ERC20 token
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `asset` | [string](#string) |  |  |
+| `chain_id` | [bytes](#bytes) |  |  |
+| `details` | [TokenDetails](#scalar.chains.evm.v1beta1.TokenDetails) |  |  |
+| `token_address` | [string](#string) |  |  |
+| `tx_hash` | [string](#string) |  |  |
+| `status` | [Status](#scalar.chains.evm.v1beta1.Status) |  |  |
+| `is_external` | [bool](#bool) |  |  |
+| `burner_code` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.evm.v1beta1.TokenDetails"></a>
+
+### TokenDetails
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `token_name` | [string](#string) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `decimals` | [uint32](#uint32) |  |  |
+| `capacity` | [bytes](#bytes) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.chains.evm.v1beta1.Status"></a>
+
+### Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNSPECIFIED | 0 | these enum values are used for bitwise operations, therefore they need to be powers of 2 |
+| STATUS_INITIALIZED | 1 |  |
+| STATUS_PENDING | 2 |  |
+| STATUS_CONFIRMED | 4 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/chains/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -1315,38 +1779,6 @@ Msg defines the nexus Msg service.
 | ----- | ---- | ----- | ----------- |
 | `key` | [string](#string) |  |  |
 | `value` | [QueueState.Item](#scalar.utils.v1beta1.QueueState.Item) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/utils/v1beta1/threshold.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/utils/v1beta1/threshold.proto
-
-
-
-<a name="scalar.utils.v1beta1.Threshold"></a>
-
-### Threshold
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `numerator` | [int64](#int64) |  | split threshold into Numerator and denominator to avoid floating point errors down the line |
-| `denominator` | [int64](#int64) |  |  |
 
 
 
@@ -1969,6 +2401,24 @@ Params represent the genesis parameters for the module
 
 
 
+<a name="scalar.covenant.v1beta1.AddCustodianToGroupRequest"></a>
+
+### AddCustodianToGroupRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `guid` | [string](#string) |  | CustodianGroup uid |
+| `custodian_pubkey` | [bytes](#bytes) |  |  |
+| `description` | [string](#string) |  |  |
+
+
+
+
+
+
 <a name="scalar.covenant.v1beta1.CreateCustodianGroupRequest"></a>
 
 ### CreateCustodianGroupRequest
@@ -2039,23 +2489,6 @@ Params represent the genesis parameters for the module
 
 
 
-<a name="scalar.covenant.v1beta1.CustodianToGroupRequest"></a>
-
-### CustodianToGroupRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `guid` | [string](#string) |  | CustodianGroup uid |
-| `custodian_pubkey` | [bytes](#bytes) |  |  |
-| `description` | [string](#string) |  |  |
-
-
-
-
-
-
 <a name="scalar.covenant.v1beta1.CustodianToGroupResponse"></a>
 
 ### CustodianToGroupResponse
@@ -2065,6 +2498,24 @@ Params represent the genesis parameters for the module
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `group` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest"></a>
+
+### RemoveCustodianFromGroupRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `guid` | [string](#string) |  | CustodianGroup uid |
+| `custodian_pubkey` | [bytes](#bytes) |  |  |
+| `description` | [string](#string) |  |  |
 
 
 
@@ -2163,9 +2614,9 @@ Pubkey used as key for lookup custodian to update other values
  <!-- end HasExtensions -->
 
 
-<a name="scalar.covenant.v1beta1.MsgService"></a>
+<a name="scalar.covenant.v1beta1.Msg"></a>
 
-### MsgService
+### Msg
 
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
@@ -2174,117 +2625,19 @@ Pubkey used as key for lookup custodian to update other values
 | `UpdateCustodian` | [UpdateCustodianRequest](#scalar.covenant.v1beta1.UpdateCustodianRequest) | [UpdateCustodianResponse](#scalar.covenant.v1beta1.UpdateCustodianResponse) | Update custodian | POST|/scalar/covenant/v1beta1/update_custodian|
 | `CreateCustodianGroup` | [CreateCustodianGroupRequest](#scalar.covenant.v1beta1.CreateCustodianGroupRequest) | [CreateCustodianGroupResponse](#scalar.covenant.v1beta1.CreateCustodianGroupResponse) | Create custodian group | POST|/scalar/covenant/v1beta1/create_custodian_group|
 | `UpdateCustodianGroup` | [UpdateCustodianGroupRequest](#scalar.covenant.v1beta1.UpdateCustodianGroupRequest) | [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse) | Update Custodian group | POST|/scalar/covenant/v1beta1/update_custodian_group|
-| `AddCustodianToGroup` | [CustodianToGroupRequest](#scalar.covenant.v1beta1.CustodianToGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Add Custodian to custodian group recalculate taproot pubkey when adding custodian to custodian group | POST|/scalar/covenant/v1beta1/add_custodian_to_group|
-| `RemoveCustodianFromGroup` | [CustodianToGroupRequest](#scalar.covenant.v1beta1.CustodianToGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Remove Custodian from custodian group recalculate taproot address when deleting custodian from custodian group | POST|/scalar/covenant/v1beta1/remove_custodian_from_group|
+| `AddCustodianToGroup` | [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Add Custodian to custodian group recalculate taproot pubkey when adding custodian to custodian group | POST|/scalar/covenant/v1beta1/add_custodian_to_group|
+| `RemoveCustodianFromGroup` | [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Remove Custodian from custodian group recalculate taproot address when deleting custodian from custodian group | POST|/scalar/covenant/v1beta1/remove_custodian_from_group|
 
 
-<a name="scalar.covenant.v1beta1.QueryService"></a>
+<a name="scalar.covenant.v1beta1.Query"></a>
 
-### QueryService
+### Query
 
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `GetCustodians` | [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest) | [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse) | Get custodians | GET|/scalar/convenant/v1beta1/custodians|
 | `CustodianGroups` | [CustodianGroupsRequest](#scalar.covenant.v1beta1.CustodianGroupsRequest) | [CustodianGroupsResponse](#scalar.covenant.v1beta1.CustodianGroupsResponse) | Get custodian groups | GET|/scalar/covenant/v1beta1/custodian_groups|
-
- <!-- end services -->
-
-
-
-<a name="scalar/tss/exported/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/tss/exported/v1beta1/types.proto
-
-
-
-<a name="scalar.tss.exported.v1beta1.KeyRequirement"></a>
-
-### KeyRequirement
-KeyRequirement defines requirements for keys
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_role` | [KeyRole](#scalar.tss.exported.v1beta1.KeyRole) |  |  |
-| `key_type` | [KeyType](#scalar.tss.exported.v1beta1.KeyType) |  |  |
-| `min_keygen_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `safety_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `key_share_distribution_policy` | [KeyShareDistributionPolicy](#scalar.tss.exported.v1beta1.KeyShareDistributionPolicy) |  |  |
-| `max_total_share_count` | [int64](#int64) |  |  |
-| `min_total_share_count` | [int64](#int64) |  |  |
-| `keygen_voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `sign_voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `keygen_timeout` | [int64](#int64) |  |  |
-| `sign_timeout` | [int64](#int64) |  |  |
-
-
-
-
-
-
-<a name="scalar.tss.exported.v1beta1.SigKeyPair"></a>
-
-### SigKeyPair
-PubKeyInfo holds a pubkey and a signature
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `pub_key` | [bytes](#bytes) |  |  |
-| `signature` | [bytes](#bytes) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
-
-<a name="scalar.tss.exported.v1beta1.KeyRole"></a>
-
-### KeyRole
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| KEY_ROLE_UNSPECIFIED | 0 |  |
-| KEY_ROLE_MASTER_KEY | 1 |  |
-| KEY_ROLE_SECONDARY_KEY | 2 |  |
-| KEY_ROLE_EXTERNAL_KEY | 3 |  |
-
-
-
-<a name="scalar.tss.exported.v1beta1.KeyShareDistributionPolicy"></a>
-
-### KeyShareDistributionPolicy
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| KEY_SHARE_DISTRIBUTION_POLICY_UNSPECIFIED | 0 |  |
-| KEY_SHARE_DISTRIBUTION_POLICY_WEIGHTED_BY_STAKE | 1 |  |
-| KEY_SHARE_DISTRIBUTION_POLICY_ONE_PER_VALIDATOR | 2 |  |
-
-
-
-<a name="scalar.tss.exported.v1beta1.KeyType"></a>
-
-### KeyType
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| KEY_TYPE_UNSPECIFIED | 0 |  |
-| KEY_TYPE_NONE | 1 |  |
-| KEY_TYPE_THRESHOLD | 2 |  |
-| KEY_TYPE_MULTISIG | 3 |  |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
 
  <!-- end services -->
 
@@ -2435,213 +2788,6 @@ PollParticipants should be embedded in poll events in other modules
 | POLL_STATE_PENDING | 1 |  |
 | POLL_STATE_COMPLETED | 2 |  |
 | POLL_STATE_FAILED | 3 |  |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/nexus/exported/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/nexus/exported/v1beta1/types.proto
-
-
-
-<a name="scalar.nexus.exported.v1beta1.Asset"></a>
-
-### Asset
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `denom` | [string](#string) |  |  |
-| `is_native_asset` | [bool](#bool) |  |  |
-
-
-
-
-
-
-<a name="scalar.nexus.exported.v1beta1.Chain"></a>
-
-### Chain
-Chain represents the properties of a registered blockchain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  | The descriptor of the chain, e.g. "evm|11155111" |
-| `supports_foreign_assets` | [bool](#bool) |  |  |
-| `key_type` | [scalar.tss.exported.v1beta1.KeyType](#scalar.tss.exported.v1beta1.KeyType) |  |  |
-| `module` | [string](#string) |  | the module has two types: chains and scalarnet |
-
-
-
-
-
-
-<a name="scalar.nexus.exported.v1beta1.CrossChainAddress"></a>
-
-### CrossChainAddress
-CrossChainAddress represents a generalized address on any registered chain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [Chain](#scalar.nexus.exported.v1beta1.Chain) |  |  |
-| `address` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.nexus.exported.v1beta1.CrossChainTransfer"></a>
-
-### CrossChainTransfer
-CrossChainTransfer represents a generalized transfer of some asset to a
-registered blockchain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `recipient` | [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress) |  |  |
-| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `id` | [uint64](#uint64) |  |  |
-| `state` | [TransferState](#scalar.nexus.exported.v1beta1.TransferState) |  |  |
-
-
-
-
-
-
-<a name="scalar.nexus.exported.v1beta1.FeeInfo"></a>
-
-### FeeInfo
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `asset` | [string](#string) |  |  |
-| `fee_rate` | [bytes](#bytes) |  |  |
-| `min_fee` | [bytes](#bytes) |  |  |
-| `max_fee` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.nexus.exported.v1beta1.GeneralMessage"></a>
-
-### GeneralMessage
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `id` | [string](#string) |  |  |
-| `sender` | [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress) |  |  |
-| `recipient` | [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `status` | [GeneralMessage.Status](#scalar.nexus.exported.v1beta1.GeneralMessage.Status) |  |  |
-| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `source_tx_id` | [bytes](#bytes) |  |  |
-| `source_tx_index` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.nexus.exported.v1beta1.TransferFee"></a>
-
-### TransferFee
-TransferFee represents accumulated fees generated by the network
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `coins` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.nexus.exported.v1beta1.WasmMessage"></a>
-
-### WasmMessage
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `source_chain` | [string](#string) |  |  |
-| `source_address` | [string](#string) |  |  |
-| `destination_chain` | [string](#string) |  |  |
-| `destination_address` | [string](#string) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `source_tx_id` | [bytes](#bytes) |  |  |
-| `source_tx_index` | [uint64](#uint64) |  |  |
-| `sender` | [bytes](#bytes) |  |  |
-| `id` | [string](#string) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
-
-<a name="scalar.nexus.exported.v1beta1.GeneralMessage.Status"></a>
-
-### GeneralMessage.Status
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| STATUS_UNSPECIFIED | 0 |  |
-| STATUS_APPROVED | 1 |  |
-| STATUS_PROCESSING | 2 |  |
-| STATUS_EXECUTED | 3 |  |
-| STATUS_FAILED | 4 |  |
-
-
-
-<a name="scalar.nexus.exported.v1beta1.TransferDirection"></a>
-
-### TransferDirection
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| TRANSFER_DIRECTION_UNSPECIFIED | 0 |  |
-| TRANSFER_DIRECTION_FROM | 1 |  |
-| TRANSFER_DIRECTION_TO | 2 |  |
-
-
-
-<a name="scalar.nexus.exported.v1beta1.TransferState"></a>
-
-### TransferState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| TRANSFER_STATE_UNSPECIFIED | 0 |  |
-| TRANSFER_STATE_PENDING | 1 |  |
-| TRANSFER_STATE_ARCHIVED | 2 |  |
-| TRANSFER_STATE_INSUFFICIENT_AMOUNT | 3 |  |
-| TRANSFER_STATE_FAILED | 4 |  |
 
 
  <!-- end enums -->
@@ -7166,6 +7312,7 @@ Query defines the gRPC querier service.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `pubkey` | [bytes](#bytes) |  |  |
+| `address` | [bytes](#bytes) |  |  |
 | `name` | [string](#string) |  |  |
 | `tag` | [string](#string) |  |  |
 | `attribute` | [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute) |  |  |
@@ -7201,11 +7348,10 @@ DestinationChain represents a blockchain where tokens can be sent
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `chain_name` | [string](#string) |  | e.g., "ethereum-sepolia" |
-| `chain_id` | [uint64](#uint64) |  | e.g., "11155111" |
-| `chain_type` | [string](#string) |  | Chain type |
-| `chain_smart_contract_address` | [bytes](#bytes) |  | Contract address on the chain |
-| `token` | [scalar.evm.v1beta1.ERC20TokenMetadata](#scalar.evm.v1beta1.ERC20TokenMetadata) |  |  |
+| `params` | [scalar.chains.v1beta1.Params](#scalar.chains.v1beta1.Params) |  | Chain params |
+| `pubkey` | [string](#string) |  |  |
+| `erc20` | [scalar.chains.evm.v1beta1.ERC20TokenMetadata](#scalar.chains.evm.v1beta1.ERC20TokenMetadata) |  |  |
+| `btc` | [scalar.chains.btc.v1beta1.BtcToken](#scalar.chains.btc.v1beta1.BtcToken) |  |  |
 
 
 
@@ -7319,6 +7465,7 @@ Params represent the genesis parameters for the module
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `pubkey` | [string](#string) |  |  |
+| `address` | [string](#string) |  |  |
 | `name` | [string](#string) |  |  |
 | `status` | [Status](#scalar.protocol.v1beta1.Status) |  |  |
 
@@ -7511,9 +7658,9 @@ pubkey used as protocol unique id
  <!-- end HasExtensions -->
 
 
-<a name="scalar.protocol.v1beta1.MsgService"></a>
+<a name="scalar.protocol.v1beta1.Msg"></a>
 
-### MsgService
+### Msg
 
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
@@ -7524,9 +7671,9 @@ pubkey used as protocol unique id
 | `UpdateSupportedChain` | [UpdateSupportedChainRequest](#scalar.protocol.v1beta1.UpdateSupportedChainRequest) | [UpdateSupportedChainResponse](#scalar.protocol.v1beta1.UpdateSupportedChainResponse) | Delete DestinationChain from protocol | POST|/scalar/protocol/v1beta1/update_supported_chain|
 
 
-<a name="scalar.protocol.v1beta1.QueryService"></a>
+<a name="scalar.protocol.v1beta1.Query"></a>
 
-### QueryService
+### Query
 Query defines the gRPC querier service
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |

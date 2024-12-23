@@ -37,7 +37,7 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 }
 
 // setParams sets the permission module's parameters
-func (k Keeper) setParams(ctx sdk.Context, p types.Params) {
+func (k Keeper) SetParams(ctx sdk.Context, p types.Params) {
 	k.paramSpace.SetParamSet(ctx, &p)
 }
 
@@ -46,15 +46,51 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
-func (k Keeper) GetProtocols(ctx sdk.Context) ([]*types.Protocol, bool) {
-	store := ctx.KVStore(k.storeKey)
+func (k Keeper) SetProtocol(ctx sdk.Context, protocol *types.Protocol) {
+	k.getStore(ctx).Set(protocolPrefix.Append(utils.KeyFromBz(protocol.Address)), protocol)
+}
+func (k Keeper) SetProtocols(ctx sdk.Context, protocols []*types.Protocol) {
+	store := k.getStore(ctx)
+	for _, protocol := range protocols {
+		store.Set(protocolPrefix.Append(utils.KeyFromBz(protocol.Address)), protocol)
+	}
+}
+func (k Keeper) GetAllProtocols(ctx sdk.Context) ([]*types.Protocol, bool) {
+	store := k.getStore(ctx)
 	protocols := []*types.Protocol{}
-	iter := sdk.KVStorePrefixIterator(store, protocolPrefix.AsKey())
-	defer iter.Close()
+	iter := store.Iterator(protocolPrefix)
+	defer utils.CloseLogError(iter, k.Logger(ctx))
 	for ; iter.Valid(); iter.Next() {
 		protocol := types.Protocol{}
-		k.cdc.MustUnmarshal(iter.Value(), &protocol)
+		iter.UnmarshalValue(&protocol)
 		protocols = append(protocols, &protocol)
 	}
 	return protocols, true
+}
+
+func (k Keeper) findProtocols(ctx sdk.Context, req *types.ProtocolsRequest) ([]*types.Protocol, bool) {
+	store := k.getStore(ctx)
+	protocols := []*types.Protocol{}
+	iter := store.Iterator(protocolPrefix)
+	defer utils.CloseLogError(iter, k.Logger(ctx))
+	for ; iter.Valid(); iter.Next() {
+		protocol := types.Protocol{}
+		iter.UnmarshalValue(&protocol)
+		if isMatch(&protocol, req) {
+			protocols = append(protocols, &protocol)
+		}
+	}
+	return protocols, true
+}
+
+// Todo: Implement Matching function
+func isMatch(protocol *types.Protocol, req *types.ProtocolsRequest) bool {
+	match := true
+	if req.Address != "" {
+
+	}
+	return match
+}
+func (k Keeper) getStore(ctx sdk.Context) utils.KVStore {
+	return utils.NewNormalizedStore(ctx.KVStore(k.storeKey), k.cdc)
 }

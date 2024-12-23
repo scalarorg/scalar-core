@@ -31,38 +31,39 @@ func init() {
 }
 
 var fileDescriptor_b96b94daf72c97ef = []byte{
-	// 494 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x95, 0x4f, 0x6b, 0xd4, 0x40,
-	0x18, 0xc6, 0x77, 0x7a, 0x10, 0x19, 0x14, 0x21, 0x0a, 0xca, 0x22, 0x41, 0xe2, 0x1f, 0xb0, 0xd5,
-	0x8c, 0xa9, 0xf1, 0x60, 0x2f, 0xa2, 0x05, 0x7b, 0x10, 0x0f, 0x56, 0xbd, 0x78, 0x29, 0xb3, 0xc9,
-	0x18, 0x03, 0xcd, 0xbc, 0xe9, 0xcc, 0x24, 0xb4, 0x57, 0x3f, 0x81, 0x20, 0xf8, 0x15, 0x04, 0x3f,
-	0x80, 0x57, 0x3d, 0x7a, 0xac, 0x78, 0xf1, 0x28, 0xbb, 0xe2, 0xe7, 0x90, 0x9d, 0x24, 0x9b, 0x66,
-	0x6c, 0x36, 0xd3, 0x8b, 0xb7, 0x3d, 0xfc, 0x9e, 0x77, 0x7f, 0xcf, 0xcb, 0xf0, 0x06, 0x5f, 0x97,
-	0x11, 0xdd, 0xa5, 0x82, 0x44, 0x50, 0x32, 0x4e, 0xb9, 0x22, 0x65, 0x30, 0x61, 0x8a, 0x06, 0x44,
-	0x32, 0x51, 0xa6, 0x11, 0xf3, 0x73, 0x01, 0x0a, 0x9c, 0x8b, 0x15, 0xe6, 0x37, 0x98, 0x5f, 0x63,
-	0xe3, 0xcb, 0x09, 0x40, 0xb2, 0xcb, 0x08, 0xcd, 0x53, 0x42, 0x39, 0x07, 0x45, 0x55, 0x0a, 0x5c,
-	0x56, 0xb1, 0xf1, 0xd5, 0xbe, 0xe9, 0x7b, 0x05, 0x13, 0x07, 0x35, 0x74, 0xa5, 0x0f, 0x52, 0xfb,
-	0x15, 0xb1, 0xfe, 0xe7, 0x34, 0xc6, 0x4f, 0x65, 0xf2, 0xbc, 0x52, 0x72, 0x3e, 0x21, 0x7c, 0x6e,
-	0x53, 0x30, 0xaa, 0xd8, 0x66, 0x21, 0x15, 0xc4, 0x29, 0xe5, 0x0e, 0xf1, 0x7b, 0x0c, 0x7d, 0x83,
-	0xdc, 0x66, 0x7b, 0x05, 0x93, 0x6a, 0x7c, 0xc7, 0x3e, 0x20, 0x73, 0xe0, 0x92, 0x79, 0xe1, 0xdb,
-	0x1f, 0xbf, 0xdf, 0xaf, 0xf8, 0xde, 0x4d, 0xd2, 0x27, 0x1c, 0xe9, 0xe4, 0x4e, 0xd4, 0x44, 0x37,
-	0xd0, 0xaa, 0x96, 0x7d, 0x99, 0xc7, 0x96, 0xb2, 0x06, 0x39, 0x2c, 0xfb, 0x4f, 0xc0, 0x5a, 0xb6,
-	0xd0, 0xc9, 0xae, 0xec, 0x17, 0x84, 0x2f, 0x18, 0xf5, 0xb7, 0x04, 0x14, 0xb9, 0x13, 0xda, 0x6e,
-	0x4b, 0xe3, 0x8d, 0xf6, 0xbd, 0x13, 0xa6, 0x6a, 0xf7, 0x0d, 0xed, 0x1e, 0x7a, 0xc4, 0x7a, 0xd1,
-	0x3b, 0xc9, 0x7c, 0x40, 0xd3, 0xc0, 0xd8, 0xc9, 0x50, 0x83, 0xe3, 0xf0, 0xe1, 0x06, 0xc7, 0xa7,
-	0xac, 0x1b, 0x98, 0xdb, 0x6f, 0x1b, 0x7c, 0x46, 0xf8, 0xfc, 0xc3, 0x38, 0x5e, 0x4c, 0x7e, 0x01,
-	0x55, 0x81, 0x25, 0x0f, 0xd6, 0x40, 0x1b, 0xf9, 0xe0, 0x04, 0x09, 0x6b, 0x71, 0x1a, 0xc7, 0x47,
-	0xac, 0x15, 0xb4, 0xe2, 0x5f, 0x11, 0xbe, 0xb4, 0xcd, 0x32, 0x28, 0xdb, 0xad, 0x3c, 0x16, 0x90,
-	0xfd, 0x47, 0xfb, 0x07, 0xda, 0xfe, 0xbe, 0x17, 0xf6, 0xda, 0x0b, 0xed, 0x77, 0xa4, 0xc0, 0x6b,
-	0x01, 0xd9, 0xa2, 0xc2, 0xfa, 0xf7, 0x15, 0x7c, 0xe6, 0xd9, 0xfc, 0x34, 0x35, 0xa7, 0xe6, 0x03,
-	0xc2, 0x67, 0xb7, 0x98, 0x5a, 0xfc, 0xa3, 0x74, 0x56, 0x87, 0xb5, 0x64, 0x53, 0x61, 0xcd, 0x8a,
-	0xad, 0xe5, 0x6f, 0x69, 0xf9, 0x1b, 0xce, 0xb5, 0x56, 0x9e, 0x9b, 0xcf, 0xbe, 0xd5, 0xf8, 0x38,
-	0xbf, 0x81, 0x9d, 0xc7, 0x27, 0x97, 0xdd, 0xc0, 0x2e, 0x69, 0x71, 0x03, 0xcd, 0x40, 0x2d, 0x19,
-	0x68, 0xc9, 0x35, 0x67, 0xc9, 0x0d, 0xec, 0xbe, 0x68, 0xf9, 0xe8, 0xc9, 0xb7, 0xa9, 0x8b, 0x0e,
-	0xa7, 0x2e, 0xfa, 0x35, 0x75, 0xd1, 0xbb, 0x99, 0x3b, 0x3a, 0x9c, 0xb9, 0xa3, 0x9f, 0x33, 0x77,
-	0xf4, 0x2a, 0x48, 0x52, 0xf5, 0xa6, 0x98, 0xf8, 0x11, 0x64, 0xf5, 0x38, 0x10, 0x49, 0xfd, 0xeb,
-	0x76, 0x04, 0x82, 0x91, 0xfd, 0x76, 0xbe, 0x3a, 0xc8, 0x99, 0x9c, 0x9c, 0xd2, 0x1f, 0x84, 0xbb,
-	0x7f, 0x03, 0x00, 0x00, 0xff, 0xff, 0x04, 0x41, 0x5b, 0xf5, 0xb7, 0x06, 0x00, 0x00,
+	// 501 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x95, 0x4f, 0x6b, 0xd4, 0x40,
+	0x18, 0xc6, 0x77, 0x2a, 0x8a, 0x0c, 0x88, 0x30, 0x0a, 0xca, 0x22, 0x41, 0xd6, 0x3f, 0x60, 0xab,
+	0x19, 0xd3, 0xae, 0xa0, 0xbd, 0x88, 0x16, 0xec, 0x41, 0x3c, 0x58, 0xf4, 0xe2, 0xa5, 0xcc, 0x26,
+	0x63, 0x0c, 0x74, 0xe7, 0x4d, 0x67, 0x26, 0xa1, 0xbd, 0xfa, 0x09, 0x04, 0xc1, 0xaf, 0x20, 0xf8,
+	0x0d, 0x3c, 0x79, 0x2d, 0x9e, 0x0a, 0x5e, 0x3c, 0xca, 0xae, 0x27, 0x3f, 0x85, 0xec, 0x24, 0xd9,
+	0x34, 0xe9, 0xce, 0x66, 0xc4, 0x5b, 0x0f, 0xcf, 0xf3, 0xe6, 0xf7, 0x7b, 0x3b, 0xbc, 0x8b, 0x6f,
+	0xa9, 0x90, 0xed, 0x31, 0x49, 0x43, 0xc8, 0xb9, 0x60, 0x42, 0xd3, 0x3c, 0x18, 0x71, 0xcd, 0x02,
+	0xaa, 0xb8, 0xcc, 0x93, 0x90, 0xfb, 0xa9, 0x04, 0x0d, 0xe4, 0x4a, 0x11, 0xf3, 0xab, 0x98, 0x5f,
+	0xc6, 0xfa, 0xd7, 0x62, 0x80, 0x78, 0x8f, 0x53, 0x96, 0x26, 0x94, 0x09, 0x01, 0x9a, 0xe9, 0x04,
+	0x84, 0x2a, 0x6a, 0xfd, 0x1b, 0xb6, 0xe9, 0xfb, 0x19, 0x97, 0x87, 0x65, 0xe8, 0xba, 0x2d, 0xa4,
+	0x0f, 0x8a, 0xc4, 0xfa, 0x9f, 0xf3, 0xf8, 0xcc, 0x0b, 0x15, 0x93, 0x2f, 0x08, 0x5f, 0xdc, 0x92,
+	0x9c, 0x69, 0xbe, 0x95, 0x29, 0x0d, 0x51, 0xc2, 0x04, 0xa1, 0xbe, 0x05, 0xcd, 0x6f, 0x25, 0x77,
+	0xf8, 0x7e, 0xc6, 0x95, 0xee, 0xdf, 0x77, 0x2f, 0xa8, 0x14, 0x84, 0xe2, 0x83, 0xe1, 0xfb, 0x1f,
+	0xbf, 0x3f, 0xae, 0xf8, 0x83, 0x3b, 0xd4, 0x46, 0x1a, 0x9a, 0xe6, 0x6e, 0x58, 0x55, 0x37, 0xd1,
+	0xaa, 0x81, 0x7d, 0x9d, 0x46, 0x8e, 0xb0, 0xad, 0x64, 0x37, 0xec, 0xa9, 0x82, 0x33, 0x6c, 0x66,
+	0x9a, 0x4d, 0xd8, 0x6f, 0x08, 0x5f, 0x6e, 0xe9, 0x6f, 0x4b, 0xc8, 0x52, 0x32, 0x74, 0xdd, 0x96,
+	0x89, 0x57, 0xd8, 0x0f, 0xfe, 0xb1, 0x55, 0xb2, 0x6f, 0x1a, 0xf6, 0xe1, 0x80, 0x3a, 0x2f, 0x7a,
+	0x37, 0x9e, 0x0d, 0xa8, 0x0c, 0x5a, 0x3b, 0xe9, 0x32, 0x58, 0x14, 0xef, 0x36, 0x58, 0xdc, 0x72,
+	0x36, 0x68, 0x6f, 0xbf, 0x36, 0xf8, 0x8a, 0xf0, 0xa5, 0x27, 0x51, 0x34, 0x9f, 0xfc, 0x0a, 0x0a,
+	0x81, 0x0d, 0x2b, 0xca, 0x82, 0x74, 0xc5, 0x1f, 0xd8, 0xff, 0x03, 0xa7, 0x1a, 0xce, 0xec, 0x2c,
+	0x8a, 0x4e, 0x80, 0x6b, 0xa8, 0xd9, 0x8f, 0x10, 0xbe, 0xba, 0xc3, 0xc7, 0x90, 0xd7, 0x8b, 0x79,
+	0x26, 0x61, 0x5c, 0x08, 0x3c, 0xb4, 0xb2, 0xd8, 0x2a, 0xff, 0x61, 0xf1, 0xd8, 0x58, 0x3c, 0x1a,
+	0x0c, 0xad, 0x16, 0xd2, 0x7c, 0xf4, 0x84, 0xc8, 0x5b, 0x09, 0xe3, 0xb9, 0xca, 0xfa, 0xf7, 0x15,
+	0x7c, 0xf6, 0xe5, 0xec, 0x3c, 0x91, 0x4f, 0x08, 0x5f, 0xd8, 0xe6, 0x7a, 0xfe, 0x29, 0x45, 0x56,
+	0xbb, 0x79, 0x54, 0xc5, 0xbe, 0xe6, 0x94, 0x2d, 0xa9, 0xef, 0x1a, 0xea, 0xdb, 0xe4, 0x66, 0x4d,
+	0x2d, 0xda, 0x4f, 0xbf, 0xc6, 0xf8, 0x3c, 0xbb, 0x83, 0x8d, 0x07, 0xa8, 0x96, 0xdd, 0xc1, 0x66,
+	0xd2, 0xe1, 0x0e, 0xb6, 0x0b, 0x25, 0x64, 0x60, 0x20, 0xd7, 0xc8, 0x92, 0x3b, 0xd8, 0x7c, 0xd5,
+	0xea, 0xe9, 0xf3, 0xa3, 0x89, 0x87, 0x8e, 0x27, 0x1e, 0xfa, 0x35, 0xf1, 0xd0, 0x87, 0xa9, 0xd7,
+	0x3b, 0x9e, 0x7a, 0xbd, 0x9f, 0x53, 0xaf, 0xf7, 0x26, 0x88, 0x13, 0xfd, 0x2e, 0x1b, 0xf9, 0x21,
+	0x8c, 0xcb, 0x71, 0x20, 0xe3, 0xf2, 0xaf, 0x7b, 0x21, 0x48, 0x4e, 0x0f, 0xea, 0xf9, 0xfa, 0x30,
+	0xe5, 0x6a, 0x74, 0xce, 0xfc, 0x1a, 0x6c, 0xfc, 0x0d, 0x00, 0x00, 0xff, 0xff, 0xee, 0x37, 0x24,
+	0xb1, 0xb4, 0x06, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -73,10 +74,10 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// MsgServiceClient is the client API for MsgService service.
+// MsgClient is the client API for Msg service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type MsgServiceClient interface {
+type MsgClient interface {
 	// Create custodian
 	CreateCustodian(ctx context.Context, in *CreateCustodianRequest, opts ...grpc.CallOption) (*CreateCustodianResponse, error)
 	// Update custodian
@@ -87,76 +88,76 @@ type MsgServiceClient interface {
 	UpdateCustodianGroup(ctx context.Context, in *UpdateCustodianGroupRequest, opts ...grpc.CallOption) (*UpdateCustodianGroupResponse, error)
 	// Add Custodian to custodian group
 	// recalculate taproot pubkey when adding custodian to custodian group
-	AddCustodianToGroup(ctx context.Context, in *CustodianToGroupRequest, opts ...grpc.CallOption) (*CustodianToGroupResponse, error)
+	AddCustodianToGroup(ctx context.Context, in *AddCustodianToGroupRequest, opts ...grpc.CallOption) (*CustodianToGroupResponse, error)
 	// Remove Custodian from custodian group
 	// recalculate taproot address when deleting custodian from custodian group
-	RemoveCustodianFromGroup(ctx context.Context, in *CustodianToGroupRequest, opts ...grpc.CallOption) (*CustodianToGroupResponse, error)
+	RemoveCustodianFromGroup(ctx context.Context, in *RemoveCustodianFromGroupRequest, opts ...grpc.CallOption) (*CustodianToGroupResponse, error)
 }
 
-type msgServiceClient struct {
+type msgClient struct {
 	cc grpc1.ClientConn
 }
 
-func NewMsgServiceClient(cc grpc1.ClientConn) MsgServiceClient {
-	return &msgServiceClient{cc}
+func NewMsgClient(cc grpc1.ClientConn) MsgClient {
+	return &msgClient{cc}
 }
 
-func (c *msgServiceClient) CreateCustodian(ctx context.Context, in *CreateCustodianRequest, opts ...grpc.CallOption) (*CreateCustodianResponse, error) {
+func (c *msgClient) CreateCustodian(ctx context.Context, in *CreateCustodianRequest, opts ...grpc.CallOption) (*CreateCustodianResponse, error) {
 	out := new(CreateCustodianResponse)
-	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.MsgService/CreateCustodian", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.Msg/CreateCustodian", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgServiceClient) UpdateCustodian(ctx context.Context, in *UpdateCustodianRequest, opts ...grpc.CallOption) (*UpdateCustodianResponse, error) {
+func (c *msgClient) UpdateCustodian(ctx context.Context, in *UpdateCustodianRequest, opts ...grpc.CallOption) (*UpdateCustodianResponse, error) {
 	out := new(UpdateCustodianResponse)
-	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.MsgService/UpdateCustodian", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.Msg/UpdateCustodian", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgServiceClient) CreateCustodianGroup(ctx context.Context, in *CreateCustodianGroupRequest, opts ...grpc.CallOption) (*CreateCustodianGroupResponse, error) {
+func (c *msgClient) CreateCustodianGroup(ctx context.Context, in *CreateCustodianGroupRequest, opts ...grpc.CallOption) (*CreateCustodianGroupResponse, error) {
 	out := new(CreateCustodianGroupResponse)
-	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.MsgService/CreateCustodianGroup", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.Msg/CreateCustodianGroup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgServiceClient) UpdateCustodianGroup(ctx context.Context, in *UpdateCustodianGroupRequest, opts ...grpc.CallOption) (*UpdateCustodianGroupResponse, error) {
+func (c *msgClient) UpdateCustodianGroup(ctx context.Context, in *UpdateCustodianGroupRequest, opts ...grpc.CallOption) (*UpdateCustodianGroupResponse, error) {
 	out := new(UpdateCustodianGroupResponse)
-	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.MsgService/UpdateCustodianGroup", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.Msg/UpdateCustodianGroup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgServiceClient) AddCustodianToGroup(ctx context.Context, in *CustodianToGroupRequest, opts ...grpc.CallOption) (*CustodianToGroupResponse, error) {
+func (c *msgClient) AddCustodianToGroup(ctx context.Context, in *AddCustodianToGroupRequest, opts ...grpc.CallOption) (*CustodianToGroupResponse, error) {
 	out := new(CustodianToGroupResponse)
-	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.MsgService/AddCustodianToGroup", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.Msg/AddCustodianToGroup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgServiceClient) RemoveCustodianFromGroup(ctx context.Context, in *CustodianToGroupRequest, opts ...grpc.CallOption) (*CustodianToGroupResponse, error) {
+func (c *msgClient) RemoveCustodianFromGroup(ctx context.Context, in *RemoveCustodianFromGroupRequest, opts ...grpc.CallOption) (*CustodianToGroupResponse, error) {
 	out := new(CustodianToGroupResponse)
-	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.MsgService/RemoveCustodianFromGroup", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.Msg/RemoveCustodianFromGroup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// MsgServiceServer is the server API for MsgService service.
-type MsgServiceServer interface {
+// MsgServer is the server API for Msg service.
+type MsgServer interface {
 	// Create custodian
 	CreateCustodian(context.Context, *CreateCustodianRequest) (*CreateCustodianResponse, error)
 	// Update custodian
@@ -167,286 +168,286 @@ type MsgServiceServer interface {
 	UpdateCustodianGroup(context.Context, *UpdateCustodianGroupRequest) (*UpdateCustodianGroupResponse, error)
 	// Add Custodian to custodian group
 	// recalculate taproot pubkey when adding custodian to custodian group
-	AddCustodianToGroup(context.Context, *CustodianToGroupRequest) (*CustodianToGroupResponse, error)
+	AddCustodianToGroup(context.Context, *AddCustodianToGroupRequest) (*CustodianToGroupResponse, error)
 	// Remove Custodian from custodian group
 	// recalculate taproot address when deleting custodian from custodian group
-	RemoveCustodianFromGroup(context.Context, *CustodianToGroupRequest) (*CustodianToGroupResponse, error)
+	RemoveCustodianFromGroup(context.Context, *RemoveCustodianFromGroupRequest) (*CustodianToGroupResponse, error)
 }
 
-// UnimplementedMsgServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedMsgServiceServer struct {
+// UnimplementedMsgServer can be embedded to have forward compatible implementations.
+type UnimplementedMsgServer struct {
 }
 
-func (*UnimplementedMsgServiceServer) CreateCustodian(ctx context.Context, req *CreateCustodianRequest) (*CreateCustodianResponse, error) {
+func (*UnimplementedMsgServer) CreateCustodian(ctx context.Context, req *CreateCustodianRequest) (*CreateCustodianResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCustodian not implemented")
 }
-func (*UnimplementedMsgServiceServer) UpdateCustodian(ctx context.Context, req *UpdateCustodianRequest) (*UpdateCustodianResponse, error) {
+func (*UnimplementedMsgServer) UpdateCustodian(ctx context.Context, req *UpdateCustodianRequest) (*UpdateCustodianResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCustodian not implemented")
 }
-func (*UnimplementedMsgServiceServer) CreateCustodianGroup(ctx context.Context, req *CreateCustodianGroupRequest) (*CreateCustodianGroupResponse, error) {
+func (*UnimplementedMsgServer) CreateCustodianGroup(ctx context.Context, req *CreateCustodianGroupRequest) (*CreateCustodianGroupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCustodianGroup not implemented")
 }
-func (*UnimplementedMsgServiceServer) UpdateCustodianGroup(ctx context.Context, req *UpdateCustodianGroupRequest) (*UpdateCustodianGroupResponse, error) {
+func (*UnimplementedMsgServer) UpdateCustodianGroup(ctx context.Context, req *UpdateCustodianGroupRequest) (*UpdateCustodianGroupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCustodianGroup not implemented")
 }
-func (*UnimplementedMsgServiceServer) AddCustodianToGroup(ctx context.Context, req *CustodianToGroupRequest) (*CustodianToGroupResponse, error) {
+func (*UnimplementedMsgServer) AddCustodianToGroup(ctx context.Context, req *AddCustodianToGroupRequest) (*CustodianToGroupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCustodianToGroup not implemented")
 }
-func (*UnimplementedMsgServiceServer) RemoveCustodianFromGroup(ctx context.Context, req *CustodianToGroupRequest) (*CustodianToGroupResponse, error) {
+func (*UnimplementedMsgServer) RemoveCustodianFromGroup(ctx context.Context, req *RemoveCustodianFromGroupRequest) (*CustodianToGroupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveCustodianFromGroup not implemented")
 }
 
-func RegisterMsgServiceServer(s grpc1.Server, srv MsgServiceServer) {
-	s.RegisterService(&_MsgService_serviceDesc, srv)
+func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
+	s.RegisterService(&_Msg_serviceDesc, srv)
 }
 
-func _MsgService_CreateCustodian_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Msg_CreateCustodian_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateCustodianRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServiceServer).CreateCustodian(ctx, in)
+		return srv.(MsgServer).CreateCustodian(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.covenant.v1beta1.MsgService/CreateCustodian",
+		FullMethod: "/scalar.covenant.v1beta1.Msg/CreateCustodian",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).CreateCustodian(ctx, req.(*CreateCustodianRequest))
+		return srv.(MsgServer).CreateCustodian(ctx, req.(*CreateCustodianRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MsgService_UpdateCustodian_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Msg_UpdateCustodian_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateCustodianRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServiceServer).UpdateCustodian(ctx, in)
+		return srv.(MsgServer).UpdateCustodian(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.covenant.v1beta1.MsgService/UpdateCustodian",
+		FullMethod: "/scalar.covenant.v1beta1.Msg/UpdateCustodian",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).UpdateCustodian(ctx, req.(*UpdateCustodianRequest))
+		return srv.(MsgServer).UpdateCustodian(ctx, req.(*UpdateCustodianRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MsgService_CreateCustodianGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Msg_CreateCustodianGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateCustodianGroupRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServiceServer).CreateCustodianGroup(ctx, in)
+		return srv.(MsgServer).CreateCustodianGroup(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.covenant.v1beta1.MsgService/CreateCustodianGroup",
+		FullMethod: "/scalar.covenant.v1beta1.Msg/CreateCustodianGroup",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).CreateCustodianGroup(ctx, req.(*CreateCustodianGroupRequest))
+		return srv.(MsgServer).CreateCustodianGroup(ctx, req.(*CreateCustodianGroupRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MsgService_UpdateCustodianGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Msg_UpdateCustodianGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateCustodianGroupRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServiceServer).UpdateCustodianGroup(ctx, in)
+		return srv.(MsgServer).UpdateCustodianGroup(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.covenant.v1beta1.MsgService/UpdateCustodianGroup",
+		FullMethod: "/scalar.covenant.v1beta1.Msg/UpdateCustodianGroup",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).UpdateCustodianGroup(ctx, req.(*UpdateCustodianGroupRequest))
+		return srv.(MsgServer).UpdateCustodianGroup(ctx, req.(*UpdateCustodianGroupRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MsgService_AddCustodianToGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CustodianToGroupRequest)
+func _Msg_AddCustodianToGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCustodianToGroupRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServiceServer).AddCustodianToGroup(ctx, in)
+		return srv.(MsgServer).AddCustodianToGroup(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.covenant.v1beta1.MsgService/AddCustodianToGroup",
+		FullMethod: "/scalar.covenant.v1beta1.Msg/AddCustodianToGroup",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).AddCustodianToGroup(ctx, req.(*CustodianToGroupRequest))
+		return srv.(MsgServer).AddCustodianToGroup(ctx, req.(*AddCustodianToGroupRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MsgService_RemoveCustodianFromGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CustodianToGroupRequest)
+func _Msg_RemoveCustodianFromGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveCustodianFromGroupRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServiceServer).RemoveCustodianFromGroup(ctx, in)
+		return srv.(MsgServer).RemoveCustodianFromGroup(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.covenant.v1beta1.MsgService/RemoveCustodianFromGroup",
+		FullMethod: "/scalar.covenant.v1beta1.Msg/RemoveCustodianFromGroup",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServiceServer).RemoveCustodianFromGroup(ctx, req.(*CustodianToGroupRequest))
+		return srv.(MsgServer).RemoveCustodianFromGroup(ctx, req.(*RemoveCustodianFromGroupRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _MsgService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "scalar.covenant.v1beta1.MsgService",
-	HandlerType: (*MsgServiceServer)(nil),
+var _Msg_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "scalar.covenant.v1beta1.Msg",
+	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateCustodian",
-			Handler:    _MsgService_CreateCustodian_Handler,
+			Handler:    _Msg_CreateCustodian_Handler,
 		},
 		{
 			MethodName: "UpdateCustodian",
-			Handler:    _MsgService_UpdateCustodian_Handler,
+			Handler:    _Msg_UpdateCustodian_Handler,
 		},
 		{
 			MethodName: "CreateCustodianGroup",
-			Handler:    _MsgService_CreateCustodianGroup_Handler,
+			Handler:    _Msg_CreateCustodianGroup_Handler,
 		},
 		{
 			MethodName: "UpdateCustodianGroup",
-			Handler:    _MsgService_UpdateCustodianGroup_Handler,
+			Handler:    _Msg_UpdateCustodianGroup_Handler,
 		},
 		{
 			MethodName: "AddCustodianToGroup",
-			Handler:    _MsgService_AddCustodianToGroup_Handler,
+			Handler:    _Msg_AddCustodianToGroup_Handler,
 		},
 		{
 			MethodName: "RemoveCustodianFromGroup",
-			Handler:    _MsgService_RemoveCustodianFromGroup_Handler,
+			Handler:    _Msg_RemoveCustodianFromGroup_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "scalar/covenant/v1beta1/service.proto",
 }
 
-// QueryServiceClient is the client API for QueryService service.
+// QueryClient is the client API for Query service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type QueryServiceClient interface {
+type QueryClient interface {
 	// Get custodians
 	GetCustodians(ctx context.Context, in *CustodiansRequest, opts ...grpc.CallOption) (*CustodiansResponse, error)
 	// Get custodian groups
 	CustodianGroups(ctx context.Context, in *CustodianGroupsRequest, opts ...grpc.CallOption) (*CustodianGroupsResponse, error)
 }
 
-type queryServiceClient struct {
+type queryClient struct {
 	cc grpc1.ClientConn
 }
 
-func NewQueryServiceClient(cc grpc1.ClientConn) QueryServiceClient {
-	return &queryServiceClient{cc}
+func NewQueryClient(cc grpc1.ClientConn) QueryClient {
+	return &queryClient{cc}
 }
 
-func (c *queryServiceClient) GetCustodians(ctx context.Context, in *CustodiansRequest, opts ...grpc.CallOption) (*CustodiansResponse, error) {
+func (c *queryClient) GetCustodians(ctx context.Context, in *CustodiansRequest, opts ...grpc.CallOption) (*CustodiansResponse, error) {
 	out := new(CustodiansResponse)
-	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.QueryService/GetCustodians", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.Query/GetCustodians", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryServiceClient) CustodianGroups(ctx context.Context, in *CustodianGroupsRequest, opts ...grpc.CallOption) (*CustodianGroupsResponse, error) {
+func (c *queryClient) CustodianGroups(ctx context.Context, in *CustodianGroupsRequest, opts ...grpc.CallOption) (*CustodianGroupsResponse, error) {
 	out := new(CustodianGroupsResponse)
-	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.QueryService/CustodianGroups", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/scalar.covenant.v1beta1.Query/CustodianGroups", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// QueryServiceServer is the server API for QueryService service.
-type QueryServiceServer interface {
+// QueryServer is the server API for Query service.
+type QueryServer interface {
 	// Get custodians
 	GetCustodians(context.Context, *CustodiansRequest) (*CustodiansResponse, error)
 	// Get custodian groups
 	CustodianGroups(context.Context, *CustodianGroupsRequest) (*CustodianGroupsResponse, error)
 }
 
-// UnimplementedQueryServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedQueryServiceServer struct {
+// UnimplementedQueryServer can be embedded to have forward compatible implementations.
+type UnimplementedQueryServer struct {
 }
 
-func (*UnimplementedQueryServiceServer) GetCustodians(ctx context.Context, req *CustodiansRequest) (*CustodiansResponse, error) {
+func (*UnimplementedQueryServer) GetCustodians(ctx context.Context, req *CustodiansRequest) (*CustodiansResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCustodians not implemented")
 }
-func (*UnimplementedQueryServiceServer) CustodianGroups(ctx context.Context, req *CustodianGroupsRequest) (*CustodianGroupsResponse, error) {
+func (*UnimplementedQueryServer) CustodianGroups(ctx context.Context, req *CustodianGroupsRequest) (*CustodianGroupsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CustodianGroups not implemented")
 }
 
-func RegisterQueryServiceServer(s grpc1.Server, srv QueryServiceServer) {
-	s.RegisterService(&_QueryService_serviceDesc, srv)
+func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
+	s.RegisterService(&_Query_serviceDesc, srv)
 }
 
-func _QueryService_GetCustodians_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Query_GetCustodians_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CustodiansRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServiceServer).GetCustodians(ctx, in)
+		return srv.(QueryServer).GetCustodians(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.covenant.v1beta1.QueryService/GetCustodians",
+		FullMethod: "/scalar.covenant.v1beta1.Query/GetCustodians",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).GetCustodians(ctx, req.(*CustodiansRequest))
+		return srv.(QueryServer).GetCustodians(ctx, req.(*CustodiansRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _QueryService_CustodianGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Query_CustodianGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CustodianGroupsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServiceServer).CustodianGroups(ctx, in)
+		return srv.(QueryServer).CustodianGroups(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scalar.covenant.v1beta1.QueryService/CustodianGroups",
+		FullMethod: "/scalar.covenant.v1beta1.Query/CustodianGroups",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).CustodianGroups(ctx, req.(*CustodianGroupsRequest))
+		return srv.(QueryServer).CustodianGroups(ctx, req.(*CustodianGroupsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _QueryService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "scalar.covenant.v1beta1.QueryService",
-	HandlerType: (*QueryServiceServer)(nil),
+var _Query_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "scalar.covenant.v1beta1.Query",
+	HandlerType: (*QueryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetCustodians",
-			Handler:    _QueryService_GetCustodians_Handler,
+			Handler:    _Query_GetCustodians_Handler,
 		},
 		{
 			MethodName: "CustodianGroups",
-			Handler:    _QueryService_CustodianGroups_Handler,
+			Handler:    _Query_CustodianGroups_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

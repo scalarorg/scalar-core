@@ -65,7 +65,7 @@ func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Rout
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
-	if err := types.RegisterQueryServiceHandlerClient(context.Background(), mux, types.NewQueryServiceClient(clientCtx)); err != nil {
+	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
 		panic(err)
 	}
 }
@@ -83,16 +83,28 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 // AppModule implements module.AppModule
 type AppModule struct {
 	AppModuleBasic
-	keeper keeper.Keeper
+	keeper      keeper.Keeper
+	voter       types.Voter
+	snapshotter types.Snapshotter
+	staking     types.StakingKeeper
+	slashing    types.SlashingKeeper
 }
 
 // NewAppModule creates a new AppModule object
 func NewAppModule(
 	k keeper.Keeper,
+	voter types.Voter,
+	snapshotter types.Snapshotter,
+	staking types.StakingKeeper,
+	slashing types.SlashingKeeper,
 ) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
 		keeper:         k,
+		voter:          voter,
+		snapshotter:    snapshotter,
+		staking:        staking,
+		slashing:       slashing,
 	}
 }
 
@@ -134,8 +146,8 @@ func (am AppModule) LegacyQuerierHandler(*codec.LegacyAmino) sdk.Querier {
 // module-specific GRPC queries.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
 	msgServer := keeper.NewMsgServerImpl(am.keeper)
-	types.RegisterMsgServiceServer(grpc.ServerWithSDKErrors{Server: cfg.MsgServer(), Err: types.ErrProtocol, Logger: am.keeper.Logger}, msgServer)
-	types.RegisterQueryServiceServer(cfg.QueryServer(), am.keeper)
+	types.RegisterMsgServer(grpc.ServerWithSDKErrors{Server: cfg.MsgServer(), Err: types.ErrProtocol, Logger: am.keeper.Logger}, msgServer)
+	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
 
 	err := cfg.RegisterMigration(types.ModuleName, 1, keeper.GetMigrationHandler(am.keeper))
 	if err != nil {

@@ -6,10 +6,10 @@ import (
 	"github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
-var _ types.MsgServiceServer = msgServer{}
+var _ types.MsgServer = msgServer{}
 
 type msgServer struct {
-	types.BaseKeeper
+	types.CovenantKeeper
 	// nexus          types.Nexus
 	voter       types.Voter
 	snapshotter types.Snapshotter
@@ -20,13 +20,13 @@ type msgServer struct {
 
 // NewMsgServerImpl returns an implementation of the evm MsgServiceServer interface
 // for the provided Keeper.
-func NewMsgServerImpl(keeper types.BaseKeeper, v types.Voter, snap types.Snapshotter, staking types.StakingKeeper, slashing types.SlashingKeeper) types.MsgServiceServer {
+func NewMsgServerImpl(keeper types.CovenantKeeper, v types.Voter, snap types.Snapshotter, staking types.StakingKeeper, slashing types.SlashingKeeper) types.MsgServer {
 	return msgServer{
-		BaseKeeper:  keeper,
-		voter:       v,
-		snapshotter: snap,
-		staking:     staking,
-		slashing:    slashing,
+		CovenantKeeper: keeper,
+		voter:          v,
+		snapshotter:    snap,
+		staking:        staking,
+		slashing:       slashing,
 		// multisigKeeper: multisigKeeper,
 	}
 }
@@ -53,12 +53,12 @@ func (s msgServer) UpdateCustodianGroup(context.Context, *types.UpdateCustodianG
 
 // Add Custodian to custodian group
 // recalculate taproot pubkey when adding custodian to custodian group
-func (s msgServer) AddCustodianToGroup(context.Context, *types.CustodianToGroupRequest) (*types.CustodianToGroupResponse, error) {
+func (s msgServer) AddCustodianToGroup(context.Context, *types.AddCustodianToGroupRequest) (*types.CustodianToGroupResponse, error) {
 	return &types.CustodianToGroupResponse{}, nil
 }
 
 // Remove Custodian from custodian group
 // recalculate taproot address when deleting custodian from custodian group
-func (s msgServer) RemoveCustodianFromGroup(context.Context, *types.CustodianToGroupRequest) (*types.CustodianToGroupResponse, error) {
+func (s msgServer) RemoveCustodianFromGroup(context.Context, *types.RemoveCustodianFromGroupRequest) (*types.CustodianToGroupResponse, error) {
 	return &types.CustodianToGroupResponse{}, nil
 }

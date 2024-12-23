@@ -60,10 +60,18 @@ message UpdateCustodianGroupResponse {
   CustodianGroup group = 1;
 }
 
-message CustodianToGroupRequest {
-  string guid = 1; //CustodianGroup uid
-  bytes custodian_pubkey = 2;
-  string description = 3;
+message AddCustodianToGroupRequest {
+  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string guid = 2; //CustodianGroup uid
+  bytes custodian_pubkey = 3;
+  string description = 4;
+}
+
+message RemoveCustodianFromGroupRequest {
+  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string guid = 2; //CustodianGroup uid
+  bytes custodian_pubkey = 3;
+  string description = 4;
 }
 
 message CustodianToGroupResponse {

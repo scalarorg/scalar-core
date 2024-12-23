@@ -19,10 +19,10 @@ var (
 	subspacePrefix = "subspace"
 )
 
-var _ types.BaseKeeper = &BaseKeeper{}
+var _ types.CovenantKeeper = &Keeper{}
 
 // BaseKeeper implements the base Keeper
-type BaseKeeper struct {
+type Keeper struct {
 	initialized bool
 	internalKeeper
 }
@@ -34,8 +34,8 @@ type internalKeeper struct {
 }
 
 // NewKeeper returns a new EVM base keeper
-func NewKeeper(cdc codec.BinaryCodec, storeKey sdk.StoreKey, paramsKeeper types.ParamsKeeper) *BaseKeeper {
-	return &BaseKeeper{
+func NewKeeper(cdc codec.BinaryCodec, storeKey sdk.StoreKey, paramsKeeper types.ParamsKeeper) Keeper {
+	return Keeper{
 		internalKeeper: internalKeeper{
 			cdc:          cdc,
 			storeKey:     storeKey,
@@ -45,7 +45,7 @@ func NewKeeper(cdc codec.BinaryCodec, storeKey sdk.StoreKey, paramsKeeper types.
 }
 
 // InitChains initializes all existing EVM chains and their respective param subspaces
-func (k *BaseKeeper) InitChains(ctx sdk.Context) {
+func (k *Keeper) InitChains(ctx sdk.Context) {
 	if k.initialized {
 		panic("chains are already initialized")
 	}
@@ -53,13 +53,13 @@ func (k *BaseKeeper) InitChains(ctx sdk.Context) {
 	iter := k.getBaseStore(ctx).IteratorNew(key.FromStr(subspacePrefix))
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 
-	for ; iter.Valid(); iter.Next() {
-		_ = k.createSubspace(ctx, nexus.ChainName(iter.Value()))
-	}
+	// for ; iter.Valid(); iter.Next() {
+	// 	_ = k.createSubspace(ctx, nexus.ChainName(iter.Value()))
+	// }
 
 	k.initialized = true
 }
-func (k BaseKeeper) CreateCustodian(ctx sdk.Context, params types.Params) (err error) {
+func (k Keeper) CreateCustodian(ctx sdk.Context, params types.Params) (err error) {
 	defer func() {
 		err = sdkerrors.Wrap(err, "cannot create new EVM chain")
 	}()
@@ -81,20 +81,20 @@ func (k BaseKeeper) CreateCustodian(ctx sdk.Context, params types.Params) (err e
 	// k.createSubspace(ctx, params.Chain).SetParamSet(ctx, &params)
 	return nil
 }
-func (k BaseKeeper) GetCustodians(ctx sdk.Context) (custodians []*types.Custodian, ok bool) {
+func (k Keeper) GetCustodians(ctx sdk.Context) (custodians []*types.Custodian, ok bool) {
 	return nil, false
 }
-func (k BaseKeeper) CreateCustodianGroup(ctx sdk.Context, params types.Params) (err error) {
+func (k Keeper) CreateCustodianGroup(ctx sdk.Context, params types.Params) (err error) {
 	defer func() {
 		err = sdkerrors.Wrap(err, "cannot create new EVM chain")
 	}()
 
 	return nil
 }
-func (k BaseKeeper) GetCustodianGroup(ctx sdk.Context) (custodianGroup *types.CustodianGroup, ok bool) {
+func (k Keeper) GetCustodianGroup(ctx sdk.Context) (custodianGroup *types.CustodianGroup, ok bool) {
 	return &types.CustodianGroup{}, false
 }
-func (k BaseKeeper) createSubspace(ctx sdk.Context, chain nexus.ChainName) params.Subspace {
+func (k Keeper) createSubspace(ctx sdk.Context, chain nexus.ChainName) params.Subspace {
 	chainKey := key.FromStr(types.ModuleName).Append(key.From(chain))
 	k.Logger(ctx).Debug(fmt.Sprintf("initialized evm subspace %s", chain))
 	return k.paramsKeeper.Subspace(chainKey.String()).WithKeyTable(types.KeyTable())

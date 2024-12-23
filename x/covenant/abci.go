@@ -9,10 +9,10 @@ import (
 
 // BeginBlocker check for infraction evidence or downtime of validators
 // on every begin block
-func BeginBlocker(sdk.Context, abci.RequestBeginBlock, types.BaseKeeper) {}
+func BeginBlocker(sdk.Context, abci.RequestBeginBlock, types.CovenantKeeper) {}
 
 // EndBlocker called every block, process inflation, update validator set.
-func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.BaseKeeper) ([]abci.ValidatorUpdate, error) {
+func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.CovenantKeeper) ([]abci.ValidatorUpdate, error) {
 	clog.Yellow("COVENANT ABCI START ENDBLOCKER")
 	// handleConfirmedEvents(ctx, bk, n, m)
 	// handleMessages(ctx, bk, n, m)

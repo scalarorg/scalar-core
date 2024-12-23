@@ -3,7 +3,10 @@ package scalar.protocol.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "scalar/covenant/v1beta1/types.proto";
-import "scalar/evm/v1beta1/types.proto";
+import "scalar/chains/v1beta1/types.proto";
+import "scalar/chains/v1beta1/params.proto";
+import "scalar/chains/evm/v1beta1/types.proto";
+import "scalar/chains/btc/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
@@ -13,21 +16,22 @@ message ProtocolAttribute {
 
 // DestinationChain represents a blockchain where tokens can be sent
 message SupportedChain {
-  string chain_name = 1; // e.g., "ethereum-sepolia"
-  uint64 chain_id = 2; // e.g., "11155111"
-  string chain_type = 3; // Chain type
-  bytes chain_smart_contract_address = 4; // Contract address on the chain
-
-  scalar.evm.v1beta1.ERC20TokenMetadata token = 5 [(gogoproto.nullable) = false];
+  scalar.chains.v1beta1.Params params = 1; //Chain params
+  string pubkey = 2;
+  oneof token {
+    scalar.chains.evm.v1beta1.ERC20TokenMetadata erc20 = 3;
+    scalar.chains.btc.v1beta1.BtcToken btc = 4;
+  }
 }
 message Protocol {
   bytes pubkey = 1;
-  string name = 2;
-  string tag = 3;
-  ProtocolAttribute attribute = 4;
-  Status status = 5;
-  scalar.covenant.v1beta1.CustodianGroup custodian_group = 6;
-  repeated SupportedChain chains = 7;
+  bytes address = 2;
+  string name = 3;
+  string tag = 4;
+  ProtocolAttribute attribute = 5;
+  Status status = 6;
+  scalar.covenant.v1beta1.CustodianGroup custodian_group = 7;
+  repeated SupportedChain chains = 8;
 }
 enum LiquidityModel {
   option (gogoproto.goproto_enum_prefix) = false;

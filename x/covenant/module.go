@@ -67,7 +67,7 @@ func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Rout
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
-	if err := types.RegisterQueryServiceHandlerClient(context.Background(), mux, types.NewQueryServiceClient(clientCtx)); err != nil {
+	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
 		panic(err)
 	}
 }
@@ -85,7 +85,7 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 // AppModule implements module.AppModule
 type AppModule struct {
 	AppModuleBasic
-	keeper *keeper.BaseKeeper
+	keeper *keeper.Keeper
 	voter  types.Voter
 	//nexus       types.Nexus
 	snapshotter types.Snapshotter
@@ -95,7 +95,7 @@ type AppModule struct {
 }
 
 // NewAppModule creates a new AppModule object
-func NewAppModule(k *keeper.BaseKeeper, voter types.Voter, snapshotter types.Snapshotter, staking types.StakingKeeper, slashing types.SlashingKeeper) AppModule {
+func NewAppModule(k *keeper.Keeper, voter types.Voter, snapshotter types.Snapshotter, staking types.StakingKeeper, slashing types.SlashingKeeper) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
 		keeper:         k,
@@ -147,8 +147,8 @@ func (am AppModule) LegacyQuerierHandler(*codec.LegacyAmino) sdk.Querier {
 // module-specific GRPC queries.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
 	msgServer := keeper.NewMsgServerImpl(am.keeper, am.voter, am.snapshotter, am.staking, am.slashing)
-	types.RegisterMsgServiceServer(grpc.ServerWithSDKErrors{Server: cfg.MsgServer(), Err: types.ErrQuery, Logger: am.keeper.Logger}, msgServer)
-	types.RegisterQueryServiceServer(cfg.QueryServer(), keeper.NewGRPCQuerier(am.keeper))
+	types.RegisterMsgServer(grpc.ServerWithSDKErrors{Server: cfg.MsgServer(), Err: types.ErrQuery, Logger: am.keeper.Logger}, msgServer)
+	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewGRPCQuerier(am.keeper))
 
 	// err := cfg.RegisterMigration(types.ModuleName, 8, keeper.AlwaysMigrateBytecode(am.keeper, am.nexus, keeper.Migrate8to9(am.keeper, am.nexus)))
 	// if err != nil {

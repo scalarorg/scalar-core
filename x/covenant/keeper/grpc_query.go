@@ -6,15 +6,15 @@ import (
 	"github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
-var _ types.QueryServiceServer = Querier{}
+var _ types.QueryServer = Querier{}
 
 // Querier implements the grpc querier
 type Querier struct {
-	keeper types.BaseKeeper
+	keeper types.CovenantKeeper
 }
 
 // NewGRPCQuerier returns a new Querier
-func NewGRPCQuerier(k types.BaseKeeper) Querier {
+func NewGRPCQuerier(k types.CovenantKeeper) Querier {
 	return Querier{
 		keeper: k,
 	}
