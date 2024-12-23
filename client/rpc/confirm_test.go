@@ -20,9 +20,9 @@ func TestConfirmSourceTx(t *testing.T) {
 	require.NotNil(t, mockNetworkClient)
 
 	chain := nexus.ChainName(utils.NormalizeString(chainNameBtcTestnet4))
-	txHash, err := chainTypes.HashFromHexStr(mockTxHash)
+	txHash, err := chainTypes.HashFromHex(mockTxHash)
 	require.NoError(t, err)
-	msg := chainTypes.NewConfirmSourceTxsRequest(mockNetworkClient.GetAddress(), chain, []chainTypes.Hash{*txHash})
+	msg := chainTypes.NewConfirmSourceTxsRequest(mockNetworkClient.GetAddress(), chain, []chainTypes.Hash{txHash})
 
 	tx, err := rpc.ConfirmSourceTx(context.Background(), mockNetworkClient, msg)
 	require.NoError(t, err)
