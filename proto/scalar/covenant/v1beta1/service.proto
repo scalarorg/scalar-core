@@ -7,7 +7,7 @@ import "scalar/covenant/v1beta1/tx.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
-service MsgService {
+service Msg {
   // Create custodian
   rpc CreateCustodian(CreateCustodianRequest) returns (CreateCustodianResponse) {
     option (google.api.http) = {
@@ -39,7 +39,7 @@ service MsgService {
   }
   // Add Custodian to custodian group
   // recalculate taproot pubkey when adding custodian to custodian group
-  rpc AddCustodianToGroup(CustodianToGroupRequest) returns (CustodianToGroupResponse) {
+  rpc AddCustodianToGroup(AddCustodianToGroupRequest) returns (CustodianToGroupResponse) {
     option (google.api.http) = {
       post: "/scalar/covenant/v1beta1/add_custodian_to_group"
       body: "*"
@@ -48,7 +48,7 @@ service MsgService {
 
   // Remove Custodian from custodian group
   // recalculate taproot address when deleting custodian from custodian group
-  rpc RemoveCustodianFromGroup(CustodianToGroupRequest) returns (CustodianToGroupResponse) {
+  rpc RemoveCustodianFromGroup(RemoveCustodianFromGroupRequest) returns (CustodianToGroupResponse) {
     option (google.api.http) = {
       post: "/scalar/covenant/v1beta1/remove_custodian_from_group"
       body: "*"
@@ -56,7 +56,7 @@ service MsgService {
   }
 }
 
-service QueryService {
+service Query {
   // Get custodians
   rpc GetCustodians(CustodiansRequest) returns (CustodiansResponse) {
     option (google.api.http) = {get: "/scalar/convenant/v1beta1/custodians"};

@@ -1,0 +1,7 @@
+syntax = "proto3";
+package scalar.chains.btc.v1beta1;
+
+option go_package = "github.com/scalarorg/scalar-core/x/chains/btc/types";
+
+message BtcToken {
+}

@@ -14,7 +14,7 @@ import (
 //go:generate moq -out ./mock/expected_keepers.go -pkg mock . Voter Nexus Snapshotter BaseKeeper ChainKeeper Rewarder StakingKeeper SlashingKeeper MultisigKeeper
 
 // BaseKeeper is implemented by this module's base keeper
-type BaseKeeper interface {
+type CovenantKeeper interface {
 	Logger(ctx sdk.Context) log.Logger
 }
 

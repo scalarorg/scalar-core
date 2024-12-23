@@ -104,6 +104,12 @@ import (
 	auxiliarytypes "github.com/scalarorg/scalar-core/x/auxiliary/types"
 	bankKepper "github.com/scalarorg/scalar-core/x/bank/keeper"
 	"github.com/scalarorg/scalar-core/x/chains"
+	"github.com/scalarorg/scalar-core/x/covenant"
+	covenantKeeper "github.com/scalarorg/scalar-core/x/covenant/keeper"
+	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
+	"github.com/scalarorg/scalar-core/x/protocol"
+	protocolKeeper "github.com/scalarorg/scalar-core/x/protocol/keeper"
+	protocolTypes "github.com/scalarorg/scalar-core/x/protocol/types"
 
 	"github.com/scalarorg/scalar-core/x/multisig"
 	multisigKeeper "github.com/scalarorg/scalar-core/x/multisig/keeper"
@@ -253,7 +259,8 @@ func NewScalarApp(
 	SetKeeper(keepers, initSnapshotKeeper(appCodec, keys, keepers))
 	SetKeeper(keepers, initVoteKeeper(appCodec, keys, keepers))
 	SetKeeper(keepers, initPermissionKeeper(appCodec, keys, keepers))
-
+	SetKeeper(keepers, initCovenantKeeper(appCodec, keys, keepers))
+	SetKeeper(keepers, initProtocolKeeper(appCodec, keys, keepers))
 	// set up ibc/wasm keepers
 	wasmHooks := InitWasmHooks(keys)
 	ics4Wrapper := InitICS4Wrapper(keepers, wasmHooks)
@@ -624,6 +631,20 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 			GetKeeper[multisigKeeper.Keeper](keepers),
 		),
 		scalarnetModule,
+		covenant.NewAppModule(
+			GetKeeper[covenantKeeper.Keeper](keepers),
+			GetKeeper[voteKeeper.Keeper](keepers),
+			GetKeeper[snapKeeper.Keeper](keepers),
+			GetKeeper[stakingkeeper.Keeper](keepers),
+			GetKeeper[slashingkeeper.Keeper](keepers),
+		),
+		protocol.NewAppModule(
+			*GetKeeper[protocolKeeper.Keeper](keepers),
+			GetKeeper[voteKeeper.Keeper](keepers),
+			GetKeeper[snapKeeper.Keeper](keepers),
+			GetKeeper[stakingkeeper.Keeper](keepers),
+			GetKeeper[slashingkeeper.Keeper](keepers),
+		),
 		reward.NewAppModule(
 			*GetKeeper[rewardKeeper.Keeper](keepers),
 			GetKeeper[nexusKeeper.Keeper](keepers),
@@ -760,6 +781,8 @@ func orderMigrations() []string {
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
+		protocolTypes.ModuleName,
+		covenantTypes.ModuleName,
 	}
 
 	// wasm module needs to be added in a specific order, so we cannot just append it at the end
@@ -835,6 +858,8 @@ func orderBeginBlockers() []string {
 		snapTypes.ModuleName,
 		scalarnetTypes.ModuleName,
 		voteTypes.ModuleName,
+		covenantTypes.ModuleName,
+		protocolTypes.ModuleName,
 		auxiliarytypes.ModuleName,
 	)
 	return beginBlockerOrder
@@ -882,6 +907,8 @@ func orderEndBlockers() []string {
 		scalarnetTypes.ModuleName,
 		permissionTypes.ModuleName,
 		voteTypes.ModuleName,
+		covenantTypes.ModuleName,
+		protocolTypes.ModuleName,
 		auxiliarytypes.ModuleName,
 	)
 	return endBlockerOrder
@@ -932,6 +959,8 @@ func orderModulesForGenesis() []string {
 		scalarnetTypes.ModuleName,
 		rewardTypes.ModuleName,
 		permissionTypes.ModuleName,
+		covenantTypes.ModuleName,
+		protocolTypes.ModuleName,
 		auxiliarytypes.ModuleName,
 	)
 	return genesisOrder
@@ -961,7 +990,10 @@ func CreateStoreKeys() map[string]*sdk.KVStoreKey {
 		nexusTypes.StoreKey,
 		scalarnetTypes.StoreKey,
 		rewardTypes.StoreKey,
-		permissionTypes.StoreKey}
+		permissionTypes.StoreKey,
+		covenantTypes.StoreKey,
+		protocolTypes.StoreKey,
+	}
 
 	if IsWasmEnabled() {
 		keys = append(keys, wasm.StoreKey)
@@ -1103,6 +1135,8 @@ func GetModuleBasics() module.BasicManager {
 		scalarnet.AppModuleBasic{},
 		reward.AppModuleBasic{},
 		permission.AppModuleBasic{},
+		covenant.AppModuleBasic{},
+		protocol.AppModuleBasic{},
 		auxiliary.AppModuleBasic{},
 	}
 

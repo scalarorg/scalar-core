@@ -54,6 +54,10 @@ import (
 	scalarParams "github.com/scalarorg/scalar-core/app/params"
 	"github.com/scalarorg/scalar-core/utils/maps"
 	bankKeeper "github.com/scalarorg/scalar-core/x/bank/keeper"
+	chainsKeeper "github.com/scalarorg/scalar-core/x/chains/keeper"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	covenantKeeper "github.com/scalarorg/scalar-core/x/covenant/keeper"
+	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	evmKeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 	multisigKeeper "github.com/scalarorg/scalar-core/x/multisig/keeper"
@@ -62,6 +66,8 @@ import (
 	nexusTypes "github.com/scalarorg/scalar-core/x/nexus/types"
 	permissionKeeper "github.com/scalarorg/scalar-core/x/permission/keeper"
 	permissionTypes "github.com/scalarorg/scalar-core/x/permission/types"
+	protocolKeeper "github.com/scalarorg/scalar-core/x/protocol/keeper"
+	protocolTypes "github.com/scalarorg/scalar-core/x/protocol/types"
 	rewardKeeper "github.com/scalarorg/scalar-core/x/reward/keeper"
 	rewardTypes "github.com/scalarorg/scalar-core/x/reward/types"
 	scalarnetKeeper "github.com/scalarorg/scalar-core/x/scalarnet/keeper"
@@ -72,9 +78,6 @@ import (
 	tssTypes "github.com/scalarorg/scalar-core/x/tss/types"
 	voteKeeper "github.com/scalarorg/scalar-core/x/vote/keeper"
 	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
-
-	chainsKeeper "github.com/scalarorg/scalar-core/x/chains/keeper"
-	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 type KeeperCache struct {
@@ -150,7 +153,8 @@ func initParamsKeeper(encodingConfig scalarParams.EncodingConfig, key, tkey sdk.
 	paramsKeeper.Subspace(rewardTypes.ModuleName)
 	paramsKeeper.Subspace(voteTypes.ModuleName)
 	paramsKeeper.Subspace(permissionTypes.ModuleName)
-
+	paramsKeeper.Subspace(protocolTypes.ModuleName)
+	paramsKeeper.Subspace(covenantTypes.ModuleName)
 	return &paramsKeeper
 }
 
@@ -490,6 +494,14 @@ func initAccountKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, ke
 	)
 
 	return &authK
+}
+func initCovenantKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *covenantKeeper.Keeper {
+	covenantK := covenantKeeper.NewKeeper(appCodec, keys[covenantTypes.StoreKey], GetKeeper[paramskeeper.Keeper](keepers))
+	return &covenantK
+}
+func initProtocolKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *protocolKeeper.Keeper {
+	protocolK := protocolKeeper.NewKeeper(appCodec, keys[protocolTypes.StoreKey], keepers.getSubspace(protocolTypes.ModuleName))
+	return &protocolK
 }
 
 // moduleAccountAddrs returns all the app's module account addresses.

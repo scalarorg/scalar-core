@@ -7,7 +7,7 @@ import "scalar/protocol/v1beta1/tx.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
-service MsgService {
+service Msg {
   // Create protocol
   rpc CreateProtocol(CreateProtocolRequest) returns (CreateProtocolResponse) {
     option (google.api.http) = {
@@ -41,7 +41,7 @@ service MsgService {
 }
 
 // Query defines the gRPC querier service
-service QueryService {
+service Query {
   // GetProtocols returns all Protocol
   rpc Protocols(ProtocolsRequest) returns (ProtocolsResponse) {
     option (google.api.http) = {get: "/scalar/protocol/v1beta1"};

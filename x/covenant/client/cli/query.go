@@ -11,7 +11,7 @@ import (
 // GetQueryCmd returns the cli query commands for this module
 func GetQueryCmd(route string) *cobra.Command {
 	protocolQueryCmd := &cobra.Command{
-		Use:                        "protocol",
+		Use:                        "covenant",
 		Short:                      fmt.Sprintf("Querying commands for the %s module", types.ModuleName),
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
@@ -19,15 +19,26 @@ func GetQueryCmd(route string) *cobra.Command {
 	}
 
 	protocolQueryCmd.AddCommand(
-		GetCmdFindProtocol(),
+		GetCmdFindCustodian(),
+		GetCmdFindCustodianGroup(),
 	)
 
 	return protocolQueryCmd
 }
-func GetCmdFindProtocol() *cobra.Command {
+func GetCmdFindCustodian() *cobra.Command {
 	return &cobra.Command{
-		Use:   "find",
-		Short: "Find a protocol",
+		Use:   "custodians",
+		Short: "Find custodians",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return nil
+		},
+	}
+}
+
+func GetCmdFindCustodianGroup() *cobra.Command {
+	return &cobra.Command{
+		Use:   "custodianGroups",
+		Short: "Find custodian groups",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return nil
 		},

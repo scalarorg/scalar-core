@@ -11,7 +11,7 @@ type msgServer struct {
 }
 
 // NewMsgServerImpl returns a new msg server instance
-func NewMsgServerImpl(keeper Keeper) types.MsgServiceServer {
+func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 	return msgServer{Keeper: keeper}
 }
 

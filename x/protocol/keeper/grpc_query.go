@@ -10,7 +10,7 @@ import (
 	"github.com/scalarorg/scalar-core/x/protocol/types"
 )
 
-var _ types.QueryServiceServer = Keeper{}
+var _ types.QueryServer = Keeper{}
 
 // GovernanceKey returns the multisig governance key
 func (k Keeper) Protocols(c context.Context, req *types.ProtocolsRequest) (*types.ProtocolsResponse, error) {
