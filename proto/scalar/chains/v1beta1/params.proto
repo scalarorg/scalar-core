@@ -14,7 +14,8 @@ message Params {
   int64 revote_locking_period = 4;
   bytes chain_id = 5 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "ChainID"
   ];
   scalar.utils.v1beta1.Threshold voting_threshold = 6 [(gogoproto.nullable) = false];
   int64 min_voter_count = 7;

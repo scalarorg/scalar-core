@@ -209,33 +209,28 @@ func (v voteHandler) HandleResult(ctx sdk.Context, result codec.ProtoMarshaler) 
 
 func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event types.Event, chain nexus.Chain) error {
 	if err := ck.SetConfirmedEvent(ctx, event); err != nil {
-		clog.Redf("[BTC] SetConfirmedEvent error: %+v", err)
 		return err
 	}
 
-	// Event_StakingTx is no longer directly handled by the BTC module,
-	// which bypassed nexus routing to destination chain, for example to evm module
+	// if not match the event type, the event also set confirmed in the abci of this module, and also enqueued to the nexus message
+	// but it was not routed to the destination chain in the nexus keeper, so it will be ignored in this module
 
 	eventType := event.GetEvent()
-	clog.Redf("[BTC] eventType: %+v", eventType)
-	clog.Redf("[BTC] event: %+v", event)
-
 	switch eventType.(type) {
-	case *types.Event_ConfirmationEvent:
-		if err := v.handleConfirmationEvent(ctx, ck, event); err != nil {
+	case *types.Event_SourceTxConfirmationEvent:
+		if err := v.handleCrossChainEvent(ctx, ck, event); err != nil {
 			return err
 		}
 	default:
-		clog.Red("Not found event type")
 		funcs.MustNoErr(ck.EnqueueConfirmedEvent(ctx, event.GetID()))
 	}
 
-	ck.Logger(ctx).Info(fmt.Sprintf("confirmed %s event %s in transaction %s", chain.Name, event.GetID(), event.TxID.HexStr()))
+	ck.Logger(ctx).Info(fmt.Sprintf("confirmed %s event %s in transaction %s", chain.Name, event.GetID(), event.TxID.Hex()))
 
 	return nil
 }
 
-func (v voteHandler) handleConfirmationEvent(ctx sdk.Context, ck types.ChainKeeper, event types.Event) error {
+func (v voteHandler) handleCrossChainEvent(ctx sdk.Context, ck types.ChainKeeper, event types.Event) error {
 	msg := mustToGeneralMessage(ctx, v.nexus, event)
 
 	clog.Bluef("msg: %+v", msg)
@@ -244,8 +239,8 @@ func (v voteHandler) handleConfirmationEvent(ctx sdk.Context, ck types.ChainKeep
 		return err
 	}
 
-	clog.Blue("handleStakingTx, enqueueRouteMessage", "msg", msg.ID)
-	clog.Blue("handleStakingTx, setEventCompleted", "event", event.GetID())
+	clog.Blue("handleCrossChainEvent, enqueueRouteMessage", "msg", msg.ID)
+	clog.Blue("handleCrossChainEvent, setEventCompleted", "event", event.GetID())
 
 	// this enqueues the message to be routed to the destination chain, it will be handled at abci of the destination module, for example evm module
 	funcs.MustNoErr(v.nexus.EnqueueRouteMessage(ctx, msg.ID))
@@ -256,7 +251,7 @@ func (v voteHandler) handleConfirmationEvent(ctx sdk.Context, ck types.ChainKeep
 
 func mustToGeneralMessage(ctx sdk.Context, n types.Nexus, event types.Event) nexus.GeneralMessage {
 	id := string(event.GetID())
-	confirmationEvent := event.GetEvent().(*types.Event_ConfirmationEvent).ConfirmationEvent
+	confirmationEvent := event.GetEvent().(*types.Event_SourceTxConfirmationEvent).SourceTxConfirmationEvent
 
 	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
 	sender := nexus.CrossChainAddress{Chain: sourceChain, Address: confirmationEvent.Sender}
@@ -269,7 +264,7 @@ func mustToGeneralMessage(ctx sdk.Context, n types.Nexus, event types.Event) nex
 		destChainName := nexus.ChainName(confirmationEvent.DestinationChain.String())
 		destinationChain = nexus.Chain{Name: destChainName, SupportsForeignAssets: false, KeyType: tss.None, Module: wasm.ModuleName}
 	}
-	recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: confirmationEvent.DestinationContractAddress.String()}
+	recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: confirmationEvent.DestinationContractAddress}
 
 	return nexus.NewGeneralMessage(id, sender, recipient, confirmationEvent.PayloadHash.Bytes(), event.TxID.Bytes(), event.Index, nil)
 }

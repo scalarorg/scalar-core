@@ -35,7 +35,6 @@ func handleConfirmedEvents(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, 
 	// This will handle all chains except Scalarnet.
 	for _, chain := range slices.Filter(n.GetChains(ctx), types.IsSupportedChain) {
 		handleConfirmedEventsForChain(ctx, chain, bk, n, m)
-
 	}
 }
 
@@ -50,8 +49,9 @@ func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.
 		events = append(events, event)
 	}
 
+	clog.Yellow("handleConfirmedEventsForChain", "chain", chain.Name.String(), "events", events)
+
 	for _, event := range events {
-		clog.Redf("[Chains] handleConfirmedEvent: %+v", event)
 		success := utils.RunCached(ctx, bk, func(ctx sdk.Context) (bool, error) {
 			if err := handleConfirmedEvent(ctx, event, bk, n, m); err != nil {
 				ck.Logger(ctx).Debug(fmt.Sprintf("failed handling event: %s", err.Error()),
@@ -80,14 +80,13 @@ func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.
 }
 
 func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) error {
-	clog.Red("handleConfirmedEvent", "event", event.GetID())
 	if err := validateEvent(ctx, event, bk, n); err != nil {
 		return err
 	}
 
 	switch event.GetEvent().(type) {
-	case *types.Event_ConfirmationEvent:
-		return handleConfirmationEvent(ctx, event, bk, n, m)
+	case *types.Event_SourceTxConfirmationEvent:
+		return handleSourceConfirmationEvent(ctx, event, bk, n, m)
 
 	// TODO: add other event types here
 
@@ -97,13 +96,12 @@ func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 }
 
 func validateEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus) error {
-	clog.Red("validateEvent", "event", event.GetID())
 	var destinationChainName nexus.ChainName
 	var contractAddress string
 	switch event := event.GetEvent().(type) {
-	case *types.Event_ConfirmationEvent:
-		destinationChainName = event.ConfirmationEvent.DestinationChain
-		contractAddress = event.ConfirmationEvent.DestinationContractAddress.String()
+	case *types.Event_SourceTxConfirmationEvent:
+		destinationChainName = event.SourceTxConfirmationEvent.DestinationChain
+		contractAddress = event.SourceTxConfirmationEvent.DestinationContractAddress
 	default:
 		panic(fmt.Errorf("unsupported event type %T", event))
 	}
@@ -132,55 +130,37 @@ func validateEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n ty
 	return nil
 }
 
-func handleConfirmationEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) error {
-	clog.Red("handleConfirmationEvent", "event", event.GetID())
-	e := event.GetConfirmationEvent()
+func handleSourceConfirmationEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) error {
+	e := event.GetSourceTxConfirmationEvent()
 	if e == nil {
 		panic(fmt.Errorf("event is nil"))
 	}
-
-	destinationChain := funcs.MustOk(n.GetChain(ctx, e.DestinationChain))
-	clog.Red("handleConfirmationEvent", "destinationChain", destinationChain.Name.String())
-	// switch destinationChain.Module {
-	// case types.ModuleName:
-	// 	// handleStakingTxToBTC(ctx, bk, multisig, n, destinationChain.Name, event)
-	// 	// TODO: implement
-	// 	clog.Red("handleConfirmationEvent for the same chain", "destinationChain", destinationChain.Name.String())
-	// 	return nil
-	// default:
-	// 	// set as general message in nexus, so the dest module can handle the message
-	// 	return setMessageToNexus(ctx, n, event, nil)
-	// }
-
-	clog.Red("handleConfirmationEvent", "destinationChain", destinationChain.Name.String())
 
 	return setMessageToNexus(ctx, n, event, nil)
 }
 
 func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset *sdk.Coin) error {
 
-	clog.Red("setMessageToNexus", "event", event)
-
 	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
 
 	var message nexus.GeneralMessage
 	switch e := event.GetEvent().(type) {
-	case *types.Event_ConfirmationEvent:
+	case *types.Event_SourceTxConfirmationEvent:
 		sender := nexus.CrossChainAddress{
 			Chain:   sourceChain,
-			Address: e.ConfirmationEvent.Sender,
+			Address: e.SourceTxConfirmationEvent.Sender,
 		}
 
 		recipient := nexus.CrossChainAddress{
-			Chain:   funcs.MustOk(n.GetChain(ctx, e.ConfirmationEvent.DestinationChain)),
-			Address: e.ConfirmationEvent.DestinationContractAddress.String(),
+			Chain:   funcs.MustOk(n.GetChain(ctx, e.SourceTxConfirmationEvent.DestinationChain)),
+			Address: e.SourceTxConfirmationEvent.DestinationContractAddress,
 		}
 
 		message = nexus.NewGeneralMessage(
 			string(event.GetID()),
 			sender,
 			recipient,
-			e.ConfirmationEvent.PayloadHash.Bytes(),
+			e.SourceTxConfirmationEvent.PayloadHash.Bytes(),
 			event.TxID.Bytes(),
 			event.Index,
 			nil,
@@ -192,8 +172,6 @@ func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset 
 		return fmt.Errorf("unsupported event type %T", event)
 	}
 
-	clog.Red("setMessageToNexus", "message", message)
-
 	if message.Recipient.Chain.Name.Equals(scalarnet.Scalarnet.Name) {
 		return fmt.Errorf("%s is not a supported recipient", scalarnet.Scalarnet.Name)
 	}
@@ -203,19 +181,16 @@ func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset 
 
 func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) {
 	allChains := n.GetChains(ctx)
-	clog.Red("all chains", allChains)
 
 	// This will handle all chains except Scalarnet.
 	for _, chain := range slices.Filter(allChains, types.IsSupportedChain) {
 		destCk := funcs.Must(bk.ForChain(ctx, chain.Name))
 		endBlockerLimit := destCk.GetParams(ctx).EndBlockerLimit
 		msgs := n.GetProcessingMessages(ctx, chain.Name, endBlockerLimit)
-		clog.Red("GetProcessingMessages", msgs)
 
 		bk.Logger(ctx).Info(fmt.Sprintf("handling %d general messages", len(msgs)), types.AttributeKeyChain, chain.Name)
 
 		for _, msg := range msgs {
-			clog.Red("handleMessages", "msg", msg)
 			success := false
 			_ = utils.RunCached(ctx, bk, func(ctx sdk.Context) (bool, error) {
 				if err := validateMessage(ctx, destCk, n, m, chain, msg); err != nil {
@@ -226,13 +201,8 @@ func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types
 					return false, err
 				}
 
-				clog.Green("validateMessage passed")
-
 				chainID := funcs.MustOk(destCk.GetChainID(ctx))
 				keyID := funcs.MustOk(m.GetCurrentKeyID(ctx, chain.Name))
-
-				clog.Green("chainID", chainID)
-				clog.Green("keyID", keyID)
 
 				switch msg.Type() {
 				case nexus.TypeGeneralMessage:
@@ -255,10 +225,6 @@ func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types
 					types.AttributeKeyMessageID, msg.ID,
 				)
 
-				clog.Red("failed handling general message",
-					types.AttributeKeyChain, chain.Name.String(),
-					types.AttributeKeyMessageID, msg.ID,
-				)
 				events.Emit(ctx, &types.DestCallFailed{
 					Chain:     chain.Name,
 					MessageID: msg.ID,
@@ -285,8 +251,6 @@ func validateMessage(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, m typ
 		return fmt.Errorf("destination chain de-activated")
 	}
 
-	// TODO: How to check if destination chain is EVM-compatible?
-	clog.Yellow("TODO: How to check if destination chain is EVM-compatible?")
 	// if _, ok := ck.GetGatewayAddress(ctx); !ok {
 	// 	return fmt.Errorf("destination chain gateway not deployed yet")
 	// }
@@ -308,8 +272,9 @@ func validateMessage(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, m typ
 
 func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID multisig.KeyID, msg nexus.GeneralMessage) {
 	cmd := types.NewApproveBridgeCallCommandGeneric(chainID, keyID, common.HexToAddress(msg.GetDestinationAddress()), common.BytesToHash(msg.PayloadHash), common.BytesToHash(msg.SourceTxID), msg.GetSourceChain(), msg.GetSourceAddress(), msg.SourceTxIndex, msg.ID)
-	clog.Redf("[Chains] EnqueueCommand: %+v", cmd)
 	funcs.MustNoErr(ck.EnqueueCommand(ctx, cmd))
+	clog.Redf("[Chains] msg: %+v", msg)
+	clog.Redf("[Chains] EnqueueCommand: %+v", cmd)
 
 	destCallApproved := &types.DestCallApproved{
 		Chain:            msg.GetSourceChain(),

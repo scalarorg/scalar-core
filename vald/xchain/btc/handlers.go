@@ -75,7 +75,9 @@ func (c *BtcClient) GetTransactions(txIDs []xchain.Hash) ([]BTCTxResult, error) 
 
 func (c *BtcClient) GetTransaction(txID xchain.Hash) (BTCTxResult, error) {
 	var tx BTCTxReceipt
-	chainHash := chainhash.Hash(txID)
+
+	// convert to string first to avoid the issue of reversed txid
+	chainHash := xchain.HashToChainHash(txID)
 	txMetadata, err := c.client.GetRawTransactionVerbose(&chainHash)
 	if err != nil {
 		clog.Cyanf("Failed to get BTC transaction %s: %+v", txID, err)

@@ -9,7 +9,6 @@ import (
 	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
-	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
@@ -31,19 +30,19 @@ const (
 	MinNumberOfOutputs = 2
 )
 
-func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (chainsTypes.ConfirmationEvent, error) {
+func (client *BtcClient) decodeSourceTxConfirmationEvent(tx *BTCTxReceipt) (*chainsTypes.SourceTxConfirmationEvent, error) {
 	if len(tx.MsgTx.TxOut) < MinNumberOfOutputs {
-		return chainsTypes.ConfirmationEvent{}, ErrInvalidTxOutCount
+		return nil, ErrInvalidTxOutCount
 	}
 
 	embeddedDataTxOut := tx.MsgTx.TxOut[EmbeddedDataOutputIndex]
 	if embeddedDataTxOut == nil || embeddedDataTxOut.PkScript == nil || embeddedDataTxOut.PkScript[0] != txscript.OP_RETURN {
-		return chainsTypes.ConfirmationEvent{}, ErrInvalidOpReturn
+		return nil, ErrInvalidOpReturn
 	}
 
 	output, err := vault.ParseVaultEmbeddedData(embeddedDataTxOut.PkScript)
 	if err != nil || output == nil {
-		return chainsTypes.ConfirmationEvent{}, ErrInvalidOpReturnData
+		return nil, ErrInvalidOpReturnData
 	}
 
 	txHash := tx.MsgTx.TxHash()
@@ -56,43 +55,44 @@ func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (chainsTypes
 
 	destinationChain := chain.NewChainInfoFromBytes(output.DestinationChain)
 	if destinationChain == nil {
-		return chainsTypes.ConfirmationEvent{}, ErrInvalidDestinationChain
+		return nil, ErrInvalidDestinationChain
 	}
 
-	var destinationContractAddress evmTypes.Address
+	var destinationContractAddress chainsTypes.Address
 	err = destinationContractAddress.Unmarshal(output.DestinationContractAddress)
 	if err != nil {
-		return chainsTypes.ConfirmationEvent{}, err
+		return nil, err
 	}
 
-	var destinationRecipientAddress evmTypes.Address
+	var destinationRecipientAddress chainsTypes.Address
 	err = destinationRecipientAddress.Unmarshal(output.DestinationRecipientAddress)
 	if err != nil {
-		return chainsTypes.ConfirmationEvent{}, err
+		return nil, err
 	}
 
-	_, payloadHash, err := encode.CalculateStakingPayloadHash(destinationRecipientAddress, uint64(stakingAmount), copiedTxHash)
+	payload, payloadHash, err := encode.CalculateStakingPayloadHash(destinationRecipientAddress, uint64(stakingAmount), copiedTxHash)
 	if err != nil {
-		return chainsTypes.ConfirmationEvent{}, ErrInvalidPayloadHash
+		return nil, ErrInvalidPayloadHash
 	}
 
-	chainHash, err := chainsTypes.HashFromBytes(payloadHash)
-	if err != nil {
-		return chainsTypes.ConfirmationEvent{}, ErrInvalidPayloadHash
-	}
+	// , err := chainsTypes.HashFromBytes(payloadHash)
+	// if err != nil {
+	// 	return chainsTypes.ConfirmationEvent{}, ErrInvalidPayloadHash
+	// }chainHash
 
 	clog.Redf("[VALD] Payload hash %+v\n", payloadHash)
 	clog.Redf("[VALD] Minting amount %+v\n", stakingAmount)
-	clog.Redf("[VALD] Chain hash %+v\n", chainHash)
+	// clog.Redf("[VALD] Chain hash %+v\n", chainHash)
 	clog.Redf("[VALD] tx: %+v", tx)
 
-	return chainsTypes.ConfirmationEvent{
+	return &chainsTypes.SourceTxConfirmationEvent{
 		Sender:                      tx.PrevTxOuts[0].ScriptPubKey.Address, // TODO: Fix hard coded
 		DestinationChain:            nexus.ChainName(destinationChain.ToBytes().String()),
 		Amount:                      uint64(stakingAmount),
 		Asset:                       "satoshi", // TODO: Fix hard coded
-		PayloadHash:                 chainHash,
-		DestinationContractAddress:  chainsTypes.Address(destinationContractAddress),
-		DestinationRecipientAddress: chainsTypes.Address(destinationRecipientAddress),
+		PayloadHash:                 chainsTypes.Hash(payloadHash),
+		Payload:                     payload,
+		DestinationContractAddress:  chainsTypes.Address(destinationContractAddress).Hex(),
+		DestinationRecipientAddress: chainsTypes.Address(destinationRecipientAddress).Hex(),
 	}, nil
 }

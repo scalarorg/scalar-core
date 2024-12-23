@@ -23,6 +23,10 @@ var (
 	KeyVotingGracePeriod   = []byte("votingGracePeriod")
 	KeyEndBlockerLimit     = []byte("endBlockerLimit")
 	KeyTransferLimit       = []byte("transferLimit")
+
+	KeyToken            = []byte("token")
+	KeyBurnable         = []byte("burnable")
+	KeyCommandsGasLimit = []byte("commandsGasLimit")
 )
 
 func KeyTable() params.KeyTable {

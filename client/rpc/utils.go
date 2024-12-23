@@ -9,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/client/rpc/cosmos"
-	btcTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	chainTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 const (
@@ -30,7 +30,7 @@ func CreateAccountFromKey(key string) (*secp256k1.PrivKey, types.AccAddress, err
 	return privKey, addr, nil
 }
 
-func ConfirmBtcTx(ctx context.Context, client *cosmos.NetworkClient, msg *btcTypes.ConfirmBridgeTxsRequest) (*types.TxResponse, error) {
+func ConfirmSourceTx(ctx context.Context, client *cosmos.NetworkClient, msg *chainTypes.ConfirmSourceTxsRequest) (*types.TxResponse, error) {
 	if client == nil {
 		return nil, fmt.Errorf("client is not initialized")
 	}

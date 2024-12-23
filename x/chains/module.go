@@ -102,7 +102,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 	msgServer := keeper.NewMsgServerImpl(params)
 	types.RegisterMsgServiceServer(cfg.MsgServer(), msgServer)
 
-	queryServer := keeper.NewGRPCQuerier(am.keeper)
+	queryServer := keeper.NewGRPCQuerier(am.keeper, am.nexus, am.multisig)
 	types.RegisterQueryServiceServer(cfg.QueryServer(), queryServer)
 
 	// TODO: add migration
