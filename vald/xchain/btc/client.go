@@ -68,6 +68,11 @@ func validateChain(cfg *config.BTCConfig) error {
 }
 
 func mapBTCConfigToRPCConfig(cfg *config.BTCConfig) *rpcclient.ConnConfig {
+	err := validateChain(cfg)
+	if err != nil {
+		panic("invalid btc chain when setting the params")
+	}
+
 	params := cfg.Chain
 
 	if params == chaincfgTestnet4ParamsName {

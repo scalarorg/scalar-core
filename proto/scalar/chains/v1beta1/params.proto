@@ -19,6 +19,7 @@ message Params {
   bytes chain_id = 5 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false,
+    (gogoproto.customname) = "ChainID"
   ];
   scalar.utils.v1beta1.Threshold voting_threshold = 6
       [ (gogoproto.nullable) = false ];

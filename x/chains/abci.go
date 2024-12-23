@@ -103,7 +103,7 @@ func validateEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n ty
 	switch event := event.GetEvent().(type) {
 	case *types.Event_ConfirmationEvent:
 		destinationChainName = event.ConfirmationEvent.DestinationChain
-		contractAddress = event.ConfirmationEvent.DestinationContractAddress.String()
+		contractAddress = event.ConfirmationEvent.DestinationContractAddress
 	default:
 		panic(fmt.Errorf("unsupported event type %T", event))
 	}
@@ -173,7 +173,7 @@ func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset 
 
 		recipient := nexus.CrossChainAddress{
 			Chain:   funcs.MustOk(n.GetChain(ctx, e.ConfirmationEvent.DestinationChain)),
-			Address: e.ConfirmationEvent.DestinationContractAddress.String(),
+			Address: e.ConfirmationEvent.DestinationContractAddress,
 		}
 
 		message = nexus.NewGeneralMessage(

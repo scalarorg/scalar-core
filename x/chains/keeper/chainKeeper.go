@@ -157,11 +157,11 @@ func (k chainKeeper) SetStakingTx(ctx sdk.Context, stakingTx types.StakingTx, st
 	case types.StakingTxStatus_Confirmed:
 		funcs.MustNoErr(
 			k.getStore(ctx).SetNewValidated(
-				confirmedStakingTxPrefix.Append(key.FromStr(stakingTx.TxID.HexStr())).Append(key.FromUInt(stakingTx.LogIndex)), &stakingTx))
+				confirmedStakingTxPrefix.Append(key.FromStr(stakingTx.TxID.Hex())).Append(key.FromUInt(stakingTx.LogIndex)), &stakingTx))
 	case types.StakingTxStatus_Completed:
 		funcs.MustNoErr(
 			k.getStore(ctx).SetNewValidated(
-				completedStakingTxPrefix.Append(key.FromStr(stakingTx.TxID.HexStr())).Append(key.FromUInt(stakingTx.LogIndex)), &stakingTx))
+				completedStakingTxPrefix.Append(key.FromStr(stakingTx.TxID.Hex())).Append(key.FromUInt(stakingTx.LogIndex)), &stakingTx))
 	default:
 		panic("invalid deposit state")
 	}

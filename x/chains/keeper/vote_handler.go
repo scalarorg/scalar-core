@@ -230,7 +230,7 @@ func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event ty
 		funcs.MustNoErr(ck.EnqueueConfirmedEvent(ctx, event.GetID()))
 	}
 
-	ck.Logger(ctx).Info(fmt.Sprintf("confirmed %s event %s in transaction %s", chain.Name, event.GetID(), event.TxID.HexStr()))
+	ck.Logger(ctx).Info(fmt.Sprintf("confirmed %s event %s in transaction %s", chain.Name, event.GetID(), event.TxID.Hex()))
 
 	return nil
 }
@@ -269,7 +269,7 @@ func mustToGeneralMessage(ctx sdk.Context, n types.Nexus, event types.Event) nex
 		destChainName := nexus.ChainName(confirmationEvent.DestinationChain.String())
 		destinationChain = nexus.Chain{Name: destChainName, SupportsForeignAssets: false, KeyType: tss.None, Module: wasm.ModuleName}
 	}
-	recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: confirmationEvent.DestinationContractAddress.String()}
+	recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: confirmationEvent.DestinationContractAddress}
 
 	return nexus.NewGeneralMessage(id, sender, recipient, confirmationEvent.PayloadHash.Bytes(), event.TxID.Bytes(), event.Index, nil)
 }

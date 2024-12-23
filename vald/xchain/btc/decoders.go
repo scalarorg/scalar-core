@@ -9,7 +9,6 @@ import (
 	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
-	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
@@ -59,13 +58,13 @@ func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (chainsTypes
 		return chainsTypes.ConfirmationEvent{}, ErrInvalidDestinationChain
 	}
 
-	var destinationContractAddress evmTypes.Address
+	var destinationContractAddress chainsTypes.Address
 	err = destinationContractAddress.Unmarshal(output.DestinationContractAddress)
 	if err != nil {
 		return chainsTypes.ConfirmationEvent{}, err
 	}
 
-	var destinationRecipientAddress evmTypes.Address
+	var destinationRecipientAddress chainsTypes.Address
 	err = destinationRecipientAddress.Unmarshal(output.DestinationRecipientAddress)
 	if err != nil {
 		return chainsTypes.ConfirmationEvent{}, err
@@ -76,14 +75,14 @@ func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (chainsTypes
 		return chainsTypes.ConfirmationEvent{}, ErrInvalidPayloadHash
 	}
 
-	chainHash, err := chainsTypes.HashFromBytes(payloadHash)
-	if err != nil {
-		return chainsTypes.ConfirmationEvent{}, ErrInvalidPayloadHash
-	}
+	// , err := chainsTypes.HashFromBytes(payloadHash)
+	// if err != nil {
+	// 	return chainsTypes.ConfirmationEvent{}, ErrInvalidPayloadHash
+	// }chainHash
 
 	clog.Redf("[VALD] Payload hash %+v\n", payloadHash)
 	clog.Redf("[VALD] Minting amount %+v\n", stakingAmount)
-	clog.Redf("[VALD] Chain hash %+v\n", chainHash)
+	// clog.Redf("[VALD] Chain hash %+v\n", chainHash)
 	clog.Redf("[VALD] tx: %+v", tx)
 
 	return chainsTypes.ConfirmationEvent{
@@ -91,8 +90,8 @@ func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (chainsTypes
 		DestinationChain:            nexus.ChainName(destinationChain.ToBytes().String()),
 		Amount:                      uint64(stakingAmount),
 		Asset:                       "satoshi", // TODO: Fix hard coded
-		PayloadHash:                 chainHash,
-		DestinationContractAddress:  chainsTypes.Address(destinationContractAddress),
-		DestinationRecipientAddress: chainsTypes.Address(destinationRecipientAddress),
+		PayloadHash:                 chainsTypes.Hash(payloadHash),
+		DestinationContractAddress:  chainsTypes.Address(destinationContractAddress).Hex(),
+		DestinationRecipientAddress: chainsTypes.Address(destinationRecipientAddress).Hex(),
 	}, nil
 }

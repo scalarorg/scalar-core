@@ -47,11 +47,11 @@ func getCmdCreateConfirmSourceTxs() *cobra.Command {
 
 			var txIDs []types.Hash
 			for _, arg := range args[1:] {
-				txHash, err := types.HashFromHexStr(arg)
+				txHash, err := types.HashFromHex(arg)
 				if err != nil {
 					return fmt.Errorf("failed to parse txID %s: %v", arg, err)
 				}
-				txIDs = append(txIDs, *txHash)
+				txIDs = append(txIDs, txHash)
 			}
 
 			msg := types.NewConfirmSourceTxsRequest(cliCtx.GetFromAddress(), nexus.ChainName(chainName), txIDs)
@@ -81,11 +81,11 @@ func getCmdCreateConfirmDestTxs() *cobra.Command {
 
 			var txIDs []types.Hash
 			for _, arg := range args[1:] {
-				txHash, err := types.HashFromHexStr(arg)
+				txHash, err := types.HashFromHex(arg)
 				if err != nil {
 					return fmt.Errorf("failed to parse txID %s: %v", arg, err)
 				}
-				txIDs = append(txIDs, *txHash)
+				txIDs = append(txIDs, txHash)
 			}
 
 			msg := types.NewConfirmDestTxsRequest(cliCtx.GetFromAddress(), nexus.ChainName(chainName), txIDs)

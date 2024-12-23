@@ -82,13 +82,13 @@ func (mgr Manager) ProcessSourceTxsConfirmation(event *types.EventConfirmSourceT
 
 func (mgr Manager) ProcessDestinationTxsConfirmation(event *types.EventConfirmDestTxsStarted) error {
 
+	mgr.logger("event", event).Debug("processing destination txs confirmation poll")
+
 	if !mgr.isParticipantOf(event.Participants) {
 		pollIDs := slices.Map(event.PollMappings, func(m types.PollMapping) vote.PollID { return m.PollID })
 		mgr.logger("poll_ids", pollIDs).Debug("ignoring gateway txs confirmation poll: not a participant")
 		return nil
 	}
-
-	mgr.logger("event", event).Debug("processing unstaking txs confirmation poll")
 
 	chainInfoBytes := chain.ChainInfoBytes{}
 

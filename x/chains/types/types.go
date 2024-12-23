@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -80,72 +80,68 @@ func (a Address) Size() int {
 	return common.AddressLength
 }
 
-type Hash chainhash.Hash
+type Hash common.Hash
 
 var ZeroHash = Hash{}
-
-func FromChainHash(hash chainhash.Hash) Hash {
-	return Hash(hash)
-}
-
-func (h Hash) Into() chainhash.Hash {
-	return chainhash.Hash(h)
-}
-
-func (h Hash) IntoRef() *chainhash.Hash {
-	return (*chainhash.Hash)(&h)
-}
-
-func (h Hash) Bytes() []byte {
-	return h[:]
-}
-
-func HashFromBytes(data []byte) (Hash, error) {
-	if len(data) != chainhash.HashSize {
-		return Hash{}, fmt.Errorf("invalid hash length")
-	}
-	return Hash(chainhash.Hash(data)), nil
-}
 
 func (h Hash) IsZero() bool {
 	return bytes.Equal(h.Bytes(), ZeroHash.Bytes())
 }
 
-func (h Hash) Size() int {
-	return chainhash.HashSize
+func (h Hash) Bytes() []byte {
+	return common.Hash(h).Bytes()
 }
 
 func (h Hash) Marshal() ([]byte, error) {
 	return h[:], nil
 }
 
-func (h Hash) MarshalTo(data []byte) (int, error) {
+// MarshalTo implements codec.ProtoMarshaler
+func (h Hash) MarshalTo(data []byte) (n int, err error) {
 	bytesCopied := copy(data, h[:])
-	if bytesCopied != chainhash.HashSize {
-		return 0, fmt.Errorf("failed to marshal TxHash: expected %d bytes, got %d", chainhash.HashSize, bytesCopied)
+	if bytesCopied != common.HashLength {
+		return 0, fmt.Errorf("expected data size to be %d, actual %d", common.HashLength, len(data))
 	}
-	return bytesCopied, nil
+
+	return common.HashLength, nil
 }
 
 func (h *Hash) Unmarshal(data []byte) error {
-	hash, err := chainhash.NewHash(data)
-	if err != nil {
-		return fmt.Errorf("failed to unmarshal TxHash: %w", err)
+	if len(data) != common.HashLength {
+		return fmt.Errorf("expected data size to be %d, actual %d", common.HashLength, len(data))
 	}
-	*h = Hash(*hash)
+
+	*h = Hash(common.BytesToHash(data))
+
 	return nil
 }
 
-func HashFromHexStr(hexStr string) (*Hash, error) {
-	hash, err := chainhash.NewHashFromStr(hexStr)
+func (h Hash) Hex() string {
+	return common.Hash(h).Hex()
+}
+
+func (h Hash) Size() int {
+	return common.HashLength
+}
+
+func StrictDecode(arguments abi.Arguments, bz []byte) ([]interface{}, error) {
+	params, err := arguments.Unpack(bz)
 	if err != nil {
 		return nil, err
 	}
-	return (*Hash)(hash), nil
+
+	if actual, err := arguments.Pack(params...); err != nil || !bytes.Equal(actual, bz) {
+		return nil, fmt.Errorf("wrong data")
+	}
+
+	return params, nil
 }
 
-func (h Hash) HexStr() string {
-	return (*chainhash.Hash)(&h).String()
+func HashFromHex(hex string) (Hash, error) {
+	if len(hex) != common.HashLength*2 {
+		return Hash{}, fmt.Errorf("invalid hash length")
+	}
+	return Hash(common.HexToHash(hex)), nil
 }
 
 func (nk NetworkKind) Validate() error {
@@ -322,7 +318,7 @@ type EventID string
 
 // NewEventID returns a new event ID
 func NewEventID(txID Hash, index uint64) EventID {
-	return EventID(fmt.Sprintf("%s-%d", txID.HexStr(), index))
+	return EventID(fmt.Sprintf("%s-%d", txID.Hex(), index))
 }
 
 // Validate returns an error, if the event ID is not in format of txID-index
@@ -401,7 +397,25 @@ func (m VoteEvents) ValidateBasic() error {
 }
 
 func (m *ConfirmationEvent) ValidateBasic() error {
-	// TODO: validate event
+	if m.Sender == "" {
+		return fmt.Errorf("invalid sender")
+	}
+
+	if err := m.DestinationChain.Validate(); err != nil {
+		return sdkerrors.Wrap(err, "invalid destination chain")
+	}
+
+	// if m.Amount == 0 {
+	// 	return fmt.Errorf("invalid amount")
+	// }
+	if err := utils.ValidateString(m.DestinationContractAddress); err != nil {
+		return sdkerrors.Wrap(err, "invalid destination address")
+	}
+
+	if m.PayloadHash.IsZero() {
+		return fmt.Errorf("invalid payload hash")
+	}
+
 	return nil
 }
 

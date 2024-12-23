@@ -43,6 +43,7 @@ import (
 	"github.com/scalarorg/scalar-core/vald/tss"
 	"github.com/scalarorg/scalar-core/vald/xchain"
 	"github.com/scalarorg/scalar-core/vald/xchain/btc"
+	"github.com/scalarorg/scalar-core/vald/xchain/evm"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
@@ -561,7 +562,24 @@ func createXChainMgr(valdCfg config.ValdConfig, cliCtx sdkClient.Context, b broa
 			panic(err)
 		}
 
-		_ = chainInfoBytes
+		if _, ok := rpcs[chainInfoBytes]; ok {
+			err := fmt.Errorf("duplicate bridge configuration found for BTC chain %s", config.ID)
+			log.Error(err.Error())
+			panic(err)
+		}
+
+		client, err := evm.NewClient(config.RPCAddr, config.FinalityOverride)
+		if err != nil {
+			err = sdkerrors.Wrap(err, fmt.Sprintf("failed to create an RPC connection for BTC chain %s. Verify your RPC config.", config.ID))
+			log.Error(err.Error())
+			panic(err)
+		}
+
+		log.WithKeyVals("chain", config.ID, "url", config.RPCAddr).
+			Debugf("created JSON-RPC client of type %T", client)
+
+		rpcs[chainInfoBytes] = client
+
 	})
 
 	return xchain.NewManager(cliCtx, rpcs, b, valAddr)

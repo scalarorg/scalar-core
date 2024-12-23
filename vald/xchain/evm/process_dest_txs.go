@@ -1,4 +1,4 @@
-package btc
+package evm
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -8,10 +8,10 @@ import (
 	"github.com/scalarorg/scalar-core/x/chains/types"
 )
 
-func (client *BtcClient) ProcessDestinationTxsConfirmation(event *types.EventConfirmDestTxsStarted, proxy sdk.AccAddress) ([]sdk.Msg, error) {
+func (client *EthereumClient) ProcessDestinationTxsConfirmation(event *types.EventConfirmDestTxsStarted, proxy sdk.AccAddress) ([]sdk.Msg, error) {
 	txIDs := slices.Map(event.PollMappings, func(m types.PollMapping) xchain.Hash { return m.TxID })
 
-	clog.Blue("[BTC] ProcessDestinationTxsConfirmation", "txIDs", txIDs)
+	clog.Blue("[EVM] ProcessDestinationTxsConfirmation", "txIDs", txIDs)
 
 	return nil, nil
 }

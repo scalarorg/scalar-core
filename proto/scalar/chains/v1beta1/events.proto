@@ -25,8 +25,7 @@ message Event {
         [ (gogoproto.enumvalue_customname) = "EventConfirmed" ];
     STATUS_COMPLETED = 2
         [ (gogoproto.enumvalue_customname) = "EventCompleted" ];
-    STATUS_FAILED = 3
-        [ (gogoproto.enumvalue_customname) = "EventFailed" ];
+    STATUS_FAILED = 3 [ (gogoproto.enumvalue_customname) = "EventFailed" ];
   }
 
   string chain = 1
@@ -52,10 +51,8 @@ message ConfirmationEvent {
   bytes payload_hash = 5
       [ (gogoproto.customtype) = "Hash", (gogoproto.nullable) = false ];
 
-  bytes destination_contract_address = 8
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
-  bytes destination_recipient_address = 9
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
+  string destination_contract_address = 6;
+  string destination_recipient_address = 7;
 }
 
 message NoEventsConfirmed {
