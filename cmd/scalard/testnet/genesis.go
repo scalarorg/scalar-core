@@ -44,7 +44,7 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfos []Token, custodia
 		log.Debug().Any("TokenAddress", tokenAddress).Msg("Parse Tokenaddress")
 		params := chainsTypes.Params{
 			Chain:       nexus.ChainName(tokenInfo.ID),
-			ChainId:     sdk.NewInt(tokenInfo.ChainID),
+			ChainID:     sdk.NewInt(tokenInfo.ChainID),
 			NetworkKind: chainsTypes.Testnet,
 		}
 		if strings.HasPrefix(tokenInfo.ID, "evm") {
@@ -401,7 +401,7 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 		state := chainsTypes.DefaultGenesisState()
 		for _, chainConfig := range chainConfigs {
 			params := chainsTypes.Params{
-				ChainId:             sdk.NewInt(int64(chainConfig.ChainID)),
+				ChainID:             sdk.NewInt(int64(chainConfig.ChainID)),
 				Chain:               nexus.ChainName(chainConfig.ID),
 				ConfirmationHeight:  2,
 				NetworkKind:         chainConfig.NetworkKind,

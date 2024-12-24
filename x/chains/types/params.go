@@ -23,6 +23,10 @@ var (
 	KeyVotingGracePeriod   = []byte("votingGracePeriod")
 	KeyEndBlockerLimit     = []byte("endBlockerLimit")
 	KeyTransferLimit       = []byte("transferLimit")
+
+	KeyToken            = []byte("token")
+	KeyBurnable         = []byte("burnable")
+	KeyCommandsGasLimit = []byte("commandsGasLimit")
 )
 
 func KeyTable() params.KeyTable {
@@ -41,7 +45,7 @@ func (m *Params) ParamSetPairs() params.ParamSetPairs {
 		params.NewParamSetPair(KeyConfirmationHeight, &m.ConfirmationHeight, validateConfirmationHeight),
 		params.NewParamSetPair(KeyNetworkKind, &m.NetworkKind, validateNetworkKind),
 		params.NewParamSetPair(KeyRevoteLockingPeriod, &m.RevoteLockingPeriod, validateRevoteLockingPeriod),
-		params.NewParamSetPair(KeyChainID, &m.ChainId, validateChainId),
+		params.NewParamSetPair(KeyChainID, &m.ChainID, validateChainId),
 		params.NewParamSetPair(KeyVotingThreshold, &m.VotingThreshold, validateVotingThreshold),
 		params.NewParamSetPair(KeyMinVoterCount, &m.MinVoterCount, validateMinVoterCount),
 		params.NewParamSetPair(KeyVotingGracePeriod, &m.VotingGracePeriod, validateVotingGracePeriod),

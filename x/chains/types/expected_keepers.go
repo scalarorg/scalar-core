@@ -1,7 +1,11 @@
 package types
 
 import (
+	"time"
+
+	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/query"
 	utils "github.com/scalarorg/scalar-core/utils"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/tendermint/tendermint/libs/log"
@@ -27,28 +31,49 @@ type BaseKeeper interface {
 // ChainKeeper is implemented by this module's chain keeper
 type ChainKeeper interface {
 	Logger(ctx sdk.Context) log.Logger
-
 	GetName() nexus.ChainName
-
 	GetParams(ctx sdk.Context) Params
-
 	GetChainID(ctx sdk.Context) (sdk.Int, bool)
-
-	// GetGatewayAddress(ctx sdk.Context) (Address, bool)
-
 	EnqueueCommand(ctx sdk.Context, cmd Command) error
-
 	GetRequiredConfirmationHeight(ctx sdk.Context) uint64
-
 	GetConfirmedEventQueue(ctx sdk.Context) utils.KVQueue
-
 	SetConfirmedEvent(ctx sdk.Context, event Event) error
-
 	EnqueueConfirmedEvent(ctx sdk.Context, eventID EventID) error
-
 	SetEventCompleted(ctx sdk.Context, eventID EventID) error
-
 	SetEventFailed(ctx sdk.Context, eventID EventID) error
+	GetRevoteLockingPeriod(ctx sdk.Context) int64
+	GetBurnerByteCode(ctx sdk.Context) []byte
+	GetTokenByteCode(ctx sdk.Context) []byte
+	SetGateway(ctx sdk.Context, address Address)
+	GetGatewayAddress(ctx sdk.Context) (Address, bool)
+	GetDeposit(ctx sdk.Context, txID Hash, logIndex uint64) (ERC20Deposit, DepositStatus, bool)
+	GetBurnerInfo(ctx sdk.Context, address Address) *BurnerInfo
+	GenerateSalt(ctx sdk.Context, recipient string) Hash
+	GetBurnerAddress(ctx sdk.Context, token ERC20Token, salt Hash, gatewayAddr Address) (Address, error)
+	SetBurnerInfo(ctx sdk.Context, burnerInfo BurnerInfo)
+	DeleteDeposit(ctx sdk.Context, deposit ERC20Deposit)
+	SetDeposit(ctx sdk.Context, deposit ERC20Deposit, state DepositStatus)
+	GetConfirmedDepositsPaginated(ctx sdk.Context, pageRequest *query.PageRequest) ([]ERC20Deposit, *query.PageResponse, error)
+	GetVotingThreshold(ctx sdk.Context) utils.Threshold
+	GetMinVoterCount(ctx sdk.Context) int64
+
+	CreateERC20Token(ctx sdk.Context, asset string, details TokenDetails, address Address) (ERC20Token, error)
+	GetERC20TokenByAsset(ctx sdk.Context, asset string) ERC20Token
+	GetERC20TokenBySymbol(ctx sdk.Context, symbol string) ERC20Token
+	GetERC20TokenByAddress(ctx sdk.Context, address Address) ERC20Token
+	GetTokens(ctx sdk.Context) []ERC20Token
+
+	GetCommand(ctx sdk.Context, id CommandID) (Command, bool)
+	GetPendingCommands(ctx sdk.Context) []Command
+	CreateNewBatchToSign(ctx sdk.Context) (CommandBatch, error)
+	SetLatestSignedCommandBatchID(ctx sdk.Context, id []byte)
+	GetLatestCommandBatch(ctx sdk.Context) CommandBatch
+	GetBatchByID(ctx sdk.Context, id []byte) CommandBatch
+	DeleteUnsignedCommandBatchID(ctx sdk.Context)
+
+	GetEvent(ctx sdk.Context, eventID EventID) (Event, bool)
+
+	GetDepositsByTxID(ctx sdk.Context, txID Hash, status DepositStatus) ([]ERC20Deposit, error)
 }
 
 // ParamsKeeper represents a global paramstore
@@ -64,26 +89,25 @@ type Voter interface {
 
 // Nexus provides functionality to manage cross-chain transfers
 type Nexus interface {
-	// LinkAddresses(ctx sdk.Context, sender nexus.CrossChainAddress, recipient nexus.CrossChainAddress) error
-	// GetRecipient(ctx sdk.Context, sender nexus.CrossChainAddress) (nexus.CrossChainAddress, bool)
-	// EnqueueTransfer(ctx sdk.Context, senderChain nexus.Chain, recipient nexus.CrossChainAddress, asset sdk.Coin) (nexus.TransferID, error)
-	// EnqueueForTransfer(ctx sdk.Context, sender nexus.CrossChainAddress, amount sdk.Coin) (nexus.TransferID, error)
-	// GetTransfersForChainPaginated(ctx sdk.Context, chain nexus.Chain, state nexus.TransferState, pageRequest *query.PageRequest) ([]nexus.CrossChainTransfer, *query.PageResponse, error)
-	// ArchivePendingTransfer(ctx sdk.Context, transfer nexus.CrossChainTransfer)
-	// SetChain(ctx sdk.Context, chain nexus.Chain)
+	LinkAddresses(ctx sdk.Context, sender nexus.CrossChainAddress, recipient nexus.CrossChainAddress) error
+	GetRecipient(ctx sdk.Context, sender nexus.CrossChainAddress) (nexus.CrossChainAddress, bool)
+	EnqueueTransfer(ctx sdk.Context, senderChain nexus.Chain, recipient nexus.CrossChainAddress, asset sdk.Coin) (nexus.TransferID, error)
+	EnqueueForTransfer(ctx sdk.Context, sender nexus.CrossChainAddress, amount sdk.Coin) (nexus.TransferID, error)
+	GetTransfersForChainPaginated(ctx sdk.Context, chain nexus.Chain, state nexus.TransferState, pageRequest *query.PageRequest) ([]nexus.CrossChainTransfer, *query.PageResponse, error)
+	ArchivePendingTransfer(ctx sdk.Context, transfer nexus.CrossChainTransfer)
+	SetChain(ctx sdk.Context, chain nexus.Chain)
 	GetChains(ctx sdk.Context) []nexus.Chain
-
 	GetChain(ctx sdk.Context, chain nexus.ChainName) (nexus.Chain, bool)
-	// IsAssetRegistered(ctx sdk.Context, chain nexus.Chain, denom string) bool
-	// RegisterAsset(ctx sdk.Context, chain nexus.Chain, asset nexus.Asset, limit sdk.Uint, window time.Duration) error
+	IsAssetRegistered(ctx sdk.Context, chain nexus.Chain, denom string) bool
+	RegisterAsset(ctx sdk.Context, chain nexus.Chain, asset nexus.Asset, limit sdk.Uint, window time.Duration) error
 	GetChainMaintainers(ctx sdk.Context, chain nexus.Chain) []sdk.ValAddress
 	IsChainActivated(ctx sdk.Context, chain nexus.Chain) bool
-	// GetChainByNativeAsset(ctx sdk.Context, asset string) (chain nexus.Chain, ok bool)
-	// ComputeTransferFee(ctx sdk.Context, sourceChain nexus.Chain, destinationChain nexus.Chain, asset sdk.Coin) (sdk.Coin, error)
-	// AddTransferFee(ctx sdk.Context, coin sdk.Coin)
+	GetChainByNativeAsset(ctx sdk.Context, asset string) (chain nexus.Chain, ok bool)
+	ComputeTransferFee(ctx sdk.Context, sourceChain nexus.Chain, destinationChain nexus.Chain, asset sdk.Coin) (sdk.Coin, error)
+	AddTransferFee(ctx sdk.Context, coin sdk.Coin)
 	GetChainMaintainerState(ctx sdk.Context, chain nexus.Chain, address sdk.ValAddress) (nexus.MaintainerState, bool)
 	SetChainMaintainerState(ctx sdk.Context, maintainerState nexus.MaintainerState) error
-	// RateLimitTransfer(ctx sdk.Context, chain nexus.ChainName, asset sdk.Coin, direction nexus.TransferDirection) error
+	RateLimitTransfer(ctx sdk.Context, chain nexus.ChainName, asset sdk.Coin, direction nexus.TransferDirection) error
 	SetNewMessage(ctx sdk.Context, m nexus.GeneralMessage) error
 	GetProcessingMessages(ctx sdk.Context, chain nexus.ChainName, limit int64) []nexus.GeneralMessage
 	SetMessageFailed(ctx sdk.Context, id string) error
@@ -123,9 +147,9 @@ type SlashingKeeper interface {
 // MultisigKeeper provides functionality to the multisig module
 type MultisigKeeper interface {
 	GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
-	// GetNextKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
-	// GetKey(ctx sdk.Context, keyID multisig.KeyID) (multisig.Key, bool)
-	// AssignKey(ctx sdk.Context, chainName nexus.ChainName, keyID multisig.KeyID) error
-	// RotateKey(ctx sdk.Context, chainName nexus.ChainName) error
-	// Sign(ctx sdk.Context, keyID multisig.KeyID, payloadHash multisig.Hash, module string, moduleMetadata ...codec.ProtoMarshaler) error
+	GetNextKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
+	GetKey(ctx sdk.Context, keyID multisig.KeyID) (multisig.Key, bool)
+	AssignKey(ctx sdk.Context, chainName nexus.ChainName, keyID multisig.KeyID) error
+	RotateKey(ctx sdk.Context, chainName nexus.ChainName) error
+	Sign(ctx sdk.Context, keyID multisig.KeyID, payloadHash multisig.Hash, module string, moduleMetadata ...codec.ProtoMarshaler) error
 }

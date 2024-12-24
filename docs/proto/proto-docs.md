@@ -59,26 +59,68 @@
     - [Status](#scalar.chains.evm.v1beta1.Status)
   
 - [scalar/chains/v1beta1/types.proto](#scalar/chains/v1beta1/types.proto)
+    - [Asset](#scalar.chains.v1beta1.Asset)
+    - [BurnerInfo](#scalar.chains.v1beta1.BurnerInfo)
     - [Command](#scalar.chains.v1beta1.Command)
     - [CommandBatchMetadata](#scalar.chains.v1beta1.CommandBatchMetadata)
+    - [Gateway](#scalar.chains.v1beta1.Gateway)
+    - [PollCompleted](#scalar.chains.v1beta1.PollCompleted)
+    - [PollExpired](#scalar.chains.v1beta1.PollExpired)
+    - [PollFailed](#scalar.chains.v1beta1.PollFailed)
+    - [PollMapping](#scalar.chains.v1beta1.PollMapping)
+    - [PollMetadata](#scalar.chains.v1beta1.PollMetadata)
     - [Proof](#scalar.chains.v1beta1.Proof)
+    - [SigMetadata](#scalar.chains.v1beta1.SigMetadata)
     - [StakingTx](#scalar.chains.v1beta1.StakingTx)
+    - [TokenDetails](#scalar.chains.v1beta1.TokenDetails)
+    - [TransferKey](#scalar.chains.v1beta1.TransferKey)
   
     - [BatchedCommandsStatus](#scalar.chains.v1beta1.BatchedCommandsStatus)
     - [CommandType](#scalar.chains.v1beta1.CommandType)
+    - [DepositStatus](#scalar.chains.v1beta1.DepositStatus)
     - [NetworkKind](#scalar.chains.v1beta1.NetworkKind)
+    - [SigType](#scalar.chains.v1beta1.SigType)
     - [StakingTxStatus](#scalar.chains.v1beta1.StakingTxStatus)
+    - [Status](#scalar.chains.v1beta1.Status)
+  
+- [scalar/snapshot/exported/v1beta1/types.proto](#scalar/snapshot/exported/v1beta1/types.proto)
+    - [Participant](#scalar.snapshot.exported.v1beta1.Participant)
+    - [Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot)
+    - [Snapshot.ParticipantsEntry](#scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry)
+  
+- [scalar/vote/exported/v1beta1/types.proto](#scalar/vote/exported/v1beta1/types.proto)
+    - [PollKey](#scalar.vote.exported.v1beta1.PollKey)
+    - [PollMetadata](#scalar.vote.exported.v1beta1.PollMetadata)
+    - [PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants)
+  
+    - [PollState](#scalar.vote.exported.v1beta1.PollState)
   
 - [scalar/chains/v1beta1/events.proto](#scalar/chains/v1beta1/events.proto)
+    - [BurnCommand](#scalar.chains.v1beta1.BurnCommand)
+    - [ChainAdded](#scalar.chains.v1beta1.ChainAdded)
     - [ChainEventCompleted](#scalar.chains.v1beta1.ChainEventCompleted)
     - [ChainEventConfirmed](#scalar.chains.v1beta1.ChainEventConfirmed)
     - [ChainEventFailed](#scalar.chains.v1beta1.ChainEventFailed)
     - [ChainEventRetryFailed](#scalar.chains.v1beta1.ChainEventRetryFailed)
-    - [ConfirmationEvent](#scalar.chains.v1beta1.ConfirmationEvent)
+    - [CommandBatchAborted](#scalar.chains.v1beta1.CommandBatchAborted)
+    - [CommandBatchSigned](#scalar.chains.v1beta1.CommandBatchSigned)
+    - [ConfirmDepositStarted](#scalar.chains.v1beta1.ConfirmDepositStarted)
+    - [ConfirmKeyTransferStarted](#scalar.chains.v1beta1.ConfirmKeyTransferStarted)
+    - [ConfirmTokenStarted](#scalar.chains.v1beta1.ConfirmTokenStarted)
     - [DestCallApproved](#scalar.chains.v1beta1.DestCallApproved)
     - [DestCallFailed](#scalar.chains.v1beta1.DestCallFailed)
     - [Event](#scalar.chains.v1beta1.Event)
+    - [EventConfirmSourceTxsStarted](#scalar.chains.v1beta1.EventConfirmSourceTxsStarted)
+    - [EventContractCall](#scalar.chains.v1beta1.EventContractCall)
+    - [EventContractCallWithToken](#scalar.chains.v1beta1.EventContractCallWithToken)
+    - [EventMultisigOperatorshipTransferred](#scalar.chains.v1beta1.EventMultisigOperatorshipTransferred)
+    - [EventMultisigOwnershipTransferred](#scalar.chains.v1beta1.EventMultisigOwnershipTransferred)
+    - [EventTokenDeployed](#scalar.chains.v1beta1.EventTokenDeployed)
+    - [EventTokenSent](#scalar.chains.v1beta1.EventTokenSent)
+    - [EventTransfer](#scalar.chains.v1beta1.EventTransfer)
+    - [MintCommand](#scalar.chains.v1beta1.MintCommand)
     - [NoEventsConfirmed](#scalar.chains.v1beta1.NoEventsConfirmed)
+    - [SourceTxConfirmationEvent](#scalar.chains.v1beta1.SourceTxConfirmationEvent)
     - [VoteEvents](#scalar.chains.v1beta1.VoteEvents)
   
     - [Event.Status](#scalar.chains.v1beta1.Event.Status)
@@ -95,28 +137,88 @@
     - [GenesisState](#scalar.chains.v1beta1.GenesisState)
     - [GenesisState.Chain](#scalar.chains.v1beta1.GenesisState.Chain)
   
-- [scalar/chains/v1beta1/poll.proto](#scalar/chains/v1beta1/poll.proto)
-    - [PollCompleted](#scalar.chains.v1beta1.PollCompleted)
-    - [PollExpired](#scalar.chains.v1beta1.PollExpired)
-    - [PollFailed](#scalar.chains.v1beta1.PollFailed)
-    - [PollMapping](#scalar.chains.v1beta1.PollMapping)
-    - [PollMetadata](#scalar.chains.v1beta1.PollMetadata)
-  
 - [scalar/chains/v1beta1/tx.proto](#scalar/chains/v1beta1/tx.proto)
-    - [ConfirmDestTxsRequest](#scalar.chains.v1beta1.ConfirmDestTxsRequest)
-    - [ConfirmDestTxsResponse](#scalar.chains.v1beta1.ConfirmDestTxsResponse)
+    - [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest)
+    - [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse)
+    - [ConfirmDepositRequest](#scalar.chains.v1beta1.ConfirmDepositRequest)
+    - [ConfirmDepositResponse](#scalar.chains.v1beta1.ConfirmDepositResponse)
     - [ConfirmSourceTxsRequest](#scalar.chains.v1beta1.ConfirmSourceTxsRequest)
     - [ConfirmSourceTxsResponse](#scalar.chains.v1beta1.ConfirmSourceTxsResponse)
-    - [EventConfirmDestTxsStarted](#scalar.chains.v1beta1.EventConfirmDestTxsStarted)
-    - [EventConfirmSourceTxsStarted](#scalar.chains.v1beta1.EventConfirmSourceTxsStarted)
+    - [ConfirmTokenRequest](#scalar.chains.v1beta1.ConfirmTokenRequest)
+    - [ConfirmTokenResponse](#scalar.chains.v1beta1.ConfirmTokenResponse)
+    - [ConfirmTransferKeyRequest](#scalar.chains.v1beta1.ConfirmTransferKeyRequest)
+    - [ConfirmTransferKeyResponse](#scalar.chains.v1beta1.ConfirmTransferKeyResponse)
+    - [CreateBurnTokensRequest](#scalar.chains.v1beta1.CreateBurnTokensRequest)
+    - [CreateBurnTokensResponse](#scalar.chains.v1beta1.CreateBurnTokensResponse)
+    - [CreateDeployTokenRequest](#scalar.chains.v1beta1.CreateDeployTokenRequest)
+    - [CreateDeployTokenResponse](#scalar.chains.v1beta1.CreateDeployTokenResponse)
+    - [CreatePendingTransfersRequest](#scalar.chains.v1beta1.CreatePendingTransfersRequest)
+    - [CreatePendingTransfersResponse](#scalar.chains.v1beta1.CreatePendingTransfersResponse)
+    - [CreateTransferOperatorshipRequest](#scalar.chains.v1beta1.CreateTransferOperatorshipRequest)
+    - [CreateTransferOperatorshipResponse](#scalar.chains.v1beta1.CreateTransferOperatorshipResponse)
+    - [CreateTransferOwnershipRequest](#scalar.chains.v1beta1.CreateTransferOwnershipRequest)
+    - [CreateTransferOwnershipResponse](#scalar.chains.v1beta1.CreateTransferOwnershipResponse)
+    - [LinkRequest](#scalar.chains.v1beta1.LinkRequest)
+    - [LinkResponse](#scalar.chains.v1beta1.LinkResponse)
+    - [RetryFailedEventRequest](#scalar.chains.v1beta1.RetryFailedEventRequest)
+    - [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse)
+    - [SetGatewayRequest](#scalar.chains.v1beta1.SetGatewayRequest)
+    - [SetGatewayResponse](#scalar.chains.v1beta1.SetGatewayResponse)
+    - [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest)
+    - [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse)
   
 - [scalar/chains/v1beta1/query.proto](#scalar/chains/v1beta1/query.proto)
     - [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest)
     - [BatchedCommandsResponse](#scalar.chains.v1beta1.BatchedCommandsResponse)
+    - [BurnerInfoRequest](#scalar.chains.v1beta1.BurnerInfoRequest)
+    - [BurnerInfoResponse](#scalar.chains.v1beta1.BurnerInfoResponse)
+    - [BytecodeRequest](#scalar.chains.v1beta1.BytecodeRequest)
+    - [BytecodeResponse](#scalar.chains.v1beta1.BytecodeResponse)
+    - [ChainsRequest](#scalar.chains.v1beta1.ChainsRequest)
+    - [ChainsResponse](#scalar.chains.v1beta1.ChainsResponse)
+    - [CommandRequest](#scalar.chains.v1beta1.CommandRequest)
+    - [CommandResponse](#scalar.chains.v1beta1.CommandResponse)
+    - [CommandResponse.ParamsEntry](#scalar.chains.v1beta1.CommandResponse.ParamsEntry)
+    - [ConfirmationHeightRequest](#scalar.chains.v1beta1.ConfirmationHeightRequest)
+    - [ConfirmationHeightResponse](#scalar.chains.v1beta1.ConfirmationHeightResponse)
+    - [DepositStateRequest](#scalar.chains.v1beta1.DepositStateRequest)
+    - [DepositStateResponse](#scalar.chains.v1beta1.DepositStateResponse)
+    - [ERC20TokensRequest](#scalar.chains.v1beta1.ERC20TokensRequest)
+    - [ERC20TokensResponse](#scalar.chains.v1beta1.ERC20TokensResponse)
+    - [ERC20TokensResponse.Token](#scalar.chains.v1beta1.ERC20TokensResponse.Token)
+    - [EventRequest](#scalar.chains.v1beta1.EventRequest)
+    - [EventResponse](#scalar.chains.v1beta1.EventResponse)
+    - [GatewayAddressRequest](#scalar.chains.v1beta1.GatewayAddressRequest)
+    - [GatewayAddressResponse](#scalar.chains.v1beta1.GatewayAddressResponse)
+    - [KeyAddressRequest](#scalar.chains.v1beta1.KeyAddressRequest)
+    - [KeyAddressResponse](#scalar.chains.v1beta1.KeyAddressResponse)
+    - [KeyAddressResponse.WeightedAddress](#scalar.chains.v1beta1.KeyAddressResponse.WeightedAddress)
+    - [ParamsRequest](#scalar.chains.v1beta1.ParamsRequest)
+    - [ParamsResponse](#scalar.chains.v1beta1.ParamsResponse)
+    - [PendingCommandsRequest](#scalar.chains.v1beta1.PendingCommandsRequest)
+    - [PendingCommandsResponse](#scalar.chains.v1beta1.PendingCommandsResponse)
+    - [QueryBurnerAddressResponse](#scalar.chains.v1beta1.QueryBurnerAddressResponse)
+    - [QueryCommandResponse](#scalar.chains.v1beta1.QueryCommandResponse)
+    - [QueryCommandResponse.ParamsEntry](#scalar.chains.v1beta1.QueryCommandResponse.ParamsEntry)
+    - [QueryDepositStateParams](#scalar.chains.v1beta1.QueryDepositStateParams)
+    - [QueryTokenAddressResponse](#scalar.chains.v1beta1.QueryTokenAddressResponse)
+    - [TokenInfoRequest](#scalar.chains.v1beta1.TokenInfoRequest)
+    - [TokenInfoResponse](#scalar.chains.v1beta1.TokenInfoResponse)
+  
+    - [ChainStatus](#scalar.chains.v1beta1.ChainStatus)
+    - [TokenType](#scalar.chains.v1beta1.TokenType)
   
 - [scalar/chains/v1beta1/service.proto](#scalar/chains/v1beta1/service.proto)
     - [MsgService](#scalar.chains.v1beta1.MsgService)
     - [QueryService](#scalar.chains.v1beta1.QueryService)
+  
+- [scalar/multisig/exported/v1beta1/types.proto](#scalar/multisig/exported/v1beta1/types.proto)
+    - [KeyState](#scalar.multisig.exported.v1beta1.KeyState)
+    - [MultisigState](#scalar.multisig.exported.v1beta1.MultisigState)
+  
+- [scalar/chains/v1beta1/tokens.proto](#scalar/chains/v1beta1/tokens.proto)
+    - [ERC20Deposit](#scalar.chains.v1beta1.ERC20Deposit)
+    - [ERC20TokenMetadata](#scalar.chains.v1beta1.ERC20TokenMetadata)
   
 - [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
     - [Custodian](#scalar.covenant.v1beta1.Custodian)
@@ -152,22 +254,6 @@
 - [scalar/covenant/v1beta1/service.proto](#scalar/covenant/v1beta1/service.proto)
     - [Msg](#scalar.covenant.v1beta1.Msg)
     - [Query](#scalar.covenant.v1beta1.Query)
-  
-- [scalar/snapshot/exported/v1beta1/types.proto](#scalar/snapshot/exported/v1beta1/types.proto)
-    - [Participant](#scalar.snapshot.exported.v1beta1.Participant)
-    - [Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot)
-    - [Snapshot.ParticipantsEntry](#scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry)
-  
-- [scalar/vote/exported/v1beta1/types.proto](#scalar/vote/exported/v1beta1/types.proto)
-    - [PollKey](#scalar.vote.exported.v1beta1.PollKey)
-    - [PollMetadata](#scalar.vote.exported.v1beta1.PollMetadata)
-    - [PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants)
-  
-    - [PollState](#scalar.vote.exported.v1beta1.PollState)
-  
-- [scalar/multisig/exported/v1beta1/types.proto](#scalar/multisig/exported/v1beta1/types.proto)
-    - [KeyState](#scalar.multisig.exported.v1beta1.KeyState)
-    - [MultisigState](#scalar.multisig.exported.v1beta1.MultisigState)
   
 - [scalar/evm/v1beta1/types.proto](#scalar/evm/v1beta1/types.proto)
     - [Asset](#scalar.evm.v1beta1.Asset)
@@ -1384,6 +1470,42 @@ ERC20TokenMetadata describes information about an ERC20 token
 
 
 
+<a name="scalar.chains.v1beta1.Asset"></a>
+
+### Asset
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `name` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.BurnerInfo"></a>
+
+### BurnerInfo
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `burner_address` | [bytes](#bytes) |  |  |
+| `token_address` | [bytes](#bytes) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `asset` | [string](#string) |  |  |
+| `salt` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
 <a name="scalar.chains.v1beta1.Command"></a>
 
 ### Command
@@ -1425,6 +1547,104 @@ ERC20TokenMetadata describes information about an ERC20 token
 
 
 
+<a name="scalar.chains.v1beta1.Gateway"></a>
+
+### Gateway
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.PollCompleted"></a>
+
+### PollCompleted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.PollExpired"></a>
+
+### PollExpired
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.PollFailed"></a>
+
+### PollFailed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.PollMapping"></a>
+
+### PollMapping
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.PollMetadata"></a>
+
+### PollMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
 <a name="scalar.chains.v1beta1.Proof"></a>
 
 ### Proof
@@ -1437,6 +1657,24 @@ ERC20TokenMetadata describes information about an ERC20 token
 | `weights` | [string](#string) | repeated |  |
 | `threshold` | [string](#string) |  |  |
 | `signatures` | [string](#string) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.SigMetadata"></a>
+
+### SigMetadata
+SigMetadata stores necessary information for external apps to map signature
+results to chains relay transaction types
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `type` | [SigType](#scalar.chains.v1beta1.SigType) |  |  |
+| `chain` | [string](#string) |  |  |
+| `command_batch_id` | [bytes](#bytes) |  |  |
 
 
 
@@ -1457,6 +1695,40 @@ ERC20TokenMetadata describes information about an ERC20 token
 | `destination_chain` | [string](#string) |  |  |
 | `destination_recipient_address` | [bytes](#bytes) |  |  |
 | `log_index` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.TokenDetails"></a>
+
+### TokenDetails
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `token_name` | [string](#string) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `decimals` | [uint32](#uint32) |  |  |
+| `capacity` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.TransferKey"></a>
+
+### TransferKey
+TransferKey contains information for a transfer operatorship
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `next_key_id` | [string](#string) |  |  |
 
 
 
@@ -1486,7 +1758,28 @@ ERC20TokenMetadata describes information about an ERC20 token
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| COMMAND_TYPE_APPROVE_BRIDGE_CALL | 0 |  |
+| COMMAND_TYPE_UNSPECIFIED | 0 |  |
+| COMMAND_TYPE_MINT_TOKEN | 1 |  |
+| COMMAND_TYPE_DEPLOY_TOKEN | 2 |  |
+| COMMAND_TYPE_BURN_TOKEN | 3 |  |
+| COMMAND_TYPE_TRANSFER_OPERATORSHIP | 4 |  |
+| COMMAND_TYPE_APPROVE_CONTRACT_CALL_WITH_MINT | 5 |  |
+| COMMAND_TYPE_APPROVE_CONTRACT_CALL | 6 |  |
+| COMMAND_TYPE_APPROVE_BRIDGE_CALL | 7 | For chains |
+
+
+
+<a name="scalar.chains.v1beta1.DepositStatus"></a>
+
+### DepositStatus
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| DEPOSIT_STATUS_UNSPECIFIED | 0 |  |
+| DEPOSIT_STATUS_PENDING | 1 |  |
+| DEPOSIT_STATUS_CONFIRMED | 2 |  |
+| DEPOSIT_STATUS_BURNED | 3 |  |
 
 
 
@@ -1499,6 +1792,19 @@ ERC20TokenMetadata describes information about an ERC20 token
 | ---- | ------ | ----------- |
 | NETWORK_KIND_MAINNET | 0 |  |
 | NETWORK_KIND_TESTNET | 1 |  |
+
+
+
+<a name="scalar.chains.v1beta1.SigType"></a>
+
+### SigType
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| SIG_TYPE_UNSPECIFIED | 0 |  |
+| SIG_TYPE_TX | 1 |  |
+| SIG_TYPE_COMMAND | 2 |  |
 
 
 
@@ -1515,6 +1821,175 @@ ERC20TokenMetadata describes information about an ERC20 token
 | STAKING_TX_STATUS_COMPLETED | 3 |  |
 
 
+
+<a name="scalar.chains.v1beta1.Status"></a>
+
+### Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNSPECIFIED | 0 | these enum values are used for bitwise operations, therefore they need to be powers of 2 |
+| STATUS_INITIALIZED | 1 |  |
+| STATUS_PENDING | 2 |  |
+| STATUS_CONFIRMED | 4 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/snapshot/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/snapshot/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.snapshot.exported.v1beta1.Participant"></a>
+
+### Participant
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [bytes](#bytes) |  |  |
+| `weight` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.snapshot.exported.v1beta1.Snapshot"></a>
+
+### Snapshot
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+| `height` | [int64](#int64) |  |  |
+| `participants` | [Snapshot.ParticipantsEntry](#scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry) | repeated |  |
+| `bonded_weight` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry"></a>
+
+### Snapshot.ParticipantsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [Participant](#scalar.snapshot.exported.v1beta1.Participant) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/vote/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/vote/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.vote.exported.v1beta1.PollKey"></a>
+
+### PollKey
+PollKey represents the key data for a poll
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.vote.exported.v1beta1.PollMetadata"></a>
+
+### PollMetadata
+PollMetadata represents a poll with write-in voting, i.e. the result of the
+vote can have any data type
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `expires_at` | [int64](#int64) |  |  |
+| `result` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+| `voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `state` | [PollState](#scalar.vote.exported.v1beta1.PollState) |  |  |
+| `min_voter_count` | [int64](#int64) |  |  |
+| `reward_pool_name` | [string](#string) |  |  |
+| `grace_period` | [int64](#int64) |  |  |
+| `completed_at` | [int64](#int64) |  |  |
+| `id` | [uint64](#uint64) |  |  |
+| `snapshot` | [scalar.snapshot.exported.v1beta1.Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot) |  |  |
+| `module` | [string](#string) |  |  |
+| `module_metadata` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+
+
+
+
+
+
+<a name="scalar.vote.exported.v1beta1.PollParticipants"></a>
+
+### PollParticipants
+PollParticipants should be embedded in poll events in other modules
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `poll_id` | [uint64](#uint64) |  |  |
+| `participants` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.vote.exported.v1beta1.PollState"></a>
+
+### PollState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| POLL_STATE_UNSPECIFIED | 0 |  |
+| POLL_STATE_PENDING | 1 |  |
+| POLL_STATE_COMPLETED | 2 |  |
+| POLL_STATE_FAILED | 3 |  |
+
+
  <!-- end enums -->
 
  <!-- end HasExtensions -->
@@ -1527,6 +2002,40 @@ ERC20TokenMetadata describes information about an ERC20 token
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/chains/v1beta1/events.proto
+
+
+
+<a name="scalar.chains.v1beta1.BurnCommand"></a>
+
+### BurnCommand
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `command_id` | [bytes](#bytes) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `deposit_address` | [string](#string) |  |  |
+| `asset` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ChainAdded"></a>
+
+### ChainAdded
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
 
 
 
@@ -1598,21 +2107,93 @@ ERC20TokenMetadata describes information about an ERC20 token
 
 
 
-<a name="scalar.chains.v1beta1.ConfirmationEvent"></a>
+<a name="scalar.chains.v1beta1.CommandBatchAborted"></a>
 
-### ConfirmationEvent
+### CommandBatchAborted
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `sender` | [string](#string) |  |  |
-| `destination_chain` | [string](#string) |  |  |
-| `amount` | [uint64](#uint64) |  |  |
+| `chain` | [string](#string) |  |  |
+| `command_batch_id` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CommandBatchSigned"></a>
+
+### CommandBatchSigned
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `command_batch_id` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmDepositStarted"></a>
+
+### ConfirmDepositStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `deposit_address` | [bytes](#bytes) |  |  |
+| `token_address` | [bytes](#bytes) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `participants` | [scalar.vote.exported.v1beta1.PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants) |  |  |
 | `asset` | [string](#string) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `destination_contract_address` | [bytes](#bytes) |  |  |
-| `destination_recipient_address` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmKeyTransferStarted"></a>
+
+### ConfirmKeyTransferStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `gateway_address` | [bytes](#bytes) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `participants` | [scalar.vote.exported.v1beta1.PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmTokenStarted"></a>
+
+### ConfirmTokenStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `gateway_address` | [bytes](#bytes) |  |  |
+| `token_address` | [bytes](#bytes) |  |  |
+| `token_details` | [TokenDetails](#scalar.chains.v1beta1.TokenDetails) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `participants` | [scalar.vote.exported.v1beta1.PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants) |  |  |
 
 
 
@@ -1668,7 +2249,175 @@ ERC20TokenMetadata describes information about an ERC20 token
 | `tx_id` | [bytes](#bytes) |  |  |
 | `status` | [Event.Status](#scalar.chains.v1beta1.Event.Status) |  |  |
 | `index` | [uint64](#uint64) |  |  |
-| `confirmation_event` | [ConfirmationEvent](#scalar.chains.v1beta1.ConfirmationEvent) |  |  |
+| `token_sent` | [EventTokenSent](#scalar.chains.v1beta1.EventTokenSent) |  |  |
+| `contract_call` | [EventContractCall](#scalar.chains.v1beta1.EventContractCall) |  |  |
+| `contract_call_with_token` | [EventContractCallWithToken](#scalar.chains.v1beta1.EventContractCallWithToken) |  |  |
+| `transfer` | [EventTransfer](#scalar.chains.v1beta1.EventTransfer) |  |  |
+| `token_deployed` | [EventTokenDeployed](#scalar.chains.v1beta1.EventTokenDeployed) |  |  |
+| `multisig_operatorship_transferred` | [EventMultisigOperatorshipTransferred](#scalar.chains.v1beta1.EventMultisigOperatorshipTransferred) |  |  |
+| `source_tx_confirmation_event` | [SourceTxConfirmationEvent](#scalar.chains.v1beta1.SourceTxConfirmationEvent) |  | for general chains |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventConfirmSourceTxsStarted"></a>
+
+### EventConfirmSourceTxsStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `poll_mappings` | [PollMapping](#scalar.chains.v1beta1.PollMapping) | repeated |  |
+| `chain` | [string](#string) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `participants` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventContractCall"></a>
+
+### EventContractCall
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `contract_address` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventContractCallWithToken"></a>
+
+### EventContractCallWithToken
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `contract_address` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `amount` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventMultisigOperatorshipTransferred"></a>
+
+### EventMultisigOperatorshipTransferred
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `new_operators` | [bytes](#bytes) | repeated |  |
+| `new_threshold` | [bytes](#bytes) |  |  |
+| `new_weights` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventMultisigOwnershipTransferred"></a>
+
+### EventMultisigOwnershipTransferred
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `pre_owners` | [bytes](#bytes) | repeated |  |
+| `prev_threshold` | [bytes](#bytes) |  |  |
+| `new_owners` | [bytes](#bytes) | repeated |  |
+| `new_threshold` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventTokenDeployed"></a>
+
+### EventTokenDeployed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `symbol` | [string](#string) |  |  |
+| `token_address` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventTokenSent"></a>
+
+### EventTokenSent
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `destination_address` | [string](#string) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `amount` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventTransfer"></a>
+
+### EventTransfer
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `to` | [bytes](#bytes) |  |  |
+| `amount` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.MintCommand"></a>
+
+### MintCommand
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `transfer_id` | [uint64](#uint64) |  |  |
+| `command_id` | [bytes](#bytes) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `destination_address` | [string](#string) |  |  |
+| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
@@ -1686,6 +2435,28 @@ ERC20TokenMetadata describes information about an ERC20 token
 | `tx_id` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
 | `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.SourceTxConfirmationEvent"></a>
+
+### SourceTxConfirmationEvent
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `amount` | [uint64](#uint64) |  |  |
+| `asset` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `payload` | [bytes](#bytes) |  |  |
+| `destination_contract_address` | [string](#string) |  |  |
+| `destination_recipient_address` | [string](#string) |  |  |
 
 
 
@@ -1885,105 +2656,6 @@ ERC20TokenMetadata describes information about an ERC20 token
 
 
 
-<a name="scalar/chains/v1beta1/poll.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/chains/v1beta1/poll.proto
-
-
-
-<a name="scalar.chains.v1beta1.PollCompleted"></a>
-
-### PollCompleted
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `tx_id` | [bytes](#bytes) |  |  |
-| `chain` | [string](#string) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.PollExpired"></a>
-
-### PollExpired
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `tx_id` | [bytes](#bytes) |  |  |
-| `chain` | [string](#string) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.PollFailed"></a>
-
-### PollFailed
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `tx_id` | [bytes](#bytes) |  |  |
-| `chain` | [string](#string) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.PollMapping"></a>
-
-### PollMapping
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `tx_id` | [bytes](#bytes) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.PollMetadata"></a>
-
-### PollMetadata
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `tx_id` | [bytes](#bytes) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
 <a name="scalar/chains/v1beta1/tx.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -1991,26 +2663,55 @@ ERC20TokenMetadata describes information about an ERC20 token
 
 
 
-<a name="scalar.chains.v1beta1.ConfirmDestTxsRequest"></a>
+<a name="scalar.chains.v1beta1.AddChainRequest"></a>
 
-### ConfirmDestTxsRequest
+### AddChainRequest
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
+| `name` | [string](#string) |  |  |
+| `params` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.AddChainResponse"></a>
+
+### AddChainResponse
+
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmDepositRequest"></a>
+
+### ConfirmDepositRequest
+MsgConfirmDeposit represents an erc20 deposit confirmation message
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `tx_ids` | [bytes](#bytes) | repeated |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `amount` | [bytes](#bytes) |  | **Deprecated.**  |
+| `burner_address` | [bytes](#bytes) |  |  |
 
 
 
 
 
 
-<a name="scalar.chains.v1beta1.ConfirmDestTxsResponse"></a>
+<a name="scalar.chains.v1beta1.ConfirmDepositResponse"></a>
 
-### ConfirmDestTxsResponse
+### ConfirmDepositResponse
 
 
 
@@ -2045,36 +2746,315 @@ ERC20TokenMetadata describes information about an ERC20 token
 
 
 
-<a name="scalar.chains.v1beta1.EventConfirmDestTxsStarted"></a>
+<a name="scalar.chains.v1beta1.ConfirmTokenRequest"></a>
 
-### EventConfirmDestTxsStarted
+### ConfirmTokenRequest
+MsgConfirmToken represents a token deploy confirmation message
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `asset` | [Asset](#scalar.chains.v1beta1.Asset) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmTokenResponse"></a>
+
+### ConfirmTokenResponse
+
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmTransferKeyRequest"></a>
+
+### ConfirmTransferKeyRequest
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `poll_mappings` | [PollMapping](#scalar.chains.v1beta1.PollMapping) | repeated |  |
+| `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `confirmation_height` | [uint64](#uint64) |  |  |
-| `participants` | [bytes](#bytes) | repeated |  |
+| `tx_id` | [bytes](#bytes) |  |  |
 
 
 
 
 
 
-<a name="scalar.chains.v1beta1.EventConfirmSourceTxsStarted"></a>
+<a name="scalar.chains.v1beta1.ConfirmTransferKeyResponse"></a>
 
-### EventConfirmSourceTxsStarted
+### ConfirmTransferKeyResponse
+
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CreateBurnTokensRequest"></a>
+
+### CreateBurnTokensRequest
+CreateBurnTokensRequest represents the message to create commands to burn
+tokens with scalarGateway
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CreateBurnTokensResponse"></a>
+
+### CreateBurnTokensResponse
+
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CreateDeployTokenRequest"></a>
+
+### CreateDeployTokenRequest
+CreateDeployTokenRequest represents the message to create a deploy token
+command for scalarGateway
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `asset` | [Asset](#scalar.chains.v1beta1.Asset) |  |  |
+| `token_details` | [TokenDetails](#scalar.chains.v1beta1.TokenDetails) |  |  |
+| `address` | [bytes](#bytes) |  |  |
+| `daily_mint_limit` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CreateDeployTokenResponse"></a>
+
+### CreateDeployTokenResponse
+
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CreatePendingTransfersRequest"></a>
+
+### CreatePendingTransfersRequest
+CreatePendingTransfersRequest represents a message to trigger the creation of
+commands handling all pending transfers
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CreatePendingTransfersResponse"></a>
+
+### CreatePendingTransfersResponse
+
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CreateTransferOperatorshipRequest"></a>
+
+### CreateTransferOperatorshipRequest
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `poll_mappings` | [PollMapping](#scalar.chains.v1beta1.PollMapping) | repeated |  |
+| `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `confirmation_height` | [uint64](#uint64) |  |  |
-| `participants` | [bytes](#bytes) | repeated |  |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CreateTransferOperatorshipResponse"></a>
+
+### CreateTransferOperatorshipResponse
+
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CreateTransferOwnershipRequest"></a>
+
+### CreateTransferOwnershipRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CreateTransferOwnershipResponse"></a>
+
+### CreateTransferOwnershipResponse
+
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.LinkRequest"></a>
+
+### LinkRequest
+MsgLink represents the message that links a cross chain address to a burner
+address
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `recipient_addr` | [string](#string) |  |  |
+| `asset` | [string](#string) |  |  |
+| `recipient_chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.LinkResponse"></a>
+
+### LinkResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `deposit_addr` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.RetryFailedEventRequest"></a>
+
+### RetryFailedEventRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.RetryFailedEventResponse"></a>
+
+### RetryFailedEventResponse
+
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.SetGatewayRequest"></a>
+
+### SetGatewayRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `address` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.SetGatewayResponse"></a>
+
+### SetGatewayResponse
+
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.SignCommandsRequest"></a>
+
+### SignCommandsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.SignCommandsResponse"></a>
+
+### SignCommandsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `batched_commands_id` | [bytes](#bytes) |  |  |
+| `command_count` | [uint32](#uint32) |  |  |
 
 
 
@@ -2134,7 +3114,576 @@ ERC20TokenMetadata describes information about an ERC20 token
 
 
 
+
+<a name="scalar.chains.v1beta1.BurnerInfoRequest"></a>
+
+### BurnerInfoRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.BurnerInfoResponse"></a>
+
+### BurnerInfoResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `burner_info` | [BurnerInfo](#scalar.chains.v1beta1.BurnerInfo) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.BytecodeRequest"></a>
+
+### BytecodeRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `contract` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.BytecodeResponse"></a>
+
+### BytecodeResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `bytecode` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ChainsRequest"></a>
+
+### ChainsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `status` | [ChainStatus](#scalar.chains.v1beta1.ChainStatus) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ChainsResponse"></a>
+
+### ChainsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chains` | [string](#string) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CommandRequest"></a>
+
+### CommandRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CommandResponse"></a>
+
+### CommandResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `type` | [string](#string) |  |  |
+| `params` | [CommandResponse.ParamsEntry](#scalar.chains.v1beta1.CommandResponse.ParamsEntry) | repeated |  |
+| `key_id` | [string](#string) |  |  |
+| `max_gas_cost` | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CommandResponse.ParamsEntry"></a>
+
+### CommandResponse.ParamsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmationHeightRequest"></a>
+
+### ConfirmationHeightRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmationHeightResponse"></a>
+
+### ConfirmationHeightResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `height` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.DepositStateRequest"></a>
+
+### DepositStateRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `params` | [QueryDepositStateParams](#scalar.chains.v1beta1.QueryDepositStateParams) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.DepositStateResponse"></a>
+
+### DepositStateResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `status` | [DepositStatus](#scalar.chains.v1beta1.DepositStatus) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ERC20TokensRequest"></a>
+
+### ERC20TokensRequest
+ERC20TokensRequest describes the chain for which the type of ERC20 tokens are
+requested.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `type` | [TokenType](#scalar.chains.v1beta1.TokenType) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ERC20TokensResponse"></a>
+
+### ERC20TokensResponse
+ERC20TokensResponse describes the asset and symbol for all
+ERC20 tokens requested for a chain
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tokens` | [ERC20TokensResponse.Token](#scalar.chains.v1beta1.ERC20TokensResponse.Token) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ERC20TokensResponse.Token"></a>
+
+### ERC20TokensResponse.Token
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `asset` | [string](#string) |  |  |
+| `symbol` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventRequest"></a>
+
+### EventRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventResponse"></a>
+
+### EventResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `event` | [Event](#scalar.chains.v1beta1.Event) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.GatewayAddressRequest"></a>
+
+### GatewayAddressRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.GatewayAddressResponse"></a>
+
+### GatewayAddressResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.KeyAddressRequest"></a>
+
+### KeyAddressRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.KeyAddressResponse"></a>
+
+### KeyAddressResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+| `addresses` | [KeyAddressResponse.WeightedAddress](#scalar.chains.v1beta1.KeyAddressResponse.WeightedAddress) | repeated |  |
+| `threshold` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.KeyAddressResponse.WeightedAddress"></a>
+
+### KeyAddressResponse.WeightedAddress
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [string](#string) |  |  |
+| `weight` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ParamsRequest"></a>
+
+### ParamsRequest
+ParamsRequest represents a message that queries the params
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ParamsResponse"></a>
+
+### ParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.chains.v1beta1.Params) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.PendingCommandsRequest"></a>
+
+### PendingCommandsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.PendingCommandsResponse"></a>
+
+### PendingCommandsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `commands` | [QueryCommandResponse](#scalar.chains.v1beta1.QueryCommandResponse) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.QueryBurnerAddressResponse"></a>
+
+### QueryBurnerAddressResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.QueryCommandResponse"></a>
+
+### QueryCommandResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `type` | [string](#string) |  |  |
+| `params` | [QueryCommandResponse.ParamsEntry](#scalar.chains.v1beta1.QueryCommandResponse.ParamsEntry) | repeated |  |
+| `key_id` | [string](#string) |  |  |
+| `max_gas_cost` | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.QueryCommandResponse.ParamsEntry"></a>
+
+### QueryCommandResponse.ParamsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.QueryDepositStateParams"></a>
+
+### QueryDepositStateParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `burner_address` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.QueryTokenAddressResponse"></a>
+
+### QueryTokenAddressResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [string](#string) |  |  |
+| `confirmed` | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.TokenInfoRequest"></a>
+
+### TokenInfoRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `asset` | [string](#string) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `address` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.TokenInfoResponse"></a>
+
+### TokenInfoResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `asset` | [string](#string) |  |  |
+| `details` | [TokenDetails](#scalar.chains.v1beta1.TokenDetails) |  |  |
+| `address` | [string](#string) |  |  |
+| `confirmed` | [bool](#bool) |  |  |
+| `is_external` | [bool](#bool) |  |  |
+| `burner_code_hash` | [string](#string) |  |  |
+
+
+
+
+
  <!-- end messages -->
+
+
+<a name="scalar.chains.v1beta1.ChainStatus"></a>
+
+### ChainStatus
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| CHAIN_STATUS_UNSPECIFIED | 0 |  |
+| CHAIN_STATUS_ACTIVATED | 1 |  |
+| CHAIN_STATUS_DEACTIVATED | 2 |  |
+
+
+
+<a name="scalar.chains.v1beta1.TokenType"></a>
+
+### TokenType
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TOKEN_TYPE_UNSPECIFIED | 0 |  |
+| TOKEN_TYPE_INTERNAL | 1 |  |
+| TOKEN_TYPE_EXTERNAL | 2 |  |
+
 
  <!-- end enums -->
 
@@ -2164,8 +3713,19 @@ Msg defines the btc Msg service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `ConfirmSourceTxs` | [ConfirmSourceTxsRequest](#scalar.chains.v1beta1.ConfirmSourceTxsRequest) | [ConfirmSourceTxsResponse](#scalar.chains.v1beta1.ConfirmSourceTxsResponse) |  | POST|/scalar/btc/confirm_source_txs|
-| `ConfirmDestTxs` | [ConfirmDestTxsRequest](#scalar.chains.v1beta1.ConfirmDestTxsRequest) | [ConfirmDestTxsResponse](#scalar.chains.v1beta1.ConfirmDestTxsResponse) |  | POST|/scalar/btc/confirm_dest_txs|
+| `ConfirmSourceTxs` | [ConfirmSourceTxsRequest](#scalar.chains.v1beta1.ConfirmSourceTxsRequest) | [ConfirmSourceTxsResponse](#scalar.chains.v1beta1.ConfirmSourceTxsResponse) |  | POST|/scalar/chains/confirm_source_txs|
+| `SetGateway` | [SetGatewayRequest](#scalar.chains.v1beta1.SetGatewayRequest) | [SetGatewayResponse](#scalar.chains.v1beta1.SetGatewayResponse) |  | POST|/scalar/chains/set_gateway|
+| `Link` | [LinkRequest](#scalar.chains.v1beta1.LinkRequest) | [LinkResponse](#scalar.chains.v1beta1.LinkResponse) |  | POST|/scalar/chains/link|
+| `ConfirmToken` | [ConfirmTokenRequest](#scalar.chains.v1beta1.ConfirmTokenRequest) | [ConfirmTokenResponse](#scalar.chains.v1beta1.ConfirmTokenResponse) |  | POST|/scalar/chains/confirm_token|
+| `ConfirmDeposit` | [ConfirmDepositRequest](#scalar.chains.v1beta1.ConfirmDepositRequest) | [ConfirmDepositResponse](#scalar.chains.v1beta1.ConfirmDepositResponse) |  | POST|/scalar/chains/confirm_deposit|
+| `ConfirmTransferKey` | [ConfirmTransferKeyRequest](#scalar.chains.v1beta1.ConfirmTransferKeyRequest) | [ConfirmTransferKeyResponse](#scalar.chains.v1beta1.ConfirmTransferKeyResponse) |  | POST|/scalar/chains/confirm_transfer_key|
+| `CreateDeployToken` | [CreateDeployTokenRequest](#scalar.chains.v1beta1.CreateDeployTokenRequest) | [CreateDeployTokenResponse](#scalar.chains.v1beta1.CreateDeployTokenResponse) |  | POST|/scalar/chains/create_deploy_token|
+| `CreateBurnTokens` | [CreateBurnTokensRequest](#scalar.chains.v1beta1.CreateBurnTokensRequest) | [CreateBurnTokensResponse](#scalar.chains.v1beta1.CreateBurnTokensResponse) |  | POST|/scalar/chains/create_burn_tokens|
+| `CreatePendingTransfers` | [CreatePendingTransfersRequest](#scalar.chains.v1beta1.CreatePendingTransfersRequest) | [CreatePendingTransfersResponse](#scalar.chains.v1beta1.CreatePendingTransfersResponse) |  | POST|/scalar/chains/create_pending_transfers|
+| `CreateTransferOperatorship` | [CreateTransferOperatorshipRequest](#scalar.chains.v1beta1.CreateTransferOperatorshipRequest) | [CreateTransferOperatorshipResponse](#scalar.chains.v1beta1.CreateTransferOperatorshipResponse) |  | POST|/scalar/chains/create_transfer_operatorship|
+| `SignCommands` | [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest) | [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse) |  | POST|/scalar/chains/sign_commands|
+| `AddChain` | [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest) | [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse) |  | POST|/scalar/chains/add_chain|
+| `RetryFailedEvent` | [RetryFailedEventRequest](#scalar.chains.v1beta1.RetryFailedEventRequest) | [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse) |  | POST|/scalar/chains/retry-failed-event|
 
 
 <a name="scalar.chains.v1beta1.QueryService"></a>
@@ -2175,7 +3735,119 @@ QueryService defines the gRPC querier service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `BatchedCommands` | [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest) | [BatchedCommandsResponse](#scalar.chains.v1beta1.BatchedCommandsResponse) | BatchedCommands queries the batched commands for a specified chain and BatchedCommandsID if no BatchedCommandsID is specified, then it returns the latest batched commands | GET|/scalar/btc/v1beta1/batched_commands/{chain}/{id}|
+| `BatchedCommands` | [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest) | [BatchedCommandsResponse](#scalar.chains.v1beta1.BatchedCommandsResponse) | BatchedCommands queries the batched commands for a specified chain and BatchedCommandsID if no BatchedCommandsID is specified, then it returns the latest batched commands | GET|/scalar/chains/v1beta1/batched_commands/{chain}/{id}|
+| `BurnerInfo` | [BurnerInfoRequest](#scalar.chains.v1beta1.BurnerInfoRequest) | [BurnerInfoResponse](#scalar.chains.v1beta1.BurnerInfoResponse) |  | GET|/scalar/chains/v1beta1/burner_info|
+| `ConfirmationHeight` | [ConfirmationHeightRequest](#scalar.chains.v1beta1.ConfirmationHeightRequest) | [ConfirmationHeightResponse](#scalar.chains.v1beta1.ConfirmationHeightResponse) | ConfirmationHeight queries the confirmation height for the specified chain | GET|/scalar/chains/v1beta1/confirmation_height/{chain}|
+| `PendingCommands` | [PendingCommandsRequest](#scalar.chains.v1beta1.PendingCommandsRequest) | [PendingCommandsResponse](#scalar.chains.v1beta1.PendingCommandsResponse) | PendingCommands queries the pending commands for the specified chain | GET|/scalar/chains/v1beta1/pending_commands/{chain}|
+| `Chains` | [ChainsRequest](#scalar.chains.v1beta1.ChainsRequest) | [ChainsResponse](#scalar.chains.v1beta1.ChainsResponse) | Chains queries the available chains | GET|/scalar/chains/v1beta1/chains|
+| `Command` | [CommandRequest](#scalar.chains.v1beta1.CommandRequest) | [CommandResponse](#scalar.chains.v1beta1.CommandResponse) | Command queries the command of a chain provided the command id | GET|/scalar/chains/v1beta1/command_request|
+| `KeyAddress` | [KeyAddressRequest](#scalar.chains.v1beta1.KeyAddressRequest) | [KeyAddressResponse](#scalar.chains.v1beta1.KeyAddressResponse) | KeyAddress queries the address of key of a chain | GET|/scalar/chains/v1beta1/key_address/{chain}|
+| `GatewayAddress` | [GatewayAddressRequest](#scalar.chains.v1beta1.GatewayAddressRequest) | [GatewayAddressResponse](#scalar.chains.v1beta1.GatewayAddressResponse) | GatewayAddress queries the address of scalar gateway at the specified chain | GET|/scalar/chains/v1beta1/gateway_address/{chain}|
+| `Bytecode` | [BytecodeRequest](#scalar.chains.v1beta1.BytecodeRequest) | [BytecodeResponse](#scalar.chains.v1beta1.BytecodeResponse) | Bytecode queries the bytecode of a specified gateway at the specified chain | GET|/scalar/chains/v1beta1/bytecode/{chain}/{contract}|
+| `Event` | [EventRequest](#scalar.chains.v1beta1.EventRequest) | [EventResponse](#scalar.chains.v1beta1.EventResponse) | Event queries an event at the specified chain | GET|/scalar/chains/v1beta1/event/{chain}/{event_id}|
+| `ERC20Tokens` | [ERC20TokensRequest](#scalar.chains.v1beta1.ERC20TokensRequest) | [ERC20TokensResponse](#scalar.chains.v1beta1.ERC20TokensResponse) | ERC20Tokens queries the ERC20 tokens registered for a chain | GET|/scalar/chains/v1beta1/erc20_tokens/{chain}|
+| `TokenInfo` | [TokenInfoRequest](#scalar.chains.v1beta1.TokenInfoRequest) | [TokenInfoResponse](#scalar.chains.v1beta1.TokenInfoResponse) | TokenInfo queries the token info for a registered ERC20 Token | GET|/scalar/chains/v1beta1/token_info/{chain}|
+| `Params` | [ParamsRequest](#scalar.chains.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.chains.v1beta1.ParamsResponse) |  | GET|/scalar/chains/v1beta1/params/{chain}|
+
+ <!-- end services -->
+
+
+
+<a name="scalar/multisig/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/multisig/exported/v1beta1/types.proto
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.multisig.exported.v1beta1.KeyState"></a>
+
+### KeyState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| KEY_STATE_UNSPECIFIED | 0 |  |
+| KEY_STATE_ASSIGNED | 1 |  |
+| KEY_STATE_ACTIVE | 2 |  |
+
+
+
+<a name="scalar.multisig.exported.v1beta1.MultisigState"></a>
+
+### MultisigState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| MULTISIG_STATE_UNSPECIFIED | 0 |  |
+| MULTISIG_STATE_PENDING | 1 |  |
+| MULTISIG_STATE_COMPLETED | 2 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/chains/v1beta1/tokens.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/chains/v1beta1/tokens.proto
+
+
+
+<a name="scalar.chains.v1beta1.ERC20Deposit"></a>
+
+### ERC20Deposit
+ERC20Deposit contains information for an ERC20 deposit
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `amount` | [bytes](#bytes) |  |  |
+| `asset` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `burner_address` | [bytes](#bytes) |  |  |
+| `log_index` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ERC20TokenMetadata"></a>
+
+### ERC20TokenMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `asset` | [string](#string) |  |  |
+| `chain_id` | [bytes](#bytes) |  |  |
+| `details` | [TokenDetails](#scalar.chains.v1beta1.TokenDetails) |  |  |
+| `token_address` | [string](#string) |  |  |
+| `tx_hash` | [string](#string) |  |  |
+| `status` | [Status](#scalar.chains.v1beta1.Status) |  |  |
+| `is_external` | [bool](#bool) |  |  |
+| `burner_code` | [bytes](#bytes) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
 
  <!-- end services -->
 
@@ -2638,203 +4310,6 @@ Pubkey used as key for lookup custodian to update other values
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `GetCustodians` | [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest) | [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse) | Get custodians | GET|/scalar/convenant/v1beta1/custodians|
 | `CustodianGroups` | [CustodianGroupsRequest](#scalar.covenant.v1beta1.CustodianGroupsRequest) | [CustodianGroupsResponse](#scalar.covenant.v1beta1.CustodianGroupsResponse) | Get custodian groups | GET|/scalar/covenant/v1beta1/custodian_groups|
-
- <!-- end services -->
-
-
-
-<a name="scalar/snapshot/exported/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/snapshot/exported/v1beta1/types.proto
-
-
-
-<a name="scalar.snapshot.exported.v1beta1.Participant"></a>
-
-### Participant
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `address` | [bytes](#bytes) |  |  |
-| `weight` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.snapshot.exported.v1beta1.Snapshot"></a>
-
-### Snapshot
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
-| `height` | [int64](#int64) |  |  |
-| `participants` | [Snapshot.ParticipantsEntry](#scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry) | repeated |  |
-| `bonded_weight` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry"></a>
-
-### Snapshot.ParticipantsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [string](#string) |  |  |
-| `value` | [Participant](#scalar.snapshot.exported.v1beta1.Participant) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/vote/exported/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/vote/exported/v1beta1/types.proto
-
-
-
-<a name="scalar.vote.exported.v1beta1.PollKey"></a>
-
-### PollKey
-PollKey represents the key data for a poll
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `module` | [string](#string) |  |  |
-| `id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.vote.exported.v1beta1.PollMetadata"></a>
-
-### PollMetadata
-PollMetadata represents a poll with write-in voting, i.e. the result of the
-vote can have any data type
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `expires_at` | [int64](#int64) |  |  |
-| `result` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
-| `voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `state` | [PollState](#scalar.vote.exported.v1beta1.PollState) |  |  |
-| `min_voter_count` | [int64](#int64) |  |  |
-| `reward_pool_name` | [string](#string) |  |  |
-| `grace_period` | [int64](#int64) |  |  |
-| `completed_at` | [int64](#int64) |  |  |
-| `id` | [uint64](#uint64) |  |  |
-| `snapshot` | [scalar.snapshot.exported.v1beta1.Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot) |  |  |
-| `module` | [string](#string) |  |  |
-| `module_metadata` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
-
-
-
-
-
-
-<a name="scalar.vote.exported.v1beta1.PollParticipants"></a>
-
-### PollParticipants
-PollParticipants should be embedded in poll events in other modules
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `poll_id` | [uint64](#uint64) |  |  |
-| `participants` | [bytes](#bytes) | repeated |  |
-
-
-
-
-
- <!-- end messages -->
-
-
-<a name="scalar.vote.exported.v1beta1.PollState"></a>
-
-### PollState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| POLL_STATE_UNSPECIFIED | 0 |  |
-| POLL_STATE_PENDING | 1 |  |
-| POLL_STATE_COMPLETED | 2 |  |
-| POLL_STATE_FAILED | 3 |  |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/multisig/exported/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/multisig/exported/v1beta1/types.proto
-
-
- <!-- end messages -->
-
-
-<a name="scalar.multisig.exported.v1beta1.KeyState"></a>
-
-### KeyState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| KEY_STATE_UNSPECIFIED | 0 |  |
-| KEY_STATE_ASSIGNED | 1 |  |
-| KEY_STATE_ACTIVE | 2 |  |
-
-
-
-<a name="scalar.multisig.exported.v1beta1.MultisigState"></a>
-
-### MultisigState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| MULTISIG_STATE_UNSPECIFIED | 0 |  |
-| MULTISIG_STATE_PENDING | 1 |  |
-| MULTISIG_STATE_COMPLETED | 2 |  |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
 
  <!-- end services -->
 

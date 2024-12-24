@@ -12,7 +12,7 @@ func DefaultGenesisState() GenesisState {
 		Chains: []GenesisState_Chain{
 			{
 				Params: Params{
-					ChainId:             BTCMainnetChainID,
+					ChainID:             BTCMainnetChainID,
 					Chain:               exported.Bitcoin.Name,
 					ConfirmationHeight:  2,
 					NetworkKind:         Mainnet,
@@ -32,7 +32,7 @@ func DefaultGenesisState() GenesisState {
 			{
 				Params: Params{
 					Chain:               exported.Ethereum.Name,
-					ChainId:             sdk.NewIntFromBigInt(gethParams.MainnetChainConfig.ChainID),
+					ChainID:             sdk.NewIntFromBigInt(gethParams.MainnetChainConfig.ChainID),
 					RevoteLockingPeriod: 50,
 					VotingThreshold:     utils.Threshold{Numerator: 51, Denominator: 100},
 					VotingGracePeriod:   3,
