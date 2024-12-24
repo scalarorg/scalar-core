@@ -9,9 +9,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/server"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	"github.com/spf13/cobra"
-
-	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 )
 
 const (
@@ -41,7 +40,7 @@ func SetGenesisEVMContractsCmd(defaultNodeHome string) *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("failed to unmarshal genesis state: %w", err)
 			}
-			genesisState := evmTypes.GetGenesisStateFromAppState(cdc, appState)
+			genesisState := chainsTypes.GetGenesisStateFromAppState(cdc, appState)
 
 			if tokenFile != "" {
 				token, err := getByteCodes(tokenFile)
@@ -49,7 +48,9 @@ func SetGenesisEVMContractsCmd(defaultNodeHome string) *cobra.Command {
 					return err
 				}
 				//TODO:  Currently assuming a single element in the Params slice. We need to generalize for more EVM chains.
-				genesisState.Chains[0].Params.TokenCode = token
+				// genesisState.Chains[0].Params.TokenCode = token
+
+				_ = token
 			}
 
 			if burnableFile != "" {
@@ -58,14 +59,16 @@ func SetGenesisEVMContractsCmd(defaultNodeHome string) *cobra.Command {
 					return err
 				}
 				//TODO:  Currently assuming a single element in the Params slice. We need to generalize for more EVM chains.
-				genesisState.Chains[0].Params.Burnable = burnable
+				// genesisState.Chains[0].Params.Burnable = burnable
+
+				_ = burnable
 			}
 
 			genesisStateBz, err := cdc.MarshalJSON(&genesisState)
 			if err != nil {
 				return fmt.Errorf("failed to marshal genesis state: %w", err)
 			}
-			appState[evmTypes.ModuleName] = genesisStateBz
+			appState[chainsTypes.ModuleName] = genesisStateBz
 			appStateJSON, err := json.Marshal(appState)
 			if err != nil {
 				return fmt.Errorf("failed to marshal application genesis state: %w", err)

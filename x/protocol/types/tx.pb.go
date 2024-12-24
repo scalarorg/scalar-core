@@ -9,7 +9,6 @@ import (
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
-	_ "github.com/scalarorg/scalar-core/x/evm/types"
 	io "io"
 	math "math"
 	math_bits "math/bits"

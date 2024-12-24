@@ -10,13 +10,11 @@ import "scalar/covenant/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
-message ProtocolAttribute {
-  LiquidityModel model = 1;
-}
+message ProtocolAttribute { LiquidityModel model = 1; }
 
 // DestinationChain represents a blockchain where tokens can be sent
 message SupportedChain {
-  scalar.chains.v1beta1.Params params = 1; //Chain params
+  scalar.chains.v1beta1.Params params = 1; // Chain params
   string address = 2;
   oneof token {
     scalar.chains.v1beta1.ERC20TokenMetadata erc20 = 3;
@@ -36,23 +34,14 @@ message Protocol {
 enum LiquidityModel {
   option (gogoproto.goproto_enum_prefix) = false;
 
-  LIQUIDITY_MODEL_POOLING = 0 [(gogoproto.enumvalue_customname) = "Pooling"];
-  LIQUIDITY_MODEL_TRANSACTIONAL = 1 [(gogoproto.enumvalue_customname) = "Transactional"];
+  LIQUIDITY_MODEL_POOLING = 0 [ (gogoproto.enumvalue_customname) = "Pooling" ];
+  LIQUIDITY_MODEL_TRANSACTIONAL = 1
+      [ (gogoproto.enumvalue_customname) = "Transactional" ];
 }
 enum Status {
   option (gogoproto.goproto_enum_prefix) = false;
 
-  STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Unspecified"];
-  STATUS_ACTIVATED = 1 [(gogoproto.enumvalue_customname) = "Activated"];
-  STATUS_DEACTIVATED = 2 [(gogoproto.enumvalue_customname) = "Deactivated"];
+  STATUS_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Unspecified" ];
+  STATUS_ACTIVATED = 1 [ (gogoproto.enumvalue_customname) = "Activated" ];
+  STATUS_DEACTIVATED = 2 [ (gogoproto.enumvalue_customname) = "Deactivated" ];
 }
-
-// BtcChain represents Bitcoin chain configuration
-// message BtcChain {
-//   string btc_signer_endpoint = 1; // e.g., "https://protocol.testnet.scalar.org/v1/sign-unbonding-tx"
-//   string btc_signer_access_token = 2; // e.g., "616171bb-e71a-4d3f-a4a7-045de8f3cad0"
-//   string btc_signer_address = 3; // e.g., "tb1q37dgjm7e7h385aykhd6gps7uqx0kv26w2ugu8c"
-//   bytes btc_signer_pk = 4; // e.g.,
-//   // "0x021387aab21303782b17e760c670432559df3968e52cb82cc2d8f9be43a227d5dc"
-//   string btc_network = 5; // e.g., "bitcoin-testnet4"
-// }

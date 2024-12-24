@@ -14,7 +14,7 @@ import (
 	. "github.com/scalarorg/scalar-core/utils/test"
 	"github.com/scalarorg/scalar-core/x/ante"
 	"github.com/scalarorg/scalar-core/x/ante/types/mock"
-	evm "github.com/scalarorg/scalar-core/x/evm/types"
+	evm "github.com/scalarorg/scalar-core/x/chains/types"
 	"github.com/scalarorg/scalar-core/x/permission/exported"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/types"
 )

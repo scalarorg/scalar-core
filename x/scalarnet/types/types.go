@@ -15,9 +15,9 @@ import (
 	ibcexported "github.com/cosmos/ibc-go/v4/modules/core/exported"
 
 	"github.com/scalarorg/scalar-core/utils"
-	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/scalarnet/exported"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 // Log attribute keys
@@ -327,7 +327,7 @@ func (minDeposits CallContractProposalMinDeposits) ToMap(ctx sdk.Context, nexus 
 		// show up here and be prefixed with 0x. Like the address validator, we should
 		// also implement chain-specific address deserializer so that we just use the
 		// actual bytes as map keys for this check instead of a string representation.
-		if chain, ok := nexus.GetChain(ctx, minDeposit.Chain); !ok || !chain.IsFrom(evmtypes.ModuleName) {
+		if chain, ok := nexus.GetChain(ctx, minDeposit.Chain); !ok || !chain.IsFrom(chainsTypes.ModuleName) {
 			continue
 		}
 		if strings.HasPrefix(contractAddress, ZERO_X_PREFIX) {

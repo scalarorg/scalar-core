@@ -8,7 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	geth "github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/scalarorg/scalar-core/x/evm/types"
+	"github.com/scalarorg/scalar-core/x/chains/types"
 	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
 

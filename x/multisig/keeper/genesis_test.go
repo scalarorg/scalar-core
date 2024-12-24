@@ -17,8 +17,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	test "github.com/scalarorg/scalar-core/utils/test"
-	evm "github.com/scalarorg/scalar-core/x/evm/exported"
-	evmKeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
+	chainsKeeper "github.com/scalarorg/scalar-core/x/chains/keeper"
 	"github.com/scalarorg/scalar-core/x/multisig"
 	"github.com/scalarorg/scalar-core/x/multisig/exported"
 	"github.com/scalarorg/scalar-core/x/multisig/exported/testutils"
@@ -30,11 +29,12 @@ import (
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	rewardmock "github.com/scalarorg/scalar-core/x/reward/exported/mock"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 )
 
 func TestInitExportGenesis(t *testing.T) {
 	encCfg := app.MakeEncodingConfig()
-	chain := evm.Ethereum
+	chain := chains.Ethereum
 	validators := slices.Expand(func(int) snapshot.Participant { return snapshot.NewParticipant(rand.ValAddr(), sdk.OneUint()) }, 10)
 
 	var (
@@ -52,7 +52,7 @@ func TestInitExportGenesis(t *testing.T) {
 		k = keeper.NewKeeper(encCfg.Codec, sdk.NewKVStoreKey(types.StoreKey), subspace)
 
 		multisigRounter := types.NewSigRouter()
-		multisigRounter.AddHandler(chain.Module, evmKeeper.NewSigHandler(encCfg.Codec, &evmKeeper.BaseKeeper{}))
+		multisigRounter.AddHandler(chain.Module, chainsKeeper.NewSigHandler(encCfg.Codec, &chainsKeeper.BaseKeeper{}))
 		k.SetSigRouter(multisigRounter)
 
 		ctx = rand.Context(fake.NewMultiStore())

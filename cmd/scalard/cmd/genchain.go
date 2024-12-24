@@ -11,12 +11,11 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/spf13/cobra"
 
-	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	nexusTypes "github.com/scalarorg/scalar-core/x/nexus/types"
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 
-	//btctypes "github.com/scalar/scalar-core/x/btc/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 // func AddGenesisBTCChainCmd(defaultNodeHome string) *cobra.Command {
@@ -109,7 +108,7 @@ func AddGenesisEVMChainCmd(defaultNodeHome string) *cobra.Command {
 				Name:                  name,
 				SupportsForeignAssets: true,
 				KeyType:               tss.Multisig,
-				Module:                evmtypes.ModuleName,
+				Module:                chainsTypes.ModuleName,
 			}
 
 			if err := chain.Validate(); err != nil {

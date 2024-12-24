@@ -58,8 +58,6 @@ import (
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenantKeeper "github.com/scalarorg/scalar-core/x/covenant/keeper"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
-	evmKeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
-	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 	multisigKeeper "github.com/scalarorg/scalar-core/x/multisig/keeper"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	nexusKeeper "github.com/scalarorg/scalar-core/x/nexus/keeper"
@@ -251,16 +249,6 @@ func initPermissionKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey,
 
 func initVoteKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *voteKeeper.Keeper {
 	voteRouter := voteTypes.NewRouter()
-	// voteRouter.AddHandler(
-	// 	evmTypes.ModuleName,
-	// 	evmKeeper.NewVoteHandler(
-	// 		appCodec,
-	// 		GetKeeper[evmKeeper.BaseKeeper](keepers),
-	// 		GetKeeper[nexusKeeper.Keeper](keepers),
-	// 		GetKeeper[rewardKeeper.Keeper](keepers),
-	// 	),
-	// )
-
 	voteRouter.AddHandler(
 		chainsTypes.ModuleName,
 		chainsKeeper.NewVoteHandler(
@@ -302,10 +290,7 @@ func initTssKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keeper
 
 func initMultisigKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *multisigKeeper.Keeper {
 	multisigRouter := multisigTypes.NewSigRouter()
-	// multisigRouter.AddHandler(evmTypes.ModuleName, evmKeeper.NewSigHandler(appCodec, GetKeeper[evmKeeper.BaseKeeper](keepers)))
-
-	// TODO: Add chains handler
-	// multisigRouter.AddHandler(chainsTypes.ModuleName, chainsKeeper.NewSigHandler(appCodec, GetKeeper[chainsKeeper.BaseKeeper](keepers)))
+	multisigRouter.AddHandler(chainsTypes.ModuleName, chainsKeeper.NewSigHandler(appCodec, GetKeeper[chainsKeeper.BaseKeeper](keepers)))
 
 	multisigK := multisigKeeper.NewKeeper(appCodec, keys[multisigTypes.StoreKey], keepers.getSubspace(multisigTypes.ModuleName))
 	multisigK.SetSigRouter(multisigRouter)
@@ -368,10 +353,6 @@ func initscalarnetKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, 
 	return &scalarnetK
 }
 
-func initEvmKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *evmKeeper.BaseKeeper {
-	return evmKeeper.NewKeeper(appCodec, keys[evmTypes.StoreKey], GetKeeper[paramskeeper.Keeper](keepers))
-}
-
 func initChainsKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *chainsKeeper.BaseKeeper {
 	return chainsKeeper.NewKeeper(appCodec, keys[chainsTypes.StoreKey], GetKeeper[paramskeeper.Keeper](keepers))
 }
@@ -380,7 +361,6 @@ func initNexusKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keep
 	// setting validator will finalize all by sealing it
 	// no more validators can be added
 	addressValidators := nexusTypes.NewAddressValidators().
-		// AddAddressValidator(evmTypes.ModuleName, evmKeeper.NewAddressValidator()).
 		AddAddressValidator(chainsTypes.ModuleName, chainsKeeper.NewAddressValidator()).
 		AddAddressValidator(scalarnetTypes.ModuleName, scalarnetKeeper.NewAddressValidator(GetKeeper[scalarnetKeeper.Keeper](keepers)))
 
@@ -414,9 +394,6 @@ func upgradeName(version string) string {
 	if !strings.HasPrefix(version, "v") {
 		version = fmt.Sprintf("v%s", version)
 	}
-
-	fmt.Println("upgradeName", version)
-	fmt.Println("semver.MajorMinor", semver.MajorMinor(version))
 
 	name := semver.MajorMinor(version)
 	if name == "" {

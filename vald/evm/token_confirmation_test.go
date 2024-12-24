@@ -23,7 +23,7 @@ import (
 	evmmock "github.com/scalarorg/scalar-core/vald/evm/mock"
 	evmrpc "github.com/scalarorg/scalar-core/vald/evm/rpc"
 	"github.com/scalarorg/scalar-core/vald/evm/rpc/mock"
-	"github.com/scalarorg/scalar-core/x/evm/types"
+	"github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 	votetypes "github.com/scalarorg/scalar-core/x/vote/types"

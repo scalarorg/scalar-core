@@ -16,11 +16,11 @@ import (
 	"github.com/scalarorg/scalar-core/utils"
 	utilsMock "github.com/scalarorg/scalar-core/utils/mock"
 	. "github.com/scalarorg/scalar-core/utils/test"
-	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	"github.com/scalarorg/scalar-core/x/vote/exported"
 	exportedMock "github.com/scalarorg/scalar-core/x/vote/exported/mock"
 	"github.com/scalarorg/scalar-core/x/vote/types"
 	"github.com/scalarorg/scalar-core/x/vote/types/mock"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 func TestHandlePollsAtExpiry(t *testing.T) {
@@ -39,7 +39,7 @@ func TestHandlePollsAtExpiry(t *testing.T) {
 		voteHandler = &exportedMock.VoteHandlerMock{}
 		poll = &exportedMock.PollMock{
 			GetIDFunc:     func() exported.PollID { return exported.PollID(rand.PosI64()) },
-			GetModuleFunc: func() string { return evmtypes.ModuleName },
+			GetModuleFunc: func() string { return chainsTypes.ModuleName },
 		}
 		keeper = &mock.VoterMock{
 			LoggerFunc:       func(ctx sdk.Context) log.Logger { return log.NewNopLogger() },

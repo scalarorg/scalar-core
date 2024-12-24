@@ -10,7 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 
-	evm "github.com/scalarorg/scalar-core/x/evm/types"
+	evm "github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 

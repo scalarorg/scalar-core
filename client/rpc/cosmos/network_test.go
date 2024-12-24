@@ -13,14 +13,14 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/client/rpc/codec"
+	"github.com/scalarorg/scalar-core/client/rpc/config"
 	"github.com/scalarorg/scalar-core/client/rpc/cosmos"
 	"github.com/scalarorg/scalar-core/utils"
-	emvtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/encoding"
 	"google.golang.org/grpc/encoding/proto"
-	"github.com/scalarorg/scalar-core/client/rpc/config"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 const (
@@ -73,11 +73,11 @@ func TestSubscribeContractCallApprovedEvent(t *testing.T) {
 	nexusChain := nexus.ChainName(utils.NormalizeString(chainNameBtcTestnet4))
 	txIds := []string{"f0510bcacb2e428bd89e39e9708555265ed413b5320c5f920bf4becac9c53f56"}
 	log.Debug().Msgf("[ScalarClient] [ConfirmTxs] Broadcast for confirmation txs from chain %s: %v", nexusChain, txIds)
-	txHashs := make([]emvtypes.Hash, len(txIds))
+	txHashs := make([]chainsTypes.Hash, len(txIds))
 	for i, txId := range txIds {
-		txHashs[i] = emvtypes.Hash(common.HexToHash(txId))
+		txHashs[i] = chainsTypes.Hash(common.HexToHash(txId))
 	}
-	//msg := emvtypes.NewConfirmGatewayTxsRequest(networkClient.GetAddress(), nexusChain, txHashs)
+	//msg := chainsTypes.NewConfirmGatewayTxsRequest(networkClient.GetAddress(), nexusChain, txHashs)
 	//2. Sign and broadcast the payload using the network client, which has the private key
 	// confirmTx, err := networkClient.SignAndBroadcastMsgs(context.Background(), msg)
 	// if err != nil {
