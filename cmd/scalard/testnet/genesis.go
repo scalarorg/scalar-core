@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"path"
+	"strings"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -21,6 +22,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/utils"
+	btctypes "github.com/scalarorg/scalar-core/x/chains/btc/types"
 	evmtypes "github.com/scalarorg/scalar-core/x/chains/evm/types"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
@@ -40,33 +42,51 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfos []Token, custodia
 	for i, tokenInfo := range tokenInfos {
 		tokenAddress := evmtypes.Address(common.HexToAddress(tokenInfo.TokenAddress))
 		log.Debug().Any("TokenAddress", tokenAddress).Msg("Parse Tokenaddress")
-		token := evmtypes.ERC20TokenMetadata{
-			Asset:   tokenInfo.Asset,
-			ChainID: sdk.NewInt(tokenInfo.ChainID),
-			TxHash:  evmtypes.Hash(evmtypes.ZeroHash),
-			//TokenAddress: tokenAddress,
-			Status: evmtypes.Confirmed,
-			Details: evmtypes.TokenDetails{
-				TokenName: tokenInfo.Name,
-				Symbol:    tokenInfo.Symbol,
-				Decimals:  tokenInfo.Decimals,
-				Capacity:  sdk.NewInt(tokenInfo.Capacity),
-			},
-		}
 		params := chainsTypes.Params{
-			Chain: nexus.ChainName(tokenInfo.ID),
+			Chain:       nexus.ChainName(tokenInfo.ID),
+			ChainId:     sdk.NewInt(tokenInfo.ChainID),
+			NetworkKind: chainsTypes.Testnet,
 		}
-		chains[i] = &protocoltypes.SupportedChain{
-			Params: &params,
-			Token: &protocoltypes.SupportedChain_Erc20{
-				Erc20: &token,
-			},
-			Address: scalarProtocol.EvmAddress,
+		if strings.HasPrefix(tokenInfo.ID, "evm") {
+			token := evmtypes.ERC20TokenMetadata{
+				Asset:   tokenInfo.Asset,
+				ChainID: sdk.NewInt(tokenInfo.ChainID),
+				TxHash:  evmtypes.Hash(evmtypes.ZeroHash),
+				//TokenAddress: tokenAddress,
+				Status: evmtypes.Confirmed,
+				Details: evmtypes.TokenDetails{
+					TokenName: tokenInfo.Name,
+					Symbol:    tokenInfo.Symbol,
+					Decimals:  tokenInfo.Decimals,
+					Capacity:  sdk.NewInt(tokenInfo.Capacity),
+				},
+			}
+			chains[i] = &protocoltypes.SupportedChain{
+				Params: &params,
+				Token: &protocoltypes.SupportedChain_Erc20{
+					Erc20: &token,
+				},
+				Address: scalarProtocol.EvmAddress,
+			}
+		} else if strings.HasPrefix(tokenInfo.ID, "bitcoin") {
+			token := btctypes.BtcToken{}
+			chains[i] = &protocoltypes.SupportedChain{
+				Params: &params,
+				Token: &protocoltypes.SupportedChain_Btc{
+					Btc: &token,
+				},
+				Address: scalarProtocol.EvmAddress,
+			}
 		}
+
+	}
+	attributes := protocoltypes.ProtocolAttribute{
+		Model: protocoltypes.Pooling,
 	}
 	protocol := protocoltypes.Protocol{
 		Pubkey:         scalarProtocol.ScalarPubKey.Bytes(),
 		Address:        sdk.AccAddress(scalarProtocol.ScalarPubKey.Address()),
+		Attribute:      &attributes,
 		Name:           protocoltypes.DefaultProtocolName,
 		Tag:            "pools",
 		Status:         protocoltypes.Activated,
@@ -283,7 +303,7 @@ func GenerateGenesis(clientCtx client.Context,
 	return appGenState, nil
 }
 func generateProtocolGenesis(scalarProtocol ScalarProtocol, custodianGroup covenanttypes.CustodianGroup, tokensPath string) (*protocoltypes.GenesisState, error) {
-	evmTokenPath := path.Join(tokensPath, "evm.json")
+	evmTokenPath := path.Join(tokensPath, "tokens.json")
 	log.Debug().Msgf("Read token config in the path %s", evmTokenPath)
 	tokenInfos, err := ParseJsonArrayConfig[Token](evmTokenPath)
 	if err != nil {
