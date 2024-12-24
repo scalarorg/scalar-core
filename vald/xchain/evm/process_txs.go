@@ -11,63 +11,23 @@ import (
 	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
 
-type newEventWrapper[T types.ConfirmationEvent] func(*types.TxConfirmationEvent) T
-
-func (client *EthereumClient) ProcessDestinationTxsConfirmation(event *types.EventConfirmDestTxsStarted, proxy sdk.AccAddress) ([]sdk.Msg, error) {
-	clog.Blue("[EVM] ProcessDestinationTxsConfirmation", "txIDs", event.PollMappings)
-	return processTxsConfirmation(
-		client,
-		event.Chain,
-		event.PollMappings,
-		event.ConfirmationHeight,
-		proxy,
-		func(e *types.TxConfirmationEvent) types.ConfirmationEvent {
-			clog.Red("eventWrapper", "event", e)
-			return &types.Event_DestTxConfirmationEvent{
-				DestTxConfirmationEvent: e,
-			}
-		},
-	)
-}
-
 func (client *EthereumClient) ProcessSourceTxsConfirmation(event *types.EventConfirmSourceTxsStarted, proxy sdk.AccAddress) ([]sdk.Msg, error) {
-	return processTxsConfirmation(
-		client,
-		event.Chain,
-		event.PollMappings,
-		event.ConfirmationHeight,
-		proxy,
-		func(e *types.TxConfirmationEvent) types.ConfirmationEvent {
-			return &types.Event_SourceTxConfirmationEvent{
-				SourceTxConfirmationEvent: e,
-			}
-		},
-	)
-}
 
-func processTxsConfirmation[T types.ConfirmationEvent](
-	client *EthereumClient,
-	chain nexus.ChainName,
-	pollMappings []types.PollMapping,
-	confirmationHeight uint64,
-	proxy sdk.AccAddress,
-	newEventWrapper newEventWrapper[T],
-) ([]sdk.Msg, error) {
-	txIDs := slices.Map(pollMappings, func(m types.PollMapping) xchain.Hash { return m.TxID })
+	txIDs := slices.Map(event.PollMappings, func(m types.PollMapping) xchain.Hash { return m.TxID })
 	clog.Redf("[ETH] txIDs: %+v", txIDs)
-	txReceipts, _ := client.GetTxReceiptsIfFinalized(txIDs, confirmationHeight)
+	txReceipts, _ := client.GetTxReceiptsIfFinalized(txIDs, event.ConfirmationHeight)
 
 	clog.Redf("[ETH] txReceipts: %+v", txReceipts)
 
 	var votes []sdk.Msg
 	for i, txReceipt := range txReceipts {
-		pollID := pollMappings[i].PollID
+		pollID := event.PollMappings[i].PollID
 		if txReceipt.Err() != nil {
-			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, types.NewVoteEvents(chain)))
+			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, types.NewVoteEvents(event.Chain)))
 			clog.Redf("broadcasting empty vote for poll %s: %s", pollID.String(), txReceipt.Err().Error())
 		} else {
-			events := processTxReceipt(client, chain, txReceipt.Ok().(ETHTxReceipt), newEventWrapper)
-			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, types.NewVoteEvents(chain, events...)))
+			events := client.processTxReceipt(event.Chain, txReceipt.Ok().(ETHTxReceipt))
+			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, types.NewVoteEvents(event.Chain, events...)))
 			clog.Redf("broadcasting vote %v for poll %s", events, pollID.String())
 		}
 	}
@@ -75,12 +35,7 @@ func processTxsConfirmation[T types.ConfirmationEvent](
 	return votes, nil
 }
 
-func processTxReceipt[T types.ConfirmationEvent](
-	client *EthereumClient,
-	chain nexus.ChainName,
-	receipt ETHTxReceipt,
-	newEventWrapper newEventWrapper[T],
-) []types.Event {
+func (c *EthereumClient) processTxReceipt(chain nexus.ChainName, receipt ETHTxReceipt) []types.Event {
 	var events []types.Event
 
 	clog.Red("processTxReceipt", "receipt", receipt)
@@ -93,26 +48,28 @@ func processTxReceipt[T types.ConfirmationEvent](
 
 		switch txlog.Topics[0] {
 		case ContractCallSig:
-			contractCallEvent, err := client.decodeEventContractCall(txlog)
+			contractCallEvent, err := c.decodeEventContractCall(txlog)
 			if err != nil {
-				client.logger().Debug(sdkerrors.Wrap(err, "decode event ContractCall failed").Error())
+				c.logger().Debug(sdkerrors.Wrap(err, "decode event ContractCall failed").Error())
 				continue
 			}
 			clog.Red("processTxReceipt", "contractCallEvent", contractCallEvent)
 
 			if err := contractCallEvent.ValidateBasic(); err != nil {
-				client.logger().Error(sdkerrors.Wrap(err, "invalid event ContractCall").Error())
+				c.logger().Error(sdkerrors.Wrap(err, "invalid event ContractCall").Error())
 				continue
 			}
 
 			events = append(events, types.Event{
 				Chain: chain,
 				TxID:  xchain.Hash(receipt.TxHash),
-				Event: newEventWrapper(contractCallEvent),
+				Event: &types.Event_SourceTxConfirmationEvent{
+					SourceTxConfirmationEvent: contractCallEvent,
+				},
 				Index: uint64(txlog.Index),
 			})
 		default:
-			client.logger().Errorf("unknown event type: %s", txlog.Topics[0])
+			c.logger().Errorf("unknown event type: %s", txlog.Topics[0])
 		}
 	}
 

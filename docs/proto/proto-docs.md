@@ -71,11 +71,8 @@
     - [PollMetadata](#scalar.chains.v1beta1.PollMetadata)
   
 - [scalar/chains/v1beta1/tx.proto](#scalar/chains/v1beta1/tx.proto)
-    - [ConfirmDestTxsRequest](#scalar.chains.v1beta1.ConfirmDestTxsRequest)
-    - [ConfirmDestTxsResponse](#scalar.chains.v1beta1.ConfirmDestTxsResponse)
     - [ConfirmSourceTxsRequest](#scalar.chains.v1beta1.ConfirmSourceTxsRequest)
     - [ConfirmSourceTxsResponse](#scalar.chains.v1beta1.ConfirmSourceTxsResponse)
-    - [EventConfirmDestTxsStarted](#scalar.chains.v1beta1.EventConfirmDestTxsStarted)
     - [EventConfirmSourceTxsStarted](#scalar.chains.v1beta1.EventConfirmSourceTxsStarted)
   
 - [scalar/chains/v1beta1/query.proto](#scalar/chains/v1beta1/query.proto)
@@ -1578,33 +1575,6 @@ Msg defines the nexus Msg service.
 
 
 
-<a name="scalar.chains.v1beta1.ConfirmDestTxsRequest"></a>
-
-### ConfirmDestTxsRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `sender` | [bytes](#bytes) |  |  |
-| `chain` | [string](#string) |  |  |
-| `tx_ids` | [bytes](#bytes) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.ConfirmDestTxsResponse"></a>
-
-### ConfirmDestTxsResponse
-
-
-
-
-
-
-
 <a name="scalar.chains.v1beta1.ConfirmSourceTxsRequest"></a>
 
 ### ConfirmSourceTxsRequest
@@ -1626,24 +1596,6 @@ Msg defines the nexus Msg service.
 
 ### ConfirmSourceTxsResponse
 
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.EventConfirmDestTxsStarted"></a>
-
-### EventConfirmDestTxsStarted
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `poll_mappings` | [PollMapping](#scalar.chains.v1beta1.PollMapping) | repeated |  |
-| `chain` | [string](#string) |  |  |
-| `confirmation_height` | [uint64](#uint64) |  |  |
-| `participants` | [bytes](#bytes) | repeated |  |
 
 
 
@@ -1751,8 +1703,7 @@ Msg defines the btc Msg service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `ConfirmSourceTxs` | [ConfirmSourceTxsRequest](#scalar.chains.v1beta1.ConfirmSourceTxsRequest) | [ConfirmSourceTxsResponse](#scalar.chains.v1beta1.ConfirmSourceTxsResponse) |  | POST|/scalar/btc/confirm_source_txs|
-| `ConfirmDestTxs` | [ConfirmDestTxsRequest](#scalar.chains.v1beta1.ConfirmDestTxsRequest) | [ConfirmDestTxsResponse](#scalar.chains.v1beta1.ConfirmDestTxsResponse) |  | POST|/scalar/btc/confirm_dest_txs|
+| `ConfirmSourceTxs` | [ConfirmSourceTxsRequest](#scalar.chains.v1beta1.ConfirmSourceTxsRequest) | [ConfirmSourceTxsResponse](#scalar.chains.v1beta1.ConfirmSourceTxsResponse) |  | POST|/scalar/chains/confirm_source_txs|
 
 
 <a name="scalar.chains.v1beta1.QueryService"></a>
@@ -1762,7 +1713,7 @@ QueryService defines the gRPC querier service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `BatchedCommands` | [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest) | [BatchedCommandsResponse](#scalar.chains.v1beta1.BatchedCommandsResponse) | BatchedCommands queries the batched commands for a specified chain and BatchedCommandsID if no BatchedCommandsID is specified, then it returns the latest batched commands | GET|/scalar/btc/v1beta1/batched_commands/{chain}/{id}|
+| `BatchedCommands` | [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest) | [BatchedCommandsResponse](#scalar.chains.v1beta1.BatchedCommandsResponse) | BatchedCommands queries the batched commands for a specified chain and BatchedCommandsID if no BatchedCommandsID is specified, then it returns the latest batched commands | GET|/scalar/chains/v1beta1/batched_commands/{chain}/{id}|
 
  <!-- end services -->
 

@@ -27,23 +27,6 @@ message ConfirmSourceTxsRequest {
 
 message ConfirmSourceTxsResponse {}
 
-message ConfirmDestTxsRequest {
-  option (scalar.permission.exported.v1beta1.permission_role) =
-      ROLE_UNRESTRICTED;
-  bytes sender = 1 [ (gogoproto.casttype) =
-                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
-  string chain = 2
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  repeated bytes tx_ids = 3 [
-    (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
-    (gogoproto.customname) = "TxIDs"
-  ];
-}
-
-message ConfirmDestTxsResponse {}
-
 message EventConfirmSourceTxsStarted {
   repeated PollMapping poll_mappings = 1 [
     (gogoproto.nullable) = false,
@@ -54,20 +37,6 @@ message EventConfirmSourceTxsStarted {
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   uint64 confirmation_height = 3;
   repeated bytes participants = 4
-      [ (gogoproto.casttype) =
-            "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
-}
-
-message EventConfirmDestTxsStarted {
-  repeated PollMapping poll_mappings = 1 [
-    (gogoproto.nullable) = false,
-    (gogoproto.jsontag) = "poll_mappings,omitempty"
-  ];
-  string chain = 2
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  uint64 confirmation_height = 4;
-  repeated bytes participants = 5
       [ (gogoproto.casttype) =
             "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
 }

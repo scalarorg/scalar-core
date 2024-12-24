@@ -88,8 +88,6 @@ func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 	switch event.GetEvent().(type) {
 	case *types.Event_SourceTxConfirmationEvent:
 		return handleSourceConfirmationEvent(ctx, event, bk, n, m)
-	// case *types.Event_DestTxConfirmationEvent:
-	// return handleDestinationConfirmationEvent(ctx, event, bk, n, m)
 
 	// TODO: add other event types here
 

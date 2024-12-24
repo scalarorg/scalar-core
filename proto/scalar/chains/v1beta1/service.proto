@@ -17,14 +17,7 @@ service MsgService {
   rpc ConfirmSourceTxs(ConfirmSourceTxsRequest)
       returns (ConfirmSourceTxsResponse) {
     option (google.api.http) = {
-      post : "/scalar/btc/confirm_source_txs"
-      body : "*"
-    };
-  }
-
-  rpc ConfirmDestTxs(ConfirmDestTxsRequest) returns (ConfirmDestTxsResponse) {
-    option (google.api.http) = {
-      post : "/scalar/btc/confirm_dest_txs"
+      post : "/scalar/chains/confirm_source_txs"
       body : "*"
     };
   }
@@ -39,6 +32,6 @@ service QueryService {
   rpc BatchedCommands(BatchedCommandsRequest)
       returns (BatchedCommandsResponse) {
     option (google.api.http).get =
-        "/scalar/btc/v1beta1/batched_commands/{chain}/{id}";
+        "/scalar/chains/v1beta1/batched_commands/{chain}/{id}";
   }
 }

@@ -29,7 +29,6 @@ func HashToChainHash(h Hash) chainhash.Hash {
 
 type Client interface {
 	ProcessSourceTxsConfirmation(event *btcTypes.EventConfirmSourceTxsStarted, proxy sdk.AccAddress) ([]sdk.Msg, error)
-	ProcessDestinationTxsConfirmation(event *btcTypes.EventConfirmDestTxsStarted, proxy sdk.AccAddress) ([]sdk.Msg, error)
 	GetTxReceiptsIfFinalized(txIDs []Hash, confHeight uint64) ([]TxResult, error)
 	GetTransactions(txIDs []Hash) ([]TxResult, error)
 	GetTransaction(txID Hash) (TxResult, error)

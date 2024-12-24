@@ -11,7 +11,6 @@ import (
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&ConfirmSourceTxsRequest{},
-		&ConfirmDestTxsRequest{},
 	)
 
 	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
