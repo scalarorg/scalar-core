@@ -15,7 +15,7 @@ import (
 	"github.com/scalarorg/scalar-core/testutils/fake"
 	"github.com/scalarorg/scalar-core/testutils/rand"
 	utilstestutils "github.com/scalarorg/scalar-core/utils/testutils"
-	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	snapshottestutils "github.com/scalarorg/scalar-core/x/snapshot/exported/testutils"
 	"github.com/scalarorg/scalar-core/x/vote/exported"
 	"github.com/scalarorg/scalar-core/x/vote/types"
@@ -31,7 +31,7 @@ func setup() (sdk.Context, Keeper, *mock.SnapshotterMock, *mock.StakingKeeperMoc
 	encodingConfig := params.MakeEncodingConfig()
 	types.RegisterLegacyAminoCodec(encodingConfig.Amino)
 	types.RegisterInterfaces(encodingConfig.InterfaceRegistry)
-	evmtypes.RegisterInterfaces(encodingConfig.InterfaceRegistry)
+	chainsTypes.RegisterInterfaces(encodingConfig.InterfaceRegistry)
 	subspace := paramstypes.NewSubspace(encodingConfig.Codec, encodingConfig.Amino, sdk.NewKVStoreKey("paramsKey"), sdk.NewKVStoreKey("tparamsKey"), "vote")
 
 	keeper := NewKeeper(

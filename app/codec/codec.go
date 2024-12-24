@@ -7,7 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/gogo/protobuf/proto"
 
-	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
 	permissiontypes "github.com/scalarorg/scalar-core/x/permission/types"
 	rewardtypes "github.com/scalarorg/scalar-core/x/reward/types"
@@ -30,7 +30,7 @@ func RegisterLegacyMsgInterfaces(registry cdctypes.InterfaceRegistry) {
 		panic(fmt.Errorf("failed to convert registry type %T", registry))
 	}
 
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".evm.v1beta1.CreateTransferOwnershipRequest", &evmtypes.CreateTransferOwnershipRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".evm.v1beta1.CreateTransferOwnershipRequest", &chainsTypes.CreateTransferOwnershipRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/scalar.scalarnet.v1beta1.RegisterIBCPathRequest", &scalarnettypes.RegisterIBCPathRequest{})
 
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/scalar.scalarnet.v1beta1.LinkRequest", &scalarnettypes.LinkRequest{})
@@ -42,20 +42,20 @@ func RegisterLegacyMsgInterfaces(registry cdctypes.InterfaceRegistry) {
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/scalar.scalarnet.v1beta1.RouteIBCTransfersRequest", &scalarnettypes.RouteIBCTransfersRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/scalar.scalarnet.v1beta1.RegisterFeeCollectorRequest", &scalarnettypes.RegisterFeeCollectorRequest{})
 
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/evm.v1beta1.LinkRequest", &evmtypes.LinkRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/evm.v1beta1.ConfirmTokenRequest", &evmtypes.ConfirmTokenRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/evm.v1beta1.ConfirmDepositRequest", &evmtypes.ConfirmDepositRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/evm.v1beta1.ConfirmTransferKeyRequest", &evmtypes.ConfirmTransferKeyRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/evm.v1beta1.CreatePendingTransfersRequest", &evmtypes.CreatePendingTransfersRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/evm.v1beta1.CreateDeployTokenRequest", &evmtypes.CreateDeployTokenRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/evm.v1beta1.CreateBurnTokensRequest", &evmtypes.CreateBurnTokensRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/evm.v1beta1.CreateTransferOwnershipRequest", &evmtypes.CreateTransferOwnershipRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/evm.v1beta1.CreateTransferOperatorshipRequest", &evmtypes.CreateTransferOperatorshipRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/evm.v1beta1.SignCommandsRequest", &evmtypes.SignCommandsRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/evm.v1beta1.AddChainRequest", &evmtypes.AddChainRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/evm.v1beta1.SetGatewayRequest", &evmtypes.SetGatewayRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/evm.v1beta1.ConfirmGatewayTxRequest", &evmtypes.ConfirmGatewayTxRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/evm.v1beta1.RetryFailedEventRequest", &evmtypes.RetryFailedEventRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.LinkRequest", &chainsTypes.LinkRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.ConfirmTokenRequest", &chainsTypes.ConfirmTokenRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.ConfirmDepositRequest", &chainsTypes.ConfirmDepositRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.ConfirmTransferKeyRequest", &chainsTypes.ConfirmTransferKeyRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.CreatePendingTransfersRequest", &chainsTypes.CreatePendingTransfersRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.CreateDeployTokenRequest", &chainsTypes.CreateDeployTokenRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.CreateBurnTokensRequest", &chainsTypes.CreateBurnTokensRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.CreateTransferOwnershipRequest", &chainsTypes.CreateTransferOwnershipRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.CreateTransferOperatorshipRequest", &chainsTypes.CreateTransferOperatorshipRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.SignCommandsRequest", &chainsTypes.SignCommandsRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.AddChainRequest", &chainsTypes.AddChainRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.SetGatewayRequest", &chainsTypes.SetGatewayRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.ConfirmSourceTxsRequest", &chainsTypes.ConfirmSourceTxsRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.RetryFailedEventRequest", &chainsTypes.RetryFailedEventRequest{})
 
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/nexus.v1beta1.RegisterChainMaintainerRequest", &nexustypes.RegisterChainMaintainerRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/nexus.v1beta1.DeregisterChainMaintainerRequest", &nexustypes.DeregisterChainMaintainerRequest{})

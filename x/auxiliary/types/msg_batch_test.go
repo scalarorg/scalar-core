@@ -10,14 +10,14 @@ import (
 	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/testutils/rand"
 	"github.com/scalarorg/scalar-core/x/auxiliary/types"
-	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 func TestBatchRequest_ValidateBasic(t *testing.T) {
 	t.Run("should fail with nested batch", func(t *testing.T) {
 		sender := rand.AccAddr()
 
-		linkRequest := evmtypes.NewLinkRequest(sender, rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5))
+		linkRequest := chainsTypes.NewLinkRequest(sender, rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5))
 		batch := types.NewBatchRequest(sender, []sdk.Msg{linkRequest})
 		message := types.NewBatchRequest(sender, []sdk.Msg{linkRequest, batch})
 
@@ -27,7 +27,7 @@ func TestBatchRequest_ValidateBasic(t *testing.T) {
 	t.Run("should fail with different signers", func(t *testing.T) {
 
 		message := types.NewBatchRequest(rand.AccAddr(), []sdk.Msg{
-			evmtypes.NewLinkRequest(rand.AccAddr(), rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5)),
+			chainsTypes.NewLinkRequest(rand.AccAddr(), rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5)),
 		})
 
 		assert.ErrorContains(t, message.ValidateBasic(), "message signer mismatch")
@@ -38,8 +38,8 @@ func TestBatchRequest_ValidateBasic(t *testing.T) {
 
 		sender := rand.AccAddr()
 		messages := []sdk.Msg{
-			evmtypes.NewLinkRequest(sender, rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5)),
-			evmtypes.NewLinkRequest(sender, rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5)),
+			chainsTypes.NewLinkRequest(sender, rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5)),
+			chainsTypes.NewLinkRequest(sender, rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5), rand.NormalizedStr(5)),
 		}
 		batch := types.NewBatchRequest(sender, messages)
 

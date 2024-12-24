@@ -32,6 +32,9 @@ import (
 	protocoltypes "github.com/scalarorg/scalar-core/x/protocol/types"
 	snapshottypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"
+	tmtypes "github.com/tendermint/tendermint/types"
+
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 // DefaultProtocol returns the default chains for a genesis state

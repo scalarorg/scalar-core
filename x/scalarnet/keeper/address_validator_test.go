@@ -10,7 +10,7 @@ package keeper_test
 
 // 	"github.com/scalarorg/scalar-core/testutils/fake"
 // 	"github.com/scalarorg/scalar-core/testutils/rand"
-// 	evm "github.com/scalarorg/scalar-core/x/evm/exported"
+// 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 // 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet/exported"
 // 	"github.com/scalarorg/scalar-core/x/scalarnet/keeper"

@@ -245,12 +245,12 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 			event.Attributes[sdk.AttributeKeyAction] == tssTypes.AttributeValueSend
 	})
 
-	// evmNewChain := eventBus.Subscribe(tmEvents.Filter[*evmTypes.ChainAdded]())
-	// evmDepConf := eventBus.Subscribe(tmEvents.Filter[*evmTypes.ConfirmDepositStarted]())
-	// evmTokConf := eventBus.Subscribe(tmEvents.Filter[*evmTypes.ConfirmTokenStarted]())
-	// evmTraConf := eventBus.Subscribe(tmEvents.Filter[*evmTypes.ConfirmKeyTransferStarted]())
-	// evmGatewayTxConf := eventBus.Subscribe(tmEvents.Filter[*evmTypes.ConfirmGatewayTxStarted]())
-	// evmGatewayTxsConf := eventBus.Subscribe(tmEvents.Filter[*evmTypes.ConfirmGatewayTxsStarted]())
+	// evmNewChain := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ChainAdded]())
+	// evmDepConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ConfirmDepositStarted]())
+	// evmTokConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ConfirmTokenStarted]())
+	// evmTraConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ConfirmKeyTransferStarted]())
+	// evmGatewayTxConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ConfirmGatewayTxStarted]())
+	// evmGatewayTxsConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ConfirmGatewayTxsStarted]())
 
 	multisigKeygen := eventBus.Subscribe(tmEvents.Filter[*multisigTypes.KeygenStarted]())
 	multisigSigning := eventBus.Subscribe(tmEvents.Filter[*multisigTypes.SigningStarted]())

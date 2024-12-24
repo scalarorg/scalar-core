@@ -18,10 +18,10 @@ import (
 	. "github.com/scalarorg/scalar-core/utils/test"
 	"github.com/scalarorg/scalar-core/x/auxiliary/keeper"
 	"github.com/scalarorg/scalar-core/x/auxiliary/types"
-	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 	votetypes "github.com/scalarorg/scalar-core/x/vote/types"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 func TestBatching(t *testing.T) {
@@ -43,7 +43,7 @@ func TestBatching(t *testing.T) {
 		messagehandlerCalled = false
 		sender = rand.AccAddr()
 		innerMessages = slices.Expand2(func() sdk.Msg {
-			return votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), evmTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3))))
+			return votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), chainsTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3))))
 		}, int(rand2.I64Between(2, 10)))
 
 		msgServer = keeper.NewMsgServer(msgServiceRouter)

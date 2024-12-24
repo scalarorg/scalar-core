@@ -17,9 +17,9 @@ import (
 	"github.com/scalarorg/scalar-core/testutils/fake"
 	"github.com/scalarorg/scalar-core/testutils/rand"
 	"github.com/scalarorg/scalar-core/utils"
-	evm "github.com/scalarorg/scalar-core/x/evm/exported"
-	evmkeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
-	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
+	chainsKeepr "github.com/scalarorg/scalar-core/x/chains/keeper"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/types"
 	testutils "github.com/scalarorg/scalar-core/x/nexus/types/testutils"
@@ -49,7 +49,7 @@ func setup() (sdk.Context, Keeper) {
 	}
 
 	addressValidators := types.NewAddressValidators()
-	addressValidators.AddAddressValidator(evmTypes.ModuleName, evmkeeper.NewAddressValidator()).
+	addressValidators.AddAddressValidator(chainsTypes.ModuleName, chainsKeepr.NewAddressValidator()).
 		AddAddressValidator(scalarnetTypes.ModuleName, ScalarnetKeeper.NewAddressValidator(scalarnetK))
 
 	addressValidators.Seal()
@@ -68,7 +68,7 @@ func getRandomScalarnetAddress() exported.CrossChainAddress {
 
 func getRandomEthereumAddress() exported.CrossChainAddress {
 	return exported.CrossChainAddress{
-		Chain:   evm.Ethereum,
+		Chain:   chains.Ethereum,
 		Address: common.BytesToAddress(rand.Bytes(common.AddressLength)).Hex(),
 	}
 }
@@ -114,10 +114,10 @@ func TestExportGenesisInitGenesis(t *testing.T) {
 		panic(err)
 	}
 
-	if err := keeper.RegisterAsset(ctx, evm.Ethereum, exported.NewAsset(scalarnet.NativeAsset, false), utils.MaxUint, time.Hour); err != nil {
+	if err := keeper.RegisterAsset(ctx, chains.Ethereum, exported.NewAsset(scalarnet.NativeAsset, false), utils.MaxUint, time.Hour); err != nil {
 		panic(err)
 	}
-	if err := keeper.RegisterFee(ctx, evm.Ethereum, testutils.RandFee(evm.Ethereum.Name, scalarnet.NativeAsset)); err != nil {
+	if err := keeper.RegisterFee(ctx, chains.Ethereum, testutils.RandFee(chains.Ethereum.Name, scalarnet.NativeAsset)); err != nil {
 		panic(err)
 	}
 
@@ -187,7 +187,7 @@ func TestExportGenesisInitGenesis(t *testing.T) {
 			Activated: true,
 		},
 		{
-			Chain:     evm.Ethereum,
+			Chain:     chains.Ethereum,
 			Assets:    []exported.Asset{exported.NewAsset(scalarnet.NativeAsset, false)},
 			Activated: true,
 		},

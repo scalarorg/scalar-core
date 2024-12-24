@@ -20,10 +20,10 @@ import (
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/vald/config"
 	"github.com/scalarorg/scalar-core/vald/tss"
-	evm "github.com/scalarorg/scalar-core/x/evm/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	"github.com/scalarorg/scalar-core/x/tss/tofnd"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 // GetSignCommand returns the command to execute a manual sign request from vald
@@ -114,14 +114,14 @@ func GetSignCommand() *cobra.Command {
 			switch res.GetSignResponse().(type) {
 			case *tofnd.SignResponse_Signature:
 				ecdsaSig := *funcs.Must(ec.ParseDERSignature(res.GetSignature()))
-				evmSignature := funcs.Must(evm.ToSignature(ecdsaSig, hash, pubKey.ToECDSAPubKey())).ToHomesteadSig()
+				chainsSignature := funcs.Must(chainsTypes.ToSignature(ecdsaSig, hash, pubKey.ToECDSAPubKey())).ToHomesteadSig()
 
 				signDetails := map[string]string{
 					"key_id":    keyID.String(),
 					"validator": valAddr,
 					"msg_hash":  utils.HexEncode(hash.Bytes()),
 					"pub_key":   utils.HexEncode(pubKey),
-					"signature": utils.HexEncode(evmSignature),
+					"signature": utils.HexEncode(chainsSignature),
 				}
 				fmt.Printf("%s", funcs.Must(json.MarshalIndent(signDetails, "", "  ")))
 

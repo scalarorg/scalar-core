@@ -15,7 +15,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
 	"github.com/rs/zerolog/log"
-	emvtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	scalarnetTypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 	ctypes "github.com/tendermint/tendermint/rpc/core/types"
@@ -169,12 +168,12 @@ func (c *NetworkClient) Start() error {
 }
 
 // https://github.com/cosmos/cosmos-sdk/blob/main/client/tx/tx.go#L31
-func (c *NetworkClient) ConfirmEvmTx(ctx context.Context, msg *emvtypes.ConfirmGatewayTxsRequest) (*sdk.TxResponse, error) {
+func (c *NetworkClient) ConfirmEvmTx(ctx context.Context, msg *chainsTypes.ConfirmGatewayTxsRequest) (*sdk.TxResponse, error) {
 	return c.SignAndBroadcastMsgs(ctx, msg)
 }
 
 func (c *NetworkClient) SignCommandsRequest(ctx context.Context, destinationChain string) (*sdk.TxResponse, error) {
-	req := emvtypes.NewSignCommandsRequest(
+	req := chainsTypes.NewSignCommandsRequest(
 		c.GetAddress(),
 		destinationChain)
 

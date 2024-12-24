@@ -1,6 +1,9 @@
 package types
 
 import (
+	"encoding/json"
+
+	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	gethParams "github.com/ethereum/go-ethereum/params"
 	utils "github.com/scalarorg/scalar-core/utils"
@@ -58,4 +61,13 @@ func NewGenesisState(chains []GenesisState_Chain) *GenesisState {
 	return &GenesisState{
 		Chains: chains,
 	}
+}
+
+func GetGenesisStateFromAppState(cdc codec.JSONCodec, appState map[string]json.RawMessage) GenesisState {
+	var genesisState GenesisState
+	if appState[ModuleName] != nil {
+		cdc.MustUnmarshalJSON(appState[ModuleName], &genesisState)
+	}
+
+	return genesisState
 }

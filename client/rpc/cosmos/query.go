@@ -12,7 +12,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/tx"
 	auth "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/rs/zerolog/log"
-	emvtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	scalarnetTypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
 	//gogogrpc "github.com/cosmos/gogoproto/grpc"
 	//pbgrpc "github.com/gogo/protobuf/grpc"
@@ -20,14 +19,14 @@ import (
 
 type QueryClient struct {
 	clientCtx             *client.Context
-	EvmQueryServiceClient emvtypes.QueryServiceClient
+	EvmQueryServiceClient chainsTypes.QueryServiceClient
 	MsgServiceClient      scalarnetTypes.MsgServiceClient
 	TxServiceClient       tx.ServiceClient
 	AccountQueryClient    auth.QueryClient
 }
 
 func NewQueryClient(clientCtx *client.Context) *QueryClient {
-	evmQueryServiceClient := emvtypes.NewQueryServiceClient(clientCtx)
+	evmQueryServiceClient := chainsTypes.NewQueryServiceClient(clientCtx)
 	msgServiceClient := scalarnetTypes.NewMsgServiceClient(clientCtx)
 	accountQueryClient := auth.NewQueryClient(clientCtx)
 	txServiceClient := tx.NewServiceClient(clientCtx)
@@ -44,8 +43,8 @@ func (c *QueryClient) GetClientCtx() *client.Context {
 	return c.clientCtx
 }
 
-func (c *QueryClient) QueryBatchedCommands(ctx context.Context, destinationChain string, batchedCommandId string) (*emvtypes.BatchedCommandsResponse, error) {
-	req := &emvtypes.BatchedCommandsRequest{
+func (c *QueryClient) QueryBatchedCommands(ctx context.Context, destinationChain string, batchedCommandId string) (*chainsTypes.BatchedCommandsResponse, error) {
+	req := &chainsTypes.BatchedCommandsRequest{
 		Chain: destinationChain,
 		Id:    batchedCommandId,
 	}
@@ -56,8 +55,8 @@ func (c *QueryClient) QueryBatchedCommands(ctx context.Context, destinationChain
 	return resp, nil
 }
 
-func (c *QueryClient) QueryPendingCommand(ctx context.Context, destinationChain string) ([]emvtypes.QueryCommandResponse, error) {
-	req := &emvtypes.PendingCommandsRequest{
+func (c *QueryClient) QueryPendingCommand(ctx context.Context, destinationChain string) ([]chainsTypes.QueryCommandResponse, error) {
+	req := &chainsTypes.PendingCommandsRequest{
 		Chain: destinationChain,
 	}
 	resp, err := c.EvmQueryServiceClient.PendingCommands(ctx, req)
@@ -144,8 +143,8 @@ func (c *QueryClient) QueryTx(ctx context.Context, txHash string) (*sdk.TxRespon
 }
 
 func (c *QueryClient) QueryActivedChains(ctx context.Context) ([]string, error) {
-	req := &emvtypes.ChainsRequest{
-		Status: emvtypes.Activated,
+	req := &chainsTypes.ChainsRequest{
+		Status: chainsTypes.Activated,
 	}
 	resp, err := c.EvmQueryServiceClient.Chains(ctx, req)
 	if err != nil {

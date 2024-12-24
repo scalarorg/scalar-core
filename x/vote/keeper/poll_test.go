@@ -19,12 +19,12 @@ import (
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	. "github.com/scalarorg/scalar-core/utils/test"
-	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	"github.com/scalarorg/scalar-core/x/vote/exported"
 	"github.com/scalarorg/scalar-core/x/vote/keeper"
 	"github.com/scalarorg/scalar-core/x/vote/types"
 	"github.com/scalarorg/scalar-core/x/vote/types/mock"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 func TestPoll(t *testing.T) {
@@ -52,7 +52,7 @@ func TestPoll(t *testing.T) {
 		encodingConfig := params.MakeEncodingConfig()
 		types.RegisterLegacyAminoCodec(encodingConfig.Amino)
 		types.RegisterInterfaces(encodingConfig.InterfaceRegistry)
-		encodingConfig.InterfaceRegistry.RegisterImplementations((*codec.ProtoMarshaler)(nil), &evmtypes.VoteEvents{})
+		encodingConfig.InterfaceRegistry.RegisterImplementations((*codec.ProtoMarshaler)(nil), &chainsTypes.VoteEvents{})
 		subspace := paramstypes.NewSubspace(encodingConfig.Codec, encodingConfig.Amino, sdk.NewKVStoreKey("paramsKey"), sdk.NewKVStoreKey("tparamsKey"), "vote")
 
 		k = keeper.NewKeeper(
@@ -95,9 +95,9 @@ func TestPoll(t *testing.T) {
 
 				for _, voter := range voters[0:3] {
 					assert.Nil(t, poll.GetResult())
-					poll.Vote(voter, ctx.BlockHeight(), &evmtypes.VoteEvents{Events: []evmtypes.Event{{}}})
+					poll.Vote(voter, ctx.BlockHeight(), &chainsTypes.VoteEvents{Events: []chainsTypes.Event{{}}})
 				}
-				poll.Vote(voters[3], ctx.BlockHeight(), &evmtypes.VoteEvents{Events: []evmtypes.Event{}})
+				poll.Vote(voters[3], ctx.BlockHeight(), &chainsTypes.VoteEvents{Events: []chainsTypes.Event{}})
 
 				for _, voter := range voters[0:3] {
 					assert.True(t, poll.HasVotedCorrectly(voter))
@@ -117,7 +117,7 @@ func TestPoll(t *testing.T) {
 
 				for _, voter := range voters[0:3] {
 					assert.Nil(t, poll.GetResult())
-					poll.Vote(voter, ctx.BlockHeight(), &evmtypes.VoteEvents{Events: []evmtypes.Event{{}}})
+					poll.Vote(voter, ctx.BlockHeight(), &chainsTypes.VoteEvents{Events: []chainsTypes.Event{{}}})
 				}
 
 				for _, voter := range voters[0:3] {
@@ -132,7 +132,7 @@ func TestPoll(t *testing.T) {
 		givenPollBuilder.
 			When2(whenPollIsInitialized).
 			Then("should return the correct result", func(t *testing.T) {
-				expected := &evmtypes.VoteEvents{Events: []evmtypes.Event{{}}}
+				expected := &chainsTypes.VoteEvents{Events: []chainsTypes.Event{{}}}
 
 				for _, voter := range voters[0:3] {
 					assert.Nil(t, poll.GetResult())
@@ -165,7 +165,7 @@ func TestPoll(t *testing.T) {
 					poll, _ = k.GetPoll(ctx, poll.GetID())
 					assert.EqualValues(t, exported.Pending, poll.GetState())
 
-					voteResult, err := poll.Vote(voter, ctx.BlockHeight(), &evmtypes.VoteEvents{})
+					voteResult, err := poll.Vote(voter, ctx.BlockHeight(), &chainsTypes.VoteEvents{})
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, exported.VoteInTime, voteResult)
@@ -183,7 +183,7 @@ func TestPoll(t *testing.T) {
 				originalPollID := poll.GetID()
 
 				for _, voter := range voters {
-					poll.Vote(voter, ctx.BlockHeight(), &evmtypes.VoteEvents{})
+					poll.Vote(voter, ctx.BlockHeight(), &chainsTypes.VoteEvents{})
 				}
 
 				assert.EqualValues(t, exported.Completed, poll.GetState())
@@ -205,7 +205,7 @@ func TestPoll(t *testing.T) {
 				poll, _ = k.GetPoll(ctx, pollID)
 
 				for _, voter := range voters {
-					poll.Vote(voter, ctx.BlockHeight(), &evmtypes.VoteEvents{})
+					poll.Vote(voter, ctx.BlockHeight(), &chainsTypes.VoteEvents{})
 				}
 
 				assert.EqualValues(t, exported.Completed, poll.GetState())
@@ -221,7 +221,7 @@ func TestPoll(t *testing.T) {
 					poll, _ = k.GetPoll(ctx, poll.GetID())
 					assert.EqualValues(t, exported.Pending, poll.GetState())
 
-					voteResult, err := poll.Vote(voter, ctx.BlockHeight(), &evmtypes.VoteEvents{})
+					voteResult, err := poll.Vote(voter, ctx.BlockHeight(), &chainsTypes.VoteEvents{})
 
 					assert.NoError(t, err)
 					assert.EqualValues(t, exported.VoteInTime, voteResult)
@@ -237,10 +237,10 @@ func TestPoll(t *testing.T) {
 			When2(whenPollIsInitialized).
 			Then("should be able to vote for a completed poll within the grace period", func(t *testing.T) {
 				for _, voter := range voters[0:3] {
-					poll.Vote(voter, ctx.BlockHeight(), &evmtypes.VoteEvents{})
+					poll.Vote(voter, ctx.BlockHeight(), &chainsTypes.VoteEvents{})
 				}
 
-				voteResult, err := poll.Vote(voters[3], ctx.BlockHeight()+1, &evmtypes.VoteEvents{})
+				voteResult, err := poll.Vote(voters[3], ctx.BlockHeight()+1, &chainsTypes.VoteEvents{})
 
 				assert.NoError(t, err)
 				assert.EqualValues(t, exported.VotedLate, voteResult)
@@ -252,10 +252,10 @@ func TestPoll(t *testing.T) {
 			When2(whenPollIsInitialized).
 			Then("should not be able to vote for a completed poll outside the grace period", func(t *testing.T) {
 				for _, voter := range voters[0:3] {
-					poll.Vote(voter, ctx.BlockHeight(), &evmtypes.VoteEvents{})
+					poll.Vote(voter, ctx.BlockHeight(), &chainsTypes.VoteEvents{})
 				}
 
-				voteResult, err := poll.Vote(voters[3], ctx.BlockHeight()+2, &evmtypes.VoteEvents{})
+				voteResult, err := poll.Vote(voters[3], ctx.BlockHeight()+2, &chainsTypes.VoteEvents{})
 
 				assert.NoError(t, err)
 				assert.EqualValues(t, exported.NoVote, voteResult)
@@ -266,8 +266,8 @@ func TestPoll(t *testing.T) {
 		givenPollBuilder.
 			When2(whenPollIsInitialized).
 			Then("should not be able to re-vote", func(t *testing.T) {
-				poll.Vote(voters[0], ctx.BlockHeight(), &evmtypes.VoteEvents{})
-				voteResult, err := poll.Vote(voters[0], ctx.BlockHeight(), &evmtypes.VoteEvents{})
+				poll.Vote(voters[0], ctx.BlockHeight(), &chainsTypes.VoteEvents{})
+				voteResult, err := poll.Vote(voters[0], ctx.BlockHeight(), &chainsTypes.VoteEvents{})
 
 				assert.Error(t, err)
 				assert.EqualValues(t, exported.NoVote, voteResult)
@@ -277,7 +277,7 @@ func TestPoll(t *testing.T) {
 		givenPollBuilder.
 			When2(whenPollIsInitialized).
 			Then("should not allow non-voters to vote", func(t *testing.T) {
-				voteResult, err := poll.Vote(rand.ValAddr(), ctx.BlockHeight(), &evmtypes.VoteEvents{})
+				voteResult, err := poll.Vote(rand.ValAddr(), ctx.BlockHeight(), &chainsTypes.VoteEvents{})
 
 				assert.Error(t, err)
 				assert.EqualValues(t, exported.NoVote, voteResult)
@@ -287,9 +287,9 @@ func TestPoll(t *testing.T) {
 		givenPollBuilder.
 			When2(whenPollIsInitialized).
 			Then("should fail the poll if it is impossible to pass the threshold", func(t *testing.T) {
-				poll.Vote(voters[0], ctx.BlockHeight(), &evmtypes.VoteEvents{Events: []evmtypes.Event{{}}})
-				poll.Vote(voters[1], ctx.BlockHeight(), &evmtypes.VoteEvents{Events: []evmtypes.Event{{}, {}}})
-				voteResult, err := poll.Vote(voters[2], ctx.BlockHeight(), &evmtypes.VoteEvents{Events: []evmtypes.Event{{}, {}, {}}})
+				poll.Vote(voters[0], ctx.BlockHeight(), &chainsTypes.VoteEvents{Events: []chainsTypes.Event{{}}})
+				poll.Vote(voters[1], ctx.BlockHeight(), &chainsTypes.VoteEvents{Events: []chainsTypes.Event{{}, {}}})
+				voteResult, err := poll.Vote(voters[2], ctx.BlockHeight(), &chainsTypes.VoteEvents{Events: []chainsTypes.Event{{}, {}, {}}})
 
 				assert.NoError(t, err)
 				assert.EqualValues(t, exported.VoteInTime, voteResult)
@@ -303,11 +303,11 @@ func TestPoll(t *testing.T) {
 		givenPollBuilder.
 			When2(whenPollIsInitialized).
 			Then("should not be able to vote for a failed poll", func(t *testing.T) {
-				poll.Vote(voters[0], ctx.BlockHeight(), &evmtypes.VoteEvents{Events: []evmtypes.Event{{}}})
-				poll.Vote(voters[1], ctx.BlockHeight(), &evmtypes.VoteEvents{Events: []evmtypes.Event{{}, {}}})
-				poll.Vote(voters[2], ctx.BlockHeight(), &evmtypes.VoteEvents{Events: []evmtypes.Event{{}, {}, {}}})
+				poll.Vote(voters[0], ctx.BlockHeight(), &chainsTypes.VoteEvents{Events: []chainsTypes.Event{{}}})
+				poll.Vote(voters[1], ctx.BlockHeight(), &chainsTypes.VoteEvents{Events: []chainsTypes.Event{{}, {}}})
+				poll.Vote(voters[2], ctx.BlockHeight(), &chainsTypes.VoteEvents{Events: []chainsTypes.Event{{}, {}, {}}})
 
-				voteResult, err := poll.Vote(voters[3], ctx.BlockHeight(), &evmtypes.VoteEvents{Events: []evmtypes.Event{{}, {}, {}}})
+				voteResult, err := poll.Vote(voters[3], ctx.BlockHeight(), &chainsTypes.VoteEvents{Events: []chainsTypes.Event{{}, {}, {}}})
 
 				assert.NoError(t, err)
 				assert.EqualValues(t, exported.NoVote, voteResult)
@@ -319,7 +319,7 @@ func TestPoll(t *testing.T) {
 
 func TestPoll_GetMetaData(t *testing.T) {
 	encCfg := params.MakeEncodingConfig()
-	evmtypes.RegisterInterfaces(encCfg.InterfaceRegistry)
+	chainsTypes.RegisterInterfaces(encCfg.InterfaceRegistry)
 
 	subspace := paramstypes.NewSubspace(encCfg.Codec, encCfg.Amino, sdk.NewKVStoreKey("paramsKey"), sdk.NewKVStoreKey("tparamsKey"), "vote")
 	k := keeper.NewKeeper(encCfg.Codec, sdk.NewKVStoreKey(types.StoreKey), subspace, &mock.SnapshotterMock{}, &mock.StakingKeeperMock{}, &mock.RewarderMock{})
@@ -330,7 +330,7 @@ func TestPoll_GetMetaData(t *testing.T) {
 		slices.Expand(func(_ int) snapshot.Participant { return snapshot.NewParticipant(rand.ValAddr(), sdk.OneUint()) }, 5),
 		sdk.NewUint(5),
 	)
-	expectedMetadata := &evmtypes.PollMetadata{
+	expectedMetadata := &chainsTypes.PollMetadata{
 		Chain: "chain",
 		TxID:  [common.HashLength]byte{},
 	}

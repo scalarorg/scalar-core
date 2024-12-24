@@ -1,20 +1,10 @@
 package cmd
 
 import (
-	"encoding/json"
-	"fmt"
-	"strings"
-
-	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/cosmos/cosmos-sdk/server"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/genutil"
-	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/spf13/cobra"
 
-	evm "github.com/scalarorg/scalar-core/x/evm/exported"
-	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
@@ -45,116 +35,117 @@ func SetGenesisChainParamsCmd(defaultNodeHome string) *cobra.Command {
 		Long: "Set chain parameters in genesis.json. " +
 			"The provided platform must be one of those scalar supports (currently only EVM).",
 		Args: cobra.MinimumNArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-			cdc := clientCtx.Codec
+		// RunE: func(cmd *cobra.Command, args []string) error {
+		// 	clientCtx := client.GetClientContextFromCmd(cmd)
+		// 	cdc := clientCtx.Codec
 
-			serverCtx := server.GetServerContextFromCmd(cmd)
-			config := serverCtx.Config
+		// 	serverCtx := server.GetServerContextFromCmd(cmd)
+		// 	config := serverCtx.Config
 
-			config.SetRoot(clientCtx.HomeDir)
+		// 	config.SetRoot(clientCtx.HomeDir)
 
-			platformStr := args[0]
+		// 	platformStr := args[0]
 
-			genFile := config.GenesisFile()
-			appState, genDoc, err := genutiltypes.GenesisStateFromGenFile(genFile)
-			if err != nil {
-				return fmt.Errorf("failed to unmarshal genesis state: %w", err)
-			}
+		// 	genFile := config.GenesisFile()
+		// 	appState, genDoc, err := genutiltypes.GenesisStateFromGenFile(genFile)
+		// 	if err != nil {
+		// 		return fmt.Errorf("failed to unmarshal genesis state: %w", err)
+		// 	}
 
-			var genesisStateBz []byte
-			var moduleName string
+		// 	var genesisStateBz []byte
+		// 	var moduleName string
 
-			switch strings.ToLower(platformStr) {
-			case strings.ToLower(evmTypes.ModuleName):
-				if len(args) < 2 {
-					return fmt.Errorf("chain name is required for EVM platform")
-				}
-				evmChainName := nexus.ChainName(args[1])
-				if err := evmChainName.Validate(); err != nil {
-					return err
-				}
+		// 	switch strings.ToLower(platformStr) {
+		// 	case strings.ToLower(chainsTypes.ModuleName):
+		// 		if len(args) < 2 {
+		// 			return fmt.Errorf("chain name is required for EVM platform")
+		// 		}
+		// 		evmChainName := nexus.ChainName(args[1])
+		// 		if err := evmChainName.Validate(); err != nil {
+		// 			return err
+		// 		}
 
-				// fetch existing EVM chain, or add new one
-				genesisState := evmTypes.GetGenesisStateFromAppState(cdc, appState)
-				moduleName = evmTypes.ModuleName
-				var chain evmTypes.GenesisState_Chain
+		// 		// fetch existing EVM chain, or add new one
+		// 		genesisState := chainsTypes.GetGenesisStateFromAppState(cdc, appState)
+		// 		moduleName = chainsTypes.ModuleName
+		// 		var chain chainsTypes.GenesisState_Chain
 
-				_, index := findEVMChain(genesisState.Chains, evmChainName)
-				if index < 0 {
-					defaults := evmTypes.DefaultChains()
-					chain, _ = findEVMChain(defaults, nexus.ChainName(evm.Ethereum.Name))
-					chain.Params.Chain = evmChainName
-					chain.Params.Network = ""
-					chain.Params.Networks = []evmTypes.NetworkInfo{}
-					genesisState.Chains = append(genesisState.Chains, chain)
-					index = len(genesisState.Chains) - 1
-				}
+		// 		_, index := findEVMChain(genesisState.Chains, evmChainName)
+		// 		if index < 0 {
+		// 			defaults := chainsTypes.DefaultChains()
+		// 			chain, _ = findEVMChain(defaults, nexus.ChainName(evm.Ethereum.Name))
+		// 			chain.Params.Chain = evmChainName
+		// 			chain.Params.Network = ""
+		// 			chain.Params.Networks = []chainsTypes.NetworkInfo{}
+		// 			genesisState.Chains = append(genesisState.Chains, chain)
+		// 			index = len(genesisState.Chains) - 1
+		// 		}
 
-				// update confirmation height
-				if confirmationHeight > 0 {
-					genesisState.Chains[index].Params.ConfirmationHeight = confirmationHeight
-				}
+		// 		// update confirmation height
+		// 		if confirmationHeight > 0 {
+		// 			genesisState.Chains[index].Params.ConfirmationHeight = confirmationHeight
+		// 		}
 
-				// update revote locking period
-				if revoteLockingPeriod > 0 {
-					genesisState.Chains[index].Params.RevoteLockingPeriod = revoteLockingPeriod
-				}
+		// 		// update revote locking period
+		// 		if revoteLockingPeriod > 0 {
+		// 			genesisState.Chains[index].Params.RevoteLockingPeriod = revoteLockingPeriod
+		// 		}
 
-				// if we are editing the list of known networks, both evm-network-name
-				// and evm-chain-id need to be used
-				if (evmNetworkName != "" && evmChainID == "") || (evmNetworkName == "" && evmChainID != "") {
-					return fmt.Errorf("flags '-%s' and '-%s' must be used together", flagEVMNetworkName, flagEVMChainID)
+		// 		// if we are editing the list of known networks, both evm-network-name
+		// 		// and evm-chain-id need to be used
+		// 		if (evmNetworkName != "" && evmChainID == "") || (evmNetworkName == "" && evmChainID != "") {
+		// 			return fmt.Errorf("flags '-%s' and '-%s' must be used together", flagEVMNetworkName, flagEVMChainID)
 
-				}
+		// 		}
 
-				// add new, or update existing network
-				if evmNetworkName != "" && evmChainID != "" {
-					id, ok := sdk.NewIntFromString(evmChainID)
-					if !ok {
-						return fmt.Errorf("chain ID must be an integer")
-					}
+		// 		// add new, or update existing network
+		// 		if evmNetworkName != "" && evmChainID != "" {
+		// 			id, ok := sdk.NewIntFromString(evmChainID)
+		// 			if !ok {
+		// 				return fmt.Errorf("chain ID must be an integer")
+		// 			}
 
-					i := findEVMNetwork(genesisState.Chains[index].Params.Networks, evmNetworkName)
-					if i < 0 {
-						genesisState.Chains[index].Params.Networks =
-							append(genesisState.Chains[index].Params.Networks,
-								evmTypes.NetworkInfo{Name: evmNetworkName, Id: id})
-					} else {
-						genesisState.Chains[index].Params.Networks[i].Id = id
-					}
+		// 			i := findEVMNetwork(genesisState.Chains[index].Params.Networks, evmNetworkName)
+		// 			if i < 0 {
+		// 				genesisState.Chains[index].Params.Networks =
+		// 					append(genesisState.Chains[index].Params.Networks,
+		// 						chainsTypes.NetworkInfo{Name: evmNetworkName, Id: id})
+		// 			} else {
+		// 				genesisState.Chains[index].Params.Networks[i].Id = id
+		// 			}
 
-				}
+		// 		}
 
-				// update expected network
-				if expectedNetwork != "" {
-					i := findEVMNetwork(genesisState.Chains[index].Params.Networks, expectedNetwork)
-					if i < 0 {
-						return fmt.Errorf("unable to find network %s", expectedNetwork)
-					}
+		// 		// update expected network
+		// 		if expectedNetwork != "" {
+		// 			i := findEVMNetwork(genesisState.Chains[index].Params.Networks, expectedNetwork)
+		// 			if i < 0 {
+		// 				return fmt.Errorf("unable to find network %s", expectedNetwork)
+		// 			}
 
-					genesisState.Chains[index].Params.Network = genesisState.Chains[index].Params.Networks[i].Name
-				}
+		// 			genesisState.Chains[index].Params.Network = genesisState.Chains[index].Params.Networks[i].Name
+		// 		}
 
-				genesisStateBz, err = cdc.MarshalJSON(&genesisState)
-				if err != nil {
-					return fmt.Errorf("failed to marshal genesis state: %w", err)
-				}
-			default:
-				return fmt.Errorf("unknown platform: %s", platformStr)
-			}
+		// 		genesisStateBz, err = cdc.MarshalJSON(&genesisState)
+		// 		if err != nil {
+		// 			return fmt.Errorf("failed to marshal genesis state: %w", err)
+		// 		}
+		// 	default:
+		// 		return fmt.Errorf("unknown platform: %s", platformStr)
+		// 	}
 
-			appState[moduleName] = genesisStateBz
+		// 	appState[moduleName] = genesisStateBz
 
-			appStateJSON, err := json.Marshal(appState)
-			if err != nil {
-				return fmt.Errorf("failed to marshal application genesis state: %w", err)
-			}
+		// 	appStateJSON, err := json.Marshal(appState)
+		// 	if err != nil {
+		// 		return fmt.Errorf("failed to marshal application genesis state: %w", err)
+		// 	}
 
-			genDoc.AppState = appStateJSON
+		// 	genDoc.AppState = appStateJSON
 
-			return genutil.ExportGenesisFile(genDoc, genFile)
-		}}
+		// 	return genutil.ExportGenesisFile(genDoc, genFile)
+		// },
+	}
 
 	cmd.Flags().String(flags.FlagHome, defaultNodeHome, "node's home directory")
 	cmd.Flags().StringVar(&expectedNetwork, flagNetwork, "", "Name of the network to set for the given chain.")
@@ -166,21 +157,9 @@ func SetGenesisChainParamsCmd(defaultNodeHome string) *cobra.Command {
 	return cmd
 }
 
-func findEVMChain(chains []evmTypes.GenesisState_Chain, chainName nexus.ChainName) (chain evmTypes.GenesisState_Chain, index int) {
+func findEVMChain(chains []chainsTypes.GenesisState_Chain, chainName nexus.ChainName) (chain chainsTypes.GenesisState_Chain, index int) {
 	for index, chain = range chains {
 		if chainName.Equals(chain.Params.Chain) {
-			return
-		}
-	}
-
-	index = -1
-	return
-}
-
-func findEVMNetwork(networks []evmTypes.NetworkInfo, network string) (index int) {
-	var info evmTypes.NetworkInfo
-	for index, info = range networks {
-		if strings.EqualFold(info.Name, network) {
 			return
 		}
 	}
