@@ -1238,6 +1238,7 @@ Msg defines the nexus Msg service.
 | `amount` | [uint64](#uint64) |  |  |
 | `asset` | [string](#string) |  |  |
 | `payload_hash` | [bytes](#bytes) |  |  |
+| `payload` | [bytes](#bytes) |  |  |
 | `destination_contract_address` | [string](#string) |  |  |
 | `destination_recipient_address` | [string](#string) |  |  |
 

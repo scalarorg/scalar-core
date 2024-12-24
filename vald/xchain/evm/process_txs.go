@@ -22,6 +22,7 @@ func (client *EthereumClient) ProcessDestinationTxsConfirmation(event *types.Eve
 		event.ConfirmationHeight,
 		proxy,
 		func(e *types.TxConfirmationEvent) types.ConfirmationEvent {
+			clog.Red("eventWrapper", "event", e)
 			return &types.Event_DestTxConfirmationEvent{
 				DestTxConfirmationEvent: e,
 			}
@@ -82,6 +83,9 @@ func processTxReceipt[T types.ConfirmationEvent](
 ) []types.Event {
 	var events []types.Event
 
+	clog.Red("processTxReceipt", "receipt", receipt)
+	clog.Red("processTxReceipt", "logs", receipt.Logs)
+
 	for _, txlog := range receipt.Logs {
 		if len(txlog.Topics) == 0 {
 			continue
@@ -94,9 +98,10 @@ func processTxReceipt[T types.ConfirmationEvent](
 				client.logger().Debug(sdkerrors.Wrap(err, "decode event ContractCall failed").Error())
 				continue
 			}
+			clog.Red("processTxReceipt", "contractCallEvent", contractCallEvent)
 
 			if err := contractCallEvent.ValidateBasic(); err != nil {
-				client.logger().Debug(sdkerrors.Wrap(err, "invalid event ContractCall").Error())
+				client.logger().Error(sdkerrors.Wrap(err, "invalid event ContractCall").Error())
 				continue
 			}
 
@@ -107,7 +112,7 @@ func processTxReceipt[T types.ConfirmationEvent](
 				Index: uint64(txlog.Index),
 			})
 		default:
-			client.logger().Debugf("unknown event type: %s", txlog.Topics[0])
+			client.logger().Errorf("unknown event type: %s", txlog.Topics[0])
 		}
 	}
 

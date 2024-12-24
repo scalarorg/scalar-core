@@ -405,10 +405,11 @@ func (m *TxConfirmationEvent) ValidateBasic() error {
 		return sdkerrors.Wrap(err, "invalid destination chain")
 	}
 
-	// if m.Amount == 0 {
-	// 	return fmt.Errorf("invalid amount")
-	// }
-	if err := utils.ValidateString(m.DestinationContractAddress); err != nil {
+	if m.Amount == 0 {
+		return fmt.Errorf("invalid amount")
+	}
+
+	if err := utils.ValidateString(m.DestinationRecipientAddress); err != nil {
 		return sdkerrors.Wrap(err, "invalid destination address")
 	}
 

@@ -275,8 +275,9 @@ func validateMessage(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, m typ
 
 func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID multisig.KeyID, msg nexus.GeneralMessage) {
 	cmd := types.NewApproveBridgeCallCommandGeneric(chainID, keyID, common.HexToAddress(msg.GetDestinationAddress()), common.BytesToHash(msg.PayloadHash), common.BytesToHash(msg.SourceTxID), msg.GetSourceChain(), msg.GetSourceAddress(), msg.SourceTxIndex, msg.ID)
-	clog.Redf("[Chains] EnqueueCommand: %+v", cmd)
 	funcs.MustNoErr(ck.EnqueueCommand(ctx, cmd))
+	clog.Redf("[Chains] msg: %+v", msg)
+	clog.Redf("[Chains] EnqueueCommand: %+v", cmd)
 
 	destCallApproved := &types.DestCallApproved{
 		Chain:            msg.GetSourceChain(),

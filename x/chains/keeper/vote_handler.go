@@ -218,14 +218,10 @@ func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event ty
 	eventType := event.GetEvent()
 	switch eventType.(type) {
 	case *types.Event_SourceTxConfirmationEvent:
-		if err := v.handleSourceConfirmationEvent(ctx, ck, event); err != nil {
+	case *types.Event_DestTxConfirmationEvent:
+		if err := v.handleCrossChainEvent(ctx, ck, event); err != nil {
 			return err
 		}
-	case *types.Event_DestTxConfirmationEvent:
-		clog.Red("handleEvent, DestTxConfirmationEvent", "event", event)
-		// if err := v.handleDestConfirmationEvent(ctx, ck, event); err != nil {
-		// 	return err
-		// }
 	default:
 		funcs.MustNoErr(ck.EnqueueConfirmedEvent(ctx, event.GetID()))
 	}
@@ -235,7 +231,7 @@ func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event ty
 	return nil
 }
 
-func (v voteHandler) handleSourceConfirmationEvent(ctx sdk.Context, ck types.ChainKeeper, event types.Event) error {
+func (v voteHandler) handleCrossChainEvent(ctx sdk.Context, ck types.ChainKeeper, event types.Event) error {
 	msg := mustToGeneralMessage(ctx, v.nexus, event)
 
 	clog.Bluef("msg: %+v", msg)
@@ -244,8 +240,8 @@ func (v voteHandler) handleSourceConfirmationEvent(ctx sdk.Context, ck types.Cha
 		return err
 	}
 
-	clog.Blue("handleStakingTx, enqueueRouteMessage", "msg", msg.ID)
-	clog.Blue("handleStakingTx, setEventCompleted", "event", event.GetID())
+	clog.Blue("handleCrossChainEvent, enqueueRouteMessage", "msg", msg.ID)
+	clog.Blue("handleCrossChainEvent, setEventCompleted", "event", event.GetID())
 
 	// this enqueues the message to be routed to the destination chain, it will be handled at abci of the destination module, for example evm module
 	funcs.MustNoErr(v.nexus.EnqueueRouteMessage(ctx, msg.ID))

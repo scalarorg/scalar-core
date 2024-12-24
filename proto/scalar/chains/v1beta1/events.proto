@@ -24,8 +24,10 @@ message TxConfirmationEvent {
   bytes payload_hash = 5
       [ (gogoproto.customtype) = "Hash", (gogoproto.nullable) = false ];
 
-  string destination_contract_address = 6;
-  string destination_recipient_address = 7;
+  bytes payload = 6;
+
+  string destination_contract_address = 7;
+  string destination_recipient_address = 8;
 }
 
 message Event {

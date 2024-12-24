@@ -70,7 +70,7 @@ func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (*chainsType
 		return nil, err
 	}
 
-	_, payloadHash, err := encode.CalculateStakingPayloadHash(destinationRecipientAddress, uint64(stakingAmount), copiedTxHash)
+	payload, payloadHash, err := encode.CalculateStakingPayloadHash(destinationRecipientAddress, uint64(stakingAmount), copiedTxHash)
 	if err != nil {
 		return nil, ErrInvalidPayloadHash
 	}
@@ -91,6 +91,7 @@ func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (*chainsType
 		Amount:                      uint64(stakingAmount),
 		Asset:                       "satoshi", // TODO: Fix hard coded
 		PayloadHash:                 chainsTypes.Hash(payloadHash),
+		Payload:                     payload,
 		DestinationContractAddress:  chainsTypes.Address(destinationContractAddress).Hex(),
 		DestinationRecipientAddress: chainsTypes.Address(destinationRecipientAddress).Hex(),
 	}, nil
