@@ -916,3 +916,24 @@ func ToSignature(sig ec.Signature, hash common.Hash, pk ecdsa.PublicKey) (Signat
 
 	return s, nil
 }
+
+// NewAsset returns a new Asset instance
+func NewAsset(chain, name string) Asset {
+	return Asset{
+		Chain: nexus.ChainName(utils.NormalizeString(chain)),
+		Name:  utils.NormalizeString(name),
+	}
+}
+
+// Validate ensures that all fields are filled with sensible values
+func (m Asset) Validate() error {
+	if err := m.Chain.Validate(); err != nil {
+		return sdkerrors.Wrap(err, "invalid chain")
+	}
+
+	if err := utils.ValidateString(m.Name); err != nil {
+		return sdkerrors.Wrap(err, "invalid name")
+	}
+
+	return nil
+}
