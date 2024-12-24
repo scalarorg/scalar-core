@@ -8377,7 +8377,7 @@ DestinationChain represents a blockchain where tokens can be sent
 | `chain_id` | [uint64](#uint64) |  | e.g., "11155111" |
 | `chain_type` | [string](#string) |  | Chain type |
 | `chain_smart_contract_address` | [bytes](#bytes) |  | Contract address on the chain |
-| `token` | [scalar.evm.v1beta1.ERC20TokenMetadata](#scalar.evm.v1beta1.ERC20TokenMetadata) |  |  |
+| `token` | [scalar.chains.v1beta1.ERC20TokenMetadata](#scalar.chains.v1beta1.ERC20TokenMetadata) |  |  |
 
 
 
@@ -8906,7 +8906,7 @@ DestinationChain represents a blockchain where tokens can be sent
 | `chain_id` | [uint64](#uint64) |  | e.g., "11155111" |
 | `chain_type` | [string](#string) |  | Chain type |
 | `chain_smart_contract_address` | [bytes](#bytes) |  | Contract address on the chain |
-| `token` | [scalar.evm.v1beta1.ERC20TokenMetadata](#scalar.evm.v1beta1.ERC20TokenMetadata) |  | Fields for ERC20 token |
+| `token` | [scalar.chains.v1beta1.ERC20TokenMetadata](#scalar.chains.v1beta1.ERC20TokenMetadata) |  | Fields for ERC20 token |
 
 
 

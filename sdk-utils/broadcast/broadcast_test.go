@@ -36,8 +36,8 @@ import (
 	. "github.com/scalarorg/scalar-core/utils/test"
 	"github.com/scalarorg/scalar-core/utils/test/rand"
 	auxiliarytypes "github.com/scalarorg/scalar-core/x/auxiliary/types"
-	evm "github.com/scalarorg/scalar-core/x/evm/types"
 	"github.com/scalarorg/scalar-core/x/reward/types"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 func TestStatefulBroadcaster(t *testing.T) {
@@ -465,11 +465,11 @@ func randomMsgs(count int) []sdk.Msg {
 	var msgs []sdk.Msg
 	sender := rand2.AccAddr()
 	for i := 0; i < count; i++ {
-		msg := evm.NewLinkRequest(
+		msg := chainsTypes.NewLinkRequest(
 			sender,
 			rand.AlphaNumericStrBetween(5, 10),
 			rand.AlphaNumericStrBetween(5, 10),
-			evm.Address(common.BytesToAddress(rand.Bytes(common.AddressLength))).Hex(),
+			chainsTypes.Address(common.BytesToAddress(rand.Bytes(common.AddressLength))).Hex(),
 			rand.AlphaStrBetween(5, 10),
 		)
 		msgs = append(msgs, msg)

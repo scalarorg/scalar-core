@@ -16,9 +16,9 @@ package keeper_test
 // 	"github.com/scalarorg/scalar-core/utils/test"
 // 	. "github.com/scalarorg/scalar-core/utils/test"
 // 	"github.com/scalarorg/scalar-core/app"
-// 	evm "github.com/scalarorg/scalar-core/x/evm/exported"
-// 	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
-// 	evmtestutils "github.com/scalarorg/scalar-core/x/evm/types/testutils"
+// 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
+// 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+// 	evmtestutils "github.com/scalarorg/scalar-core/x/chains/types/testutils"
 // 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 // 	nexustestutils "github.com/scalarorg/scalar-core/x/nexus/exported/testutils"
 // 	nexus "github.com/scalarorg/scalar-core/x/nexus/keeper"
@@ -451,7 +451,7 @@ package keeper_test
 // 	sourceChain := nexustestutils.RandomChain()
 // 	sourceChain.Module = scalarnet.ModuleName
 // 	destinationChain := nexustestutils.RandomChain()
-// 	destinationChain.Module = evmtypes.ModuleName
+// 	destinationChain.Module = chainsTypes.ModuleName
 // 	id, txID, nonce := k.GenerateMessageID(ctx)
 // 	msg := exported.GeneralMessage{
 // 		ID:            id,
@@ -522,7 +522,7 @@ package keeper_test
 // 	sourceChain := nexustestutils.RandomChain()
 // 	sourceChain.Module = scalarnet.ModuleName
 // 	destinationChain := nexustestutils.RandomChain()
-// 	destinationChain.Module = evmtypes.ModuleName
+// 	destinationChain.Module = chainsTypes.ModuleName
 // 	id, txID, nonce := k.GenerateMessageID(ctx)
 // 	msg := exported.GeneralMessage{
 // 		ID:            id,
@@ -549,7 +549,7 @@ package keeper_test
 // 	sourceChain := nexustestutils.RandomChain()
 // 	sourceChain.Module = scalarnet.ModuleName
 // 	destinationChain := nexustestutils.RandomChain()
-// 	destinationChain.Module = evmtypes.ModuleName
+// 	destinationChain.Module = chainsTypes.ModuleName
 // 	k.SetChain(ctx, sourceChain)
 // 	k.SetChain(ctx, destinationChain)
 // 	k.ActivateChain(ctx, sourceChain)

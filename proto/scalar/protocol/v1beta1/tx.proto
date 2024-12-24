@@ -2,7 +2,7 @@ syntax = "proto3";
 package scalar.protocol.v1beta1;
 
 import "scalar/protocol/v1beta1/types.proto";
-import "scalar/evm/v1beta1/types.proto";
+import "scalar/chains/v1beta1/tokens.proto";
 import "gogoproto/gogo.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
@@ -77,7 +77,7 @@ message AddDestinationChainToProtocolRequest {
   bytes chain_smart_contract_address = 5; // Contract address on the chain
 
   // Fields for ERC20 token
-  scalar.evm.v1beta1.ERC20TokenMetadata token = 6
+  scalar.chains.v1beta1.ERC20TokenMetadata token = 6
       [ (gogoproto.nullable) = false ];
 }
 

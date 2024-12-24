@@ -13,8 +13,8 @@ package scalarnet_test
 // 	"github.com/stretchr/testify/assert"
 
 // 	"github.com/scalarorg/scalar-core/testutils/rand"
-// 	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
-// 	evmtestutils "github.com/scalarorg/scalar-core/x/evm/types/testutils"
+// 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+// 	evmtestutils "github.com/scalarorg/scalar-core/x/chains/types/testutils"
 // 	nexusTypes "github.com/scalarorg/scalar-core/x/nexus/exported"
 // 	nexustestutils "github.com/scalarorg/scalar-core/x/nexus/exported/testutils"
 // 	. "github.com/scalarorg/scalar-core/utils/test"
@@ -44,7 +44,7 @@ package scalarnet_test
 // 		ctx, k, _ = setup()
 
 // 		destChain = nexustestutils.RandomChain()
-// 		destChain.Module = evmtypes.ModuleName
+// 		destChain.Module = chainsTypes.ModuleName
 // 		governanceAccount = rand.AccAddr()
 
 // 		contractCall = types.ContractCall{

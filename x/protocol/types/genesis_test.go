@@ -7,12 +7,12 @@ import (
 )
 
 func DefaultProtocol() Protocol {
-	// token := evmtypes.ERC20TokenMetadata{
+	// token := chainsTypes.ERC20TokenMetadata{
 	// 	Asset:        "pBtc",
 	// 	ChainID:      sdk.NewInt(1115511),
-	// 	TokenAddress: evmtypes.Address(common.HexToAddress("0x5f214989a5f49ab3c56fd5003c2858e24959c018")),
-	// 	Status:       evmtypes.Confirmed,
-	// 	Details: evmtypes.TokenDetails{
+	// 	TokenAddress: chainsTypes.Address(common.HexToAddress("0x5f214989a5f49ab3c56fd5003c2858e24959c018")),
+	// 	Status:       chainsTypes.Confirmed,
+	// 	Details: chainsTypes.TokenDetails{
 	// 		TokenName: "pBtc",
 	// 		Symbol:    "pBtc",
 	// 		Decimals:  8,
@@ -22,7 +22,7 @@ func DefaultProtocol() Protocol {
 	protocol := Protocol{
 		// Name:          DefaultProtocolName,
 		// CovenantGroup: covenanttypes.DefaultCovenantGroupName,
-		// Tokens: []evmtypes.ERC20TokenMetadata{
+		// Tokens: []chainsTypes.ERC20TokenMetadata{
 		// 	token,
 		// },
 	}

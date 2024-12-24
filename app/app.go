@@ -131,9 +131,6 @@ import (
 	voteKeeper "github.com/scalarorg/scalar-core/x/vote/keeper"
 	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
 
-	// evmKeeper "github.com/scalarorg/scalar-core/x/evm/keeper"
-	// evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
-
 	chainsKeeper "github.com/scalarorg/scalar-core/x/chains/keeper"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 
@@ -373,9 +370,7 @@ func NewScalarApp(
 	/* ==== at this point all stores are fully loaded ==== */
 
 	// we need to ensure that all chain subspaces are loaded at start-up to prevent unexpected consensus failures
-	// when the params keeper is used outside the evm module's context
-
-	// GetKeeper[evmKeeper.BaseKeeper](keepers).InitChains(app.NewContext(true, tmproto.Header{}))
+	// when the params keeper is used outside the chains module's context
 
 	GetKeeper[chainsKeeper.BaseKeeper](keepers).InitChains(app.NewContext(true, tmproto.Header{}))
 	return app
@@ -446,7 +441,7 @@ func initIBCRouter(keepers *KeeperCache, scalarnetModule porttypes.IBCModule) *p
 
 func initMessageRouter(keepers *KeeperCache) nexusTypes.MessageRouter {
 	messageRouter := nexusTypes.NewMessageRouter().
-		// AddRoute(evmTypes.ModuleName, evmKeeper.NewMessageRoute()).
+		// AddRoute(chainsTypes.ModuleName, evmKeeper.NewMessageRoute()).
 		AddRoute(chainsTypes.ModuleName, chainsKeeper.NewMessageRoute()).
 		AddRoute(scalarnetTypes.ModuleName, scalarnetKeeper.NewMessageRoute(
 			GetKeeper[scalarnetKeeper.IBCKeeper](keepers),
@@ -605,15 +600,6 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 			GetKeeper[bankkeeper.BaseKeeper](keepers),
 			GetKeeper[authkeeper.AccountKeeper](keepers),
 		),
-		// evm.NewAppModule(
-		// 	GetKeeper[evmKeeper.BaseKeeper](keepers),
-		// 	GetKeeper[voteKeeper.Keeper](keepers),
-		// 	GetKeeper[nexusKeeper.Keeper](keepers),
-		// 	GetKeeper[snapKeeper.Keeper](keepers),
-		// 	GetKeeper[stakingkeeper.Keeper](keepers),
-		// 	GetKeeper[slashingkeeper.Keeper](keepers),
-		// 	GetKeeper[multisigKeeper.Keeper](keepers),
-		// ),
 		chains.NewAppModule(
 			GetKeeper[chainsKeeper.BaseKeeper](keepers),
 			GetKeeper[voteKeeper.Keeper](keepers),
@@ -777,7 +763,7 @@ func orderMigrations() []string {
 		tssTypes.ModuleName,
 		rewardTypes.ModuleName,
 		voteTypes.ModuleName,
-		// evmTypes.ModuleName,
+		// chainsTypes.ModuleName,
 		chainsTypes.ModuleName,
 		nexusTypes.ModuleName,
 		permissionTypes.ModuleName,
@@ -830,7 +816,7 @@ func orderBeginBlockers() []string {
 		permissionTypes.ModuleName,
 		multisigTypes.ModuleName,
 		tssTypes.ModuleName,
-		// evmTypes.ModuleName,
+		// chainsTypes.ModuleName,
 		chainsTypes.ModuleName,
 		snapTypes.ModuleName,
 		scalarnetTypes.ModuleName,
@@ -874,7 +860,7 @@ func orderEndBlockers() []string {
 	endBlockerOrder = append(endBlockerOrder,
 		multisigTypes.ModuleName,
 		tssTypes.ModuleName,
-		// evmTypes.ModuleName,
+		// chainsTypes.ModuleName,
 		chainsTypes.ModuleName,
 		nexusTypes.ModuleName,
 		rewardTypes.ModuleName,
@@ -926,7 +912,6 @@ func orderModulesForGenesis() []string {
 		multisigTypes.ModuleName,
 		tssTypes.ModuleName,
 		nexusTypes.ModuleName,
-		// evmTypes.ModuleName, // Run evm end blocker after nexus so GMP calls routed to EVM get processed within the same block
 		chainsTypes.ModuleName,
 		voteTypes.ModuleName,
 		scalarnetTypes.ModuleName,
@@ -953,7 +938,7 @@ func CreateStoreKeys() map[string]*sdk.KVStoreKey {
 		capabilitytypes.StoreKey,
 		feegrant.StoreKey,
 		voteTypes.StoreKey,
-		// evmTypes.StoreKey,
+		// chainsTypes.StoreKey,
 		chainsTypes.StoreKey,
 		snapTypes.StoreKey,
 		multisigTypes.StoreKey,
@@ -1096,7 +1081,6 @@ func GetModuleBasics() module.BasicManager {
 		multisig.AppModuleBasic{},
 		tss.AppModuleBasic{},
 		vote.AppModuleBasic{},
-		// evm.AppModuleBasic{},
 		chains.AppModuleBasic{},
 		snapshot.AppModuleBasic{},
 		nexus.AppModuleBasic{},

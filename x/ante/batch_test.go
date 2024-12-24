@@ -9,7 +9,7 @@ package ante_test
 // 	appParams "github.com/scalarorg/scalar-core/app/params"
 // 	"github.com/scalarorg/scalar-core/testutils/rand"
 // 	auxiliarytypes "github.com/scalarorg/scalar-core/x/auxiliary/types"
-// 	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
+// 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 // 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 // 	votetypes "github.com/scalarorg/scalar-core/x/vote/types"
 // 	. "github.com/scalarorg/scalar-core/utils/test"
@@ -38,9 +38,9 @@ package ante_test
 // 			tx = &mock.FeeTxMock{
 // 				GetMsgsFunc: func() []sdk.Msg {
 // 					return []sdk.Msg{
-// 						votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), evmTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
-// 						votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), evmTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
-// 						votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), evmTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
+// 						votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), chainsTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
+// 						votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), chainsTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
+// 						votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), chainsTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
 // 					}
 // 				},
 // 			}
@@ -60,19 +60,19 @@ package ante_test
 // 	givenBatchAnteHandler.
 // 		When("a Batch Request is valid", func() {
 // 			batchMsg = auxiliarytypes.NewBatchRequest(sender, []sdk.Msg{
-// 				votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), evmTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
-// 				votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), evmTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
+// 				votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), chainsTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
+// 				votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), chainsTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
 // 			})
 // 		}).
 // 		Then("should unwrap inner message", func(t *testing.T) {
 // 			tx = &mock.FeeTxMock{
 // 				GetMsgsFunc: func() []sdk.Msg {
 // 					return []sdk.Msg{
-// 						votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), evmTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
+// 						votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), chainsTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
 // 						batchMsg,
-// 						votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), evmTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
+// 						votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), chainsTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
 // 						batchMsg,
-// 						votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), evmTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
+// 						votetypes.NewVoteRequest(sender, vote.PollID(rand.PosI64()), chainsTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3)))),
 // 					}
 // 				},
 // 			}

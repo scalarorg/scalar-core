@@ -12,7 +12,7 @@ import (
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
-	evmTypes "github.com/ethereum/go-ethereum/core/types"
+	chainsTypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/events"
@@ -562,7 +562,7 @@ func (k chainKeeper) GetBurnerByteCode(ctx sdk.Context) []byte {
 	return getParam[[]byte](k, ctx, types.KeyBurnable)
 }
 
-func (k chainKeeper) getSigner(ctx sdk.Context) evmTypes.EIP155Signer {
+func (k chainKeeper) getSigner(ctx sdk.Context) chainsTypes.EIP155Signer {
 
 	chainID, found := k.GetChainID(ctx)
 
@@ -571,7 +571,7 @@ func (k chainKeeper) getSigner(ctx sdk.Context) evmTypes.EIP155Signer {
 	if !found {
 		panic(fmt.Sprintf("could not find chain ID for network '%s'", chainID))
 	}
-	return evmTypes.NewEIP155Signer(chainID.BigInt())
+	return chainsTypes.NewEIP155Signer(chainID.BigInt())
 }
 
 func (k chainKeeper) setTokenMetadata(ctx sdk.Context, meta types.ERC20TokenMetadata) {

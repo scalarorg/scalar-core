@@ -7,14 +7,14 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/scalarorg/scalar-core/testutils/rand"
-	evmTypes "github.com/scalarorg/scalar-core/x/evm/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/vote/exported"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 func TestVoteRequest_ValidateBasic(t *testing.T) {
 	t.Run("no sender", func(t *testing.T) {
-		vote := NewVoteRequest(nil, exported.PollID(rand.PosI64()), evmTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3))))
+		vote := NewVoteRequest(nil, exported.PollID(rand.PosI64()), chainsTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3))))
 		assert.Error(t, vote.ValidateBasic())
 	})
 
@@ -37,7 +37,7 @@ func TestVoteRequest_ValidateBasic(t *testing.T) {
 	})
 
 	t.Run("correct vote", func(t *testing.T) {
-		vote := NewVoteRequest(rand.AccAddr(), exported.PollID(rand.PosI64()), evmTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3))))
+		vote := NewVoteRequest(rand.AccAddr(), exported.PollID(rand.PosI64()), chainsTypes.NewVoteEvents(nexus.ChainName(rand.NormalizedStr(3))))
 		assert.NoError(t, vote.ValidateBasic())
 	})
 }

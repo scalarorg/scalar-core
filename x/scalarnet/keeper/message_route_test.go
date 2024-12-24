@@ -12,7 +12,7 @@ package keeper_test
 // "github.com/stretchr/testify/assert"
 //
 // "github.com/scalarorg/scalar-core/testutils/rand"
-// evmtestutils "github.com/scalarorg/scalar-core/x/evm/types/testutils"
+// evmtestutils "github.com/scalarorg/scalar-core/x/chains/types/testutils"
 // nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 // nexusmock "github.com/scalarorg/scalar-core/x/nexus/exported/mock"
 // nexustestutils "github.com/scalarorg/scalar-core/x/nexus/exported/testutils"

@@ -31,7 +31,6 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
-	evmtypes "github.com/scalarorg/scalar-core/x/evm/types"
 )
 
 const (
@@ -77,12 +76,12 @@ type ValidatorInfo struct {
 
 // DefaultProtocol returns the default chains for a genesis state
 func DefaultProtocol() protocoltypes.Protocol {
-	token := evmtypes.ERC20TokenMetadata{
+	token := chainsTypes.ERC20TokenMetadata{
 		Asset:        "pBtc",
 		ChainID:      sdk.NewInt(1115511),
-		TokenAddress: evmtypes.Address(common.HexToAddress("0x5f214989a5f49ab3c56fd5003c2858e24959c018")),
-		Status:       evmtypes.Confirmed,
-		Details: evmtypes.TokenDetails{
+		TokenAddress: chainsTypes.Address(common.HexToAddress("0x5f214989a5f49ab3c56fd5003c2858e24959c018")),
+		Status:       chainsTypes.Confirmed,
+		Details: chainsTypes.TokenDetails{
 			TokenName: "pBtc",
 			Symbol:    "pBtc",
 			Decimals:  8,
@@ -92,7 +91,7 @@ func DefaultProtocol() protocoltypes.Protocol {
 	// protocol := protocoltypes.Protocol{
 	// 	Name:          protocoltypes.DefaultProtocolName,
 	// 	CovenantGroup: covenanttypes.DefaultCovenantGroupName,
-	// 	Tokens: []evmtypes.ERC20TokenMetadata{
+	// 	Tokens: []chainsTypes.ERC20TokenMetadata{
 	// 		token,
 	// 	},
 	// }
@@ -253,8 +252,8 @@ func GenerateGenesis(clientCtx client.Context,
 	protocolGenState := protocoltypes.NewGenesisState(DefaultProtocol())
 	appGenState[protocoltypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(protocolGenState)
 	// //evm chains
-	// var evmGenState evmtypes.GenesisState
-	// clientCtx.Codec.MustUnmarshalJSON(appGenState[evmtypes.ModuleName], &evmGenState)
+	// var evmGenState chainsTypes.GenesisState
+	// clientCtx.Codec.MustUnmarshalJSON(appGenState[chainsTypes.ModuleName], &evmGenState)
 	// //btc chains
 	// var btcGenState btctypes.GenesisState
 	// clientCtx.Codec.MustUnmarshalJSON(appGenState[btctypes.ModuleName], &btcGenState)

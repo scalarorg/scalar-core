@@ -17,7 +17,6 @@ import (
 
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/grpc"
-	"github.com/scalarorg/scalar-core/x/evm/client/rest"
 	"github.com/scalarorg/scalar-core/x/multisig/client/cli"
 	"github.com/scalarorg/scalar-core/x/multisig/keeper"
 	"github.com/scalarorg/scalar-core/x/multisig/types"
@@ -62,7 +61,7 @@ func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, _ client.TxEncodingCo
 
 // RegisterRESTRoutes registers the REST routes for this module
 func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Router) {
-	rest.RegisterRoutes(clientCtx, rtr)
+	// rest.RegisterRoutes(clientCtx, rtr)
 }
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the module.

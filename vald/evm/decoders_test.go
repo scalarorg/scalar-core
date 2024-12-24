@@ -11,7 +11,7 @@ import (
 
 	"github.com/scalarorg/scalar-core/testutils/rand"
 	"github.com/scalarorg/scalar-core/vald/evm"
-	"github.com/scalarorg/scalar-core/x/evm/types"
+	"github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 func TestDecodeEventTokenSent(t *testing.T) {

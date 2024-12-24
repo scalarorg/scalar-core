@@ -28,7 +28,7 @@ import (
 	"github.com/scalarorg/scalar-core/x/ante"
 	"github.com/scalarorg/scalar-core/x/ante/types/mock"
 	auxiliarytypes "github.com/scalarorg/scalar-core/x/auxiliary/types"
-	evm "github.com/scalarorg/scalar-core/x/evm/types"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/types"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
@@ -69,7 +69,7 @@ func TestCheckRefundFeeDecorator_AnteHandle(t *testing.T) {
 			label:       "multiple non-refundable messages",
 			succeeds:    true,
 			refundCount: 0,
-			msgs:        []sdk.Msg{&exported.WasmMessage{}, &evm.ConfirmGatewayTxsRequest{}, &scalarnet.LinkRequest{}},
+			msgs:        []sdk.Msg{&exported.WasmMessage{}, &chainsTypes.ConfirmSourceTxsRequest{}, &scalarnet.LinkRequest{}},
 		},
 		{
 			label:       "single refundable message",
@@ -104,7 +104,7 @@ func TestCheckRefundFeeDecorator_AnteHandle(t *testing.T) {
 			refundCount: 0,
 			msgs: []sdk.Msg{auxiliarytypes.NewBatchRequest(
 				sender,
-				[]sdk.Msg{&exported.WasmMessage{}, &evm.ConfirmGatewayTxsRequest{}, &scalarnet.LinkRequest{}},
+				[]sdk.Msg{&exported.WasmMessage{}, &chainsTypes.ConfirmSourceTxsRequest{}, &scalarnet.LinkRequest{}},
 			)},
 		},
 		{
