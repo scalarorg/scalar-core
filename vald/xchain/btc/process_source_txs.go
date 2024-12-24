@@ -38,7 +38,7 @@ func (client *BtcClient) processSrcTxReceipt(chain nexus.ChainName, receipt BTCT
 
 	var events []types.Event
 
-	btcEvent, err := client.decodeStakingTransaction(&receipt)
+	btcEvent, err := client.decodeSourceTxConfirmationEvent(&receipt)
 	if err != nil {
 		client.logger().Debug(sdkerrors.Wrap(err, "decode event ContractCall failed").Error())
 	}

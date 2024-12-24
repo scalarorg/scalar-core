@@ -218,7 +218,6 @@ func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event ty
 	eventType := event.GetEvent()
 	switch eventType.(type) {
 	case *types.Event_SourceTxConfirmationEvent:
-	case *types.Event_DestTxConfirmationEvent:
 		if err := v.handleCrossChainEvent(ctx, ck, event); err != nil {
 			return err
 		}

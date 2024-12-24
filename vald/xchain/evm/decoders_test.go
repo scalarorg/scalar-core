@@ -1,4 +1,4 @@
-package evm_test 
+package evm_test
 
 import (
 	"math/big"
@@ -83,14 +83,14 @@ func TestDecodeEventContractCallWithToken(t *testing.T) {
 }
 
 func TestDecodeTokenDeployEvent_CorrectData(t *testing.T) {
-	axelarGateway := common.HexToAddress("0xA193E42526F1FEA8C99AF609dcEabf30C1c29fAA")
+	scalarGateway := common.HexToAddress("0xA193E42526F1FEA8C99AF609dcEabf30C1c29fAA")
 
 	tokenDeploySig := evm.ERC20TokenDeploymentSig
 	expectedAddr := common.HexToAddress("0xE7481ECB61F9C84b91C03414F3D5d48E5436045D")
 	expectedSymbol := "XPTO"
 	data := common.FromHex("0x0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000e7481ecb61f9c84b91c03414f3d5d48e5436045d00000000000000000000000000000000000000000000000000000000000000045850544f00000000000000000000000000000000000000000000000000000000")
 
-	l := &geth.Log{Address: axelarGateway, Data: data, Topics: []common.Hash{tokenDeploySig}}
+	l := &geth.Log{Address: scalarGateway, Data: data, Topics: []common.Hash{tokenDeploySig}}
 
 	tokenDeployed, err := evm.DecodeERC20TokenDeploymentEvent(l)
 	assert.NoError(t, err)

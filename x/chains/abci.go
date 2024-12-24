@@ -35,7 +35,6 @@ func handleConfirmedEvents(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, 
 	// This will handle all chains except Scalarnet.
 	for _, chain := range slices.Filter(n.GetChains(ctx), types.IsSupportedChain) {
 		handleConfirmedEventsForChain(ctx, chain, bk, n, m)
-
 	}
 }
 

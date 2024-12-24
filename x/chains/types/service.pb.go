@@ -37,29 +37,81 @@ func init() {
 }
 
 var fileDescriptor_bd3ac3d6d884da59 = []byte{
-	// 349 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x91, 0x31, 0x4b, 0x33, 0x31,
-	0x18, 0xc7, 0x9b, 0x77, 0x78, 0x87, 0xe3, 0x85, 0x57, 0x0e, 0x5d, 0x8a, 0x04, 0x5a, 0xc1, 0x41,
-	0x6c, 0x42, 0xab, 0x38, 0x88, 0x53, 0x3b, 0x77, 0xd0, 0x3a, 0xb9, 0x94, 0x5c, 0x1a, 0xaf, 0x07,
-	0xbd, 0x3c, 0xd7, 0x24, 0x57, 0xae, 0x94, 0x2e, 0x7e, 0x02, 0xc1, 0x4f, 0xe0, 0x17, 0x10, 0xbf,
-	0x81, 0x8e, 0x8e, 0x05, 0x17, 0x47, 0xe9, 0xf9, 0x41, 0xa4, 0x97, 0x74, 0xb0, 0x9c, 0xd0, 0xed,
-	0x81, 0xff, 0xef, 0x9f, 0xe7, 0x97, 0xc4, 0x3b, 0xd0, 0x9c, 0x8d, 0x98, 0xa2, 0x7c, 0xc8, 0x22,
-	0xa9, 0xe9, 0xa4, 0x19, 0x08, 0xc3, 0x9a, 0x54, 0x0b, 0x35, 0x89, 0xb8, 0x20, 0x89, 0x02, 0x03,
-	0xfe, 0x9e, 0x85, 0x88, 0x85, 0x88, 0x83, 0xaa, 0xbb, 0x21, 0x84, 0x50, 0x10, 0x74, 0x35, 0x59,
-	0xb8, 0xba, 0x1f, 0x02, 0x84, 0x23, 0x41, 0x59, 0x12, 0x51, 0x26, 0x25, 0x18, 0x66, 0x22, 0x90,
-	0xda, 0xa5, 0xb8, 0x7c, 0x9f, 0xc9, 0x5c, 0x5e, 0x2b, 0xcf, 0xc7, 0xa9, 0x50, 0x53, 0x8b, 0xb4,
-	0x9e, 0x91, 0xe7, 0x75, 0x75, 0xd8, 0xb3, 0x8a, 0xfe, 0x23, 0xf2, 0x76, 0x3a, 0x20, 0x6f, 0x23,
-	0x15, 0xf7, 0x20, 0x55, 0x5c, 0x5c, 0x67, 0xda, 0x27, 0xa4, 0x54, 0x99, 0x6c, 0x82, 0x57, 0x62,
-	0x9c, 0x0a, 0x6d, 0xaa, 0x74, 0x6b, 0x5e, 0x27, 0x20, 0xb5, 0xa8, 0x1f, 0xdf, 0xbd, 0x7f, 0x3d,
-	0xfc, 0x39, 0xac, 0xd7, 0xe8, 0x4f, 0x61, 0x6e, 0x0b, 0x7d, 0x5d, 0x34, 0xfa, 0x26, 0xd3, 0xe7,
-	0xe8, 0xa8, 0xf5, 0x82, 0xbc, 0x7f, 0x97, 0xab, 0x2b, 0xac, 0xa5, 0x9f, 0x90, 0xf7, 0xbf, 0xcd,
-	0x0c, 0x1f, 0x8a, 0x41, 0x07, 0xe2, 0x98, 0xc9, 0x81, 0xf6, 0x1b, 0xbf, 0x38, 0x6c, 0x70, 0x6b,
-	0x65, 0xb2, 0x2d, 0xee, 0x8c, 0x2f, 0x0a, 0xe3, 0x33, 0xff, 0x94, 0x96, 0x3f, 0x71, 0x60, 0x7b,
-	0x7d, 0xee, 0x8a, 0x74, 0x56, 0x00, 0x73, 0x3a, 0x8b, 0x06, 0xf3, 0x76, 0xf7, 0x6d, 0x89, 0xd1,
-	0x62, 0x89, 0xd1, 0xe7, 0x12, 0xa3, 0xfb, 0x1c, 0x57, 0x5e, 0x73, 0x8c, 0x16, 0x39, 0xae, 0x7c,
-	0xe4, 0xb8, 0x72, 0x43, 0xc3, 0xc8, 0x0c, 0xd3, 0x80, 0x70, 0x88, 0xdd, 0xe9, 0xa0, 0x42, 0x37,
-	0x35, 0x38, 0x28, 0x41, 0xb3, 0xf5, 0x3a, 0x33, 0x4d, 0x84, 0x0e, 0xfe, 0x16, 0x5f, 0x79, 0xf2,
-	0x1d, 0x00, 0x00, 0xff, 0xff, 0x0b, 0x6c, 0x54, 0x01, 0x7f, 0x02, 0x00, 0x00,
+	// 1175 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x98, 0xcd, 0x6f, 0x1c, 0x35,
+	0x14, 0xc0, 0x63, 0x04, 0xa1, 0x98, 0xaa, 0x29, 0xe6, 0x43, 0x55, 0xd4, 0x2e, 0xca, 0xe4, 0x7b,
+	0x93, 0xdd, 0x49, 0xb6, 0xa1, 0x40, 0xc4, 0xa5, 0x49, 0xcb, 0x87, 0x4a, 0x45, 0x49, 0x7a, 0xe2,
+	0x32, 0x9a, 0x9d, 0x71, 0x66, 0x47, 0xd9, 0xd8, 0x5b, 0xdb, 0x1b, 0xb2, 0x2a, 0x91, 0x10, 0xe2,
+	0x50, 0x09, 0x21, 0x15, 0x01, 0x02, 0x8e, 0x1c, 0x7a, 0xe0, 0xc2, 0x8d, 0x03, 0x37, 0x8e, 0x70,
+	0xab, 0xc4, 0x05, 0x89, 0x0b, 0x4a, 0xf8, 0x43, 0xd0, 0x3c, 0xdb, 0xfb, 0x31, 0x59, 0xef, 0x6c,
+	0xb9, 0xcd, 0xca, 0xbf, 0x67, 0xff, 0xc6, 0x6f, 0xfc, 0xfc, 0x12, 0x3c, 0x2b, 0xa3, 0xb0, 0x19,
+	0x0a, 0x3f, 0x6a, 0x84, 0x29, 0x93, 0xfe, 0xe1, 0x7a, 0x9d, 0xaa, 0x70, 0xdd, 0x97, 0x54, 0x1c,
+	0xa6, 0x11, 0xad, 0xb6, 0x04, 0x57, 0x9c, 0xbc, 0xac, 0xa1, 0xaa, 0x86, 0xaa, 0x06, 0x9a, 0x7e,
+	0x29, 0xe1, 0x09, 0x07, 0xc2, 0xcf, 0x9e, 0x34, 0x3c, 0x7d, 0x39, 0xe1, 0x3c, 0x69, 0x52, 0x3f,
+	0x6c, 0xa5, 0x7e, 0xc8, 0x18, 0x57, 0xa1, 0x4a, 0x39, 0x93, 0x66, 0xb4, 0x34, 0x7c, 0x3d, 0x75,
+	0x64, 0xc6, 0x67, 0x86, 0x8f, 0xdf, 0x6b, 0x53, 0xd1, 0xd1, 0x48, 0xed, 0x9b, 0x8b, 0x18, 0xdf,
+	0x96, 0xc9, 0xae, 0x56, 0x24, 0x3f, 0x22, 0x7c, 0x71, 0x9b, 0xb3, 0xbd, 0x54, 0x1c, 0xec, 0xf2,
+	0xb6, 0x88, 0xe8, 0xdd, 0x23, 0x49, 0xaa, 0xd5, 0xa1, 0xca, 0xd5, 0x3c, 0xb8, 0x43, 0xef, 0xb5,
+	0xa9, 0x54, 0xd3, 0xfe, 0xd8, 0xbc, 0x6c, 0x71, 0x26, 0xa9, 0xb7, 0xfa, 0xd9, 0x9f, 0xff, 0x7e,
+	0xfd, 0xd4, 0x82, 0x37, 0xe3, 0x0f, 0x0a, 0x47, 0x3a, 0x20, 0x90, 0x10, 0x11, 0xa8, 0x23, 0xb9,
+	0x89, 0xca, 0xe4, 0x01, 0xc2, 0x78, 0x97, 0xaa, 0x77, 0x42, 0x45, 0x3f, 0x0e, 0x3b, 0x64, 0xc9,
+	0xb1, 0x5a, 0x0f, 0xb1, 0x5e, 0xcb, 0x63, 0x90, 0xc6, 0x68, 0x1e, 0x8c, 0x5e, 0xf5, 0xa6, 0x73,
+	0x46, 0x92, 0xaa, 0x20, 0xd1, 0x6c, 0xa6, 0xc2, 0xf1, 0xd3, 0xef, 0xa7, 0x6c, 0x9f, 0x78, 0x8e,
+	0x99, 0xb3, 0x41, 0xbb, 0xfa, 0xec, 0x48, 0xc6, 0xac, 0x5b, 0x82, 0x75, 0x2f, 0x79, 0x2f, 0xe6,
+	0xd6, 0x6d, 0xa6, 0x6c, 0x3f, 0x5b, 0xf0, 0x21, 0xc2, 0xe7, 0xcd, 0x36, 0xde, 0xe5, 0xfb, 0x94,
+	0x91, 0xf2, 0xe8, 0xbd, 0x06, 0xc8, 0x1a, 0xac, 0x8c, 0xc5, 0x1a, 0x93, 0x45, 0x30, 0x99, 0xf1,
+	0x2e, 0x3b, 0x72, 0xa2, 0x32, 0x3a, 0x53, 0xfa, 0x1e, 0xe1, 0x0b, 0x66, 0x86, 0x1b, 0xb4, 0xc5,
+	0x65, 0xaa, 0xc8, 0xea, 0xe8, 0x85, 0x0c, 0x66, 0xb5, 0x2a, 0x63, 0xd2, 0x46, 0x6c, 0x19, 0xc4,
+	0x66, 0xbd, 0x92, 0x43, 0x2c, 0xd6, 0x7c, 0xa6, 0xf6, 0x13, 0xc2, 0xc4, 0xbe, 0x9c, 0x08, 0x99,
+	0xdc, 0xa3, 0xe2, 0x16, 0xed, 0x90, 0xb5, 0x82, 0x7d, 0xe8, 0xa1, 0x56, 0x71, 0xfd, 0x09, 0x22,
+	0x8c, 0x66, 0x15, 0x34, 0x97, 0xbc, 0x59, 0xd7, 0xfe, 0x99, 0x98, 0x60, 0x9f, 0xc2, 0xa7, 0xf4,
+	0x08, 0xe1, 0x17, 0xb6, 0x05, 0x0d, 0x15, 0xbd, 0x41, 0x5b, 0x4d, 0xde, 0xd1, 0xe9, 0x75, 0x1e,
+	0xa5, 0x3c, 0x69, 0x4d, 0xd7, 0xc6, 0x0f, 0x30, 0xa2, 0x15, 0x10, 0x5d, 0xf4, 0xbc, 0xbc, 0x28,
+	0x44, 0x64, 0xdb, 0xd9, 0xe4, 0x9d, 0x5e, 0xba, 0xa1, 0x42, 0xc0, 0xd0, 0x56, 0x5b, 0x30, 0x98,
+	0x6a, 0x44, 0x85, 0xc8, 0x81, 0x85, 0x15, 0xe2, 0x0c, 0x5f, 0x54, 0x21, 0xb4, 0x64, 0xbd, 0x2d,
+	0x98, 0x56, 0x84, 0x0a, 0xf1, 0x2b, 0xc2, 0xaf, 0xe8, 0xa9, 0xee, 0x50, 0x16, 0xa7, 0x2c, 0xb1,
+	0x09, 0x92, 0x64, 0x63, 0xe4, 0xca, 0x79, 0xdc, 0xfa, 0xbe, 0xf6, 0x84, 0x51, 0xc6, 0xba, 0x06,
+	0xd6, 0xab, 0xde, 0xe2, 0x70, 0xeb, 0x96, 0x8e, 0xeb, 0x7e, 0x0a, 0xe0, 0xfe, 0x07, 0xc2, 0xd3,
+	0x7a, 0x5a, 0x3b, 0xdf, 0x07, 0x2d, 0x2a, 0x42, 0xc5, 0x85, 0x6c, 0xa4, 0x2d, 0xf2, 0xc6, 0x48,
+	0x93, 0x61, 0x21, 0xf6, 0x1d, 0xde, 0xfc, 0x1f, 0x91, 0xe6, 0x3d, 0xae, 0xc1, 0x7b, 0xac, 0x79,
+	0x2b, 0xc3, 0xdf, 0xa3, 0xfb, 0x29, 0xf3, 0xbe, 0x60, 0x5b, 0xad, 0x76, 0xd3, 0x84, 0x6d, 0xf3,
+	0x83, 0x83, 0x90, 0xc5, 0xd2, 0x59, 0xad, 0xfa, 0xa1, 0xa2, 0x6a, 0x35, 0xc8, 0x16, 0x54, 0x2b,
+	0x99, 0x26, 0x2c, 0x88, 0x0c, 0x9d, 0x29, 0x7d, 0x8a, 0xf0, 0xb9, 0xeb, 0x71, 0xbc, 0x9d, 0x0d,
+	0x93, 0x05, 0xc7, 0x12, 0x16, 0xb0, 0x2a, 0x8b, 0x85, 0x9c, 0xd1, 0x98, 0x05, 0x8d, 0x2b, 0xde,
+	0xa5, 0x9c, 0x46, 0x18, 0xc7, 0x01, 0x3c, 0xda, 0x13, 0xb4, 0x43, 0x95, 0xe8, 0xbc, 0x1d, 0xa6,
+	0x4d, 0x1a, 0xdf, 0x3c, 0xa4, 0x4c, 0x39, 0x4f, 0x50, 0x1e, 0x2c, 0x3a, 0x41, 0x67, 0xf9, 0x82,
+	0x13, 0x24, 0xb2, 0x80, 0xca, 0x1e, 0x44, 0x54, 0x68, 0x16, 0xb2, 0x89, 0xca, 0xb5, 0xbf, 0xa7,
+	0xf0, 0xf9, 0x0f, 0xb3, 0x36, 0xc1, 0x36, 0x06, 0x3f, 0x23, 0x3c, 0xb5, 0x15, 0xaa, 0xa8, 0x41,
+	0xe3, 0x6e, 0x36, 0x5d, 0x85, 0x3b, 0xc7, 0x59, 0xe5, 0xea, 0xb8, 0xb8, 0x31, 0x7e, 0x0b, 0x8c,
+	0xaf, 0x91, 0x0d, 0x7f, 0x78, 0x1b, 0x53, 0xd7, 0x71, 0xdd, 0xf4, 0xfa, 0xf7, 0x01, 0x38, 0xf6,
+	0xef, 0xa7, 0xf1, 0x31, 0xf9, 0x12, 0x61, 0x9c, 0x15, 0x12, 0x2a, 0xde, 0x63, 0x7b, 0xdc, 0xd9,
+	0x25, 0xf4, 0x90, 0xa2, 0x2e, 0xa1, 0x9f, 0x34, 0x86, 0x65, 0x30, 0x9c, 0x23, 0x9e, 0xcb, 0x10,
+	0x42, 0x82, 0x34, 0x13, 0xf8, 0xa5, 0x77, 0x17, 0x41, 0x0f, 0xf7, 0x2e, 0x4d, 0x93, 0x86, 0x2a,
+	0xba, 0x8b, 0xfa, 0xd0, 0x31, 0xef, 0xa2, 0x81, 0x08, 0xe3, 0xb9, 0x09, 0x9e, 0x1b, 0xa4, 0xe6,
+	0xf0, 0x8c, 0xfa, 0x42, 0x83, 0x06, 0xc4, 0xda, 0xcd, 0xcc, 0xee, 0xd0, 0x29, 0x53, 0xe0, 0x0a,
+	0x13, 0x9f, 0xe3, 0x8a, 0x12, 0x7f, 0x06, 0x37, 0xba, 0xaf, 0x83, 0xee, 0x3a, 0xf1, 0x1d, 0xba,
+	0xb6, 0x6e, 0xe6, 0x13, 0x4f, 0x3e, 0xc1, 0x93, 0x70, 0x1e, 0x25, 0x99, 0x73, 0x6d, 0x12, 0xfc,
+	0xb4, 0x62, 0xf3, 0x05, 0xd4, 0x60, 0x33, 0x48, 0xae, 0xb8, 0xb6, 0x4f, 0xaf, 0xf9, 0x00, 0xe1,
+	0x67, 0xcd, 0xbb, 0x10, 0xe7, 0xcc, 0x7a, 0xdc, 0x0a, 0x2c, 0x14, 0x61, 0x83, 0xcd, 0x04, 0x59,
+	0x70, 0x26, 0x10, 0xf8, 0x40, 0xe8, 0x79, 0xc9, 0xb7, 0x08, 0xe3, 0x5b, 0xb4, 0x73, 0x3d, 0x8e,
+	0x05, 0x95, 0xd2, 0xf9, 0xf1, 0xf7, 0x90, 0xa2, 0x8f, 0xbf, 0x9f, 0x1c, 0xbc, 0xdc, 0x48, 0xd9,
+	0xe1, 0xb4, 0x4f, 0x3b, 0x41, 0xa8, 0x63, 0xba, 0x09, 0x7a, 0x84, 0xf0, 0x05, 0xd3, 0x6a, 0x5b,
+	0x37, 0x57, 0xaf, 0x38, 0x88, 0x15, 0xf5, 0x8a, 0x79, 0x7a, 0xf0, 0xe2, 0x22, 0x55, 0x87, 0xa3,
+	0x69, 0xe5, 0xcf, 0x78, 0x7e, 0x87, 0xf0, 0xb9, 0xad, 0x8e, 0xa2, 0x11, 0x8f, 0xa9, 0xf3, 0x96,
+	0xb0, 0x40, 0xd1, 0x2d, 0xd1, 0xe3, 0xc6, 0x3c, 0x8e, 0x75, 0x13, 0xd0, 0x2b, 0x68, 0x11, 0x67,
+	0x4a, 0x84, 0x91, 0x3a, 0x26, 0x5f, 0x20, 0xfc, 0x8c, 0xbe, 0x31, 0x5c, 0x7f, 0x4f, 0x0c, 0x5c,
+	0x13, 0x73, 0xa3, 0xa1, 0x31, 0x0f, 0x1c, 0x5c, 0x0b, 0x3d, 0x1b, 0xf8, 0x19, 0x64, 0x45, 0xf6,
+	0x07, 0x84, 0x9f, 0xbf, 0xb9, 0xb3, 0x5d, 0x5b, 0x33, 0x7d, 0xa0, 0xeb, 0xf3, 0xe9, 0x63, 0xac,
+	0x59, 0x79, 0x1c, 0xd4, 0xf8, 0x5d, 0x05, 0xbf, 0x0a, 0x59, 0x71, 0xf9, 0x89, 0xa8, 0xb6, 0x66,
+	0xfa, 0xbf, 0x6e, 0x0e, 0xbf, 0x42, 0xf8, 0x39, 0x98, 0x07, 0xea, 0xbf, 0x2b, 0x39, 0x5d, 0xc2,
+	0x7a, 0x2d, 0x15, 0x83, 0xc6, 0x6a, 0x1d, 0xac, 0x56, 0xc8, 0xb2, 0xc3, 0x0a, 0x7c, 0xa0, 0xf8,
+	0x77, 0x9d, 0x3e, 0x47, 0x78, 0xf2, 0x4e, 0x28, 0xc2, 0x03, 0x77, 0x85, 0xd2, 0xc3, 0x45, 0x15,
+	0xca, 0x52, 0x83, 0x3d, 0x3c, 0x99, 0x77, 0x55, 0x4c, 0xc0, 0xad, 0xc6, 0xd6, 0xed, 0xdf, 0x4f,
+	0x4a, 0xe8, 0xf1, 0x49, 0x09, 0xfd, 0x73, 0x52, 0x42, 0x0f, 0x4f, 0x4b, 0x13, 0xbf, 0x9d, 0x96,
+	0xd0, 0xe3, 0xd3, 0xd2, 0xc4, 0x5f, 0xa7, 0xa5, 0x89, 0x8f, 0xfc, 0x24, 0x55, 0x8d, 0x76, 0xbd,
+	0x1a, 0xf1, 0x03, 0x33, 0x1d, 0x17, 0x89, 0x79, 0xaa, 0x44, 0x5c, 0x50, 0xff, 0xc8, 0xce, 0xaf,
+	0x3a, 0x2d, 0x2a, 0xeb, 0x93, 0xf0, 0xaf, 0x84, 0xab, 0xff, 0x05, 0x00, 0x00, 0xff, 0xff, 0xb4,
+	0x5a, 0x23, 0x68, 0xff, 0x10, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -75,6 +127,18 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgServiceClient interface {
 	ConfirmSourceTxs(ctx context.Context, in *ConfirmSourceTxsRequest, opts ...grpc.CallOption) (*ConfirmSourceTxsResponse, error)
+	SetGateway(ctx context.Context, in *SetGatewayRequest, opts ...grpc.CallOption) (*SetGatewayResponse, error)
+	Link(ctx context.Context, in *LinkRequest, opts ...grpc.CallOption) (*LinkResponse, error)
+	ConfirmToken(ctx context.Context, in *ConfirmTokenRequest, opts ...grpc.CallOption) (*ConfirmTokenResponse, error)
+	ConfirmDeposit(ctx context.Context, in *ConfirmDepositRequest, opts ...grpc.CallOption) (*ConfirmDepositResponse, error)
+	ConfirmTransferKey(ctx context.Context, in *ConfirmTransferKeyRequest, opts ...grpc.CallOption) (*ConfirmTransferKeyResponse, error)
+	CreateDeployToken(ctx context.Context, in *CreateDeployTokenRequest, opts ...grpc.CallOption) (*CreateDeployTokenResponse, error)
+	CreateBurnTokens(ctx context.Context, in *CreateBurnTokensRequest, opts ...grpc.CallOption) (*CreateBurnTokensResponse, error)
+	CreatePendingTransfers(ctx context.Context, in *CreatePendingTransfersRequest, opts ...grpc.CallOption) (*CreatePendingTransfersResponse, error)
+	CreateTransferOperatorship(ctx context.Context, in *CreateTransferOperatorshipRequest, opts ...grpc.CallOption) (*CreateTransferOperatorshipResponse, error)
+	SignCommands(ctx context.Context, in *SignCommandsRequest, opts ...grpc.CallOption) (*SignCommandsResponse, error)
+	AddChain(ctx context.Context, in *AddChainRequest, opts ...grpc.CallOption) (*AddChainResponse, error)
+	RetryFailedEvent(ctx context.Context, in *RetryFailedEventRequest, opts ...grpc.CallOption) (*RetryFailedEventResponse, error)
 }
 
 type msgServiceClient struct {
@@ -94,9 +158,129 @@ func (c *msgServiceClient) ConfirmSourceTxs(ctx context.Context, in *ConfirmSour
 	return out, nil
 }
 
+func (c *msgServiceClient) SetGateway(ctx context.Context, in *SetGatewayRequest, opts ...grpc.CallOption) (*SetGatewayResponse, error) {
+	out := new(SetGatewayResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.MsgService/SetGateway", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgServiceClient) Link(ctx context.Context, in *LinkRequest, opts ...grpc.CallOption) (*LinkResponse, error) {
+	out := new(LinkResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.MsgService/Link", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgServiceClient) ConfirmToken(ctx context.Context, in *ConfirmTokenRequest, opts ...grpc.CallOption) (*ConfirmTokenResponse, error) {
+	out := new(ConfirmTokenResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.MsgService/ConfirmToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgServiceClient) ConfirmDeposit(ctx context.Context, in *ConfirmDepositRequest, opts ...grpc.CallOption) (*ConfirmDepositResponse, error) {
+	out := new(ConfirmDepositResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.MsgService/ConfirmDeposit", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgServiceClient) ConfirmTransferKey(ctx context.Context, in *ConfirmTransferKeyRequest, opts ...grpc.CallOption) (*ConfirmTransferKeyResponse, error) {
+	out := new(ConfirmTransferKeyResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.MsgService/ConfirmTransferKey", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgServiceClient) CreateDeployToken(ctx context.Context, in *CreateDeployTokenRequest, opts ...grpc.CallOption) (*CreateDeployTokenResponse, error) {
+	out := new(CreateDeployTokenResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.MsgService/CreateDeployToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgServiceClient) CreateBurnTokens(ctx context.Context, in *CreateBurnTokensRequest, opts ...grpc.CallOption) (*CreateBurnTokensResponse, error) {
+	out := new(CreateBurnTokensResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.MsgService/CreateBurnTokens", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgServiceClient) CreatePendingTransfers(ctx context.Context, in *CreatePendingTransfersRequest, opts ...grpc.CallOption) (*CreatePendingTransfersResponse, error) {
+	out := new(CreatePendingTransfersResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.MsgService/CreatePendingTransfers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgServiceClient) CreateTransferOperatorship(ctx context.Context, in *CreateTransferOperatorshipRequest, opts ...grpc.CallOption) (*CreateTransferOperatorshipResponse, error) {
+	out := new(CreateTransferOperatorshipResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.MsgService/CreateTransferOperatorship", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgServiceClient) SignCommands(ctx context.Context, in *SignCommandsRequest, opts ...grpc.CallOption) (*SignCommandsResponse, error) {
+	out := new(SignCommandsResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.MsgService/SignCommands", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgServiceClient) AddChain(ctx context.Context, in *AddChainRequest, opts ...grpc.CallOption) (*AddChainResponse, error) {
+	out := new(AddChainResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.MsgService/AddChain", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgServiceClient) RetryFailedEvent(ctx context.Context, in *RetryFailedEventRequest, opts ...grpc.CallOption) (*RetryFailedEventResponse, error) {
+	out := new(RetryFailedEventResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.MsgService/RetryFailedEvent", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServiceServer is the server API for MsgService service.
 type MsgServiceServer interface {
 	ConfirmSourceTxs(context.Context, *ConfirmSourceTxsRequest) (*ConfirmSourceTxsResponse, error)
+	SetGateway(context.Context, *SetGatewayRequest) (*SetGatewayResponse, error)
+	Link(context.Context, *LinkRequest) (*LinkResponse, error)
+	ConfirmToken(context.Context, *ConfirmTokenRequest) (*ConfirmTokenResponse, error)
+	ConfirmDeposit(context.Context, *ConfirmDepositRequest) (*ConfirmDepositResponse, error)
+	ConfirmTransferKey(context.Context, *ConfirmTransferKeyRequest) (*ConfirmTransferKeyResponse, error)
+	CreateDeployToken(context.Context, *CreateDeployTokenRequest) (*CreateDeployTokenResponse, error)
+	CreateBurnTokens(context.Context, *CreateBurnTokensRequest) (*CreateBurnTokensResponse, error)
+	CreatePendingTransfers(context.Context, *CreatePendingTransfersRequest) (*CreatePendingTransfersResponse, error)
+	CreateTransferOperatorship(context.Context, *CreateTransferOperatorshipRequest) (*CreateTransferOperatorshipResponse, error)
+	SignCommands(context.Context, *SignCommandsRequest) (*SignCommandsResponse, error)
+	AddChain(context.Context, *AddChainRequest) (*AddChainResponse, error)
+	RetryFailedEvent(context.Context, *RetryFailedEventRequest) (*RetryFailedEventResponse, error)
 }
 
 // UnimplementedMsgServiceServer can be embedded to have forward compatible implementations.
@@ -105,6 +289,42 @@ type UnimplementedMsgServiceServer struct {
 
 func (*UnimplementedMsgServiceServer) ConfirmSourceTxs(ctx context.Context, req *ConfirmSourceTxsRequest) (*ConfirmSourceTxsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConfirmSourceTxs not implemented")
+}
+func (*UnimplementedMsgServiceServer) SetGateway(ctx context.Context, req *SetGatewayRequest) (*SetGatewayResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetGateway not implemented")
+}
+func (*UnimplementedMsgServiceServer) Link(ctx context.Context, req *LinkRequest) (*LinkResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Link not implemented")
+}
+func (*UnimplementedMsgServiceServer) ConfirmToken(ctx context.Context, req *ConfirmTokenRequest) (*ConfirmTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConfirmToken not implemented")
+}
+func (*UnimplementedMsgServiceServer) ConfirmDeposit(ctx context.Context, req *ConfirmDepositRequest) (*ConfirmDepositResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConfirmDeposit not implemented")
+}
+func (*UnimplementedMsgServiceServer) ConfirmTransferKey(ctx context.Context, req *ConfirmTransferKeyRequest) (*ConfirmTransferKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConfirmTransferKey not implemented")
+}
+func (*UnimplementedMsgServiceServer) CreateDeployToken(ctx context.Context, req *CreateDeployTokenRequest) (*CreateDeployTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateDeployToken not implemented")
+}
+func (*UnimplementedMsgServiceServer) CreateBurnTokens(ctx context.Context, req *CreateBurnTokensRequest) (*CreateBurnTokensResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateBurnTokens not implemented")
+}
+func (*UnimplementedMsgServiceServer) CreatePendingTransfers(ctx context.Context, req *CreatePendingTransfersRequest) (*CreatePendingTransfersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatePendingTransfers not implemented")
+}
+func (*UnimplementedMsgServiceServer) CreateTransferOperatorship(ctx context.Context, req *CreateTransferOperatorshipRequest) (*CreateTransferOperatorshipResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateTransferOperatorship not implemented")
+}
+func (*UnimplementedMsgServiceServer) SignCommands(ctx context.Context, req *SignCommandsRequest) (*SignCommandsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SignCommands not implemented")
+}
+func (*UnimplementedMsgServiceServer) AddChain(ctx context.Context, req *AddChainRequest) (*AddChainResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddChain not implemented")
+}
+func (*UnimplementedMsgServiceServer) RetryFailedEvent(ctx context.Context, req *RetryFailedEventRequest) (*RetryFailedEventResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RetryFailedEvent not implemented")
 }
 
 func RegisterMsgServiceServer(s grpc1.Server, srv MsgServiceServer) {
@@ -129,6 +349,222 @@ func _MsgService_ConfirmSourceTxs_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MsgService_SetGateway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetGatewayRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServiceServer).SetGateway(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.MsgService/SetGateway",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServiceServer).SetGateway(ctx, req.(*SetGatewayRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MsgService_Link_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LinkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServiceServer).Link(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.MsgService/Link",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServiceServer).Link(ctx, req.(*LinkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MsgService_ConfirmToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConfirmTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServiceServer).ConfirmToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.MsgService/ConfirmToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServiceServer).ConfirmToken(ctx, req.(*ConfirmTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MsgService_ConfirmDeposit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConfirmDepositRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServiceServer).ConfirmDeposit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.MsgService/ConfirmDeposit",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServiceServer).ConfirmDeposit(ctx, req.(*ConfirmDepositRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MsgService_ConfirmTransferKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConfirmTransferKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServiceServer).ConfirmTransferKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.MsgService/ConfirmTransferKey",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServiceServer).ConfirmTransferKey(ctx, req.(*ConfirmTransferKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MsgService_CreateDeployToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateDeployTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServiceServer).CreateDeployToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.MsgService/CreateDeployToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServiceServer).CreateDeployToken(ctx, req.(*CreateDeployTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MsgService_CreateBurnTokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateBurnTokensRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServiceServer).CreateBurnTokens(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.MsgService/CreateBurnTokens",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServiceServer).CreateBurnTokens(ctx, req.(*CreateBurnTokensRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MsgService_CreatePendingTransfers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePendingTransfersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServiceServer).CreatePendingTransfers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.MsgService/CreatePendingTransfers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServiceServer).CreatePendingTransfers(ctx, req.(*CreatePendingTransfersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MsgService_CreateTransferOperatorship_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTransferOperatorshipRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServiceServer).CreateTransferOperatorship(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.MsgService/CreateTransferOperatorship",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServiceServer).CreateTransferOperatorship(ctx, req.(*CreateTransferOperatorshipRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MsgService_SignCommands_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SignCommandsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServiceServer).SignCommands(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.MsgService/SignCommands",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServiceServer).SignCommands(ctx, req.(*SignCommandsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MsgService_AddChain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddChainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServiceServer).AddChain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.MsgService/AddChain",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServiceServer).AddChain(ctx, req.(*AddChainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MsgService_RetryFailedEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RetryFailedEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServiceServer).RetryFailedEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.MsgService/RetryFailedEvent",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServiceServer).RetryFailedEvent(ctx, req.(*RetryFailedEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _MsgService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "scalar.chains.v1beta1.MsgService",
 	HandlerType: (*MsgServiceServer)(nil),
@@ -136,6 +572,54 @@ var _MsgService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ConfirmSourceTxs",
 			Handler:    _MsgService_ConfirmSourceTxs_Handler,
+		},
+		{
+			MethodName: "SetGateway",
+			Handler:    _MsgService_SetGateway_Handler,
+		},
+		{
+			MethodName: "Link",
+			Handler:    _MsgService_Link_Handler,
+		},
+		{
+			MethodName: "ConfirmToken",
+			Handler:    _MsgService_ConfirmToken_Handler,
+		},
+		{
+			MethodName: "ConfirmDeposit",
+			Handler:    _MsgService_ConfirmDeposit_Handler,
+		},
+		{
+			MethodName: "ConfirmTransferKey",
+			Handler:    _MsgService_ConfirmTransferKey_Handler,
+		},
+		{
+			MethodName: "CreateDeployToken",
+			Handler:    _MsgService_CreateDeployToken_Handler,
+		},
+		{
+			MethodName: "CreateBurnTokens",
+			Handler:    _MsgService_CreateBurnTokens_Handler,
+		},
+		{
+			MethodName: "CreatePendingTransfers",
+			Handler:    _MsgService_CreatePendingTransfers_Handler,
+		},
+		{
+			MethodName: "CreateTransferOperatorship",
+			Handler:    _MsgService_CreateTransferOperatorship_Handler,
+		},
+		{
+			MethodName: "SignCommands",
+			Handler:    _MsgService_SignCommands_Handler,
+		},
+		{
+			MethodName: "AddChain",
+			Handler:    _MsgService_AddChain_Handler,
+		},
+		{
+			MethodName: "RetryFailedEvent",
+			Handler:    _MsgService_RetryFailedEvent_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -150,6 +634,30 @@ type QueryServiceClient interface {
 	// BatchedCommandsID if no BatchedCommandsID is specified, then it returns the
 	// latest batched commands
 	BatchedCommands(ctx context.Context, in *BatchedCommandsRequest, opts ...grpc.CallOption) (*BatchedCommandsResponse, error)
+	BurnerInfo(ctx context.Context, in *BurnerInfoRequest, opts ...grpc.CallOption) (*BurnerInfoResponse, error)
+	// ConfirmationHeight queries the confirmation height for the specified chain
+	ConfirmationHeight(ctx context.Context, in *ConfirmationHeightRequest, opts ...grpc.CallOption) (*ConfirmationHeightResponse, error)
+	// PendingCommands queries the pending commands for the specified chain
+	PendingCommands(ctx context.Context, in *PendingCommandsRequest, opts ...grpc.CallOption) (*PendingCommandsResponse, error)
+	// Chains queries the available chains
+	Chains(ctx context.Context, in *ChainsRequest, opts ...grpc.CallOption) (*ChainsResponse, error)
+	// Command queries the command of a chain provided the command id
+	Command(ctx context.Context, in *CommandRequest, opts ...grpc.CallOption) (*CommandResponse, error)
+	// KeyAddress queries the address of key of a chain
+	KeyAddress(ctx context.Context, in *KeyAddressRequest, opts ...grpc.CallOption) (*KeyAddressResponse, error)
+	// GatewayAddress queries the address of scalar gateway at the specified
+	// chain
+	GatewayAddress(ctx context.Context, in *GatewayAddressRequest, opts ...grpc.CallOption) (*GatewayAddressResponse, error)
+	// Bytecode queries the bytecode of a specified gateway at the specified
+	// chain
+	Bytecode(ctx context.Context, in *BytecodeRequest, opts ...grpc.CallOption) (*BytecodeResponse, error)
+	// Event queries an event at the specified chain
+	Event(ctx context.Context, in *EventRequest, opts ...grpc.CallOption) (*EventResponse, error)
+	// ERC20Tokens queries the ERC20 tokens registered for a chain
+	ERC20Tokens(ctx context.Context, in *ERC20TokensRequest, opts ...grpc.CallOption) (*ERC20TokensResponse, error)
+	// TokenInfo queries the token info for a registered ERC20 Token
+	TokenInfo(ctx context.Context, in *TokenInfoRequest, opts ...grpc.CallOption) (*TokenInfoResponse, error)
+	Params(ctx context.Context, in *ParamsRequest, opts ...grpc.CallOption) (*ParamsResponse, error)
 }
 
 type queryServiceClient struct {
@@ -169,12 +677,144 @@ func (c *queryServiceClient) BatchedCommands(ctx context.Context, in *BatchedCom
 	return out, nil
 }
 
+func (c *queryServiceClient) BurnerInfo(ctx context.Context, in *BurnerInfoRequest, opts ...grpc.CallOption) (*BurnerInfoResponse, error) {
+	out := new(BurnerInfoResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.QueryService/BurnerInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryServiceClient) ConfirmationHeight(ctx context.Context, in *ConfirmationHeightRequest, opts ...grpc.CallOption) (*ConfirmationHeightResponse, error) {
+	out := new(ConfirmationHeightResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.QueryService/ConfirmationHeight", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryServiceClient) PendingCommands(ctx context.Context, in *PendingCommandsRequest, opts ...grpc.CallOption) (*PendingCommandsResponse, error) {
+	out := new(PendingCommandsResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.QueryService/PendingCommands", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryServiceClient) Chains(ctx context.Context, in *ChainsRequest, opts ...grpc.CallOption) (*ChainsResponse, error) {
+	out := new(ChainsResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.QueryService/Chains", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryServiceClient) Command(ctx context.Context, in *CommandRequest, opts ...grpc.CallOption) (*CommandResponse, error) {
+	out := new(CommandResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.QueryService/Command", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryServiceClient) KeyAddress(ctx context.Context, in *KeyAddressRequest, opts ...grpc.CallOption) (*KeyAddressResponse, error) {
+	out := new(KeyAddressResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.QueryService/KeyAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryServiceClient) GatewayAddress(ctx context.Context, in *GatewayAddressRequest, opts ...grpc.CallOption) (*GatewayAddressResponse, error) {
+	out := new(GatewayAddressResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.QueryService/GatewayAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryServiceClient) Bytecode(ctx context.Context, in *BytecodeRequest, opts ...grpc.CallOption) (*BytecodeResponse, error) {
+	out := new(BytecodeResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.QueryService/Bytecode", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryServiceClient) Event(ctx context.Context, in *EventRequest, opts ...grpc.CallOption) (*EventResponse, error) {
+	out := new(EventResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.QueryService/Event", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryServiceClient) ERC20Tokens(ctx context.Context, in *ERC20TokensRequest, opts ...grpc.CallOption) (*ERC20TokensResponse, error) {
+	out := new(ERC20TokensResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.QueryService/ERC20Tokens", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryServiceClient) TokenInfo(ctx context.Context, in *TokenInfoRequest, opts ...grpc.CallOption) (*TokenInfoResponse, error) {
+	out := new(TokenInfoResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.QueryService/TokenInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryServiceClient) Params(ctx context.Context, in *ParamsRequest, opts ...grpc.CallOption) (*ParamsResponse, error) {
+	out := new(ParamsResponse)
+	err := c.cc.Invoke(ctx, "/scalar.chains.v1beta1.QueryService/Params", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServiceServer is the server API for QueryService service.
 type QueryServiceServer interface {
 	// BatchedCommands queries the batched commands for a specified chain and
 	// BatchedCommandsID if no BatchedCommandsID is specified, then it returns the
 	// latest batched commands
 	BatchedCommands(context.Context, *BatchedCommandsRequest) (*BatchedCommandsResponse, error)
+	BurnerInfo(context.Context, *BurnerInfoRequest) (*BurnerInfoResponse, error)
+	// ConfirmationHeight queries the confirmation height for the specified chain
+	ConfirmationHeight(context.Context, *ConfirmationHeightRequest) (*ConfirmationHeightResponse, error)
+	// PendingCommands queries the pending commands for the specified chain
+	PendingCommands(context.Context, *PendingCommandsRequest) (*PendingCommandsResponse, error)
+	// Chains queries the available chains
+	Chains(context.Context, *ChainsRequest) (*ChainsResponse, error)
+	// Command queries the command of a chain provided the command id
+	Command(context.Context, *CommandRequest) (*CommandResponse, error)
+	// KeyAddress queries the address of key of a chain
+	KeyAddress(context.Context, *KeyAddressRequest) (*KeyAddressResponse, error)
+	// GatewayAddress queries the address of scalar gateway at the specified
+	// chain
+	GatewayAddress(context.Context, *GatewayAddressRequest) (*GatewayAddressResponse, error)
+	// Bytecode queries the bytecode of a specified gateway at the specified
+	// chain
+	Bytecode(context.Context, *BytecodeRequest) (*BytecodeResponse, error)
+	// Event queries an event at the specified chain
+	Event(context.Context, *EventRequest) (*EventResponse, error)
+	// ERC20Tokens queries the ERC20 tokens registered for a chain
+	ERC20Tokens(context.Context, *ERC20TokensRequest) (*ERC20TokensResponse, error)
+	// TokenInfo queries the token info for a registered ERC20 Token
+	TokenInfo(context.Context, *TokenInfoRequest) (*TokenInfoResponse, error)
+	Params(context.Context, *ParamsRequest) (*ParamsResponse, error)
 }
 
 // UnimplementedQueryServiceServer can be embedded to have forward compatible implementations.
@@ -183,6 +823,42 @@ type UnimplementedQueryServiceServer struct {
 
 func (*UnimplementedQueryServiceServer) BatchedCommands(ctx context.Context, req *BatchedCommandsRequest) (*BatchedCommandsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BatchedCommands not implemented")
+}
+func (*UnimplementedQueryServiceServer) BurnerInfo(ctx context.Context, req *BurnerInfoRequest) (*BurnerInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BurnerInfo not implemented")
+}
+func (*UnimplementedQueryServiceServer) ConfirmationHeight(ctx context.Context, req *ConfirmationHeightRequest) (*ConfirmationHeightResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConfirmationHeight not implemented")
+}
+func (*UnimplementedQueryServiceServer) PendingCommands(ctx context.Context, req *PendingCommandsRequest) (*PendingCommandsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PendingCommands not implemented")
+}
+func (*UnimplementedQueryServiceServer) Chains(ctx context.Context, req *ChainsRequest) (*ChainsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Chains not implemented")
+}
+func (*UnimplementedQueryServiceServer) Command(ctx context.Context, req *CommandRequest) (*CommandResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Command not implemented")
+}
+func (*UnimplementedQueryServiceServer) KeyAddress(ctx context.Context, req *KeyAddressRequest) (*KeyAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method KeyAddress not implemented")
+}
+func (*UnimplementedQueryServiceServer) GatewayAddress(ctx context.Context, req *GatewayAddressRequest) (*GatewayAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GatewayAddress not implemented")
+}
+func (*UnimplementedQueryServiceServer) Bytecode(ctx context.Context, req *BytecodeRequest) (*BytecodeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Bytecode not implemented")
+}
+func (*UnimplementedQueryServiceServer) Event(ctx context.Context, req *EventRequest) (*EventResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Event not implemented")
+}
+func (*UnimplementedQueryServiceServer) ERC20Tokens(ctx context.Context, req *ERC20TokensRequest) (*ERC20TokensResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ERC20Tokens not implemented")
+}
+func (*UnimplementedQueryServiceServer) TokenInfo(ctx context.Context, req *TokenInfoRequest) (*TokenInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TokenInfo not implemented")
+}
+func (*UnimplementedQueryServiceServer) Params(ctx context.Context, req *ParamsRequest) (*ParamsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
 }
 
 func RegisterQueryServiceServer(s grpc1.Server, srv QueryServiceServer) {
@@ -207,6 +883,222 @@ func _QueryService_BatchedCommands_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _QueryService_BurnerInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BurnerInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServiceServer).BurnerInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.QueryService/BurnerInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServiceServer).BurnerInfo(ctx, req.(*BurnerInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QueryService_ConfirmationHeight_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConfirmationHeightRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServiceServer).ConfirmationHeight(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.QueryService/ConfirmationHeight",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServiceServer).ConfirmationHeight(ctx, req.(*ConfirmationHeightRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QueryService_PendingCommands_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PendingCommandsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServiceServer).PendingCommands(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.QueryService/PendingCommands",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServiceServer).PendingCommands(ctx, req.(*PendingCommandsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QueryService_Chains_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChainsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServiceServer).Chains(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.QueryService/Chains",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServiceServer).Chains(ctx, req.(*ChainsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QueryService_Command_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CommandRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServiceServer).Command(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.QueryService/Command",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServiceServer).Command(ctx, req.(*CommandRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QueryService_KeyAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(KeyAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServiceServer).KeyAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.QueryService/KeyAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServiceServer).KeyAddress(ctx, req.(*KeyAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QueryService_GatewayAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GatewayAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServiceServer).GatewayAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.QueryService/GatewayAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServiceServer).GatewayAddress(ctx, req.(*GatewayAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QueryService_Bytecode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BytecodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServiceServer).Bytecode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.QueryService/Bytecode",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServiceServer).Bytecode(ctx, req.(*BytecodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QueryService_Event_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServiceServer).Event(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.QueryService/Event",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServiceServer).Event(ctx, req.(*EventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QueryService_ERC20Tokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ERC20TokensRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServiceServer).ERC20Tokens(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.QueryService/ERC20Tokens",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServiceServer).ERC20Tokens(ctx, req.(*ERC20TokensRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QueryService_TokenInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TokenInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServiceServer).TokenInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.QueryService/TokenInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServiceServer).TokenInfo(ctx, req.(*TokenInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QueryService_Params_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ParamsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServiceServer).Params(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scalar.chains.v1beta1.QueryService/Params",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServiceServer).Params(ctx, req.(*ParamsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _QueryService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "scalar.chains.v1beta1.QueryService",
 	HandlerType: (*QueryServiceServer)(nil),
@@ -214,6 +1106,54 @@ var _QueryService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "BatchedCommands",
 			Handler:    _QueryService_BatchedCommands_Handler,
+		},
+		{
+			MethodName: "BurnerInfo",
+			Handler:    _QueryService_BurnerInfo_Handler,
+		},
+		{
+			MethodName: "ConfirmationHeight",
+			Handler:    _QueryService_ConfirmationHeight_Handler,
+		},
+		{
+			MethodName: "PendingCommands",
+			Handler:    _QueryService_PendingCommands_Handler,
+		},
+		{
+			MethodName: "Chains",
+			Handler:    _QueryService_Chains_Handler,
+		},
+		{
+			MethodName: "Command",
+			Handler:    _QueryService_Command_Handler,
+		},
+		{
+			MethodName: "KeyAddress",
+			Handler:    _QueryService_KeyAddress_Handler,
+		},
+		{
+			MethodName: "GatewayAddress",
+			Handler:    _QueryService_GatewayAddress_Handler,
+		},
+		{
+			MethodName: "Bytecode",
+			Handler:    _QueryService_Bytecode_Handler,
+		},
+		{
+			MethodName: "Event",
+			Handler:    _QueryService_Event_Handler,
+		},
+		{
+			MethodName: "ERC20Tokens",
+			Handler:    _QueryService_ERC20Tokens_Handler,
+		},
+		{
+			MethodName: "TokenInfo",
+			Handler:    _QueryService_TokenInfo_Handler,
+		},
+		{
+			MethodName: "Params",
+			Handler:    _QueryService_Params_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

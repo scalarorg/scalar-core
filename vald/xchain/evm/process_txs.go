@@ -48,7 +48,7 @@ func (c *EthereumClient) processTxReceipt(chain nexus.ChainName, receipt ETHTxRe
 
 		switch txlog.Topics[0] {
 		case ContractCallSig:
-			contractCallEvent, err := c.decodeEventContractCall(txlog)
+			contractCallEvent, err := c.decodeSourceTxConfirmationEvent(txlog)
 			if err != nil {
 				c.logger().Debug(sdkerrors.Wrap(err, "decode event ContractCall failed").Error())
 				continue

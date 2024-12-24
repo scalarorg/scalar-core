@@ -30,7 +30,7 @@ const (
 	MinNumberOfOutputs = 2
 )
 
-func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (*chainsTypes.TxConfirmationEvent, error) {
+func (client *BtcClient) decodeSourceTxConfirmationEvent(tx *BTCTxReceipt) (*chainsTypes.SourceTxConfirmationEvent, error) {
 	if len(tx.MsgTx.TxOut) < MinNumberOfOutputs {
 		return nil, ErrInvalidTxOutCount
 	}
@@ -85,7 +85,7 @@ func (client *BtcClient) decodeStakingTransaction(tx *BTCTxReceipt) (*chainsType
 	// clog.Redf("[VALD] Chain hash %+v\n", chainHash)
 	clog.Redf("[VALD] tx: %+v", tx)
 
-	return &chainsTypes.TxConfirmationEvent{
+	return &chainsTypes.SourceTxConfirmationEvent{
 		Sender:                      tx.PrevTxOuts[0].ScriptPubKey.Address, // TODO: Fix hard coded
 		DestinationChain:            nexus.ChainName(destinationChain.ToBytes().String()),
 		Amount:                      uint64(stakingAmount),

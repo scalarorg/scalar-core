@@ -18,5 +18,18 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&Event{},
 		&VoteEvents{},
 		&PollMetadata{},
+		&LinkRequest{},
+		&ConfirmTokenRequest{},
+		&ConfirmDepositRequest{},
+		&ConfirmTransferKeyRequest{},
+		&CreatePendingTransfersRequest{},
+		&CreateDeployTokenRequest{},
+		&CreateBurnTokensRequest{},
+		&CreateTransferOperatorshipRequest{},
+		&SignCommandsRequest{},
+		&AddChainRequest{},
+		&SetGatewayRequest{},
+		&ConfirmSourceTxsRequest{},
+		&RetryFailedEventRequest{},
 	)
 }

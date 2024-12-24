@@ -26,7 +26,7 @@ var (
 	ContractCallSig = crypto.Keccak256Hash([]byte("ContractCall(address,string,string,bytes32,bytes)"))
 )
 
-func (client *EthereumClient) decodeEventContractCall(log *geth.Log) (*chainsTypes.TxConfirmationEvent, error) {
+func (client *EthereumClient) decodeSourceTxConfirmationEvent(log *geth.Log) (*chainsTypes.SourceTxConfirmationEvent, error) {
 	arguments := abi.Arguments{
 		{Type: stringType},
 		{Type: stringType},
@@ -85,7 +85,7 @@ func (client *EthereumClient) decodeEventContractCall(log *geth.Log) (*chainsTyp
 
 }
 
-func genMockEvent() (*chainsTypes.TxConfirmationEvent, error) {
+func genMockEvent() (*chainsTypes.SourceTxConfirmationEvent, error) {
 	lockingScript, _ := hex.DecodeString("1234567890123456789012345678901234567890123456789012345678901234567890")
 	amount := uint64(7)
 	feeOpts := utilsTypes.FastestFee
@@ -95,7 +95,7 @@ func genMockEvent() (*chainsTypes.TxConfirmationEvent, error) {
 		return nil, err
 	}
 
-	return &chainsTypes.TxConfirmationEvent{
+	return &chainsTypes.SourceTxConfirmationEvent{
 		Sender:                      "0x24a1dB57Fa3ecAFcbaD91d6Ef068439acEeAe090",
 		DestinationChain:            "bitcoin|4",
 		Amount:                      100_000,
