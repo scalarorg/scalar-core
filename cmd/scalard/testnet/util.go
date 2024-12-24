@@ -1,6 +1,9 @@
 package testnet
 
 import (
+	"encoding/json"
+	"os"
+
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
@@ -151,4 +154,32 @@ func startInProcess(cfg Config, val *Validator) error {
 	// }
 
 	return nil
+}
+
+func ParseJsonArrayConfig[T any](filePath string) ([]T, error) {
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to read file")
+		return nil, err
+	}
+	var result []T
+	if err := json.Unmarshal(content, &result); err != nil {
+		log.Error().Err(err).Msg("Failed to unmarshal json")
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func ParseJsonConfig[T any](filePath string) (*T, error) {
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+	var result T
+	if err := json.Unmarshal(content, &result); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }
