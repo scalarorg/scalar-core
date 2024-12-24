@@ -59,7 +59,8 @@ var (
 	flagBtcPubkey           = "BTC_PUBKEY"
 	flagNodeDirPrefix       = "node-dir-prefix"
 	flagNumValidators       = "v"
-	flagSupportedChains     = "supported-chains"
+	flagChains              = "chains"
+	flagTokens              = "tokens"
 	flagOutputDir           = "output-dir"
 	flagBaseDir             = "base-dir"
 	flagTimeout             = "timeout"
@@ -80,19 +81,20 @@ var (
 )
 
 type initArgs struct {
-	algo            string
-	chainID         string
-	keyringBackend  string
-	minGasPrices    string
-	nodeDaemonHome  string
-	supportedChains string
-	nodeDirPrefix   string
-	numValidators   int
-	outputDir       string
-	nodeDomain      string
-	portOffset      int
-	baseFee         sdk.Int
-	minGasPrice     sdk.Dec
+	algo           string
+	chainID        string
+	keyringBackend string
+	minGasPrices   string
+	nodeDaemonHome string
+	chains         string
+	tokens         string
+	nodeDirPrefix  string
+	numValidators  int
+	outputDir      string
+	nodeDomain     string
+	portOffset     int
+	baseFee        sdk.Int
+	minGasPrice    sdk.Dec
 }
 
 type startArgs struct {
@@ -189,7 +191,8 @@ Example:
 			args.nodeDomain, _ = cmd.Flags().GetString(flagNodeDomain)
 			args.numValidators, _ = cmd.Flags().GetInt(flagNumValidators)
 			args.portOffset, _ = cmd.Flags().GetInt(flagPortOffset)
-			args.supportedChains, _ = cmd.Flags().GetString(flagSupportedChains)
+			args.chains, _ = cmd.Flags().GetString(flagChains)
+			args.tokens, _ = cmd.Flags().GetString(flagTokens)
 			args.algo, _ = cmd.Flags().GetString(flagKeyType)
 			baseFee, _ := cmd.Flags().GetString(flagBaseFee)
 			minGasPrice, _ := cmd.Flags().GetString(flagMinGasPrice)
@@ -220,9 +223,12 @@ Example:
 		*scalarnode* results in persistent peers list ID0@scalarnode1:46656, ID1@scalarnode2:46656, ...
 		*192.168.0.1* results in persistent peers list ID0@192.168.0.11:46656, ID1@192.168.0.12:46656, ...
 		`)
-	cmd.Flags().String(flagSupportedChains, "./chains", `Supported chains directory, each chain family is config in a seperated json file under this directory: 
+	cmd.Flags().String(flagChains, "./chains", `Supported chains directory, each chain family is config in a seperated json file under this directory: 
 		*./chains/evm.json* stores all evm chain configs ...
 		*./chains/btc.json* stores all btc chain configs ...
+		`)
+	cmd.Flags().String(flagTokens, "./tokens", `Supported token for default protocol Scalar, each chain family is config in a seperated json file under this directory: 
+		*./tokens/evm.json* stores all evm erc20 token configs ...
 		`)
 	cmd.Flags().String(flags.FlagKeyringBackend, flags.DefaultKeyringBackend, "Select keyring's backend (os|file|test)")
 	cmd.Flags().String(flagEnvFile, "", "Path to environment file to load (optional)")
@@ -736,7 +742,7 @@ func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig
 	for i, validatorInfo := range validatorInfos {
 		validators[i] = validatorInfo.GenesisValidator
 	}
-	appGenState, err := GenerateGenesis(clientCtx, mbm, GenesisAsset, validatorInfos, scalarProtocol, args.supportedChains)
+	appGenState, err := GenerateGenesis(clientCtx, mbm, GenesisAsset, validatorInfos, scalarProtocol, args)
 	if err != nil {
 		fmt.Printf("GenerateGenesis err: %s\n", err.Error())
 		return err
@@ -771,7 +777,7 @@ func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig
 		}
 		createAppConfig(validatorInfo.NodeDir, args, i)
 		configPath := filepath.Join(validatorInfo.NodeDir, "config/config.toml")
-		appendBridgeConfig(configPath, args.supportedChains)
+		appendBridgeConfig(configPath, args.chains)
 	}
 
 	return nil
@@ -937,7 +943,7 @@ func initGenFiles(
 	scalarProtocol ScalarProtocol,
 	args initArgs,
 ) error {
-	appGenState, err := GenerateGenesis(clientCtx, mbm, coinDenom, validatorInfos, scalarProtocol, args.supportedChains)
+	appGenState, err := GenerateGenesis(clientCtx, mbm, coinDenom, validatorInfos, scalarProtocol, args)
 	if err != nil {
 		fmt.Printf("GenerateGenesis err: %s\n", err.Error())
 		return err

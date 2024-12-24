@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"os"
+	"path"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -18,6 +18,7 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/utils"
 	evmtypes "github.com/scalarorg/scalar-core/x/chains/evm/types"
@@ -30,77 +31,38 @@ import (
 	protocoltypes "github.com/scalarorg/scalar-core/x/protocol/types"
 	snapshottypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"
-	tmtypes "github.com/tendermint/tendermint/types"
 )
-
-const (
-	ValidatorKeyName   = "priv_validator"
-	BroadcasterKeyName = "broadcaster"
-	ScalarKeyName      = "scalar"
-	GovKeyName         = "govenance"
-	FaucetKeyName      = "faucet"
-)
-
-type GenesisState map[string]json.RawMessage
-
-type ScalarProtocol struct {
-	ScalarPubKey  cryptotypes.PubKey
-	ScalarBalance banktypes.Balance
-	EvmAddress    string
-}
-
-type ValidatorInfo struct {
-	Host        string
-	Moniker     string
-	NodeID      string
-	NodeDir     string
-	SeedAddress string
-	RPCPort     int
-
-	ValPubKey  cryptotypes.PubKey
-	ValBalance banktypes.Balance
-
-	ValNodePubKey  cryptotypes.PubKey
-	ValNodeBalance banktypes.Balance
-	//Balance of broadcaster
-	Broadcaster        cryptotypes.PubKey
-	BroadcasterBalance banktypes.Balance
-
-	GovPubKey  cryptotypes.PubKey
-	GovBalance banktypes.Balance
-
-	FaucetPubKey  cryptotypes.PubKey
-	FaucetBalance banktypes.Balance
-
-	GenesisValidator tmtypes.GenesisValidator
-	BtcPubkey        string
-	GenFile          string
-}
 
 // DefaultProtocol returns the default chains for a genesis state
-func DefaultProtocol(scalarProtocol ScalarProtocol, custodianGroup covenanttypes.CustodianGroup) protocoltypes.Protocol {
-	token := evmtypes.ERC20TokenMetadata{
-		Asset:   "pBtc",
-		ChainID: sdk.NewInt(1115511),
-		//TokenAddress: evmtypes.Address(common.HexToAddress("0x25F23D37861210cdc3c694112cFa64bBca6D7143")),
-		Status: evmtypes.Confirmed,
-		Details: evmtypes.TokenDetails{
-			TokenName: "pBtc",
-			Symbol:    "pBtc",
-			Decimals:  8,
-			Capacity:  sdk.NewInt(100000000),
-		},
-	}
-
-	params := chainsTypes.Params{
-		Chain: "evm|11155111",
-	}
-	chain := protocoltypes.SupportedChain{
-		Params: &params,
-		Token: &protocoltypes.SupportedChain_Erc20{
-			Erc20: &token,
-		},
-		Address: scalarProtocol.EvmAddress,
+func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfos []Token, custodianGroup covenanttypes.CustodianGroup) protocoltypes.Protocol {
+	log.Debug().Any("Infos", tokenInfos).Msg("Create defaultProtocol")
+	chains := make([]*protocoltypes.SupportedChain, len(tokenInfos))
+	for i, tokenInfo := range tokenInfos {
+		tokenAddress := evmtypes.Address(common.HexToAddress(tokenInfo.TokenAddress))
+		log.Debug().Any("TokenAddress", tokenAddress).Msg("Parse Tokenaddress")
+		token := evmtypes.ERC20TokenMetadata{
+			Asset:   tokenInfo.Asset,
+			ChainID: sdk.NewInt(tokenInfo.ChainID),
+			TxHash:  evmtypes.Hash(evmtypes.ZeroHash),
+			//TokenAddress: tokenAddress,
+			Status: evmtypes.Confirmed,
+			Details: evmtypes.TokenDetails{
+				TokenName: tokenInfo.Name,
+				Symbol:    tokenInfo.Symbol,
+				Decimals:  tokenInfo.Decimals,
+				Capacity:  sdk.NewInt(tokenInfo.Capacity),
+			},
+		}
+		params := chainsTypes.Params{
+			Chain: nexus.ChainName(tokenInfo.ID),
+		}
+		chains[i] = &protocoltypes.SupportedChain{
+			Params: &params,
+			Token: &protocoltypes.SupportedChain_Erc20{
+				Erc20: &token,
+			},
+			Address: scalarProtocol.EvmAddress,
+		}
 	}
 	protocol := protocoltypes.Protocol{
 		Pubkey:         scalarProtocol.ScalarPubKey.Bytes(),
@@ -109,8 +71,41 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, custodianGroup covenanttypes
 		Tag:            "pools",
 		Status:         protocoltypes.Activated,
 		CustodianGroup: &custodianGroup,
-		Chains:         []*protocoltypes.SupportedChain{&chain},
+		Chains:         chains,
 	}
+
+	// token := evmtypes.ERC20TokenMetadata{
+	// 	Asset:   "pBtc",
+	// 	ChainID: sdk.NewInt(1115511),
+	// 	//TokenAddress: evmtypes.Address(common.HexToAddress("0x25F23D37861210cdc3c694112cFa64bBca6D7143")),
+	// 	Status: evmtypes.Confirmed,
+	// 	Details: evmtypes.TokenDetails{
+	// 		TokenName: "pBtc",
+	// 		Symbol:    "pBtc",
+	// 		Decimals:  8,
+	// 		Capacity:  sdk.NewInt(100000000),
+	// 	},
+	// }
+
+	// params := chainsTypes.Params{
+	// 	Chain: "evm|11155111",
+	// }
+	// chain := protocoltypes.SupportedChain{
+	// 	Params: &params,
+	// 	Token: &protocoltypes.SupportedChain_Erc20{
+	// 		Erc20: &token,
+	// 	},
+	// 	Address: scalarProtocol.EvmAddress,
+	// }
+	// protocol := protocoltypes.Protocol{
+	// 	Pubkey:         scalarProtocol.ScalarPubKey.Bytes(),
+	// 	Address:        sdk.AccAddress(scalarProtocol.ScalarPubKey.Address()),
+	// 	Name:           protocoltypes.DefaultProtocolName,
+	// 	Tag:            "pools",
+	// 	Status:         protocoltypes.Activated,
+	// 	CustodianGroup: &custodianGroup,
+	// 	Chains:         []*protocoltypes.SupportedChain{&chain},
+	// }
 	return protocol
 }
 func GenerateGenesis(clientCtx client.Context,
@@ -118,7 +113,7 @@ func GenerateGenesis(clientCtx client.Context,
 	coinDenom string,
 	validatorInfos []ValidatorInfo,
 	scalarProtocol ScalarProtocol,
-	supportedChainsPath string,
+	args initArgs,
 ) (GenesisState, error) {
 	appGenState := mbm.DefaultGenesis(clientCtx.Codec)
 	genBalances := []banktypes.Balance{scalarProtocol.ScalarBalance}
@@ -208,7 +203,7 @@ func GenerateGenesis(clientCtx client.Context,
 	for _, proxyValidator := range proxyValidators {
 		validatorAddrs = append(validatorAddrs, proxyValidator.Validator)
 	}
-	nexusGenState := generateNexusGenesis(supportedChainsPath, validatorAddrs, coinDenom)
+	nexusGenState := generateNexusGenesis(args.chains, validatorAddrs, coinDenom)
 	appGenState[nexustypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(nexusGenState)
 	//pemission module
 	permissionGenState := permissiontypes.DefaultGenesisState()
@@ -245,7 +240,7 @@ func GenerateGenesis(clientCtx client.Context,
 	stakingGenState := generateStakingGenesis(coinDenom, validatorInfos)
 	appGenState[stakingtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(stakingGenState)
 	// supported chains
-	if err := GenerateSupportedChains(clientCtx, supportedChainsPath, appGenState); err != nil {
+	if err := GenerateSupportedChains(clientCtx, args.chains, appGenState); err != nil {
 		log.Error().Err(err).Msg("Failed to generate supported chains")
 	}
 	//Covenant
@@ -273,15 +268,10 @@ func GenerateGenesis(clientCtx client.Context,
 	covnantGenState := covenanttypes.NewGenesisState(custodians, &custodianGroup)
 	appGenState[covenanttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&covnantGenState)
 	//Protocol
-	protocol := DefaultProtocol(scalarProtocol, custodianGroup)
-	protocolGenState := protocoltypes.NewGenesisState([]*protocoltypes.Protocol{&protocol})
-	appGenState[protocoltypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(protocolGenState)
-	// //evm chains
-	// var evmGenState evmtypes.GenesisState
-	// clientCtx.Codec.MustUnmarshalJSON(appGenState[evmtypes.ModuleName], &evmGenState)
-	// //btc chains
-	// var btcGenState btctypes.GenesisState
-	// clientCtx.Codec.MustUnmarshalJSON(appGenState[btctypes.ModuleName], &btcGenState)
+	protocolGenState, err := generateProtocolGenesis(scalarProtocol, custodianGroup, args.tokens)
+	if err == nil {
+		appGenState[protocoltypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(protocolGenState)
+	}
 
 	// var feemarketGenState feemarkettypes.GenesisState
 	// clientCtx.Codec.MustUnmarshalJSON(appGenState[feemarkettypes.ModuleName], &feemarketGenState)
@@ -291,6 +281,18 @@ func GenerateGenesis(clientCtx client.Context,
 	// appGenState[feemarkettypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&feemarketGenState)
 
 	return appGenState, nil
+}
+func generateProtocolGenesis(scalarProtocol ScalarProtocol, custodianGroup covenanttypes.CustodianGroup, tokensPath string) (*protocoltypes.GenesisState, error) {
+	evmTokenPath := path.Join(tokensPath, "evm.json")
+	log.Debug().Msgf("Read token config in the path %s", evmTokenPath)
+	tokenInfos, err := ParseJsonArrayConfig[Token](evmTokenPath)
+	if err != nil {
+		return nil, err
+	}
+	log.Debug().Any("TokenInfo", tokenInfos).Msgf("Successfull parsed token config")
+	protocol := DefaultProtocol(scalarProtocol, tokenInfos, custodianGroup)
+	protocolGenState := protocoltypes.NewGenesisState([]*protocoltypes.Protocol{&protocol})
+	return protocolGenState, nil
 }
 func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *stakingtypes.GenesisState {
 	stakingGenState := stakingtypes.DefaultGenesisState()
@@ -412,32 +414,4 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 		genesisState[chainsTypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&state)
 	}
 	return nil
-}
-
-func ParseJsonArrayConfig[T any](filePath string) ([]T, error) {
-	content, err := os.ReadFile(filePath)
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to read file")
-		return nil, err
-	}
-	var result []T
-	if err := json.Unmarshal(content, &result); err != nil {
-		log.Error().Err(err).Msg("Failed to unmarshal json")
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func ParseJsonConfig[T any](filePath string) (*T, error) {
-	content, err := os.ReadFile(filePath)
-	if err != nil {
-		return nil, err
-	}
-	var result T
-	if err := json.Unmarshal(content, &result); err != nil {
-		return nil, err
-	}
-
-	return &result, nil
 }

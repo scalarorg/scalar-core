@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
 	evmtypes "github.com/scalarorg/scalar-core/x/chains/evm/types"
-	"github.com/scalarorg/scalar-core/x/covenant/types"
+	types "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
 func NewGenesisState(protocols []*Protocol) *GenesisState {
@@ -13,12 +13,13 @@ func NewGenesisState(protocols []*Protocol) *GenesisState {
 	}
 }
 
-// DefaultGenesisState returns a genesis state with default parameters
-func DefaultGenesisState() *GenesisState {
-	return NewGenesisState([]*Protocol{DefaultProtocol()})
-}
 func (m GenesisState) Validate() error {
 	return nil
+}
+
+// DefaultGenesisState returns a genesis state with default parameters
+func DefaultGenesisState() *GenesisState {
+	return NewGenesisState([]*Protocol{})
 }
 
 func DefaultProtocol() *Protocol {
