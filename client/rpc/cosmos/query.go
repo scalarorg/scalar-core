@@ -12,6 +12,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/tx"
 	auth "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/rs/zerolog/log"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	scalarnetTypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
 	//gogogrpc "github.com/cosmos/gogoproto/grpc"
 	//pbgrpc "github.com/gogo/protobuf/grpc"

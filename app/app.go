@@ -247,7 +247,6 @@ func NewScalarApp(
 
 	// set up custom  keepers
 	SetKeeper(keepers, initscalarnetKeeper(appCodec, keys, keepers))
-	// SetKeeper(keepers, initEvmKeeper(appCodec, keys, keepers))
 	SetKeeper(keepers, initChainsKeeper(appCodec, keys, keepers))
 	SetKeeper(keepers, initNexusKeeper(appCodec, keys, keepers))
 	SetKeeper(keepers, initRewardKeeper(appCodec, keys, keepers))
@@ -448,7 +447,6 @@ func initIBCRouter(keepers *KeeperCache, scalarnetModule porttypes.IBCModule) *p
 
 func initMessageRouter(keepers *KeeperCache) nexusTypes.MessageRouter {
 	messageRouter := nexusTypes.NewMessageRouter().
-		// AddRoute(chainsTypes.ModuleName, evmKeeper.NewMessageRoute()).
 		AddRoute(chainsTypes.ModuleName, chainsKeeper.NewMessageRoute()).
 		AddRoute(scalarnetTypes.ModuleName, scalarnetKeeper.NewMessageRoute(
 			GetKeeper[scalarnetKeeper.IBCKeeper](keepers),

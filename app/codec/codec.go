@@ -30,13 +30,9 @@ func RegisterLegacyMsgInterfaces(registry cdctypes.InterfaceRegistry) {
 		panic(fmt.Errorf("failed to convert registry type %T", registry))
 	}
 
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".evm.v1beta1.CreateTransferOwnershipRequest", &chainsTypes.CreateTransferOwnershipRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/scalar.scalarnet.v1beta1.RegisterIBCPathRequest", &scalarnettypes.RegisterIBCPathRequest{})
-
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/scalar.scalarnet.v1beta1.LinkRequest", &scalarnettypes.LinkRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/scalar.scalarnet.v1beta1.ConfirmDepositRequest", &scalarnettypes.ConfirmDepositRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/scalar.scalarnet.v1beta1.ExecutePendingTransfersRequest", &scalarnettypes.ExecutePendingTransfersRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/scalar.scalarnet.v1beta1.RegisterIBCPathRequest", &scalarnettypes.RegisterIBCPathRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/scalar.scalarnet.v1beta1.AddCosmosBasedChainRequest", &scalarnettypes.AddCosmosBasedChainRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/scalar.scalarnet.v1beta1.RegisterAssetRequest", &scalarnettypes.RegisterAssetRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/scalar.scalarnet.v1beta1.RouteIBCTransfersRequest", &scalarnettypes.RouteIBCTransfersRequest{})
@@ -49,7 +45,6 @@ func RegisterLegacyMsgInterfaces(registry cdctypes.InterfaceRegistry) {
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.CreatePendingTransfersRequest", &chainsTypes.CreatePendingTransfersRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.CreateDeployTokenRequest", &chainsTypes.CreateDeployTokenRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.CreateBurnTokensRequest", &chainsTypes.CreateBurnTokensRequest{})
-	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.CreateTransferOwnershipRequest", &chainsTypes.CreateTransferOwnershipRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.CreateTransferOperatorshipRequest", &chainsTypes.CreateTransferOperatorshipRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.SignCommandsRequest", &chainsTypes.SignCommandsRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.AddChainRequest", &chainsTypes.AddChainRequest{})

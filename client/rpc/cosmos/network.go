@@ -15,6 +15,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
 	"github.com/rs/zerolog/log"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	scalarnetTypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 	ctypes "github.com/tendermint/tendermint/rpc/core/types"
@@ -168,7 +169,7 @@ func (c *NetworkClient) Start() error {
 }
 
 // https://github.com/cosmos/cosmos-sdk/blob/main/client/tx/tx.go#L31
-func (c *NetworkClient) ConfirmEvmTx(ctx context.Context, msg *chainsTypes.ConfirmGatewayTxsRequest) (*sdk.TxResponse, error) {
+func (c *NetworkClient) ConfirmSourceTxs(ctx context.Context, msg *chainsTypes.ConfirmSourceTxsRequest) (*sdk.TxResponse, error) {
 	return c.SignAndBroadcastMsgs(ctx, msg)
 }
 

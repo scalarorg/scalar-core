@@ -23,7 +23,6 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/utils"
 	btctypes "github.com/scalarorg/scalar-core/x/chains/btc/types"
-	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
@@ -32,7 +31,6 @@ import (
 	protocoltypes "github.com/scalarorg/scalar-core/x/protocol/types"
 	snapshottypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"
-	tmtypes "github.com/tendermint/tendermint/types"
 
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
