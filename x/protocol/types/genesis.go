@@ -3,7 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
-	evmtypes "github.com/scalarorg/scalar-core/x/chains/evm/types"
+	evmtypes "github.com/scalarorg/scalar-core/x/chains/types"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 

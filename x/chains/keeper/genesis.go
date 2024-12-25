@@ -37,6 +37,10 @@ func (k BaseKeeper) InitGenesis(ctx sdk.Context, state types.GenesisState) {
 			ck.SetLatestSignedCommandBatchID(ctx, latestBatch.ID)
 		}
 
+		if chain.Gateway != nil {
+			ck.setGateway(ctx, *chain.Gateway)
+		}
+
 		// TODO: add tokens
 		// for _, token := range chain.Tokens {
 		// 	ck.setTokenMetadata(ctx, token)

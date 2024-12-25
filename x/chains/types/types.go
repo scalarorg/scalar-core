@@ -88,6 +88,9 @@ const (
 func IsSupportedChain(chain nexus.Chain) bool {
 	return chain.Module == ModuleName
 }
+func IsEvmChain(chain nexus.Chain) bool {
+	return chain.GetFamily().Equals(nexus.EVM)
+}
 
 // TODO: Currently inherits from evm types.Address. This should be refactored for multiple chains.
 type Address common.Address

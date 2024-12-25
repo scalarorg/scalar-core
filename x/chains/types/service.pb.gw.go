@@ -2081,31 +2081,31 @@ func RegisterMsgServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 }
 
 var (
-	pattern_MsgService_ConfirmSourceTxs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"scalar", "chains", "confirm_source_txs"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MsgService_ConfirmSourceTxs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "chains", "v1beta1", "confirm_source_txs"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_MsgService_SetGateway_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"scalar", "chains", "set_gateway"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MsgService_SetGateway_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "chains", "v1beta1", "set_gateway"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_MsgService_Link_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"scalar", "chains", "link"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MsgService_Link_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "chains", "v1beta1", "link"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_MsgService_ConfirmToken_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"scalar", "chains", "confirm_token"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MsgService_ConfirmToken_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "chains", "v1beta1", "confirm_token"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_MsgService_ConfirmDeposit_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"scalar", "chains", "confirm_deposit"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MsgService_ConfirmDeposit_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "chains", "v1beta1", "confirm_deposit"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_MsgService_ConfirmTransferKey_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"scalar", "chains", "confirm_transfer_key"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_MsgService_CreateDeployToken_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"scalar", "chains", "create_deploy_token"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MsgService_CreateDeployToken_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "chains", "v1beta1", "create_deploy_token"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_MsgService_CreateBurnTokens_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"scalar", "chains", "create_burn_tokens"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MsgService_CreateBurnTokens_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "chains", "v1beta1", "create_burn_tokens"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_MsgService_CreatePendingTransfers_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"scalar", "chains", "create_pending_transfers"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MsgService_CreatePendingTransfers_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "chains", "v1beta1", "create_pending_transfers"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_MsgService_CreateTransferOperatorship_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"scalar", "chains", "create_transfer_operatorship"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MsgService_CreateTransferOperatorship_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "chains", "v1beta1", "create_transfer_operatorship"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_MsgService_SignCommands_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"scalar", "chains", "sign_commands"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MsgService_SignCommands_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "chains", "v1beta1", "sign_commands"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_MsgService_AddChain_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"scalar", "chains", "add_chain"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MsgService_AddChain_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "chains", "v1beta1", "add_chain"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_MsgService_RetryFailedEvent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"scalar", "chains", "retry-failed-event"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MsgService_RetryFailedEvent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "chains", "v1beta1", "retry-failed-event"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

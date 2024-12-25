@@ -2,11 +2,11 @@ syntax = "proto3";
 package scalar.protocol.v1beta1;
 
 import "gogoproto/gogo.proto";
-import "scalar/covenant/v1beta1/types.proto";
-import "scalar/chains/v1beta1/types.proto";
-import "scalar/chains/v1beta1/params.proto";
-import "scalar/chains/evm/v1beta1/types.proto";
 import "scalar/chains/btc/v1beta1/types.proto";
+import "scalar/chains/v1beta1/params.proto";
+import "scalar/chains/v1beta1/tokens.proto";
+import "scalar/chains/v1beta1/types.proto";
+import "scalar/covenant/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
@@ -19,7 +19,7 @@ message SupportedChain {
   scalar.chains.v1beta1.Params params = 1; //Chain params
   string address = 2;
   oneof token {
-    scalar.chains.evm.v1beta1.ERC20TokenMetadata erc20 = 3;
+    scalar.chains.v1beta1.ERC20TokenMetadata erc20 = 3;
     scalar.chains.btc.v1beta1.BtcToken btc = 4;
   }
 }
