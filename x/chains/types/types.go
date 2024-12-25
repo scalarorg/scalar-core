@@ -502,7 +502,7 @@ func (c CommandID) ValidateBasic() error {
 	return nil
 }
 
-func (m *StakingTx) ValidateBasic() error {
+func (m *SourceTx) ValidateBasic() error {
 	if err := sdk.ValidateDenom(m.Asset); err != nil {
 		return sdkerrors.Wrap(err, "invalid asset")
 	}

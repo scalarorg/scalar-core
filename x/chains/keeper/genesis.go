@@ -22,8 +22,8 @@ func (k BaseKeeper) InitGenesis(ctx sdk.Context, state types.GenesisState) {
 
 		ck.getCommandQueue(ctx).ImportState(chain.CommandQueue)
 
-		for _, stakingTx := range chain.ConfirmedStakingTxs {
-			ck.SetStakingTx(ctx, stakingTx, types.StakingTxStatus_Confirmed)
+		for _, sourceTx := range chain.ConfirmedSourceTxs {
+			ck.SetSourceTx(ctx, sourceTx, types.SourceTxStatus_Confirmed)
 		}
 
 		var latestBatch types.CommandBatchMetadata
@@ -73,7 +73,7 @@ func (k BaseKeeper) getChains(ctx sdk.Context) []types.GenesisState_Chain {
 		chain := types.GenesisState_Chain{
 			Params:              ck.GetParams(ctx),
 			CommandQueue:        ck.getCommandQueue(ctx).ExportState(),
-			ConfirmedStakingTxs: ck.getConfirmedStakingTxs(ctx),
+			ConfirmedSourceTxs:  ck.getConfirmedSourceTxs(ctx),
 			CommandBatches:      ck.getCommandBatchesMetadata(ctx),
 			Events:              ck.getEvents(ctx),
 			ConfirmedEventQueue: ck.GetConfirmedEventQueue(ctx).(utils.GeneralKVQueue).ExportState(),

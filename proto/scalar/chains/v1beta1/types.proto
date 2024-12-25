@@ -30,7 +30,7 @@ enum BatchedCommandsStatus {
       [ (gogoproto.enumvalue_customname) = "BatchSigned" ];
 }
 
-enum StakingTxStatus {
+enum SourceTxStatus {
   option (gogoproto.goproto_enum_prefix) = true;
   option (gogoproto.goproto_enum_stringer) = true;
 
@@ -44,7 +44,7 @@ enum StakingTxStatus {
       [ (gogoproto.enumvalue_customname) = "Completed" ];
 }
 
-message StakingTx {
+message SourceTx {
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "Hash",

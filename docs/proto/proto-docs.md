@@ -39,7 +39,7 @@
     - [PollMetadata](#scalar.chains.v1beta1.PollMetadata)
     - [Proof](#scalar.chains.v1beta1.Proof)
     - [SigMetadata](#scalar.chains.v1beta1.SigMetadata)
-    - [StakingTx](#scalar.chains.v1beta1.StakingTx)
+    - [SourceTx](#scalar.chains.v1beta1.SourceTx)
     - [TokenDetails](#scalar.chains.v1beta1.TokenDetails)
     - [TransferKey](#scalar.chains.v1beta1.TransferKey)
   
@@ -48,7 +48,7 @@
     - [DepositStatus](#scalar.chains.v1beta1.DepositStatus)
     - [NetworkKind](#scalar.chains.v1beta1.NetworkKind)
     - [SigType](#scalar.chains.v1beta1.SigType)
-    - [StakingTxStatus](#scalar.chains.v1beta1.StakingTxStatus)
+    - [SourceTxStatus](#scalar.chains.v1beta1.SourceTxStatus)
     - [Status](#scalar.chains.v1beta1.Status)
   
 - [scalar/utils/v1beta1/threshold.proto](#scalar/utils/v1beta1/threshold.proto)
@@ -1105,9 +1105,9 @@ results to chains relay transaction types
 
 
 
-<a name="scalar.chains.v1beta1.StakingTx"></a>
+<a name="scalar.chains.v1beta1.SourceTx"></a>
 
-### StakingTx
+### SourceTx
 
 
 
@@ -1232,9 +1232,9 @@ TransferKey contains information for a transfer operatorship
 
 
 
-<a name="scalar.chains.v1beta1.StakingTxStatus"></a>
+<a name="scalar.chains.v1beta1.SourceTxStatus"></a>
 
-### StakingTxStatus
+### SourceTxStatus
 
 
 | Name | Number | Description |
@@ -2213,7 +2213,7 @@ PollParticipants should be embedded in poll events in other modules
 | ----- | ---- | ----- | ----------- |
 | `params` | [Params](#scalar.chains.v1beta1.Params) |  |  |
 | `command_queue` | [scalar.utils.v1beta1.QueueState](#scalar.utils.v1beta1.QueueState) |  |  |
-| `confirmed_staking_txs` | [StakingTx](#scalar.chains.v1beta1.StakingTx) | repeated |  |
+| `confirmed_source_txs` | [SourceTx](#scalar.chains.v1beta1.SourceTx) | repeated |  |
 | `command_batches` | [CommandBatchMetadata](#scalar.chains.v1beta1.CommandBatchMetadata) | repeated |  |
 | `gateway` | [Gateway](#scalar.chains.v1beta1.Gateway) |  |  |
 | `events` | [Event](#scalar.chains.v1beta1.Event) | repeated |  |
