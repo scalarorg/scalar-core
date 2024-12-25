@@ -1368,6 +1368,8 @@ github.com/sasha-s/go-deadlock v0.3.5 h1:tNCOEEDG6tBqrNDOX35j/7hL5FcFViG6awUGROb
 github.com/sasha-s/go-deadlock v0.3.5/go.mod h1:bugP6EGbdGYObIlx7pUZtWqlvo8k9H6vCBBsiChJQ5U=
 github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20241219092630-d03748ff6bdc h1:QLXN7T+dcVFloTQAIijgU6rfclA1iijI6pP9lsVCfCI=
 github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20241219092630-d03748ff6bdc/go.mod h1:q+FgVSWNEDSjJ15s4LUT53tIGtNARAR0mrPGgJN8Y1w=
+github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20241225035324-7da2e43d719e h1:aimjv42DIe/j+QhHhAWP6uy02xYAQ5/VFr63oF/83Sc=
+github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20241225035324-7da2e43d719e/go.mod h1:q+FgVSWNEDSjJ15s4LUT53tIGtNARAR0mrPGgJN8Y1w=
 github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible h1:Bn1aCHHRnjv4Bl16T8rcaFjYSrGrIZvpiGO6P3Q4GpU=
 github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible/go.mod h1:5b4v6he4MtMOwMlS0TUMTu2PcXUg8+E1lC7eC3UO/RA=
 github.com/sirupsen/logrus v1.4.2/go.mod h1:tLMulIdttU9McNUspp0xgXVQah82FyeX6MwdIuYE2rE=
