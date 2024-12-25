@@ -40,8 +40,8 @@ var (
 	confirmedDepositPrefix = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 2)
 	burnedDepositPrefix    = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 3)
 
-	confirmedStakingTxPrefix = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 4)
-	completedStakingTxPrefix = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 5)
+	confirmedSourceTxPrefix = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 4)
+	completedSourceTxPrefix = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 5)
 )
 
 var _ types.ChainKeeper = chainKeeper{}
@@ -164,18 +164,18 @@ func (k chainKeeper) GetParams(ctx sdk.Context) types.Params {
 	return p
 }
 
-func (k chainKeeper) getConfirmedStakingTxs(ctx sdk.Context) []types.StakingTx {
-	var stakingTxs []types.StakingTx
-	iter := k.getStore(ctx).IteratorNew(confirmedStakingTxPrefix)
+func (k chainKeeper) getConfirmedSourceTxs(ctx sdk.Context) []types.SourceTx {
+	var sourceTxs []types.SourceTx
+	iter := k.getStore(ctx).IteratorNew(confirmedSourceTxPrefix)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 
 	for ; iter.Valid(); iter.Next() {
-		var stakingTx types.StakingTx
-		iter.UnmarshalValue(&stakingTx)
-		stakingTxs = append(stakingTxs, stakingTx)
+		var sourceTx types.SourceTx
+		iter.UnmarshalValue(&sourceTx)
+		sourceTxs = append(sourceTxs, sourceTx)
 	}
 
-	return stakingTxs
+	return sourceTxs
 }
 
 func (k chainKeeper) getCommandBatchesMetadata(ctx sdk.Context) []types.CommandBatchMetadata {
@@ -266,18 +266,18 @@ func (k chainKeeper) getCommandQueue(ctx sdk.Context) utils.BlockHeightKVQueue {
 	)
 }
 
-func (k chainKeeper) SetStakingTx(ctx sdk.Context, stakingTx types.StakingTx, state types.StakingTxStatus) {
+func (k chainKeeper) SetSourceTx(ctx sdk.Context, sourceTx types.SourceTx, state types.SourceTxStatus) {
 	switch state {
-	case types.StakingTxStatus_Confirmed:
+	case types.SourceTxStatus_Confirmed:
 		funcs.MustNoErr(
 			k.getStore(ctx).SetNewValidated(
-				confirmedStakingTxPrefix.Append(key.FromStr(stakingTx.TxID.Hex())).Append(key.FromUInt(stakingTx.LogIndex)), &stakingTx))
-	case types.StakingTxStatus_Completed:
+				confirmedSourceTxPrefix.Append(key.FromStr(sourceTx.TxID.Hex())).Append(key.FromUInt(sourceTx.LogIndex)), &sourceTx))
+	case types.SourceTxStatus_Completed:
 		funcs.MustNoErr(
 			k.getStore(ctx).SetNewValidated(
-				completedStakingTxPrefix.Append(key.FromStr(stakingTx.TxID.Hex())).Append(key.FromUInt(stakingTx.LogIndex)), &stakingTx))
+				completedSourceTxPrefix.Append(key.FromStr(sourceTx.TxID.Hex())).Append(key.FromUInt(sourceTx.LogIndex)), &sourceTx))
 	default:
-		panic("invalid deposit state")
+		panic("invalid source tx state")
 	}
 }
 

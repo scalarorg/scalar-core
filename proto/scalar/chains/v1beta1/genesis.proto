@@ -16,7 +16,7 @@ message GenesisState {
 
     scalar.utils.v1beta1.QueueState command_queue = 2 [(gogoproto.nullable) = false];
 
-    repeated StakingTx confirmed_staking_txs = 3 [(gogoproto.nullable) = false];
+    repeated SourceTx confirmed_source_txs = 3 [(gogoproto.nullable) = false];
 
     repeated CommandBatchMetadata command_batches = 4 [(gogoproto.nullable) = false];
     Gateway gateway = 5;
