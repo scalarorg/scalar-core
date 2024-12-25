@@ -27,7 +27,7 @@ func DefaultGenesisState() GenesisState {
 					TransferLimit:       1000,
 				},
 				CommandQueue:        utils.QueueState{},
-				ConfirmedStakingTxs: []StakingTx{},
+				ConfirmedSourceTxs:  []SourceTx{},
 				CommandBatches:      []CommandBatchMetadata{},
 				Events:              []Event{},
 				ConfirmedEventQueue: utils.QueueState{},

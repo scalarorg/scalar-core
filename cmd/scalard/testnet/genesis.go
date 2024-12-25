@@ -435,7 +435,7 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 					Params:              params,
 					CommandQueue:        utils.QueueState{},
 					ConfirmedEventQueue: utils.QueueState{},
-					ConfirmedStakingTxs: make([]chainsTypes.StakingTx, 0),
+					ConfirmedSourceTxs:  make([]chainsTypes.SourceTx, 0),
 					CommandBatches:      make([]chainsTypes.CommandBatchMetadata, 0),
 					Gateway:             gateway,
 					Events:              make([]chainsTypes.Event, 0),
