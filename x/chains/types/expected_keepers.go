@@ -74,6 +74,8 @@ type ChainKeeper interface {
 	GetEvent(ctx sdk.Context, eventID EventID) (Event, bool)
 
 	GetDepositsByTxID(ctx sdk.Context, txID Hash, status DepositStatus) ([]ERC20Deposit, error)
+
+	GetMetadata(ctx sdk.Context) map[string]string
 }
 
 // ParamsKeeper represents a global paramstore

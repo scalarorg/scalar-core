@@ -398,7 +398,8 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to parse chains config")
 		}
-		state := chainsTypes.DefaultGenesisState()
+
+		chainsState := chainsTypes.DefaultGenesisState()
 		for _, chainConfig := range chainConfigs {
 			params := chainsTypes.Params{
 				ChainID:             sdk.NewInt(int64(chainConfig.ChainID)),
@@ -411,10 +412,11 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 				VotingGracePeriod:   50,
 				EndBlockerLimit:     50,
 				TransferLimit:       1000,
+				Metadata:            chainConfig.Metadata,
 			}
 			//Check if chainName is already in the genesis state
 			addChain := true
-			for _, chain := range state.Chains {
+			for _, chain := range chainsState.Chains {
 				if chain.Params.Chain == nexus.ChainName(chainConfig.ID) {
 					addChain = false
 					log.Debug().Msgf("chain name %s already exists", chainConfig.ID)
@@ -431,7 +433,7 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 						}
 					}
 				}
-				state.Chains = append(state.Chains, chainsTypes.GenesisState_Chain{
+				chainsState.Chains = append(chainsState.Chains, chainsTypes.GenesisState_Chain{
 					Params:              params,
 					CommandQueue:        utils.QueueState{},
 					ConfirmedEventQueue: utils.QueueState{},
@@ -442,7 +444,7 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 				})
 			}
 		}
-		genesisState[chainsTypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&state)
+		genesisState[chainsTypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&chainsState)
 	}
 	return nil
 }

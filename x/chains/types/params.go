@@ -23,10 +23,10 @@ var (
 	KeyVotingGracePeriod   = []byte("votingGracePeriod")
 	KeyEndBlockerLimit     = []byte("endBlockerLimit")
 	KeyTransferLimit       = []byte("transferLimit")
-
-	KeyToken            = []byte("token")
-	KeyBurnable         = []byte("burnable")
-	KeyCommandsGasLimit = []byte("commandsGasLimit")
+	KeyMetadata            = []byte("metadata")
+	KeyToken               = []byte("token")
+	KeyBurnable            = []byte("burnable")
+	KeyCommandsGasLimit    = []byte("commandsGasLimit")
 )
 
 func KeyTable() params.KeyTable {
@@ -51,6 +51,7 @@ func (m *Params) ParamSetPairs() params.ParamSetPairs {
 		params.NewParamSetPair(KeyVotingGracePeriod, &m.VotingGracePeriod, validateVotingGracePeriod),
 		params.NewParamSetPair(KeyEndBlockerLimit, &m.EndBlockerLimit, validateEndBlockerLimit),
 		params.NewParamSetPair(KeyTransferLimit, &m.TransferLimit, validateTransferLimit),
+		params.NewParamSetPair(KeyMetadata, &m.Metadata, validateMetadata),
 	}
 }
 
@@ -151,5 +152,14 @@ func validateTransferLimit(i interface{}) error {
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
+	return nil
+}
+
+func validateMetadata(i interface{}) error {
+	_, ok := i.(map[string]string)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
 	return nil
 }

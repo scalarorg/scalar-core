@@ -1,4 +1,3 @@
-
 # Include .env file
 ifneq (,$(wildcard ./.env))
     include .env
@@ -242,7 +241,17 @@ cfs2:
 	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "bitcoin|4" 18fa2be86b54d9ff7e35aba97d57483f05500cd9301547607f67ea5b47fa1c87 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
 
 cfd2:
-	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" 6a93d1f9ea33b554a3599426e7b6e978cb8bd2bb2622f571cdc6972e515763c8 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" cabc3140a564038f9f76e9d692309ea8d5be7d5a8a2133b97bf0579a73cfbb37 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+
+.PHONY: params
+params:
+	@if [ -z "$(CHAIN)" ]; then \
+		$(SCALAR_BIN_PATH) query chains params "bitcoin|4"; \
+	else \
+		$(SCALAR_BIN_PATH) query chains params '$(CHAIN)'; \
+	fi
+
+	
 
 .PHONY: open-docs
 open-docs:

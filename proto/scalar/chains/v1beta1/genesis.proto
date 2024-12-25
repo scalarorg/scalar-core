@@ -23,6 +23,7 @@ message GenesisState {
     repeated Event events = 6 [(gogoproto.nullable) = false];
 
     scalar.utils.v1beta1.QueueState confirmed_event_queue = 7 [(gogoproto.nullable) = false];
+
   }
 
   repeated Chain chains = 1 [(gogoproto.nullable) = false];

@@ -7,7 +7,6 @@ import (
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/vald/xchain"
 	"github.com/scalarorg/scalar-core/x/chains/types"
-	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
 
@@ -25,7 +24,7 @@ func (client *BtcClient) ProcessSourceTxsConfirmation(event *types.EventConfirmS
 			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, types.NewVoteEvents(event.Chain)))
 			clog.Redf("broadcasting empty vote for poll %s: %s", pollID.String(), txReceipt.Err().Error())
 		} else {
-			events := client.processSrcTxReceipt(event.Chain, txReceipt.Ok().(BTCTxReceipt))
+			events := client.processSrcTxReceipt(event, txReceipt.Ok().(BTCTxReceipt))
 			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, types.NewVoteEvents(event.Chain, events...)))
 			clog.Redf("broadcasting vote %v for poll %s", events, pollID.String())
 		}
@@ -34,7 +33,7 @@ func (client *BtcClient) ProcessSourceTxsConfirmation(event *types.EventConfirmS
 	return votes, nil
 }
 
-func (client *BtcClient) processSrcTxReceipt(chain nexus.ChainName, receipt BTCTxReceipt) []types.Event {
+func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsStarted, receipt BTCTxReceipt) []types.Event {
 
 	var events []types.Event
 
@@ -53,7 +52,7 @@ func (client *BtcClient) processSrcTxReceipt(chain nexus.ChainName, receipt BTCT
 	}
 
 	events = append(events, types.Event{
-		Chain: chain,
+		Chain: event.Chain,
 		TxID:  txID,
 		Event: &types.Event_SourceTxConfirmationEvent{
 			SourceTxConfirmationEvent: btcEvent,

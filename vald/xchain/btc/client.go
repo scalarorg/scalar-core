@@ -10,6 +10,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/vald/config"
 	"github.com/scalarorg/scalar-core/vald/xchain"
+	btcChain "github.com/scalarorg/bitcoin-vault/go-utils/chain"
 )
 
 type BtcClient struct {
@@ -18,17 +19,6 @@ type BtcClient struct {
 	blockHeightCache          *BlockHeightCache
 	latestFinalizedBlockCache xchain.LatestFinalizedBlockCache
 }
-
-var chaincfgTestnet4ParamsName = "testnet4"
-
-var BtcChainValue = map[string]uint64{
-	chaincfg.MainNetParams.Name:       0,
-	chaincfg.TestNet3Params.Name:      1,
-	chaincfg.SigNetParams.Name:        2,
-	chaincfg.RegressionNetParams.Name: 3,
-	chaincfgTestnet4ParamsName:        4,
-}
-
 type BTCTxReceipt struct {
 	Raw        btcjson.TxRawResult
 	PrevTxOuts []*btcjson.Vout
@@ -60,7 +50,7 @@ func NewClient(cfg *config.BTCConfig) (xchain.Client, error) {
 }
 
 func validateChain(cfg *config.BTCConfig) error {
-	_, ok := BtcChainValue[cfg.Chain]
+	_, ok := btcChain.BtcChainConfigValueInt[cfg.Chain]
 	if !ok {
 		return fmt.Errorf("invalid chain %s", cfg.Chain)
 	}
@@ -75,7 +65,7 @@ func mapBTCConfigToRPCConfig(cfg *config.BTCConfig) *rpcclient.ConnConfig {
 
 	params := cfg.Chain
 
-	if params == chaincfgTestnet4ParamsName {
+	if params == btcChain.ChaincfgTestnet4ParamsName {
 		params = chaincfg.TestNet3Params.Name
 	}
 
