@@ -20,10 +20,10 @@
       }
     },
     {
-      "url": "../../tmp-swagger-gen/scalar/evm/v1beta1/query.swagger.json"
+      "url": "../../tmp-swagger-gen/scalar/chains/v1beta1/query.swagger.json"
     },
     {
-      "url": "../../tmp-swagger-gen/scalar/evm/v1beta1/service.swagger.json",
+      "url": "../../tmp-swagger-gen/scalar/chains/v1beta1/service.swagger.json",
       "operationIds": {
         "rename": {
           "Link": "EvmLink",

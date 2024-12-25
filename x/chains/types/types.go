@@ -940,3 +940,138 @@ func (m Asset) Validate() error {
 
 	return nil
 }
+
+const maxReceiverLength = 128
+
+// ValidateBasic returns an error if the event token sent is invalid
+func (m EventTokenSent) ValidateBasic() error {
+	if m.Sender.IsZeroAddress() {
+		return fmt.Errorf("invalid sender")
+	}
+
+	if err := m.DestinationChain.Validate(); err != nil {
+		return sdkerrors.Wrap(err, "invalid destination chain")
+	}
+
+	if err := utils.ValidateString(m.DestinationAddress); err != nil {
+		return sdkerrors.Wrap(err, "invalid destination address")
+	}
+
+	if len(m.DestinationAddress) > maxReceiverLength {
+		return fmt.Errorf("receiver length %d is greater than %d", len(m.DestinationAddress), maxReceiverLength)
+	}
+
+	if err := utils.ValidateString(m.Symbol); err != nil {
+		return sdkerrors.Wrap(err, "invalid symbol")
+	}
+
+	if m.Amount.IsZero() {
+		return fmt.Errorf("invalid amount")
+	}
+
+	return nil
+}
+
+// ValidateBasic returns an error if the event contract call is invalid
+func (m EventContractCall) ValidateBasic() error {
+	if m.Sender.IsZeroAddress() {
+		return fmt.Errorf("invalid sender")
+	}
+
+	if err := m.DestinationChain.Validate(); err != nil {
+		return sdkerrors.Wrap(err, "invalid destination chain")
+	}
+
+	if err := utils.ValidateString(m.ContractAddress); err != nil {
+		return sdkerrors.Wrap(err, "invalid destination address")
+	}
+
+	if len(m.ContractAddress) > maxReceiverLength {
+		return fmt.Errorf("receiver length %d is greater than %d", len(m.ContractAddress), maxReceiverLength)
+	}
+
+	if m.PayloadHash.IsZero() {
+		return fmt.Errorf("invalid payload hash")
+	}
+
+	return nil
+}
+
+// ValidateBasic returns an error if the event contract call with token is invalid
+func (m EventContractCallWithToken) ValidateBasic() error {
+	if m.Sender.IsZeroAddress() {
+		return fmt.Errorf("invalid sender")
+	}
+
+	if err := m.DestinationChain.Validate(); err != nil {
+		return sdkerrors.Wrap(err, "invalid destination chain")
+	}
+
+	if err := utils.ValidateString(m.ContractAddress); err != nil {
+		return sdkerrors.Wrap(err, "invalid destination address")
+	}
+
+	if len(m.ContractAddress) > maxReceiverLength {
+		return fmt.Errorf("receiver length %d is greater than %d", len(m.ContractAddress), maxReceiverLength)
+	}
+
+	if m.PayloadHash.IsZero() {
+		return fmt.Errorf("invalid payload hash")
+	}
+
+	if err := utils.ValidateString(m.Symbol); err != nil {
+		return sdkerrors.Wrap(err, "invalid symbol")
+	}
+
+	if m.Amount.IsZero() {
+		return fmt.Errorf("invalid amount")
+	}
+
+	return nil
+}
+
+// ValidateBasic returns an error if the event transfer is invalid
+func (m EventTransfer) ValidateBasic() error {
+	if m.To.IsZeroAddress() {
+		return fmt.Errorf("invalid sender")
+	}
+
+	if m.Amount.IsZero() {
+		return fmt.Errorf("invalid amount")
+	}
+
+	return nil
+}
+
+// ValidateBasic returns an error if the event token deployed is invalid
+func (m EventTokenDeployed) ValidateBasic() error {
+	if m.TokenAddress.IsZeroAddress() {
+		return fmt.Errorf("invalid sender")
+	}
+
+	if err := utils.ValidateString(m.Symbol); err != nil {
+		return sdkerrors.Wrap(err, "invalid symbol")
+	}
+
+	return nil
+}
+
+// ValidateBasic returns an error if the event multisig operatorship transferred is invalid
+func (m EventMultisigOperatorshipTransferred) ValidateBasic() error {
+	if slices.Any(m.NewOperators, Address.IsZeroAddress) {
+		return fmt.Errorf("invalid new operators")
+	}
+
+	if len(m.NewOperators) != len(m.NewWeights) {
+		return fmt.Errorf("length of new operators does not match new weights")
+	}
+
+	totalWeight := sdk.ZeroUint()
+	slices.ForEach(m.NewWeights, func(w sdk.Uint) { totalWeight = totalWeight.Add(w) })
+
+	if m.NewThreshold.IsZero() || m.NewThreshold.GT(totalWeight) {
+		return fmt.Errorf("invalid new threshold")
+	}
+
+	return nil
+}
