@@ -1788,6 +1788,9 @@ var _ types.ChainKeeper = &ChainKeeperMock{}
 //			GetLatestCommandBatchFunc: func(ctx sdk.Context) types.CommandBatch {
 //				panic("mock out the GetLatestCommandBatch method")
 //			},
+//			GetMetadataFunc: func(ctx sdk.Context) map[string]string {
+//				panic("mock out the GetMetadata method")
+//			},
 //			GetMinVoterCountFunc: func(ctx sdk.Context) int64 {
 //				panic("mock out the GetMinVoterCount method")
 //			},
@@ -1914,6 +1917,9 @@ type ChainKeeperMock struct {
 
 	// GetLatestCommandBatchFunc mocks the GetLatestCommandBatch method.
 	GetLatestCommandBatchFunc func(ctx sdk.Context) types.CommandBatch
+
+	// GetMetadataFunc mocks the GetMetadata method.
+	GetMetadataFunc func(ctx sdk.Context) map[string]string
 
 	// GetMinVoterCountFunc mocks the GetMinVoterCount method.
 	GetMinVoterCountFunc func(ctx sdk.Context) int64
@@ -2127,6 +2133,11 @@ type ChainKeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx sdk.Context
 		}
+		// GetMetadata holds details about calls to the GetMetadata method.
+		GetMetadata []struct {
+			// Ctx is the ctx argument value.
+			Ctx sdk.Context
+		}
 		// GetMinVoterCount holds details about calls to the GetMinVoterCount method.
 		GetMinVoterCount []struct {
 			// Ctx is the ctx argument value.
@@ -2250,6 +2261,7 @@ type ChainKeeperMock struct {
 	lockGetEvent                      sync.RWMutex
 	lockGetGatewayAddress             sync.RWMutex
 	lockGetLatestCommandBatch         sync.RWMutex
+	lockGetMetadata                   sync.RWMutex
 	lockGetMinVoterCount              sync.RWMutex
 	lockGetName                       sync.RWMutex
 	lockGetParams                     sync.RWMutex
@@ -3090,6 +3102,38 @@ func (mock *ChainKeeperMock) GetLatestCommandBatchCalls() []struct {
 	mock.lockGetLatestCommandBatch.RLock()
 	calls = mock.calls.GetLatestCommandBatch
 	mock.lockGetLatestCommandBatch.RUnlock()
+	return calls
+}
+
+// GetMetadata calls GetMetadataFunc.
+func (mock *ChainKeeperMock) GetMetadata(ctx sdk.Context) map[string]string {
+	if mock.GetMetadataFunc == nil {
+		panic("ChainKeeperMock.GetMetadataFunc: method is nil but ChainKeeper.GetMetadata was just called")
+	}
+	callInfo := struct {
+		Ctx sdk.Context
+	}{
+		Ctx: ctx,
+	}
+	mock.lockGetMetadata.Lock()
+	mock.calls.GetMetadata = append(mock.calls.GetMetadata, callInfo)
+	mock.lockGetMetadata.Unlock()
+	return mock.GetMetadataFunc(ctx)
+}
+
+// GetMetadataCalls gets all the calls that were made to GetMetadata.
+// Check the length with:
+//
+//	len(mockedChainKeeper.GetMetadataCalls())
+func (mock *ChainKeeperMock) GetMetadataCalls() []struct {
+	Ctx sdk.Context
+} {
+	var calls []struct {
+		Ctx sdk.Context
+	}
+	mock.lockGetMetadata.RLock()
+	calls = mock.calls.GetMetadata
+	mock.lockGetMetadata.RUnlock()
 	return calls
 }
 

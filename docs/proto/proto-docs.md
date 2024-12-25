@@ -107,6 +107,7 @@
   
 - [scalar/chains/v1beta1/params.proto](#scalar/chains/v1beta1/params.proto)
     - [Params](#scalar.chains.v1beta1.Params)
+    - [Params.MetadataEntry](#scalar.chains.v1beta1.Params.MetadataEntry)
   
 - [scalar/utils/v1beta1/queuer.proto](#scalar/utils/v1beta1/queuer.proto)
     - [QueueState](#scalar.utils.v1beta1.QueueState)
@@ -2103,6 +2104,23 @@ PollParticipants should be embedded in poll events in other modules
 | `voting_grace_period` | [int64](#int64) |  |  |
 | `end_blocker_limit` | [int64](#int64) |  |  |
 | `transfer_limit` | [uint64](#uint64) |  |  |
+| `metadata` | [Params.MetadataEntry](#scalar.chains.v1beta1.Params.MetadataEntry) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.Params.MetadataEntry"></a>
+
+### Params.MetadataEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [string](#string) |  |  |
 
 
 

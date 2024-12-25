@@ -67,7 +67,7 @@ func (k *BaseKeeper) InitChains(ctx sdk.Context) {
 // CreateChain creates the subspace for a new BTC chain. Returns an error if the chain already exists
 func (k BaseKeeper) CreateChain(ctx sdk.Context, params types.Params) (err error) {
 	defer func() {
-		err = sdkerrors.Wrap(err, "cannot create new BTC chain")
+		err = sdkerrors.Wrap(err, fmt.Sprintf("cannot create new %s chain", params.Chain))
 	}()
 
 	if !k.initialized {
@@ -83,6 +83,8 @@ func (k BaseKeeper) CreateChain(ctx sdk.Context, params types.Params) (err error
 	}
 
 	k.getBaseStore(ctx).SetRawNew(chainKey, []byte(params.Chain.String()))
+
+	clog.Red("CreateChain", "params", params)
 
 	k.createSubspace(ctx, params.Chain).SetParamSet(ctx, &params)
 

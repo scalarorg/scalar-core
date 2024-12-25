@@ -214,6 +214,10 @@ func (k chainKeeper) GetChainID(ctx sdk.Context) (sdk.Int, bool) {
 	return chainId, true
 }
 
+func (k chainKeeper) GetMetadata(ctx sdk.Context) map[string]string {
+	return getParam[map[string]string](k, ctx, types.KeyMetadata)
+}
+
 func (k chainKeeper) GetRequiredConfirmationHeight(ctx sdk.Context) uint64 {
 	return getParam[uint64](k, ctx, types.KeyConfirmationHeight)
 }

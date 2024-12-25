@@ -7795,6 +7795,10 @@ paths:
                   transfer_limit:
                     type: string
                     format: uint64
+                  metadata:
+                    type: object
+                    additionalProperties:
+                      type: string
         default:
           description: An unexpected error response
           schema:
@@ -54842,6 +54846,10 @@ definitions:
       transfer_limit:
         type: string
         format: uint64
+      metadata:
+        type: object
+        additionalProperties:
+          type: string
   scalar.chains.v1beta1.ParamsResponse:
     type: object
     properties:
@@ -54891,6 +54899,10 @@ definitions:
           transfer_limit:
             type: string
             format: uint64
+          metadata:
+            type: object
+            additionalProperties:
+              type: string
   scalar.chains.v1beta1.PendingCommandsResponse:
     type: object
     properties:

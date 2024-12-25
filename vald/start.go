@@ -38,6 +38,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/log"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/vald/config"
+	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
 	"github.com/scalarorg/scalar-core/vald/multisig"
 	grpc "github.com/scalarorg/scalar-core/vald/tofnd_grpc"
 	"github.com/scalarorg/scalar-core/vald/tss"
@@ -90,6 +91,11 @@ func GetValdCommand() *cobra.Command {
 			}
 
 			cliCtx, err := sdkClient.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			err = grpc_client.InitQueryClientManager(cliCtx)
 			if err != nil {
 				return err
 			}
