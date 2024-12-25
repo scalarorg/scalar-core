@@ -3,6 +3,7 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 
@@ -13,6 +14,7 @@ import (
 func (k BaseKeeper) InitGenesis(ctx sdk.Context, state types.GenesisState) {
 	// TODO: add btc genesis
 	for _, chain := range state.Chains {
+		clog.Red("InitGenesis", "chain", chain.Params.Chain)
 		funcs.MustNoErr(k.CreateChain(ctx, chain.Params))
 		ck := funcs.Must(k.ForChain(ctx, chain.Params.Chain)).(chainKeeper)
 
