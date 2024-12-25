@@ -18,7 +18,7 @@ require (
 	github.com/cosmos/gogoproto v1.7.0 // indirect
 	github.com/gogo/protobuf v1.3.3
 	github.com/gorilla/websocket v1.5.3 // indirect
-	github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20241219092630-d03748ff6bdc
+	github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20241225035324-7da2e43d719e
 	github.com/spf13/cobra v1.8.1 // indirect
 	github.com/spf13/viper v1.19.0
 )
