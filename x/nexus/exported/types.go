@@ -151,6 +151,10 @@ func (m Chain) Validate() error {
 func (m Chain) GetName() ChainName {
 	return m.Name
 }
+func (m Chain) GetFamily() ChainFamily {
+	parts := strings.Split(m.Name.String(), "|")
+	return ChainFamily(parts[0])
+}
 
 // IsFrom returns true if the chain registered under the module
 func (m Chain) IsFrom(module string) bool {
@@ -215,6 +219,24 @@ func (m FeeInfo) Validate() error {
 
 	return nil
 }
+
+type ChainFamily string
+
+func (c ChainFamily) String() string {
+	return string(c)
+}
+
+// Equals returns boolean for whether two chain names are case-insensitive equal
+func (c ChainFamily) Equals(c2 ChainFamily) bool {
+	return strings.EqualFold(c.String(), c2.String())
+}
+
+const (
+	BITCOIN ChainFamily = "bitcoin"
+	EVM     ChainFamily = "evm"
+	COSMOS  ChainFamily = "cosmos"
+	SOLANA  ChainFamily = "solana"
+)
 
 type ChainName string
 

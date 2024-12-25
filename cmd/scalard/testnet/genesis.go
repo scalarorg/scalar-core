@@ -23,7 +23,6 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/utils"
 	btctypes "github.com/scalarorg/scalar-core/x/chains/btc/types"
-	evmtypes "github.com/scalarorg/scalar-core/x/chains/evm/types"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -40,7 +39,7 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfos []Token, custodia
 	log.Debug().Any("Infos", tokenInfos).Msg("Create defaultProtocol")
 	chains := make([]*protocoltypes.SupportedChain, len(tokenInfos))
 	for i, tokenInfo := range tokenInfos {
-		tokenAddress := evmtypes.Address(common.HexToAddress(tokenInfo.TokenAddress))
+		tokenAddress := chainsTypes.Address(common.HexToAddress(tokenInfo.TokenAddress))
 		log.Debug().Any("TokenAddress", tokenAddress).Msg("Parse Tokenaddress")
 		params := chainsTypes.Params{
 			Chain:       nexus.ChainName(tokenInfo.ID),
@@ -48,13 +47,13 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfos []Token, custodia
 			NetworkKind: chainsTypes.Testnet,
 		}
 		if strings.HasPrefix(tokenInfo.ID, "evm") {
-			token := evmtypes.ERC20TokenMetadata{
+			token := chainsTypes.ERC20TokenMetadata{
 				Asset:   tokenInfo.Asset,
 				ChainID: sdk.NewInt(tokenInfo.ChainID),
-				TxHash:  evmtypes.Hash(evmtypes.ZeroHash),
+				TxHash:  chainsTypes.Hash(chainsTypes.ZeroHash),
 				//TokenAddress: tokenAddress,
-				Status: evmtypes.Confirmed,
-				Details: evmtypes.TokenDetails{
+				Status: chainsTypes.Confirmed,
+				Details: chainsTypes.TokenDetails{
 					TokenName: tokenInfo.Name,
 					Symbol:    tokenInfo.Symbol,
 					Decimals:  tokenInfo.Decimals,
@@ -421,12 +420,23 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 				}
 			}
 			if addChain {
+				var gateway *chainsTypes.Gateway
+				if chainConfig.Gateway != "" {
+					gwHex, err := getByteAddress(chainConfig.Gateway)
+					fmt.Printf("Gateway %s, decoded %v", chainConfig.Gateway, gwHex)
+					if err == nil && len(gwHex) == 20 {
+						gateway = &chainsTypes.Gateway{
+							Address: chainsTypes.Address(gwHex),
+						}
+					}
+				}
 				state.Chains = append(state.Chains, chainsTypes.GenesisState_Chain{
 					Params:              params,
 					CommandQueue:        utils.QueueState{},
 					ConfirmedEventQueue: utils.QueueState{},
 					ConfirmedStakingTxs: make([]chainsTypes.StakingTx, 0),
 					CommandBatches:      make([]chainsTypes.CommandBatchMetadata, 0),
+					Gateway:             gateway,
 					Events:              make([]chainsTypes.Event, 0),
 				})
 			}
@@ -434,4 +444,12 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 		genesisState[chainsTypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&state)
 	}
 	return nil
+}
+
+func getByteAddress(hexString string) ([]byte, error) {
+	if strings.HasPrefix(hexString, "0x") {
+		return hex.DecodeString(hexString[2:])
+	} else {
+		return hex.DecodeString(hexString)
+	}
 }
