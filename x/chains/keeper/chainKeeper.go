@@ -164,6 +164,10 @@ func (k chainKeeper) GetParams(ctx sdk.Context) types.Params {
 	return p
 }
 
+func (k chainKeeper) getCommandsGasLimit(ctx sdk.Context) uint32 {
+	return getParam[uint32](k, ctx, types.KeyCommandsGasLimit)
+}
+
 func (k chainKeeper) getConfirmedSourceTxs(ctx sdk.Context) []types.SourceTx {
 	var sourceTxs []types.SourceTx
 	iter := k.getStore(ctx).IteratorNew(confirmedSourceTxPrefix)
@@ -712,10 +716,6 @@ func (k chainKeeper) CreateNewBatchToSign(ctx sdk.Context) (types.CommandBatch, 
 		k.setCommandBatchMetadata(ctx, m)
 	}
 	return types.NewCommandBatch(commandBatch, setter), nil
-}
-
-func (k chainKeeper) getCommandsGasLimit(ctx sdk.Context) uint32 {
-	return getParam[uint32](k, ctx, types.KeyCommandsGasLimit)
 }
 
 func (k chainKeeper) GetLatestCommandBatch(ctx sdk.Context) types.CommandBatch {

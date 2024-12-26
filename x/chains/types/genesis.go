@@ -8,25 +8,30 @@ import (
 	gethParams "github.com/ethereum/go-ethereum/params"
 	utils "github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
+func DefaultChainParams(chainId sdk.Int, chain nexus.ChainName, networkKind NetworkKind, metadata map[string]string) Params {
+	return Params{
+		ChainID:             chainId,
+		Chain:               chain,
+		ConfirmationHeight:  2,
+		NetworkKind:         networkKind,
+		RevoteLockingPeriod: 50,
+		VotingThreshold:     utils.Threshold{Numerator: 51, Denominator: 100},
+		MinVoterCount:       1,
+		CommandsGasLimit:    5000000,
+		VotingGracePeriod:   50,
+		EndBlockerLimit:     50,
+		TransferLimit:       1000,
+		Metadata:            metadata,
+	}
+}
 func DefaultGenesisState() GenesisState {
 	return GenesisState{
 		Chains: []GenesisState_Chain{
 			{
-				Params: Params{
-					ChainID:             BTCMainnetChainID,
-					Chain:               exported.Bitcoin.Name,
-					ConfirmationHeight:  2,
-					NetworkKind:         Mainnet,
-					RevoteLockingPeriod: 50,
-					VotingThreshold:     utils.Threshold{Numerator: 51, Denominator: 100},
-					MinVoterCount:       1,
-					VotingGracePeriod:   50,
-					EndBlockerLimit:     50,
-					TransferLimit:       1000,
-					Metadata:            map[string]string{},
-				},
+				Params:              DefaultChainParams(BTCMainnetChainID, exported.Bitcoin.Name, Mainnet, map[string]string{}),
 				CommandQueue:        utils.QueueState{},
 				ConfirmedSourceTxs:  []SourceTx{},
 				CommandBatches:      []CommandBatchMetadata{},
@@ -34,17 +39,12 @@ func DefaultGenesisState() GenesisState {
 				ConfirmedEventQueue: utils.QueueState{},
 			},
 			{
-				Params: Params{
-					Chain:               exported.Ethereum.Name,
-					ChainID:             sdk.NewIntFromBigInt(gethParams.MainnetChainConfig.ChainID),
-					RevoteLockingPeriod: 50,
-					VotingThreshold:     utils.Threshold{Numerator: 51, Denominator: 100},
-					VotingGracePeriod:   3,
-					MinVoterCount:       1,
-					EndBlockerLimit:     50,
-					TransferLimit:       50,
-					Metadata:            map[string]string{},
-				},
+				Params:              DefaultChainParams(sdk.NewIntFromBigInt(gethParams.MainnetChainConfig.ChainID), exported.Ethereum.Name, Mainnet, map[string]string{}),
+				CommandQueue:        utils.QueueState{},
+				ConfirmedSourceTxs:  []SourceTx{},
+				CommandBatches:      []CommandBatchMetadata{},
+				Events:              []Event{},
+				ConfirmedEventQueue: utils.QueueState{},
 			},
 		},
 	}

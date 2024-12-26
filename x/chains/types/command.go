@@ -259,6 +259,15 @@ func (m Command) DecodeParams() (map[string]string, error) {
 		params["payloadHash"] = payloadHash.Hex()
 		params["sourceTxHash"] = sourceTxID.Hex()
 		params["sourceEventIndex"] = sourceEventIndex.String()
+	case COMMAND_TYPE_APPROVE_BRIDGE_CALL:
+		sourceChain, sourceAddress, contractAddress, payloadHash, sourceTxID, sourceEventIndex := DecodeApproveContractCallParams(m.Params)
+
+		params["sourceChain"] = sourceChain
+		params["sourceAddress"] = sourceAddress
+		params["contractAddress"] = contractAddress.Hex()
+		params["payloadHash"] = payloadHash.Hex()
+		params["sourceTxHash"] = sourceTxID.Hex()
+		params["sourceEventIndex"] = sourceEventIndex.String()
 	case COMMAND_TYPE_DEPLOY_TOKEN:
 		name, symbol, decs, cap, tokenAddress, dailyMintLimit := DecodeDeployTokenParams(m.Params)
 
