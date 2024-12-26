@@ -1,13 +1,21 @@
 package cosmos
 
 import (
+	"context"
 	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/go-bip39"
-	"github.com/rs/zerolog/log"
+	chainTypes "github.com/scalarorg/scalar-core/x/chains/types"
+)
+
+const (
+	AccountAddressPrefix   = "scalar"
+	ValidatorAddressPrefix = AccountAddressPrefix + types.PrefixValidator + types.PrefixOperator
 )
 
 func CreateAccountFromMnemonic(mnemonic string, bip44Path string) (*secp256k1.PrivKey, types.AccAddress, error) {
@@ -28,33 +36,30 @@ func CreateAccountFromMnemonic(mnemonic string, bip44Path string) (*secp256k1.Pr
 	// Create private key and get address
 	privKey := &secp256k1.PrivKey{Key: privKeyBytes}
 	addr := types.AccAddress(privKey.PubKey().Address())
-	log.Debug().Msgf("Created account with address: %s from mnemonic: %s", addr.String(), mnemonic)
 	return privKey, addr, nil
 }
 
-type EventQuery struct {
-	TmEvent   string
-	Module    string
-	Version   string
-	EventName string
-	Attribute string
-	Operator  string
-}
-
-type EventQueryResult struct {
-	Key    string
-	Topic  string
-	Family string
-}
-
-func CreateEventQuery(query EventQuery) EventQueryResult {
-	event := fmt.Sprintf("%s.%s.%s", query.Module, query.Version, query.EventName)
-	key := fmt.Sprintf("%s.%s", event, query.Attribute)
-
-	topic := fmt.Sprintf("tm.event='%s' AND %s %s", query.TmEvent, key, query.Operator)
-	return EventQueryResult{
-		Family: event,
-		Key:    key,
-		Topic:  topic,
+func ConfirmSourceTx(ctx context.Context, client *NetworkClient, msg *chainTypes.ConfirmSourceTxsRequest) (*types.TxResponse, error) {
+	if client == nil {
+		return nil, fmt.Errorf("client is not initialized")
 	}
+	return client.SignAndBroadcastMsgs(ctx, msg)
+}
+
+func StringArrayToBytes(s string) ([]byte, error) {
+	// Remove brackets and split by comma
+	s = strings.Trim(s, "[]")
+	numberStrings := strings.Split(s, ",")
+
+	bytes := make([]byte, len(numberStrings))
+	for i, numStr := range numberStrings {
+		// Convert string to uint64
+		val, err := strconv.ParseUint(strings.TrimSpace(numStr), 10, 8)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse number at index %d: %w", i, err)
+		}
+		bytes[i] = byte(val)
+	}
+
+	return bytes, nil
 }

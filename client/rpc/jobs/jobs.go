@@ -2,8 +2,10 @@ package jobs
 
 import (
 	"context"
-	"strings"
+	"fmt"
+	"reflect"
 
+	"github.com/gogo/protobuf/proto"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/client/rpc/cosmos"
 )
@@ -12,23 +14,20 @@ import (
 type EventJob struct {
 	name          string
 	query         string
-	group         string
 	networkClient *cosmos.NetworkClient
 }
 
 // NewEventJob creates a new event job with typed event handling
-func NewEventJob(name, query, group string, networkClient *cosmos.NetworkClient) *EventJob {
+func NewEventJob(name string, query cosmos.EventQuery, networkClient *cosmos.NetworkClient) *EventJob {
 	return &EventJob{
 		name:          name,
-		query:         query,
-		group:         group,
+		query:         query.ToQuery(),
 		networkClient: networkClient,
 	}
 }
 
 // Run implements the Job interface
-func RunJob[T any](job *EventJob, ctx context.Context, parser func(map[string]interface{}) T, handler func(T) error) {
-
+func RunJob[T proto.Message](job *EventJob, ctx context.Context, handler func(T) error) {
 	ch, err := job.networkClient.Subscribe(ctx, job.name, job.query)
 	if err != nil {
 		log.Error().Err(err).Str("job", job.name).Msg("Failed to subscribe to events")
@@ -48,21 +47,20 @@ func RunJob[T any](job *EventJob, ctx context.Context, parser func(map[string]in
 				return
 			}
 
-			// Create a map with single values instead of arrays
-			eventData := make(map[string]interface{})
-			for eventType, attrs := range resultEvent.Events {
-				if strings.Contains(eventType, job.group) {
-					keys := strings.Split(eventType, ".")
-					key := keys[len(keys)-1]
-					if len(attrs) > 0 {
-						// Handle byte arrays (like command_id) by decoding from hex
-						eventData[key] = attrs[0]
-					}
-				}
+			var event T
+			eventType := reflect.TypeOf(event).Elem()
+
+			newEvent := reflect.New(eventType).Interface().(T)
+
+			fmt.Println(resultEvent.Events)
+
+			err := cosmos.ParseEvent(resultEvent.Events, newEvent)
+			if err != nil {
+				log.Error().Err(err).Str("job", job.name).Msg("Failed to parse event")
+				continue
 			}
 
-			typedEvent := parser(eventData)
-			if err := handler(typedEvent); err != nil {
+			if err := handler(newEvent); err != nil {
 				log.Error().Err(err).Str("job", job.name).Msg("Failed to handle event")
 			}
 		}

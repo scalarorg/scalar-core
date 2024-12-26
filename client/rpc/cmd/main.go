@@ -10,8 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"github.com/scalarorg/scalar-core/client/rpc/utils"
-	"github.com/scalarorg/scalar-core/client/rpc/cmd/approve"
+	"github.com/scalarorg/scalar-core/client/rpc/cmd/handlers"
 	"github.com/scalarorg/scalar-core/client/rpc/config"
 	"github.com/scalarorg/scalar-core/client/rpc/cosmos"
 	"github.com/scalarorg/scalar-core/client/rpc/jobs"
@@ -31,16 +30,14 @@ var (
 )
 
 var (
-	DestCallApprovedEvent = cosmos.CreateEventQuery(
-		cosmos.EventQuery{
-			TmEvent:   "NewBlock",
-			Module:    "scalar.chains",
-			Version:   "v1beta1",
-			EventName: "DestCallApproved",
-			Attribute: "event_id",
-			Operator:  "EXISTS",
-		},
-	)
+	DestCallApprovedEvent = cosmos.EventQuery{
+		TmEvent:   "NewBlock",
+		Module:    "scalar.chains",
+		Version:   "v1beta1",
+		Event:     "DestCallApproved",
+		Attribute: "event_id",
+		Operator:  "EXISTS",
+	}
 )
 
 func setCosmosAccountPrefix() {
@@ -74,7 +71,7 @@ func setupNetworkClient() (*cosmos.NetworkClient, types.AccAddress, error) {
 	}
 
 	queryClient := cosmos.NewQueryClient(clientCtx)
-	privKey, addr, err := utils.CreateAccountFromMnemonic(config.GlobalConfig.Mnemonic, "")
+	privKey, addr, err := cosmos.CreateAccountFromMnemonic(config.GlobalConfig.Mnemonic, "")
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to create account: %w", err)
 	}
@@ -113,9 +110,8 @@ func main() {
 
 	subscribedJobs := []*jobs.EventJob{
 		jobs.NewEventJob(
-			DestCallApprovedEvent.Key,
-			DestCallApprovedEvent.Topic,
-			DestCallApprovedEvent.Family,
+			"dest_call_approved_event",
+			DestCallApprovedEvent,
 			networkClient,
 		),
 	}
@@ -125,7 +121,7 @@ func main() {
 		wg.Add(1)
 		go func(j *jobs.EventJob) {
 			defer wg.Done()
-			jobs.RunJob(j, context.Background(), approve.ParseDestCallApproved, approve.ProcessDestCallApproved)
+			jobs.RunJob(j, context.Background(), handlers.ProcessDestCallApproved)
 		}(job)
 	}
 
