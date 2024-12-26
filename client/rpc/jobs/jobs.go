@@ -2,9 +2,8 @@ package jobs
 
 import (
 	"context"
-	"fmt"
+	"strings"
 
-	"github.com/gogo/protobuf/proto"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/client/rpc/cosmos"
 )
@@ -13,61 +12,58 @@ import (
 type EventJob struct {
 	name          string
 	query         string
+	group         string
 	networkClient *cosmos.NetworkClient
-	handler       func(proto.Message) error
 }
 
 // NewEventJob creates a new event job with typed event handling
-func NewEventJob(name, query string, networkClient *cosmos.NetworkClient, handler func(proto.Message) error) *EventJob {
+func NewEventJob(name, query, group string, networkClient *cosmos.NetworkClient) *EventJob {
 	return &EventJob{
 		name:          name,
 		query:         query,
+		group:         group,
 		networkClient: networkClient,
-		handler:       handler,
 	}
 }
 
 // Run implements the Job interface
-func (j *EventJob) Run(ctx context.Context) error {
-	ch, err := j.networkClient.Subscribe(ctx, j.name, j.query)
+func RunJob[T any](job *EventJob, ctx context.Context, parser func(map[string]interface{}) T, handler func(T) error) {
+
+	ch, err := job.networkClient.Subscribe(ctx, job.name, job.query)
 	if err != nil {
-		return fmt.Errorf("failed to subscribe to events for job %s: %w", j.name, err)
+		log.Error().Err(err).Str("job", job.name).Msg("Failed to subscribe to events")
+		return
 	}
 
-	log.Info().Str("job", j.name).Msg("Starting event job")
+	log.Info().Str("job", job.name).Str("query", job.query).Msg("Starting event job")
 
 	for {
 		select {
 		case <-ctx.Done():
-			return nil
+			return
 
 		case resultEvent, ok := <-ch:
 			if !ok {
-				return fmt.Errorf("event channel closed for job %s", j.name)
+				log.Error().Str("job", job.name).Msg("Event channel closed")
+				return
 			}
 
-			// Debug log the raw event
-			log.Debug().
-				Str("job", j.name).
-				Interface("event", resultEvent).
-				Msg("Received event")
-
-			// Process each event in the result
+			// Create a map with single values instead of arrays
+			eventData := make(map[string]interface{})
 			for eventType, attrs := range resultEvent.Events {
-				if eventType == j.name {
-					_ = attrs
-					log.Info().Str("event", eventType).Msg("Received event")
-					// parsedEvent := funcs.Must(sdk.ParseTypedEvent(abci.Event{
-					// 	Type:       eventType,
-					// 	Attributes: attrs,
-					// })).(T)
-
-					// if err := j.handler(parsedEvent); err != nil {
-					// 	log.Error().Err(err).
-					// 		Str("job", j.name).
-					// 		Msg("Failed to handle event")
-					// }
+				if strings.Contains(eventType, job.group) {
+					keys := strings.Split(eventType, ".")
+					key := keys[len(keys)-1]
+					if len(attrs) > 0 {
+						// Handle byte arrays (like command_id) by decoding from hex
+						eventData[key] = attrs[0]
+					}
 				}
+			}
+
+			typedEvent := parser(eventData)
+			if err := handler(typedEvent); err != nil {
+				log.Error().Err(err).Str("job", job.name).Msg("Failed to handle event")
 			}
 		}
 	}

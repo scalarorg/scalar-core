@@ -203,7 +203,6 @@ func (c *NetworkClient) createTxFactory(ctx context.Context) tx.Factory {
 	if err != nil {
 		log.Error().Msgf("failed to get account: %+v", err)
 	} else {
-		log.Debug().Msgf("[ScalarClient] [NetworkClient] account number: %v, sequence number: %v", resp.AccountNumber, resp.Sequence)
 		txf = txf.WithAccountNumber(resp.AccountNumber)
 		//If sequence number is greater than current sequence number, update the sequence number
 		//This is to avoid the situation where the transaction is not included in the next block
@@ -225,7 +224,6 @@ func (c *NetworkClient) SignAndBroadcastMsgs(ctx context.Context, msgs ...sdk.Ms
 	fees := int64(txf.GasAdjustment() * float64(simRes.GasInfo.GasUsed) * config.GlobalConfig.GasPrice)
 	txf = txf.WithGas(adjusted)
 	txf = txf.WithFees(sdk.NewCoin(config.GlobalConfig.Denom, sdk.NewInt(fees)).String())
-	log.Debug().Msgf("[ScalarNetworkClient] [SignAndBroadcastMsgs] estimated gas: %v, gasPrice: %v, fees: %v", adjusted, config.GlobalConfig.GasPrice, txf.Fees())
 	// Every required params are set in the txFactory
 	txBuilder, err := txf.BuildUnsignedTx(msgs...)
 	if err != nil {
@@ -239,8 +237,6 @@ func (c *NetworkClient) SignAndBroadcastMsgs(ctx context.Context, msgs ...sdk.Ms
 		return nil, err
 	}
 	if result != nil && result.Code == 0 {
-		//log.Debug().Msgf("[ScalarNetworkClient] [SignAndBroadcastMsgs] success broadcast tx with tx hash: %s", result.TxHash)
-		//Update sequence and account number
 		c.txFactory = c.txFactory.WithSequence(c.txFactory.Sequence() + 1)
 	} else {
 		log.Error().Msgf("[ScalarNetworkClient] [SignAndBroadcastMsgs] failed to broadcast tx: %+v", result)
