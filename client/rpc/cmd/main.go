@@ -8,10 +8,10 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/types"
-	"github.com/gogo/protobuf/proto"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"github.com/scalarorg/scalar-core/client/rpc"
+	"github.com/scalarorg/scalar-core/client/rpc/utils"
+	"github.com/scalarorg/scalar-core/client/rpc/cmd/approve"
 	"github.com/scalarorg/scalar-core/client/rpc/config"
 	"github.com/scalarorg/scalar-core/client/rpc/cosmos"
 	"github.com/scalarorg/scalar-core/client/rpc/jobs"
@@ -31,14 +31,15 @@ var (
 )
 
 var (
-	DestCallApprovedEventTopicId = cosmos.CreateEventQuery(
-		"NewBlock",
-		"scalar.chains",
-		"v1beta1",
-		"DestCallApproved",
-		"event_id",
-		"EXISTS",
-		"",
+	DestCallApprovedEvent = cosmos.CreateEventQuery(
+		cosmos.EventQuery{
+			TmEvent:   "NewBlock",
+			Module:    "scalar.chains",
+			Version:   "v1beta1",
+			EventName: "DestCallApproved",
+			Attribute: "event_id",
+			Operator:  "EXISTS",
+		},
 	)
 )
 
@@ -73,7 +74,7 @@ func setupNetworkClient() (*cosmos.NetworkClient, types.AccAddress, error) {
 	}
 
 	queryClient := cosmos.NewQueryClient(clientCtx)
-	privKey, addr, err := rpc.CreateAccountFromMnemonic(config.GlobalConfig.Mnemonic, "")
+	privKey, addr, err := utils.CreateAccountFromMnemonic(config.GlobalConfig.Mnemonic, "")
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to create account: %w", err)
 	}
@@ -109,17 +110,13 @@ func main() {
 	if err := networkClient.Start(); err != nil {
 		panic(fmt.Errorf("failed to start network client: %w", err))
 	}
-	// defer networkClient.
 
 	subscribedJobs := []*jobs.EventJob{
 		jobs.NewEventJob(
-			"dest_call_approved",
-			DestCallApprovedEventTopicId,
+			DestCallApprovedEvent.Key,
+			DestCallApprovedEvent.Topic,
+			DestCallApprovedEvent.Family,
 			networkClient,
-			func(event proto.Message) error {
-				fmt.Println("dest_call_approved", event)
-				return nil
-			},
 		),
 	}
 
@@ -128,7 +125,7 @@ func main() {
 		wg.Add(1)
 		go func(j *jobs.EventJob) {
 			defer wg.Done()
-			j.Run(context.Background())
+			jobs.RunJob(j, context.Background(), approve.ParseDestCallApproved, approve.ProcessDestCallApproved)
 		}(job)
 	}
 

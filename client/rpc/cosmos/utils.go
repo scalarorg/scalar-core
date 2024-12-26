@@ -32,6 +32,29 @@ func CreateAccountFromMnemonic(mnemonic string, bip44Path string) (*secp256k1.Pr
 	return privKey, addr, nil
 }
 
-func CreateEventQuery(tmEvent string, module string, version string, eventName string, attribute string, operator string, value string) string {
-	return fmt.Sprintf("tm.event='%s' AND %s.%s.%s.%s %s %s", tmEvent, module, version, eventName, attribute, operator, value)
+type EventQuery struct {
+	TmEvent   string
+	Module    string
+	Version   string
+	EventName string
+	Attribute string
+	Operator  string
+}
+
+type EventQueryResult struct {
+	Key    string
+	Topic  string
+	Family string
+}
+
+func CreateEventQuery(query EventQuery) EventQueryResult {
+	event := fmt.Sprintf("%s.%s.%s", query.Module, query.Version, query.EventName)
+	key := fmt.Sprintf("%s.%s", event, query.Attribute)
+
+	topic := fmt.Sprintf("tm.event='%s' AND %s %s", query.TmEvent, key, query.Operator)
+	return EventQueryResult{
+		Family: event,
+		Key:    key,
+		Topic:  topic,
+	}
 }
