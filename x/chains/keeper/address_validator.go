@@ -11,7 +11,7 @@ import (
 func NewAddressValidator() nexus.AddressValidator {
 	return func(ctx sdk.Context, address nexus.CrossChainAddress) error {
 		// TODO: validate btc address
-		clog.Red("TODO: validate btc address", address)
+		clog.Red("TODO: validate address", address)
 		return nil
 	}
 }

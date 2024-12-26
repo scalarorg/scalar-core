@@ -10,13 +10,12 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 
 	"github.com/scalarorg/bitcoin-vault/go-utils/address"
-	btcChain "github.com/scalarorg/bitcoin-vault/go-utils/chain"
+	chainUtils "github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
-	"github.com/scalarorg/scalar-core/x/chains/types"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -36,7 +35,7 @@ var (
 	}
 )
 
-func (client *EthereumClient) decodeSourceTxConfirmationEvent(event *types.EventConfirmSourceTxsStarted, log *geth.Log) (*chainsTypes.SourceTxConfirmationEvent, error) {
+func (client *EthereumClient) decodeSourceTxConfirmationEvent(log *geth.Log) (*chainsTypes.SourceTxConfirmationEvent, error) {
 	params, err := chainsTypes.StrictDecode(ContractCallDataArgs, log.Data)
 	if err != nil {
 		return nil, err
@@ -105,7 +104,7 @@ func decodeAddress(chain string, identifier []byte, metadata map[string]string) 
 
 	chainType := chainInfoBytes.ChainType()
 
-	if chainType == btcChain.ChainTypeBitcoin {
+	if chainType == chainUtils.ChainTypeBitcoin {
 		params := metadata["params"]
 		if params == "" {
 			return "", fmt.Errorf("params is required")
@@ -118,7 +117,7 @@ func decodeAddress(chain string, identifier []byte, metadata map[string]string) 
 		return addr.String(), nil
 	}
 
-	if chainType == btcChain.ChainTypeEVM {
+	if chainType == chainUtils.ChainTypeEVM {
 		address := common.BytesToAddress(identifier)
 		return address.String(), nil
 	}
