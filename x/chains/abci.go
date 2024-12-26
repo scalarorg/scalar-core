@@ -194,7 +194,7 @@ func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types
 			success := false
 			_ = utils.RunCached(ctx, bk, func(ctx sdk.Context) (bool, error) {
 				if err := validateMessage(ctx, destCk, n, m, chain, msg); err != nil {
-					bk.Logger(ctx).Info(fmt.Sprintf("failed validating message: %s", err.Error()),
+					bk.Logger(ctx).Error(fmt.Sprintf("failed validating message: %s", err.Error()),
 						types.AttributeKeyChain, msg.GetDestinationChain(),
 						types.AttributeKeyMessageID, msg.ID,
 					)
