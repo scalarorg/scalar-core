@@ -401,19 +401,6 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 
 		chainsState := chainsTypes.DefaultGenesisState()
 		for _, chainConfig := range chainConfigs {
-			params := chainsTypes.Params{
-				ChainId:             sdk.NewInt(int64(chainConfig.ChainID)),
-				Chain:               nexus.ChainName(chainConfig.ID),
-				ConfirmationHeight:  2,
-				NetworkKind:         chainConfig.NetworkKind,
-				RevoteLockingPeriod: 50,
-				VotingThreshold:     utils.Threshold{Numerator: 51, Denominator: 100},
-				MinVoterCount:       1,
-				VotingGracePeriod:   50,
-				EndBlockerLimit:     50,
-				TransferLimit:       1000,
-				Metadata:            chainConfig.Metadata,
-			}
 			//Check if chainName is already in the genesis state
 			addChain := true
 			for _, chain := range chainsState.Chains {
@@ -434,7 +421,7 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 					}
 				}
 				chainsState.Chains = append(chainsState.Chains, chainsTypes.GenesisState_Chain{
-					Params:              params,
+					Params:              chainsTypes.DefaultChainParams(sdk.NewInt(int64(chainConfig.ChainID)), nexus.ChainName(chainConfig.ID), chainConfig.NetworkKind, chainConfig.Metadata),
 					CommandQueue:        utils.QueueState{},
 					ConfirmedEventQueue: utils.QueueState{},
 					ConfirmedSourceTxs:  make([]chainsTypes.SourceTx, 0),

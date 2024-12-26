@@ -7786,6 +7786,9 @@ paths:
                   min_voter_count:
                     type: string
                     format: int64
+                  commands_gas_limit:
+                    type: integer
+                    format: int64
                   voting_grace_period:
                     type: string
                     format: int64
@@ -54837,6 +54840,9 @@ definitions:
       min_voter_count:
         type: string
         format: int64
+      commands_gas_limit:
+        type: integer
+        format: int64
       voting_grace_period:
         type: string
         format: int64
@@ -54889,6 +54895,9 @@ definitions:
                 format: int64
           min_voter_count:
             type: string
+            format: int64
+          commands_gas_limit:
+            type: integer
             format: int64
           voting_grace_period:
             type: string

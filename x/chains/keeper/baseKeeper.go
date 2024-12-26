@@ -115,7 +115,7 @@ func (k BaseKeeper) forChain(ctx sdk.Context, chain nexus.ChainName) (chainKeepe
 
 func (k BaseKeeper) createSubspace(ctx sdk.Context, chain nexus.ChainName) params.Subspace {
 	chainKey := key.FromStr(types.ModuleName).Append(key.From(chain))
-	k.Logger(ctx).Debug(fmt.Sprintf("initialized btc subspace %s", chain))
+	k.Logger(ctx).Debug(fmt.Sprintf("initialized subspace for chain %s", chain))
 	return k.paramsKeeper.Subspace(chainKey.String()).WithKeyTable(types.KeyTable())
 }
 

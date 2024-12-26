@@ -20,13 +20,14 @@ var (
 	KeyChainID             = []byte("chainId")
 	KeyVotingThreshold     = []byte("votingThreshold")
 	KeyMinVoterCount       = []byte("minVoterCount")
+	KeyCommandsGasLimit    = []byte("commandsGasLimit")
 	KeyVotingGracePeriod   = []byte("votingGracePeriod")
 	KeyEndBlockerLimit     = []byte("endBlockerLimit")
 	KeyTransferLimit       = []byte("transferLimit")
 	KeyMetadata            = []byte("metadata")
-	KeyToken               = []byte("token")
-	KeyBurnable            = []byte("burnable")
-	KeyCommandsGasLimit    = []byte("commandsGasLimit")
+
+	KeyToken    = []byte("token")
+	KeyBurnable = []byte("burnable")
 )
 
 func KeyTable() params.KeyTable {
@@ -48,6 +49,7 @@ func (m *Params) ParamSetPairs() params.ParamSetPairs {
 		params.NewParamSetPair(KeyChainID, &m.ChainId, validateChainId),
 		params.NewParamSetPair(KeyVotingThreshold, &m.VotingThreshold, validateVotingThreshold),
 		params.NewParamSetPair(KeyMinVoterCount, &m.MinVoterCount, validateMinVoterCount),
+		params.NewParamSetPair(KeyCommandsGasLimit, &m.CommandsGasLimit, validateCommandsGasLimit),
 		params.NewParamSetPair(KeyVotingGracePeriod, &m.VotingGracePeriod, validateVotingGracePeriod),
 		params.NewParamSetPair(KeyEndBlockerLimit, &m.EndBlockerLimit, validateEndBlockerLimit),
 		params.NewParamSetPair(KeyTransferLimit, &m.TransferLimit, validateTransferLimit),
@@ -120,6 +122,19 @@ func validateMinVoterCount(i interface{}) error {
 	if count < 1 {
 		return fmt.Errorf("min voter count must be greater than 0")
 	}
+	return nil
+}
+
+func validateCommandsGasLimit(commandsGasLimit interface{}) error {
+	val, ok := commandsGasLimit.(uint32)
+	if !ok {
+		return fmt.Errorf("invalid parameter type for commands gas limit: %T", commandsGasLimit)
+	}
+
+	if val <= 0 {
+		return fmt.Errorf("commands gas limit must be >0")
+	}
+
 	return nil
 }
 

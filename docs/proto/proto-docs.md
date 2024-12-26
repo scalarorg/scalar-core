@@ -2101,6 +2101,7 @@ PollParticipants should be embedded in poll events in other modules
 | `chain_id` | [bytes](#bytes) |  |  |
 | `voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
 | `min_voter_count` | [int64](#int64) |  |  |
+| `commands_gas_limit` | [uint32](#uint32) |  |  |
 | `voting_grace_period` | [int64](#int64) |  |  |
 | `end_blocker_limit` | [int64](#int64) |  |  |
 | `transfer_limit` | [uint64](#uint64) |  |  |
