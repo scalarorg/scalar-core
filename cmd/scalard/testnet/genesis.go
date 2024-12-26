@@ -44,7 +44,7 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfos []Token, custodia
 		log.Debug().Any("TokenAddress", tokenAddress).Msg("Parse Tokenaddress")
 		params := chainsTypes.Params{
 			Chain:       nexus.ChainName(tokenInfo.ID),
-			ChainId:     sdk.NewInt(tokenInfo.ChainID),
+			ChainID:     sdk.NewInt(tokenInfo.ChainID),
 			NetworkKind: chainsTypes.Testnet,
 		}
 		if strings.HasPrefix(tokenInfo.ID, "evm") {

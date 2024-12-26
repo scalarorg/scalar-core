@@ -46,7 +46,7 @@ func (m *Params) ParamSetPairs() params.ParamSetPairs {
 		params.NewParamSetPair(KeyConfirmationHeight, &m.ConfirmationHeight, validateConfirmationHeight),
 		params.NewParamSetPair(KeyNetworkKind, &m.NetworkKind, validateNetworkKind),
 		params.NewParamSetPair(KeyRevoteLockingPeriod, &m.RevoteLockingPeriod, validateRevoteLockingPeriod),
-		params.NewParamSetPair(KeyChainID, &m.ChainId, validateChainId),
+		params.NewParamSetPair(KeyChainID, &m.ChainID, validateChainId),
 		params.NewParamSetPair(KeyVotingThreshold, &m.VotingThreshold, validateVotingThreshold),
 		params.NewParamSetPair(KeyMinVoterCount, &m.MinVoterCount, validateMinVoterCount),
 		params.NewParamSetPair(KeyCommandsGasLimit, &m.CommandsGasLimit, validateCommandsGasLimit),
