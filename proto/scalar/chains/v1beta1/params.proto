@@ -22,8 +22,9 @@ message Params {
   scalar.utils.v1beta1.Threshold voting_threshold = 6
       [ (gogoproto.nullable) = false ];
   int64 min_voter_count = 7;
-  int64 voting_grace_period = 8;
-  int64 end_blocker_limit = 9;
-  uint64 transfer_limit = 10;
-  map<string, string> metadata = 11;
+  uint32 commands_gas_limit = 8;
+  int64 voting_grace_period = 9;
+  int64 end_blocker_limit = 10;
+  uint64 transfer_limit = 11;
+  map<string, string> metadata = 12;
 }
