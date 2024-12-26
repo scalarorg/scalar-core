@@ -88,8 +88,21 @@ const (
 func IsSupportedChain(chain nexus.Chain) bool {
 	return chain.Module == ModuleName
 }
-func IsEvmChain(chain nexus.Chain) bool {
+
+func IsEvmChain(chain nexus.ChainName) bool {
 	return chain.GetFamily().Equals(nexus.EVM)
+}
+
+func IsBitcoinChain(chain nexus.ChainName) bool {
+	return chain.GetFamily().Equals(nexus.BITCOIN)
+}
+
+func IsCosmosChain(chain nexus.ChainName) bool {
+	return chain.GetFamily().Equals(nexus.COSMOS)
+}
+
+func IsSolanaChain(chain nexus.ChainName) bool {
+	return chain.GetFamily().Equals(nexus.SOLANA)
 }
 
 // TODO: Currently inherits from evm types.Address. This should be refactored for multiple chains.

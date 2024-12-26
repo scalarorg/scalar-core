@@ -7,25 +7,26 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/client/rpc/codec"
+	"github.com/scalarorg/scalar-core/client/rpc/config"
 )
 
 // var _ grpc.ClientConn = &client.Context{}
 
-func CreateClientContext(config *CosmosNetworkConfig) (*client.Context, error) {
+func CreateClientContext() (*client.Context, error) {
 	clientCtx := client.Context{
-		ChainID: config.ID,
+		ChainID: config.GlobalConfig.ID,
 	}
-	if config.RPCUrl != "" {
-		log.Info().Msgf("Create rpcClient using RPC URL: %s", config.RPCUrl)
-		clientCtx = clientCtx.WithNodeURI(config.RPCUrl)
-		rpcClient, err := client.NewClientFromNode(config.RPCUrl)
+	if config.GlobalConfig.RPCUrl != "" {
+		log.Info().Msgf("Create rpcClient using RPC URL: %s", config.GlobalConfig.RPCUrl)
+		clientCtx = clientCtx.WithNodeURI(config.GlobalConfig.RPCUrl)
+		rpcClient, err := client.NewClientFromNode(config.GlobalConfig.RPCUrl)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create RPC client: %w", err)
 		}
 		clientCtx = clientCtx.WithClient(rpcClient)
 	}
-	if config.Mnemonic != "" {
-		_, addr, err := CreateAccountFromMnemonic(config.Mnemonic)
+	if config.GlobalConfig.Mnemonic != "" {
+		_, addr, err := CreateAccountFromMnemonic(config.GlobalConfig.Mnemonic, "")
 		if err != nil {
 			return nil, fmt.Errorf("failed to create account from mnemonic: %w", err)
 		}
@@ -52,9 +53,9 @@ func WithRpcClientCtx(rpcUrl string) ClientContextOption {
 	}
 }
 
-func CreateClientContextWithOptions(config *CosmosNetworkConfig, opts ...ClientContextOption) (*client.Context, error) {
+func CreateClientContextWithOptions(opts ...ClientContextOption) (*client.Context, error) {
 	clientCtx := client.Context{
-		ChainID: config.ID,
+		ChainID: config.GlobalConfig.ID,
 	}
 	for _, opt := range opts {
 		err := opt(&clientCtx)

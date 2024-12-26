@@ -15,22 +15,23 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
 	"github.com/rs/zerolog/log"
+	"github.com/scalarorg/scalar-core/client/rpc/config"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	scalarnetTypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 	ctypes "github.com/tendermint/tendermint/rpc/core/types"
 )
 
-func createDefaultTxFactory(config *CosmosNetworkConfig, txConfig client.TxConfig) (tx.Factory, error) {
+func createDefaultTxFactory(txConfig client.TxConfig) (tx.Factory, error) {
 	factory := tx.Factory{}
 	factory = factory.WithTxConfig(txConfig)
-	if config.ID == "" {
+	if config.GlobalConfig.ID == "" {
 		return factory, fmt.Errorf("chain ID is required")
 	}
-	factory = factory.WithChainID(config.ID)
+	factory = factory.WithChainID(config.GlobalConfig.ID)
 	//Todo: estimate gas each time broadcast tx
 	factory = factory.WithGas(0) // Adjust in estimateGas()
-	factory = factory.WithGasAdjustment(DEFAULT_GAS_ADJUSTMENT)
+	factory = factory.WithGasAdjustment(config.GlobalConfig.GasAdjustment)
 	//factory = factory.WithGasPrices(config.GasPrice)
 	// factory = factory.WithFees(sdk.NewCoin("uaxl", sdk.NewInt(20000)).String())
 
@@ -42,7 +43,6 @@ func createDefaultTxFactory(config *CosmosNetworkConfig, txConfig client.TxConfi
 }
 
 type NetworkClient struct {
-	config         *CosmosNetworkConfig
 	rpcClient      rpcclient.Client
 	queryClient    *QueryClient
 	addr           sdk.AccAddress
@@ -52,16 +52,16 @@ type NetworkClient struct {
 	sequenceNumber uint64
 }
 
-func NewNetworkClient(config *CosmosNetworkConfig, queryClient *QueryClient, txConfig client.TxConfig) (*NetworkClient, error) {
-	privKey, addr, err := CreateAccountFromMnemonic(config.Mnemonic)
+func NewNetworkClient(queryClient *QueryClient, txConfig client.TxConfig) (*NetworkClient, error) {
+	privKey, addr, err := CreateAccountFromMnemonic(config.GlobalConfig.Mnemonic, "")
 	if err != nil {
 		return nil, fmt.Errorf("failed to create account from mnemonic: %w", err)
 	}
 	log.Info().Msgf("Scalar NetworkClient created with broadcaster address: %s", addr.String())
 	var rpcClient rpcclient.Client
-	if config.RPCUrl != "" {
-		log.Info().Msgf("Create rpc client with url: %s", config.RPCUrl)
-		rpcClient, err = client.NewClientFromNode(config.RPCUrl)
+	if config.GlobalConfig.RPCUrl != "" {
+		log.Info().Msgf("Create rpc client with url: %s", config.GlobalConfig.RPCUrl)
+		rpcClient, err = client.NewClientFromNode(config.GlobalConfig.RPCUrl)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create RPC client: %w", err)
 		}
@@ -71,12 +71,11 @@ func NewNetworkClient(config *CosmosNetworkConfig, queryClient *QueryClient, txC
 	if err != nil {
 		return nil, err
 	}
-	txFactory, err := createDefaultTxFactory(config, txConfig)
+	txFactory, err := createDefaultTxFactory(txConfig)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create tx factory: %w", err)
 	}
 	networkClient := &NetworkClient{
-		config:         config,
 		rpcClient:      rpcClient,
 		queryClient:    queryClient,
 		addr:           addr,
@@ -125,18 +124,16 @@ func (c *NetworkClient) SetTxFactory(txFactory tx.Factory) {
 	c.txFactory = txFactory
 }
 
-func NewNetworkClientWithOptions(config *CosmosNetworkConfig, queryClient *QueryClient, txConfig client.TxConfig, opts ...NetworkClientOption) (*NetworkClient, error) {
-	networkClient := &NetworkClient{
-		config: config,
-	}
+func NewNetworkClientWithOptions(queryClient *QueryClient, txConfig client.TxConfig, opts ...NetworkClientOption) (*NetworkClient, error) {
+	networkClient := &NetworkClient{}
 	for _, opt := range opts {
 		opt(networkClient)
 	}
 
 	log.Info().Msgf("Scalar NetworkClient created with broadcaster address: %s", networkClient.addr.String())
-	if config.RPCUrl != "" {
-		log.Info().Msgf("Create rpc client with url: %s", config.RPCUrl)
-		rpcClient, err := client.NewClientFromNode(config.RPCUrl)
+	if config.GlobalConfig.RPCUrl != "" {
+		log.Info().Msgf("Create rpc client with url: %s", config.GlobalConfig.RPCUrl)
+		rpcClient, err := client.NewClientFromNode(config.GlobalConfig.RPCUrl)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create RPC client: %w", err)
 		}
@@ -150,7 +147,7 @@ func NewNetworkClientWithOptions(config *CosmosNetworkConfig, queryClient *Query
 	networkClient.sequenceNumber = account.Sequence
 
 	if networkClient.txFactory.AccountNumber() == 0 {
-		txFactory, err := createDefaultTxFactory(config, txConfig)
+		txFactory, err := createDefaultTxFactory(txConfig)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create tx factory: %w", err)
 		}
@@ -225,10 +222,10 @@ func (c *NetworkClient) SignAndBroadcastMsgs(ctx context.Context, msgs ...sdk.Ms
 	if err != nil {
 		return nil, fmt.Errorf("failed to calculate gas: %w", err)
 	}
-	fees := int64(txf.GasAdjustment() * float64(simRes.GasInfo.GasUsed) * c.config.GasPrice)
+	fees := int64(txf.GasAdjustment() * float64(simRes.GasInfo.GasUsed) * config.GlobalConfig.GasPrice)
 	txf = txf.WithGas(adjusted)
-	txf = txf.WithFees(sdk.NewCoin(c.config.Denom, sdk.NewInt(fees)).String())
-	log.Debug().Msgf("[ScalarNetworkClient] [SignAndBroadcastMsgs] estimated gas: %v, gasPrice: %v, fees: %v", adjusted, c.config.GasPrice, txf.Fees())
+	txf = txf.WithFees(sdk.NewCoin(config.GlobalConfig.Denom, sdk.NewInt(fees)).String())
+	log.Debug().Msgf("[ScalarNetworkClient] [SignAndBroadcastMsgs] estimated gas: %v, gasPrice: %v, fees: %v", adjusted, config.GlobalConfig.GasPrice, txf.Fees())
 	// Every required params are set in the txFactory
 	txBuilder, err := txf.BuildUnsignedTx(msgs...)
 	if err != nil {
@@ -254,7 +251,7 @@ func (c *NetworkClient) SignAndBroadcastMsgs(ctx context.Context, msgs ...sdk.Ms
 func (c *NetworkClient) trySignAndBroadcastMsgs(ctx context.Context, txBuilder client.TxBuilder) (*sdk.TxResponse, error) {
 	var err error
 	var result *sdk.TxResponse
-	for i := 0; i < c.config.MaxRetries; i++ {
+	for i := 0; i < config.GlobalConfig.MaxRetries; i++ {
 		txf := c.createTxFactory(ctx)
 		log.Debug().Msgf("[ScalarNetworkClient] [trySignAndBroadcastMsgs] account sequence: %d", txf.Sequence())
 		c.txFactory = txf
@@ -281,13 +278,13 @@ func (c *NetworkClient) trySignAndBroadcastMsgs(ctx context.Context, txBuilder c
 		//Sleep for a while if error is nil
 		//Or error "account sequence mismatch"
 		if result != nil && result.Code > 0 && strings.Contains(result.RawLog, "account sequence mismatch") {
-			log.Debug().Msgf("[ScalarNetworkClient] [trySignAndBroadcast] sleep for %d milliseconds due to error: %s", c.config.RetryInterval, result.RawLog)
-			time.Sleep(time.Duration(c.config.RetryInterval) * time.Millisecond)
+			log.Debug().Msgf("[ScalarNetworkClient] [trySignAndBroadcast] sleep for %d milliseconds due to error: %s", config.GlobalConfig.RetryInterval, result.RawLog)
+			time.Sleep(time.Duration(config.GlobalConfig.RetryInterval) * time.Millisecond)
 		} else {
 			return result, nil
 		}
 	}
-	log.Error().Msgf("[ScalarNetworkClient] [trySignAndBroadcast] failed to broadcast tx after %d retries", c.config.MaxRetries)
+	log.Error().Msgf("[ScalarNetworkClient] [trySignAndBroadcast] failed to broadcast tx after %d retries", config.GlobalConfig.MaxRetries)
 	return result, err
 }
 func (c *NetworkClient) signTx(txf tx.Factory, txBuilder client.TxBuilder, overwriteSig bool) error {
@@ -368,7 +365,7 @@ func (c *NetworkClient) signTx(txf tx.Factory, txBuilder client.TxBuilder, overw
 }
 
 func (c *NetworkClient) BroadcastTx(ctx context.Context, txBytes []byte) (*sdk.TxResponse, error) {
-	switch c.config.BroadcastMode {
+	switch config.GlobalConfig.BroadcastMode {
 	case flags.BroadcastSync:
 		return c.BroadcastTxSync(ctx, txBytes)
 	case flags.BroadcastAsync:
@@ -376,7 +373,7 @@ func (c *NetworkClient) BroadcastTx(ctx context.Context, txBytes []byte) (*sdk.T
 	case flags.BroadcastBlock:
 		return c.BroadcastTxCommit(ctx, txBytes)
 	default:
-		return nil, fmt.Errorf("unsupported return type %s; supported types: sync, async, block", c.config.BroadcastMode)
+		return nil, fmt.Errorf("unsupported return type %s; supported types: sync, async, block", config.GlobalConfig.BroadcastMode)
 	}
 }
 

@@ -19,24 +19,20 @@ import (
 )
 
 type QueryClient struct {
-	clientCtx             *client.Context
-	EvmQueryServiceClient chainsTypes.QueryServiceClient
-	MsgServiceClient      scalarnetTypes.MsgServiceClient
-	TxServiceClient       tx.ServiceClient
-	AccountQueryClient    auth.QueryClient
+	clientCtx                *client.Context
+	ChainsQueryServiceClient chainsTypes.QueryServiceClient
+	MsgServiceClient         scalarnetTypes.MsgServiceClient
+	TxServiceClient          tx.ServiceClient
+	AccountQueryClient       auth.QueryClient
 }
 
 func NewQueryClient(clientCtx *client.Context) *QueryClient {
-	evmQueryServiceClient := chainsTypes.NewQueryServiceClient(clientCtx)
-	msgServiceClient := scalarnetTypes.NewMsgServiceClient(clientCtx)
-	accountQueryClient := auth.NewQueryClient(clientCtx)
-	txServiceClient := tx.NewServiceClient(clientCtx)
 	return &QueryClient{
-		clientCtx:             clientCtx,
-		EvmQueryServiceClient: evmQueryServiceClient,
-		MsgServiceClient:      msgServiceClient,
-		TxServiceClient:       txServiceClient,
-		AccountQueryClient:    accountQueryClient,
+		clientCtx:                clientCtx,
+		ChainsQueryServiceClient: chainsTypes.NewQueryServiceClient(clientCtx),
+		MsgServiceClient:         scalarnetTypes.NewMsgServiceClient(clientCtx),
+		TxServiceClient:          tx.NewServiceClient(clientCtx),
+		AccountQueryClient:       auth.NewQueryClient(clientCtx),
 	}
 }
 
@@ -49,7 +45,7 @@ func (c *QueryClient) QueryBatchedCommands(ctx context.Context, destinationChain
 		Chain: destinationChain,
 		Id:    batchedCommandId,
 	}
-	resp, err := c.EvmQueryServiceClient.BatchedCommands(ctx, req)
+	resp, err := c.ChainsQueryServiceClient.BatchedCommands(ctx, req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query batched commands: %w", err)
 	}
@@ -60,7 +56,7 @@ func (c *QueryClient) QueryPendingCommand(ctx context.Context, destinationChain 
 	req := &chainsTypes.PendingCommandsRequest{
 		Chain: destinationChain,
 	}
-	resp, err := c.EvmQueryServiceClient.PendingCommands(ctx, req)
+	resp, err := c.ChainsQueryServiceClient.PendingCommands(ctx, req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query pending commands: %w", err)
 	}
@@ -147,7 +143,7 @@ func (c *QueryClient) QueryActivedChains(ctx context.Context) ([]string, error) 
 	req := &chainsTypes.ChainsRequest{
 		Status: chainsTypes.Activated,
 	}
-	resp, err := c.EvmQueryServiceClient.Chains(ctx, req)
+	resp, err := c.ChainsQueryServiceClient.Chains(ctx, req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query chains: %w", err)
 	}

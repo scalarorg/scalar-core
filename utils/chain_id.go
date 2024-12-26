@@ -14,3 +14,8 @@ func ChainInfoBytesFromString(chainID string) (chain.ChainInfoBytes, error) {
 	}
 	return chainInfoBytes, nil
 }
+
+func ValidateChainID(chainID string) bool {
+	_, err := ChainInfoBytesFromString(chainID)
+	return err == nil
+}
