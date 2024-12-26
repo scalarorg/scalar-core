@@ -287,6 +287,18 @@ func validateMessage(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, m typ
 		return fmt.Errorf("invalid contract address")
 	}
 
+	if msg.Sender.Address == "" {
+		return fmt.Errorf("sender address is empty")
+	}
+
+	if msg.Recipient.Address == "" {
+		return fmt.Errorf("recipient address is empty")
+	}
+
+	if msg.PayloadHash == nil {
+		return fmt.Errorf("payload hash is empty")
+	}
+
 	switch msg.Type() {
 	case nexus.TypeGeneralMessage:
 		return nil
