@@ -1,0 +1,14 @@
+{
+  "chain_id": 73475,
+  "id": "cosmos|73475",
+  "name": "scalar-testnet-1",
+  "denom": "ascal",
+  "gas_price": 0.0125,
+  "rpc_url": "http://localhost:26657",
+  "lcd_url": "http://localhost:2317",
+  "ws_url": "ws://localhost:26657/websocket",
+  "max_retries": 3,
+  "retry_interval": 30000,
+  "broadcast_mode": "sync",
+  "mnemonic": "latin total dream gesture brain bunker truly stove left video cost transfer guide occur bicycle oxygen world ready witness exhibit federal salute half day"
+}

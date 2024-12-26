@@ -7,7 +7,6 @@ import (
 	vault "github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
-	"github.com/scalarorg/scalar-core/utils/clog"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -74,16 +73,6 @@ func (client *BtcClient) decodeSourceTxConfirmationEvent(tx *BTCTxReceipt) (*cha
 	if err != nil {
 		return nil, ErrInvalidPayloadHash
 	}
-
-	// , err := chainsTypes.HashFromBytes(payloadHash)
-	// if err != nil {
-	// 	return chainsTypes.ConfirmationEvent{}, ErrInvalidPayloadHash
-	// }chainHash
-
-	clog.Redf("[VALD] Payload hash %+v\n", payloadHash)
-	clog.Redf("[VALD] Minting amount %+v\n", stakingAmount)
-	// clog.Redf("[VALD] Chain hash %+v\n", chainHash)
-	clog.Redf("[VALD] tx: %+v", tx)
 
 	return &chainsTypes.SourceTxConfirmationEvent{
 		Sender:                      tx.PrevTxOuts[0].ScriptPubKey.Address, // TODO: Fix hard coded

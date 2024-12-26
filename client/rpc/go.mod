@@ -9,7 +9,6 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/rs/zerolog v1.33.0
 	github.com/scalarorg/scalar-core v1.1.2
-	github.com/stretchr/testify v1.10.0
 	github.com/tendermint/tendermint v0.34.27
 	google.golang.org/grpc v1.67.1
 )
@@ -20,7 +19,7 @@ require (
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20241225092503-82ec223e89c3
 	github.com/spf13/cobra v1.8.1 // indirect
-	github.com/spf13/viper v1.19.0
+	github.com/spf13/viper v1.19.0 // indirect
 )
 
 require (
@@ -141,6 +140,7 @@ require (
 	github.com/spf13/cast v1.7.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stoewer/go-strcase v1.3.0 // indirect
+	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/supranational/blst v0.3.13 // indirect
 	github.com/syndtr/goleveldb v1.0.1-0.20220721030215-126854af5e6d // indirect

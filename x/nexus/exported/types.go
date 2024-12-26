@@ -151,9 +151,14 @@ func (m Chain) Validate() error {
 func (m Chain) GetName() ChainName {
 	return m.Name
 }
-func (m Chain) GetFamily() ChainFamily {
-	parts := strings.Split(m.Name.String(), "|")
+
+func (name ChainName) GetFamily() ChainFamily {
+	parts := strings.Split(name.String(), "|")
 	return ChainFamily(parts[0])
+}
+
+func (m Chain) GetFamily() ChainFamily {
+	return m.Name.GetFamily()
 }
 
 // IsFrom returns true if the chain registered under the module

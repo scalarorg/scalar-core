@@ -10,7 +10,6 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 
 	"github.com/scalarorg/bitcoin-vault/go-utils/address"
-	chainUtils "github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/clog"
@@ -57,6 +56,9 @@ func (client *EthereumClient) decodeSourceTxConfirmationEvent(log *geth.Log) (*c
 	}
 
 	chainID := params[0].(string)
+	if !utils.ValidateChainID(chainID) {
+		return nil, fmt.Errorf("invalid chain id")
+	}
 
 	destinationChain := nexus.ChainName(chainID)
 
@@ -75,7 +77,7 @@ func (client *EthereumClient) decodeSourceTxConfirmationEvent(log *geth.Log) (*c
 
 	chainMetadata := chainParams.Params.Metadata
 
-	destinationRecipientAddress, err := decodeAddress(chainID, recipientChainIdentifier, chainMetadata)
+	destinationRecipientAddress, err := decodeAddress(destinationChain, recipientChainIdentifier, chainMetadata)
 	if err != nil {
 		return nil, fmt.Errorf("error decoding destination recipient address: %w", err)
 	}
@@ -96,15 +98,8 @@ func (client *EthereumClient) decodeSourceTxConfirmationEvent(log *geth.Log) (*c
 	return cfEvent, nil
 }
 
-func decodeAddress(chain string, identifier []byte, metadata map[string]string) (string, error) {
-	chainInfoBytes, err := utils.ChainInfoBytesFromString(chain)
-	if err != nil {
-		return "", fmt.Errorf("error decoding chain info bytes: %w", err)
-	}
-
-	chainType := chainInfoBytes.ChainType()
-
-	if chainType == chainUtils.ChainTypeBitcoin {
+func decodeAddress(chain nexus.ChainName, identifier []byte, metadata map[string]string) (string, error) {
+	if chainsTypes.IsBitcoinChain(chain) {
 		params := metadata["params"]
 		if params == "" {
 			return "", fmt.Errorf("params is required")
@@ -117,7 +112,7 @@ func decodeAddress(chain string, identifier []byte, metadata map[string]string) 
 		return addr.String(), nil
 	}
 
-	if chainType == chainUtils.ChainTypeEVM {
+	if chainsTypes.IsEvmChain(chain) {
 		address := common.BytesToAddress(identifier)
 		return address.String(), nil
 	}

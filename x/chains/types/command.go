@@ -11,6 +11,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
@@ -60,6 +61,7 @@ func NewApproveBridgeCallCommandGeneric(
 	ID string,
 ) Command {
 	commandID := NewCommandID([]byte(ID), chainID)
+	clog.Redf("[Chains] commandID: %+v", commandID.Hex())
 	return Command{
 		ID:         commandID,
 		Type:       COMMAND_TYPE_APPROVE_BRIDGE_CALL,

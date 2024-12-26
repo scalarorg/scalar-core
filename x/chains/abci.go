@@ -242,20 +242,28 @@ func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types
 
 func validateMessage(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, m types.MultisigKeeper, chain nexus.Chain, msg nexus.GeneralMessage) error {
 	// TODO refactor to do these checks earlier so we don't fail in the end blocker
-	_, ok := m.GetCurrentKeyID(ctx, chain.Name)
-	if !ok {
-		return fmt.Errorf("current key not set for chain %v", chain.Name)
+
+	if !utils.ValidateChainID(chain.Name.String()) {
+		return fmt.Errorf("invalid chain id")
 	}
 
 	if !n.IsChainActivated(ctx, chain) {
 		return fmt.Errorf("destination chain de-activated")
 	}
+
 	//Check gateway address is set for evm chain
-	if types.IsEvmChain(chain) {
+	if types.IsEvmChain(chain.Name) {
 		if _, ok := ck.GetGatewayAddress(ctx); !ok {
 			return fmt.Errorf("destination chain gateway for chain %v not deployed yet", chain.Name)
 		}
+
+		_, ok := m.GetCurrentKeyID(ctx, chain.Name)
+		if !ok {
+			return fmt.Errorf("current key not set for chain %v", chain.Name)
+		}
+
 	}
+
 	if !common.IsHexAddress(msg.GetDestinationAddress()) {
 		return fmt.Errorf("invalid contract address")
 	}
@@ -304,8 +312,9 @@ func handleMessageWithToken(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus
 func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID multisig.KeyID, msg nexus.GeneralMessage) {
 	cmd := types.NewApproveBridgeCallCommandGeneric(chainID, keyID, common.HexToAddress(msg.GetDestinationAddress()), common.BytesToHash(msg.PayloadHash), common.BytesToHash(msg.SourceTxID), msg.GetSourceChain(), msg.GetSourceAddress(), msg.SourceTxIndex, msg.ID)
 	funcs.MustNoErr(ck.EnqueueCommand(ctx, cmd))
-	clog.Redf("[Chains] msg: %+v", msg)
-	clog.Redf("[Chains] EnqueueCommand: %+v", cmd)
+
+	clog.Redf("[abci/chains] handleMessage: msg: %+v", msg)
+	clog.Redf("[abci/chains] handleMessage: EnqueueCommand: %+v", cmd)
 
 	destCallApproved := &types.DestCallApproved{
 		Chain:            msg.GetSourceChain(),
