@@ -268,9 +268,9 @@ Example:
 const nodeDirPerm = 0o755
 
 func readEnvKeys(index int) EnvKeys {
-	validatorMnemonic := os.Getenv(flagValidatorMnemonic + strconv.Itoa(index))
+	validatorMnemonic := getNonQuoteEnv(flagValidatorMnemonic + strconv.Itoa(index))
 	if validatorMnemonic == "" {
-		validatorMnemonic = os.Getenv(flagValidatorMnemonic)
+		validatorMnemonic = getNonQuoteEnv(flagValidatorMnemonic)
 	}
 	btcPubKey := os.Getenv(flagBtcPubkey + strconv.Itoa(index))
 	if btcPubKey == "" {
@@ -278,13 +278,25 @@ func readEnvKeys(index int) EnvKeys {
 	}
 	envKeys := EnvKeys{
 		ValidatorMnemonic:   validatorMnemonic,
-		BroadcasterMnemonic: os.Getenv(flagBroadcasterMnemonic),
-		GovernanceMnemonic:  os.Getenv(flagGovernanceMnemonic),
-		FaucetMnemonic:      os.Getenv(flagFaucetMnemonic),
+		BroadcasterMnemonic: getNonQuoteEnv(flagBroadcasterMnemonic),
+		GovernanceMnemonic:  getNonQuoteEnv(flagGovernanceMnemonic),
+		FaucetMnemonic:      getNonQuoteEnv(flagFaucetMnemonic),
 		BtcPubkey:           btcPubKey,
 	}
-	fmt.Printf("%+v", envKeys)
+	log.Debug().Any("EnvKeys", envKeys).Msg("Environment variables")
 	return envKeys
+}
+
+// Get environment variable then remove start and end quote '"'
+func getNonQuoteEnv(key string) string {
+	value := os.Getenv(key)
+	if value[0] == '"' {
+		value = value[1:]
+	}
+	if i := len(value) - 1; value[i] == '"' {
+		value = value[:i]
+	}
+	return value
 }
 
 // initTestnetFiles initializes testnet files for a testnet to be run in a separate process
@@ -299,7 +311,6 @@ func initTestnetFiles(
 	if args.chainID == "" {
 		args.chainID = fmt.Sprintf("scalar_%d-1", tmrand.Int63n(9999999999999)+1)
 	}
-	fmt.Printf("nodeConfig: %v\n", nodeConfig)
 	var (
 		validatorInfos []ValidatorInfo
 	)
@@ -423,18 +434,20 @@ func createKeyringAccountFromMnemonic(keybase keyring.Keyring,
 		algo,
 	)
 	if err != nil {
+		log.Error().Err(err).Str("Mnemonic", mnemonic).Str("bip44path", bip44Path).Msg("[createKeyringAccountFromMnemonic] NewAccount error")
 		info, err = keybase.Key(keyName)
+		if err != nil {
+			log.Error().Err(err).Msg("[createKeyringAccountFromMnemonic] Get existing key error")
+			return nil, nil, err
+		}
 	}
-	if err != nil {
-		return nil, nil, err
-	}
+
 	ko, err := keyring.MkAccKeyOutput(info)
 	if err != nil {
 		log.Error().Err(err).Msg("[createKeyringAccountFromMnemonic] MkAccKeyOutput")
 		return nil, nil, err
 	}
 	log.Debug().Str("keyName", keyName).Msgf("MkAccKeyOutput: %v", ko)
-	// log.Debug().Str("keyName", keyName).Str("address", info.GetAddress().String()).Msg("Keyring account created")
 	return info.GetPubKey(), info.GetAddress(), nil
 }
 func storeValidatorAddress(valAddress sdk.ValAddress, keyName string, nodeDir string) error {
@@ -549,7 +562,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		fmt.Sprintf("m/%d'/%d'/0'/0/0",
 			PurposeValidator, uint32(index)))
 	if err != nil {
-		log.Error().Err(err).Msg("[initValidatorConfig] Create faucet keyring account from mnemonic")
+		log.Error().Err(err).Msg("[initValidatorConfig] Create validator account from Mnemonic")
 		key, err := kb.Key(ValidatorKeyName)
 		if err != nil {
 			log.Error().Err(err).Msg("[initValidatorConfig] Get faucet keyring account")
