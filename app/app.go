@@ -765,8 +765,8 @@ func orderMigrations() []string {
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
-		protocolTypes.ModuleName,
 		covenantTypes.ModuleName,
+		protocolTypes.ModuleName,
 	}
 
 	// wasm module needs to be added in a specific order, so we cannot just append it at the end
@@ -784,7 +784,6 @@ func orderMigrations() []string {
 		tssTypes.ModuleName,
 		rewardTypes.ModuleName,
 		voteTypes.ModuleName,
-		// chainsTypes.ModuleName,
 		chainsTypes.ModuleName,
 		nexusTypes.ModuleName,
 		permissionTypes.ModuleName,
@@ -837,7 +836,6 @@ func orderBeginBlockers() []string {
 		permissionTypes.ModuleName,
 		multisigTypes.ModuleName,
 		tssTypes.ModuleName,
-		// chainsTypes.ModuleName,
 		chainsTypes.ModuleName,
 		snapTypes.ModuleName,
 		scalarnetTypes.ModuleName,
@@ -883,7 +881,6 @@ func orderEndBlockers() []string {
 	endBlockerOrder = append(endBlockerOrder,
 		multisigTypes.ModuleName,
 		tssTypes.ModuleName,
-		// chainsTypes.ModuleName,
 		chainsTypes.ModuleName,
 		nexusTypes.ModuleName,
 		rewardTypes.ModuleName,
@@ -965,7 +962,6 @@ func CreateStoreKeys() map[string]*sdk.KVStoreKey {
 		capabilitytypes.StoreKey,
 		feegrant.StoreKey,
 		voteTypes.StoreKey,
-		// chainsTypes.StoreKey,
 		chainsTypes.StoreKey,
 		snapTypes.StoreKey,
 		multisigTypes.StoreKey,

@@ -26,7 +26,8 @@ SCALAR_HOME_DIR ?= .scalar/scalar
 SCALAR_CHAIN_ID ?= scalar-testnet-1
 SCALAR_KEYRING_BACKEND ?= test
 LOCAL_LIB_PATH ?= $(shell pwd)/lib
-
+USER_ID ?= $(shell id -u)
+GROUP_ID ?= $(shell id -g)
 export CGO_LDFLAGS := ${CGO_LDFLAGS} -lbitcoin_vault_ffi  -L${LOCAL_LIB_PATH}
 
 $(info ⛳️ Makefile Environment Variables ⛳️)
@@ -137,6 +138,8 @@ docker-image:
 		--build-arg WASMVM_VERSION="${WASMVM_VERSION}" \
 		--build-arg IBC_WASM_HOOKS="${IBC_WASM_HOOKS}" \
 		--build-arg ARCH="${ARCH}" \
+		--build-arg USER_ID="${USER_ID}" \
+		--build-arg GROUP_ID="${GROUP_ID}" \
 		-t scalarorg/scalar-core .
 
 docker-run:
