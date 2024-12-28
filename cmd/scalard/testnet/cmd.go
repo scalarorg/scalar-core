@@ -51,7 +51,6 @@ const (
 
 var (
 	flagScalarMnemonic      = "SCALAR_MNEMONIC"
-	flagEvmContractAddress  = "PROTOCOL_EVM_CONTRACT_ADDRESS"
 	flagValidatorMnemonic   = "VALIDATOR_MNEMONIC"
 	flagBroadcasterMnemonic = "BROADCASTER_MNEMONIC"
 	flagGovernanceMnemonic  = "GOV_MNEMONIC"
@@ -333,9 +332,7 @@ func initTestnetFiles(
 		validatorInfos = append(validatorInfos, *validatorInfo)
 	}
 	scalarMnemonic := getNonQuoteEnv(flagScalarMnemonic)
-	scalarProtocol := ScalarProtocol{
-		EvmAddress: os.Getenv(flagEvmContractAddress),
-	}
+	scalarProtocol := ScalarProtocol{}
 	if scalarMnemonic != "" {
 		privKey, address, err := createScalarAccount(scalarMnemonic)
 		if err != nil {
