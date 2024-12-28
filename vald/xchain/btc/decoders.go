@@ -44,12 +44,6 @@ func (client *BtcClient) decodeSourceTxConfirmationEvent(tx *BTCTxReceipt) (*cha
 		return nil, ErrInvalidOpReturnData
 	}
 
-	txHash := tx.MsgTx.TxHash()
-	txBytes := txHash.CloneBytes()
-	txBytes = txBytes[:32]
-	var copiedTxHash [32]byte
-	copy(copiedTxHash[:], txBytes)
-
 	var stakingAmount int64 = tx.MsgTx.TxOut[StakingOutputIndex].Value
 
 	destinationChain := chain.NewChainInfoFromBytes(output.DestinationChain)
@@ -63,22 +57,22 @@ func (client *BtcClient) decodeSourceTxConfirmationEvent(tx *BTCTxReceipt) (*cha
 		return nil, err
 	}
 
+	payload, payloadHash, err := encode.SafeCalculateSourcePayloadHash(uint64(stakingAmount), tx.MsgTx.TxID(), output.DestinationRecipientAddress)
+	if err != nil {
+		return nil, ErrInvalidPayloadHash
+	}
+
 	var destinationRecipientAddress chainsTypes.Address
 	err = destinationRecipientAddress.Unmarshal(output.DestinationRecipientAddress)
 	if err != nil {
 		return nil, err
 	}
 
-	payload, payloadHash, err := encode.CalculateStakingPayloadHash(destinationRecipientAddress, uint64(stakingAmount), copiedTxHash)
-	if err != nil {
-		return nil, ErrInvalidPayloadHash
-	}
-
 	return &chainsTypes.SourceTxConfirmationEvent{
-		Sender:                      tx.PrevTxOuts[0].ScriptPubKey.Address, // TODO: Fix hard coded
+		Sender:                      tx.PrevTxOuts[0].ScriptPubKey.Address,
 		DestinationChain:            nexus.ChainName(destinationChain.ToBytes().String()),
 		Amount:                      uint64(stakingAmount),
-		Asset:                       "satoshi", // TODO: Fix hard coded
+		Asset:                       "satoshi",
 		PayloadHash:                 chainsTypes.Hash(payloadHash),
 		Payload:                     payload,
 		DestinationContractAddress:  chainsTypes.Address(destinationContractAddress).Hex(),
