@@ -47,6 +47,10 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfos []Token, custodia
 			ChainID:     sdk.NewInt(tokenInfo.ChainID),
 			NetworkKind: chainsTypes.Testnet,
 		}
+		supportedChain := protocoltypes.SupportedChain{
+			Params:  &params,
+			Address: tokenInfo.ProtocolAddress,
+		}
 		if strings.HasPrefix(tokenInfo.ID, "evm") {
 			token := chainsTypes.ERC20TokenMetadata{
 				Asset:   tokenInfo.Asset,
@@ -61,22 +65,15 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfos []Token, custodia
 					Capacity:  sdk.NewInt(tokenInfo.Capacity),
 				},
 			}
-			chains[i] = &protocoltypes.SupportedChain{
-				Params: &params,
-				Token: &protocoltypes.SupportedChain_Erc20{
-					Erc20: &token,
-				},
-				Address: scalarProtocol.EvmAddress,
+			supportedChain.Token = &protocoltypes.SupportedChain_Erc20{
+				Erc20: &token,
 			}
+			chains[i] = &supportedChain
 		} else if strings.HasPrefix(tokenInfo.ID, "bitcoin") {
-			token := btctypes.BtcToken{}
-			chains[i] = &protocoltypes.SupportedChain{
-				Params: &params,
-				Token: &protocoltypes.SupportedChain_Btc{
-					Btc: &token,
-				},
-				Address: scalarProtocol.EvmAddress,
+			supportedChain.Token = &protocoltypes.SupportedChain_Btc{
+				Btc: &btctypes.BtcToken{},
 			}
+			chains[i] = &supportedChain
 		}
 
 	}
@@ -93,39 +90,6 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfos []Token, custodia
 		CustodianGroup: &custodianGroup,
 		Chains:         chains,
 	}
-
-	// token := evmtypes.ERC20TokenMetadata{
-	// 	Asset:   "pBtc",
-	// 	ChainID: sdk.NewInt(1115511),
-	// 	//TokenAddress: evmtypes.Address(common.HexToAddress("0x25F23D37861210cdc3c694112cFa64bBca6D7143")),
-	// 	Status: evmtypes.Confirmed,
-	// 	Details: evmtypes.TokenDetails{
-	// 		TokenName: "pBtc",
-	// 		Symbol:    "pBtc",
-	// 		Decimals:  8,
-	// 		Capacity:  sdk.NewInt(100000000),
-	// 	},
-	// }
-
-	// params := chainsTypes.Params{
-	// 	Chain: "evm|11155111",
-	// }
-	// chain := protocoltypes.SupportedChain{
-	// 	Params: &params,
-	// 	Token: &protocoltypes.SupportedChain_Erc20{
-	// 		Erc20: &token,
-	// 	},
-	// 	Address: scalarProtocol.EvmAddress,
-	// }
-	// protocol := protocoltypes.Protocol{
-	// 	Pubkey:         scalarProtocol.ScalarPubKey.Bytes(),
-	// 	Address:        sdk.AccAddress(scalarProtocol.ScalarPubKey.Address()),
-	// 	Name:           protocoltypes.DefaultProtocolName,
-	// 	Tag:            "pools",
-	// 	Status:         protocoltypes.Activated,
-	// 	CustodianGroup: &custodianGroup,
-	// 	Chains:         []*protocoltypes.SupportedChain{&chain},
-	// }
 	return protocol
 }
 func GenerateGenesis(clientCtx client.Context,

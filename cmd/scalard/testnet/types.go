@@ -21,17 +21,17 @@ type GenesisState map[string]json.RawMessage
 type ScalarProtocol struct {
 	ScalarPubKey  cryptotypes.PubKey
 	ScalarBalance banktypes.Balance
-	EvmAddress    string
 }
 type Token struct {
-	ID           string `json:"id" mapstructure:"id"`
-	ChainID      int64  `json:"chain_id" mapstructure:"chain_id"`
-	Asset        string `json:"asset" mapstructure:"asset"`
-	Symbol       string `json:"symbol" mapstructure:"symbol"`
-	Name         string `json:"name" mapstructure:"name"`
-	Capacity     int64  `json:"capacity" mapstructure:"capacity"`
-	Decimals     uint8  `json:"decimals" mapstructure:"decimals"`
-	TokenAddress string `json:"token_address" mapstructure:"token_address"`
+	ID              string `json:"id" mapstructure:"id"`
+	ChainID         int64  `json:"chain_id" mapstructure:"chain_id"`
+	Asset           string `json:"asset" mapstructure:"asset"`
+	Symbol          string `json:"symbol" mapstructure:"symbol"`
+	Name            string `json:"name" mapstructure:"name"`
+	Capacity        int64  `json:"capacity" mapstructure:"capacity"`
+	Decimals        uint8  `json:"decimals" mapstructure:"decimals"`
+	TokenAddress    string `json:"token_address" mapstructure:"token_address"`
+	ProtocolAddress string `json:"protocol_address" mapstructure:"protocol_address"`
 }
 type ValidatorInfo struct {
 	Host        string
