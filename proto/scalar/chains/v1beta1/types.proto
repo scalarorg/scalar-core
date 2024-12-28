@@ -1,47 +1,38 @@
 syntax = "proto3";
 package scalar.chains.v1beta1;
 
+import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/protobuf/any.proto";
-import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
-
 option (gogoproto.goproto_getters_all) = false;
 
 enum NetworkKind {
   option (gogoproto.goproto_enum_prefix) = false;
   option (gogoproto.goproto_enum_stringer) = true;
 
-  NETWORK_KIND_MAINNET = 0 [ (gogoproto.enumvalue_customname) = "Mainnet" ];
-  NETWORK_KIND_TESTNET = 1 [ (gogoproto.enumvalue_customname) = "Testnet" ];
+  NETWORK_KIND_MAINNET = 0 [(gogoproto.enumvalue_customname) = "Mainnet"];
+  NETWORK_KIND_TESTNET = 1 [(gogoproto.enumvalue_customname) = "Testnet"];
 }
 
 enum BatchedCommandsStatus {
   option (gogoproto.goproto_enum_prefix) = false;
 
-  BATCHED_COMMANDS_STATUS_UNSPECIFIED = 0
-      [ (gogoproto.enumvalue_customname) = "BatchNonExistent" ];
-  BATCHED_COMMANDS_STATUS_SIGNING = 1
-      [ (gogoproto.enumvalue_customname) = "BatchSigning" ];
-  BATCHED_COMMANDS_STATUS_ABORTED = 2
-      [ (gogoproto.enumvalue_customname) = "BatchAborted" ];
-  BATCHED_COMMANDS_STATUS_SIGNED = 3
-      [ (gogoproto.enumvalue_customname) = "BatchSigned" ];
+  BATCHED_COMMANDS_STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "BatchNonExistent"];
+  BATCHED_COMMANDS_STATUS_SIGNING = 1 [(gogoproto.enumvalue_customname) = "BatchSigning"];
+  BATCHED_COMMANDS_STATUS_ABORTED = 2 [(gogoproto.enumvalue_customname) = "BatchAborted"];
+  BATCHED_COMMANDS_STATUS_SIGNED = 3 [(gogoproto.enumvalue_customname) = "BatchSigned"];
 }
 
 enum SourceTxStatus {
   option (gogoproto.goproto_enum_prefix) = true;
   option (gogoproto.goproto_enum_stringer) = true;
 
-  STAKING_TX_STATUS_UNSPECIFIED = 0
-      [ (gogoproto.enumvalue_customname) = "None" ];
-  STAKING_TX_STATUS_PENDING = 1
-      [ (gogoproto.enumvalue_customname) = "Pending" ];
-  STAKING_TX_STATUS_CONFIRMED = 2
-      [ (gogoproto.enumvalue_customname) = "Confirmed" ];
-  STAKING_TX_STATUS_COMPLETED = 3
-      [ (gogoproto.enumvalue_customname) = "Completed" ];
+  STAKING_TX_STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "None"];
+  STAKING_TX_STATUS_PENDING = 1 [(gogoproto.enumvalue_customname) = "Pending"];
+  STAKING_TX_STATUS_CONFIRMED = 2 [(gogoproto.enumvalue_customname) = "Confirmed"];
+  STAKING_TX_STATUS_COMPLETED = 3 [(gogoproto.enumvalue_customname) = "Completed"];
 }
 
 message SourceTx {
@@ -55,35 +46,30 @@ message SourceTx {
     (gogoproto.nullable) = false
   ];
   string asset = 3; // TODO: change to asset type: sats, runes, btc, etc
-  string destination_chain = 4
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  bytes destination_recipient_address = 5
-      [ (gogoproto.customtype) = "Address" ];
+  string destination_chain = 4 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  bytes destination_recipient_address = 5 [(gogoproto.customtype) = "Address"];
   uint64 log_index = 6;
 }
 
 message CommandBatchMetadata {
-  bytes id = 1 [ (gogoproto.customname) = "ID" ];
+  bytes id = 1 [(gogoproto.customname) = "ID"];
   repeated bytes command_ids = 2 [
     (gogoproto.nullable) = false,
     (gogoproto.customname) = "CommandIDs",
     (gogoproto.customtype) = "CommandID"
   ];
   bytes data = 3;
-  bytes sig_hash = 4
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+  bytes sig_hash = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "Hash"
+  ];
   BatchedCommandsStatus status = 5;
   string key_id = 6 [
     (gogoproto.customname) = "KeyID",
-    (gogoproto.casttype) =
-        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+    (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
-  bytes prev_batched_commands_id = 7
-      [ (gogoproto.customname) = "PrevBatchedCommandsID" ];
-  google.protobuf.Any signature = 8
-      [ (cosmos_proto.accepts_interface) =
-            "github.com/cosmos/codec/ProtoMarshaler" ];
+  bytes prev_batched_commands_id = 7 [(gogoproto.customname) = "PrevBatchedCommandsID"];
+  google.protobuf.Any signature = 8 [(cosmos_proto.accepts_interface) = "github.com/cosmos/codec/ProtoMarshaler"];
 }
 
 message Proof {
@@ -102,8 +88,7 @@ message Command {
   bytes params = 2;
   string key_id = 3 [
     (gogoproto.customname) = "KeyID",
-    (gogoproto.casttype) =
-        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+    (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
   uint32 max_gas_cost = 4;
   CommandType type = 5;
@@ -118,15 +103,12 @@ message PollMapping {
   uint64 poll_id = 2 [
     (gogoproto.nullable) = false,
     (gogoproto.customname) = "PollID",
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
   ];
 }
 
 message PollMetadata {
-  string chain = 1
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string chain = 1 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
   bytes tx_id = 2 [
     (gogoproto.customname) = "TxID",
     (gogoproto.nullable) = false,
@@ -140,13 +122,10 @@ message PollFailed {
     (gogoproto.customtype) = "Hash",
     (gogoproto.customname) = "TxID"
   ];
-  string chain = 2
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
     (gogoproto.nullable) = false
   ];
 }
@@ -157,13 +136,10 @@ message PollExpired {
     (gogoproto.customtype) = "Hash",
     (gogoproto.customname) = "TxID"
   ];
-  string chain = 2
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
     (gogoproto.nullable) = false
   ];
 }
@@ -174,13 +150,10 @@ message PollCompleted {
     (gogoproto.customtype) = "Hash",
     (gogoproto.customname) = "TxID"
   ];
-  string chain = 2
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
   uint64 poll_id = 3 [
     (gogoproto.customname) = "PollID",
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
     (gogoproto.nullable) = false
   ];
 }
@@ -189,19 +162,17 @@ message PollCompleted {
 // results to chains relay transaction types
 message SigMetadata {
   SigType type = 1;
-  string chain = 2
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  bytes command_batch_id = 3 [ (gogoproto.customname) = "CommandBatchID" ];
+  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  bytes command_batch_id = 3 [(gogoproto.customname) = "CommandBatchID"];
 }
 
 enum SigType {
   option (gogoproto.goproto_enum_prefix) = false;
   option (gogoproto.goproto_enum_stringer) = true;
 
-  SIG_TYPE_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "None" ];
-  SIG_TYPE_TX = 1 [ (gogoproto.enumvalue_customname) = "SigTx" ];
-  SIG_TYPE_COMMAND = 2 [ (gogoproto.enumvalue_customname) = "SigCommand" ];
+  SIG_TYPE_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "None"];
+  SIG_TYPE_TX = 1 [(gogoproto.enumvalue_customname) = "SigTx"];
+  SIG_TYPE_COMMAND = 2 [(gogoproto.enumvalue_customname) = "SigCommand"];
 }
 
 // TransferKey contains information for a transfer operatorship
@@ -215,8 +186,7 @@ message TransferKey {
   ];
   string next_key_id = 3 [
     (gogoproto.customname) = "NextKeyID",
-    (gogoproto.casttype) =
-        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+    (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
 }
 
@@ -224,24 +194,21 @@ enum DepositStatus {
   option (gogoproto.goproto_enum_prefix) = true;
   option (gogoproto.goproto_enum_stringer) = true;
 
-  DEPOSIT_STATUS_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "None" ];
-  DEPOSIT_STATUS_PENDING = 1 [ (gogoproto.enumvalue_customname) = "Pending" ];
-  DEPOSIT_STATUS_CONFIRMED = 2
-      [ (gogoproto.enumvalue_customname) = "Confirmed" ];
-  DEPOSIT_STATUS_BURNED = 3 [ (gogoproto.enumvalue_customname) = "Burned" ];
+  DEPOSIT_STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "None"];
+  DEPOSIT_STATUS_PENDING = 1 [(gogoproto.enumvalue_customname) = "Pending"];
+  DEPOSIT_STATUS_CONFIRMED = 2 [(gogoproto.enumvalue_customname) = "Confirmed"];
+  DEPOSIT_STATUS_BURNED = 3 [(gogoproto.enumvalue_customname) = "Burned"];
 }
 
 message Asset {
-  string chain = 1
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string chain = 1 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
   string name = 2;
 }
 
 message TokenDetails {
   string token_name = 1;
   string symbol = 2;
-  uint32 decimals = 3 [ (gogoproto.casttype) = "uint8" ];
+  uint32 decimals = 3 [(gogoproto.casttype) = "uint8"];
   bytes capacity = 4 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
@@ -251,22 +218,28 @@ message TokenDetails {
 message Gateway {
   reserved 2; // status was removed in v0.27
 
-  bytes address = 1
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
+  bytes address = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "Address"
+  ];
 }
 
 message BurnerInfo {
-  bytes burner_address = 1
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
-  bytes token_address = 2
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
-  string destination_chain = 3
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  bytes burner_address = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "Address"
+  ];
+  bytes token_address = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "Address"
+  ];
+  string destination_chain = 3 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
   string symbol = 4;
   string asset = 5;
-  bytes salt = 6
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+  bytes salt = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "Hash"
+  ];
 }
 
 enum Status {
@@ -275,10 +248,10 @@ enum Status {
 
   // these enum values are used for bitwise operations, therefore they need to
   // be powers of 2
-  STATUS_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "NonExistent" ];
-  STATUS_INITIALIZED = 1 [ (gogoproto.enumvalue_customname) = "Initialized" ];
-  STATUS_PENDING = 2 [ (gogoproto.enumvalue_customname) = "Pending" ];
-  STATUS_CONFIRMED = 4 [ (gogoproto.enumvalue_customname) = "Confirmed" ];
+  STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "NonExistent"];
+  STATUS_INITIALIZED = 1 [(gogoproto.enumvalue_customname) = "Initialized"];
+  STATUS_PENDING = 2 [(gogoproto.enumvalue_customname) = "Pending"];
+  STATUS_CONFIRMED = 4 [(gogoproto.enumvalue_customname) = "Confirmed"];
 }
 
 enum CommandType {
@@ -292,7 +265,4 @@ enum CommandType {
   COMMAND_TYPE_TRANSFER_OPERATORSHIP = 4;
   COMMAND_TYPE_APPROVE_CONTRACT_CALL_WITH_MINT = 5;
   COMMAND_TYPE_APPROVE_CONTRACT_CALL = 6;
-
-  // For chains
-  COMMAND_TYPE_APPROVE_BRIDGE_CALL = 7;
 }

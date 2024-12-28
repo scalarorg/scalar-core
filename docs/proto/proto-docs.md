@@ -1190,7 +1190,6 @@ TransferKey contains information for a transfer operatorship
 | COMMAND_TYPE_TRANSFER_OPERATORSHIP | 4 |  |
 | COMMAND_TYPE_APPROVE_CONTRACT_CALL_WITH_MINT | 5 |  |
 | COMMAND_TYPE_APPROVE_CONTRACT_CALL | 6 |  |
-| COMMAND_TYPE_APPROVE_BRIDGE_CALL | 7 | For chains |
 
 
 
