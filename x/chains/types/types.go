@@ -24,13 +24,11 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
-	proto "github.com/gogo/protobuf/proto"
 	utils "github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
-	"github.com/stoewer/go-strcase"
 	"golang.org/x/exp/maps"
 )
 
@@ -255,10 +253,6 @@ func (nk *NetworkKind) FromString(s string) error {
 
 func (nk *NetworkKind) UnmarshalText(text []byte) error {
 	return nk.FromString(string(text))
-}
-
-func (c CommandType) String() string {
-	return strcase.LowerCamelCase(strings.TrimPrefix(proto.EnumName(CommandType_name, int32(c)), "COMMAND_TYPE_"))
 }
 
 // CommandBatch represents a batch of commands

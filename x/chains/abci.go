@@ -310,7 +310,7 @@ func handleMessageWithToken(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus
 }
 
 func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID multisig.KeyID, msg nexus.GeneralMessage) {
-	cmd := types.NewApproveBridgeCallCommandGeneric(chainID, keyID, common.HexToAddress(msg.GetDestinationAddress()), common.BytesToHash(msg.PayloadHash), common.BytesToHash(msg.SourceTxID), msg.GetSourceChain(), msg.GetSourceAddress(), msg.SourceTxIndex, msg.ID)
+	cmd := types.NewApproveContractCallCommandGeneric(chainID, keyID, common.HexToAddress(msg.GetDestinationAddress()), common.BytesToHash(msg.PayloadHash), common.BytesToHash(msg.SourceTxID), msg.GetSourceChain(), msg.GetSourceAddress(), msg.SourceTxIndex, msg.ID)
 	funcs.MustNoErr(ck.EnqueueCommand(ctx, cmd))
 
 	clog.Redf("[abci/chains] handleMessage: msg: %+v", msg)
@@ -326,7 +326,7 @@ func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID
 		PayloadHash:      types.Hash(common.BytesToHash(msg.PayloadHash)),
 	}
 
-	clog.Redf("[Chains] destCallApproved: %+v", destCallApproved)
+	clog.Bluef("[Chains] DestCallApproved: %+v", destCallApproved)
 
 	events.Emit(ctx, destCallApproved)
 
