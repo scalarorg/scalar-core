@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// go test -v -run TestFaucet ./client/rpc/evm/faucet_test.go
+// go test -timeout 10m -run ^TestFaucet$ github.com/scalarorg/scalar-core/client/rpc/evm -v -count=1
 func TestFaucet(t *testing.T) {
 	ctx := context.Background()
 	// Prepare the input parameters

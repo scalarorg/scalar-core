@@ -57,7 +57,7 @@ func (client *BtcClient) decodeSourceTxConfirmationEvent(tx *BTCTxReceipt) (*cha
 		return nil, err
 	}
 
-	payload, payloadHash, err := encode.SafeCalculateSourcePayloadHash(uint64(stakingAmount), tx.MsgTx.TxID(), output.DestinationRecipientAddress)
+	payload, payloadHash, err := encode.SafeCalculateDestPayload(uint64(stakingAmount), tx.MsgTx.TxID(), output.DestinationRecipientAddress)
 	if err != nil {
 		return nil, ErrInvalidPayloadHash
 	}
