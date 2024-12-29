@@ -7,3 +7,6 @@ bin
 .env
 .runtime
 lib
+
+scalard
+*.txt

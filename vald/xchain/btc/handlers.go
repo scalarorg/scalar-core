@@ -30,8 +30,8 @@ func (client *BtcClient) GetTxReceiptsIfFinalized(txIDs []common.Hash, confHeigh
 			btcReceipt := receipt.(BTCTxReceipt)
 			isFinalized, err := client.isFinalized(btcReceipt.Raw, confHeight)
 			if err != nil {
-				return results.FromErr[common.TxReceipt](sdkerrors.Wrapf(errors.With(err, "tx_id", btcReceipt.Raw.Txid),
-					"cannot determine if the transaction %s is finalized", btcReceipt.Raw.Txid),
+				return results.FromErr[common.TxReceipt](sdkerrors.Wrapf(errors.With(err, "tx_id", btcReceipt.Raw.TxID),
+					"cannot determine if the transaction %s is finalized", btcReceipt.Raw.TxID),
 				)
 			}
 
@@ -39,7 +39,8 @@ func (client *BtcClient) GetTxReceiptsIfFinalized(txIDs []common.Hash, confHeigh
 				return results.FromErr[common.TxReceipt](common.ErrNotFinalized)
 			}
 
-			if btcReceipt.Raw.Confirmations <= confHeight {
+			if btcReceipt.Raw.Confirmations < int64(confHeight) {
+				clog.Redf("[BTC] tx_id: %s, conf_height: %d, confirmations: %d", btcReceipt.Raw.TxID, confHeight, btcReceipt.Raw.Confirmations)
 				return results.FromErr[common.TxReceipt](common.ErrTxFailed)
 			}
 
@@ -78,12 +79,12 @@ func (c *BtcClient) GetTransaction(txID common.Hash) (BTCTxResult, error) {
 
 	// convert to string first to avoid the issue of reversed txid
 	chainHash := common.HashToChainHash(txID)
-	txMetadata, err := c.client.GetRawTransactionVerbose(&chainHash)
+	txResult, err := c.client.GetTransaction(&chainHash)
 	if err != nil {
 		clog.Cyanf("Failed to get BTC transaction %s: %+v", txID, err)
 		return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
 	} else {
-		txRaw, err := hex.DecodeString(txMetadata.Hex)
+		txRaw, err := hex.DecodeString(txResult.Hex)
 		if err != nil {
 			c.logger("failed to decode hex string", "txID", txID, "error", err)
 			return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
@@ -105,7 +106,7 @@ func (c *BtcClient) GetTransaction(txID common.Hash) (BTCTxResult, error) {
 			return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
 		}
 
-		tx.Raw = *txMetadata
+		tx.Raw = txResult
 		tx.PrevTxOuts = prevTxOuts
 		tx.MsgTx = msgTx
 	}
