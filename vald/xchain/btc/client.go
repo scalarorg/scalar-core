@@ -20,7 +20,7 @@ type BtcClient struct {
 	latestFinalizedBlockCache common.LatestFinalizedBlockCache
 }
 type BTCTxReceipt struct {
-	Raw        btcjson.TxRawResult
+	Raw        *btcjson.GetTransactionResult
 	PrevTxOuts []*btcjson.Vout
 	MsgTx      *wire.MsgTx
 }

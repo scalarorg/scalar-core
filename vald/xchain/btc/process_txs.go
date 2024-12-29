@@ -25,6 +25,9 @@ func (client *BtcClient) ProcessSourceTxsConfirmation(event *types.EventConfirmS
 			clog.Redf("broadcasting empty vote for poll %s: %s", pollID.String(), txReceipt.Err().Error())
 		} else {
 			events := client.processSrcTxReceipt(event, txReceipt.Ok().(BTCTxReceipt))
+			if len(events) == 0 {
+				continue
+			}
 			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, types.NewVoteEvents(event.Chain, events...)))
 			clog.Redf("broadcasting vote %v for poll %s", events, pollID.String())
 		}
@@ -39,16 +42,22 @@ func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsS
 
 	btcEvent, err := client.decodeSourceTxConfirmationEvent(&receipt)
 	if err != nil {
-		client.logger().Debug(sdkerrors.Wrap(err, "decode event ContractCall failed").Error())
+		client.logger().Error(sdkerrors.Wrap(err, "decode event ContractCall failed").Error())
+		return nil
 	}
+
+	clog.Greenf("[BTC] btcEvent: %+v\n", btcEvent)
 
 	if err := btcEvent.ValidateBasic(); err != nil {
-		client.logger().Debug(sdkerrors.Wrap(err, "invalid event ContractCall").Error())
+		client.logger().Error(sdkerrors.Wrap(err, "invalid event ContractCall").Error())
+		return nil
 	}
 
-	txID, err := types.HashFromHex(receipt.Raw.Txid)
+	// Note: TxID is the reversed-order hash of the txid aka RPC TxID, aka Mempool TxID
+	txID, err := types.HashFromHex(receipt.Raw.TxID)
 	if err != nil {
-		client.logger().Debug(sdkerrors.Wrap(err, "invalid tx id").Error())
+		client.logger().Error(sdkerrors.Wrap(err, "invalid tx id").Error())
+		return nil
 	}
 
 	events = append(events, types.Event{
@@ -57,8 +66,10 @@ func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsS
 		Event: &types.Event_SourceTxConfirmationEvent{
 			SourceTxConfirmationEvent: btcEvent,
 		},
-		Index: 0, // TODO: fix this hardcoded index, this is used to identify the staking tx in the event
+		Index: uint64(receipt.Raw.BlockIndex),
 	})
+
+	clog.Bluef("[BTC] SourceTxConfirmationEvent: %+v\n", events)
 
 	return events
 }

@@ -13,7 +13,7 @@ func (c *BtcClient) logger(keyvals ...any) log.Logger {
 	return log.WithKeyVals(keyvals...)
 }
 
-func (client *BtcClient) isFinalized(txReceipt btcjson.TxRawResult, confHeight uint64) (bool, error) {
+func (client *BtcClient) isFinalized(txReceipt *btcjson.GetTransactionResult, confHeight uint64) (bool, error) {
 	blockHeightCache := client.blockHeightCache.Get(txReceipt.BlockHash)
 	if blockHeightCache == nil {
 		blockHeight, err := client.GetBlockHeight(txReceipt.BlockHash)

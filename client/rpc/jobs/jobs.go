@@ -2,7 +2,6 @@ package jobs
 
 import (
 	"context"
-	"fmt"
 	"reflect"
 
 	"github.com/gogo/protobuf/proto"
@@ -51,8 +50,6 @@ func RunJob[T proto.Message](job *EventJob, ctx context.Context, handler func(T)
 			eventType := reflect.TypeOf(event).Elem()
 
 			newEvent := reflect.New(eventType).Interface().(T)
-
-			fmt.Println(resultEvent.Events)
 
 			err := cosmos.ParseEvent(resultEvent.Events, newEvent)
 			if err != nil {
