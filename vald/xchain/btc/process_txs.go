@@ -5,13 +5,13 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/slices"
-	"github.com/scalarorg/scalar-core/vald/xchain"
+	xcommon "github.com/scalarorg/scalar-core/vald/xchain/common"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
 
 func (client *BtcClient) ProcessSourceTxsConfirmation(event *types.EventConfirmSourceTxsStarted, proxy sdk.AccAddress) ([]sdk.Msg, error) {
-	txIDs := slices.Map(event.PollMappings, func(m types.PollMapping) xchain.Hash { return m.TxID })
+	txIDs := slices.Map(event.PollMappings, func(m types.PollMapping) xcommon.Hash { return xcommon.Hash(m.TxID) })
 	txReceipts, _ := client.GetTxReceiptsIfFinalized(txIDs, event.ConfirmationHeight)
 
 	clog.Redf("[BTC] txReceipts: %+v", txReceipts)

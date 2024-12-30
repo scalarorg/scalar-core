@@ -1,10 +1,12 @@
-package xchain
+package common
 
 import (
 	"encoding/hex"
 
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/scalarorg/scalar-core/utils/monads/results"
 	btcTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
@@ -13,7 +15,7 @@ type TxReceipt interface{}
 
 type TxResult = results.Result[TxReceipt]
 
-type Hash = [32]byte
+type Hash = common.Hash
 
 func HashToString(h Hash) string {
 	return hex.EncodeToString(h[:])
@@ -26,6 +28,10 @@ func HashToChainHash(h Hash) chainhash.Hash {
 	}
 	return chainhash.Hash(reversedTxID)
 }
+
+// TxReceiptResult is a custom type that allows moq to correctly generate the mock for
+// results.TxReceiptResult with *types.Receipt.
+type TxReceiptResult results.Result[types.Receipt]
 
 type Client interface {
 	ProcessSourceTxsConfirmation(event *btcTypes.EventConfirmSourceTxsStarted, proxy sdk.AccAddress) ([]sdk.Msg, error)

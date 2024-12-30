@@ -1,4 +1,4 @@
-package xchain
+package common
 
 import (
 	"sync"
