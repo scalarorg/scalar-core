@@ -1,0 +1,19 @@
+syntax = "proto3";
+package scalar.covenant.exported.v1beta1;
+
+option go_package = "github.com/scalarorg/scalar-core/x/covenant/exported";
+
+import "gogoproto/gogo.proto";
+
+option (gogoproto.goproto_getters_all) = false;
+
+enum PsbtState {
+  option (gogoproto.goproto_enum_prefix) = false;
+  option (gogoproto.goproto_enum_stringer) = true;
+
+  PSBT_STATE_UNSPECIFIED = 0
+      [ (gogoproto.enumvalue_customname) = "NonExistent" ];
+  PSBT_STATE_CREATING = 1 [ (gogoproto.enumvalue_customname) = "Creating" ];
+  PSBT_STATE_SIGNING = 2 [ (gogoproto.enumvalue_customname) = "Signing" ];
+  PSBT_STATE_COMPLETED = 3 [ (gogoproto.enumvalue_customname) = "Completed" ];
+}

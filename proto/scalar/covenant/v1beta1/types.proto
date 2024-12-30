@@ -1,13 +1,16 @@
 syntax = "proto3";
 package scalar.covenant.v1beta1;
 
-import "gogoproto/gogo.proto";
-
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
+
+import "google/protobuf/any.proto";
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+import "scalar/covenant/exported/v1beta1/types.proto";
 
 // Custodian represents an individual custodian configuration
 message Custodian {
-  string name = 1; // e.g., "Custodian1"
+  string name = 1;      // e.g., "Custodian1"
   bytes btc_pubkey = 2; // e.g.,
   // "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
   Status status = 3; // Whether the custodian is active
@@ -15,10 +18,11 @@ message Custodian {
 }
 
 // CustodianGroup represents a group of custodians with their configuration
-// uid is used as identity of the group, btc_pubkey is change by list of custodians
+// uid is used as identity of the group, btc_pubkey is change by list of
+// custodians
 message CustodianGroup {
   string uid = 1;
-  string name = 2; // e.g., "All"
+  string name = 2;       // e.g., "All"
   string btc_pubkey = 3; // e.g.,
   // "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
   uint32 quorum = 4; // quorum threshold  e.g.,3
@@ -30,7 +34,29 @@ message CustodianGroup {
 enum Status {
   option (gogoproto.goproto_enum_prefix) = false;
 
-  STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Unspecified"];
-  STATUS_ACTIVATED = 1 [(gogoproto.enumvalue_customname) = "Activated"];
-  STATUS_DEACTIVATED = 2 [(gogoproto.enumvalue_customname) = "Deactivated"];
+  STATUS_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Unspecified" ];
+  STATUS_ACTIVATED = 1 [ (gogoproto.enumvalue_customname) = "Activated" ];
+  STATUS_DEACTIVATED = 2 [ (gogoproto.enumvalue_customname) = "Deactivated" ];
+}
+
+message PsbtSigs {
+  option (gogoproto.stable_marshaler) = true;
+  bytes psbt = 1;
+  map<string, bytes> tap_script_sigs = 2
+      [ (gogoproto.castvalue) = "TapScriptSig" ];
+}
+
+message SigningSession {
+  option (gogoproto.stable_marshaler) = true;
+
+  uint64 id = 1 [ (gogoproto.customname) = "ID" ];
+  PsbtSigs psbt_sigs = 2 [ (gogoproto.nullable) = false ];
+  exported.v1beta1.PsbtState state = 3;
+  int64 expires_at = 4;
+  int64 completed_at = 5;
+  int64 grace_period = 6;
+  string module = 7;
+  google.protobuf.Any module_metadata = 8
+      [ (cosmos_proto.accepts_interface) =
+            "github.com/cosmos/codec/ProtoMarshaler" ];
 }

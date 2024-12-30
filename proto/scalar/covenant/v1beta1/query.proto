@@ -3,6 +3,7 @@ package scalar.covenant.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "scalar/covenant/v1beta1/types.proto";
+import "scalar/covenant/v1beta1/params.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
@@ -12,9 +13,7 @@ message CustodiansRequest {
   Status status = 3;
 }
 
-message CustodiansResponse {
-  repeated Custodian custodians = 1;
-}
+message CustodiansResponse { repeated Custodian custodians = 1; }
 
 message CustodianGroupsRequest {
   string uid = 1;
@@ -24,6 +23,9 @@ message CustodianGroupsRequest {
   Status status = 5;
 }
 
-message CustodianGroupsResponse {
-  repeated CustodianGroup groups = 1;
-}
+message CustodianGroupsResponse { repeated CustodianGroup groups = 1; }
+
+// ParamsRequest represents a message that queries the params
+message ParamsRequest {}
+
+message ParamsResponse { Params params = 1 [ (gogoproto.nullable) = false ]; }

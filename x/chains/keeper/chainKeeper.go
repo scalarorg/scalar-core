@@ -15,6 +15,7 @@ import (
 	chainsTypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/key"
@@ -680,6 +681,18 @@ func (k chainKeeper) CreateNewBatchToSign(ctx sdk.Context) (types.CommandBatch, 
 	gasLimit := k.getCommandsGasLimit(ctx)
 	gasCost := firstCmd.MaxGasCost
 	keyID := firstCmd.KeyID
+
+	clog.Yellowf("[keeper] [CreateNewBatchToSign] firstCmd: %+v", firstCmd)
+	clog.Yellowf("[keeper] [CreateNewBatchToSign] firstCmd.ID: %+x", firstCmd.ID)
+	clog.Yellowf("[keeper] [CreateNewBatchToSign] firstCmd.Params: %+x", firstCmd.Params)
+	clog.Yellowf("[keeper] [CreateNewBatchToSign] firstCmd.KeyID: %+v", firstCmd.KeyID)
+	clog.Yellowf("[keeper] [CreateNewBatchToSign] firstCmd.MaxGasCost: %+v", firstCmd.MaxGasCost)
+	clog.Yellowf("[keeper] [CreateNewBatchToSign] firstCmd.Type: %+v", firstCmd.Type)
+	clog.Yellowf("[keeper] [CreateNewBatchToSign] chainID: %+v", chainID)
+	clog.Yellowf("[keeper] [CreateNewBatchToSign] gasLimit: %+v", gasLimit)
+	clog.Yellowf("[keeper] [CreateNewBatchToSign] gasCost: %+v", gasCost)
+	clog.Yellowf("[keeper] [CreateNewBatchToSign] keyID: %+v", keyID)
+
 	filter := func(value codec.ProtoMarshaler) bool {
 		cmd, ok := value.(*types.Command)
 		gasCost += cmd.MaxGasCost

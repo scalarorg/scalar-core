@@ -35,7 +35,8 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	chainsTxCmd.AddCommand(
-		getCmdCreateConfirmSourceTxs(),
+		GetCmdCreateConfirmSourceTxs(),
+		GetCmdSignBtcCommands(),
 		GetCmdSetGateway(),
 		GetCmdLink(),
 		GetCmdConfirmERC20TokenDeployment(),
@@ -51,7 +52,7 @@ func GetTxCmd() *cobra.Command {
 	return chainsTxCmd
 }
 
-func getCmdCreateConfirmSourceTxs() *cobra.Command {
+func GetCmdCreateConfirmSourceTxs() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "confirm-source-txs <chain> <txID>...",
 		Short: "Confirm source transactions in a chain",
@@ -366,6 +367,27 @@ func GetCmdAddChain() *cobra.Command {
 			}
 
 			msg := types.NewAddChainRequest(cliCtx.GetFromAddress(), name, chainConf.Params)
+
+			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
+		},
+	}
+	flags.AddTxFlagsToCmd(cmd)
+	return cmd
+}
+
+// GetCmdSignBtcCommands returns the cli command to sign pending commands for a BTC chain contract
+func GetCmdSignBtcCommands() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "sign-btc-commands [chain]",
+		Short: "Sign pending commands for a BTC chain contract",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cliCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			msg := types.NewSignBTCCommandsRequest(cliCtx.GetFromAddress(), args[0])
 
 			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
 		},
