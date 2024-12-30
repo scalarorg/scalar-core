@@ -211,6 +211,21 @@ message SignCommandsResponse {
   uint32 command_count = 2;
 }
 
+message SignBTCCommandsRequest {
+  option (permission.exported.v1beta1.permission_role) = ROLE_UNRESTRICTED;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+}
+
+message SignBTCCommandsResponse {
+  bytes batched_commands_id = 1
+      [ (gogoproto.customname) = "BatchedCommandsID" ];
+  uint32 command_count = 2;
+}
+
 message AddChainRequest {
   option (permission.exported.v1beta1.permission_role) = ROLE_ACCESS_CONTROL;
   bytes sender = 1 [ (gogoproto.casttype) =

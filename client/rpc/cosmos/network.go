@@ -181,6 +181,19 @@ func (c *NetworkClient) SignCommandsRequest(ctx context.Context, destinationChai
 	}
 	return txRes, nil
 }
+
+func (c *NetworkClient) SignBTCCommandsRequest(ctx context.Context, destinationChain string) (*sdk.TxResponse, error) {
+	req := chainsTypes.NewSignBTCCommandsRequest(
+		c.GetAddress(),
+		destinationChain)
+
+	txRes, err := c.SignAndBroadcastMsgs(ctx, req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to sign commands request: %w", err)
+	}
+	return txRes, nil
+}
+
 func (c *NetworkClient) SendRouteMessageRequest(ctx context.Context, id string, payload string) (*sdk.TxResponse, error) {
 	payloadBytes := []byte(payload)
 	req := scalarnetTypes.NewRouteMessage(

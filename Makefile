@@ -231,7 +231,7 @@ prereqs:
 ######
 # Usage: SCALAR_HOME_DIR=.scalar/node1/scalard make cfst WALLET=node1 ARGS="bitcoin-testnet4 07b50c84f889e2f1315da875fc91734e2bac8d0153ff9a98d9da14caa4fc7d57"
 ######
-.PHONY: cfs
+.PHONY: cfs cfs2 cfs3 cfd2 cfd3 cfd4
 cfs:
 	@if [ -z "$(ARGS)" ]; then \
 		echo "ARGS is required"; \
@@ -247,6 +247,17 @@ cfs3:
 
 cfd2:
 	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" cabc3140a564038f9f76e9d692309ea8d5be7d5a8a2133b97bf0579a73cfbb37 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+
+	
+cfd3:
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" be6668d3c6c00fde1e9e089fc37b837dc5d908afd9f3bf79ab3af66322170ef5 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+
+cfd4:
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" a799b1e5c5a53142d31faeb663c18909fa1c7e748080ade0db960ca608005251 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+
+.PHONY: sign-btc
+sign-btc:
+	$(SCALAR_BIN_PATH) tx chains sign-btc-commands "bitcoin|4" --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
 
 .PHONY: params
 params:

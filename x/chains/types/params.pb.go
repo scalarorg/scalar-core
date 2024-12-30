@@ -160,6 +160,13 @@ func (m *Params) GetTransferLimit() uint64 {
 	return 0
 }
 
+func (m *Params) GetProcessingTxsWindowSize() uint64 {
+	if m != nil {
+		return m.ProcessingTxsWindowSize
+	}
+	return 0
+}
+
 func (m *Params) GetMetadata() map[string]string {
 	if m != nil {
 		return m.Metadata
@@ -259,6 +266,11 @@ func (m *Params) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			i--
 			dAtA[i] = 0x72
 		}
+	}
+	if m.ProcessingTxsWindowSize != 0 {
+		i = encodeVarintParams(dAtA, i, uint64(m.ProcessingTxsWindowSize))
+		i--
+		dAtA[i] = 0x60
 	}
 	if m.TransferLimit != 0 {
 		i = encodeVarintParams(dAtA, i, uint64(m.TransferLimit))
@@ -400,6 +412,9 @@ func (m *Params) Size() (n int) {
 	}
 	if m.TransferLimit != 0 {
 		n += 1 + sovParams(uint64(m.TransferLimit))
+	}
+	if m.ProcessingTxsWindowSize != 0 {
+		n += 1 + sovParams(uint64(m.ProcessingTxsWindowSize))
 	}
 	if len(m.Metadata) > 0 {
 		for k, v := range m.Metadata {

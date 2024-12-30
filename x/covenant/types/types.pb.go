@@ -5,8 +5,12 @@ package types
 
 import (
 	fmt "fmt"
+	types "github.com/cosmos/cosmos-sdk/codec/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
+	github_com_gogo_protobuf_sortkeys "github.com/gogo/protobuf/sortkeys"
+	_ "github.com/regen-network/cosmos-proto"
+	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -122,7 +126,8 @@ func (m *Custodian) GetDescription() string {
 }
 
 // CustodianGroup represents a group of custodians with their configuration
-// uid is used as identity of the group, btc_pubkey is change by list of custodians
+// uid is used as identity of the group, btc_pubkey is change by list of
+// custodians
 type CustodianGroup struct {
 	Uid       string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
 	Name      string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
@@ -216,10 +221,157 @@ func (m *CustodianGroup) GetCustodians() []*Custodian {
 	return nil
 }
 
+type PsbtSigs struct {
+	Psbt          []byte                  `protobuf:"bytes,1,opt,name=psbt,proto3" json:"psbt,omitempty"`
+	TapScriptSigs map[string]TapScriptSig `protobuf:"bytes,2,rep,name=tap_script_sigs,json=tapScriptSigs,proto3,castvalue=TapScriptSig" json:"tap_script_sigs,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+}
+
+func (m *PsbtSigs) Reset()         { *m = PsbtSigs{} }
+func (m *PsbtSigs) String() string { return proto.CompactTextString(m) }
+func (*PsbtSigs) ProtoMessage()    {}
+func (*PsbtSigs) Descriptor() ([]byte, []int) {
+	return fileDescriptor_404fd62bcdc2fd38, []int{2}
+}
+func (m *PsbtSigs) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *PsbtSigs) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	b = b[:cap(b)]
+	n, err := m.MarshalToSizedBuffer(b)
+	if err != nil {
+		return nil, err
+	}
+	return b[:n], nil
+}
+func (m *PsbtSigs) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PsbtSigs.Merge(m, src)
+}
+func (m *PsbtSigs) XXX_Size() int {
+	return m.Size()
+}
+func (m *PsbtSigs) XXX_DiscardUnknown() {
+	xxx_messageInfo_PsbtSigs.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PsbtSigs proto.InternalMessageInfo
+
+func (m *PsbtSigs) GetPsbt() []byte {
+	if m != nil {
+		return m.Psbt
+	}
+	return nil
+}
+
+func (m *PsbtSigs) GetTapScriptSigs() map[string]TapScriptSig {
+	if m != nil {
+		return m.TapScriptSigs
+	}
+	return nil
+}
+
+type SigningSession struct {
+	ID             uint64             `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	PsbtSigs       PsbtSigs           `protobuf:"bytes,2,opt,name=psbt_sigs,json=psbtSigs,proto3" json:"psbt_sigs"`
+	State          exported.PsbtState `protobuf:"varint,3,opt,name=state,proto3,enum=scalar.covenant.exported.v1beta1.PsbtState" json:"state,omitempty"`
+	ExpiresAt      int64              `protobuf:"varint,4,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
+	CompletedAt    int64              `protobuf:"varint,5,opt,name=completed_at,json=completedAt,proto3" json:"completed_at,omitempty"`
+	GracePeriod    int64              `protobuf:"varint,6,opt,name=grace_period,json=gracePeriod,proto3" json:"grace_period,omitempty"`
+	Module         string             `protobuf:"bytes,7,opt,name=module,proto3" json:"module,omitempty"`
+	ModuleMetadata *types.Any         `protobuf:"bytes,8,opt,name=module_metadata,json=moduleMetadata,proto3" json:"module_metadata,omitempty"`
+}
+
+func (m *SigningSession) Reset()         { *m = SigningSession{} }
+func (m *SigningSession) String() string { return proto.CompactTextString(m) }
+func (*SigningSession) ProtoMessage()    {}
+func (*SigningSession) Descriptor() ([]byte, []int) {
+	return fileDescriptor_404fd62bcdc2fd38, []int{3}
+}
+func (m *SigningSession) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *SigningSession) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	b = b[:cap(b)]
+	n, err := m.MarshalToSizedBuffer(b)
+	if err != nil {
+		return nil, err
+	}
+	return b[:n], nil
+}
+func (m *SigningSession) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SigningSession.Merge(m, src)
+}
+func (m *SigningSession) XXX_Size() int {
+	return m.Size()
+}
+func (m *SigningSession) XXX_DiscardUnknown() {
+	xxx_messageInfo_SigningSession.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SigningSession proto.InternalMessageInfo
+
+func (m *SigningSession) GetID() uint64 {
+	if m != nil {
+		return m.ID
+	}
+	return 0
+}
+
+func (m *SigningSession) GetPsbtSigs() PsbtSigs {
+	if m != nil {
+		return m.PsbtSigs
+	}
+	return PsbtSigs{}
+}
+
+func (m *SigningSession) GetState() exported.PsbtState {
+	if m != nil {
+		return m.State
+	}
+	return exported.NonExistent
+}
+
+func (m *SigningSession) GetExpiresAt() int64 {
+	if m != nil {
+		return m.ExpiresAt
+	}
+	return 0
+}
+
+func (m *SigningSession) GetCompletedAt() int64 {
+	if m != nil {
+		return m.CompletedAt
+	}
+	return 0
+}
+
+func (m *SigningSession) GetGracePeriod() int64 {
+	if m != nil {
+		return m.GracePeriod
+	}
+	return 0
+}
+
+func (m *SigningSession) GetModule() string {
+	if m != nil {
+		return m.Module
+	}
+	return ""
+}
+
+func (m *SigningSession) GetModuleMetadata() *types.Any {
+	if m != nil {
+		return m.ModuleMetadata
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterEnum("scalar.covenant.v1beta1.Status", Status_name, Status_value)
 	proto.RegisterType((*Custodian)(nil), "scalar.covenant.v1beta1.Custodian")
 	proto.RegisterType((*CustodianGroup)(nil), "scalar.covenant.v1beta1.CustodianGroup")
+	proto.RegisterType((*PsbtSigs)(nil), "scalar.covenant.v1beta1.PsbtSigs")
+	proto.RegisterMapType((map[string]TapScriptSig)(nil), "scalar.covenant.v1beta1.PsbtSigs.TapScriptSigsEntry")
+	proto.RegisterType((*SigningSession)(nil), "scalar.covenant.v1beta1.SigningSession")
 }
 
 func init() {
@@ -227,35 +379,56 @@ func init() {
 }
 
 var fileDescriptor_404fd62bcdc2fd38 = []byte{
-	// 433 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x92, 0x41, 0x8b, 0xd3, 0x40,
-	0x1c, 0xc5, 0x33, 0x6d, 0x8d, 0x74, 0xea, 0xae, 0x65, 0x10, 0x0d, 0x05, 0x63, 0xe8, 0x1e, 0x2c,
-	0x82, 0x09, 0x5d, 0x0f, 0x9e, 0xb3, 0x4d, 0x94, 0x22, 0xc8, 0x92, 0xa4, 0x1e, 0xbc, 0x2c, 0x93,
-	0xc9, 0x18, 0x07, 0x6d, 0x26, 0x66, 0x66, 0x8a, 0xfb, 0x01, 0x04, 0x59, 0x3c, 0x78, 0xf5, 0xb0,
-	0x27, 0xbf, 0x8c, 0xc7, 0x3d, 0x7a, 0x94, 0xf6, 0x8b, 0xc8, 0x4e, 0xd2, 0x6e, 0x40, 0x7a, 0xf2,
-	0xf6, 0xf2, 0xcf, 0x6f, 0xfe, 0xff, 0xf7, 0xe0, 0xc1, 0x23, 0x41, 0xf0, 0x47, 0x5c, 0x79, 0x84,
-	0xaf, 0x68, 0x81, 0x0b, 0xe9, 0xad, 0xa6, 0x29, 0x95, 0x78, 0xea, 0xc9, 0xf3, 0x92, 0x0a, 0xb7,
-	0xac, 0xb8, 0xe4, 0xe8, 0x41, 0x0d, 0xb9, 0x5b, 0xc8, 0x6d, 0xa0, 0xd1, 0xbd, 0x9c, 0xe7, 0x5c,
-	0x33, 0xde, 0xb5, 0xaa, 0xf1, 0xf1, 0x0f, 0x00, 0xfb, 0x33, 0x25, 0x24, 0xcf, 0x18, 0x2e, 0x10,
-	0x82, 0xbd, 0x02, 0x2f, 0xa9, 0x05, 0x1c, 0x30, 0xe9, 0x47, 0x5a, 0xa3, 0x87, 0x10, 0xa6, 0x92,
-	0x9c, 0x95, 0x2a, 0xfd, 0x40, 0xcf, 0xad, 0x8e, 0x03, 0x26, 0x77, 0xa2, 0x7e, 0x2a, 0xc9, 0xa9,
-	0x1e, 0xa0, 0xe7, 0xd0, 0x14, 0x12, 0x4b, 0x25, 0xac, 0xae, 0x03, 0x26, 0x87, 0xc7, 0x8f, 0xdc,
-	0x3d, 0x06, 0xdc, 0x58, 0x63, 0x51, 0x83, 0x23, 0x07, 0x0e, 0x32, 0x2a, 0x48, 0xc5, 0x4a, 0xc9,
-	0x78, 0x61, 0xf5, 0xf4, 0xc9, 0xf6, 0x68, 0xfc, 0xad, 0x03, 0x0f, 0x77, 0xde, 0x5e, 0x56, 0x5c,
-	0x95, 0x68, 0x08, 0xbb, 0x8a, 0x65, 0x8d, 0xbf, 0x6b, 0xb9, 0xb3, 0xdc, 0xd9, 0x6b, 0xb9, 0xab,
-	0xff, 0xb4, 0x2c, 0xdf, 0x87, 0xe6, 0x27, 0xc5, 0x2b, 0xb5, 0xd4, 0x47, 0x0f, 0xa2, 0xe6, 0xab,
-	0x15, 0xe5, 0xd6, 0x7f, 0x45, 0x31, 0xff, 0x89, 0x82, 0x4e, 0x20, 0x24, 0xdb, 0x24, 0xc2, 0xba,
-	0xed, 0x74, 0x27, 0x83, 0xe3, 0xf1, 0xde, 0xf5, 0xbb, 0xd0, 0x51, 0xeb, 0xd5, 0x93, 0x2f, 0x00,
-	0x9a, 0xf5, 0x61, 0xf4, 0x18, 0xa2, 0x38, 0xf1, 0x93, 0x45, 0x7c, 0xb6, 0x78, 0x1d, 0x9f, 0x86,
-	0xb3, 0xf9, 0x8b, 0x79, 0x18, 0x0c, 0x8d, 0xd1, 0xdd, 0x8b, 0x4b, 0x67, 0xb0, 0x28, 0x44, 0x49,
-	0x09, 0x7b, 0xc7, 0x68, 0x86, 0x8e, 0xe0, 0xb0, 0x01, 0xfd, 0x59, 0x32, 0x7f, 0xe3, 0x27, 0x61,
-	0x30, 0x04, 0xa3, 0x83, 0x8b, 0x4b, 0xa7, 0xef, 0x13, 0xc9, 0x56, 0x58, 0xd2, 0xac, 0xb5, 0x2d,
-	0x08, 0x6f, 0xb0, 0x4e, 0xbd, 0x2d, 0xa0, 0x78, 0x0b, 0x8e, 0x7a, 0x5f, 0x7f, 0xda, 0xc6, 0xc9,
-	0xab, 0x5f, 0x6b, 0x1b, 0x5c, 0xad, 0x6d, 0xf0, 0x67, 0x6d, 0x83, 0xef, 0x1b, 0xdb, 0xb8, 0xda,
-	0xd8, 0xc6, 0xef, 0x8d, 0x6d, 0xbc, 0x9d, 0xe6, 0x4c, 0xbe, 0x57, 0xa9, 0x4b, 0xf8, 0xd2, 0xab,
-	0xb3, 0xf1, 0x2a, 0x6f, 0xd4, 0x53, 0xc2, 0x2b, 0xea, 0x7d, 0xbe, 0x29, 0xaf, 0x2e, 0x6d, 0x6a,
-	0xea, 0x1a, 0x3e, 0xfb, 0x1b, 0x00, 0x00, 0xff, 0xff, 0x06, 0xd4, 0x49, 0xab, 0xdc, 0x02, 0x00,
-	0x00,
+	// 783 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x54, 0xcf, 0x6e, 0xf3, 0x44,
+	0x10, 0x8f, 0x9d, 0x3f, 0x5f, 0xb3, 0x49, 0xd3, 0x68, 0x55, 0x7d, 0xf8, 0x8b, 0x44, 0x92, 0x2f,
+	0x95, 0x20, 0x2a, 0xd4, 0x56, 0x0b, 0x12, 0xa8, 0x27, 0x92, 0x26, 0xa0, 0x08, 0x15, 0x45, 0x76,
+	0xca, 0x81, 0x8b, 0xb5, 0xb6, 0xb7, 0xee, 0x8a, 0xc4, 0x6b, 0xbc, 0xeb, 0xa8, 0x79, 0x00, 0x24,
+	0x54, 0x71, 0xe0, 0x08, 0x87, 0x0a, 0x21, 0x5e, 0x81, 0x87, 0xa8, 0x38, 0xf5, 0x84, 0x38, 0x15,
+	0x94, 0xbe, 0x08, 0xf2, 0x7a, 0x9d, 0x1a, 0x4a, 0xc4, 0x81, 0xdb, 0xcc, 0xec, 0x6f, 0xfe, 0xfc,
+	0x66, 0x66, 0x07, 0x1c, 0x30, 0x17, 0xcd, 0x51, 0x64, 0xb8, 0x74, 0x89, 0x03, 0x14, 0x70, 0x63,
+	0x79, 0xec, 0x60, 0x8e, 0x8e, 0x0d, 0xbe, 0x0a, 0x31, 0xd3, 0xc3, 0x88, 0x72, 0x0a, 0xdf, 0x48,
+	0x41, 0x7a, 0x06, 0xd2, 0x25, 0xa8, 0xf5, 0xca, 0xa7, 0xd4, 0x9f, 0x63, 0x43, 0xc0, 0x9c, 0xf8,
+	0xd2, 0x40, 0xc1, 0x2a, 0xf5, 0x69, 0xed, 0xfb, 0xd4, 0xa7, 0x42, 0x34, 0x12, 0x49, 0x5a, 0x5f,
+	0xb9, 0x94, 0x2d, 0x28, 0xb3, 0xd3, 0x87, 0x54, 0x91, 0x4f, 0xef, 0xfe, 0xb3, 0x12, 0x7c, 0x1d,
+	0xd2, 0x88, 0x63, 0xef, 0xdf, 0x4a, 0xea, 0xfd, 0xa0, 0x80, 0xea, 0x59, 0xcc, 0x38, 0xf5, 0x08,
+	0x0a, 0x20, 0x04, 0xa5, 0x00, 0x2d, 0xb0, 0xa6, 0x74, 0x95, 0x7e, 0xd5, 0x14, 0x32, 0x7c, 0x13,
+	0x00, 0x87, 0xbb, 0x76, 0x18, 0x3b, 0x5f, 0xe2, 0x95, 0xa6, 0x76, 0x95, 0x7e, 0xdd, 0xac, 0x3a,
+	0xdc, 0x9d, 0x0a, 0x03, 0xfc, 0x00, 0x54, 0x18, 0x47, 0x3c, 0x66, 0x5a, 0xb1, 0xab, 0xf4, 0x1b,
+	0x27, 0x1d, 0x7d, 0x0b, 0x49, 0xdd, 0x12, 0x30, 0x53, 0xc2, 0x61, 0x17, 0xd4, 0x3c, 0xcc, 0xdc,
+	0x88, 0x84, 0x9c, 0xd0, 0x40, 0x2b, 0x89, 0x94, 0x79, 0x53, 0xef, 0x5b, 0x15, 0x34, 0x36, 0xb5,
+	0x7d, 0x12, 0xd1, 0x38, 0x84, 0x4d, 0x50, 0x8c, 0x89, 0x27, 0xeb, 0x4b, 0xc4, 0x4d, 0xc9, 0xea,
+	0xd6, 0x92, 0x8b, 0xe2, 0x25, 0x57, 0xf2, 0x4b, 0x50, 0xf9, 0x2a, 0xa6, 0x51, 0xbc, 0x10, 0x49,
+	0x77, 0x4d, 0xa9, 0xe5, 0xa8, 0x94, 0xff, 0x17, 0x95, 0xca, 0x33, 0x2a, 0x70, 0x08, 0x80, 0x9b,
+	0x31, 0x61, 0xda, 0x8b, 0x6e, 0xb1, 0x5f, 0x3b, 0xe9, 0x6d, 0x0d, 0xbf, 0x21, 0x6d, 0xe6, 0xbc,
+	0x7a, 0xbf, 0x29, 0x60, 0x67, 0xca, 0x1c, 0x6e, 0x11, 0x9f, 0x25, 0xb4, 0x43, 0xe6, 0x70, 0xd1,
+	0x89, 0xba, 0x29, 0x64, 0x18, 0x80, 0x3d, 0x8e, 0x42, 0x3b, 0xcd, 0x6a, 0x33, 0xe2, 0x33, 0x4d,
+	0x15, 0x99, 0xde, 0xdf, 0x9a, 0x29, 0x8b, 0xa7, 0xcf, 0x50, 0x68, 0x09, 0xbf, 0x44, 0x1b, 0x07,
+	0x3c, 0x5a, 0x0d, 0x9b, 0x37, 0x7f, 0x74, 0xea, 0x79, 0xbb, 0xb9, 0xcb, 0xf3, 0xa8, 0xd6, 0x47,
+	0x00, 0x3e, 0x77, 0x4b, 0x46, 0x94, 0x74, 0x5d, 0x8e, 0x28, 0xe9, 0xf7, 0x3e, 0x28, 0x2f, 0xd1,
+	0x3c, 0xc6, 0x72, 0x79, 0x52, 0xe5, 0x54, 0xfd, 0x50, 0x39, 0x2d, 0x7d, 0xff, 0x53, 0x47, 0xe9,
+	0xfd, 0x58, 0x04, 0x0d, 0x8b, 0xf8, 0x01, 0x09, 0x7c, 0x0b, 0x33, 0x96, 0xf4, 0xeb, 0x25, 0x50,
+	0xe5, 0x98, 0x4b, 0xc3, 0xca, 0xfa, 0xa1, 0xa3, 0x4e, 0x46, 0xa6, 0x4a, 0x3c, 0x38, 0x02, 0xd5,
+	0x84, 0x6a, 0x46, 0x4e, 0xe9, 0xd7, 0x4e, 0x5e, 0xff, 0x27, 0xb9, 0x61, 0xe9, 0xee, 0xa1, 0x53,
+	0x30, 0x77, 0xc2, 0xac, 0x79, 0x03, 0x50, 0x4e, 0x26, 0x87, 0xe5, 0xca, 0xbe, 0xf3, 0x2c, 0x42,
+	0xf6, 0x65, 0xfe, 0x1e, 0x2a, 0x71, 0x31, 0x53, 0xcf, 0x64, 0xc5, 0xf0, 0x75, 0x48, 0x22, 0xcc,
+	0x6c, 0xc4, 0xc5, 0x1e, 0x15, 0xcd, 0xaa, 0xb4, 0x0c, 0x38, 0x7c, 0x0d, 0xea, 0x2e, 0x5d, 0x84,
+	0x73, 0xcc, 0xb1, 0x97, 0x00, 0xca, 0x02, 0x50, 0xdb, 0xd8, 0x52, 0x88, 0x1f, 0x21, 0x17, 0xdb,
+	0x21, 0x8e, 0x08, 0xf5, 0xc4, 0xd6, 0x14, 0xcd, 0x9a, 0xb0, 0x4d, 0x85, 0x29, 0x59, 0xd4, 0x05,
+	0xf5, 0xe2, 0x39, 0xd6, 0x5e, 0x88, 0x6e, 0x4a, 0x0d, 0x12, 0xb0, 0x97, 0x4a, 0xf6, 0x02, 0x73,
+	0xe4, 0x21, 0x8e, 0xb4, 0x1d, 0xd1, 0x8b, 0x7d, 0x3d, 0x3d, 0x24, 0x7a, 0x76, 0x48, 0xf4, 0x41,
+	0xb0, 0x1a, 0x1e, 0xfe, 0xfa, 0xcb, 0xd1, 0x5b, 0x3e, 0xe1, 0x57, 0xb1, 0xa3, 0xbb, 0x74, 0x21,
+	0xcf, 0x85, 0xe1, 0x52, 0x0f, 0xbb, 0xc6, 0x34, 0x41, 0x9e, 0xa3, 0x88, 0x5d, 0xa1, 0x39, 0x8e,
+	0xcc, 0x46, 0x1a, 0xf8, 0x5c, 0xc6, 0x4d, 0x27, 0x74, 0xf8, 0xb5, 0x02, 0x2a, 0xe9, 0xce, 0xc3,
+	0xb7, 0x01, 0xb4, 0x66, 0x83, 0xd9, 0x85, 0x65, 0x5f, 0x7c, 0x66, 0x4d, 0xc7, 0x67, 0x93, 0x8f,
+	0x27, 0xe3, 0x51, 0xb3, 0xd0, 0xda, 0xbb, 0xb9, 0xed, 0xd6, 0x2e, 0x02, 0x16, 0x62, 0x97, 0x5c,
+	0x12, 0xec, 0xc1, 0x03, 0xd0, 0x94, 0xc0, 0xc1, 0xd9, 0x6c, 0xf2, 0xf9, 0x60, 0x36, 0x1e, 0x35,
+	0x95, 0xd6, 0xee, 0xcd, 0x6d, 0xb7, 0x3a, 0x70, 0x39, 0x59, 0x22, 0x8e, 0xbd, 0x5c, 0xb4, 0xd1,
+	0xf8, 0x09, 0xa6, 0xa6, 0xd1, 0x46, 0x18, 0x65, 0xc0, 0x56, 0xe9, 0x9b, 0x9f, 0xdb, 0x85, 0xe1,
+	0xa7, 0x77, 0xeb, 0xb6, 0x72, 0xbf, 0x6e, 0x2b, 0x7f, 0xae, 0xdb, 0xca, 0x77, 0x8f, 0xed, 0xc2,
+	0xfd, 0x63, 0xbb, 0xf0, 0xfb, 0x63, 0xbb, 0xf0, 0xc5, 0x71, 0x8e, 0x5f, 0x3a, 0x4d, 0x1a, 0xf9,
+	0x52, 0x3a, 0x72, 0x69, 0x84, 0x8d, 0xeb, 0xa7, 0x8b, 0x28, 0x0e, 0xa0, 0x53, 0x11, 0x4d, 0x7a,
+	0xef, 0xaf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x69, 0x54, 0x1e, 0xdd, 0xbb, 0x05, 0x00, 0x00,
 }
 
 func (m *Custodian) Marshal() (dAtA []byte, err error) {
@@ -382,6 +555,139 @@ func (m *CustodianGroup) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *PsbtSigs) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PsbtSigs) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *PsbtSigs) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.TapScriptSigs) > 0 {
+		keysForTapScriptSigs := make([]string, 0, len(m.TapScriptSigs))
+		for k := range m.TapScriptSigs {
+			keysForTapScriptSigs = append(keysForTapScriptSigs, string(k))
+		}
+		github_com_gogo_protobuf_sortkeys.Strings(keysForTapScriptSigs)
+		for iNdEx := len(keysForTapScriptSigs) - 1; iNdEx >= 0; iNdEx-- {
+			v := m.TapScriptSigs[string(keysForTapScriptSigs[iNdEx])]
+			baseI := i
+			if len(v) > 0 {
+				i -= len(v)
+				copy(dAtA[i:], v)
+				i = encodeVarintTypes(dAtA, i, uint64(len(v)))
+				i--
+				dAtA[i] = 0x12
+			}
+			i -= len(keysForTapScriptSigs[iNdEx])
+			copy(dAtA[i:], keysForTapScriptSigs[iNdEx])
+			i = encodeVarintTypes(dAtA, i, uint64(len(keysForTapScriptSigs[iNdEx])))
+			i--
+			dAtA[i] = 0xa
+			i = encodeVarintTypes(dAtA, i, uint64(baseI-i))
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	if len(m.Psbt) > 0 {
+		i -= len(m.Psbt)
+		copy(dAtA[i:], m.Psbt)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Psbt)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *SigningSession) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *SigningSession) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *SigningSession) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.ModuleMetadata != nil {
+		{
+			size, err := m.ModuleMetadata.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTypes(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x42
+	}
+	if len(m.Module) > 0 {
+		i -= len(m.Module)
+		copy(dAtA[i:], m.Module)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Module)))
+		i--
+		dAtA[i] = 0x3a
+	}
+	if m.GracePeriod != 0 {
+		i = encodeVarintTypes(dAtA, i, uint64(m.GracePeriod))
+		i--
+		dAtA[i] = 0x30
+	}
+	if m.CompletedAt != 0 {
+		i = encodeVarintTypes(dAtA, i, uint64(m.CompletedAt))
+		i--
+		dAtA[i] = 0x28
+	}
+	if m.ExpiresAt != 0 {
+		i = encodeVarintTypes(dAtA, i, uint64(m.ExpiresAt))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.State != 0 {
+		i = encodeVarintTypes(dAtA, i, uint64(m.State))
+		i--
+		dAtA[i] = 0x18
+	}
+	{
+		size, err := m.PsbtSigs.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTypes(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if m.ID != 0 {
+		i = encodeVarintTypes(dAtA, i, uint64(m.ID))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTypes(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTypes(v)
 	base := offset
@@ -450,6 +756,65 @@ func (m *CustodianGroup) Size() (n int) {
 			l = e.Size()
 			n += 1 + l + sovTypes(uint64(l))
 		}
+	}
+	return n
+}
+
+func (m *PsbtSigs) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Psbt)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if len(m.TapScriptSigs) > 0 {
+		for k, v := range m.TapScriptSigs {
+			_ = k
+			_ = v
+			l = 0
+			if len(v) > 0 {
+				l = 1 + len(v) + sovTypes(uint64(len(v)))
+			}
+			mapEntrySize := 1 + len(k) + sovTypes(uint64(len(k))) + l
+			n += mapEntrySize + 1 + sovTypes(uint64(mapEntrySize))
+		}
+	}
+	return n
+}
+
+func (m *SigningSession) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.ID != 0 {
+		n += 1 + sovTypes(uint64(m.ID))
+	}
+	l = m.PsbtSigs.Size()
+	n += 1 + l + sovTypes(uint64(l))
+	if m.State != 0 {
+		n += 1 + sovTypes(uint64(m.State))
+	}
+	if m.ExpiresAt != 0 {
+		n += 1 + sovTypes(uint64(m.ExpiresAt))
+	}
+	if m.CompletedAt != 0 {
+		n += 1 + sovTypes(uint64(m.CompletedAt))
+	}
+	if m.GracePeriod != 0 {
+		n += 1 + sovTypes(uint64(m.GracePeriod))
+	}
+	l = len(m.Module)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.ModuleMetadata != nil {
+		l = m.ModuleMetadata.Size()
+		n += 1 + l + sovTypes(uint64(l))
 	}
 	return n
 }
@@ -853,6 +1218,464 @@ func (m *CustodianGroup) Unmarshal(dAtA []byte) error {
 			}
 			m.Custodians = append(m.Custodians, &Custodian{})
 			if err := m.Custodians[len(m.Custodians)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *PsbtSigs) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PsbtSigs: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PsbtSigs: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Psbt", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Psbt = append(m.Psbt[:0], dAtA[iNdEx:postIndex]...)
+			if m.Psbt == nil {
+				m.Psbt = []byte{}
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TapScriptSigs", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.TapScriptSigs == nil {
+				m.TapScriptSigs = make(map[string]TapScriptSig)
+			}
+			var mapkey string
+			mapvalue := []byte{}
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowTypes
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					wire |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					var stringLenmapkey uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowTypes
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						stringLenmapkey |= uint64(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					intStringLenmapkey := int(stringLenmapkey)
+					if intStringLenmapkey < 0 {
+						return ErrInvalidLengthTypes
+					}
+					postStringIndexmapkey := iNdEx + intStringLenmapkey
+					if postStringIndexmapkey < 0 {
+						return ErrInvalidLengthTypes
+					}
+					if postStringIndexmapkey > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapkey = string(dAtA[iNdEx:postStringIndexmapkey])
+					iNdEx = postStringIndexmapkey
+				} else if fieldNum == 2 {
+					var mapbyteLen uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowTypes
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapbyteLen |= uint64(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					intMapbyteLen := int(mapbyteLen)
+					if intMapbyteLen < 0 {
+						return ErrInvalidLengthTypes
+					}
+					postbytesIndex := iNdEx + intMapbyteLen
+					if postbytesIndex < 0 {
+						return ErrInvalidLengthTypes
+					}
+					if postbytesIndex > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapvalue = make([]byte, mapbyteLen)
+					copy(mapvalue, dAtA[iNdEx:postbytesIndex])
+					iNdEx = postbytesIndex
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipTypes(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if (skippy < 0) || (iNdEx+skippy) < 0 {
+						return ErrInvalidLengthTypes
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
+				}
+			}
+			m.TapScriptSigs[mapkey] = ((TapScriptSig)(mapvalue))
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *SigningSession) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: SigningSession: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: SigningSession: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ID", wireType)
+			}
+			m.ID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PsbtSigs", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.PsbtSigs.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field State", wireType)
+			}
+			m.State = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.State |= exported.PsbtState(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExpiresAt", wireType)
+			}
+			m.ExpiresAt = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ExpiresAt |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CompletedAt", wireType)
+			}
+			m.CompletedAt = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CompletedAt |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GracePeriod", wireType)
+			}
+			m.GracePeriod = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.GracePeriod |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Module", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Module = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ModuleMetadata", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.ModuleMetadata == nil {
+				m.ModuleMetadata = &types.Any{}
+			}
+			if err := m.ModuleMetadata.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

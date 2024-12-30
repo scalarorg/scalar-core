@@ -1,10 +1,18 @@
 syntax = "proto3";
 package scalar.covenant.v1beta1;
 
-import "gogoproto/gogo.proto";
-
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
+
+import "gogoproto/gogo.proto";
+import "scalar/utils/v1beta1/threshold.proto";
+
 option (gogoproto.goproto_getters_all) = false;
 
 // Params represent the genesis parameters for the module
-message Params {}
+message Params {
+  scalar.utils.v1beta1.Threshold signing_threshold = 1
+      [ (gogoproto.nullable) = false ];
+  int64 signing_timeout = 2;
+  int64 signing_grace_period = 3;
+  uint64 active_epoch_count = 4;
+}

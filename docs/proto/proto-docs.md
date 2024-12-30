@@ -145,6 +145,8 @@
     - [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse)
     - [SetGatewayRequest](#scalar.chains.v1beta1.SetGatewayRequest)
     - [SetGatewayResponse](#scalar.chains.v1beta1.SetGatewayResponse)
+    - [SignBTCCommandsRequest](#scalar.chains.v1beta1.SignBTCCommandsRequest)
+    - [SignBTCCommandsResponse](#scalar.chains.v1beta1.SignBTCCommandsResponse)
     - [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest)
     - [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse)
   
@@ -201,9 +203,21 @@
     - [ERC20Deposit](#scalar.chains.v1beta1.ERC20Deposit)
     - [ERC20TokenMetadata](#scalar.chains.v1beta1.ERC20TokenMetadata)
   
+- [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
+    - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
+  
+- [scalar/covenant/v1beta1/events.proto](#scalar/covenant/v1beta1/events.proto)
+    - [SigningCompleted](#scalar.covenant.v1beta1.SigningCompleted)
+    - [SigningExpired](#scalar.covenant.v1beta1.SigningExpired)
+    - [SigningStarted](#scalar.covenant.v1beta1.SigningStarted)
+    - [TapScriptSigSubmitted](#scalar.covenant.v1beta1.TapScriptSigSubmitted)
+  
 - [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
     - [Custodian](#scalar.covenant.v1beta1.Custodian)
     - [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup)
+    - [PsbtSigs](#scalar.covenant.v1beta1.PsbtSigs)
+    - [PsbtSigs.TapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtSigs.TapScriptSigsEntry)
+    - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
   
     - [Status](#scalar.covenant.v1beta1.Status)
   
@@ -218,6 +232,8 @@
     - [CustodianGroupsResponse](#scalar.covenant.v1beta1.CustodianGroupsResponse)
     - [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest)
     - [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse)
+    - [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest)
+    - [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse)
   
 - [scalar/covenant/v1beta1/tx.proto](#scalar/covenant/v1beta1/tx.proto)
     - [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest)
@@ -227,6 +243,8 @@
     - [CreateCustodianResponse](#scalar.covenant.v1beta1.CreateCustodianResponse)
     - [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse)
     - [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest)
+    - [SubmitTapScriptSigRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigRequest)
+    - [SubmitTapScriptSigResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigResponse)
     - [UpdateCustodianGroupRequest](#scalar.covenant.v1beta1.UpdateCustodianGroupRequest)
     - [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse)
     - [UpdateCustodianRequest](#scalar.covenant.v1beta1.UpdateCustodianRequest)
@@ -2106,6 +2124,7 @@ PollParticipants should be embedded in poll events in other modules
 | `voting_grace_period` | [int64](#int64) |  |  |
 | `end_blocker_limit` | [int64](#int64) |  |  |
 | `transfer_limit` | [uint64](#uint64) |  |  |
+| `processing_txs_window_size` | [uint64](#uint64) |  |  |
 | `metadata` | [Params.MetadataEntry](#scalar.chains.v1beta1.Params.MetadataEntry) | repeated |  |
 
 
@@ -2620,6 +2639,38 @@ address
 
 ### SetGatewayResponse
 
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.SignBTCCommandsRequest"></a>
+
+### SignBTCCommandsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.SignBTCCommandsResponse"></a>
+
+### SignBTCCommandsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `batched_commands_id` | [bytes](#bytes) |  |  |
+| `command_count` | [uint32](#uint32) |  |  |
 
 
 
@@ -3321,6 +3372,7 @@ Msg defines the btc Msg service.
 | `CreatePendingTransfers` | [CreatePendingTransfersRequest](#scalar.chains.v1beta1.CreatePendingTransfersRequest) | [CreatePendingTransfersResponse](#scalar.chains.v1beta1.CreatePendingTransfersResponse) |  | POST|/scalar/chains/v1beta1/create_pending_transfers|
 | `CreateTransferOperatorship` | [CreateTransferOperatorshipRequest](#scalar.chains.v1beta1.CreateTransferOperatorshipRequest) | [CreateTransferOperatorshipResponse](#scalar.chains.v1beta1.CreateTransferOperatorshipResponse) |  | POST|/scalar/chains/v1beta1/create_transfer_operatorship|
 | `SignCommands` | [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest) | [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_commands|
+| `SignBTCCommands` | [SignBTCCommandsRequest](#scalar.chains.v1beta1.SignBTCCommandsRequest) | [SignBTCCommandsResponse](#scalar.chains.v1beta1.SignBTCCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
 | `AddChain` | [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest) | [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse) |  | POST|/scalar/chains/v1beta1/add_chain|
 | `RetryFailedEvent` | [RetryFailedEventRequest](#scalar.chains.v1beta1.RetryFailedEventRequest) | [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse) |  | POST|/scalar/chains/v1beta1/retry-failed-event|
 
@@ -3450,6 +3502,120 @@ ERC20Deposit contains information for an ERC20 deposit
 
 
 
+<a name="scalar/covenant/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/covenant/exported/v1beta1/types.proto
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.covenant.exported.v1beta1.PsbtState"></a>
+
+### PsbtState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| PSBT_STATE_UNSPECIFIED | 0 |  |
+| PSBT_STATE_CREATING | 1 |  |
+| PSBT_STATE_SIGNING | 2 |  |
+| PSBT_STATE_COMPLETED | 3 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/covenant/v1beta1/events.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/covenant/v1beta1/events.proto
+
+
+
+<a name="scalar.covenant.v1beta1.SigningCompleted"></a>
+
+### SigningCompleted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigningExpired"></a>
+
+### SigningExpired
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigningStarted"></a>
+
+### SigningStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+| `psbt` | [bytes](#bytes) |  |  |
+| `requesting_module` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.TapScriptSigSubmitted"></a>
+
+### TapScriptSigSubmitted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+| `participant` | [bytes](#bytes) |  |  |
+| `tap_script_sig` | [bytes](#bytes) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/covenant/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -3481,7 +3647,8 @@ Whether the custodian is active |
 
 ### CustodianGroup
 CustodianGroup represents a group of custodians with their configuration
-uid is used as identity of the group, btc_pubkey is change by list of custodians
+uid is used as identity of the group, btc_pubkey is change by list of
+custodians
 
 
 | Field | Type | Label | Description |
@@ -3495,6 +3662,60 @@ quorum threshold e.g.,3 |
 | `status` | [Status](#scalar.covenant.v1beta1.Status) |  | Whether the custodian is active |
 | `description` | [string](#string) |  |  |
 | `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.PsbtSigs"></a>
+
+### PsbtSigs
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `psbt` | [bytes](#bytes) |  |  |
+| `tap_script_sigs` | [PsbtSigs.TapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtSigs.TapScriptSigsEntry) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.PsbtSigs.TapScriptSigsEntry"></a>
+
+### PsbtSigs.TapScriptSigsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigningSession"></a>
+
+### SigningSession
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [uint64](#uint64) |  |  |
+| `psbt_sigs` | [PsbtSigs](#scalar.covenant.v1beta1.PsbtSigs) |  |  |
+| `state` | [scalar.covenant.exported.v1beta1.PsbtState](#scalar.covenant.exported.v1beta1.PsbtState) |  |  |
+| `expires_at` | [int64](#int64) |  |  |
+| `completed_at` | [int64](#int64) |  |  |
+| `grace_period` | [int64](#int64) |  |  |
+| `module` | [string](#string) |  |  |
+| `module_metadata` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
 
 
 
@@ -3566,6 +3787,14 @@ quorum threshold e.g.,3 |
 
 ### Params
 Params represent the genesis parameters for the module
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `signing_timeout` | [int64](#int64) |  |  |
+| `signing_grace_period` | [int64](#int64) |  |  |
+| `active_epoch_count` | [uint64](#uint64) |  |  |
 
 
 
@@ -3648,6 +3877,31 @@ Params represent the genesis parameters for the module
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.ParamsRequest"></a>
+
+### ParamsRequest
+ParamsRequest represents a message that queries the params
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.ParamsResponse"></a>
+
+### ParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.covenant.v1beta1.Params) |  |  |
 
 
 
@@ -3791,6 +4045,33 @@ Params represent the genesis parameters for the module
 
 
 
+<a name="scalar.covenant.v1beta1.SubmitTapScriptSigRequest"></a>
+
+### SubmitTapScriptSigRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+| `tap_script_sig` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SubmitTapScriptSigResponse"></a>
+
+### SubmitTapScriptSigResponse
+
+
+
+
+
+
+
 <a name="scalar.covenant.v1beta1.UpdateCustodianGroupRequest"></a>
 
 ### UpdateCustodianGroupRequest
@@ -3896,6 +4177,7 @@ Pubkey used as key for lookup custodian to update other values
 | `UpdateCustodianGroup` | [UpdateCustodianGroupRequest](#scalar.covenant.v1beta1.UpdateCustodianGroupRequest) | [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse) | Update Custodian group | POST|/scalar/covenant/v1beta1/update_custodian_group|
 | `AddCustodianToGroup` | [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Add Custodian to custodian group recalculate taproot pubkey when adding custodian to custodian group | POST|/scalar/covenant/v1beta1/add_custodian_to_group|
 | `RemoveCustodianFromGroup` | [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Remove Custodian from custodian group recalculate taproot address when deleting custodian from custodian group | POST|/scalar/covenant/v1beta1/remove_custodian_from_group|
+| `SubmitTapScriptSig` | [SubmitTapScriptSigRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigRequest) | [SubmitTapScriptSigResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigResponse) |  | POST|/scalar/covenant/v1beta1/submit_tap_script_sig|
 
 
 <a name="scalar.covenant.v1beta1.Query"></a>
@@ -3907,6 +4189,7 @@ Pubkey used as key for lookup custodian to update other values
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `GetCustodians` | [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest) | [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse) | Get custodians | GET|/scalar/convenant/v1beta1/custodians|
 | `CustodianGroups` | [CustodianGroupsRequest](#scalar.covenant.v1beta1.CustodianGroupsRequest) | [CustodianGroupsResponse](#scalar.covenant.v1beta1.CustodianGroupsResponse) | Get custodian groups | GET|/scalar/covenant/v1beta1/custodian_groups|
+| `Params` | [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse) |  | GET|/scalar/covenant/v1beta1/params|
 
  <!-- end services -->
 

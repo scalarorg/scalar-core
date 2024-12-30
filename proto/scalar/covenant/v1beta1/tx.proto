@@ -7,7 +7,8 @@ import "scalar/covenant/v1beta1/types.proto";
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
 message CreateCustodianRequest {
-  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
 
   string name = 2;
   bytes btc_pubkey = 3;
@@ -15,25 +16,23 @@ message CreateCustodianRequest {
   string description = 5;
 }
 
-message CreateCustodianResponse {
-  Custodian custodian = 1;
-}
+message CreateCustodianResponse { Custodian custodian = 1; }
 
 // Pubkey used as key for lookup custodian to update other values
 message UpdateCustodianRequest {
-  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   bytes btc_pubkey = 2;
   string name = 3;
   Status status = 4;
   string description = 5;
 }
 
-message UpdateCustodianResponse {
-  Custodian custodian = 1;
-}
+message UpdateCustodianResponse { Custodian custodian = 1; }
 
 message CreateCustodianGroupRequest {
-  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string uid = 2;
   string name = 3;
   uint32 quorum = 4;
@@ -42,12 +41,11 @@ message CreateCustodianGroupRequest {
   repeated bytes custodian = 7;
 }
 
-message CreateCustodianGroupResponse {
-  CustodianGroup group = 1;
-}
+message CreateCustodianGroupResponse { CustodianGroup group = 1; }
 
 message UpdateCustodianGroupRequest {
-  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string uid = 2;
   string name = 3;
   uint32 quorum = 4;
@@ -56,24 +54,31 @@ message UpdateCustodianGroupRequest {
   repeated bytes custodian = 7;
 }
 
-message UpdateCustodianGroupResponse {
-  CustodianGroup group = 1;
-}
+message UpdateCustodianGroupResponse { CustodianGroup group = 1; }
 
 message AddCustodianToGroupRequest {
-  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-  string guid = 2; //CustodianGroup uid
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string guid = 2; // CustodianGroup uid
   bytes custodian_pubkey = 3;
   string description = 4;
 }
 
 message RemoveCustodianFromGroupRequest {
-  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-  string guid = 2; //CustodianGroup uid
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string guid = 2; // CustodianGroup uid
   bytes custodian_pubkey = 3;
   string description = 4;
 }
 
-message CustodianToGroupResponse {
-  CustodianGroup group = 1;
+message CustodianToGroupResponse { CustodianGroup group = 1; }
+
+message SubmitTapScriptSigRequest {
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
+  bytes tap_script_sig = 3 [ (gogoproto.casttype) = "TapscriptSig" ];
 }
+
+message SubmitTapScriptSigResponse {}
