@@ -155,3 +155,7 @@ type MultisigKeeper interface {
 	RotateKey(ctx sdk.Context, chainName nexus.ChainName) error
 	Sign(ctx sdk.Context, keyID multisig.KeyID, payloadHash multisig.Hash, module string, moduleMetadata ...codec.ProtoMarshaler) error
 }
+
+type CovenantKeeper interface {
+	CreateAndSignPsbt(ctx sdk.Context, keyID multisig.KeyID, payloadHash multisig.Hash, module string, moduleMetadata ...codec.ProtoMarshaler) error
+}

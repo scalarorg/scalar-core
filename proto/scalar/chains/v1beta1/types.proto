@@ -83,6 +83,9 @@ message CommandBatchMetadata {
   google.protobuf.Any signature = 8
       [ (cosmos_proto.accepts_interface) =
             "github.com/cosmos/codec/ProtoMarshaler" ];
+
+  // extra data for the command, map 1:1 with the commands
+  repeated bytes extra_data = 9;
 }
 
 message Proof {
@@ -106,6 +109,9 @@ message Command {
   ];
   uint32 max_gas_cost = 4;
   CommandType type = 5;
+
+  // This field is used as extra data for the command, metadata is encoded in the payload, it can be fee information, etc.
+  bytes payload = 6;
 }
 
 message PollMapping {

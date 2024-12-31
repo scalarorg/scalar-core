@@ -287,6 +287,11 @@ func (b CommandBatch) GetData() []byte {
 	return b.metadata.Data
 }
 
+// GetExtraData returns the batch's extra data
+func (b CommandBatch) GetExtraData() [][]byte {
+	return b.metadata.ExtraData
+}
+
 // GetID returns the batch ID
 func (b CommandBatch) GetID() []byte {
 	return b.metadata.ID
@@ -356,10 +361,13 @@ func NewCommandBatchMetadata(blockHeight int64, chainID sdk.Int, keyID multisig.
 	var commands []CommandType
 	var commandParams [][]byte
 
+	var extraData [][]byte
+
 	for _, cmd := range cmds {
 		commandIDs = append(commandIDs, cmd.ID)
 		commands = append(commands, cmd.Type)
 		commandParams = append(commandParams, cmd.Params)
+		extraData = append(extraData, cmd.Payload)
 	}
 
 	data, err := packArguments(chainID, commandIDs, commands, commandParams)
@@ -377,6 +385,8 @@ func NewCommandBatchMetadata(blockHeight int64, chainID sdk.Int, keyID multisig.
 		SigHash:    Hash(GetSignHash(data)),
 		Status:     BatchSigning,
 		KeyID:      keyID,
+		// new field
+		ExtraData: extraData,
 	}, nil
 }
 

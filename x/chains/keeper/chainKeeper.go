@@ -682,17 +682,6 @@ func (k chainKeeper) CreateNewBatchToSign(ctx sdk.Context) (types.CommandBatch, 
 	gasCost := firstCmd.MaxGasCost
 	keyID := firstCmd.KeyID
 
-	clog.Yellowf("[keeper] [CreateNewBatchToSign] firstCmd: %+v", firstCmd)
-	clog.Yellowf("[keeper] [CreateNewBatchToSign] firstCmd.ID: %+x", firstCmd.ID)
-	clog.Yellowf("[keeper] [CreateNewBatchToSign] firstCmd.Params: %+x", firstCmd.Params)
-	clog.Yellowf("[keeper] [CreateNewBatchToSign] firstCmd.KeyID: %+v", firstCmd.KeyID)
-	clog.Yellowf("[keeper] [CreateNewBatchToSign] firstCmd.MaxGasCost: %+v", firstCmd.MaxGasCost)
-	clog.Yellowf("[keeper] [CreateNewBatchToSign] firstCmd.Type: %+v", firstCmd.Type)
-	clog.Yellowf("[keeper] [CreateNewBatchToSign] chainID: %+v", chainID)
-	clog.Yellowf("[keeper] [CreateNewBatchToSign] gasLimit: %+v", gasLimit)
-	clog.Yellowf("[keeper] [CreateNewBatchToSign] gasCost: %+v", gasCost)
-	clog.Yellowf("[keeper] [CreateNewBatchToSign] keyID: %+v", keyID)
-
 	filter := func(value codec.ProtoMarshaler) bool {
 		cmd, ok := value.(*types.Command)
 		gasCost += cmd.MaxGasCost
@@ -708,7 +697,11 @@ func (k chainKeeper) CreateNewBatchToSign(ctx sdk.Context) (types.CommandBatch, 
 			break
 		}
 
-		commands = append(commands, cmd.Clone())
+		clog.Magentaf("[keeper] [CreateNewBatchToSign] command: %+x", cmd)
+
+		// Note: Becareful with cmd.Clone() if you want to add more fields to the command, please update this function
+		clonedCmd := cmd.Clone()
+		commands = append(commands, clonedCmd)
 	}
 
 	commandBatch, err := types.NewCommandBatchMetadata(ctx.BlockHeight(), chainID, keyID, commands)

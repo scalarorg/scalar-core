@@ -7,19 +7,18 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 )
 
-func (s msgServer) SignBTCCommands(c context.Context, req *types.SignBTCCommandsRequest) (*types.SignBTCCommandsResponse, error) {
+func (s msgServer) SignCommands(c context.Context, req *types.SignCommandsRequest) (*types.SignCommandsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	chain, ok := s.nexus.GetChain(ctx, req.Chain)
 	if !ok {
 		return nil, fmt.Errorf("%s is not a registered chain", req.Chain)
 	}
 
-	if !types.IsBitcoinChain(chain.Name) {
-		return nil, fmt.Errorf("chain %s is not a BTC chain", chain.Name)
+	if !types.IsEvmChain(chain.Name) {
+		return nil, fmt.Errorf("chain %s is not a EVM chain", chain.Name)
 	}
 
 	if err := validateChainActivated(ctx, s.nexus, chain); err != nil {
@@ -40,21 +39,8 @@ func (s msgServer) SignBTCCommands(c context.Context, req *types.SignBTCCommands
 		return nil, err
 	}
 	if len(commandBatch.GetCommandIDs()) == 0 {
-		return &types.SignBTCCommandsResponse{CommandCount: 0, BatchedCommandsID: nil}, nil
+		return &types.SignCommandsResponse{CommandCount: 0, BatchedCommandsID: nil}, nil
 	}
-
-	clog.Yellow("Sign BTC Commands")
-
-	extraData := commandBatch.GetExtraData()
-
-	for i, command := range commandBatch.GetCommandIDs() {
-		clog.Yellowf("[keeper] [msg_server_sign_btc_commands] command: %+x", command.Hex())
-		clog.Yellowf("[keeper] [msg_server_sign_btc_commands] command data: %+x", commandBatch.GetData())
-		clog.Yellowf("[keeper] [msg_server_sign_btc_commands] command extra data: %+x", extraData[i])
-	}
-
-
-	// TODO: use covenant keeper sign and create psbt
 
 	if err := s.multisig.Sign(
 		ctx,
@@ -69,8 +55,6 @@ func (s msgServer) SignBTCCommands(c context.Context, req *types.SignBTCCommands
 	if !commandBatch.SetStatus(types.BatchSigning) {
 		return nil, fmt.Errorf("failed setting status of command batch %s to be signing", hex.EncodeToString(commandBatch.GetID()))
 	}
-
-	clog.Yellowf("[keeper] [msg_server_sign_btc_commands] commandBatch: %+v", commandBatch)
 
 	batchedCommandsIDHex := hex.EncodeToString(commandBatch.GetID())
 	commandList := types.CommandIDsToStrings(commandBatch.GetCommandIDs())
@@ -96,5 +80,5 @@ func (s msgServer) SignBTCCommands(c context.Context, req *types.SignBTCCommands
 		),
 	)
 
-	return &types.SignBTCCommandsResponse{CommandCount: uint32(len(commandBatch.GetCommandIDs())), BatchedCommandsID: commandBatch.GetID()}, nil
+	return &types.SignCommandsResponse{CommandCount: uint32(len(commandBatch.GetCommandIDs())), BatchedCommandsID: commandBatch.GetID()}, nil
 }

@@ -229,7 +229,8 @@ func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event ty
 }
 
 func (v voteHandler) handleCrossChainEvent(ctx sdk.Context, ck types.ChainKeeper, event types.Event) error {
-	msg := mustToGeneralMessage(ctx, v.nexus, event)
+	// msg := mustToGeneralMessage(ctx, v.nexus, event)
+	msg := mustToGeneralMessageWithPayload(ctx, v.nexus, event)
 
 	clog.Bluef("msg: %+v", msg)
 	if err := v.nexus.SetNewMessage(ctx, msg); err != nil {
@@ -247,24 +248,78 @@ func (v voteHandler) handleCrossChainEvent(ctx sdk.Context, ck types.ChainKeeper
 	return nil
 }
 
-func mustToGeneralMessage(ctx sdk.Context, n types.Nexus, event types.Event) nexus.GeneralMessage {
-	id := string(event.GetID())
-	confirmationEvent := event.GetEvent().(*types.Event_SourceTxConfirmationEvent).SourceTxConfirmationEvent
+// createGeneralMessageBase creates the common components of a general message
+func createGeneralMessageBase(ctx sdk.Context, n types.Nexus, event types.Event) (
+	string,
+	nexus.CrossChainAddress,
+	nexus.CrossChainAddress,
+	*types.SourceTxConfirmationEvent,
+	error) {
 
-	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
+	id := string(event.GetID())
+
+	confirmEvent, ok := event.GetEvent().(*types.Event_SourceTxConfirmationEvent)
+	if !ok {
+		return "", nexus.CrossChainAddress{}, nexus.CrossChainAddress{}, nil,
+			fmt.Errorf("invalid event type: expected SourceTxConfirmationEvent")
+	}
+	confirmationEvent := confirmEvent.SourceTxConfirmationEvent
+
+	sourceChain, ok := n.GetChain(ctx, event.Chain)
+	if !ok {
+		return "", nexus.CrossChainAddress{}, nexus.CrossChainAddress{}, nil,
+			fmt.Errorf("source chain not found: %s", event.Chain)
+	}
 	sender := nexus.CrossChainAddress{Chain: sourceChain, Address: confirmationEvent.Sender}
 
-	// TODO: GetChain should query by chain type and chain id for more network flexibility
 	destinationChain, ok := n.GetChain(ctx, confirmationEvent.DestinationChain)
 	if !ok {
-		// try forwarding it to wasm router if destination chain is not registered
-		// Wasm chain names are always lower case, so normalize it for consistency in core
-		destChainName := nexus.ChainName(confirmationEvent.DestinationChain.String())
-		destinationChain = nexus.Chain{Name: destChainName, SupportsForeignAssets: false, KeyType: tss.None, Module: wasm.ModuleName}
+		// Default to wasm router for unregistered chains
+		destinationChain = nexus.Chain{
+			Name:                  nexus.ChainName(confirmationEvent.DestinationChain.String()),
+			SupportsForeignAssets: false,
+			KeyType:               tss.None,
+			Module:                wasm.ModuleName,
+		}
 	}
 	recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: confirmationEvent.DestinationContractAddress}
 
-	return nexus.NewGeneralMessage(id, sender, recipient, confirmationEvent.PayloadHash.Bytes(), event.TxID.Bytes(), event.Index, nil)
+	return id, sender, recipient, confirmationEvent, nil
+}
+
+func mustToGeneralMessageWithPayload(ctx sdk.Context, n types.Nexus, event types.Event) nexus.GeneralMessage {
+	id, sender, recipient, confirmationEvent, err := createGeneralMessageBase(ctx, n, event)
+	if err != nil {
+		panic(err)
+	}
+
+	return nexus.NewGeneralMessageWithPayload(
+		id,
+		sender,
+		recipient,
+		confirmationEvent.PayloadHash.Bytes(),
+		event.TxID.Bytes(),
+		event.Index,
+		nil,
+		confirmationEvent.Payload,
+	)
+}
+
+func mustToGeneralMessage(ctx sdk.Context, n types.Nexus, event types.Event) nexus.GeneralMessage {
+	id, sender, recipient, confirmationEvent, err := createGeneralMessageBase(ctx, n, event)
+	if err != nil {
+		panic(err)
+	}
+
+	return nexus.NewGeneralMessage(
+		id,
+		sender,
+		recipient,
+		confirmationEvent.PayloadHash.Bytes(),
+		event.TxID.Bytes(),
+		event.Index,
+		nil,
+	)
 }
 
 func mustGetMetadata(poll vote.Poll) types.PollMetadata {

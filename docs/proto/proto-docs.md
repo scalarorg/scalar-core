@@ -967,6 +967,7 @@ Msg defines the nexus Msg service.
 | `key_id` | [string](#string) |  |  |
 | `max_gas_cost` | [uint32](#uint32) |  |  |
 | `type` | [CommandType](#scalar.chains.v1beta1.CommandType) |  |  |
+| `payload` | [bytes](#bytes) |  | This field is used as extra data for the command, metadata is encoded in the payload, it can be fee information, etc. |
 
 
 
@@ -989,6 +990,7 @@ Msg defines the nexus Msg service.
 | `key_id` | [string](#string) |  |  |
 | `prev_batched_commands_id` | [bytes](#bytes) |  |  |
 | `signature` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+| `extra_data` | [bytes](#bytes) | repeated | extra data for the command, map 1:1 with the commands |
 
 
 
@@ -5265,6 +5267,7 @@ registered blockchain
 | `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `source_tx_id` | [bytes](#bytes) |  |  |
 | `source_tx_index` | [uint64](#uint64) |  |  |
+| `payload` | [bytes](#bytes) |  | Additional data for the message, metadata is encoded in the payload, it can be fee information, etc. It will be used later when enqueuing the command and batch command. Currently, the main purpose is use to form the psbt for btc |
 
 
 

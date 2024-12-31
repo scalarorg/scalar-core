@@ -138,23 +138,29 @@ func NewApproveContractCallCommand(
 	}
 }
 
+type ApproveContractCallCommandParams struct {
+	ContractAddress  common.Address
+	PayloadHash      common.Hash
+	SourceTxID       common.Hash
+	SourceChain      nexus.ChainName
+	Sender           string
+	SourceEventIndex uint64
+	Payload          []byte
+}
+
 // NewApproveContractCallCommandGeneric creates a command to approve contract call
 func NewApproveContractCallCommandGeneric(
 	chainID sdk.Int,
 	keyID multisig.KeyID,
-	contractAddress common.Address,
-	payloadHash common.Hash,
-	sourceTxID common.Hash,
-	sourceChain nexus.ChainName,
-	sender string,
-	sourceEventIndex uint64,
 	ID string,
+	params *ApproveContractCallCommandParams,
 ) Command {
 	commandID := NewCommandID([]byte(ID), chainID)
 	return Command{
 		ID:         commandID,
 		Type:       COMMAND_TYPE_APPROVE_CONTRACT_CALL,
-		Params:     createApproveContractCallParamsGeneric(contractAddress, payloadHash, sourceTxID, string(sourceChain), sender, sourceEventIndex),
+		Params:     createApproveContractCallParamsGeneric(params),
+		Payload:    params.Payload,
 		KeyID:      keyID,
 		MaxGasCost: approveContractCallMaxGasCost,
 	}
@@ -271,6 +277,8 @@ func (m Command) Clone() Command {
 		KeyID:      m.KeyID,
 		MaxGasCost: m.MaxGasCost,
 		Params:     make([]byte, len(m.Params)),
+		// Update here if you want to add more fields to the command
+		Payload: m.Payload,
 	}
 	copy(clone.Params, m.Params)
 
@@ -316,20 +324,16 @@ func createApproveContractCallParams(
 }
 
 func createApproveContractCallParamsGeneric(
-	contractAddress common.Address,
-	payloadHash common.Hash,
-	txID common.Hash,
-	sourceChain string,
-	sender string,
-	sourceEventIndex uint64) []byte {
+	params *ApproveContractCallCommandParams,
+) []byte {
 
 	return funcs.Must(approveContractCallArguments.Pack(
-		sourceChain,
-		sender,
-		contractAddress,
-		payloadHash,
-		txID,
-		new(big.Int).SetUint64(sourceEventIndex),
+		params.SourceChain,
+		params.Sender,
+		params.ContractAddress,
+		params.PayloadHash,
+		params.SourceTxID,
+		new(big.Int).SetUint64(params.SourceEventIndex),
 	))
 }
 

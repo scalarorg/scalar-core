@@ -110,6 +110,9 @@ message GeneralMessage {
   cosmos.base.v1beta1.Coin asset = 6;
   bytes source_tx_id = 7 [ (gogoproto.customname) = "SourceTxID" ];
   uint64 source_tx_index = 8;
+
+  // Additional data for the message, metadata is encoded in the payload, it can be fee information, etc. It will be used later when enqueuing the command and batch command. Currently, the main purpose is use to form the psbt for btc
+  bytes payload = 9;
 }
 
 message WasmMessage {
