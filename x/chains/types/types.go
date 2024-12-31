@@ -676,6 +676,16 @@ func ParseMultisigKey(key multisig.Key) (map[string]sdk.Uint, sdk.Uint) {
 	return addressWeights, key.GetMinPassingWeight()
 }
 
+// NewTokenDetails returns a new TokenDetails instance
+func NewTokenDetails(tokenName, symbol string, decimals uint8, capacity sdk.Int) TokenDetails {
+	return TokenDetails{
+		TokenName: utils.NormalizeString(tokenName),
+		Symbol:    utils.NormalizeString(symbol),
+		Decimals:  decimals,
+		Capacity:  capacity,
+	}
+}
+
 func (m TokenDetails) Validate() error {
 	if err := utils.ValidateString(m.TokenName); err != nil {
 		return sdkerrors.Wrap(err, "invalid token name")

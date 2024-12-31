@@ -7763,6 +7763,12 @@ paths:
                       - NETWORK_KIND_MAINNET
                       - NETWORK_KIND_TESTNET
                     default: NETWORK_KIND_MAINNET
+                  token_code:
+                    type: string
+                    format: byte
+                  burnable:
+                    type: string
+                    format: byte
                   revote_locking_period:
                     type: string
                     format: int64
@@ -54817,6 +54823,12 @@ definitions:
           - NETWORK_KIND_MAINNET
           - NETWORK_KIND_TESTNET
         default: NETWORK_KIND_MAINNET
+      token_code:
+        type: string
+        format: byte
+      burnable:
+        type: string
+        format: byte
       revote_locking_period:
         type: string
         format: int64
@@ -54873,6 +54885,12 @@ definitions:
               - NETWORK_KIND_MAINNET
               - NETWORK_KIND_TESTNET
             default: NETWORK_KIND_MAINNET
+          token_code:
+            type: string
+            format: byte
+          burnable:
+            type: string
+            format: byte
           revote_locking_period:
             type: string
             format: int64
