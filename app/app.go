@@ -617,10 +617,10 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 		scalarnetModule,
 		covenant.NewAppModule(
 			GetKeeper[covenantKeeper.Keeper](keepers),
-			GetKeeper[voteKeeper.Keeper](keepers),
-			GetKeeper[snapKeeper.Keeper](keepers),
 			GetKeeper[stakingkeeper.Keeper](keepers),
-			GetKeeper[slashingkeeper.Keeper](keepers),
+			GetKeeper[snapKeeper.Keeper](keepers),
+			GetKeeper[rewardKeeper.Keeper](keepers),
+			GetKeeper[nexusKeeper.Keeper](keepers),
 		),
 		protocol.NewAppModule(
 			*GetKeeper[protocolKeeper.Keeper](keepers),
@@ -836,11 +836,11 @@ func orderBeginBlockers() []string {
 		permissionTypes.ModuleName,
 		multisigTypes.ModuleName,
 		tssTypes.ModuleName,
+		covenantTypes.ModuleName,
 		chainsTypes.ModuleName,
 		snapTypes.ModuleName,
 		scalarnetTypes.ModuleName,
 		voteTypes.ModuleName,
-		covenantTypes.ModuleName,
 		protocolTypes.ModuleName,
 		auxiliarytypes.ModuleName,
 	)
@@ -881,6 +881,7 @@ func orderEndBlockers() []string {
 	endBlockerOrder = append(endBlockerOrder,
 		multisigTypes.ModuleName,
 		tssTypes.ModuleName,
+		covenantTypes.ModuleName,
 		chainsTypes.ModuleName,
 		nexusTypes.ModuleName,
 		rewardTypes.ModuleName,
@@ -888,7 +889,6 @@ func orderEndBlockers() []string {
 		scalarnetTypes.ModuleName,
 		permissionTypes.ModuleName,
 		voteTypes.ModuleName,
-		covenantTypes.ModuleName,
 		protocolTypes.ModuleName,
 		auxiliarytypes.ModuleName,
 	)

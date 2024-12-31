@@ -492,7 +492,7 @@ func (k chainKeeper) initTokenMetadata(ctx sdk.Context, asset string, details ty
 
 	gatewayAddr, found := k.GetGatewayAddress(ctx)
 	if !found {
-		return types.ERC20TokenMetadata{}, fmt.Errorf("axelar gateway address for chain '%s' not set", k.chain)
+		return types.ERC20TokenMetadata{}, fmt.Errorf("scalar gateway address for chain '%s' not set", k.chain)
 	}
 
 	tokenAddr, err := k.getTokenAddress(ctx, details, gatewayAddr)

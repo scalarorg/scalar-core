@@ -6,6 +6,8 @@ import "scalar/covenant/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
+option (gogoproto.goproto_getters_all) = false;
+
 message CreateCustodianRequest {
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -78,7 +80,10 @@ message SubmitTapScriptSigRequest {
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
-  bytes tap_script_sig = 3 [ (gogoproto.casttype) = "TapscriptSig" ];
+  bytes tap_script_sig = 3 [
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/covenant/exported.TapScriptSig"
+  ];
 }
 
 message SubmitTapScriptSigResponse {}

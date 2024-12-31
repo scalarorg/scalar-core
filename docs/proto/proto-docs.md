@@ -204,28 +204,33 @@
     - [ERC20TokenMetadata](#scalar.chains.v1beta1.ERC20TokenMetadata)
   
 - [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
+    - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
+  
     - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
+  
+- [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
+    - [Custodian](#scalar.covenant.v1beta1.Custodian)
+    - [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup)
+    - [Key](#scalar.covenant.v1beta1.Key)
+    - [Key.PubKeysEntry](#scalar.covenant.v1beta1.Key.PubKeysEntry)
+    - [MultiSig](#scalar.covenant.v1beta1.MultiSig)
+    - [MultiSig.TapScriptSigsEntry](#scalar.covenant.v1beta1.MultiSig.TapScriptSigsEntry)
+    - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
+  
+    - [Status](#scalar.covenant.v1beta1.Status)
   
 - [scalar/covenant/v1beta1/events.proto](#scalar/covenant/v1beta1/events.proto)
     - [SigningCompleted](#scalar.covenant.v1beta1.SigningCompleted)
     - [SigningExpired](#scalar.covenant.v1beta1.SigningExpired)
     - [SigningStarted](#scalar.covenant.v1beta1.SigningStarted)
+    - [SigningStarted.PubKeysEntry](#scalar.covenant.v1beta1.SigningStarted.PubKeysEntry)
     - [TapScriptSigSubmitted](#scalar.covenant.v1beta1.TapScriptSigSubmitted)
-  
-- [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
-    - [Custodian](#scalar.covenant.v1beta1.Custodian)
-    - [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup)
-    - [PsbtSigs](#scalar.covenant.v1beta1.PsbtSigs)
-    - [PsbtSigs.TapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtSigs.TapScriptSigsEntry)
-    - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
-  
-    - [Status](#scalar.covenant.v1beta1.Status)
-  
-- [scalar/covenant/v1beta1/genesis.proto](#scalar/covenant/v1beta1/genesis.proto)
-    - [GenesisState](#scalar.covenant.v1beta1.GenesisState)
   
 - [scalar/covenant/v1beta1/params.proto](#scalar/covenant/v1beta1/params.proto)
     - [Params](#scalar.covenant.v1beta1.Params)
+  
+- [scalar/covenant/v1beta1/genesis.proto](#scalar/covenant/v1beta1/genesis.proto)
+    - [GenesisState](#scalar.covenant.v1beta1.GenesisState)
   
 - [scalar/covenant/v1beta1/query.proto](#scalar/covenant/v1beta1/query.proto)
     - [CustodianGroupsRequest](#scalar.covenant.v1beta1.CustodianGroupsRequest)
@@ -251,8 +256,8 @@
     - [UpdateCustodianResponse](#scalar.covenant.v1beta1.UpdateCustodianResponse)
   
 - [scalar/covenant/v1beta1/service.proto](#scalar/covenant/v1beta1/service.proto)
-    - [Msg](#scalar.covenant.v1beta1.Msg)
-    - [Query](#scalar.covenant.v1beta1.Query)
+    - [MsgService](#scalar.covenant.v1beta1.MsgService)
+    - [QueryService](#scalar.covenant.v1beta1.QueryService)
   
 - [scalar/multisig/v1beta1/events.proto](#scalar/multisig/v1beta1/events.proto)
     - [KeyAssigned](#scalar.multisig.v1beta1.KeyAssigned)
@@ -3508,6 +3513,23 @@ ERC20Deposit contains information for an ERC20 deposit
 ## scalar/covenant/exported/v1beta1/types.proto
 
 
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSig"></a>
+
+### TapScriptSig
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_x_only` | [bytes](#bytes) |  |  |
+| `leaf_hash` | [bytes](#bytes) |  |  |
+| `signature` | [bytes](#bytes) |  |  |
+
+
+
+
+
  <!-- end messages -->
 
 
@@ -3519,94 +3541,11 @@ ERC20Deposit contains information for an ERC20 deposit
 | Name | Number | Description |
 | ---- | ------ | ----------- |
 | PSBT_STATE_UNSPECIFIED | 0 |  |
-| PSBT_STATE_CREATING | 1 |  |
-| PSBT_STATE_SIGNING | 2 |  |
-| PSBT_STATE_COMPLETED | 3 |  |
+| PSBT_STATE_PENDING | 1 |  |
+| PSBT_STATE_CREATING | 2 |  |
+| PSBT_STATE_SIGNING | 3 |  |
+| PSBT_STATE_COMPLETED | 4 |  |
 
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/covenant/v1beta1/events.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/covenant/v1beta1/events.proto
-
-
-
-<a name="scalar.covenant.v1beta1.SigningCompleted"></a>
-
-### SigningCompleted
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `module` | [string](#string) |  |  |
-| `sig_id` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.SigningExpired"></a>
-
-### SigningExpired
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `module` | [string](#string) |  |  |
-| `sig_id` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.SigningStarted"></a>
-
-### SigningStarted
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `module` | [string](#string) |  |  |
-| `sig_id` | [uint64](#uint64) |  |  |
-| `psbt` | [bytes](#bytes) |  |  |
-| `requesting_module` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.TapScriptSigSubmitted"></a>
-
-### TapScriptSigSubmitted
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `module` | [string](#string) |  |  |
-| `sig_id` | [uint64](#uint64) |  |  |
-| `participant` | [bytes](#bytes) |  |  |
-| `tap_script_sig` | [bytes](#bytes) |  |  |
-
-
-
-
-
- <!-- end messages -->
 
  <!-- end enums -->
 
@@ -3668,25 +3607,27 @@ quorum threshold e.g.,3 |
 
 
 
-<a name="scalar.covenant.v1beta1.PsbtSigs"></a>
+<a name="scalar.covenant.v1beta1.Key"></a>
 
-### PsbtSigs
+### Key
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `psbt` | [bytes](#bytes) |  |  |
-| `tap_script_sigs` | [PsbtSigs.TapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtSigs.TapScriptSigsEntry) | repeated |  |
+| `id` | [string](#string) |  |  |
+| `snapshot` | [scalar.snapshot.exported.v1beta1.Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot) |  |  |
+| `pub_keys` | [Key.PubKeysEntry](#scalar.covenant.v1beta1.Key.PubKeysEntry) | repeated |  |
+| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  | exported.v1beta1.KeyState state = 5; |
 
 
 
 
 
 
-<a name="scalar.covenant.v1beta1.PsbtSigs.TapScriptSigsEntry"></a>
+<a name="scalar.covenant.v1beta1.Key.PubKeysEntry"></a>
 
-### PsbtSigs.TapScriptSigsEntry
+### Key.PubKeysEntry
 
 
 
@@ -3694,6 +3635,39 @@ quorum threshold e.g.,3 |
 | ----- | ---- | ----- | ----------- |
 | `key` | [string](#string) |  |  |
 | `value` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.MultiSig"></a>
+
+### MultiSig
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+| `psbt` | [bytes](#bytes) |  |  |
+| `tap_script_sigs` | [MultiSig.TapScriptSigsEntry](#scalar.covenant.v1beta1.MultiSig.TapScriptSigsEntry) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.MultiSig.TapScriptSigsEntry"></a>
+
+### MultiSig.TapScriptSigsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [scalar.covenant.exported.v1beta1.TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig) |  |  |
 
 
 
@@ -3709,8 +3683,10 @@ quorum threshold e.g.,3 |
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `id` | [uint64](#uint64) |  |  |
-| `psbt_sigs` | [PsbtSigs](#scalar.covenant.v1beta1.PsbtSigs) |  |  |
+| `multi_sig` | [MultiSig](#scalar.covenant.v1beta1.MultiSig) |  |  |
 | `state` | [scalar.covenant.exported.v1beta1.PsbtState](#scalar.covenant.exported.v1beta1.PsbtState) |  |  |
+| `key` | [Key](#scalar.covenant.v1beta1.Key) |  |  |
+| `psbt` | [bytes](#bytes) |  |  |
 | `expires_at` | [int64](#int64) |  |  |
 | `completed_at` | [int64](#int64) |  |  |
 | `grace_period` | [int64](#int64) |  |  |
@@ -3744,23 +3720,93 @@ quorum threshold e.g.,3 |
 
 
 
-<a name="scalar/covenant/v1beta1/genesis.proto"></a>
+<a name="scalar/covenant/v1beta1/events.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## scalar/covenant/v1beta1/genesis.proto
+## scalar/covenant/v1beta1/events.proto
 
 
 
-<a name="scalar.covenant.v1beta1.GenesisState"></a>
+<a name="scalar.covenant.v1beta1.SigningCompleted"></a>
 
-### GenesisState
+### SigningCompleted
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
-| `groups` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) | repeated |  |
+| `module` | [string](#string) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigningExpired"></a>
+
+### SigningExpired
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigningStarted"></a>
+
+### SigningStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+| `key_id` | [string](#string) |  |  |
+| `pub_keys` | [SigningStarted.PubKeysEntry](#scalar.covenant.v1beta1.SigningStarted.PubKeysEntry) | repeated |  |
+| `psbt` | [bytes](#bytes) |  |  |
+| `requesting_module` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigningStarted.PubKeysEntry"></a>
+
+### SigningStarted.PubKeysEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.TapScriptSigSubmitted"></a>
+
+### TapScriptSigSubmitted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+| `participant` | [bytes](#bytes) |  |  |
+| `tap_script_sig` | [scalar.covenant.exported.v1beta1.TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig) |  |  |
 
 
 
@@ -3795,6 +3841,40 @@ Params represent the genesis parameters for the module
 | `signing_timeout` | [int64](#int64) |  |  |
 | `signing_grace_period` | [int64](#int64) |  |  |
 | `active_epoch_count` | [uint64](#uint64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/covenant/v1beta1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/covenant/v1beta1/genesis.proto
+
+
+
+<a name="scalar.covenant.v1beta1.GenesisState"></a>
+
+### GenesisState
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.covenant.v1beta1.Params) |  |  |
+| `signing_sessions` | [SigningSession](#scalar.covenant.v1beta1.SigningSession) | repeated |  |
+| `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
+| `groups` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) | repeated |  |
 
 
 
@@ -4164,9 +4244,9 @@ Pubkey used as key for lookup custodian to update other values
  <!-- end HasExtensions -->
 
 
-<a name="scalar.covenant.v1beta1.Msg"></a>
+<a name="scalar.covenant.v1beta1.MsgService"></a>
 
-### Msg
+### MsgService
 
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
@@ -4180,9 +4260,9 @@ Pubkey used as key for lookup custodian to update other values
 | `SubmitTapScriptSig` | [SubmitTapScriptSigRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigRequest) | [SubmitTapScriptSigResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigResponse) |  | POST|/scalar/covenant/v1beta1/submit_tap_script_sig|
 
 
-<a name="scalar.covenant.v1beta1.Query"></a>
+<a name="scalar.covenant.v1beta1.QueryService"></a>
 
-### Query
+### QueryService
 
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |

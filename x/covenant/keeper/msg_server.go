@@ -6,28 +6,30 @@ import (
 	"github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
-var _ types.MsgServer = msgServer{}
-
 type msgServer struct {
-	types.CovenantKeeper
-	// nexus          types.Nexus
-	voter       types.Voter
+	Keeper
 	snapshotter types.Snapshotter
-	staking     types.StakingKeeper
-	slashing    types.SlashingKeeper
-	// multisigKeeper types.MultisigKeeper
+	staker      types.Staker
+	nexus       types.Nexus
+}
+
+var _ types.MsgServiceServer = msgServer{}
+
+type MsgServerConstructArgs struct {
+	Keeper
+	Snapshotter types.Snapshotter
+	Staker      types.Staker
+	Nexus       types.Nexus
 }
 
 // NewMsgServerImpl returns an implementation of the evm MsgServiceServer interface
 // for the provided Keeper.
-func NewMsgServerImpl(keeper types.CovenantKeeper, v types.Voter, snap types.Snapshotter, staking types.StakingKeeper, slashing types.SlashingKeeper) types.MsgServer {
+func NewMsgServerImpl(arg *MsgServerConstructArgs) types.MsgServiceServer {
 	return msgServer{
-		CovenantKeeper: keeper,
-		voter:          v,
-		snapshotter:    snap,
-		staking:        staking,
-		slashing:       slashing,
-		// multisigKeeper: multisigKeeper,
+		Keeper:      arg.Keeper,
+		snapshotter: arg.Snapshotter,
+		staker:      arg.Staker,
+		nexus:       arg.Nexus,
 	}
 }
 

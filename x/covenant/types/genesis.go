@@ -4,10 +4,12 @@ import (
 	"github.com/google/uuid"
 )
 
-func NewGenesisState(custodians []*Custodian, group *CustodianGroup) GenesisState {
+func NewGenesisState(params *Params, signingSessions []SigningSession, custodians []*Custodian, group *CustodianGroup) GenesisState {
 	return GenesisState{
-		Custodians: custodians,
-		Groups:     []*CustodianGroup{group},
+		Params:          *params,
+		Custodians:      custodians,
+		Groups:          []*CustodianGroup{group},
+		SigningSessions: signingSessions,
 	}
 }
 
@@ -15,7 +17,9 @@ func NewGenesisState(custodians []*Custodian, group *CustodianGroup) GenesisStat
 func DefaultGenesisState() GenesisState {
 	custodians := []*Custodian{DefaultCustodian()}
 	group := DefaultCustodianGroup()
-	return NewGenesisState(custodians, group)
+	params := DefaultParams()
+	session := []SigningSession{}
+	return NewGenesisState(params, session, custodians, group)
 }
 func (m GenesisState) Validate() error {
 	return nil
