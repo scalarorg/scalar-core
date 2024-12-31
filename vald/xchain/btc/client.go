@@ -7,17 +7,17 @@ import (
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcd/rpcclient"
 	"github.com/btcsuite/btcd/wire"
+	btcChain "github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/vald/config"
-	"github.com/scalarorg/scalar-core/vald/xchain"
-	btcChain "github.com/scalarorg/bitcoin-vault/go-utils/chain"
+	"github.com/scalarorg/scalar-core/vald/xchain/common"
 )
 
 type BtcClient struct {
 	client                    *rpcclient.Client
 	cfg                       *rpcclient.ConnConfig
 	blockHeightCache          *BlockHeightCache
-	latestFinalizedBlockCache xchain.LatestFinalizedBlockCache
+	latestFinalizedBlockCache common.LatestFinalizedBlockCache
 }
 type BTCTxReceipt struct {
 	Raw        btcjson.TxRawResult
@@ -25,11 +25,11 @@ type BTCTxReceipt struct {
 	MsgTx      *wire.MsgTx
 }
 
-type BTCTxResult = results.Result[xchain.TxReceipt]
+type BTCTxResult = results.Result[common.TxReceipt]
 
-var _ xchain.Client = &BtcClient{}
+var _ common.Client = &BtcClient{}
 
-func NewClient(cfg *config.BTCConfig) (xchain.Client, error) {
+func NewClient(cfg *config.BTCConfig) (common.Client, error) {
 	rpcConfig := mapBTCConfigToRPCConfig(cfg)
 	rpcClient, error := rpcclient.New(rpcConfig, nil)
 	if error != nil {
@@ -37,7 +37,7 @@ func NewClient(cfg *config.BTCConfig) (xchain.Client, error) {
 	}
 
 	blockHeightCache := NewBlockHeightCache()
-	latestFinalizedBlockCache := xchain.NewLatestFinalizedBlockCache()
+	latestFinalizedBlockCache := common.NewLatestFinalizedBlockCache()
 
 	client := &BtcClient{
 		client:                    rpcClient,

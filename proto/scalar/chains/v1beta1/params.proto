@@ -8,23 +8,22 @@ import "scalar/utils/v1beta1/threshold.proto";
 option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
 
 message Params {
-  string chain = 1
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string chain = 1 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
   uint64 confirmation_height = 2;
   NetworkKind network_kind = 3;
-  int64 revote_locking_period = 4;
-  bytes chain_id = 5 [
+  bytes token_code = 4;
+  bytes burnable = 5;
+  int64 revote_locking_period = 6;
+  bytes chain_id = 7 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false,
     (gogoproto.customname) = "ChainID"
   ];
-  scalar.utils.v1beta1.Threshold voting_threshold = 6
-      [ (gogoproto.nullable) = false ];
-  int64 min_voter_count = 7;
-  uint32 commands_gas_limit = 8;
-  int64 voting_grace_period = 9;
-  int64 end_blocker_limit = 10;
-  uint64 transfer_limit = 11;
-  map<string, string> metadata = 12;
+  scalar.utils.v1beta1.Threshold voting_threshold = 8 [(gogoproto.nullable) = false];
+  int64 min_voter_count = 9;
+  uint32 commands_gas_limit = 10;
+  int64 voting_grace_period = 11;
+  int64 end_blocker_limit = 12;
+  uint64 transfer_limit = 13;
+  map<string, string> metadata = 14;
 }

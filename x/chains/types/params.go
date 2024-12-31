@@ -19,15 +19,14 @@ var (
 	KeyRevoteLockingPeriod = []byte("revoteLockingPeriod")
 	KeyChainID             = []byte("chainId")
 	KeyVotingThreshold     = []byte("votingThreshold")
+	KeyToken               = []byte("token")
+	KeyBurnable            = []byte("burnable")
 	KeyMinVoterCount       = []byte("minVoterCount")
 	KeyCommandsGasLimit    = []byte("commandsGasLimit")
 	KeyVotingGracePeriod   = []byte("votingGracePeriod")
 	KeyEndBlockerLimit     = []byte("endBlockerLimit")
 	KeyTransferLimit       = []byte("transferLimit")
 	KeyMetadata            = []byte("metadata")
-
-	KeyToken    = []byte("token")
-	KeyBurnable = []byte("burnable")
 )
 
 func KeyTable() params.KeyTable {
@@ -45,6 +44,8 @@ func (m *Params) ParamSetPairs() params.ParamSetPairs {
 		params.NewParamSetPair(KeyChainName, &m.Chain, validateChainName),
 		params.NewParamSetPair(KeyConfirmationHeight, &m.ConfirmationHeight, validateConfirmationHeight),
 		params.NewParamSetPair(KeyNetworkKind, &m.NetworkKind, validateNetworkKind),
+		params.NewParamSetPair(KeyToken, &m.TokenCode, validateBytes),
+		params.NewParamSetPair(KeyBurnable, &m.Burnable, validateBurnable),
 		params.NewParamSetPair(KeyRevoteLockingPeriod, &m.RevoteLockingPeriod, validateRevoteLockingPeriod),
 		params.NewParamSetPair(KeyChainID, &m.ChainID, validateChainId),
 		params.NewParamSetPair(KeyVotingThreshold, &m.VotingThreshold, validateVotingThreshold),
@@ -80,6 +81,20 @@ func validateNetworkKind(i interface{}) error {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 	return networkKind.Validate()
+}
+
+func validateBytes(bytes interface{}) error {
+	b, ok := bytes.([]byte)
+	if !ok {
+		return fmt.Errorf("invalid parameter type for byte slice: %T", bytes)
+	}
+
+	if len(b) == 0 {
+		// Todo: Enable check burnable code it not empty
+		// return fmt.Errorf("byte slice cannot be empty")
+	}
+
+	return nil
 }
 
 func validateRevoteLockingPeriod(i interface{}) error {
@@ -147,6 +162,18 @@ func validateVotingGracePeriod(i interface{}) error {
 	if period < 1 {
 		return fmt.Errorf("voting grace period must be greater than 0")
 	}
+	return nil
+}
+
+func validateBurnable(i interface{}) error {
+	if err := validateBytes(i); err != nil {
+		return err
+	}
+	// Todo: Turnon validateBurnerCode
+	// if err := validateBurnerCode(i.([]byte)); err != nil {
+	// 	return err
+	// }
+
 	return nil
 }
 

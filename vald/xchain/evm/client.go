@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/scalarorg/scalar-core/utils/monads/results"
-	"github.com/scalarorg/scalar-core/vald/xchain"
+	"github.com/scalarorg/scalar-core/vald/xchain/common"
 
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -16,14 +16,14 @@ import (
 type EthereumClient struct {
 	*ethclient.Client
 	rpc                       *rpc.Client
-	latestFinalizedBlockCache xchain.LatestFinalizedBlockCache
+	latestFinalizedBlockCache common.LatestFinalizedBlockCache
 }
 
 type ETHTxReceipt = types.Receipt
 
-type ETHTxResult = results.Result[xchain.TxReceipt]
+type ETHTxResult = results.Result[common.TxReceipt]
 
-var _ xchain.Client = &EthereumClient{}
+var _ common.Client = &EthereumClient{}
 
 // func NewClient(url string, override FinalityOverride) (Client, error) {
 // 	rpc, err := rpc.DialContext(context.Background(), url)
@@ -47,7 +47,7 @@ var _ xchain.Client = &EthereumClient{}
 // 	return ethereumClient, nil
 // }
 
-func NewClient(url, finalityOverride string) (xchain.Client, error) {
+func NewClient(url, finalityOverride string) (common.Client, error) {
 	rpcClient, err := rpc.DialContext(context.Background(), url)
 	if err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func NewClient(url, finalityOverride string) (xchain.Client, error) {
 		return nil, err
 	}
 
-	latestFinalizedBlockCache := xchain.NewLatestFinalizedBlockCache()
+	latestFinalizedBlockCache := common.NewLatestFinalizedBlockCache()
 
 	client := &EthereumClient{
 		rpc:                       rpcClient,

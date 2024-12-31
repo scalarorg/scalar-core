@@ -2096,6 +2096,8 @@ PollParticipants should be embedded in poll events in other modules
 | `chain` | [string](#string) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
 | `network_kind` | [NetworkKind](#scalar.chains.v1beta1.NetworkKind) |  |  |
+| `token_code` | [bytes](#bytes) |  |  |
+| `burnable` | [bytes](#bytes) |  |  |
 | `revote_locking_period` | [int64](#int64) |  |  |
 | `chain_id` | [bytes](#bytes) |  |  |
 | `voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
