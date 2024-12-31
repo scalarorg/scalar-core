@@ -102,6 +102,15 @@ func validateEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n ty
 	case *types.Event_SourceTxConfirmationEvent:
 		destinationChainName = event.SourceTxConfirmationEvent.DestinationChain
 		contractAddress = event.SourceTxConfirmationEvent.DestinationContractAddress
+	case *types.Event_ContractCallWithToken:
+		destinationChainName = event.ContractCallWithToken.DestinationChain
+		contractAddress = event.ContractCallWithToken.ContractAddress
+	case *types.Event_TokenSent:
+		destinationChainName = event.TokenSent.DestinationChain
+	case *types.Event_Transfer, *types.Event_TokenDeployed,
+		*types.Event_MultisigOperatorshipTransferred:
+		// skip checks for non-gateway tx event
+		return nil
 	default:
 		panic(fmt.Errorf("unsupported event type %T", event))
 	}
@@ -126,6 +135,16 @@ func validateEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n ty
 	if !destinationChain.IsFrom(types.ModuleName) {
 		return nil
 	}
+	// Todo: Verify destination's gatewayAddress if destination is an evm chain
+	// destinationCk, err := bk.ForChain(ctx, destinationChainName)
+	// if err != nil {
+	// 	return fmt.Errorf("destination chain not EVM-compatible")
+	// }
+
+	// // skip if destination chain has not got gateway set yet
+	// if _, ok := destinationCk.GetGatewayAddress(ctx); !ok {
+	// 	return fmt.Errorf("destination chain gateway not deployed yet")
+	// }
 
 	return nil
 }

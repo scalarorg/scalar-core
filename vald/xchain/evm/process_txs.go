@@ -65,6 +65,45 @@ func (c *EthereumClient) processTxReceipt(event *types.EventConfirmSourceTxsStar
 				},
 				Index: uint64(txlog.Index),
 			})
+		case ContractCallWithTokenSig:
+			gatewayEvent, err := DecodeEventContractCallWithToken(txlog)
+			if err != nil {
+				c.logger().Debug(sdkerrors.Wrap(err, "decode event ContractCallWithToken failed").Error())
+				continue
+			}
+
+			if err := gatewayEvent.ValidateBasic(); err != nil {
+				c.logger().Debug(sdkerrors.Wrap(err, "invalid event ContractCallWithToken").Error())
+				continue
+			}
+
+			events = append(events, types.Event{
+				Chain: event.Chain,
+				TxID:  types.Hash(txlog.TxHash),
+				Index: uint64(txlog.Index),
+				Event: &types.Event_ContractCallWithToken{
+					ContractCallWithToken: &gatewayEvent,
+				},
+			})
+		case TokenSentSig:
+			gatewayEvent, err := DecodeEventTokenSent(txlog)
+			if err != nil {
+				c.logger().Debug(sdkerrors.Wrap(err, "decode event TokenSent failed").Error())
+			}
+
+			if err := gatewayEvent.ValidateBasic(); err != nil {
+				c.logger().Debug(sdkerrors.Wrap(err, "invalid event TokenSent").Error())
+				continue
+			}
+
+			events = append(events, types.Event{
+				Chain: event.Chain,
+				TxID:  types.Hash(txlog.TxHash),
+				Index: uint64(txlog.Index),
+				Event: &types.Event_TokenSent{
+					TokenSent: &gatewayEvent,
+				},
+			})
 		default:
 			c.logger().Errorf("unknown event type: %s", txlog.Topics[0])
 		}
