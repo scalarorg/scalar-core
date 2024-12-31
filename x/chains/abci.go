@@ -26,7 +26,6 @@ func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.BaseKeeper, n 
 	clog.Yellow("Chains ABCI ENDBLOCKER")
 	handleConfirmedEvents(ctx, bk, n, m)
 	handleMessages(ctx, bk, n, m)
-	handleProcessingTxs(ctx, bk, n, m)
 
 	return nil, nil
 }
@@ -378,30 +377,4 @@ func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID
 		types.AttributeKeyMessageID, msg.ID,
 		types.AttributeKeyCommandsID, cmd.ID,
 	)
-}
-
-func handleProcessingTxs(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) {
-	allChains := n.GetChains(ctx)
-
-	// This will handle all chains except Scalarnet.
-	for _, chain := range slices.Filter(allChains, types.IsSupportedChain) {
-		ck := funcs.Must(bk.ForChain(ctx, chain.Name))
-		latest := ck.GetLatestCommandBatch(ctx)
-		commandIDs := latest.GetCommandIDs()
-		if len(commandIDs) > 0 {
-			clog.Redf("Chain: %+v, BatchStatus: %+v", chain.Name, latest.GetStatus())
-			clog.Magentaf("BatchID: %+x", latest.GetID())
-			clog.Magenta("BacthCommandSignature: ", latest.GetSignature())
-
-			for _, commandID := range commandIDs {
-				command, ok := ck.GetCommand(ctx, commandID)
-				if !ok {
-					ck.Logger(ctx).Error("command not found")
-					continue
-				}
-				clog.Greenf("commandID: %+x, command.KeyID: %+v, command.Type: %+v", commandID, command.KeyID, command.Type)
-				clog.Greenf("command.Params: %+x", command.Params)
-			}
-		}
-	}
 }

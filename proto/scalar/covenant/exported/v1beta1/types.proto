@@ -13,7 +13,14 @@ enum PsbtState {
 
   PSBT_STATE_UNSPECIFIED = 0
       [ (gogoproto.enumvalue_customname) = "NonExistent" ];
-  PSBT_STATE_CREATING = 1 [ (gogoproto.enumvalue_customname) = "Creating" ];
-  PSBT_STATE_SIGNING = 2 [ (gogoproto.enumvalue_customname) = "Signing" ];
-  PSBT_STATE_COMPLETED = 3 [ (gogoproto.enumvalue_customname) = "Completed" ];
+  PSBT_STATE_PENDING = 1 [ (gogoproto.enumvalue_customname) = "Pending" ];
+  PSBT_STATE_CREATING = 2 [ (gogoproto.enumvalue_customname) = "Creating" ];
+  PSBT_STATE_SIGNING = 3 [ (gogoproto.enumvalue_customname) = "Signing" ];
+  PSBT_STATE_COMPLETED = 4 [ (gogoproto.enumvalue_customname) = "Completed" ];
+}
+
+message TapScriptSig {
+  bytes key_x_only = 1 [ (gogoproto.customtype) = "KeyXOnly" ];
+  bytes leaf_hash = 2 [ (gogoproto.customtype) = "LeafHash" ];
+  bytes signature = 3 [ (gogoproto.customtype) = "Signature" ];
 }

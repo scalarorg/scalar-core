@@ -24,5 +24,13 @@ func (k Keeper) ExportGenesis(ctx sdk.Context) types.GenesisState {
 	if !ok {
 		custodianGroup = &types.CustodianGroup{}
 	}
-	return types.NewGenesisState(custodians, custodianGroup)
+
+	signingSessions, ok := k.GetSigningSessions(ctx)
+	if !ok {
+		signingSessions = []types.SigningSession{}
+	}
+
+	params := k.GetParams(ctx)
+
+	return types.NewGenesisState(&params, signingSessions, custodians, custodianGroup)
 }

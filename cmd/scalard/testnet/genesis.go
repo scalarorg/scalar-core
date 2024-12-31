@@ -249,7 +249,9 @@ func GenerateGenesis(clientCtx client.Context,
 			BtcPubkey: btcPubkey,
 		}
 	}
-	covnantGenState := covenanttypes.NewGenesisState(custodians, &custodianGroup)
+
+	defaultCovenantState := covenanttypes.DefaultGenesisState()
+	covnantGenState := covenanttypes.NewGenesisState(&defaultCovenantState.Params, defaultCovenantState.SigningSessions, custodians, &custodianGroup)
 	appGenState[covenanttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&covnantGenState)
 	//Protocol
 	protocolGenState, err := generateProtocolGenesis(scalarProtocol, custodianGroup, args.tokens)

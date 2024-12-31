@@ -7,7 +7,7 @@ import "scalar/covenant/v1beta1/tx.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
-service Msg {
+service MsgService {
   // Create custodian
   rpc CreateCustodian(CreateCustodianRequest)
       returns (CreateCustodianResponse) {
@@ -70,7 +70,7 @@ service Msg {
   }
 }
 
-service Query {
+service QueryService {
   // Get custodians
   rpc GetCustodians(CustodiansRequest) returns (CustodiansResponse) {
     option (google.api.http) = {

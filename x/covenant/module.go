@@ -13,7 +13,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/scalarorg/scalar-core/utils"
-	"github.com/scalarorg/scalar-core/utils/grpc"
 	"github.com/scalarorg/scalar-core/x/covenant/client/cli"
 	"github.com/scalarorg/scalar-core/x/covenant/keeper"
 	"github.com/scalarorg/scalar-core/x/covenant/types"
@@ -67,7 +66,7 @@ func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Rout
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
-	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
+	if err := types.RegisterQueryServiceHandlerClient(context.Background(), mux, types.NewQueryServiceClient(clientCtx)); err != nil {
 		panic(err)
 	}
 }
@@ -85,26 +84,27 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 // AppModule implements module.AppModule
 type AppModule struct {
 	AppModuleBasic
-	keeper *keeper.Keeper
-	voter  types.Voter
-	//nexus       types.Nexus
+	keeper      *keeper.Keeper
+	staker      types.Staker
 	snapshotter types.Snapshotter
-	staking     types.StakingKeeper
-	slashing    types.SlashingKeeper
-	//multisig    types.MultisigKeeper
+	rewarder    types.Rewarder
+	nexus       types.Nexus
 }
 
 // NewAppModule creates a new AppModule object
-func NewAppModule(k *keeper.Keeper, voter types.Voter, snapshotter types.Snapshotter, staking types.StakingKeeper, slashing types.SlashingKeeper) AppModule {
+func NewAppModule(k *keeper.Keeper,
+	staker types.Staker,
+	snapshotter types.Snapshotter,
+	rewarder types.Rewarder,
+	nexus types.Nexus,
+) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
 		keeper:         k,
-		voter:          voter,
-		//nexus:          nexus,
-		snapshotter: snapshotter,
-		staking:     staking,
-		slashing:    slashing,
-		//multisig:       multisig,
+		staker:         staker,
+		snapshotter:    snapshotter,
+		rewarder:       rewarder,
+		nexus:          nexus,
 	}
 }
 
@@ -130,7 +130,7 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 
 // Route returns the module's route
 func (am AppModule) Route() sdk.Route {
-	return sdk.NewRoute(types.RouterKey, NewHandler(am.keeper, am.voter, am.snapshotter, am.staking, am.slashing))
+	return sdk.Route{}
 }
 
 // QuerierRoute returns this module's query route
@@ -146,9 +146,17 @@ func (am AppModule) LegacyQuerierHandler(*codec.LegacyAmino) sdk.Querier {
 // RegisterServices registers a GRPC query service to respond to the
 // module-specific GRPC queries.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
-	msgServer := keeper.NewMsgServerImpl(am.keeper, am.voter, am.snapshotter, am.staking, am.slashing)
-	types.RegisterMsgServer(grpc.ServerWithSDKErrors{Server: cfg.MsgServer(), Err: types.ErrQuery, Logger: am.keeper.Logger}, msgServer)
-	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewGRPCQuerier(am.keeper))
+	msgServer := keeper.NewMsgServerImpl(&keeper.MsgServerConstructArgs{
+		Keeper:      *am.keeper,
+		Snapshotter: am.snapshotter,
+		Staker:      am.staker,
+		Nexus:       am.nexus,
+	})
+
+	types.RegisterMsgServiceServer(cfg.MsgServer(), msgServer)
+
+	queryServer := keeper.NewGRPCQuerier(am.keeper)
+	types.RegisterQueryServiceServer(cfg.QueryServer(), queryServer)
 
 	// err := cfg.RegisterMigration(types.ModuleName, 8, keeper.AlwaysMigrateBytecode(am.keeper, am.nexus, keeper.Migrate8to9(am.keeper, am.nexus)))
 	// if err != nil {

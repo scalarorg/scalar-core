@@ -4,14 +4,26 @@ package scalar.covenant.v1beta1;
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
 import "gogoproto/gogo.proto";
+import "scalar/covenant/v1beta1/types.proto";
+import "scalar/covenant/exported/v1beta1/types.proto";
+
+option (gogoproto.goproto_getters_all) = false;
 
 message SigningStarted {
   option (gogoproto.stable_marshaler) = true;
 
   string module = 1;
   uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
-  bytes psbt = 3;
-  string requesting_module = 4;
+  string key_id = 3 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/covenant/exported.KeyID"
+  ];
+  map<string, bytes> pub_keys = 4
+      [ (gogoproto.castvalue) =
+            "github.com/scalarorg/scalar-core/x/covenant/exported.PublicKey" ];
+  bytes psbt = 5 [ (gogoproto.casttype) = "Psbt" ];
+  string requesting_module = 6;
 }
 
 message SigningCompleted {
@@ -29,5 +41,5 @@ message TapScriptSigSubmitted {
   uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
   bytes participant = 3 [ (gogoproto.casttype) =
                               "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
-  bytes tap_script_sig = 4 [ (gogoproto.casttype) = "TapScriptSig" ];
+  scalar.covenant.exported.v1beta1.TapScriptSig tap_script_sig = 4;
 }
