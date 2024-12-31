@@ -13731,6 +13731,14 @@ paths:
                       source_tx_index:
                         type: string
                         format: uint64
+                      payload:
+                        type: string
+                        format: byte
+                        title: Additional data for the message, metadata is encoded in the payload, it
+                          can be fee information, etc. It will be used later
+                          when enqueuing the command and batch command.
+                          Currently, the main purpose is use to form the psbt
+                          for btc
         default:
           description: An unexpected error response
           content:
@@ -51515,6 +51523,13 @@ components:
         source_tx_index:
           type: string
           format: uint64
+        payload:
+          type: string
+          format: byte
+          title: Additional data for the message, metadata is encoded in the payload, it
+            can be fee information, etc. It will be used later when enqueuing
+            the command and batch command. Currently, the main purpose is use to
+            form the psbt for btc
     scalar.nexus.exported.v1beta1.GeneralMessage.Status:
       type: string
       enum:
@@ -51936,6 +51951,13 @@ components:
             source_tx_index:
               type: string
               format: uint64
+            payload:
+              type: string
+              format: byte
+              title: Additional data for the message, metadata is encoded in the payload, it
+                can be fee information, etc. It will be used later when
+                enqueuing the command and batch command. Currently, the main
+                purpose is use to form the psbt for btc
     scalar.nexus.v1beta1.Params:
       type: object
       properties:

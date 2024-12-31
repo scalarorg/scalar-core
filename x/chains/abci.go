@@ -175,7 +175,16 @@ func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset 
 			Address: e.SourceTxConfirmationEvent.DestinationContractAddress,
 		}
 
-		message = nexus.NewGeneralMessage(
+		// message = nexus.NewGeneralMessage(
+		// 	string(event.GetID()),
+		// 	sender,
+		// 	recipient,
+		// 	e.SourceTxConfirmationEvent.PayloadHash.Bytes(),
+		// 	event.TxID.Bytes(),
+		// 	event.Index,
+		// 	nil,
+		// )
+		message = nexus.NewGeneralMessageWithPayload(
 			string(event.GetID()),
 			sender,
 			recipient,
@@ -183,6 +192,7 @@ func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset 
 			event.TxID.Bytes(),
 			event.Index,
 			nil,
+			e.SourceTxConfirmationEvent.Payload,
 		)
 
 	// TODO: add other event types here
@@ -341,20 +351,23 @@ func handleMessageWithToken(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus
 }
 
 func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID multisig.KeyID, msg nexus.GeneralMessage) {
+	params := &types.ApproveContractCallCommandParams{
+		ContractAddress:  common.HexToAddress(msg.GetDestinationAddress()),
+		PayloadHash:      common.BytesToHash(msg.PayloadHash),
+		SourceTxID:       common.BytesToHash(msg.SourceTxID),
+		SourceChain:      msg.GetSourceChain(),
+		Sender:           msg.GetSourceAddress(),
+		SourceEventIndex: msg.SourceTxIndex,
+		Payload:          msg.Payload,
+	}
 
 	clog.Yellow("[abci/chains/handleMessage] ==== COMMAND PARAMS ====")
-
 	clog.Yellowf("chainID: %+v", chainID)
-	clog.Yellowf("keyID: %+v", keyID)
-	clog.Yellowf("destinationAddress: %+v", msg.GetDestinationAddress())
-	clog.Yellowf("payloadHash: %+v", common.BytesToHash(msg.PayloadHash))
-	clog.Yellowf("sourceTxID: %+v", common.BytesToHash(msg.SourceTxID))
-	clog.Yellowf("sourceChain: %+v", msg.GetSourceChain())
-	clog.Yellowf("sourceAddress: %+v", msg.GetSourceAddress())
-	clog.Yellowf("sourceTxIndex: %+v", msg.SourceTxIndex)
-	clog.Yellowf("messageID: %+v", msg.ID)
+	clog.Yellowf("keyID: %+x", keyID)
+	clog.Yellowf("msgID: %+x", msg.ID)
+	clog.Yellowf("params: %+v", params)
 
-	cmd := types.NewApproveContractCallCommandGeneric(chainID, keyID, common.HexToAddress(msg.GetDestinationAddress()), common.BytesToHash(msg.PayloadHash), common.BytesToHash(msg.SourceTxID), msg.GetSourceChain(), msg.GetSourceAddress(), msg.SourceTxIndex, msg.ID)
+	cmd := types.NewApproveContractCallCommandGeneric(chainID, keyID, msg.ID, params)
 	funcs.MustNoErr(ck.EnqueueCommand(ctx, cmd))
 
 	destCallApproved := &types.DestCallApproved{

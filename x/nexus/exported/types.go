@@ -302,6 +302,20 @@ func NewGeneralMessage(id string, sender CrossChainAddress, recipient CrossChain
 	}
 }
 
+func NewGeneralMessageWithPayload(id string, sender CrossChainAddress, recipient CrossChainAddress, payloadHash []byte, sourceTxID []byte, sourceTxIndex uint64, asset *sdk.Coin, payload []byte) GeneralMessage {
+	return GeneralMessage{
+		ID:            id,
+		Sender:        sender,
+		Recipient:     recipient,
+		PayloadHash:   payloadHash,
+		Status:        Approved,
+		Asset:         asset,
+		SourceTxID:    sourceTxID,
+		SourceTxIndex: sourceTxIndex,
+		Payload:       payload,
+	}
+}
+
 // ValidateBasic validates the general message
 func (m GeneralMessage) ValidateBasic() error {
 	if err := utils.ValidateString(m.ID); err != nil {
