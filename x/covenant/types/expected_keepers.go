@@ -22,7 +22,8 @@ type Keeper interface {
 	CreateCustodian(ctx sdk.Context, params Params) (err error)
 	GetCustodians(ctx sdk.Context) (custodians []*Custodian, ok bool)
 	CreateCustodianGroup(ctx sdk.Context, params Params) (err error)
-	GetCustodianGroup(ctx sdk.Context) (custodianGroup *CustodianGroup, ok bool)
+	GetAllCustodianGroups(ctx sdk.Context) (custodianGroups []*CustodianGroup, ok bool)
+	GetCustodianGroup(ctx sdk.Context, groupId string) (custodianGroup *CustodianGroup, ok bool)
 
 	GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (exported.KeyID, bool)
 	GetKey(ctx sdk.Context, keyID exported.KeyID) (exported.Key, bool)

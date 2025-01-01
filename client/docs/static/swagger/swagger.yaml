@@ -8889,6 +8889,8 @@ paths:
                 format: byte
               chain:
                 type: string
+              protocol_id:
+                type: string
       tags:
         - MsgService
   /scalar/chains/v1beta1/sign_commands:
@@ -55255,6 +55257,8 @@ definitions:
         type: string
         format: byte
       chain:
+        type: string
+      protocol_id:
         type: string
   scalar.chains.v1beta1.SignBTCCommandsResponse:
     type: object

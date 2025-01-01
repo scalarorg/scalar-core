@@ -7,22 +7,19 @@ import (
 
 // InitGenesis initializes the state from a genesis file
 func (k Keeper) InitGenesis(ctx sdk.Context, state types.GenesisState) {
-
+	k.SetCustodians(ctx, state.Custodians)
+	k.SetCustodianGroups(ctx, state.Groups)
 }
 
 // ExportGenesis generates a genesis file from the state
 func (k Keeper) ExportGenesis(ctx sdk.Context) types.GenesisState {
-	// protocols, ok := k.GetProtocols(ctx)
-	// if !ok {
-	// 	return types.NewGenesisState([]*types.Protocol{})
-	// }
-	custodians, ok := k.GetCustodians(ctx)
+	custodians, ok := k.GetAllCustodians(ctx)
 	if !ok {
 		custodians = []*types.Custodian{}
 	}
-	custodianGroup, ok := k.GetCustodianGroup(ctx)
+	custodianGroups, ok := k.GetAllCustodianGroups(ctx)
 	if !ok {
-		custodianGroup = &types.CustodianGroup{}
+		custodianGroups = []*types.CustodianGroup{}
 	}
 
 	signingSessions, ok := k.GetSigningSessions(ctx)
@@ -32,5 +29,5 @@ func (k Keeper) ExportGenesis(ctx sdk.Context) types.GenesisState {
 
 	params := k.GetParams(ctx)
 
-	return types.NewGenesisState(&params, signingSessions, custodians, custodianGroup)
+	return types.NewGenesisState(&params, signingSessions, custodians, custodianGroups)
 }

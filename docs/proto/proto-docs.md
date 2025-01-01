@@ -2662,6 +2662,7 @@ address
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
+| `protocol_id` | [string](#string) |  |  |
 
 
 
@@ -4269,7 +4270,7 @@ Pubkey used as key for lookup custodian to update other values
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `GetCustodians` | [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest) | [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse) | Get custodians | GET|/scalar/convenant/v1beta1/custodians|
+| `Custodians` | [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest) | [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse) | Get custodians | GET|/scalar/convenant/v1beta1/custodians|
 | `CustodianGroups` | [CustodianGroupsRequest](#scalar.covenant.v1beta1.CustodianGroupsRequest) | [CustodianGroupsResponse](#scalar.covenant.v1beta1.CustodianGroupsResponse) | Get custodian groups | GET|/scalar/covenant/v1beta1/custodian_groups|
 | `Params` | [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse) |  | GET|/scalar/covenant/v1beta1/params|
 

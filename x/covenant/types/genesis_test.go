@@ -8,5 +8,5 @@ import (
 )
 
 func TestDefaultGenesisState(t *testing.T) {
-	assert.NoError(t, types.NewGenesisState(types.DefaultParams(), []types.SigningSession{}, []*types.Custodian{types.DefaultCustodian()}, types.DefaultCustodianGroup()).Validate())
+	assert.NoError(t, types.NewGenesisState(types.DefaultParams(), []types.SigningSession{}, []*types.Custodian{types.DefaultCustodian()}, []*types.CustodianGroup{types.DefaultCustodianGroup()}).Validate())
 }
