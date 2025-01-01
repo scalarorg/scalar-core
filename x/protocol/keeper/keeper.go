@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"bytes"
 	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -81,6 +82,20 @@ func (k Keeper) findProtocols(ctx sdk.Context, req *types.ProtocolsRequest) ([]*
 		}
 	}
 	return protocols, true
+}
+
+func (k Keeper) getProtocolByAddress(ctx sdk.Context, address []byte) (*types.Protocol, bool) {
+	store := k.getStore(ctx)
+	iter := store.Iterator(protocolPrefix)
+	defer utils.CloseLogError(iter, k.Logger(ctx))
+	for ; iter.Valid(); iter.Next() {
+		protocol := types.Protocol{}
+		iter.UnmarshalValue(&protocol)
+		if bytes.Compare(protocol.Address, address) == 0 {
+			return &protocol, true
+		}
+	}
+	return nil, false
 }
 
 // Todo: Implement Matching function

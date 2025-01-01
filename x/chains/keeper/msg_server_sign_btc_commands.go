@@ -53,9 +53,8 @@ func (s msgServer) SignBTCCommands(c context.Context, req *types.SignBTCCommands
 		clog.Yellowf("[keeper] [msg_server_sign_btc_commands] command extra data: %+x", extraData[i])
 	}
 
-
 	// TODO: use covenant keeper sign and create psbt
-
+	// For btc signing, commandBatch.KeyID is custodianGroupId, which is set to commandBatch or get from SignBTCCommandRequest.ProtocolId
 	if err := s.multisig.Sign(
 		ctx,
 		commandBatch.GetKeyID(),

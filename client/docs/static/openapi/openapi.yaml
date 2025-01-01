@@ -8102,7 +8102,19 @@ paths:
                               "value": "1.212s"
                             }
       requestBody:
-        $ref: "#/components/requestBodies/SignBTCCommandsBody"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sender:
+                  type: string
+                  format: byte
+                chain:
+                  type: string
+                protocol_id:
+                  type: string
+        required: true
       tags:
         - MsgService
   /scalar/chains/v1beta1/sign_commands:
@@ -8293,7 +8305,17 @@ paths:
                               "value": "1.212s"
                             }
       requestBody:
-        $ref: "#/components/requestBodies/SignBTCCommandsBody"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sender:
+                  type: string
+                  format: byte
+                chain:
+                  type: string
+        required: true
       tags:
         - MsgService
   "/scalar/chains/v1beta1/token_info/{chain}":
@@ -49180,18 +49202,6 @@ components:
               key_id:
                 type: string
       required: true
-    SignBTCCommandsBody:
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              sender:
-                type: string
-                format: byte
-              chain:
-                type: string
-      required: true
   schemas:
     google.protobuf.Any:
       type: object
@@ -50851,6 +50861,8 @@ components:
           type: string
           format: byte
         chain:
+          type: string
+        protocol_id:
           type: string
     scalar.chains.v1beta1.SignBTCCommandsResponse:
       type: object

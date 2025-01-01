@@ -12,8 +12,9 @@ import (
 )
 
 var (
-	chainPrefix    = utils.KeyFromStr("chain")
-	subspacePrefix = "subspace"
+	custodianPrefix      = utils.KeyFromStr("covenantCustodian")
+	custodianGroupPrefix = utils.KeyFromStr("covenantCustodianGroup")
+	subspacePrefix       = "subspace"
 )
 
 var _ types.Keeper = &Keeper{}
@@ -47,4 +48,8 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 
 func (k Keeper) GetSigRouter() types.SigRouter {
 	return nil
+}
+
+func (k Keeper) getStore(ctx sdk.Context) utils.KVStore {
+	return utils.NewNormalizedStore(ctx.KVStore(k.storeKey), k.cdc)
 }

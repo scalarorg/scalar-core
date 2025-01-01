@@ -251,7 +251,7 @@ func GenerateGenesis(clientCtx client.Context,
 	}
 
 	defaultCovenantState := covenanttypes.DefaultGenesisState()
-	covnantGenState := covenanttypes.NewGenesisState(&defaultCovenantState.Params, defaultCovenantState.SigningSessions, custodians, &custodianGroup)
+	covnantGenState := covenanttypes.NewGenesisState(&defaultCovenantState.Params, defaultCovenantState.SigningSessions, custodians, []*covenanttypes.CustodianGroup{&custodianGroup})
 	appGenState[covenanttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&covnantGenState)
 	//Protocol
 	protocolGenState, err := generateProtocolGenesis(scalarProtocol, custodianGroup, args.tokens)
