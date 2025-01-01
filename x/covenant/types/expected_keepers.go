@@ -25,7 +25,7 @@ type Keeper interface {
 	GetAllCustodianGroups(ctx sdk.Context) (custodianGroups []*CustodianGroup, ok bool)
 	GetCustodianGroup(ctx sdk.Context, groupId string) (custodianGroup *CustodianGroup, ok bool)
 
-	GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (exported.KeyID, bool)
+	// GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (exported.KeyID, bool)
 	GetKey(ctx sdk.Context, keyID exported.KeyID) (exported.Key, bool)
 	SetKey(ctx sdk.Context, key Key)
 	GetSigRouter() SigRouter

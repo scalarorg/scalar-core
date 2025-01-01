@@ -159,3 +159,6 @@ type MultisigKeeper interface {
 type CovenantKeeper interface {
 	CreateAndSignPsbt(ctx sdk.Context, keyID multisig.KeyID, payloadHash multisig.Hash, module string, moduleMetadata ...codec.ProtoMarshaler) error
 }
+
+type ProtocolKeeper interface {
+}

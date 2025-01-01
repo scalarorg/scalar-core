@@ -73,9 +73,20 @@ type AppModule struct {
 	slashing    types.SlashingKeeper
 	staking     types.StakingKeeper
 	multisig    types.MultisigKeeper
+	covenant    types.CovenantKeeper
+	protocol    types.ProtocolKeeper
 }
 
-func NewAppModule(keeper *keeper.BaseKeeper, voter types.Voter, nexus types.Nexus, snapshotter types.Snapshotter, slashing types.SlashingKeeper, staking types.StakingKeeper, multisig types.MultisigKeeper) AppModule {
+func NewAppModule(keeper *keeper.BaseKeeper,
+	voter types.Voter,
+	nexus types.Nexus,
+	snapshotter types.Snapshotter,
+	slashing types.SlashingKeeper,
+	staking types.StakingKeeper,
+	multisig types.MultisigKeeper,
+	covenant types.CovenantKeeper,
+	protocol types.ProtocolKeeper,
+) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
 		keeper:         keeper,
@@ -85,6 +96,8 @@ func NewAppModule(keeper *keeper.BaseKeeper, voter types.Voter, nexus types.Nexu
 		slashing:       slashing,
 		staking:        staking,
 		multisig:       multisig,
+		covenant:       covenant,
+		protocol:       protocol,
 	}
 }
 
@@ -98,6 +111,8 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 		Snapshotter: am.snapshotter,
 		Slashing:    am.slashing,
 		Multisig:    am.multisig,
+		Covenant:    am.covenant,
+		Protocol:    am.protocol,
 	}
 	msgServer := keeper.NewMsgServerImpl(params)
 	types.RegisterMsgServiceServer(cfg.MsgServer(), msgServer)

@@ -613,6 +613,8 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 			GetKeeper[slashingkeeper.Keeper](keepers),
 			GetKeeper[stakingkeeper.Keeper](keepers),
 			GetKeeper[multisigKeeper.Keeper](keepers),
+			GetKeeper[covenantKeeper.Keeper](keepers),
+			GetKeeper[protocolKeeper.Keeper](keepers),
 		),
 		scalarnetModule,
 		covenant.NewAppModule(

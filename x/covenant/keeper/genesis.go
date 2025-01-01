@@ -9,6 +9,22 @@ import (
 func (k Keeper) InitGenesis(ctx sdk.Context, state types.GenesisState) {
 	k.SetCustodians(ctx, state.Custodians)
 	k.SetCustodianGroups(ctx, state.Groups)
+	var fistKey *types.Key
+	for _, group := range state.Groups {
+		key := group.CreateKey()
+		k.SetKey(ctx, key)
+		if fistKey == nil {
+			fistKey = &key
+		}
+	}
+	k.rotateKey(fistKey)
+	//Rotate the first key for all btc chains
+
+}
+
+// Todo: rorate key for every supported btc chains
+func (k Keeper) rotateKey(key *types.Key) {
+
 }
 
 // ExportGenesis generates a genesis file from the state

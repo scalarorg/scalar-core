@@ -2662,7 +2662,6 @@ address
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `protocol_id` | [string](#string) |  |  |
 
 
 

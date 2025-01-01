@@ -182,7 +182,6 @@ message SignBTCCommandsRequest {
   option (permission.exported.v1beta1.permission_role) = ROLE_UNRESTRICTED;
   bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
   string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
-  string protocol_id = 3;
 }
 
 message SignBTCCommandsResponse {
