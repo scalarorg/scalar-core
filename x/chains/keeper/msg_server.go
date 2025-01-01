@@ -31,6 +31,7 @@ type msgServer struct {
 	voter       types.Voter
 	staking     types.StakingKeeper
 	multisig    types.MultisigKeeper
+	covenant    types.CovenantKeeper
 }
 
 type MsgServerConstructArgs struct {
@@ -41,6 +42,8 @@ type MsgServerConstructArgs struct {
 	Staking     types.StakingKeeper
 	Slashing    types.SlashingKeeper
 	Multisig    types.MultisigKeeper
+	Covenant    types.CovenantKeeper
+	Protocol    types.ProtocolKeeper
 }
 
 func (args MsgServerConstructArgs) Validate() error {
@@ -72,6 +75,12 @@ func (args MsgServerConstructArgs) Validate() error {
 		return fmt.Errorf("multisig keeper is nil")
 	}
 
+	if args.Covenant == nil {
+		return fmt.Errorf("covenant keeper is nil")
+	}
+	if args.Protocol == nil {
+		return fmt.Errorf("protocol keeper is nil")
+	}
 	return nil
 }
 
@@ -84,6 +93,7 @@ func NewMsgServerImpl(args MsgServerConstructArgs) types.MsgServiceServer {
 		slashing:    args.Slashing,
 		staking:     args.Staking,
 		multisig:    args.Multisig,
+		covenant:    args.Covenant,
 	}
 }
 

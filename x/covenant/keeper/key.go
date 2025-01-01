@@ -1,40 +1,55 @@
 package keeper
 
 import (
+	"strings"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/covenant/exported"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
-	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 // GetKey returns the key of the given ID
 func (k Keeper) GetKey(ctx sdk.Context, keyID exported.KeyID) (exported.Key, bool) {
-	// var key types.Key
-	// ok := k.getStore(ctx).Get(keyPrefix.Append(utils.LowerCaseKey(keyID.String())), &key)
-	// if !ok {
-	// 	return nil, false
-	// }
+	//return key, k.getStore(ctx).Get(keyPrefix.Append(utils.LowerCaseKey(keyID.String())), &key)
+	var key types.Key
+	ok := k.getStore(ctx).Get(keyPrefix.Append(utils.LowerCaseKey(keyID.String())), &key)
+	if !ok {
+		return nil, false
+	}
 
-	// return &key, true
-	return nil, false
+	return &key, true
+}
+
+func (k Keeper) GetAllKeys(ctx sdk.Context) []exported.Key {
+	store := k.getStore(ctx)
+	keys := []exported.Key{}
+	iter := store.Iterator(custodianPrefix)
+	defer utils.CloseLogError(iter, k.Logger(ctx))
+	for ; iter.Valid(); iter.Next() {
+		key := types.Key{}
+		iter.UnmarshalValue(&key)
+		keys = append(keys, &key)
+	}
+	return keys
 }
 
 // SetKey sets the given key
 func (k Keeper) SetKey(ctx sdk.Context, key types.Key) {
-	// k.setKey(ctx, key)
+	k.getStore(ctx).Set(keyPrefix.Append(utils.LowerCaseKey(key.ID.String())), &key)
 
-	// participants := key.GetParticipants()
-	// events.Emit(ctx, types.NewKeygenCompleted(key.ID))
-	// k.Logger(ctx).Info("setting key",
-	// 	"key_id", key.ID,
-	// 	"participant_count", len(participants),
-	// 	"participants", strings.Join(slices.Map(participants, sdk.ValAddress.String), ", "),
-	// 	"participants_weight", key.GetParticipantsWeight().String(),
-	// 	"bonded_weight", key.Snapshot.BondedWeight.String(),
-	// 	"signing_threshold", key.SigningThreshold.String(),
-	// )
+	participants := key.GetParticipants()
+	k.Logger(ctx).Info("setting key",
+		"key_id", key.ID,
+		"participant_count", len(participants),
+		"participants", strings.Join(slices.Map(participants, sdk.ValAddress.String), ", "),
+		"participants_weight", key.GetParticipantsWeight().String(),
+		"bonded_weight", key.Snapshot.BondedWeight.String(),
+		"signing_threshold", key.SigningThreshold.String(),
+	)
 }
 
-func (k Keeper) GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (exported.KeyID, bool) {
-	return "", false
-}
+// func (k Keeper) GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (exported.KeyID, bool) {
+// 	return "", false
+// }

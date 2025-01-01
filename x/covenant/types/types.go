@@ -20,6 +20,18 @@ func (p Psbt) ValidateBasic() error {
 
 type TapScriptSig []byte
 
+func (g CustodianGroup) CreateKey() Key {
+	pubKeys := map[string]exported.PublicKey{}
+	for _, custodian := range g.Custodians {
+		pubKeys[custodian.Name] = custodian.BtcPubkey
+	}
+	key := Key{
+		ID:      exported.KeyID(g.Uid),
+		PubKeys: pubKeys,
+	}
+	return key
+}
+
 // GetParticipants returns the participants of the given key
 func (m Key) GetParticipants() []sdk.ValAddress {
 	return sortAddresses(
