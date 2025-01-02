@@ -110,6 +110,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 		Voter:       am.voter,
 		Snapshotter: am.snapshotter,
 		Slashing:    am.slashing,
+		Staking:     am.staking,
 		Multisig:    am.multisig,
 		Covenant:    am.covenant,
 		Protocol:    am.protocol,

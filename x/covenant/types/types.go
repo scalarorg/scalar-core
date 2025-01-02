@@ -8,7 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
-	"github.com/scalarorg/scalar-core/x/covenant/exported"
+	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	"golang.org/x/exp/maps"
 )
 
@@ -53,7 +53,7 @@ func (m Key) GetMinPassingWeight() sdk.Uint {
 }
 
 // GetPubKey returns the public key of the given participant
-func (m Key) GetPubKey(p sdk.ValAddress) (exported.PublicKey, bool) {
+func (m Key) GetPubKey(p sdk.ValAddress) (multisig.PublicKey, bool) {
 	pubKey, ok := m.PubKeys[p.String()]
 
 	return pubKey, ok

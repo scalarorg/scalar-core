@@ -32,7 +32,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	)
 
 	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
-		&MultiSig{},
+		&PsbtMultiSig{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_MsgService_serviceDesc)

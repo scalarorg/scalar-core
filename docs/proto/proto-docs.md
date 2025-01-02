@@ -213,8 +213,8 @@
     - [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup)
     - [Key](#scalar.covenant.v1beta1.Key)
     - [Key.PubKeysEntry](#scalar.covenant.v1beta1.Key.PubKeysEntry)
-    - [MultiSig](#scalar.covenant.v1beta1.MultiSig)
-    - [MultiSig.TapScriptSigsEntry](#scalar.covenant.v1beta1.MultiSig.TapScriptSigsEntry)
+    - [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig)
+    - [PsbtMultiSig.TapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.TapScriptSigsEntry)
     - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
   
     - [Status](#scalar.covenant.v1beta1.Status)
@@ -3643,9 +3643,9 @@ quorum threshold e.g.,3 |
 
 
 
-<a name="scalar.covenant.v1beta1.MultiSig"></a>
+<a name="scalar.covenant.v1beta1.PsbtMultiSig"></a>
 
-### MultiSig
+### PsbtMultiSig
 
 
 
@@ -3653,16 +3653,16 @@ quorum threshold e.g.,3 |
 | ----- | ---- | ----- | ----------- |
 | `key_id` | [string](#string) |  |  |
 | `psbt` | [bytes](#bytes) |  |  |
-| `tap_script_sigs` | [MultiSig.TapScriptSigsEntry](#scalar.covenant.v1beta1.MultiSig.TapScriptSigsEntry) | repeated |  |
+| `tap_script_sigs` | [PsbtMultiSig.TapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.TapScriptSigsEntry) | repeated |  |
 
 
 
 
 
 
-<a name="scalar.covenant.v1beta1.MultiSig.TapScriptSigsEntry"></a>
+<a name="scalar.covenant.v1beta1.PsbtMultiSig.TapScriptSigsEntry"></a>
 
-### MultiSig.TapScriptSigsEntry
+### PsbtMultiSig.TapScriptSigsEntry
 
 
 
@@ -3685,7 +3685,7 @@ quorum threshold e.g.,3 |
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `id` | [uint64](#uint64) |  |  |
-| `multi_sig` | [MultiSig](#scalar.covenant.v1beta1.MultiSig) |  |  |
+| `psbt_multi_sig` | [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig) |  |  |
 | `state` | [scalar.covenant.exported.v1beta1.PsbtState](#scalar.covenant.exported.v1beta1.PsbtState) |  |  |
 | `key` | [Key](#scalar.covenant.v1beta1.Key) |  |  |
 | `psbt` | [bytes](#bytes) |  |  |
