@@ -50,6 +50,7 @@ require (
 	google.golang.org/genproto/googleapis/api v0.0.0-20240311132316-a219d84964c2
 	google.golang.org/grpc v1.67.1
 	google.golang.org/protobuf v1.35.1
+	gotest.tools v2.2.0+incompatible
 )
 
 require (

@@ -22,10 +22,10 @@ import (
 func BeginBlocker(sdk.Context, abci.RequestBeginBlock, types.BaseKeeper) {}
 
 // EndBlocker called every block, process inflation, update validator set.
-func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) ([]abci.ValidatorUpdate, error) {
+func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, cov types.CovenantKeeper) ([]abci.ValidatorUpdate, error) {
 	clog.Yellow("Chains ABCI ENDBLOCKER")
 	handleConfirmedEvents(ctx, bk, n, m)
-	handleMessages(ctx, bk, n, m)
+	handleMessages(ctx, bk, n, m, cov)
 
 	return nil, nil
 }
@@ -208,7 +208,7 @@ func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset 
 	return n.SetNewMessage(ctx, message)
 }
 
-func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) {
+func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, cov types.CovenantKeeper) {
 	allChains := n.GetChains(ctx)
 
 	// This will handle all chains except Scalarnet.
@@ -231,7 +231,15 @@ func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types
 				}
 
 				chainID := funcs.MustOk(destCk.GetChainID(ctx))
-				keyID := funcs.MustOk(m.GetCurrentKeyID(ctx, chain.Name))
+
+				var keyID multisig.KeyID
+				if types.IsEvmChain(chain.Name) {
+					keyID = funcs.MustOk(m.GetCurrentKeyID(ctx, chain.Name))
+				} else if types.IsBitcoinChain(chain.Name) {
+					keyID = funcs.MustOk(cov.GetCurrentKeyID(ctx, chain.Name))
+				} else {
+					return false, fmt.Errorf("unsupported chain %v for key id", chain.Name)
+				}
 
 				switch msg.Type() {
 				case nexus.TypeGeneralMessage:
@@ -285,12 +293,6 @@ func validateMessage(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, m typ
 		if _, ok := ck.GetGatewayAddress(ctx); !ok {
 			return fmt.Errorf("destination chain gateway for chain %v not deployed yet", chain.Name)
 		}
-
-		_, ok := m.GetCurrentKeyID(ctx, chain.Name)
-		if !ok {
-			return fmt.Errorf("current key not set for chain %v", chain.Name)
-		}
-
 	}
 
 	if !common.IsHexAddress(msg.GetDestinationAddress()) {

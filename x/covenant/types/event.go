@@ -5,16 +5,18 @@ import (
 
 	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 // NewSigningStarted is the constructor for event signing started
-func NewSigningStarted(sigID uint64, key multisigTypes.Key, psbt Psbt, requestingModule string) *SigningStarted {
-	return &SigningStarted{
+func NewCreateAndSigningPsbtStarted(sigID uint64, key multisigTypes.Key, batchPsbtPayload []PsbtPayload, requestingModule string, chainName nexus.ChainName) *CreateAndSigningPsbtStarted {
+	return &CreateAndSigningPsbtStarted{
 		Module:           ModuleName,
+		Chain:            chainName,
 		SigID:            sigID,
 		KeyID:            key.GetID(),
 		PubKeys:          key.GetPubKeys(),
-		Psbt:             psbt,
+		BatchPsbtPayload: batchPsbtPayload,
 		RequestingModule: requestingModule,
 	}
 }

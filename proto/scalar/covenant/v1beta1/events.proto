@@ -9,21 +9,26 @@ import "scalar/covenant/exported/v1beta1/types.proto";
 
 option (gogoproto.goproto_getters_all) = false;
 
-message SigningStarted {
+message CreateAndSigningPsbtStarted {
   option (gogoproto.stable_marshaler) = true;
 
   string module = 1;
-  uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
-  string key_id = 3 [
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  uint64 sig_id = 3 [ (gogoproto.customname) = "SigID" ];
+  string key_id = 4 [
     (gogoproto.customname) = "KeyID",
     (gogoproto.casttype) =
         "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
-  map<string, bytes> pub_keys = 4
+  map<string, bytes> pub_keys = 5
       [ (gogoproto.castvalue) =
             "github.com/scalarorg/scalar-core/x/multisig/exported.PublicKey" ];
-  bytes psbt = 5 [ (gogoproto.casttype) = "Psbt" ];
-  string requesting_module = 6;
+  // it is a batch of psbt payloads, which were encoded in the evm transaction
+  repeated bytes batch_psbt_payload = 6
+      [ (gogoproto.casttype) = "PsbtPayload" ];
+  string requesting_module = 7;
 }
 
 message SigningCompleted {
