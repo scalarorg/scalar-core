@@ -8,6 +8,7 @@ import (
 
 	"github.com/scalarorg/scalar-core/utils"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
+	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
@@ -28,7 +29,7 @@ type Keeper interface {
 
 	GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
 	GetKey(ctx sdk.Context, keyID multisig.KeyID) (multisig.Key, bool)
-	SetKey(ctx sdk.Context, key Key)
+	SetKey(ctx sdk.Context, key multisigTypes.Key)
 	GetCovenantRouter() CovenantRouter
 	SetCovenantRouter(router CovenantRouter)
 

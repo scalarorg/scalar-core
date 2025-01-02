@@ -209,11 +209,19 @@
     - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
     - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
   
+- [scalar/multisig/v1beta1/types.proto](#scalar/multisig/v1beta1/types.proto)
+    - [Key](#scalar.multisig.v1beta1.Key)
+    - [Key.PubKeysEntry](#scalar.multisig.v1beta1.Key.PubKeysEntry)
+    - [KeyEpoch](#scalar.multisig.v1beta1.KeyEpoch)
+    - [KeygenSession](#scalar.multisig.v1beta1.KeygenSession)
+    - [KeygenSession.IsPubKeyReceivedEntry](#scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry)
+    - [MultiSig](#scalar.multisig.v1beta1.MultiSig)
+    - [MultiSig.SigsEntry](#scalar.multisig.v1beta1.MultiSig.SigsEntry)
+    - [SigningSession](#scalar.multisig.v1beta1.SigningSession)
+  
 - [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
     - [Custodian](#scalar.covenant.v1beta1.Custodian)
     - [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup)
-    - [Key](#scalar.covenant.v1beta1.Key)
-    - [Key.PubKeysEntry](#scalar.covenant.v1beta1.Key.PubKeysEntry)
     - [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig)
     - [PsbtMultiSig.TapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.TapScriptSigsEntry)
     - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
@@ -277,16 +285,6 @@
   
 - [scalar/multisig/v1beta1/params.proto](#scalar/multisig/v1beta1/params.proto)
     - [Params](#scalar.multisig.v1beta1.Params)
-  
-- [scalar/multisig/v1beta1/types.proto](#scalar/multisig/v1beta1/types.proto)
-    - [Key](#scalar.multisig.v1beta1.Key)
-    - [Key.PubKeysEntry](#scalar.multisig.v1beta1.Key.PubKeysEntry)
-    - [KeyEpoch](#scalar.multisig.v1beta1.KeyEpoch)
-    - [KeygenSession](#scalar.multisig.v1beta1.KeygenSession)
-    - [KeygenSession.IsPubKeyReceivedEntry](#scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry)
-    - [MultiSig](#scalar.multisig.v1beta1.MultiSig)
-    - [MultiSig.SigsEntry](#scalar.multisig.v1beta1.MultiSig.SigsEntry)
-    - [SigningSession](#scalar.multisig.v1beta1.SigningSession)
   
 - [scalar/multisig/v1beta1/genesis.proto](#scalar/multisig/v1beta1/genesis.proto)
     - [GenesisState](#scalar.multisig.v1beta1.GenesisState)
@@ -3571,6 +3569,167 @@ ERC20Deposit contains information for an ERC20 deposit
 
 
 
+<a name="scalar/multisig/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/multisig/v1beta1/types.proto
+
+
+
+<a name="scalar.multisig.v1beta1.Key"></a>
+
+### Key
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `snapshot` | [scalar.snapshot.exported.v1beta1.Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot) |  |  |
+| `pub_keys` | [Key.PubKeysEntry](#scalar.multisig.v1beta1.Key.PubKeysEntry) | repeated |  |
+| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `state` | [scalar.multisig.exported.v1beta1.KeyState](#scalar.multisig.exported.v1beta1.KeyState) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.Key.PubKeysEntry"></a>
+
+### Key.PubKeysEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeyEpoch"></a>
+
+### KeyEpoch
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `epoch` | [uint64](#uint64) |  |  |
+| `chain` | [string](#string) |  |  |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeygenSession"></a>
+
+### KeygenSession
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [Key](#scalar.multisig.v1beta1.Key) |  |  |
+| `state` | [scalar.multisig.exported.v1beta1.MultisigState](#scalar.multisig.exported.v1beta1.MultisigState) |  |  |
+| `keygen_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `expires_at` | [int64](#int64) |  |  |
+| `completed_at` | [int64](#int64) |  |  |
+| `is_pub_key_received` | [KeygenSession.IsPubKeyReceivedEntry](#scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry) | repeated |  |
+| `grace_period` | [int64](#int64) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry"></a>
+
+### KeygenSession.IsPubKeyReceivedEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.MultiSig"></a>
+
+### MultiSig
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `sigs` | [MultiSig.SigsEntry](#scalar.multisig.v1beta1.MultiSig.SigsEntry) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.MultiSig.SigsEntry"></a>
+
+### MultiSig.SigsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.SigningSession"></a>
+
+### SigningSession
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [uint64](#uint64) |  |  |
+| `multi_sig` | [MultiSig](#scalar.multisig.v1beta1.MultiSig) |  |  |
+| `state` | [scalar.multisig.exported.v1beta1.MultisigState](#scalar.multisig.exported.v1beta1.MultisigState) |  |  |
+| `key` | [Key](#scalar.multisig.v1beta1.Key) |  |  |
+| `expires_at` | [int64](#int64) |  |  |
+| `completed_at` | [int64](#int64) |  |  |
+| `grace_period` | [int64](#int64) |  |  |
+| `module` | [string](#string) |  |  |
+| `module_metadata` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/covenant/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -3623,41 +3782,6 @@ quorum threshold e.g.,3 |
 
 
 
-<a name="scalar.covenant.v1beta1.Key"></a>
-
-### Key
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `id` | [string](#string) |  |  |
-| `snapshot` | [scalar.snapshot.exported.v1beta1.Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot) |  |  |
-| `pub_keys` | [Key.PubKeysEntry](#scalar.covenant.v1beta1.Key.PubKeysEntry) | repeated |  |
-| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `state` | [scalar.covenant.exported.v1beta1.KeyState](#scalar.covenant.exported.v1beta1.KeyState) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.Key.PubKeysEntry"></a>
-
-### Key.PubKeysEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [string](#string) |  |  |
-| `value` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
 <a name="scalar.covenant.v1beta1.PsbtMultiSig"></a>
 
 ### PsbtMultiSig
@@ -3702,7 +3826,7 @@ quorum threshold e.g.,3 |
 | `id` | [uint64](#uint64) |  |  |
 | `psbt_multi_sig` | [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig) |  |  |
 | `state` | [scalar.covenant.exported.v1beta1.PsbtState](#scalar.covenant.exported.v1beta1.PsbtState) |  |  |
-| `key` | [Key](#scalar.covenant.v1beta1.Key) |  |  |
+| `key` | [scalar.multisig.v1beta1.Key](#scalar.multisig.v1beta1.Key) |  |  |
 | `psbt` | [bytes](#bytes) |  |  |
 | `expires_at` | [int64](#int64) |  |  |
 | `completed_at` | [int64](#int64) |  |  |
@@ -4547,167 +4671,6 @@ Params represent the genesis parameters for the module
 | `signing_timeout` | [int64](#int64) |  |  |
 | `signing_grace_period` | [int64](#int64) |  |  |
 | `active_epoch_count` | [uint64](#uint64) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/multisig/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/multisig/v1beta1/types.proto
-
-
-
-<a name="scalar.multisig.v1beta1.Key"></a>
-
-### Key
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `id` | [string](#string) |  |  |
-| `snapshot` | [scalar.snapshot.exported.v1beta1.Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot) |  |  |
-| `pub_keys` | [Key.PubKeysEntry](#scalar.multisig.v1beta1.Key.PubKeysEntry) | repeated |  |
-| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `state` | [scalar.multisig.exported.v1beta1.KeyState](#scalar.multisig.exported.v1beta1.KeyState) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.Key.PubKeysEntry"></a>
-
-### Key.PubKeysEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [string](#string) |  |  |
-| `value` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeyEpoch"></a>
-
-### KeyEpoch
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `epoch` | [uint64](#uint64) |  |  |
-| `chain` | [string](#string) |  |  |
-| `key_id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeygenSession"></a>
-
-### KeygenSession
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [Key](#scalar.multisig.v1beta1.Key) |  |  |
-| `state` | [scalar.multisig.exported.v1beta1.MultisigState](#scalar.multisig.exported.v1beta1.MultisigState) |  |  |
-| `keygen_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `expires_at` | [int64](#int64) |  |  |
-| `completed_at` | [int64](#int64) |  |  |
-| `is_pub_key_received` | [KeygenSession.IsPubKeyReceivedEntry](#scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry) | repeated |  |
-| `grace_period` | [int64](#int64) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry"></a>
-
-### KeygenSession.IsPubKeyReceivedEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [string](#string) |  |  |
-| `value` | [bool](#bool) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.MultiSig"></a>
-
-### MultiSig
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `sigs` | [MultiSig.SigsEntry](#scalar.multisig.v1beta1.MultiSig.SigsEntry) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.MultiSig.SigsEntry"></a>
-
-### MultiSig.SigsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [string](#string) |  |  |
-| `value` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.SigningSession"></a>
-
-### SigningSession
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `id` | [uint64](#uint64) |  |  |
-| `multi_sig` | [MultiSig](#scalar.multisig.v1beta1.MultiSig) |  |  |
-| `state` | [scalar.multisig.exported.v1beta1.MultisigState](#scalar.multisig.exported.v1beta1.MultisigState) |  |  |
-| `key` | [Key](#scalar.multisig.v1beta1.Key) |  |  |
-| `expires_at` | [int64](#int64) |  |  |
-| `completed_at` | [int64](#int64) |  |  |
-| `grace_period` | [int64](#int64) |  |  |
-| `module` | [string](#string) |  |  |
-| `module_metadata` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
 
 
 

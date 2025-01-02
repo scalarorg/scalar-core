@@ -12,13 +12,14 @@ import (
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
-	"github.com/scalarorg/scalar-core/x/covenant/exported"
+	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
+	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 )
 
 var _ codectypes.UnpackInterfacesMessage = SigningSession{}
 
 // NewSigningSession is the contructor for signing session
-func NewSigningSession(id uint64, key Key, psbt Psbt, expiresAt int64, gracePeriod int64, module string, moduleMetadataProto ...codec.ProtoMarshaler) SigningSession {
+func NewSigningSession(id uint64, key multisigTypes.Key, psbt Psbt, expiresAt int64, gracePeriod int64, module string, moduleMetadataProto ...codec.ProtoMarshaler) SigningSession {
 	var moduleMetadata *codectypes.Any
 	if len(moduleMetadataProto) > 0 {
 		moduleMetadata = funcs.Must(codectypes.NewAnyWithValue(moduleMetadataProto[0]))
@@ -246,7 +247,7 @@ func (m PsbtMultiSig) GetTapScriptSig(p sdk.ValAddress) (*exported.TapScriptSig,
 
 // GetParticipants returns the participants of the given multi sig
 func (m PsbtMultiSig) GetParticipants() []sdk.ValAddress {
-	return sortAddresses(
+	return multisigTypes.SortAddresses(
 		slices.Map(maps.Keys(m.TapScriptSigs), func(a string) sdk.ValAddress { return funcs.Must(sdk.ValAddressFromBech32(a)) }),
 	)
 }

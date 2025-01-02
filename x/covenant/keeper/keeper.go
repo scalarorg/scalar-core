@@ -8,7 +8,6 @@ import (
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/covenant/types"
-	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	"github.com/tendermint/tendermint/libs/log"
 )
 
@@ -72,8 +71,4 @@ func (k Keeper) GetCovenantRouter() types.CovenantRouter {
 
 func (k Keeper) getStore(ctx sdk.Context) utils.KVStore {
 	return utils.NewNormalizedStore(ctx.KVStore(k.storeKey), k.cdc)
-}
-
-func (k Keeper) CreateAndSignPsbt(ctx sdk.Context, keyID multisig.KeyID, payloadHash multisig.Hash, module string, moduleMetadata ...codec.ProtoMarshaler) error {
-	return nil
 }
