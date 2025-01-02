@@ -3,11 +3,12 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/scalarorg/scalar-core/x/covenant/exported"
+	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
+	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 )
 
 // NewSigningStarted is the constructor for event signing started
-func NewSigningStarted(sigID uint64, key Key, psbt Psbt, requestingModule string) *SigningStarted {
+func NewSigningStarted(sigID uint64, key multisigTypes.Key, psbt Psbt, requestingModule string) *SigningStarted {
 	return &SigningStarted{
 		Module:           ModuleName,
 		SigID:            sigID,

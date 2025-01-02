@@ -238,7 +238,7 @@ func (m MultiSig) GetSignature(p sdk.ValAddress) (ec.Signature, bool) {
 
 // GetParticipants returns the participants of the given multi sig
 func (m MultiSig) GetParticipants() []sdk.ValAddress {
-	return sortAddresses(
+	return SortAddresses(
 		slices.Map(maps.Keys(m.Sigs), func(a string) sdk.ValAddress { return funcs.Must(sdk.ValAddressFromBech32(a)) }),
 	)
 }
