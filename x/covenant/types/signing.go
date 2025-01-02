@@ -18,25 +18,36 @@ import (
 
 var _ codectypes.UnpackInterfacesMessage = SigningSession{}
 
+type NewSigningSessionParams struct {
+	ID               uint64
+	Key              multisigTypes.Key
+	BatchPsbtPayload []PsbtPayload
+	ExpiresAt        int64
+	GracePeriod      int64
+	Module           string
+	ModuleMetadata   []codec.ProtoMarshaler
+}
+
 // NewSigningSession is the contructor for signing session
-func NewSigningSession(id uint64, key multisigTypes.Key, psbt Psbt, expiresAt int64, gracePeriod int64, module string, moduleMetadataProto ...codec.ProtoMarshaler) SigningSession {
+func NewSigningSession(params *NewSigningSessionParams) SigningSession {
 	var moduleMetadata *codectypes.Any
-	if len(moduleMetadataProto) > 0 {
-		moduleMetadata = funcs.Must(codectypes.NewAnyWithValue(moduleMetadataProto[0]))
+	if len(params.ModuleMetadata) > 0 {
+		moduleMetadata = funcs.Must(codectypes.NewAnyWithValue(params.ModuleMetadata[0]))
 	}
 
 	return SigningSession{
-		ID: id,
+		ID: params.ID,
 		PsbtMultiSig: PsbtMultiSig{
-			KeyID: key.ID,
-			Psbt:  psbt,
+			KeyID: params.Key.ID,
+			Psbt:  EmptyPsbt,
 		},
-		State:          exported.Pending,
-		Key:            key,
-		ExpiresAt:      expiresAt,
-		GracePeriod:    gracePeriod,
-		Module:         module,
-		ModuleMetadata: moduleMetadata,
+		State:            exported.Pending,
+		Key:              params.Key,
+		ExpiresAt:        params.ExpiresAt,
+		GracePeriod:      params.GracePeriod,
+		Module:           params.Module,
+		ModuleMetadata:   moduleMetadata,
+		BatchPsbtPayload: params.BatchPsbtPayload,
 	}
 }
 
@@ -207,13 +218,17 @@ func (m SigningSession) isExpired(blockHeight int64) bool {
 
 // ValidateBasic returns an error if the given sig is invalid; nil otherwise
 func (m PsbtMultiSig) ValidateBasic() error {
+	clog.Magenta("validate m.KeyID", m.KeyID)
 	if err := m.KeyID.ValidateBasic(); err != nil {
 		return err
 	}
 
+	clog.Magenta("validate m.Psbt")
 	if err := m.Psbt.ValidateBasic(); err != nil {
 		return err
 	}
+
+	clog.Magenta("validate m.TapScriptSigs, len: ", len(m.TapScriptSigs))
 
 	signatureSeen := make(map[string]bool, len(m.TapScriptSigs))
 	for address, sig := range m.TapScriptSigs {
@@ -224,6 +239,7 @@ func (m PsbtMultiSig) ValidateBasic() error {
 		signatureSeen[sigHex] = true
 
 		if _, err := sdk.ValAddressFromBech32(address); err != nil {
+			clog.Magenta("validate m.TapScriptSigs vald address, address: ", address)
 			return err
 		}
 

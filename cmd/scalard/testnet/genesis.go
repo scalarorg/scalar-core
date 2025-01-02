@@ -230,7 +230,7 @@ func GenerateGenesis(clientCtx client.Context,
 	//Covenant
 	custodians := make([]*covenanttypes.Custodian, len(validatorInfos))
 	custodianGroup := covenanttypes.CustodianGroup{
-		Uid:         "1c92b906-d5f8-477d-98c7-0d70d94ebb36",
+		Uid:         "mock|123456789",
 		Name:        "scalar",
 		Custodians:  custodians,
 		Quorum:      3,

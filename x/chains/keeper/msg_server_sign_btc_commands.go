@@ -43,13 +43,12 @@ func (s msgServer) SignBTCCommands(c context.Context, req *types.SignBTCCommands
 		return &types.SignBTCCommandsResponse{CommandCount: 0, BatchedCommandsID: nil}, nil
 	}
 
-	// TODO: use covenant keeper sign and create psbt
-
 	if err := s.covenant.CreateAndSignPsbt(
 		ctx,
 		commandBatch.GetKeyID(),
-		commandBatch.GetSigHash().Bytes(),
+		commandBatch.GetExtraData(),
 		types.ModuleName,
+		chain.Name,
 		types.NewSigMetadata(types.SigCommand, chain.Name, commandBatch.GetID()),
 	); err != nil {
 		return nil, err

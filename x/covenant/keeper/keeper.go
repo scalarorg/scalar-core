@@ -7,16 +7,25 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/key"
 	"github.com/scalarorg/scalar-core/x/covenant/types"
 	"github.com/tendermint/tendermint/libs/log"
 )
 
 var (
-	custodianPrefix      = utils.KeyFromStr("covenantCustodian")
-	custodianGroupPrefix = utils.KeyFromStr("covenantCustodianGroup")
-	keyPrefix            = utils.KeyFromStr("key")
-	keyEpochPrefix       = utils.KeyFromStr("keyEpoch")
-	subspacePrefix       = "subspace"
+	keygenPrefix           = utils.KeyFromInt(1)
+	signingPrefix          = utils.KeyFromInt(2)
+	keyPrefix              = utils.KeyFromInt(3)
+	expiryKeygenPrefix     = utils.KeyFromInt(4)
+	expirySigningPrefix    = utils.KeyFromInt(5)
+	keyEpochPrefix         = utils.KeyFromInt(6)
+	keyRotationCountPrefix = utils.KeyFromInt(7)
+	custodianPrefix        = utils.KeyFromInt(8)
+	custodianGroupPrefix   = utils.KeyFromInt(9)
+
+	signingSessionCountKey = utils.KeyFromInt(100)
+
+	keygenOptOutPrefix = key.RegisterStaticKey(types.ModuleName, 8)
 )
 
 var _ types.Keeper = &Keeper{}
@@ -48,27 +57,10 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.Params{}
 }
 
-func (k *Keeper) SetCovenantRouter(router types.CovenantRouter) {
-	if k.covRouter != nil {
-		panic("router already set")
-	}
-
-	k.covRouter = router
-
-	// In order to avoid invalid or non-deterministic behavior, we seal the router immediately
-	// to prevent additional handlers from being registered after the keeper is initialized.
-	k.covRouter.Seal()
-}
-
-// GetCovenantRouter returns the covenant router. If no router was set, it returns a (sealed) router with no handlers
-func (k Keeper) GetCovenantRouter() types.CovenantRouter {
-	if k.covRouter == nil {
-		k.SetCovenantRouter(types.NewCovenantRouter())
-	}
-
-	return k.covRouter
-}
-
 func (k Keeper) getStore(ctx sdk.Context) utils.KVStore {
 	return utils.NewNormalizedStore(ctx.KVStore(k.storeKey), k.cdc)
+}
+
+func (k Keeper) setParams(ctx sdk.Context, params types.Params) {
+	k.paramSpace.SetParamSet(ctx, &params)
 }

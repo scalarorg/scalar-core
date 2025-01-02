@@ -2,23 +2,29 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 )
 
 // InitGenesis initializes the state from a genesis file
 func (k Keeper) InitGenesis(ctx sdk.Context, state types.GenesisState) {
+	k.setParams(ctx, state.Params)
+	slices.ForEach(state.SigningSessions, withContext(ctx, k.setSigningSession))
+
+	k.setSigningSessionCount(ctx, uint64(len(state.SigningSessions)))
+
 	k.SetCustodians(ctx, state.Custodians)
 	k.SetCustodianGroups(ctx, state.Groups)
-	var fistKey *multisigTypes.Key
+	var firstKey *multisigTypes.Key
 	for _, group := range state.Groups {
 		key := group.CreateKey()
 		k.SetKey(ctx, key)
-		if fistKey == nil {
-			fistKey = &key
+		if firstKey == nil {
+			firstKey = &key
 		}
 	}
-	k.rotateKey(fistKey)
+	k.rotateKey(firstKey)
 	//Rotate the first key for all btc chains
 
 }
@@ -47,4 +53,10 @@ func (k Keeper) ExportGenesis(ctx sdk.Context) types.GenesisState {
 	params := k.GetParams(ctx)
 
 	return types.NewGenesisState(&params, signingSessions, custodians, custodianGroups)
+}
+
+func withContext[T any](ctx sdk.Context, fn func(sdk.Context, T)) func(T) {
+	return func(t T) {
+		fn(ctx, t)
+	}
 }

@@ -53,25 +53,6 @@ message PsbtMultiSig {
   map<string, covenant.exported.v1beta1.TapScriptSig> tap_script_sigs = 3;
 }
 
-// message Key {
-//   option (gogoproto.stable_marshaler) = true;
-
-//   string id = 1 [
-//     (gogoproto.customname) = "ID",
-//     (gogoproto.casttype) =
-//         "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
-//   ];
-//   snapshot.exported.v1beta1.Snapshot snapshot = 2
-//       [ (gogoproto.nullable) = false ];
-//   map<string, bytes> pub_keys = 3
-//       [ (gogoproto.castvalue) =
-//             "github.com/scalarorg/scalar-core/x/multisig/exported.PublicKey"
-//             ];
-//   utils.v1beta1.Threshold signing_threshold = 4
-//       [ (gogoproto.nullable) = false ];
-//   exported.v1beta1.KeyState state = 5;
-// }
-
 message SigningSession {
   option (gogoproto.stable_marshaler) = true;
 
@@ -79,12 +60,13 @@ message SigningSession {
   PsbtMultiSig psbt_multi_sig = 2 [ (gogoproto.nullable) = false ];
   exported.v1beta1.PsbtState state = 3;
   scalar.multisig.v1beta1.Key key = 4 [ (gogoproto.nullable) = false ];
-  bytes psbt = 5 [ (gogoproto.casttype) = "Psbt" ];
-  int64 expires_at = 6;
-  int64 completed_at = 7;
-  int64 grace_period = 8;
-  string module = 9;
-  google.protobuf.Any module_metadata = 10
+  int64 expires_at = 5;
+  int64 completed_at = 6;
+  int64 grace_period = 7;
+  string module = 8;
+  google.protobuf.Any module_metadata = 9
       [ (cosmos_proto.accepts_interface) =
             "github.com/cosmos/codec/ProtoMarshaler" ];
+  repeated bytes batch_psbt_payload = 10
+      [ (gogoproto.casttype) = "PsbtPayload" ];
 }

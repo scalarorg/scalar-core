@@ -22,7 +22,7 @@ func KeyTable() params.KeyTable {
 // DefaultParams creates the default genesis parameters
 func DefaultParams() *Params {
 	return &Params{
-		SigningThreshold:   utils.NewThreshold(3, 5),
+		SigningThreshold:   utils.NewThreshold(3, 4),
 		SigningTimeout:     10,
 		SigningGracePeriod: 1,
 		ActiveEpochCount:   5,
