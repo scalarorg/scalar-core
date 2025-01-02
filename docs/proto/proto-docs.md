@@ -206,6 +206,7 @@
 - [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
     - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
   
+    - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
     - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
   
 - [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
@@ -3535,6 +3536,19 @@ ERC20Deposit contains information for an ERC20 deposit
  <!-- end messages -->
 
 
+<a name="scalar.covenant.exported.v1beta1.KeyState"></a>
+
+### KeyState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| KEY_STATE_UNSPECIFIED | 0 |  |
+| KEY_STATE_ASSIGNED | 1 |  |
+| KEY_STATE_ACTIVE | 2 |  |
+
+
+
 <a name="scalar.covenant.exported.v1beta1.PsbtState"></a>
 
 ### PsbtState
@@ -3620,7 +3634,8 @@ quorum threshold e.g.,3 |
 | `id` | [string](#string) |  |  |
 | `snapshot` | [scalar.snapshot.exported.v1beta1.Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot) |  |  |
 | `pub_keys` | [Key.PubKeysEntry](#scalar.covenant.v1beta1.Key.PubKeysEntry) | repeated |  |
-| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  | exported.v1beta1.KeyState state = 5; |
+| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `state` | [scalar.covenant.exported.v1beta1.KeyState](#scalar.covenant.exported.v1beta1.KeyState) |  |  |
 
 
 

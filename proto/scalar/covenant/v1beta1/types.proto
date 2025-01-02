@@ -68,7 +68,7 @@ message Key {
             "github.com/scalarorg/scalar-core/x/multisig/exported.PublicKey" ];
   utils.v1beta1.Threshold signing_threshold = 4
       [ (gogoproto.nullable) = false ];
-  // exported.v1beta1.KeyState state = 5;
+  exported.v1beta1.KeyState state = 5;
 }
 
 message SigningSession {

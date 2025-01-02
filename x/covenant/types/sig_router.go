@@ -9,31 +9,31 @@ import (
 )
 
 // SigRouter implements a sig router based on module name
-type SigRouter interface {
-	AddHandler(module string, handler exported.SigHandler) SigRouter
+type CovenantRouter interface {
+	AddHandler(module string, handler exported.CovenantHandler) CovenantRouter
 	HasHandler(module string) bool
-	GetHandler(module string) exported.SigHandler
+	GetHandler(module string) exported.CovenantHandler
 	Seal()
 }
 
-var _ SigRouter = (*router)(nil)
+var _ CovenantRouter = (*router)(nil)
 
 type router struct {
-	handlers map[string]exported.SigHandler
+	handlers map[string]exported.CovenantHandler
 	sealed   bool
 }
 
 // NewSigRouter is the contructor for sig router
-func NewSigRouter() SigRouter {
+func NewCovenantRouter() CovenantRouter {
 	return &router{
-		handlers: make(map[string]exported.SigHandler),
+		handlers: make(map[string]exported.CovenantHandler),
 	}
 }
 
 // AddHandler registers a new handler for the given module; panics if the
 // router is sealed, if the module is invalid, or if the module has been
 // registered already.
-func (r *router) AddHandler(module string, handler exported.SigHandler) SigRouter {
+func (r *router) AddHandler(module string, handler exported.CovenantHandler) CovenantRouter {
 	if handler == nil {
 		panic("nil handler received")
 	}
@@ -62,7 +62,7 @@ func (r router) HasHandler(module string) bool {
 }
 
 // GetHandler returns the handler for the given module.
-func (r router) GetHandler(module string) exported.SigHandler {
+func (r router) GetHandler(module string) exported.CovenantHandler {
 	if !r.HasHandler(module) {
 		panic(fmt.Sprintf("no handler for module %s registered", module))
 	}

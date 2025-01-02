@@ -10,7 +10,7 @@ import (
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 )
 
-//go:generate moq -out ./mock/types.go -pkg mock . SigHandler Key MultiSig
+//go:generate moq -out ./mock/types.go -pkg mock . CovenantHandler Key MultiSig
 
 // PsbtMultiSig provides an interface to work with the multi sig
 type PsbtMultiSig interface {
@@ -20,9 +20,9 @@ type PsbtMultiSig interface {
 	ValidateBasic() error
 }
 
-// SigHandler defines the interface for the requesting module to implement in
+// CovenantHandler defines the interface for the requesting module to implement in
 // order to handle the different results of signing session
-type SigHandler interface {
+type CovenantHandler interface {
 	HandleCompleted(ctx sdk.Context, sig utils.ValidatedProtoMarshaler, moduleMetadata codec.ProtoMarshaler) error
 	HandleFailed(ctx sdk.Context, moduleMetadata codec.ProtoMarshaler) error
 }

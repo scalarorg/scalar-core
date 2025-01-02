@@ -28,7 +28,7 @@ type Keeper struct {
 	cdc        codec.BinaryCodec
 	storeKey   sdk.StoreKey
 	paramSpace paramtypes.Subspace
-	sigRouter  types.SigRouter
+	covRouter  types.CovenantRouter
 }
 
 // NewKeeper returns a new EVM base keeper
@@ -49,8 +49,25 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.Params{}
 }
 
-func (k Keeper) GetSigRouter() types.SigRouter {
-	return nil
+func (k *Keeper) SetCovenantRouter(router types.CovenantRouter) {
+	if k.covRouter != nil {
+		panic("router already set")
+	}
+
+	k.covRouter = router
+
+	// In order to avoid invalid or non-deterministic behavior, we seal the router immediately
+	// to prevent additional handlers from being registered after the keeper is initialized.
+	k.covRouter.Seal()
+}
+
+// GetCovenantRouter returns the covenant router. If no router was set, it returns a (sealed) router with no handlers
+func (k Keeper) GetCovenantRouter() types.CovenantRouter {
+	if k.covRouter == nil {
+		k.SetCovenantRouter(types.NewCovenantRouter())
+	}
+
+	return k.covRouter
 }
 
 func (k Keeper) getStore(ctx sdk.Context) utils.KVStore {

@@ -10,10 +10,10 @@ import (
 )
 
 func (k Keeper) CreateAndSignPsbt(ctx sdk.Context, keyID multisig.KeyID, payloadHash multisig.Hash, module string, moduleMetadata ...codec.ProtoMarshaler) error {
-	clog.Green("Creating and signing PSBT", "keyID", keyID, "payloadHash", payloadHash, "module", module)
+	clog.Green("Creating and signing PSBT", "keyID", keyID, "payloadHash", payloadHash, "module", module, "moduleMetadata", moduleMetadata)
 
-	if !k.GetSigRouter().HasHandler(module) {
-		panic(fmt.Errorf("sig handler not registered for module %s", module))
+	if !k.GetCovenantRouter().HasHandler(module) {
+		panic(fmt.Errorf("covenant handler not registered for module %s", module))
 	}
 
 	// key, ok := k.getKey(ctx, keyID)
