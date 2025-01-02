@@ -43,19 +43,9 @@ func (s msgServer) SignBTCCommands(c context.Context, req *types.SignBTCCommands
 		return &types.SignBTCCommandsResponse{CommandCount: 0, BatchedCommandsID: nil}, nil
 	}
 
-	clog.Yellow("Sign BTC Commands")
-
-	extraData := commandBatch.GetExtraData()
-
-	for i, command := range commandBatch.GetCommandIDs() {
-		clog.Yellowf("[keeper] [msg_server_sign_btc_commands] command: %+x", command.Hex())
-		clog.Yellowf("[keeper] [msg_server_sign_btc_commands] command data: %+x", commandBatch.GetData())
-		clog.Yellowf("[keeper] [msg_server_sign_btc_commands] command extra data: %+x", extraData[i])
-	}
-
 	// TODO: use covenant keeper sign and create psbt
-	// For btc signing, commandBatch.KeyID is custodianGroupId, which is set to commandBatch or get from SignBTCCommandRequest.ProtocolId
-	if err := s.multisig.Sign(
+
+	if err := s.covenant.CreateAndSignPsbt(
 		ctx,
 		commandBatch.GetKeyID(),
 		commandBatch.GetSigHash().Bytes(),

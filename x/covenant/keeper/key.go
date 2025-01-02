@@ -6,14 +6,14 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/slices"
-	"github.com/scalarorg/scalar-core/x/covenant/exported"
-	types "github.com/scalarorg/scalar-core/x/covenant/types"
+	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
+	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 // GetKey returns the key of the given ID
-func (k Keeper) GetKey(ctx sdk.Context, keyID exported.KeyID) (exported.Key, bool) {
-	//return key, k.getStore(ctx).Get(keyPrefix.Append(utils.LowerCaseKey(keyID.String())), &key)
-	var key types.Key
+func (k Keeper) GetKey(ctx sdk.Context, keyID multisig.KeyID) (multisig.Key, bool) {
+	var key multisigTypes.Key
 	ok := k.getStore(ctx).Get(keyPrefix.Append(utils.LowerCaseKey(keyID.String())), &key)
 	if !ok {
 		return nil, false
@@ -22,13 +22,13 @@ func (k Keeper) GetKey(ctx sdk.Context, keyID exported.KeyID) (exported.Key, boo
 	return &key, true
 }
 
-func (k Keeper) GetAllKeys(ctx sdk.Context) []exported.Key {
+func (k Keeper) GetAllKeys(ctx sdk.Context) []multisig.Key {
 	store := k.getStore(ctx)
-	keys := []exported.Key{}
-	iter := store.Iterator(custodianPrefix)
+	keys := []multisig.Key{}
+	iter := store.Iterator(keyPrefix)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 	for ; iter.Valid(); iter.Next() {
-		key := types.Key{}
+		key := multisigTypes.Key{}
 		iter.UnmarshalValue(&key)
 		keys = append(keys, &key)
 	}
@@ -36,7 +36,7 @@ func (k Keeper) GetAllKeys(ctx sdk.Context) []exported.Key {
 }
 
 // SetKey sets the given key
-func (k Keeper) SetKey(ctx sdk.Context, key types.Key) {
+func (k Keeper) SetKey(ctx sdk.Context, key multisigTypes.Key) {
 	k.getStore(ctx).Set(keyPrefix.Append(utils.LowerCaseKey(key.ID.String())), &key)
 
 	participants := key.GetParticipants()
@@ -50,6 +50,6 @@ func (k Keeper) SetKey(ctx sdk.Context, key types.Key) {
 	)
 }
 
-// func (k Keeper) GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (exported.KeyID, bool) {
-// 	return "", false
-// }
+func (k Keeper) GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool) {
+	return "", false
+}
