@@ -29,7 +29,8 @@ type Keeper interface {
 	GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
 	GetKey(ctx sdk.Context, keyID multisig.KeyID) (multisig.Key, bool)
 	SetKey(ctx sdk.Context, key Key)
-	GetSigRouter() SigRouter
+	GetCovenantRouter() CovenantRouter
+	SetCovenantRouter(router CovenantRouter)
 
 	GetSigningSessions(ctx sdk.Context) (signingSessions []SigningSession, ok bool)
 

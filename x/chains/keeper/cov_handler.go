@@ -11,23 +11,23 @@ import (
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/x/chains/types"
-	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
+	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 )
 
-type sigHandler struct {
+type covHandler struct {
 	cdc    codec.Codec
 	keeper types.BaseKeeper
 }
 
-// NewSigHandler returns the handler for processing signatures delivered by the multisig module
-func NewSigHandler(cdc codec.Codec, keeper types.BaseKeeper) multisig.SigHandler {
-	return sigHandler{
+// NewCovenantHandler returns the handler for processing signatures delivered by the covenant module
+func NewCovenantHandler(cdc codec.Codec, keeper types.BaseKeeper) covenant.CovenantHandler {
+	return covHandler{
 		cdc:    cdc,
 		keeper: keeper,
 	}
 }
 
-func (s sigHandler) HandleCompleted(ctx sdk.Context, sig utils.ValidatedProtoMarshaler, moduleMetadata codec.ProtoMarshaler) error {
+func (s covHandler) HandleCompleted(ctx sdk.Context, sig utils.ValidatedProtoMarshaler, moduleMetadata codec.ProtoMarshaler) error {
 	sigMetadata := moduleMetadata.(*types.SigMetadata)
 	commandBatch, err := s.getCommandBatch(ctx, sigMetadata)
 	if err != nil {
@@ -41,7 +41,7 @@ func (s sigHandler) HandleCompleted(ctx sdk.Context, sig utils.ValidatedProtoMar
 	return nil
 }
 
-func (s sigHandler) HandleFailed(ctx sdk.Context, moduleMetadata codec.ProtoMarshaler) error {
+func (s covHandler) HandleFailed(ctx sdk.Context, moduleMetadata codec.ProtoMarshaler) error {
 	sigMetadata := moduleMetadata.(*types.SigMetadata)
 	commandBatch, err := s.getCommandBatch(ctx, sigMetadata)
 	if err != nil {
@@ -58,7 +58,7 @@ func (s sigHandler) HandleFailed(ctx sdk.Context, moduleMetadata codec.ProtoMars
 	return nil
 }
 
-func (s sigHandler) getCommandBatch(ctx sdk.Context, sigMetadata *types.SigMetadata) (types.CommandBatch, error) {
+func (s covHandler) getCommandBatch(ctx sdk.Context, sigMetadata *types.SigMetadata) (types.CommandBatch, error) {
 	ck, err := s.keeper.ForChain(ctx, sigMetadata.Chain)
 	if err != nil {
 		return types.CommandBatch{}, fmt.Errorf("chain %s does not exist as a chain", sigMetadata.Chain)

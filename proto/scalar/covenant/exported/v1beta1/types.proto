@@ -24,3 +24,12 @@ message TapScriptSig {
   bytes leaf_hash = 2 [ (gogoproto.customtype) = "LeafHash" ];
   bytes signature = 3 [ (gogoproto.customtype) = "Signature" ];
 }
+
+enum KeyState {
+  option (gogoproto.goproto_enum_prefix) = false;
+  option (gogoproto.goproto_enum_stringer) = true;
+
+  KEY_STATE_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Inactive" ];
+  KEY_STATE_ASSIGNED = 1 [ (gogoproto.enumvalue_customname) = "Assigned" ];
+  KEY_STATE_ACTIVE = 2 [ (gogoproto.enumvalue_customname) = "Active" ];
+}

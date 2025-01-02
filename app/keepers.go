@@ -474,7 +474,11 @@ func initAccountKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, ke
 }
 
 func initCovenantKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepers *KeeperCache) *covenantKeeper.Keeper {
+	covenantRouter := covenantTypes.NewCovenantRouter()
+	covenantRouter.AddHandler(chainsTypes.ModuleName, chainsKeeper.NewCovenantHandler(appCodec, GetKeeper[chainsKeeper.BaseKeeper](keepers)))
+
 	covenantK := covenantKeeper.NewKeeper(appCodec, keys[covenantTypes.StoreKey], keepers.getSubspace(covenantTypes.ModuleName))
+	covenantK.SetCovenantRouter(covenantRouter)
 	return &covenantK
 }
 
