@@ -9,7 +9,9 @@ import "scalar/covenant/exported/v1beta1/types.proto";
 
 option (gogoproto.goproto_getters_all) = false;
 
-message CreateAndSigningPsbtStarted {
+message CreatingPsbtStarted {}
+
+message SigningPsbtStarted {
   option (gogoproto.stable_marshaler) = true;
 
   string module = 1;
@@ -31,12 +33,12 @@ message CreateAndSigningPsbtStarted {
   string requesting_module = 7;
 }
 
-message SigningCompleted {
+message SigningPsbtCompleted {
   string module = 1;
   uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
 }
 
-message SigningExpired {
+message SigningPsbtExpired {
   string module = 1;
   uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
 }

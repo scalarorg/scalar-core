@@ -8,9 +8,13 @@ import (
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
-// NewSigningStarted is the constructor for event signing started
-func NewCreateAndSigningPsbtStarted(sigID uint64, key multisigTypes.Key, batchPsbtPayload []PsbtPayload, requestingModule string, chainName nexus.ChainName) *CreateAndSigningPsbtStarted {
-	return &CreateAndSigningPsbtStarted{
+func NewCreatingPsbtStarted() *CreatingPsbtStarted {
+	return &CreatingPsbtStarted{}
+}
+
+// NewSigningPsbtStarted is the constructor for event signing started
+func NewSigningPsbtStarted(sigID uint64, key multisigTypes.Key, batchPsbtPayload []PsbtPayload, requestingModule string, chainName nexus.ChainName) *SigningPsbtStarted {
+	return &SigningPsbtStarted{
 		Module:           ModuleName,
 		Chain:            chainName,
 		SigID:            sigID,
@@ -21,17 +25,17 @@ func NewCreateAndSigningPsbtStarted(sigID uint64, key multisigTypes.Key, batchPs
 	}
 }
 
-// NewSigningExpired is the constructor for event signing expired
-func NewSigningExpired(sigID uint64) *SigningExpired {
-	return &SigningExpired{
+// NewSigningPsbtExpired is the constructor for event signing expired
+func NewSigningPsbtExpired(sigID uint64) *SigningPsbtExpired {
+	return &SigningPsbtExpired{
 		Module: ModuleName,
 		SigID:  sigID,
 	}
 }
 
 // NewSigningCompleted is the constructor for event signing completed
-func NewSigningCompleted(sigID uint64) *SigningCompleted {
-	return &SigningCompleted{
+func NewSigningPsbtCompleted(sigID uint64) *SigningPsbtCompleted {
+	return &SigningPsbtCompleted{
 		Module: ModuleName,
 		SigID:  sigID,
 	}

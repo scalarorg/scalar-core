@@ -229,10 +229,11 @@
     - [Status](#scalar.covenant.v1beta1.Status)
   
 - [scalar/covenant/v1beta1/events.proto](#scalar/covenant/v1beta1/events.proto)
-    - [CreateAndSigningPsbtStarted](#scalar.covenant.v1beta1.CreateAndSigningPsbtStarted)
-    - [CreateAndSigningPsbtStarted.PubKeysEntry](#scalar.covenant.v1beta1.CreateAndSigningPsbtStarted.PubKeysEntry)
-    - [SigningCompleted](#scalar.covenant.v1beta1.SigningCompleted)
-    - [SigningExpired](#scalar.covenant.v1beta1.SigningExpired)
+    - [CreatingPsbtStarted](#scalar.covenant.v1beta1.CreatingPsbtStarted)
+    - [SigningPsbtCompleted](#scalar.covenant.v1beta1.SigningPsbtCompleted)
+    - [SigningPsbtExpired](#scalar.covenant.v1beta1.SigningPsbtExpired)
+    - [SigningPsbtStarted](#scalar.covenant.v1beta1.SigningPsbtStarted)
+    - [SigningPsbtStarted.PubKeysEntry](#scalar.covenant.v1beta1.SigningPsbtStarted.PubKeysEntry)
     - [TapScriptSigSubmitted](#scalar.covenant.v1beta1.TapScriptSigSubmitted)
   
 - [scalar/covenant/v1beta1/params.proto](#scalar/covenant/v1beta1/params.proto)
@@ -3868,9 +3869,51 @@ quorum threshold e.g.,3 |
 
 
 
-<a name="scalar.covenant.v1beta1.CreateAndSigningPsbtStarted"></a>
+<a name="scalar.covenant.v1beta1.CreatingPsbtStarted"></a>
 
-### CreateAndSigningPsbtStarted
+### CreatingPsbtStarted
+
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigningPsbtCompleted"></a>
+
+### SigningPsbtCompleted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigningPsbtExpired"></a>
+
+### SigningPsbtExpired
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigningPsbtStarted"></a>
+
+### SigningPsbtStarted
 
 
 
@@ -3880,7 +3923,7 @@ quorum threshold e.g.,3 |
 | `chain` | [string](#string) |  |  |
 | `sig_id` | [uint64](#uint64) |  |  |
 | `key_id` | [string](#string) |  |  |
-| `pub_keys` | [CreateAndSigningPsbtStarted.PubKeysEntry](#scalar.covenant.v1beta1.CreateAndSigningPsbtStarted.PubKeysEntry) | repeated |  |
+| `pub_keys` | [SigningPsbtStarted.PubKeysEntry](#scalar.covenant.v1beta1.SigningPsbtStarted.PubKeysEntry) | repeated |  |
 | `batch_psbt_payload` | [bytes](#bytes) | repeated | it is a batch of psbt payloads, which were encoded in the evm transaction |
 | `requesting_module` | [string](#string) |  |  |
 
@@ -3889,9 +3932,9 @@ quorum threshold e.g.,3 |
 
 
 
-<a name="scalar.covenant.v1beta1.CreateAndSigningPsbtStarted.PubKeysEntry"></a>
+<a name="scalar.covenant.v1beta1.SigningPsbtStarted.PubKeysEntry"></a>
 
-### CreateAndSigningPsbtStarted.PubKeysEntry
+### SigningPsbtStarted.PubKeysEntry
 
 
 
@@ -3899,38 +3942,6 @@ quorum threshold e.g.,3 |
 | ----- | ---- | ----- | ----------- |
 | `key` | [string](#string) |  |  |
 | `value` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.SigningCompleted"></a>
-
-### SigningCompleted
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `module` | [string](#string) |  |  |
-| `sig_id` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.SigningExpired"></a>
-
-### SigningExpired
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `module` | [string](#string) |  |  |
-| `sig_id` | [uint64](#uint64) |  |  |
 
 
 

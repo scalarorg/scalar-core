@@ -50,11 +50,11 @@ import (
 	xcommon "github.com/scalarorg/scalar-core/vald/xchain/common"
 	xevm "github.com/scalarorg/scalar-core/vald/xchain/evm"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	"github.com/scalarorg/scalar-core/x/tss/tofnd"
 	tssTypes "github.com/scalarorg/scalar-core/x/tss/types"
-	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
 // RW grants -rw------- file permissions
@@ -271,7 +271,10 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 	// TODO: Version2: handle staking and unstaking events for multiple chains, currently it uses type of btc, we need to change it to more generic type
 	sourceEventConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.EventConfirmSourceTxsStarted]())
 
-	createAndSigningPsbt := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.CreateAndSigningPsbtStarted]())
+	// creatingPsbt := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.CreatingPsbtStarted]())
+	covenantSigningPsbt := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.SigningPsbtStarted]())
+
+	_ = covenantSigningPsbt
 
 	eventCtx, cancelEventCtx := context.WithCancel(context.Background())
 	eGroup, eventCtx := errgroup.WithContext(eventCtx)
@@ -333,8 +336,9 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 		createJobTyped(multisigSigning, multisigMgr.ProcessSigningStarted, cancelEventCtx),
 
 		createJobTyped(sourceEventConf, xMgr.ProcessSourceTxsConfirmation, cancelEventCtx),
-		
-		createJobTyped(createAndSigningPsbt, xMgr.ProcessCreateAndSigningPsbtStarted, cancelEventCtx),
+
+		// createJobTyped(creatingPsbt, xMgr.ProcessCreatingPsbtStarted, cancelEventCtx),
+		// createJobTyped(covenantSigningPsbt, covenantMgr.ProcessSigningPsbtStarted, cancelEventCtx),
 	}
 
 	slices.ForEach(js, func(job jobs.Job) {
