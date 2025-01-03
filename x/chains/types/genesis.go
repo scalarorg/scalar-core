@@ -24,8 +24,7 @@ func DefaultChainParams(chainId sdk.Int, chain nexus.ChainName, networkKind Netw
 		VotingGracePeriod:   50,
 		EndBlockerLimit:     50,
 		TransferLimit:       1000,
-		ProcessingTxsWindowSize: 7,
-		Metadata:               metadata,
+		Metadata:            metadata,
 	}
 }
 func DefaultGenesisState() GenesisState {

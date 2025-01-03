@@ -7804,9 +7804,6 @@ paths:
                   transfer_limit:
                     type: string
                     format: uint64
-                  processing_txs_window_size:
-                    type: string
-                    format: uint64
                   metadata:
                     type: object
                     additionalProperties:
@@ -55097,9 +55094,6 @@ definitions:
       transfer_limit:
         type: string
         format: uint64
-      processing_txs_window_size:
-        type: string
-        format: uint64
       metadata:
         type: object
         additionalProperties:
@@ -55160,9 +55154,6 @@ definitions:
             type: string
             format: int64
           transfer_limit:
-            type: string
-            format: uint64
-          processing_txs_window_size:
             type: string
             format: uint64
           metadata:
