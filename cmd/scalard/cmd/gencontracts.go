@@ -48,7 +48,7 @@ func SetGenesisEVMContractsCmd(defaultNodeHome string) *cobra.Command {
 					return err
 				}
 				//TODO:  Currently assuming a single element in the Params slice. We need to generalize for more EVM chains.
-				// genesisState.Chains[0].Params.TokenCode = token
+				genesisState.Chains[0].Params.TokenCode = token
 
 				_ = token
 			}
@@ -59,7 +59,7 @@ func SetGenesisEVMContractsCmd(defaultNodeHome string) *cobra.Command {
 					return err
 				}
 				//TODO:  Currently assuming a single element in the Params slice. We need to generalize for more EVM chains.
-				// genesisState.Chains[0].Params.Burnable = burnable
+				genesisState.Chains[0].Params.Burnable = burnable
 
 				_ = burnable
 			}

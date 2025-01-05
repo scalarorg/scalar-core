@@ -24,11 +24,11 @@ func TestDecodeEventTokenSent(t *testing.T) {
 	}
 
 	expected := types.EventTokenSent{
-		Sender:             types.Address(common.HexToAddress("0x68B93045fe7D8794a7cAF327e7f855CD6Cd03BB8")),
+		//Sender:             types.Address(common.HexToAddress("0x68B93045fe7D8794a7cAF327e7f855CD6Cd03BB8")),
+		Sender:             "0x68B93045fe7D8794a7cAF327e7f855CD6Cd03BB8",
 		DestinationChain:   "ethereum-2",
 		DestinationAddress: "0x58ea4103ed955dCBbdc8a0fEbaba395B6e44d15F",
-		Symbol:             "ethereum-1-uaxl",
-		Amount:             sdk.NewUint(10000000),
+		Asset:              sdk.NewCoin("ethereum-1-uaxl", sdk.NewInt(10000000)),
 	}
 	actual, err := evm.DecodeEventTokenSent(log)
 

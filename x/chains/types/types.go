@@ -54,6 +54,8 @@ const (
 	BurnerCodeHashV4 = "0x701d8db26f2d668fee8acf2346199a6b63b0173f212324d1c5a04b4d4de95666"
 	// BurnerCodeHashV5 is the hash of the bytecode of burner v5
 	BurnerCodeHashV5 = "0x9f217a79e864028081339cfcead3c3d1fe92e237fcbe9468d6bb4d1da7aa6352"
+
+	BurnerCodeHashV6 = "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
 )
 
 // ScalarGateway contract ABI and command selectors
@@ -972,7 +974,7 @@ const maxReceiverLength = 128
 
 // ValidateBasic returns an error if the event token sent is invalid
 func (m EventTokenSent) ValidateBasic() error {
-	if m.Sender.IsZeroAddress() {
+	if err := utils.ValidateString(m.Sender); err != nil {
 		return fmt.Errorf("invalid sender")
 	}
 
@@ -988,11 +990,11 @@ func (m EventTokenSent) ValidateBasic() error {
 		return fmt.Errorf("receiver length %d is greater than %d", len(m.DestinationAddress), maxReceiverLength)
 	}
 
-	if err := utils.ValidateString(m.Symbol); err != nil {
+	if err := utils.ValidateString(m.Asset.Denom); err != nil {
 		return sdkerrors.Wrap(err, "invalid symbol")
 	}
 
-	if m.Amount.IsZero() {
+	if m.Asset.Amount.IsZero() {
 		return fmt.Errorf("invalid amount")
 	}
 

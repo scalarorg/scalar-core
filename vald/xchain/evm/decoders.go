@@ -160,11 +160,10 @@ func DecodeEventTokenSent(log *geth.Log) (types.EventTokenSent, error) {
 	}
 
 	return types.EventTokenSent{
-		Sender:             types.Address(common.BytesToAddress(log.Topics[1].Bytes())),
+		Sender:             types.Address(common.BytesToAddress(log.Topics[1].Bytes())).String(),
 		DestinationChain:   nexus.ChainName(params[0].(string)),
 		DestinationAddress: params[1].(string),
-		Symbol:             params[2].(string),
-		Amount:             sdk.NewUintFromBigInt(params[3].(*big.Int)),
+		Asset:              sdk.NewCoin(params[2].(string), sdk.NewIntFromBigInt(params[3].(*big.Int))),
 	}, nil
 }
 
