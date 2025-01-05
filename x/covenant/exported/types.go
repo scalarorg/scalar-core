@@ -126,3 +126,14 @@ func (t TapScriptSig) ValidateBasic() error {
 
 	return nil
 }
+
+var EmptyTapScriptSigList = TapScriptSigList{}
+
+func (t TapScriptSigList) ValidateBasic() error {
+	for _, sig := range t.TapScriptSigs {
+		if err := sig.ValidateBasic(); err != nil {
+			return err
+		}
+	}
+	return nil
+}

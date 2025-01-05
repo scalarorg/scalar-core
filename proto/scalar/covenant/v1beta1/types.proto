@@ -50,8 +50,12 @@ message PsbtMultiSig {
         "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
   bytes psbt = 2 [ (gogoproto.casttype) = "Psbt" ];
-  map<string, covenant.exported.v1beta1.TapScriptSig> tap_script_sigs = 3;
+  map<string, bytes> participant_tap_script_sigs = 3 [
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/covenant/exported.TapScriptSigList"
+  ];
 }
+
 
 message SigningSession {
   option (gogoproto.stable_marshaler) = true;

@@ -21,14 +21,14 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&CreateCustodianRequest{},
 		&CreateCustodianGroupRequest{},
-		&SubmitTapScriptSigRequest{},
+		&SubmitTapScriptSigsRequest{},
 	)
 	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
 		&gogoprototypes.BoolValue{},
 	)
 
 	registry.RegisterImplementations((*reward.Refundable)(nil),
-		&SubmitTapScriptSigRequest{},
+		&SubmitTapScriptSigsRequest{},
 	)
 
 	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),

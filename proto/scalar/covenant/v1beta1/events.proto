@@ -37,10 +37,10 @@ message SigningPsbtExpired {
   uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
 }
 
-message TapScriptSigSubmitted {
+message TapScriptSigsSubmitted {
   string module = 1;
   uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
   bytes participant = 3 [ (gogoproto.casttype) =
                               "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
-  scalar.covenant.exported.v1beta1.TapScriptSig tap_script_sig = 4;
+  scalar.covenant.exported.v1beta1.TapScriptSigList tap_script_sigs = 4;
 }
