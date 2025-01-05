@@ -8886,6 +8886,9 @@ paths:
                 format: byte
               chain:
                 type: string
+              psbt:
+                type: string
+                format: byte
       tags:
         - MsgService
   /scalar/chains/v1beta1/sign_commands:
@@ -55247,6 +55250,9 @@ definitions:
         format: byte
       chain:
         type: string
+      psbt:
+        type: string
+        format: byte
   scalar.chains.v1beta1.SignBTCCommandsResponse:
     type: object
     properties:

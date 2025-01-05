@@ -5,14 +5,16 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/scalarorg/scalar-core/utils"
+	covenant "github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 // NewSignBTCCommandsRequest creates a message of type SignBTCCommandsRequest
-func NewSignBTCCommandsRequest(sender sdk.AccAddress, chain string) *SignBTCCommandsRequest {
+func NewSignBTCCommandsRequest(sender sdk.AccAddress, chain string, psbt covenant.Psbt) *SignBTCCommandsRequest {
 	return &SignBTCCommandsRequest{
 		Sender: sender,
 		Chain:  nexus.ChainName(utils.NormalizeString(chain)),
+		Psbt:   psbt,
 	}
 }
 

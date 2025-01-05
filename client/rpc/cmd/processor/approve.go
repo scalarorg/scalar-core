@@ -1,15 +1,13 @@
 package processor
 
 import (
-	"context"
 	"fmt"
 
-	"github.com/rs/zerolog/log"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 func (p *Processor) ProcessDestCallApproved(event *chainsTypes.DestCallApproved) error {
-	ctx := context.Background()
+	// ctx := context.Background()
 	fmt.Println("Processing DestCallApproved event")
 	fmt.Println("chain: ", event.Chain)
 	fmt.Println("event_id: ", event.EventID)
@@ -19,12 +17,12 @@ func (p *Processor) ProcessDestCallApproved(event *chainsTypes.DestCallApproved)
 	fmt.Println("contract_address: ", event.ContractAddress)
 	fmt.Printf("payload_hash: %x\n", event.PayloadHash)
 
-	res, err := p.networkClient.SignBTCCommandsRequest(ctx, event.DestinationChain.String())
-	if err != nil {
-		return err
-	}
+	// res, err := p.networkClient.SignBTCCommandsRequest(ctx, event.DestinationChain.String())
+	// if err != nil {
+	// 	return err
+	// }
 
-	log.Info().Msgf("[Processor] [ProcessDestCallApproved] txRes: %v", res)
+	// log.Info().Msgf("[Processor] [ProcessDestCallApproved] txRes: %v", res)
 
 	return nil
 }

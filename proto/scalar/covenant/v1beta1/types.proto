@@ -67,6 +67,4 @@ message SigningSession {
   google.protobuf.Any module_metadata = 9
       [ (cosmos_proto.accepts_interface) =
             "github.com/cosmos/codec/ProtoMarshaler" ];
-  repeated bytes batch_psbt_payload = 10
-      [ (gogoproto.casttype) = "PsbtPayload" ];
 }

@@ -229,7 +229,6 @@
     - [Status](#scalar.covenant.v1beta1.Status)
   
 - [scalar/covenant/v1beta1/events.proto](#scalar/covenant/v1beta1/events.proto)
-    - [CreatingPsbtStarted](#scalar.covenant.v1beta1.CreatingPsbtStarted)
     - [SigningPsbtCompleted](#scalar.covenant.v1beta1.SigningPsbtCompleted)
     - [SigningPsbtExpired](#scalar.covenant.v1beta1.SigningPsbtExpired)
     - [SigningPsbtStarted](#scalar.covenant.v1beta1.SigningPsbtStarted)
@@ -2661,6 +2660,7 @@ address
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
+| `psbt` | [bytes](#bytes) |  |  |
 
 
 
@@ -3832,7 +3832,6 @@ quorum threshold e.g.,3 |
 | `grace_period` | [int64](#int64) |  |  |
 | `module` | [string](#string) |  |  |
 | `module_metadata` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
-| `batch_psbt_payload` | [bytes](#bytes) | repeated |  |
 
 
 
@@ -3865,16 +3864,6 @@ quorum threshold e.g.,3 |
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/covenant/v1beta1/events.proto
-
-
-
-<a name="scalar.covenant.v1beta1.CreatingPsbtStarted"></a>
-
-### CreatingPsbtStarted
-
-
-
-
 
 
 
@@ -3923,8 +3912,8 @@ quorum threshold e.g.,3 |
 | `sig_id` | [uint64](#uint64) |  |  |
 | `key_id` | [string](#string) |  |  |
 | `pub_keys` | [SigningPsbtStarted.PubKeysEntry](#scalar.covenant.v1beta1.SigningPsbtStarted.PubKeysEntry) | repeated |  |
-| `batch_psbt_payload` | [bytes](#bytes) | repeated | it is a batch of psbt payloads, which were encoded in the evm transaction |
 | `requesting_module` | [string](#string) |  |  |
+| `psbt` | [bytes](#bytes) |  |  |
 
 
 

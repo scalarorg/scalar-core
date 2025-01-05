@@ -16,7 +16,7 @@ import (
 	"github.com/scalarorg/scalar-core/x/tss/tofnd"
 )
 
-// Mgr represents an object that manages all communication with the multisig process
+// Mgr represents an object that manages all communication with the psbt process
 type Mgr struct {
 	client      Client
 	ctx         sdkclient.Context

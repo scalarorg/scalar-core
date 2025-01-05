@@ -8,19 +8,15 @@ import (
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
-func NewCreatingPsbtStarted() *CreatingPsbtStarted {
-	return &CreatingPsbtStarted{}
-}
-
 // NewSigningPsbtStarted is the constructor for event signing started
-func NewSigningPsbtStarted(sigID uint64, key multisigTypes.Key, batchPsbtPayload []PsbtPayload, requestingModule string, chainName nexus.ChainName) *SigningPsbtStarted {
+func NewSigningPsbtStarted(sigID uint64, key multisigTypes.Key, psbt []byte, requestingModule string, chainName nexus.ChainName) *SigningPsbtStarted {
 	return &SigningPsbtStarted{
 		Module:           ModuleName,
 		Chain:            chainName,
 		SigID:            sigID,
 		KeyID:            key.GetID(),
 		PubKeys:          key.GetPubKeys(),
-		BatchPsbtPayload: batchPsbtPayload,
+		Psbt:             psbt,
 		RequestingModule: requestingModule,
 	}
 }

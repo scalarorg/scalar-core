@@ -2,6 +2,7 @@ package vald
 
 import (
 	"context"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"os/signal"
@@ -25,6 +26,7 @@ import (
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 	"golang.org/x/sync/errgroup"
 
+	btcRpcClient "github.com/btcsuite/btcd/rpcclient"
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
@@ -43,6 +45,7 @@ import (
 	evmRPC "github.com/scalarorg/scalar-core/vald/evm/rpc"
 	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
 	"github.com/scalarorg/scalar-core/vald/multisig"
+	"github.com/scalarorg/scalar-core/vald/psbt"
 	grpc "github.com/scalarorg/scalar-core/vald/tofnd_grpc"
 	"github.com/scalarorg/scalar-core/vald/tss"
 	"github.com/scalarorg/scalar-core/vald/xchain"
@@ -230,6 +233,8 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 
 	multisigMgr := createMultisigMgr(bc, clientCtx, scalarCfg, valAddr)
 
+	// psbtMgr := createPSBTMgr(scalarCfg.BTCMgrConfig, clientCtx, bc, valAddr, scalarCfg.PrivKey)
+
 	nodeHeight, err := waitUntilNetworkSync(scalarCfg, robustClient)
 	if err != nil {
 		panic(err)
@@ -334,6 +339,8 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 		// createJobTyped(evmGatewayTxsConf, evmMgr.ProcessGatewayTxsConfirmation, cancelEventCtx),
 		createJobTyped(multisigKeygen, multisigMgr.ProcessKeygenStarted, cancelEventCtx),
 		createJobTyped(multisigSigning, multisigMgr.ProcessSigningStarted, cancelEventCtx),
+
+		// createJobTyped(covenantSigningPsbt, psbtMgr.ProcessSigningPsbtStarted, cancelEventCtx),
 
 		createJobTyped(sourceEventConf, xMgr.ProcessSourceTxsConfirmation, cancelEventCtx),
 
@@ -568,6 +575,39 @@ func createEVMClients(configs []config.EVMConfig, rpcs map[chain.ChainInfoBytes]
 		logClientCreation(config.ID, config.RPCAddr, client)
 		rpcs[chainInfoBytes] = client
 	})
+}
+
+func createPSBTMgr(configs []config.BTCConfig, cliCtx sdkClient.Context, b broadcast.Broadcaster, valAddr sdk.ValAddress, privKey string) *psbt.Mgr {
+	rpcs := make(map[chain.ChainInfoBytes]*btcRpcClient.Client)
+	bridgeConfigs := slices.Filter(configs, func(config config.BTCConfig) bool {
+		return config.WithBridge
+	})
+
+	slices.ForEach(bridgeConfigs, func(config config.BTCConfig) {
+		chainInfoBytes := getChainInfoBytes(config.ID)
+		if _, ok := rpcs[chainInfoBytes]; ok {
+			err := fmt.Errorf("duplicate bridge configuration found for BTC chain %s", config.ID)
+			log.Error(err.Error())
+			panic(err)
+		}
+
+		rpcConfig := btc.MapBTCConfigToRPCConfig(&config)
+		client, error := btcRpcClient.New(rpcConfig, nil)
+		if error != nil {
+			panic(error)
+		}
+
+		rpcs[chainInfoBytes] = client
+	})
+
+	privKeyBytes, err := hex.DecodeString(privKey)
+	if err != nil {
+		panic(fmt.Errorf("invalid private key %s", privKey))
+	}
+
+	fmt.Printf("privKeyBytes: %x\n", privKeyBytes)
+
+	return psbt.NewMgr(rpcs, cliCtx, valAddr, b, privKeyBytes)
 }
 
 func getChainInfoBytes(chainID string) chain.ChainInfoBytes {

@@ -39,14 +39,18 @@ func (s msgServer) SignBTCCommands(c context.Context, req *types.SignBTCCommands
 	if err != nil {
 		return nil, err
 	}
+
 	if len(commandBatch.GetCommandIDs()) == 0 {
 		return &types.SignBTCCommandsResponse{CommandCount: 0, BatchedCommandsID: nil}, nil
 	}
 
-	if err := s.covenant.CreateAndSignPsbt(
+	// TODO: validate the psbt with the commands: check the outputs map 1-1 with the command payloads, check the amount of inputs is greater than the amount of outputs, check the format of psbt by btcd-lib.packet
+	// use psbt.ValidateBasic()
+
+	if err := s.covenant.SignPsbt(
 		ctx,
 		commandBatch.GetKeyID(),
-		commandBatch.GetExtraData(),
+		req.Psbt,
 		types.ModuleName,
 		chain.Name,
 		types.NewSigMetadata(types.SigCommand, chain.Name, commandBatch.GetID()),

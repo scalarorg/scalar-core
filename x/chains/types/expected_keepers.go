@@ -11,6 +11,7 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
+	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
@@ -157,7 +158,7 @@ type MultisigKeeper interface {
 }
 
 type CovenantKeeper interface {
-	CreateAndSignPsbt(ctx sdk.Context, keyID multisig.KeyID, extraData [][]byte, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
+	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, psbt covenantTypes.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
 
 	GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
 }
