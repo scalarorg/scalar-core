@@ -5,6 +5,7 @@ import (
 	fmt "fmt"
 
 	"github.com/scalarorg/scalar-core/utils/clog"
+	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 )
@@ -49,3 +50,5 @@ func (g CustodianGroup) CreateKey() multisigTypes.Key {
 	}
 	return key
 }
+
+var DefaultParticipantTapScriptSigs = make(map[string]*exported.TapScriptSigList)

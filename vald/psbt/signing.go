@@ -2,9 +2,12 @@ package psbt
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/scalarorg/scalar-core/utils/clog"
+	"github.com/scalarorg/scalar-core/utils/log"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 )
@@ -46,21 +49,21 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 	clog.Yellowf("keyUID: %s", keyUID)
 	clog.Yellowf("partyUID: %s", partyUID)
 
-	tapScriptSigs, err := mgr.sign(keyUID, event.Psbt, pubKey)
+	listOfTapScriptSig, err := mgr.sign(keyUID, event.Psbt, pubKey)
 	if err != nil {
 		return err
 	}
 
-	for i, tapScriptSig := range tapScriptSigs {
+	for i, tapScriptSig := range listOfTapScriptSig.TapScriptSigs {
 		clog.Yellowf("tapScriptSig[%d]: %+v", i, tapScriptSig)
 	}
 
-	// log.Infof("operator %s sending signature for signing %d", partyUID, event.GetSigID())
+	log.Infof("operator %s sending signature for signing %d", partyUID, event.GetSigID())
 
-	// msg := types.NewSubmitSignatureRequest(mgr.ctx.FromAddress, event.GetSigID(), sig)
-	// if _, err := mgr.broadcaster.Broadcast(context.Background(), msg); err != nil {
-	// 	return sdkerrors.Wrap(err, "handler goroutine: failure to broadcast outgoing submit signature message")
-	// }
+	msg := covenantTypes.NewSubmitTapScriptSigsRequest(mgr.ctx.FromAddress, event.GetSigID(), listOfTapScriptSig)
+	if _, err := mgr.b.Broadcast(context.Background(), msg); err != nil {
+		return sdkerrors.Wrap(err, "handler goroutine: failure to broadcast outgoing submit signature message")
+	}
 
 	return nil
 }
@@ -70,7 +73,7 @@ func (mgr *Mgr) validatePubKey(pubKey []byte) bool {
 		return false
 	}
 
-	if bytes.Compare(mgr.privKey.Serialize(), pubKey) != 0 {
+	if !bytes.Equal(mgr.privKey.Serialize(), pubKey) {
 		return false
 	}
 

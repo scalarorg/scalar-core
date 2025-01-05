@@ -23,6 +23,10 @@ func (k Keeper) setSigningSession(ctx sdk.Context, signing types.SigningSession)
 	k.getStore(ctx).Set(getSigningSessionKey(signing.GetID()), &signing)
 }
 
+func (k Keeper) getSigningSession(ctx sdk.Context, id uint64) (signing types.SigningSession, ok bool) {
+	return signing, k.getStore(ctx).Get(getSigningSessionKey(id), &signing)
+}
+
 func getSigningSessionExpiryKey(signing types.SigningSession) utils.Key {
 	expiry := signing.ExpiresAt
 	if signing.State == exported.Completed {

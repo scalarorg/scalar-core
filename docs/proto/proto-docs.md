@@ -205,6 +205,7 @@
   
 - [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
     - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
+    - [TapScriptSigList](#scalar.covenant.exported.v1beta1.TapScriptSigList)
   
     - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
     - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
@@ -223,7 +224,7 @@
     - [Custodian](#scalar.covenant.v1beta1.Custodian)
     - [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup)
     - [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig)
-    - [PsbtMultiSig.TapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.TapScriptSigsEntry)
+    - [PsbtMultiSig.ParticipantTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantTapScriptSigsEntry)
     - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
   
     - [Status](#scalar.covenant.v1beta1.Status)
@@ -233,7 +234,7 @@
     - [SigningPsbtExpired](#scalar.covenant.v1beta1.SigningPsbtExpired)
     - [SigningPsbtStarted](#scalar.covenant.v1beta1.SigningPsbtStarted)
     - [SigningPsbtStarted.PubKeysEntry](#scalar.covenant.v1beta1.SigningPsbtStarted.PubKeysEntry)
-    - [TapScriptSigSubmitted](#scalar.covenant.v1beta1.TapScriptSigSubmitted)
+    - [TapScriptSigsSubmitted](#scalar.covenant.v1beta1.TapScriptSigsSubmitted)
   
 - [scalar/covenant/v1beta1/params.proto](#scalar/covenant/v1beta1/params.proto)
     - [Params](#scalar.covenant.v1beta1.Params)
@@ -257,8 +258,8 @@
     - [CreateCustodianResponse](#scalar.covenant.v1beta1.CreateCustodianResponse)
     - [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse)
     - [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest)
-    - [SubmitTapScriptSigRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigRequest)
-    - [SubmitTapScriptSigResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigResponse)
+    - [SubmitTapScriptSigsRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigsRequest)
+    - [SubmitTapScriptSigsResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigsResponse)
     - [UpdateCustodianGroupRequest](#scalar.covenant.v1beta1.UpdateCustodianGroupRequest)
     - [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse)
     - [UpdateCustodianRequest](#scalar.covenant.v1beta1.UpdateCustodianRequest)
@@ -3531,6 +3532,21 @@ ERC20Deposit contains information for an ERC20 deposit
 
 
 
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSigList"></a>
+
+### TapScriptSigList
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tap_script_sigs` | [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig) | repeated |  |
+
+
+
+
+
  <!-- end messages -->
 
 
@@ -3792,23 +3808,23 @@ quorum threshold e.g.,3 |
 | ----- | ---- | ----- | ----------- |
 | `key_id` | [string](#string) |  |  |
 | `psbt` | [bytes](#bytes) |  |  |
-| `tap_script_sigs` | [PsbtMultiSig.TapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.TapScriptSigsEntry) | repeated |  |
+| `participant_tap_script_sigs` | [PsbtMultiSig.ParticipantTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantTapScriptSigsEntry) | repeated |  |
 
 
 
 
 
 
-<a name="scalar.covenant.v1beta1.PsbtMultiSig.TapScriptSigsEntry"></a>
+<a name="scalar.covenant.v1beta1.PsbtMultiSig.ParticipantTapScriptSigsEntry"></a>
 
-### PsbtMultiSig.TapScriptSigsEntry
+### PsbtMultiSig.ParticipantTapScriptSigsEntry
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `key` | [string](#string) |  |  |
-| `value` | [scalar.covenant.exported.v1beta1.TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig) |  |  |
+| `value` | [bytes](#bytes) |  |  |
 
 
 
@@ -3936,9 +3952,9 @@ quorum threshold e.g.,3 |
 
 
 
-<a name="scalar.covenant.v1beta1.TapScriptSigSubmitted"></a>
+<a name="scalar.covenant.v1beta1.TapScriptSigsSubmitted"></a>
 
-### TapScriptSigSubmitted
+### TapScriptSigsSubmitted
 
 
 
@@ -3947,7 +3963,7 @@ quorum threshold e.g.,3 |
 | `module` | [string](#string) |  |  |
 | `sig_id` | [uint64](#uint64) |  |  |
 | `participant` | [bytes](#bytes) |  |  |
-| `tap_script_sig` | [scalar.covenant.exported.v1beta1.TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig) |  |  |
+| `tap_script_sigs` | [scalar.covenant.exported.v1beta1.TapScriptSigList](#scalar.covenant.exported.v1beta1.TapScriptSigList) |  |  |
 
 
 
@@ -4266,9 +4282,9 @@ ParamsRequest represents a message that queries the params
 
 
 
-<a name="scalar.covenant.v1beta1.SubmitTapScriptSigRequest"></a>
+<a name="scalar.covenant.v1beta1.SubmitTapScriptSigsRequest"></a>
 
-### SubmitTapScriptSigRequest
+### SubmitTapScriptSigsRequest
 
 
 
@@ -4276,16 +4292,16 @@ ParamsRequest represents a message that queries the params
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `sig_id` | [uint64](#uint64) |  |  |
-| `tap_script_sig` | [bytes](#bytes) |  |  |
+| `tap_script_sigs` | [scalar.covenant.exported.v1beta1.TapScriptSigList](#scalar.covenant.exported.v1beta1.TapScriptSigList) |  |  |
 
 
 
 
 
 
-<a name="scalar.covenant.v1beta1.SubmitTapScriptSigResponse"></a>
+<a name="scalar.covenant.v1beta1.SubmitTapScriptSigsResponse"></a>
 
-### SubmitTapScriptSigResponse
+### SubmitTapScriptSigsResponse
 
 
 
@@ -4398,7 +4414,7 @@ Pubkey used as key for lookup custodian to update other values
 | `UpdateCustodianGroup` | [UpdateCustodianGroupRequest](#scalar.covenant.v1beta1.UpdateCustodianGroupRequest) | [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse) | Update Custodian group | POST|/scalar/covenant/v1beta1/update_custodian_group|
 | `AddCustodianToGroup` | [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Add Custodian to custodian group recalculate taproot pubkey when adding custodian to custodian group | POST|/scalar/covenant/v1beta1/add_custodian_to_group|
 | `RemoveCustodianFromGroup` | [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Remove Custodian from custodian group recalculate taproot address when deleting custodian from custodian group | POST|/scalar/covenant/v1beta1/remove_custodian_from_group|
-| `SubmitTapScriptSig` | [SubmitTapScriptSigRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigRequest) | [SubmitTapScriptSigResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigResponse) |  | POST|/scalar/covenant/v1beta1/submit_tap_script_sig|
+| `SubmitTapScriptSigs` | [SubmitTapScriptSigsRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigsRequest) | [SubmitTapScriptSigsResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigsResponse) |  | POST|/scalar/covenant/v1beta1/submit_tap_script_sig|
 
 
 <a name="scalar.covenant.v1beta1.QueryService"></a>
