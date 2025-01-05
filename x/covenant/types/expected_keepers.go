@@ -35,7 +35,7 @@ type Keeper interface {
 
 	GetSigningSessions(ctx sdk.Context) (signingSessions []SigningSession, ok bool)
 
-	CreateAndSignPsbt(ctx sdk.Context, keyID multisig.KeyID, extraData [][]byte, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
+	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, psbt Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
 }
 
 // Snapshotter provides snapshot keeper functionality

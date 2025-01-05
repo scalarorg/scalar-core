@@ -7,10 +7,6 @@ import "gogoproto/gogo.proto";
 import "scalar/covenant/v1beta1/types.proto";
 import "scalar/covenant/exported/v1beta1/types.proto";
 
-option (gogoproto.goproto_getters_all) = false;
-
-message CreatingPsbtStarted {}
-
 message SigningPsbtStarted {
   option (gogoproto.stable_marshaler) = true;
 
@@ -27,10 +23,8 @@ message SigningPsbtStarted {
   map<string, bytes> pub_keys = 5
       [ (gogoproto.castvalue) =
             "github.com/scalarorg/scalar-core/x/multisig/exported.PublicKey" ];
-  // it is a batch of psbt payloads, which were encoded in the evm transaction
-  repeated bytes batch_psbt_payload = 6
-      [ (gogoproto.casttype) = "PsbtPayload" ];
-  string requesting_module = 7;
+  string requesting_module = 6;
+  bytes psbt = 7 [ (gogoproto.casttype) = "Psbt" ];
 }
 
 message SigningPsbtCompleted {

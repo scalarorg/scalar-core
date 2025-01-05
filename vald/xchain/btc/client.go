@@ -30,7 +30,7 @@ type BTCTxResult = results.Result[common.TxReceipt]
 var _ common.Client = &BtcClient{}
 
 func NewClient(cfg *config.BTCConfig) (common.Client, error) {
-	rpcConfig := mapBTCConfigToRPCConfig(cfg)
+	rpcConfig := MapBTCConfigToRPCConfig(cfg)
 	rpcClient, error := rpcclient.New(rpcConfig, nil)
 	if error != nil {
 		return nil, error
@@ -57,7 +57,7 @@ func validateChain(cfg *config.BTCConfig) error {
 	return nil
 }
 
-func mapBTCConfigToRPCConfig(cfg *config.BTCConfig) *rpcclient.ConnConfig {
+func MapBTCConfigToRPCConfig(cfg *config.BTCConfig) *rpcclient.ConnConfig {
 	err := validateChain(cfg)
 	if err != nil {
 		panic("invalid btc chain when setting the params")

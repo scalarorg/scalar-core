@@ -63,6 +63,7 @@ type ValdConfig struct {
 
 	BTCMgrConfig []BTCConfig `mapstructure:"scalar_bridge_btc"`
 	EVMMgrConfig []EVMConfig `mapstructure:"scalar_bridge_evm"`
+	PrivKey      string      `mapstructure:"btc_priv_key"`
 }
 
 // DefaultValdConfig returns a configurations populated with default values

@@ -19,13 +19,13 @@ import (
 var _ codectypes.UnpackInterfacesMessage = SigningSession{}
 
 type NewSigningSessionParams struct {
-	ID               uint64
-	Key              multisigTypes.Key
-	BatchPsbtPayload []PsbtPayload
-	ExpiresAt        int64
-	GracePeriod      int64
-	Module           string
-	ModuleMetadata   []codec.ProtoMarshaler
+	ID             uint64
+	Key            multisigTypes.Key
+	ExpiresAt      int64
+	GracePeriod    int64
+	Module         string
+	ModuleMetadata []codec.ProtoMarshaler
+	Psbt           Psbt
 }
 
 // NewSigningSession is the contructor for signing session
@@ -39,15 +39,14 @@ func NewSigningSession(params *NewSigningSessionParams) SigningSession {
 		ID: params.ID,
 		PsbtMultiSig: PsbtMultiSig{
 			KeyID: params.Key.ID,
-			Psbt:  EmptyPsbt,
+			Psbt:  params.Psbt,
 		},
-		State:            exported.Pending,
-		Key:              params.Key,
-		ExpiresAt:        params.ExpiresAt,
-		GracePeriod:      params.GracePeriod,
-		Module:           params.Module,
-		ModuleMetadata:   moduleMetadata,
-		BatchPsbtPayload: params.BatchPsbtPayload,
+		State:          exported.Pending,
+		Key:            params.Key,
+		ExpiresAt:      params.ExpiresAt,
+		GracePeriod:    params.GracePeriod,
+		Module:         params.Module,
+		ModuleMetadata: moduleMetadata,
 	}
 }
 

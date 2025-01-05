@@ -13,7 +13,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/chains/types"
-	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
@@ -70,10 +69,6 @@ func (mgr Manager) ProcessSourceTxsConfirmation(event *types.EventConfirmSourceT
 	_, err = mgr.broadcaster.Broadcast(context.TODO(), votes...)
 
 	return err
-}
-
-func (mgr Manager) ProcessCreatingPsbtStarted(event *covenantTypes.CreatingPsbtStarted) error {
-	return fmt.Errorf("not implemented")
 }
 
 // isParticipantOf checks if the validator is in the poll participants list

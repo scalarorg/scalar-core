@@ -17,6 +17,7 @@ import (
 	"github.com/scalarorg/scalar-core/x/chains/types"
 
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	covenant "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
 const (
@@ -380,14 +381,18 @@ func GetCmdSignBtcCommands() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sign-btc-commands [chain]",
 		Short: "Sign pending commands for a BTC chain contract",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cliCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
+			psbt, err := covenant.PsbtFromHex(args[1])
+			if err != nil {
+				return err
+			}
 
-			msg := types.NewSignBTCCommandsRequest(cliCtx.GetFromAddress(), args[0])
+			msg := types.NewSignBTCCommandsRequest(cliCtx.GetFromAddress(), args[0], psbt)
 
 			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
 		},
