@@ -43,10 +43,9 @@ func (k BaseKeeper) InitGenesis(ctx sdk.Context, state types.GenesisState) {
 			ck.setGateway(ctx, *chain.Gateway)
 		}
 
-		// TODO: add tokens
-		// for _, token := range chain.Tokens {
-		// 	ck.setTokenMetadata(ctx, token)
-		// }
+		for _, token := range chain.Tokens {
+			ck.setTokenMetadata(ctx, token)
+		}
 
 		for _, event := range chain.Events {
 			ck.setEvent(ctx, event)

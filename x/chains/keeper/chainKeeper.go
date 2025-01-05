@@ -866,7 +866,7 @@ func (k chainKeeper) GetBurnerAddress(ctx sdk.Context, token types.ERC20Token, s
 		}
 
 		initCodeHash = types.Hash(crypto.Keccak256Hash(append(token.GetBurnerCode(), params...)))
-	case types.BurnerCodeHashV2, types.BurnerCodeHashV3, types.BurnerCodeHashV4, types.BurnerCodeHashV5:
+	case types.BurnerCodeHashV2, types.BurnerCodeHashV3, types.BurnerCodeHashV4, types.BurnerCodeHashV5, types.BurnerCodeHashV6:
 		initCodeHash = tokenBurnerCodeHash
 	default:
 		return types.Address{}, fmt.Errorf("unsupported burner code with hash %s for chain %s", tokenBurnerCodeHash.Hex(), k.chain)

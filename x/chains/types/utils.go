@@ -65,7 +65,8 @@ func validateBurnerCode(burnerCode []byte) error {
 		BurnerCodeHashV2,
 		BurnerCodeHashV3,
 		BurnerCodeHashV4,
-		BurnerCodeHashV5:
+		BurnerCodeHashV5,
+		BurnerCodeHashV6:
 		break
 	default:
 		return fmt.Errorf("unsupported burner code with hash %s", burnerCodeHash)

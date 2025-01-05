@@ -8,25 +8,8 @@ import (
 	gethParams "github.com/ethereum/go-ethereum/params"
 	utils "github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
-	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
-func DefaultChainParams(chainId sdk.Int, chain nexus.ChainName, networkKind NetworkKind, metadata map[string]string) Params {
-	return Params{
-		ChainID:             chainId,
-		Chain:               chain,
-		ConfirmationHeight:  2,
-		NetworkKind:         networkKind,
-		RevoteLockingPeriod: 50,
-		VotingThreshold:     utils.Threshold{Numerator: 51, Denominator: 100},
-		MinVoterCount:       1,
-		CommandsGasLimit:    5000000,
-		VotingGracePeriod:   50,
-		EndBlockerLimit:     50,
-		TransferLimit:       1000,
-		Metadata:            metadata,
-	}
-}
 func DefaultGenesisState() GenesisState {
 	return GenesisState{
 		Chains: []GenesisState_Chain{
@@ -36,6 +19,7 @@ func DefaultGenesisState() GenesisState {
 				ConfirmedSourceTxs:  []SourceTx{},
 				CommandBatches:      []CommandBatchMetadata{},
 				Events:              []Event{},
+				Tokens:              []ERC20TokenMetadata{},
 				ConfirmedEventQueue: utils.QueueState{},
 			},
 			{
@@ -44,6 +28,7 @@ func DefaultGenesisState() GenesisState {
 				ConfirmedSourceTxs:  []SourceTx{},
 				CommandBatches:      []CommandBatchMetadata{},
 				Events:              []Event{},
+				Tokens:              []ERC20TokenMetadata{},
 				ConfirmedEventQueue: utils.QueueState{},
 			},
 		},
