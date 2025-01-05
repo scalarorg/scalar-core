@@ -275,12 +275,19 @@ func GenerateGenesis(clientCtx client.Context,
 	return appGenState, nil
 }
 func generateProtocolGenesis(scalarProtocol ScalarProtocol, custodianGroup covenanttypes.CustodianGroup, tokensPath string) (*protocoltypes.GenesisState, error) {
-	evmTokenPath := path.Join(tokensPath, "tokens.json")
+	evmTokenPath := path.Join(tokensPath, "evm.json")
 	log.Debug().Msgf("Read token config in the path %s", evmTokenPath)
 	tokenInfos, err := ParseJsonArrayConfig[Token](evmTokenPath)
 	if err != nil {
 		return nil, err
 	}
+	btcTokenPath := path.Join(tokensPath, "btc.json")
+	log.Debug().Msgf("Read token config in the path %s", btcTokenPath)
+	btcTokenInfos, err := ParseJsonArrayConfig[Token](btcTokenPath)
+	if err != nil {
+		return nil, err
+	}
+	tokenInfos = append(tokenInfos, btcTokenInfos...)
 	log.Debug().Any("TokenInfo", tokenInfos).Msgf("Successfull parsed token config")
 	protocol := DefaultProtocol(scalarProtocol, tokenInfos, custodianGroup)
 	protocolGenState := protocoltypes.NewGenesisState([]*protocoltypes.Protocol{&protocol})

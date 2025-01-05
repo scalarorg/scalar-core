@@ -92,6 +92,7 @@
     - [Event](#scalar.chains.v1beta1.Event)
     - [EventConfirmSourceTxsStarted](#scalar.chains.v1beta1.EventConfirmSourceTxsStarted)
     - [EventContractCall](#scalar.chains.v1beta1.EventContractCall)
+    - [EventContractCallWithMintApproved](#scalar.chains.v1beta1.EventContractCallWithMintApproved)
     - [EventContractCallWithToken](#scalar.chains.v1beta1.EventContractCallWithToken)
     - [EventMultisigOperatorshipTransferred](#scalar.chains.v1beta1.EventMultisigOperatorshipTransferred)
     - [EventMultisigOwnershipTransferred](#scalar.chains.v1beta1.EventMultisigOwnershipTransferred)
@@ -108,6 +109,14 @@
 - [scalar/chains/v1beta1/params.proto](#scalar/chains/v1beta1/params.proto)
     - [Params](#scalar.chains.v1beta1.Params)
     - [Params.MetadataEntry](#scalar.chains.v1beta1.Params.MetadataEntry)
+  
+- [scalar/multisig/exported/v1beta1/types.proto](#scalar/multisig/exported/v1beta1/types.proto)
+    - [KeyState](#scalar.multisig.exported.v1beta1.KeyState)
+    - [MultisigState](#scalar.multisig.exported.v1beta1.MultisigState)
+  
+- [scalar/chains/v1beta1/tokens.proto](#scalar/chains/v1beta1/tokens.proto)
+    - [ERC20Deposit](#scalar.chains.v1beta1.ERC20Deposit)
+    - [ERC20TokenMetadata](#scalar.chains.v1beta1.ERC20TokenMetadata)
   
 - [scalar/utils/v1beta1/queuer.proto](#scalar/utils/v1beta1/queuer.proto)
     - [QueueState](#scalar.utils.v1beta1.QueueState)
@@ -194,14 +203,6 @@
 - [scalar/chains/v1beta1/service.proto](#scalar/chains/v1beta1/service.proto)
     - [MsgService](#scalar.chains.v1beta1.MsgService)
     - [QueryService](#scalar.chains.v1beta1.QueryService)
-  
-- [scalar/multisig/exported/v1beta1/types.proto](#scalar/multisig/exported/v1beta1/types.proto)
-    - [KeyState](#scalar.multisig.exported.v1beta1.KeyState)
-    - [MultisigState](#scalar.multisig.exported.v1beta1.MultisigState)
-  
-- [scalar/chains/v1beta1/tokens.proto](#scalar/chains/v1beta1/tokens.proto)
-    - [ERC20Deposit](#scalar.chains.v1beta1.ERC20Deposit)
-    - [ERC20TokenMetadata](#scalar.chains.v1beta1.ERC20TokenMetadata)
   
 - [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
     - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
@@ -1853,6 +1854,7 @@ PollParticipants should be embedded in poll events in other modules
 | `token_sent` | [EventTokenSent](#scalar.chains.v1beta1.EventTokenSent) |  |  |
 | `contract_call` | [EventContractCall](#scalar.chains.v1beta1.EventContractCall) |  |  |
 | `contract_call_with_token` | [EventContractCallWithToken](#scalar.chains.v1beta1.EventContractCallWithToken) |  |  |
+| `contract_call_with_mint_approved` | [EventContractCallWithMintApproved](#scalar.chains.v1beta1.EventContractCallWithMintApproved) |  |  |
 | `transfer` | [EventTransfer](#scalar.chains.v1beta1.EventTransfer) |  |  |
 | `token_deployed` | [EventTokenDeployed](#scalar.chains.v1beta1.EventTokenDeployed) |  |  |
 | `multisig_operatorship_transferred` | [EventMultisigOperatorshipTransferred](#scalar.chains.v1beta1.EventMultisigOperatorshipTransferred) |  |  |
@@ -1893,6 +1895,28 @@ PollParticipants should be embedded in poll events in other modules
 | `destination_chain` | [string](#string) |  |  |
 | `contract_address` | [string](#string) |  |  |
 | `payload_hash` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventContractCallWithMintApproved"></a>
+
+### EventContractCallWithMintApproved
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+| `command_id` | [bytes](#bytes) |  |  |
+| `sender` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `contract_address` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
@@ -1978,11 +2002,13 @@ PollParticipants should be embedded in poll events in other modules
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+| `transfer_id` | [uint64](#uint64) |  |  |
+| `sender` | [string](#string) |  |  |
 | `destination_chain` | [string](#string) |  |  |
 | `destination_address` | [string](#string) |  |  |
-| `symbol` | [string](#string) |  |  |
-| `amount` | [bytes](#bytes) |  |  |
+| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
@@ -2163,6 +2189,106 @@ PollParticipants should be embedded in poll events in other modules
 
 
 
+<a name="scalar/multisig/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/multisig/exported/v1beta1/types.proto
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.multisig.exported.v1beta1.KeyState"></a>
+
+### KeyState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| KEY_STATE_UNSPECIFIED | 0 |  |
+| KEY_STATE_ASSIGNED | 1 |  |
+| KEY_STATE_ACTIVE | 2 |  |
+
+
+
+<a name="scalar.multisig.exported.v1beta1.MultisigState"></a>
+
+### MultisigState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| MULTISIG_STATE_UNSPECIFIED | 0 |  |
+| MULTISIG_STATE_PENDING | 1 |  |
+| MULTISIG_STATE_COMPLETED | 2 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/chains/v1beta1/tokens.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/chains/v1beta1/tokens.proto
+
+
+
+<a name="scalar.chains.v1beta1.ERC20Deposit"></a>
+
+### ERC20Deposit
+ERC20Deposit contains information for an ERC20 deposit
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `amount` | [bytes](#bytes) |  |  |
+| `asset` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `burner_address` | [bytes](#bytes) |  |  |
+| `log_index` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ERC20TokenMetadata"></a>
+
+### ERC20TokenMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `asset` | [string](#string) |  |  |
+| `chain_id` | [bytes](#bytes) |  |  |
+| `details` | [TokenDetails](#scalar.chains.v1beta1.TokenDetails) |  |  |
+| `token_address` | [string](#string) |  |  |
+| `tx_hash` | [string](#string) |  |  |
+| `status` | [Status](#scalar.chains.v1beta1.Status) |  |  |
+| `is_external` | [bool](#bool) |  |  |
+| `burner_code` | [bytes](#bytes) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/utils/v1beta1/queuer.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -2261,6 +2387,7 @@ PollParticipants should be embedded in poll events in other modules
 | `confirmed_source_txs` | [SourceTx](#scalar.chains.v1beta1.SourceTx) | repeated |  |
 | `command_batches` | [CommandBatchMetadata](#scalar.chains.v1beta1.CommandBatchMetadata) | repeated |  |
 | `gateway` | [Gateway](#scalar.chains.v1beta1.Gateway) |  |  |
+| `tokens` | [ERC20TokenMetadata](#scalar.chains.v1beta1.ERC20TokenMetadata) | repeated |  |
 | `events` | [Event](#scalar.chains.v1beta1.Event) | repeated |  |
 | `confirmed_event_queue` | [scalar.utils.v1beta1.QueueState](#scalar.utils.v1beta1.QueueState) |  |  |
 
@@ -3404,106 +3531,6 @@ QueryService defines the gRPC querier service.
 | `ERC20Tokens` | [ERC20TokensRequest](#scalar.chains.v1beta1.ERC20TokensRequest) | [ERC20TokensResponse](#scalar.chains.v1beta1.ERC20TokensResponse) | ERC20Tokens queries the ERC20 tokens registered for a chain | GET|/scalar/chains/v1beta1/erc20_tokens/{chain}|
 | `TokenInfo` | [TokenInfoRequest](#scalar.chains.v1beta1.TokenInfoRequest) | [TokenInfoResponse](#scalar.chains.v1beta1.TokenInfoResponse) | TokenInfo queries the token info for a registered ERC20 Token | GET|/scalar/chains/v1beta1/token_info/{chain}|
 | `Params` | [ParamsRequest](#scalar.chains.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.chains.v1beta1.ParamsResponse) |  | GET|/scalar/chains/v1beta1/params/{chain}|
-
- <!-- end services -->
-
-
-
-<a name="scalar/multisig/exported/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/multisig/exported/v1beta1/types.proto
-
-
- <!-- end messages -->
-
-
-<a name="scalar.multisig.exported.v1beta1.KeyState"></a>
-
-### KeyState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| KEY_STATE_UNSPECIFIED | 0 |  |
-| KEY_STATE_ASSIGNED | 1 |  |
-| KEY_STATE_ACTIVE | 2 |  |
-
-
-
-<a name="scalar.multisig.exported.v1beta1.MultisigState"></a>
-
-### MultisigState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| MULTISIG_STATE_UNSPECIFIED | 0 |  |
-| MULTISIG_STATE_PENDING | 1 |  |
-| MULTISIG_STATE_COMPLETED | 2 |  |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/chains/v1beta1/tokens.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/chains/v1beta1/tokens.proto
-
-
-
-<a name="scalar.chains.v1beta1.ERC20Deposit"></a>
-
-### ERC20Deposit
-ERC20Deposit contains information for an ERC20 deposit
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `tx_id` | [bytes](#bytes) |  |  |
-| `amount` | [bytes](#bytes) |  |  |
-| `asset` | [string](#string) |  |  |
-| `destination_chain` | [string](#string) |  |  |
-| `burner_address` | [bytes](#bytes) |  |  |
-| `log_index` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.ERC20TokenMetadata"></a>
-
-### ERC20TokenMetadata
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `asset` | [string](#string) |  |  |
-| `chain_id` | [bytes](#bytes) |  |  |
-| `details` | [TokenDetails](#scalar.chains.v1beta1.TokenDetails) |  |  |
-| `token_address` | [string](#string) |  |  |
-| `tx_hash` | [string](#string) |  |  |
-| `status` | [Status](#scalar.chains.v1beta1.Status) |  |  |
-| `is_external` | [bool](#bool) |  |  |
-| `burner_code` | [bytes](#bytes) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
 
  <!-- end services -->
 

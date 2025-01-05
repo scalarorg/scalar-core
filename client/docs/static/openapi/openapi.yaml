@@ -6170,18 +6170,34 @@ paths:
                       token_sent:
                         type: object
                         properties:
+                          chain:
+                            type: string
+                          event_id:
+                            type: string
+                          transfer_id:
+                            type: string
+                            format: uint64
                           sender:
                             type: string
-                            format: byte
                           destination_chain:
                             type: string
                           destination_address:
                             type: string
-                          symbol:
-                            type: string
-                          amount:
-                            type: string
-                            format: byte
+                          asset:
+                            type: object
+                            properties:
+                              denom:
+                                type: string
+                              amount:
+                                type: string
+                            description: >-
+                              Coin defines a token with a denomination and an
+                              amount.
+
+
+                              NOTE: The amount field is an Int which implements the custom method
+
+                              signatures required by gogoproto.
                       contract_call:
                         type: object
                         properties:
@@ -6213,6 +6229,40 @@ paths:
                           amount:
                             type: string
                             format: byte
+                      contract_call_with_mint_approved:
+                        type: object
+                        properties:
+                          chain:
+                            type: string
+                          event_id:
+                            type: string
+                          command_id:
+                            type: string
+                            format: byte
+                          sender:
+                            type: string
+                          destination_chain:
+                            type: string
+                          contract_address:
+                            type: string
+                          payload_hash:
+                            type: string
+                            format: byte
+                          asset:
+                            type: object
+                            properties:
+                              denom:
+                                type: string
+                              amount:
+                                type: string
+                            description: >-
+                              Coin defines a token with a denomination and an
+                              amount.
+
+
+                              NOTE: The amount field is an Int which implements the custom method
+
+                              signatures required by gogoproto.
                       transfer:
                         type: object
                         properties:
@@ -50278,18 +50328,33 @@ components:
         token_sent:
           type: object
           properties:
+            chain:
+              type: string
+            event_id:
+              type: string
+            transfer_id:
+              type: string
+              format: uint64
             sender:
               type: string
-              format: byte
             destination_chain:
               type: string
             destination_address:
               type: string
-            symbol:
-              type: string
-            amount:
-              type: string
-              format: byte
+            asset:
+              type: object
+              properties:
+                denom:
+                  type: string
+                amount:
+                  type: string
+              description: >-
+                Coin defines a token with a denomination and an amount.
+
+
+                NOTE: The amount field is an Int which implements the custom method
+
+                signatures required by gogoproto.
         contract_call:
           type: object
           properties:
@@ -50321,6 +50386,39 @@ components:
             amount:
               type: string
               format: byte
+        contract_call_with_mint_approved:
+          type: object
+          properties:
+            chain:
+              type: string
+            event_id:
+              type: string
+            command_id:
+              type: string
+              format: byte
+            sender:
+              type: string
+            destination_chain:
+              type: string
+            contract_address:
+              type: string
+            payload_hash:
+              type: string
+              format: byte
+            asset:
+              type: object
+              properties:
+                denom:
+                  type: string
+                amount:
+                  type: string
+              description: >-
+                Coin defines a token with a denomination and an amount.
+
+
+                NOTE: The amount field is an Int which implements the custom method
+
+                signatures required by gogoproto.
         transfer:
           type: object
           properties:
@@ -50398,6 +50496,37 @@ components:
         payload_hash:
           type: string
           format: byte
+    scalar.chains.v1beta1.EventContractCallWithMintApproved:
+      type: object
+      properties:
+        chain:
+          type: string
+        event_id:
+          type: string
+        command_id:
+          type: string
+          format: byte
+        sender:
+          type: string
+        destination_chain:
+          type: string
+        contract_address:
+          type: string
+        payload_hash:
+          type: string
+          format: byte
+        asset:
+          type: object
+          properties:
+            denom:
+              type: string
+            amount:
+              type: string
+          description: |-
+            Coin defines a token with a denomination and an amount.
+
+            NOTE: The amount field is an Int which implements the custom method
+            signatures required by gogoproto.
     scalar.chains.v1beta1.EventContractCallWithToken:
       type: object
       properties:
@@ -50457,18 +50586,33 @@ components:
             token_sent:
               type: object
               properties:
+                chain:
+                  type: string
+                event_id:
+                  type: string
+                transfer_id:
+                  type: string
+                  format: uint64
                 sender:
                   type: string
-                  format: byte
                 destination_chain:
                   type: string
                 destination_address:
                   type: string
-                symbol:
-                  type: string
-                amount:
-                  type: string
-                  format: byte
+                asset:
+                  type: object
+                  properties:
+                    denom:
+                      type: string
+                    amount:
+                      type: string
+                  description: >-
+                    Coin defines a token with a denomination and an amount.
+
+
+                    NOTE: The amount field is an Int which implements the custom method
+
+                    signatures required by gogoproto.
             contract_call:
               type: object
               properties:
@@ -50500,6 +50644,39 @@ components:
                 amount:
                   type: string
                   format: byte
+            contract_call_with_mint_approved:
+              type: object
+              properties:
+                chain:
+                  type: string
+                event_id:
+                  type: string
+                command_id:
+                  type: string
+                  format: byte
+                sender:
+                  type: string
+                destination_chain:
+                  type: string
+                contract_address:
+                  type: string
+                payload_hash:
+                  type: string
+                  format: byte
+                asset:
+                  type: object
+                  properties:
+                    denom:
+                      type: string
+                    amount:
+                      type: string
+                  description: >-
+                    Coin defines a token with a denomination and an amount.
+
+
+                    NOTE: The amount field is an Int which implements the custom method
+
+                    signatures required by gogoproto.
             transfer:
               type: object
               properties:
@@ -50567,18 +50744,31 @@ components:
     scalar.chains.v1beta1.EventTokenSent:
       type: object
       properties:
+        chain:
+          type: string
+        event_id:
+          type: string
+        transfer_id:
+          type: string
+          format: uint64
         sender:
           type: string
-          format: byte
         destination_chain:
           type: string
         destination_address:
           type: string
-        symbol:
-          type: string
-        amount:
-          type: string
-          format: byte
+        asset:
+          type: object
+          properties:
+            denom:
+              type: string
+            amount:
+              type: string
+          description: |-
+            Coin defines a token with a denomination and an amount.
+
+            NOTE: The amount field is an Int which implements the custom method
+            signatures required by gogoproto.
     scalar.chains.v1beta1.EventTransfer:
       type: object
       properties:
