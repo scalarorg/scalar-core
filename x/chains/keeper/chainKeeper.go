@@ -82,7 +82,6 @@ func (k chainKeeper) GetRevoteLockingPeriod(ctx sdk.Context) int64 {
 
 func (k chainKeeper) GetPendingCommands(ctx sdk.Context) []types.Command {
 	var commands []types.Command
-
 	keys := k.getCommandQueue(ctx).Keys()
 	for _, queueKey := range keys {
 		var cmd types.Command
