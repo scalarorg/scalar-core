@@ -224,7 +224,7 @@ func GenerateGenesis(clientCtx client.Context,
 	//set staking params
 	stakingGenState := generateStakingGenesis(coinDenom, validatorInfos)
 	appGenState[stakingtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(stakingGenState)
-	// supported chains
+	// scalar chains' module
 	if err := GenerateSupportedChains(clientCtx, args.chains, appGenState); err != nil {
 		log.Error().Err(err).Msg("Failed to generate supported chains")
 	}
@@ -317,7 +317,7 @@ func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *s
 	// 	rate, _ := sdk.NewDecFromStr("0.1")
 	// 	maxRate, _ := sdk.NewDecFromStr("0.2")
 	// 	maxChangeRate, _ := sdk.NewDecFromStr("0.01")
-	// 	commission := types.NewCommissionWithTime(rate, maxRate, maxChangeRate, time.Now())
+	// 	commission := chainsTypesNewCommissionWithTime(rate, maxRate, maxChangeRate, time.Now())
 	// 	validator, err = validator.SetInitialCommission(commission)
 
 	// 	if err != nil {
@@ -346,15 +346,16 @@ func generateNexusGenesis(supportedChainsPath string, validatorAddrs []sdk.ValAd
 			if err != nil {
 				log.Error().Err(err).Msg("Failed to validate chains config")
 			}
+			chainName := nexus.ChainName(chainConfig.ID)
 			nexusGenState.Chains = append(nexusGenState.Chains, nexus.Chain{
-				Name:                  nexus.ChainName(chainConfig.ID),
+				Name:                  chainName,
 				SupportsForeignAssets: true,
 				KeyType:               tss.Multisig,
 				Module:                chainsTypes.ModuleName,
 			})
 			chainState := nexustypes.ChainState{
 				Chain: nexus.Chain{
-					Name:                  nexus.ChainName(chainConfig.ID),
+					Name:                  chainName,
 					SupportsForeignAssets: true,
 					KeyType:               tss.Multisig,
 					Module:                chainsTypes.ModuleName,
@@ -362,6 +363,9 @@ func generateNexusGenesis(supportedChainsPath string, validatorAddrs []sdk.ValAd
 				Activated:        true,
 				Assets:           []nexus.Asset{nexus.NewAsset(coinDenom, true)},
 				MaintainerStates: make([]nexustypes.MaintainerState, len(validatorAddrs)),
+			}
+			if chainsTypes.IsBitcoinChain(chainName) {
+				chainState.Assets = append(chainState.Assets, nexus.NewAsset("sBtc", false))
 			}
 			for i, valAddr := range validatorAddrs {
 				chainState.MaintainerStates[i] = *nexustypes.NewMaintainerState(nexus.ChainName(chainConfig.ID), valAddr)
@@ -382,8 +386,9 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 		for _, chainConfig := range chainConfigs {
 			//Check if chainName is already in the genesis state
 			addChain := true
+			chainName := nexus.ChainName(chainConfig.ID)
 			for _, chain := range chainsState.Chains {
-				if chain.Params.Chain == nexus.ChainName(chainConfig.ID) {
+				if chain.Params.Chain == chainName {
 					addChain = false
 					log.Debug().Msgf("chain name %s already exists", chainConfig.ID)
 				}
@@ -399,7 +404,7 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 						}
 					}
 				}
-				chainsState.Chains = append(chainsState.Chains, chainsTypes.GenesisState_Chain{
+				chain := chainsTypes.GenesisState_Chain{
 					Params:              chainsTypes.DefaultChainParams(sdk.NewInt(int64(chainConfig.ChainID)), nexus.ChainName(chainConfig.ID), chainConfig.NetworkKind, chainConfig.Metadata),
 					CommandQueue:        utils.QueueState{},
 					ConfirmedEventQueue: utils.QueueState{},
@@ -407,14 +412,37 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 					CommandBatches:      make([]chainsTypes.CommandBatchMetadata, 0),
 					Gateway:             gateway,
 					Events:              make([]chainsTypes.Event, 0),
-				})
+					Tokens:              []chainsTypes.ERC20TokenMetadata{},
+				}
+				if chainsTypes.IsBitcoinChain(chainName) {
+					// Add default sBtc
+					sBtc := createDefaultSbtc()
+					chain.Tokens = append(chain.Tokens, sBtc)
+				}
+				chainsState.Chains = append(chainsState.Chains, chain)
 			}
 		}
 		genesisState[chainsTypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&chainsState)
 	}
 	return nil
 }
-
+func createDefaultSbtc() chainsTypes.ERC20TokenMetadata {
+	return chainsTypes.ERC20TokenMetadata{
+		Asset:   "sBtc",
+		ChainID: sdk.NewInt(4),
+		Details: chainsTypes.TokenDetails{
+			TokenName: "BtcTestnet4",
+			Symbol:    "sBtc",
+			Decimals:  8,
+			Capacity:  sdk.NewInt(0),
+		},
+		TokenAddress: chainsTypes.Address(common.HexToAddress("ffffffffffffffffffffffffffffffffffffffff")),
+		TxHash:       chainsTypes.ZeroHash,
+		Status:       chainsTypes.Confirmed,
+		IsExternal:   true,
+		BurnerCode:   nil, //burner code for external tokens must be nil
+	}
+}
 func getByteAddress(hexString string) ([]byte, error) {
 	if strings.HasPrefix(hexString, "0x") {
 		return hex.DecodeString(hexString[2:])
