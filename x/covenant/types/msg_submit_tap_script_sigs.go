@@ -3,6 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/x/covenant/exported"
 )
 
@@ -19,8 +20,21 @@ func NewSubmitTapScriptSigsRequest(sender sdk.AccAddress, sigID uint64, tapScrip
 
 // ValidateBasic implements the sdk.Msg interface.
 func (m SubmitTapScriptSigsRequest) ValidateBasic() error {
+	clog.Magentaf("ValidateBasic for SubmitTapScriptSigsRequest, m: %+v", m)
 	if err := sdk.VerifyAddressFormat(m.Sender); err != nil {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, sdkerrors.Wrap(err, "sender").Error())
+	}
+
+	if m.TapScriptSigs == nil {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "tap script sigs is nil")
+	}
+
+	if m.TapScriptSigs.TapScriptSigs == nil {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "tap script sigs is nil")
+	}
+
+	if len(m.TapScriptSigs.TapScriptSigs) == 0 {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "tap script sigs is empty")
 	}
 
 	for _, tapScriptSig := range m.TapScriptSigs.TapScriptSigs {

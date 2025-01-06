@@ -1,3 +1,7 @@
+
+[additional_keys]
+btc_priv_key = "private_key"
+
 [[scalar_bridge_btc]]
 id = "bitcoin|4"
 chain_id = 4

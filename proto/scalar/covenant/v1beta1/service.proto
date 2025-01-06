@@ -64,7 +64,7 @@ service MsgService {
   rpc SubmitTapScriptSigs(SubmitTapScriptSigsRequest)
       returns (SubmitTapScriptSigsResponse) {
     option (google.api.http) = {
-      post : "/scalar/covenant/v1beta1/submit_tap_script_sig"
+      post : "/scalar/covenant/v1beta1/submit_tap_script_sigs"
       body : "*"
     };
   }

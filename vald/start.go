@@ -233,7 +233,7 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 
 	multisigMgr := createMultisigMgr(bc, clientCtx, scalarCfg, valAddr)
 
-	// psbtMgr := createPSBTMgr(scalarCfg.BTCMgrConfig, clientCtx, bc, valAddr, scalarCfg.PrivKey)
+	psbtMgr := createPSBTMgr(scalarCfg.BTCMgrConfig, clientCtx, bc, valAddr, scalarCfg.AdditionalKeys.BtcPrivKey)
 
 	nodeHeight, err := waitUntilNetworkSync(scalarCfg, robustClient)
 	if err != nil {
@@ -278,8 +278,6 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 
 	// creatingPsbt := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.CreatingPsbtStarted]())
 	covenantSigningPsbt := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.SigningPsbtStarted]())
-
-	_ = covenantSigningPsbt
 
 	eventCtx, cancelEventCtx := context.WithCancel(context.Background())
 	eGroup, eventCtx := errgroup.WithContext(eventCtx)
@@ -345,7 +343,7 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 		createJobTyped(sourceEventConf, xMgr.ProcessSourceTxsConfirmation, cancelEventCtx),
 
 		// createJobTyped(creatingPsbt, xMgr.ProcessCreatingPsbtStarted, cancelEventCtx),
-		// createJobTyped(covenantSigningPsbt, covenantMgr.ProcessSigningPsbtStarted, cancelEventCtx),
+		createJobTyped(covenantSigningPsbt, psbtMgr.ProcessSigningPsbtStarted, cancelEventCtx),
 	}
 
 	slices.ForEach(js, func(job jobs.Job) {
@@ -604,8 +602,6 @@ func createPSBTMgr(configs []config.BTCConfig, cliCtx sdkClient.Context, b broad
 	if err != nil {
 		panic(fmt.Errorf("invalid private key %s", privKey))
 	}
-
-	fmt.Printf("privKeyBytes: %x\n", privKeyBytes)
 
 	return psbt.NewMgr(rpcs, cliCtx, valAddr, b, privKeyBytes)
 }

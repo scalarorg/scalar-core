@@ -6,6 +6,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
@@ -31,6 +32,7 @@ func (k Keeper) SignPsbt(ctx sdk.Context, keyID multisig.KeyID, psbt types.Psbt,
 	}
 
 	params := k.GetParams(ctx)
+	clog.Red("SigningPsbt", "params", params)
 
 	expiresAt := ctx.BlockHeight() + params.SigningTimeout
 	signingSession := types.NewSigningSession(&types.NewSigningSessionParams{

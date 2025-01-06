@@ -53,8 +53,9 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
-func (k Keeper) GetParams(ctx sdk.Context) types.Params {
-	return types.Params{}
+func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
+	k.paramSpace.GetParamSet(ctx, &params)
+	return params
 }
 
 func (k Keeper) getStore(ctx sdk.Context) utils.KVStore {

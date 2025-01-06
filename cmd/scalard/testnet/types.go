@@ -5,6 +5,7 @@ import (
 
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	"github.com/scalarorg/scalar-core/vald/config"
 	tmtypes "github.com/tendermint/tendermint/types"
 )
 
@@ -44,9 +45,8 @@ type ValidatorInfo struct {
 	ValPubKey  cryptotypes.PubKey
 	ValBalance banktypes.Balance
 
-	ValNodePubKey  cryptotypes.PubKey
-	ValNodeBalance banktypes.Balance
-	//Balance of broadcaster
+	ValNodePubKey      cryptotypes.PubKey
+	ValNodeBalance     banktypes.Balance
 	Broadcaster        cryptotypes.PubKey
 	BroadcasterBalance banktypes.Balance
 
@@ -57,6 +57,6 @@ type ValidatorInfo struct {
 	FaucetBalance banktypes.Balance
 
 	GenesisValidator tmtypes.GenesisValidator
-	BtcPubkey        string
 	GenFile          string
+	AdditionalKeys   config.AdditionalKeys
 }

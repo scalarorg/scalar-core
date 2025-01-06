@@ -38,15 +38,16 @@ const (
 
 type KeyXOnly [KeyXOnlyLength]byte
 
+var EmptyKeyXOnly = KeyXOnly{}
+
 func (k KeyXOnly) Bytes() [KeyXOnlyLength]byte {
 	return k
 }
 
 func (k KeyXOnly) ValidateBasic() error {
-	if len(k) != KeyXOnlyLength {
-		return fmt.Errorf("key x only length %d not in range [%d,%d]", len(k), KeyXOnlyLength, KeyXOnlyLength)
+	if k == EmptyKeyXOnly {
+		return fmt.Errorf("key x only is empty")
 	}
-
 	return nil
 }
 
@@ -54,17 +55,22 @@ func (k KeyXOnly) Size() int {
 	return KeyXOnlyLength
 }
 
-func (k KeyXOnly) MarshalTo(dAtA []byte) (int, error) {
+func (k *KeyXOnly) MarshalTo(dAtA []byte) (int, error) {
 	copy(dAtA, k[:])
 	return KeyXOnlyLength, nil
 }
 
-func (k KeyXOnly) Unmarshal(dAtA []byte) error {
+func (k *KeyXOnly) Unmarshal(dAtA []byte) error {
+	if len(dAtA) != KeyXOnlyLength {
+		return fmt.Errorf("invalid data length: expected %d, got %d", KeyXOnlyLength, len(dAtA))
+	}
 	copy(k[:], dAtA)
 	return nil
 }
 
 type LeafHash [LeafHashLength]byte
+
+var EmptyLeafHash = LeafHash{}
 
 func (l LeafHash) Bytes() [LeafHashLength]byte {
 	return l
@@ -75,6 +81,10 @@ func (l LeafHash) ValidateBasic() error {
 		return fmt.Errorf("leaf hash length %d not in range [%d,%d]", len(l), LeafHashLength, LeafHashLength)
 	}
 
+	if l == EmptyLeafHash {
+		return fmt.Errorf("leaf hash is empty")
+	}
+
 	return nil
 }
 
@@ -82,17 +92,22 @@ func (l LeafHash) Size() int {
 	return LeafHashLength
 }
 
-func (l LeafHash) MarshalTo(dAtA []byte) (int, error) {
+func (l *LeafHash) MarshalTo(dAtA []byte) (int, error) {
 	copy(dAtA, l[:])
 	return LeafHashLength, nil
 }
 
-func (l LeafHash) Unmarshal(dAtA []byte) error {
+func (l *LeafHash) Unmarshal(dAtA []byte) error {
+	if len(dAtA) != LeafHashLength {
+		return fmt.Errorf("invalid data length: expected %d, got %d", LeafHashLength, len(dAtA))
+	}
 	copy(l[:], dAtA)
 	return nil
 }
 
 type Signature [SignatureLength]byte
+
+var EmptySignature = Signature{}
 
 func (s Signature) Bytes() [SignatureLength]byte {
 	return s
@@ -103,6 +118,10 @@ func (s Signature) ValidateBasic() error {
 		return fmt.Errorf("signature length %d not in range [%d,%d]", len(s), SignatureLength, SignatureLength)
 	}
 
+	if s == EmptySignature {
+		return fmt.Errorf("signature is empty")
+	}
+
 	return nil
 }
 
@@ -110,12 +129,15 @@ func (s Signature) Size() int {
 	return SignatureLength
 }
 
-func (s Signature) MarshalTo(dAtA []byte) (int, error) {
+func (s *Signature) MarshalTo(dAtA []byte) (int, error) {
 	copy(dAtA, s[:])
 	return SignatureLength, nil
 }
 
-func (s Signature) Unmarshal(dAtA []byte) error {
+func (s *Signature) Unmarshal(dAtA []byte) error {
+	if len(dAtA) != SignatureLength {
+		return fmt.Errorf("invalid data length: expected %d, got %d", SignatureLength, len(dAtA))
+	}
 	copy(s[:], dAtA)
 	return nil
 }

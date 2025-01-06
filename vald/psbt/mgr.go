@@ -30,7 +30,7 @@ type Mgr struct {
 func NewMgr(rpcs map[chain.ChainInfoBytes]*btcRpcClient.Client, ctx sdkclient.Context, valAddr sdk.ValAddress, b broadcast.Broadcaster, privKeyBytes []byte) *Mgr {
 
 	if len(privKeyBytes) != 32 {
-		panic("invalid private key length")
+		panic("invalid private key length, got: " + fmt.Sprintf("%x", privKeyBytes))
 	}
 
 	privKey := secp256k1.PrivKeyFromBytes(privKeyBytes)
@@ -61,7 +61,7 @@ func (mgr Mgr) sign(keyUID string, psbt covenantTypes.Psbt) (*covenant.TapScript
 	tapScriptSigs, err := vault.SignPsbtAndCollectSigs(
 		psbt,
 		privkey.Serialize(),
-		vault.NetworkKindTestnet,
+		vault.NetworkKindTestnet, // TODO: call to chain to get the network kind
 	)
 	if err != nil {
 		return nil, err

@@ -3809,7 +3809,7 @@ quorum threshold e.g.,3 |
 | `key_id` | [string](#string) |  |  |
 | `psbt` | [bytes](#bytes) |  |  |
 | `participant_tap_script_sigs` | [PsbtMultiSig.ParticipantTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantTapScriptSigsEntry) | repeated |  |
-| `finalized` | [bool](#bool) |  |  |
+| `finalized_tx` | [bytes](#bytes) |  |  |
 
 
 
@@ -4415,7 +4415,7 @@ Pubkey used as key for lookup custodian to update other values
 | `UpdateCustodianGroup` | [UpdateCustodianGroupRequest](#scalar.covenant.v1beta1.UpdateCustodianGroupRequest) | [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse) | Update Custodian group | POST|/scalar/covenant/v1beta1/update_custodian_group|
 | `AddCustodianToGroup` | [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Add Custodian to custodian group recalculate taproot pubkey when adding custodian to custodian group | POST|/scalar/covenant/v1beta1/add_custodian_to_group|
 | `RemoveCustodianFromGroup` | [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Remove Custodian from custodian group recalculate taproot address when deleting custodian from custodian group | POST|/scalar/covenant/v1beta1/remove_custodian_from_group|
-| `SubmitTapScriptSigs` | [SubmitTapScriptSigsRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigsRequest) | [SubmitTapScriptSigsResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigsResponse) |  | POST|/scalar/covenant/v1beta1/submit_tap_script_sig|
+| `SubmitTapScriptSigs` | [SubmitTapScriptSigsRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigsRequest) | [SubmitTapScriptSigsResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigsResponse) |  | POST|/scalar/covenant/v1beta1/submit_tap_script_sigs|
 
 
 <a name="scalar.covenant.v1beta1.QueryService"></a>

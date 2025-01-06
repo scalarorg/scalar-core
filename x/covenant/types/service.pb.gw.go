@@ -771,7 +771,7 @@ var (
 
 	pattern_MsgService_RemoveCustodianFromGroup_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "covenant", "v1beta1", "remove_custodian_from_group"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_MsgService_SubmitTapScriptSigs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "covenant", "v1beta1", "submit_tap_script_sig"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MsgService_SubmitTapScriptSigs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"scalar", "covenant", "v1beta1", "submit_tap_script_sigs"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
