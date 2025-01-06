@@ -203,7 +203,6 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 		"eventID", event.GetID(),
 		"transferID", transferID.String(),
 	)
-	clog.Magentaf("[x/chains] [ABCI]-Emited EventTokenSent")
 	events.Emit(ctx, &types.EventTokenSent{
 		Chain:              event.Chain,
 		EventID:            event.GetID(),
