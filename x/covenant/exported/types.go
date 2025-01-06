@@ -38,6 +38,10 @@ const (
 
 type KeyXOnly [KeyXOnlyLength]byte
 
+func (k KeyXOnly) Bytes() [KeyXOnlyLength]byte {
+	return k
+}
+
 func (k KeyXOnly) ValidateBasic() error {
 	if len(k) != KeyXOnlyLength {
 		return fmt.Errorf("key x only length %d not in range [%d,%d]", len(k), KeyXOnlyLength, KeyXOnlyLength)
@@ -62,6 +66,10 @@ func (k KeyXOnly) Unmarshal(dAtA []byte) error {
 
 type LeafHash [LeafHashLength]byte
 
+func (l LeafHash) Bytes() [LeafHashLength]byte {
+	return l
+}
+
 func (l LeafHash) ValidateBasic() error {
 	if len(l) != LeafHashLength {
 		return fmt.Errorf("leaf hash length %d not in range [%d,%d]", len(l), LeafHashLength, LeafHashLength)
@@ -85,6 +93,10 @@ func (l LeafHash) Unmarshal(dAtA []byte) error {
 }
 
 type Signature [SignatureLength]byte
+
+func (s Signature) Bytes() [SignatureLength]byte {
+	return s
+}
 
 func (s Signature) ValidateBasic() error {
 	if len(s) != SignatureLength {

@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	"github.com/scalarorg/scalar-core/utils/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -64,4 +66,39 @@ func (k Keeper) nextSigID(ctx sdk.Context) uint64 {
 	defer k.getStore(ctx).Set(signingSessionCountKey, &gogoprototypes.UInt64Value{Value: val.Value + 1})
 
 	return val.Value
+}
+
+// DeleteSigningSession deletes the signing session with the given ID
+func (k Keeper) DeleteSigningSession(ctx sdk.Context, id uint64) {
+	signing, ok := k.getSigningSession(ctx, id)
+	if !ok {
+		return
+	}
+
+	k.getStore(ctx).Delete(getSigningSessionExpiryKey(signing))
+	k.getStore(ctx).Delete(getSigningSessionKey(id))
+}
+
+// GetSigningSessionsByExpiry returns all signing sessions that either expires at
+// or goes out of the grace period at the given block height
+func (k Keeper) GetSigningSessionsByExpiry(ctx sdk.Context, expiry int64) []types.SigningSession {
+	var results []types.SigningSession
+
+	iter := k.getStore(ctx).Iterator(expirySigningPrefix.Append(utils.KeyFromInt(expiry)))
+	defer utils.CloseLogError(iter, k.Logger(ctx))
+
+	for ; iter.Valid(); iter.Next() {
+		var value gogoprototypes.UInt64Value
+		iter.UnmarshalValue(&value)
+
+		sigID := value.Value
+		result, ok := k.getSigningSession(ctx, sigID)
+		if !ok {
+			panic(fmt.Errorf("signing session %d not found", sigID))
+		}
+
+		results = append(results, result)
+	}
+
+	return results
 }

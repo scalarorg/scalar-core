@@ -49,7 +49,7 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 	clog.Yellowf("keyUID: %s", keyUID)
 	clog.Yellowf("partyUID: %s", partyUID)
 
-	listOfTapScriptSig, err := mgr.sign(keyUID, event.Psbt, pubKey)
+	listOfTapScriptSig, err := mgr.sign(keyUID, event.Psbt)
 	if err != nil {
 		return err
 	}

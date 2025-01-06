@@ -30,10 +30,13 @@ type Keeper interface {
 	GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
 	GetKey(ctx sdk.Context, keyID multisig.KeyID) (multisig.Key, bool)
 	SetKey(ctx sdk.Context, key multisigTypes.Key)
-	GetCovenantRouter() CovenantRouter
 	SetCovenantRouter(router CovenantRouter)
 
 	GetSigningSessions(ctx sdk.Context) (signingSessions []SigningSession, ok bool)
+
+	GetSigningSessionsByExpiry(ctx sdk.Context, expiry int64) []SigningSession
+	DeleteSigningSession(ctx sdk.Context, id uint64)
+	GetCovenantRouter() CovenantRouter
 
 	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, psbt Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
 }
