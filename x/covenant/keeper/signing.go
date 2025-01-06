@@ -3,6 +3,7 @@ package keeper
 import (
 	"fmt"
 
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -18,11 +19,17 @@ func (k Keeper) GetSigningSessions(ctx sdk.Context) (signingSessions []types.Sig
 
 func (k Keeper) setSigningSession(ctx sdk.Context, signing types.SigningSession) {
 	// the deletion is necessary because we may update it to a different location depending on the current state of the session
-	k.getStore(ctx).Delete(expirySigningPrefix.Append(utils.KeyFromInt(signing.ExpiresAt)).Append(utils.KeyFromInt(signing.GetID())))
+	deletedKey := expirySigningPrefix.Append(utils.KeyFromInt(signing.ExpiresAt)).Append(utils.KeyFromInt(signing.GetID()))
+	k.getStore(ctx).Delete(deletedKey)
+	clog.Redf("setSigningSession, deletedKey: %+v", deletedKey)
 
-	k.getStore(ctx).Set(getSigningSessionExpiryKey(signing), &gogoprototypes.UInt64Value{Value: signing.GetID()})
+	signingSessionExpiryKey := getSigningSessionExpiryKey(signing)
+	k.getStore(ctx).Set(signingSessionExpiryKey, &gogoprototypes.UInt64Value{Value: signing.GetID()})
+	clog.Redf("setSigningSession, signingSessionExpiryKey: %+v", signingSessionExpiryKey)
 
-	k.getStore(ctx).Set(getSigningSessionKey(signing.GetID()), &signing)
+	signingSessionKey := getSigningSessionKey(signing.GetID())
+	k.getStore(ctx).Set(signingSessionKey, &signing)
+	clog.Redf("setSigningSession, signingSessionKey: %+v", signingSessionKey)
 }
 
 func (k Keeper) getSigningSession(ctx sdk.Context, id uint64) (signing types.SigningSession, ok bool) {

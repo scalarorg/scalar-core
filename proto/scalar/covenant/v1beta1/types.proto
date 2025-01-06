@@ -54,9 +54,8 @@ message PsbtMultiSig {
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/covenant/exported.TapScriptSigList"
   ];
-  bool finalized = 4;
+  bytes finalized_tx = 4;
 }
-
 
 message SigningSession {
   option (gogoproto.stable_marshaler) = true;

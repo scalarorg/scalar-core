@@ -59,7 +59,7 @@ func (g CustodianGroup) CreateKey() multisigTypes.Key {
 
 var DefaultParticipantTapScriptSigs = make(map[string]*exported.TapScriptSigList)
 
-func (p PsbtMultiSig) Finalize() (Psbt, error) {
+func (p *PsbtMultiSig) Finalize() error {
 	psbtBytes := p.Psbt.Bytes()
 	var err error
 	for _, list := range p.ParticipantTapScriptSigs {
@@ -75,14 +75,17 @@ func (p PsbtMultiSig) Finalize() (Psbt, error) {
 		})
 		psbtBytes, err = vault.AggregateTapScriptSigs(psbtBytes, inputTapscriptSigs)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	}
-	return psbtBytes, nil
-}
+	clog.Greenf("CovenantHandler: Finalize, Psbt: %x", psbtBytes)
 
-func (p *PsbtMultiSig) SetFinalizedPsbt(psbt []byte) {
-	// TODO: check if the psbt is finalized, call to the vault
-	p.Psbt = psbt
-	p.Finalized = true
+	tx, err := vault.FinalizePsbtAndExtractTx(psbtBytes)
+	if err != nil {
+		return err
+	}
+
+	p.FinalizedTx = tx
+	p.Psbt = psbtBytes
+	return nil
 }

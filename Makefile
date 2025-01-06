@@ -259,6 +259,10 @@ cfd4:
 sign-btc:
 	$(SCALAR_BIN_PATH) tx chains sign-btc-commands "bitcoin|4" $(MOCK_PSBT) --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
 
+.PHONY: batch-command
+batch-command:
+	$(SCALAR_BIN_PATH) query chains batched-commands "bitcoin|4"  802d18c610690663ee983d373d771e58a9c49fc802099e61249a0f0fecb019eb
+
 .PHONY: params
 params:
 	@if [ -z "$(CHAIN)" ]; then \

@@ -4,6 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
@@ -18,6 +19,7 @@ func BeginBlocker(ctx sdk.Context, _ abci.RequestBeginBlock, bk types.Keeper) {}
 
 // EndBlocker called every block, process inflation, update validator set.
 func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.Keeper, rewarder types.Rewarder) ([]abci.ValidatorUpdate, error) {
+	clog.Greenf("Covenant EndBlocker, ctx.BlockHeight: %+v", ctx.BlockHeight())
 	handleSignings(ctx, bk, rewarder)
 	return nil, nil
 }
@@ -26,6 +28,7 @@ func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 	// we handle sessions that'll expire on the next block,
 	// to avoid waiting for an additional block
 	for _, signing := range k.GetSigningSessionsByExpiry(ctx, ctx.BlockHeight()+1) {
+		clog.Bluef("handleSignings, signing.GetID(): %+v", signing.GetID())
 		_ = utils.RunCached(ctx, k, func(cachedCtx sdk.Context) ([]abci.ValidatorUpdate, error) {
 			k.DeleteSigningSession(cachedCtx, signing.GetID())
 			module := signing.GetModule()
@@ -43,23 +46,24 @@ func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 				return nil, nil
 			}
 
+			// finalize the psbt
+			err := signing.PsbtMultiSig.Finalize()
+			if err != nil {
+				return nil, sdkerrors.Wrap(err, "failed to finalize psbt")
+			}
+
 			sig := funcs.Must(signing.Result())
 
 			// TODO: must validate the signature in the submit signature request then release the rewards
 			slices.ForEach(sig.GetParticipants(), func(p sdk.ValAddress) { funcs.MustNoErr(pool.ReleaseRewards(p)) })
 
-			// finalize the psbt
-			finalizedPsbt, err := signing.PsbtMultiSig.Finalize()
-			if err != nil {
-				return nil, sdkerrors.Wrap(err, "failed to finalize psbt")
-			}
-
-			signing.PsbtMultiSig.SetFinalizedPsbt(finalizedPsbt)
-
 			if err := k.GetCovenantRouter().GetHandler(module).HandleCompleted(cachedCtx, &sig, signing.GetMetadata()); err != nil {
 				return nil, sdkerrors.Wrap(err, "failed to handle completed signature")
 			}
 
+			clog.Greenf("CovenantHandler: HandleCompleted, Psbt: %x", sig.GetPsbt().Bytes())
+			clog.Greenf("CovenantHandler: HandleCompleted, FinalizedTx: %x", sig.GetFinalizedTx())
+			
 			events.Emit(cachedCtx, types.NewSigningPsbtCompleted(signing.GetID()))
 			k.Logger(cachedCtx).Info("signing session completed",
 				"sig_id", signing.GetID(),
