@@ -3813,6 +3813,7 @@ quorum threshold e.g.,3 |
 | `key_id` | [string](#string) |  |  |
 | `psbt` | [bytes](#bytes) |  |  |
 | `participant_tap_script_sigs` | [PsbtMultiSig.ParticipantTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantTapScriptSigsEntry) | repeated |  |
+| `finalized` | [bool](#bool) |  |  |
 
 
 

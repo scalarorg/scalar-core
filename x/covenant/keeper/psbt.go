@@ -16,8 +16,6 @@ import (
 // TODO: Currently, we are mocking the psbt, we need to split it into two events
 // CreatingPsbtStarted and SigningPsbtStarted
 
-var mockPsbt = []byte("mock_psbt")
-
 func (k Keeper) SignPsbt(ctx sdk.Context, keyID multisig.KeyID, psbt types.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error {
 	if !k.GetCovenantRouter().HasHandler(module) {
 		panic(fmt.Errorf("covenant handler not registered for module %s", module))

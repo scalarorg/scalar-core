@@ -54,6 +54,7 @@ message PsbtMultiSig {
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/covenant/exported.TapScriptSigList"
   ];
+  bool finalized = 4;
 }
 
 

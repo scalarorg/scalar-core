@@ -4,13 +4,19 @@ import (
 	"encoding/hex"
 	fmt "fmt"
 
+	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	"github.com/scalarorg/scalar-core/utils/clog"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 )
 
 type Psbt []byte
+
+func (p Psbt) Bytes() []byte {
+	return p
+}
 
 var EmptyPsbt = []byte{}
 
@@ -52,3 +58,31 @@ func (g CustodianGroup) CreateKey() multisigTypes.Key {
 }
 
 var DefaultParticipantTapScriptSigs = make(map[string]*exported.TapScriptSigList)
+
+func (p PsbtMultiSig) Finalize() (Psbt, error) {
+	psbtBytes := p.Psbt.Bytes()
+	var err error
+	for _, list := range p.ParticipantTapScriptSigs {
+		inputTapscriptSigs := slices.Map(list.TapScriptSigs, func(sig *exported.TapScriptSig) vault.TapScriptSig {
+			keyXOnly := sig.KeyXOnly.Bytes()
+			leafHash := sig.LeafHash.Bytes()
+			signature := sig.Signature.Bytes()
+			return vault.TapScriptSig{
+				KeyXOnly:  keyXOnly,
+				LeafHash:  leafHash,
+				Signature: signature,
+			}
+		})
+		psbtBytes, err = vault.AggregateTapScriptSigs(psbtBytes, inputTapscriptSigs)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return psbtBytes, nil
+}
+
+func (p *PsbtMultiSig) SetFinalizedPsbt(psbt []byte) {
+	// TODO: check if the psbt is finalized, call to the vault
+	p.Psbt = psbt
+	p.Finalized = true
+}
