@@ -14,10 +14,9 @@ import (
 
 // PsbtMultiSig provides an interface to work with the multi sig
 type PsbtMultiSig interface {
-	GetTapScriptSig(p sdk.ValAddress) (TapScriptSig, bool)
-	GetPsbt() []byte
 	GetKeyID() multisig.KeyID
 	ValidateBasic() error
+	GetFinalizedTx() []byte
 }
 
 // CovenantHandler defines the interface for the requesting module to implement in
