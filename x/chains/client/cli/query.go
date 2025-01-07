@@ -10,10 +10,10 @@ import (
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/spf13/cobra"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/scalarorg/scalar-core/x/chains/keeper"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 const (
