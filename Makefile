@@ -246,7 +246,7 @@ cfs3:
 	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "bitcoin|4" 5188eea7ceb9f585f5ba8a2abebb82f9850dd671b6e2926263674af6882fd3f6 fc702634fc245b254d44585dfaa6527871899dbfe38d5585abecbb738f8865bf --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 537803
 
 cfd2:
-	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" cabc3140a564038f9f76e9d692309ea8d5be7d5a8a2133b97bf0579a73cfbb37 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" cabc3140a564038f9f76e9d692309ea8d5be7d5a8a2133b97bf0579a73cfbb37 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 507368
 
 	
 cfd3:
@@ -258,6 +258,10 @@ cfd4:
 .PHONY: sign-btc
 sign-btc:
 	$(SCALAR_BIN_PATH) tx chains sign-btc-commands "bitcoin|4" $(MOCK_PSBT) --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+
+.PHONY: batch-command
+batch-command:
+	$(SCALAR_BIN_PATH) query chains batched-commands "bitcoin|4" $(BATCH_ID)
 
 .PHONY: params
 params:

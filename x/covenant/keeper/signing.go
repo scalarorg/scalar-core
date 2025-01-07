@@ -1,6 +1,9 @@
 package keeper
 
 import (
+	"fmt"
+
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -16,11 +19,21 @@ func (k Keeper) GetSigningSessions(ctx sdk.Context) (signingSessions []types.Sig
 
 func (k Keeper) setSigningSession(ctx sdk.Context, signing types.SigningSession) {
 	// the deletion is necessary because we may update it to a different location depending on the current state of the session
-	k.getStore(ctx).Delete(expirySigningPrefix.Append(utils.KeyFromInt(signing.ExpiresAt)).Append(utils.KeyFromInt(signing.GetID())))
+	deletedKey := expirySigningPrefix.Append(utils.KeyFromInt(signing.ExpiresAt)).Append(utils.KeyFromInt(signing.GetID()))
+	k.getStore(ctx).Delete(deletedKey)
+	clog.Redf("setSigningSession, deletedKey: %+v", deletedKey)
 
-	k.getStore(ctx).Set(getSigningSessionExpiryKey(signing), &gogoprototypes.UInt64Value{Value: signing.GetID()})
+	signingSessionExpiryKey := getSigningSessionExpiryKey(signing)
+	k.getStore(ctx).Set(signingSessionExpiryKey, &gogoprototypes.UInt64Value{Value: signing.GetID()})
+	clog.Redf("setSigningSession, signingSessionExpiryKey: %+v", signingSessionExpiryKey)
 
-	k.getStore(ctx).Set(getSigningSessionKey(signing.GetID()), &signing)
+	signingSessionKey := getSigningSessionKey(signing.GetID())
+	k.getStore(ctx).Set(signingSessionKey, &signing)
+	clog.Redf("setSigningSession, signingSessionKey: %+v", signingSessionKey)
+}
+
+func (k Keeper) getSigningSession(ctx sdk.Context, id uint64) (signing types.SigningSession, ok bool) {
+	return signing, k.getStore(ctx).Get(getSigningSessionKey(id), &signing)
 }
 
 func getSigningSessionExpiryKey(signing types.SigningSession) utils.Key {
@@ -60,4 +73,39 @@ func (k Keeper) nextSigID(ctx sdk.Context) uint64 {
 	defer k.getStore(ctx).Set(signingSessionCountKey, &gogoprototypes.UInt64Value{Value: val.Value + 1})
 
 	return val.Value
+}
+
+// DeleteSigningSession deletes the signing session with the given ID
+func (k Keeper) DeleteSigningSession(ctx sdk.Context, id uint64) {
+	signing, ok := k.getSigningSession(ctx, id)
+	if !ok {
+		return
+	}
+
+	k.getStore(ctx).Delete(getSigningSessionExpiryKey(signing))
+	k.getStore(ctx).Delete(getSigningSessionKey(id))
+}
+
+// GetSigningSessionsByExpiry returns all signing sessions that either expires at
+// or goes out of the grace period at the given block height
+func (k Keeper) GetSigningSessionsByExpiry(ctx sdk.Context, expiry int64) []types.SigningSession {
+	var results []types.SigningSession
+
+	iter := k.getStore(ctx).Iterator(expirySigningPrefix.Append(utils.KeyFromInt(expiry)))
+	defer utils.CloseLogError(iter, k.Logger(ctx))
+
+	for ; iter.Valid(); iter.Next() {
+		var value gogoprototypes.UInt64Value
+		iter.UnmarshalValue(&value)
+
+		sigID := value.Value
+		result, ok := k.getSigningSession(ctx, sigID)
+		if !ok {
+			panic(fmt.Errorf("signing session %d not found", sigID))
+		}
+
+		results = append(results, result)
+	}
+
+	return results
 }

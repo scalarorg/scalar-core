@@ -52,10 +52,6 @@ func NewSigningSession(params *NewSigningSessionParams) SigningSession {
 
 // ValidateBasic returns an error if the given signing session is invalid; nil otherwise
 func (m SigningSession) ValidateBasic() error {
-	if err := m.PsbtMultiSig.ValidateBasic(); err != nil {
-		return err
-	}
-
 	if err := m.Key.ValidateBasic(); err != nil {
 		return err
 	}
@@ -90,6 +86,10 @@ func (m SigningSession) ValidateBasic() error {
 			return fmt.Errorf("completed signing session must have completed at set")
 		}
 
+		if err := m.PsbtMultiSig.ValidateBasic(); err != nil {
+			return err
+		}
+
 		if m.GetParticipantsWeight().LT(m.Key.GetMinPassingWeight()) {
 			return fmt.Errorf("completed signing session must have completed multi signature")
 		}
@@ -97,16 +97,16 @@ func (m SigningSession) ValidateBasic() error {
 		return fmt.Errorf("unexpected state %s", m.GetState())
 	}
 
-	for addr, sig := range m.PsbtMultiSig.TapScriptSigs {
+	for addr, sigs := range m.PsbtMultiSig.ParticipantTapScriptSigs {
 		pubKey, ok := m.Key.PubKeys[addr]
 		if !ok {
 			return fmt.Errorf("participant %s does not have public key submitted", addr)
 		}
 
 		// TODO: Implement signature verification
-		_ = sig
+		_ = sigs
 		_ = pubKey
-		clog.Redf("TODO: Implement signature verification for tapscriptsig")
+		clog.Redf("ValidateBasic, TODO: Implement signature verification for tapscriptsig")
 		// if !sig.Verify(m.PsbtMultiSig.TapScriptHash, pubKey) {
 		// 	return fmt.Errorf("signature does not match the public key")
 		// }
@@ -115,10 +115,10 @@ func (m SigningSession) ValidateBasic() error {
 	return nil
 }
 
-// AddSig adds a new signature for the given participant into the signing session
-func (m *SigningSession) AddSig(blockHeight int64, participant sdk.ValAddress, sig exported.TapScriptSig) error {
-	if m.PsbtMultiSig.TapScriptSigs == nil {
-		m.PsbtMultiSig.TapScriptSigs = make(map[string]*exported.TapScriptSig)
+// AddTapScriptSigs adds the given tapscript sigs to the signing session
+func (m *SigningSession) AddTapScriptSigs(blockHeight int64, participant sdk.ValAddress, inputSigs *exported.TapScriptSigList) error {
+	if m.PsbtMultiSig.ParticipantTapScriptSigs == nil {
+		m.PsbtMultiSig.ParticipantTapScriptSigs = make(map[string]*exported.TapScriptSigList)
 	}
 
 	if m.isExpired(blockHeight) {
@@ -129,14 +129,12 @@ func (m *SigningSession) AddSig(blockHeight int64, participant sdk.ValAddress, s
 		return fmt.Errorf("%s is not a participant of signing %d", participant.String(), m.GetID())
 	}
 
-	if _, ok := m.PsbtMultiSig.TapScriptSigs[participant.String()]; ok {
+	if _, ok := m.PsbtMultiSig.ParticipantTapScriptSigs[participant.String()]; ok {
 		return fmt.Errorf("participant %s already submitted its signature for signing %d", participant.String(), m.GetID())
 	}
 
 	// TODO: Implement signature verification
-	_ = sig
-	_ = m.Key.PubKeys[participant.String()]
-	clog.Redf("TODO: Implement signature verification for tapscriptsig")
+	clog.Yellow("AddTapScriptSigs, TODO: Implement signature verification for tapscriptsig\n")
 	// if !sig.Verify(m.PsbtMultiSig.PayloadHash, m.Key.PubKeys[participant.String()]) {
 	// 	return fmt.Errorf("invalid signature received from participant %s for signing %d", participant.String(), m.GetID())
 	// }
@@ -145,7 +143,7 @@ func (m *SigningSession) AddSig(blockHeight int64, participant sdk.ValAddress, s
 		return fmt.Errorf("signing session %d has closed", m.GetID())
 	}
 
-	m.addSig(participant, sig)
+	m.addSig(participant, inputSigs)
 
 	if m.GetState() != exported.Completed && m.GetParticipantsWeight().GTE(m.Key.GetMinPassingWeight()) {
 		m.CompletedAt = blockHeight
@@ -160,7 +158,7 @@ func (m SigningSession) GetMissingParticipants() []sdk.ValAddress {
 	participants := m.Key.GetParticipants()
 
 	return slices.Filter(participants, func(p sdk.ValAddress) bool {
-		_, ok := m.PsbtMultiSig.TapScriptSigs[p.String()]
+		_, ok := m.PsbtMultiSig.ParticipantTapScriptSigs[p.String()]
 
 		return !ok
 	})
@@ -203,8 +201,10 @@ func (m SigningSession) GetMetadata() codec.ProtoMarshaler {
 	return m.ModuleMetadata.GetCachedValue().(codec.ProtoMarshaler)
 }
 
-func (m *SigningSession) addSig(participant sdk.ValAddress, sig exported.TapScriptSig) {
-	m.PsbtMultiSig.TapScriptSigs[participant.String()] = &sig
+func (m *SigningSession) addSig(participant sdk.ValAddress, sigs *exported.TapScriptSigList) {
+	clog.Redf("addSig, participant: %+s", participant.String())
+	clog.Redf("addSig, sigs: %+v", sigs)
+	m.PsbtMultiSig.ParticipantTapScriptSigs[participant.String()] = sigs
 }
 
 func (m SigningSession) isWithinGracePeriod(blockHeight int64) bool {
@@ -227,22 +227,28 @@ func (m PsbtMultiSig) ValidateBasic() error {
 		return err
 	}
 
-	clog.Magenta("validate m.TapScriptSigs, len: ", len(m.TapScriptSigs))
+	clog.Magenta("validate m.ParticipantTapScriptSigs, len: ", len(m.ParticipantTapScriptSigs))
 
-	signatureSeen := make(map[string]bool, len(m.TapScriptSigs))
-	for address, sig := range m.TapScriptSigs {
-		sigHex := sig.String()
-		if signatureSeen[sigHex] {
+	signatureSeen := make(map[string]bool, len(m.ParticipantTapScriptSigs))
+	numSigs := -1
+	for address, sigs := range m.ParticipantTapScriptSigs {
+		if numSigs == -1 {
+			numSigs = sigs.Size()
+		}
+		if numSigs != sigs.Size() {
+			return fmt.Errorf("participant %s has different number of signatures", address)
+		}
+		if signatureSeen[address] {
 			return fmt.Errorf("duplicate signature seen")
 		}
-		signatureSeen[sigHex] = true
+		signatureSeen[address] = true
 
 		if _, err := sdk.ValAddressFromBech32(address); err != nil {
 			clog.Magenta("validate m.TapScriptSigs vald address, address: ", address)
 			return err
 		}
 
-		if err := sig.ValidateBasic(); err != nil {
+		if err := sigs.ValidateBasic(); err != nil {
 			return err
 		}
 	}
@@ -251,18 +257,18 @@ func (m PsbtMultiSig) ValidateBasic() error {
 }
 
 // GetSignature returns the ECDSA signature of the given participant
-func (m PsbtMultiSig) GetTapScriptSig(p sdk.ValAddress) (*exported.TapScriptSig, bool) {
-	sig, ok := m.TapScriptSigs[p.String()]
+func (m PsbtMultiSig) GetTapScriptSigs(p sdk.ValAddress) (*exported.TapScriptSigList, bool) {
+	sigs, ok := m.ParticipantTapScriptSigs[p.String()]
 	if !ok {
 		return nil, false
 	}
 
-	return sig, true
+	return sigs, true
 }
 
 // GetParticipants returns the participants of the given multi sig
 func (m PsbtMultiSig) GetParticipants() []sdk.ValAddress {
 	return multisigTypes.SortAddresses(
-		slices.Map(maps.Keys(m.TapScriptSigs), func(a string) sdk.ValAddress { return funcs.Must(sdk.ValAddressFromBech32(a)) }),
+		slices.Map(maps.Keys(m.ParticipantTapScriptSigs), func(a string) sdk.ValAddress { return funcs.Must(sdk.ValAddressFromBech32(a)) }),
 	)
 }

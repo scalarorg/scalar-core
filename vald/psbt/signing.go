@@ -2,9 +2,12 @@ package psbt
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/scalarorg/scalar-core/utils/clog"
+	"github.com/scalarorg/scalar-core/utils/log"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 )
@@ -17,10 +20,6 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 		return nil
 	}
 
-	clog.Redf("ProcessSigningPsbtStarted, event: %+v", event)
-
-	clog.Redf("PSBT: %+x", event.Psbt)
-
 	mgrParticipant := mgr.valAddr.String()
 
 	clog.Yellowf("mgrParticipant: %s", mgrParticipant)
@@ -30,8 +29,6 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 		return nil
 	}
 
-	clog.Yellowf("pubKey: %v", pubKey.String())
-	clog.Yellowf("pubKey: %v", pubKey)
 	clog.Yellow("pubKey: ", pubKey)
 
 	if !mgr.validatePubKey(pubKey) {
@@ -46,21 +43,21 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 	clog.Yellowf("keyUID: %s", keyUID)
 	clog.Yellowf("partyUID: %s", partyUID)
 
-	tapScriptSigs, err := mgr.sign(keyUID, event.Psbt, pubKey)
+	listOfTapScriptSig, err := mgr.sign(keyUID, event.Psbt)
 	if err != nil {
 		return err
 	}
 
-	for i, tapScriptSig := range tapScriptSigs {
-		clog.Yellowf("tapScriptSig[%d]: %+v", i, tapScriptSig)
+	for i, tapScriptSig := range listOfTapScriptSig.TapScriptSigs {
+		clog.Yellowf("ProcessSigningPsbtStarted, tapScriptSig[%d]: %+v", i, tapScriptSig)
 	}
 
-	// log.Infof("operator %s sending signature for signing %d", partyUID, event.GetSigID())
+	log.Infof("operator %s sending signature for signing %d", partyUID, event.GetSigID())
 
-	// msg := types.NewSubmitSignatureRequest(mgr.ctx.FromAddress, event.GetSigID(), sig)
-	// if _, err := mgr.broadcaster.Broadcast(context.Background(), msg); err != nil {
-	// 	return sdkerrors.Wrap(err, "handler goroutine: failure to broadcast outgoing submit signature message")
-	// }
+	msg := covenantTypes.NewSubmitTapScriptSigsRequest(mgr.ctx.FromAddress, event.GetSigID(), listOfTapScriptSig)
+	if _, err := mgr.b.Broadcast(context.Background(), msg); err != nil {
+		return sdkerrors.Wrap(err, "handler goroutine: failure to broadcast outgoing submit signature message")
+	}
 
 	return nil
 }
@@ -70,9 +67,5 @@ func (mgr *Mgr) validatePubKey(pubKey []byte) bool {
 		return false
 	}
 
-	if bytes.Compare(mgr.privKey.Serialize(), pubKey) != 0 {
-		return false
-	}
-
-	return true
+	return bytes.Equal(pubKey, mgr.pubKey.SerializeCompressed())
 }

@@ -10,10 +10,10 @@ import (
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/spf13/cobra"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/scalarorg/scalar-core/x/chains/keeper"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 const (
@@ -180,7 +180,7 @@ func getCmdBytecode() *cobra.Command {
 func getCmdQueryBatchedCommands() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "batched-commands [chain] [batchedCommandsID]",
-		Short: "Get the signed batched commands that can be wrapped in an EVM transaction to be executed in Scalar Gateway",
+		Short: "Get the signed batched commands that can be wrapped in an transaction to be executed in Scalar Gateway",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)

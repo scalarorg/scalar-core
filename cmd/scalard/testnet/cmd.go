@@ -56,6 +56,7 @@ var (
 	flagGovernanceMnemonic  = "GOV_MNEMONIC"
 	flagFaucetMnemonic      = "FAUCET_MNEMONIC"
 	flagBtcPubkey           = "BTC_PUBKEY"
+	flagBtcPrivkey          = "BTC_PRIVKEY"
 	flagNodeDirPrefix       = "node-dir-prefix"
 	flagNumValidators       = "v"
 	flagChains              = "chains"
@@ -109,6 +110,7 @@ type EnvKeys struct {
 	GovernanceMnemonic  string
 	FaucetMnemonic      string
 	BtcPubkey           string
+	BtcPrivkey          string
 }
 
 // createValidatorMsgGasLimit is the gas limit used in the MsgCreateValidator included in genesis transactions.
@@ -275,12 +277,18 @@ func readEnvKeys(index int) EnvKeys {
 	if btcPubKey == "" {
 		btcPubKey = os.Getenv(flagBtcPubkey)
 	}
+
+	btcPrivkey := os.Getenv(flagBtcPrivkey + strconv.Itoa(index))
+	if btcPrivkey == "" {
+		btcPrivkey = os.Getenv(flagBtcPrivkey)
+	}
 	envKeys := EnvKeys{
 		ValidatorMnemonic:   validatorMnemonic,
 		BroadcasterMnemonic: getNonQuoteEnv(flagBroadcasterMnemonic),
 		GovernanceMnemonic:  getNonQuoteEnv(flagGovernanceMnemonic),
 		FaucetMnemonic:      getNonQuoteEnv(flagFaucetMnemonic),
 		BtcPubkey:           btcPubKey,
+		BtcPrivkey:          btcPrivkey,
 	}
 	log.Debug().Any("EnvKeys", envKeys).Msg("Environment variables")
 	return envKeys
@@ -538,11 +546,13 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		Moniker:       nodeDirName,
 		NodeDir:       nodeDir,
 		GenFile:       nodeConfig.GenesisFile(),
-		BtcPubkey:     envKeys.BtcPubkey,
 		ValNodePubKey: valNodePubKey,
 		ValNodeBalance: banktypes.Balance{
 			Address: sdk.AccAddress(valNodePubKey.Address()).String(),
 			Coins:   sdk.Coins{ValidatorCoin},
+		},
+		AdditionalKeys: config.AdditionalKeys{
+			BtcPrivKey: envKeys.BtcPrivkey,
 		},
 	}
 
@@ -789,6 +799,7 @@ func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig
 		createAppConfig(validatorInfo.NodeDir, args, i)
 		configPath := filepath.Join(validatorInfo.NodeDir, "config/config.toml")
 		appendBridgeConfig(configPath, args.chains)
+		appendAdditionalKeys(configPath, validatorInfo)
 	}
 
 	return nil
@@ -935,6 +946,38 @@ http_post_mode = true
 		}
 	}
 	return nil
+}
+
+func appendAdditionalKeys(configPath string, validatorInfo ValidatorInfo) error {
+	file, err := os.OpenFile(configPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Error().Err(err).Str("configPath", configPath).Msg("Could not open config file")
+		return err
+	}
+
+	defer file.Close()
+
+	_, err = file.WriteString(`
+#######################################################
+###         Additional Keys            ###
+#######################################################
+	`)
+
+	if err != nil {
+		log.Error().Err(err).Str("configPath", configPath).Msg("Could not write text to config file")
+		return err
+	}
+
+	_, err = file.WriteString(fmt.Sprintf(`
+[additional_keys]
+btc_priv_key = "%s"
+`, validatorInfo.AdditionalKeys.BtcPrivKey))
+	if err != nil {
+		log.Error().Err(err).Str("configPath", configPath).Msg("Could not write text to config file")
+		return err
+	}
+	return nil
+
 }
 
 func setCustomAppConfig(cmd *cobra.Command) error {

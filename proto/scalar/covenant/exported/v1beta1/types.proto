@@ -25,6 +25,8 @@ message TapScriptSig {
   bytes signature = 3 [ (gogoproto.customtype) = "Signature" ];
 }
 
+message TapScriptSigList { repeated TapScriptSig tap_script_sigs = 1; }
+
 enum KeyState {
   option (gogoproto.goproto_enum_prefix) = false;
   option (gogoproto.goproto_enum_stringer) = true;

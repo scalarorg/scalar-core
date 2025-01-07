@@ -19,6 +19,7 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/decred/dcrd/dcrec/secp256k1/v4"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/utils"
@@ -238,15 +239,20 @@ func GenerateGenesis(clientCtx client.Context,
 		Description: "Default custodial group, which contains all custodians",
 	}
 	for i, validator := range validatorInfos {
-		btcPubkey, err := hex.DecodeString(validator.BtcPubkey)
+		btcPrivKey, err := hex.DecodeString(validator.AdditionalKeys.BtcPrivKey)
 		if err != nil {
 			return appGenState, err
 		}
-		fmt.Printf("% x", btcPubkey)
+		if len(btcPrivKey) != 32 {
+			return appGenState, fmt.Errorf("invalid private key length")
+		}
+
+		privKey := secp256k1.PrivKeyFromBytes(btcPrivKey)
+
 		custodians[i] = &covenanttypes.Custodian{
 			Name:      validator.Host,
 			Status:    covenanttypes.Activated,
-			BtcPubkey: btcPubkey,
+			BtcPubkey: privKey.PubKey().SerializeCompressed(),
 		}
 	}
 
