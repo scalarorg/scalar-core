@@ -23,16 +23,34 @@ type ScalarProtocol struct {
 	ScalarPubKey  cryptotypes.PubKey
 	ScalarBalance banktypes.Balance
 }
+type DeployInfo struct {
+	ID           string `json:"id" mapstructure:"id"`
+	ChainId      uint64 `json:"chain_id" mapstructure:"chain_id"`
+	Name         string `json:"name" mapstructure:"name"`
+	Gateway      string `json:"gateway" mapstructure:"gateway"`
+	TokenAddress string `json:"token_address" mapstructure:"token_address"`
+	TxHash       string `json:"tx_hash" mapstructure:"tx_hash"`
+}
 type Token struct {
-	ID              string `json:"id" mapstructure:"id"`
-	ChainID         int64  `json:"chain_id" mapstructure:"chain_id"`
-	Asset           string `json:"asset" mapstructure:"asset"`
-	Symbol          string `json:"symbol" mapstructure:"symbol"`
-	Name            string `json:"name" mapstructure:"name"`
-	Capacity        int64  `json:"capacity" mapstructure:"capacity"`
-	Decimals        uint8  `json:"decimals" mapstructure:"decimals"`
-	TokenAddress    string `json:"token_address" mapstructure:"token_address"`
-	ProtocolAddress string `json:"protocol_address" mapstructure:"protocol_address"`
+	ID             string       `json:"id" mapstructure:"id"`
+	ChainID        int64        `json:"chain_id" mapstructure:"chain_id"`
+	Asset          string       `json:"asset" mapstructure:"asset"`
+	Symbol         string       `json:"symbol" mapstructure:"symbol"`
+	Name           string       `json:"name" mapstructure:"name"`
+	Capacity       int64        `json:"capacity" mapstructure:"capacity"`
+	Decimals       uint8        `json:"decimals" mapstructure:"decimals"`
+	DailyMintLimit string       `json:"daily_mint_limit" mapstructure:"daily_mint_limit"`
+	TokenAddress   string       `json:"token_address" mapstructure:"token_address"`
+	Deployments    []DeployInfo `json:"deployments" mapstructure:"deployments"`
+}
+type InternalToken struct {
+	ChainID int64  `json:"chain_id" mapstructure:"chain_id"`
+	Address string `json:"address" mapstructure:"address"`
+}
+type TokenPool struct {
+	ChainId string          `json:"chain_d" mapstructure:"chain_id"`
+	Asset   string          `json:"asset" mapstructure:"asset"`
+	Chains  []InternalToken `json:"chain" mapstructure:"chain"`
 }
 type ValidatorInfo struct {
 	Host        string
