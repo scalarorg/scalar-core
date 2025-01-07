@@ -40,7 +40,7 @@ func TestRunJob(t *testing.T) {
 		"scalar.chains.v1beta1.DestCallApproved.sender":            []string{"tb1q2rwweg2c48y8966qt4fzj0f4zyg9wty7tykzwg"},
 	}
 
-	RunJob2(mockEventData, func(event *types.DestCallApproved) error {
+	RunJob2(mockEventData, func(event *types.ContractCallApproved) error {
 		log.Info().
 			Any("chain", event.Chain.String()).
 			Any("event_id", event.EventID).

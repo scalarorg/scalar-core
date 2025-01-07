@@ -18,7 +18,7 @@ var mockEventData = map[string][]string{
 }
 
 func TestParser(t *testing.T) {
-	var event chainsTypes.DestCallApproved
+	var event chainsTypes.ContractCallApproved
 	err := ParseEvent(mockEventData, &event)
 	if err != nil {
 		t.Fatal("Failed to parse event", err)
@@ -26,7 +26,7 @@ func TestParser(t *testing.T) {
 	}
 	fmt.Printf("%+v\n, type: %T\n", event, event)
 
-	event2 := &chainsTypes.DestCallApproved{}
+	event2 := &chainsTypes.ContractCallApproved{}
 	ParseEvent(mockEventData, event2)
 	fmt.Printf("%+v\n, type: %T\n", event2, event2)
 	fmt.Printf("%+v\n, type: %T\n", event2.PayloadHash, event2.PayloadHash)

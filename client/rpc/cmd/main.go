@@ -123,7 +123,7 @@ func main() {
 		wg.Add(1)
 		go func(j *jobs.EventJob) {
 			defer wg.Done()
-			jobs.RunJob(j, context.Background(), proc.ProcessDestCallApproved)
+			jobs.RunJob(j, context.Background(), proc.ProcessContractCallApproved)
 		}(job)
 	}
 

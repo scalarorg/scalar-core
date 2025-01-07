@@ -6,7 +6,7 @@ import (
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
-func (p *Processor) ProcessDestCallApproved(event *chainsTypes.DestCallApproved) error {
+func (p *Processor) ProcessContractCallApproved(event *chainsTypes.ContractCallApproved) error {
 	// ctx := context.Background()
 	fmt.Println("Processing DestCallApproved event")
 	fmt.Println("chain: ", event.Chain)
