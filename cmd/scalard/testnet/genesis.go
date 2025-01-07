@@ -23,7 +23,6 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/utils"
-	btctypes "github.com/scalarorg/scalar-core/x/chains/btc/types"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
@@ -37,49 +36,57 @@ import (
 )
 
 // DefaultProtocol returns the default chains for a genesis state
-func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfos []Token, custodianGroup covenanttypes.CustodianGroup) protocoltypes.Protocol {
-	log.Debug().Any("Infos", tokenInfos).Msg("Create defaultProtocol")
-	chains := make([]*protocoltypes.SupportedChain, len(tokenInfos))
-	for i, tokenInfo := range tokenInfos {
-		tokenAddress := chainsTypes.Address(common.HexToAddress(tokenInfo.TokenAddress))
-		log.Debug().Any("TokenAddress", tokenAddress).Msg("Parse Tokenaddress")
-		params := chainsTypes.Params{
-			Chain:       nexus.ChainName(tokenInfo.ID),
-			ChainID:     sdk.NewInt(tokenInfo.ChainID),
-			NetworkKind: chainsTypes.Testnet,
-		}
-		supportedChain := protocoltypes.SupportedChain{
-			Params:  &params,
-			Address: tokenInfo.ProtocolAddress,
-		}
-		if strings.HasPrefix(tokenInfo.ID, "evm") {
-			token := chainsTypes.ERC20TokenMetadata{
-				Asset:   tokenInfo.Asset,
-				ChainID: sdk.NewInt(tokenInfo.ChainID),
-				TxHash:  chainsTypes.Hash(chainsTypes.ZeroHash),
-				//TokenAddress: tokenAddress,
-				Status: chainsTypes.Confirmed,
-				Details: chainsTypes.TokenDetails{
-					TokenName: tokenInfo.Name,
-					Symbol:    tokenInfo.Symbol,
-					Decimals:  tokenInfo.Decimals,
-					Capacity:  sdk.NewInt(tokenInfo.Capacity),
-				},
-			}
-			supportedChain.Token = &protocoltypes.SupportedChain_Erc20{
-				Erc20: &token,
-			}
-			chains[i] = &supportedChain
-		} else if strings.HasPrefix(tokenInfo.ID, "bitcoin") {
-			supportedChain.Token = &protocoltypes.SupportedChain_Btc{
-				Btc: &btctypes.BtcToken{},
-			}
-			chains[i] = &supportedChain
-		}
+func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfo Token, custodianGroup covenanttypes.CustodianGroup) protocoltypes.Protocol {
+	log.Debug().Any("TokenInfo", tokenInfo).Msg("Create defaultProtocol")
+	// chains := make([]*protocoltypes.SupportedChain, len(tokenInfos))
+	// for i, tokenInfo := range tokenInfos {
+	// 	tokenAddress := chainsTypes.Address(common.HexToAddress(tokenInfo.TokenAddress))
+	// 	log.Debug().Any("TokenAddress", tokenAddress).Msg("Parse Tokenaddress")
+	// 	params := chainsTypes.Params{
+	// 		Chain:       nexus.ChainName(tokenInfo.ID),
+	// 		ChainID:     sdk.NewInt(tokenInfo.ChainID),
+	// 		NetworkKind: chainsTypes.Testnet,
+	// 	}
+	// 	supportedChain := protocoltypes.SupportedChain{
+	// 		Chain:       nexus.ChainName(tokenInfo.ID):      &params,
+	// 		Address: tokenInfo.ProtocolAddress,
+	// 	}
+	// 	if types.IsEvmChain(nexus.ChainName(tokenInfo.ID)) {
+	// 		token := chainsTypes.ERC20TokenMetadata{
+	// 			Asset:   tokenInfo.Asset,
+	// 			ChainID: sdk.NewInt(tokenInfo.ChainID),
+	// 			// TxHash:  chainsTypes.Hash(chainsTypes.ZeroHash),
+	// 			// TokenAddress: tokenAddress,
+	// 			Status: chainsTypes.Confirmed,
+	// 			Details: chainsTypes.TokenDetails{
+	// 				TokenName: tokenInfo.Name,
+	// 				Symbol:    tokenInfo.Symbol,
+	// 				Decimals:  tokenInfo.Decimals,
+	// 				Capacity:  sdk.NewInt(tokenInfo.Capacity),
+	// 			},
+	// 		}
+	// 		supportedChain.Token = &protocoltypes.SupportedChain_Erc20{
+	// 			Erc20: &token,
+	// 		}
+	// 		chains[i] = &supportedChain
+	// 	} else if types.IsEvmChain(nexus.ChainName(tokenInfo.ID)) {
+	// 		supportedChain.Token = &protocoltypes.SupportedChain_Btc{
+	// 			Btc: &btctypes.BtcToken{},
+	// 		}
+	// 		chains[i] = &supportedChain
+	// 	}
 
-	}
+	// }
 	attributes := protocoltypes.ProtocolAttribute{
 		Model: protocoltypes.Pooling,
+	}
+	supportedChains := []*protocoltypes.SupportedChain{}
+	for _, chain := range tokenInfo.Deployments {
+		supportedChains = append(supportedChains, &protocoltypes.SupportedChain{
+			Chain:   nexus.ChainName(chain.ID),
+			Name:    chain.Name,
+			Address: chain.TokenAddress,
+		})
 	}
 	protocol := protocoltypes.Protocol{
 		Pubkey:         scalarProtocol.ScalarPubKey.Bytes(),
@@ -89,7 +96,8 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfos []Token, custodia
 		Tag:            "pools",
 		Status:         protocoltypes.Activated,
 		CustodianGroup: &custodianGroup,
-		Chains:         chains,
+		Asset:          &chainsTypes.Asset{Chain: nexus.ChainName(tokenInfo.ID), Name: tokenInfo.Asset},
+		Chains:         supportedChains,
 	}
 	return protocol
 }
@@ -275,21 +283,23 @@ func GenerateGenesis(clientCtx client.Context,
 	return appGenState, nil
 }
 func generateProtocolGenesis(scalarProtocol ScalarProtocol, custodianGroup covenanttypes.CustodianGroup, tokensPath string) (*protocoltypes.GenesisState, error) {
-	evmTokenPath := path.Join(tokensPath, "evm.json")
-	log.Debug().Msgf("Read token config in the path %s", evmTokenPath)
-	tokenInfos, err := ParseJsonArrayConfig[Token](evmTokenPath)
-	if err != nil {
-		return nil, err
-	}
+	// evmTokenPath := path.Join(tokensPath, "evm.json")
+	// log.Debug().Msgf("Read token config in the path %s", evmTokenPath)
+	// tokenInfos, err := ParseJsonArrayConfig[Token](evmTokenPath)
+	// if err != nil {
+	// 	return nil, err
+	// }
 	btcTokenPath := path.Join(tokensPath, "btc.json")
 	log.Debug().Msgf("Read token config in the path %s", btcTokenPath)
-	btcTokenInfos, err := ParseJsonArrayConfig[Token](btcTokenPath)
+	tokenInfos, err := ParseJsonArrayConfig[Token](btcTokenPath)
 	if err != nil {
 		return nil, err
 	}
-	tokenInfos = append(tokenInfos, btcTokenInfos...)
+	if len(tokenInfos) == 0 {
+		log.Error().Msgf("Missing token infos in path %s", btcTokenPath)
+	}
 	log.Debug().Any("TokenInfo", tokenInfos).Msgf("Successfull parsed token config")
-	protocol := DefaultProtocol(scalarProtocol, tokenInfos, custodianGroup)
+	protocol := DefaultProtocol(scalarProtocol, tokenInfos[0], custodianGroup)
 	protocolGenState := protocoltypes.NewGenesisState([]*protocoltypes.Protocol{&protocol})
 	return protocolGenState, nil
 }

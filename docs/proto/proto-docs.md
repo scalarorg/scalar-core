@@ -6740,14 +6740,15 @@ Query defines the gRPC querier service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `pubkey` | [bytes](#bytes) |  |  |
-| `address` | [bytes](#bytes) |  |  |
+| `pubkey` | [bytes](#bytes) |  | Scalar's pubkey |
+| `address` | [bytes](#bytes) |  | Scalar's address |
 | `name` | [string](#string) |  |  |
 | `tag` | [string](#string) |  |  |
 | `attribute` | [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute) |  |  |
 | `status` | [Status](#scalar.protocol.v1beta1.Status) |  |  |
 | `custodian_group` | [scalar.covenant.v1beta1.CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
-| `chains` | [SupportedChain](#scalar.protocol.v1beta1.SupportedChain) | repeated |  |
+| `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
+| `chains` | [SupportedChain](#scalar.protocol.v1beta1.SupportedChain) | repeated | Other chains with internal asset |
 
 
 
@@ -6777,10 +6778,9 @@ DestinationChain represents a blockchain where tokens can be sent
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `params` | [scalar.chains.v1beta1.Params](#scalar.chains.v1beta1.Params) |  | Chain params |
-| `address` | [string](#string) |  |  |
-| `erc20` | [scalar.chains.v1beta1.ERC20TokenMetadata](#scalar.chains.v1beta1.ERC20TokenMetadata) |  |  |
-| `btc` | [scalar.chains.btc.v1beta1.BtcToken](#scalar.chains.btc.v1beta1.BtcToken) |  |  |
+| `chain` | [string](#string) |  |  |
+| `name` | [string](#string) |  |  |
+| `address` | [string](#string) |  | Asset address on the chain |
 
 
 
