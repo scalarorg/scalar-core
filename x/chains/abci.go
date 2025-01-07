@@ -594,7 +594,7 @@ func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types
 					types.AttributeKeyMessageID, msg.ID,
 				)
 
-				events.Emit(ctx, &types.DestCallFailed{
+				events.Emit(ctx, &types.ContractCallFailed{
 					Chain:     chain.Name,
 					MessageID: msg.ID,
 				})
@@ -664,7 +664,7 @@ func handleMessageWithToken(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus
 	cmd := types.NewApproveContractCallWithMintGeneric(chainID, keyID, common.BytesToHash(msg.SourceTxID), msg.SourceTxIndex, msg, token.GetDetails().Symbol)
 	funcs.MustNoErr(ck.EnqueueCommand(ctx, cmd))
 
-	events.Emit(ctx, &types.DestCallWithMintApproved{
+	events.Emit(ctx, &types.EventContractCallWithMintApproved{
 		Chain:            msg.GetSourceChain(),
 		EventID:          types.EventID(msg.ID),
 		CommandID:        cmd.ID,
@@ -704,7 +704,7 @@ func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID
 	cmd := types.NewApproveContractCallCommandGeneric(chainID, keyID, msg.ID, params)
 	funcs.MustNoErr(ck.EnqueueCommand(ctx, cmd))
 
-	destCallApproved := &types.DestCallApproved{
+	destCallApproved := &types.ContractCallApproved{
 		Chain:            msg.GetSourceChain(),
 		EventID:          types.EventID(msg.ID),
 		CommandID:        cmd.ID,
