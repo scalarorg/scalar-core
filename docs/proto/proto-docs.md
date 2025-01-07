@@ -86,9 +86,8 @@
     - [ConfirmDepositStarted](#scalar.chains.v1beta1.ConfirmDepositStarted)
     - [ConfirmKeyTransferStarted](#scalar.chains.v1beta1.ConfirmKeyTransferStarted)
     - [ConfirmTokenStarted](#scalar.chains.v1beta1.ConfirmTokenStarted)
-    - [DestCallApproved](#scalar.chains.v1beta1.DestCallApproved)
-    - [DestCallFailed](#scalar.chains.v1beta1.DestCallFailed)
-    - [DestCallWithMintApproved](#scalar.chains.v1beta1.DestCallWithMintApproved)
+    - [ContractCallApproved](#scalar.chains.v1beta1.ContractCallApproved)
+    - [ContractCallFailed](#scalar.chains.v1beta1.ContractCallFailed)
     - [Event](#scalar.chains.v1beta1.Event)
     - [EventConfirmSourceTxsStarted](#scalar.chains.v1beta1.EventConfirmSourceTxsStarted)
     - [EventContractCall](#scalar.chains.v1beta1.EventContractCall)
@@ -1780,9 +1779,9 @@ PollParticipants should be embedded in poll events in other modules
 
 
 
-<a name="scalar.chains.v1beta1.DestCallApproved"></a>
+<a name="scalar.chains.v1beta1.ContractCallApproved"></a>
 
-### DestCallApproved
+### ContractCallApproved
 
 
 
@@ -1801,9 +1800,9 @@ PollParticipants should be embedded in poll events in other modules
 
 
 
-<a name="scalar.chains.v1beta1.DestCallFailed"></a>
+<a name="scalar.chains.v1beta1.ContractCallFailed"></a>
 
-### DestCallFailed
+### ContractCallFailed
 
 
 
@@ -1811,28 +1810,6 @@ PollParticipants should be embedded in poll events in other modules
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
 | `message_id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.DestCallWithMintApproved"></a>
-
-### DestCallWithMintApproved
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `event_id` | [string](#string) |  |  |
-| `command_id` | [bytes](#bytes) |  |  |
-| `sender` | [string](#string) |  |  |
-| `destination_chain` | [string](#string) |  |  |
-| `contract_address` | [string](#string) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
