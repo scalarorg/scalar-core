@@ -133,7 +133,10 @@ func DecodeEventContractCallWithToken(log *geth.Log) (types.EventContractCallWit
 	if err != nil {
 		return types.EventContractCallWithToken{}, err
 	}
-
+	payload, ok := params[2].([]byte)
+	if !ok {
+		return types.EventContractCallWithToken{}, fmt.Errorf("invalid payload")
+	}
 	return types.EventContractCallWithToken{
 		Sender:           types.Address(common.BytesToAddress(log.Topics[1].Bytes())),
 		DestinationChain: nexus.ChainName(params[0].(string)),
@@ -141,6 +144,7 @@ func DecodeEventContractCallWithToken(log *geth.Log) (types.EventContractCallWit
 		PayloadHash:      types.Hash(common.BytesToHash(log.Topics[2].Bytes())),
 		Symbol:           params[3].(string),
 		Amount:           sdk.NewUintFromBigInt(params[4].(*big.Int)),
+		Payload:          payload,
 	}, nil
 }
 

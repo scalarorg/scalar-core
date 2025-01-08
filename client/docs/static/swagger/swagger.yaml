@@ -6831,6 +6831,9 @@ paths:
                       amount:
                         type: string
                         format: byte
+                      payload:
+                        type: string
+                        format: byte
                   contract_call_with_mint_approved:
                     type: object
                     properties:
@@ -8087,6 +8090,9 @@ paths:
                     max_gas_cost:
                       type: integer
                       format: int64
+                    payload:
+                      type: string
+                      format: byte
         default:
           description: An unexpected error response
           schema:
@@ -54785,6 +54791,9 @@ definitions:
           amount:
             type: string
             format: byte
+          payload:
+            type: string
+            format: byte
       contract_call_with_mint_approved:
         type: object
         properties:
@@ -54945,6 +54954,9 @@ definitions:
       amount:
         type: string
         format: byte
+      payload:
+        type: string
+        format: byte
   scalar.chains.v1beta1.EventMultisigOperatorshipTransferred:
     type: object
     properties:
@@ -55043,6 +55055,9 @@ definitions:
               symbol:
                 type: string
               amount:
+                type: string
+                format: byte
+              payload:
                 type: string
                 format: byte
           contract_call_with_mint_approved:
@@ -55380,6 +55395,9 @@ definitions:
             max_gas_cost:
               type: integer
               format: int64
+            payload:
+              type: string
+              format: byte
   scalar.chains.v1beta1.Proof:
     type: object
     properties:
@@ -55413,6 +55431,9 @@ definitions:
       max_gas_cost:
         type: integer
         format: int64
+      payload:
+        type: string
+        format: byte
   scalar.chains.v1beta1.RetryFailedEventRequest:
     type: object
     properties:

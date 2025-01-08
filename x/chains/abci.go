@@ -337,7 +337,31 @@ func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset 
 			nil,
 			e.SourceTxConfirmationEvent.Payload,
 		)
+	case *types.Event_ContractCallWithToken:
+		if asset == nil {
+			return fmt.Errorf("expect asset for ContractCallWithToken")
+		}
 
+		sender := nexus.CrossChainAddress{
+			Chain:   sourceChain,
+			Address: e.ContractCallWithToken.Sender.Hex(),
+		}
+
+		recipient := nexus.CrossChainAddress{
+			Chain:   funcs.MustOk(n.GetChain(ctx, e.ContractCallWithToken.DestinationChain)),
+			Address: e.ContractCallWithToken.ContractAddress,
+		}
+
+		message = nexus.NewGeneralMessageWithPayload(
+			string(event.GetID()),
+			sender,
+			recipient,
+			e.ContractCallWithToken.PayloadHash.Bytes(),
+			event.TxID.Bytes(),
+			event.Index,
+			asset,
+			event.GetContractCallWithToken().Payload,
+		)
 	// TODO: add other event types here
 
 	default:

@@ -349,6 +349,7 @@ func GetCommandResponse(cmd types.Command) (types.QueryCommandResponse, error) {
 		KeyID:      string(cmd.KeyID),
 		MaxGasCost: cmd.MaxGasCost,
 		Params:     params,
+		Payload:    cmd.Payload,
 	}, nil
 }
 

@@ -208,6 +208,7 @@ func NewApproveContractCallWithMintGeneric(
 		Params:     createApproveContractCallWithMintParamsGeneric(contractAddress, payloadHash, sourceTxID, message.Sender, sourceEventIndex, message.Asset.Amount.BigInt(), symbol),
 		KeyID:      keyID,
 		MaxGasCost: approveContractCallWithMintMaxGasCost,
+		Payload:    message.Payload,
 	}
 }
 
