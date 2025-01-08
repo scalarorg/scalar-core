@@ -2663,6 +2663,12 @@ paths:
                       end_blocker_limit:
                         type: string
                         format: uint64
+                      version:
+                        type: integer
+                        format: int64
+                      tag:
+                        type: string
+                        format: byte
                       call_contracts_proposal_min_deposits:
                         type: array
                         items:
@@ -49819,6 +49825,12 @@ components:
         end_blocker_limit:
           type: string
           format: uint64
+        version:
+          type: integer
+          format: int64
+        tag:
+          type: string
+          format: byte
         call_contracts_proposal_min_deposits:
           type: array
           items:
@@ -49861,6 +49873,12 @@ components:
             end_blocker_limit:
               type: string
               format: uint64
+            version:
+              type: integer
+              format: int64
+            tag:
+              type: string
+              format: byte
             call_contracts_proposal_min_deposits:
               type: array
               items:

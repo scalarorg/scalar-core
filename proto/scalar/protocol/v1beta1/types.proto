@@ -10,7 +10,9 @@ import "scalar/covenant/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
-message ProtocolAttribute { LiquidityModel model = 1; }
+message ProtocolAttribute {
+  LiquidityModel model = 1;
+}
 
 // DestinationChain represents a blockchain where tokens can be sent
 message SupportedChain {
@@ -22,7 +24,7 @@ message Protocol {
   bytes pubkey = 1; //Scalar's pubkey
   bytes address = 2; //Scalar's address
   string name = 3;
-  string tag = 4;
+  bytes tag = 4;
   ProtocolAttribute attribute = 5;
   Status status = 6;
   scalar.covenant.v1beta1.CustodianGroup custodian_group = 7;
@@ -32,14 +34,13 @@ message Protocol {
 enum LiquidityModel {
   option (gogoproto.goproto_enum_prefix) = false;
 
-  LIQUIDITY_MODEL_POOLING = 0 [ (gogoproto.enumvalue_customname) = "Pooling" ];
-  LIQUIDITY_MODEL_TRANSACTIONAL = 1
-      [ (gogoproto.enumvalue_customname) = "Transactional" ];
+  LIQUIDITY_MODEL_POOLING = 0 [(gogoproto.enumvalue_customname) = "Pooling"];
+  LIQUIDITY_MODEL_TRANSACTIONAL = 1 [(gogoproto.enumvalue_customname) = "Transactional"];
 }
 enum Status {
   option (gogoproto.goproto_enum_prefix) = false;
 
-  STATUS_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Unspecified" ];
-  STATUS_ACTIVATED = 1 [ (gogoproto.enumvalue_customname) = "Activated" ];
-  STATUS_DEACTIVATED = 2 [ (gogoproto.enumvalue_customname) = "Deactivated" ];
+  STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Unspecified"];
+  STATUS_ACTIVATED = 1 [(gogoproto.enumvalue_customname) = "Activated"];
+  STATUS_DEACTIVATED = 2 [(gogoproto.enumvalue_customname) = "Deactivated"];
 }
