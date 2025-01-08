@@ -29,6 +29,7 @@ import (
 	permissionexported "github.com/scalarorg/scalar-core/x/permission/exported"
 	permissiontypes "github.com/scalarorg/scalar-core/x/permission/types"
 	protocoltypes "github.com/scalarorg/scalar-core/x/protocol/types"
+	scalarnettypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
 	snapshottypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"
 
@@ -93,7 +94,7 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfo Token, custodianGr
 		Address:        sdk.AccAddress(scalarProtocol.ScalarPubKey.Address()),
 		Attribute:      &attributes,
 		Name:           protocoltypes.DefaultProtocolName,
-		Tag:            "pools",
+		Tag:            []byte("pools"),
 		Status:         protocoltypes.Activated,
 		CustodianGroup: &custodianGroup,
 		Asset:          &chainsTypes.Asset{Chain: nexus.ChainName(tokenInfo.ID), Name: tokenInfo.Asset},
@@ -198,6 +199,11 @@ func GenerateGenesis(clientCtx client.Context,
 	}
 	nexusGenState := generateNexusGenesis(args.chains, validatorAddrs, coinDenom)
 	appGenState[nexustypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(nexusGenState)
+	//scalarnet
+	scalarnetGenState := scalarnettypes.DefaultGenesisState()
+	scalarnetGenState.Params.Version = args.version
+	scalarnetGenState.Params.Tag = args.tag
+	appGenState[scalarnettypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(scalarnetGenState)
 	//pemission module
 	permissionGenState := permissiontypes.DefaultGenesisState()
 	govAccounts := []permissiontypes.GovAccount{}
@@ -238,14 +244,6 @@ func GenerateGenesis(clientCtx client.Context,
 	}
 	//Covenant
 	custodians := make([]*covenanttypes.Custodian, len(validatorInfos))
-	custodianGroup := covenanttypes.CustodianGroup{
-		Uid:         "mock|123456789",
-		Name:        "scalar",
-		Custodians:  custodians,
-		Quorum:      3,
-		Status:      covenanttypes.Activated,
-		Description: "Default custodial group, which contains all custodians",
-	}
 	for i, validator := range validatorInfos {
 		btcPrivKey, err := hex.DecodeString(validator.AdditionalKeys.BtcPrivKey)
 		if err != nil {
@@ -263,7 +261,17 @@ func GenerateGenesis(clientCtx client.Context,
 			BtcPubkey: privKey.PubKey().SerializeCompressed(),
 		}
 	}
-
+	//Todo: Create custodian group pubkey
+	custodianPubKeys := []byte{}
+	custodianGroup := covenanttypes.CustodianGroup{
+		Uid:         "mock|123456789",
+		Name:        "scalar",
+		Custodians:  custodians,
+		BtcPubkey:   custodianPubKeys,
+		Quorum:      3,
+		Status:      covenanttypes.Activated,
+		Description: "Default custodial group, which contains all custodians",
+	}
 	defaultCovenantState := covenanttypes.DefaultGenesisState()
 	covnantGenState := covenanttypes.NewGenesisState(&defaultCovenantState.Params, defaultCovenantState.SigningSessions, custodians, []*covenanttypes.CustodianGroup{&custodianGroup})
 	appGenState[covenanttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&covnantGenState)

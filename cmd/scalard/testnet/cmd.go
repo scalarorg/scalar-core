@@ -72,6 +72,8 @@ var (
 	flagMinGasPrice         = "min-gas-price"
 	flagKeyType             = "key-type"
 	flagEnvFile             = "env-file"
+	flagTag                 = "tag"
+	flagVersion             = "version"
 	flagEnableLogging       = "enable-logging"
 	flagRPCAddress          = "rpc.address"
 	flagAPIAddress          = "api.address"
@@ -83,6 +85,8 @@ var (
 type initArgs struct {
 	algo           string
 	chainID        string
+	tag            []byte
+	version        uint32
 	keyringBackend string
 	minGasPrices   string
 	nodeDaemonHome string
@@ -197,6 +201,7 @@ Example:
 			args.algo, _ = cmd.Flags().GetString(flagKeyType)
 			baseFee, _ := cmd.Flags().GetString(flagBaseFee)
 			minGasPrice, _ := cmd.Flags().GetString(flagMinGasPrice)
+
 			var ok bool
 			args.baseFee, ok = sdk.NewIntFromString(baseFee)
 			if !ok || args.baseFee.LT(sdk.ZeroInt()) {
@@ -210,7 +215,7 @@ Example:
 			if args.minGasPrice.LT(sdk.ZeroDec()) {
 				return fmt.Errorf("invalid value for --min-gas-price. expected a int or decimal greater than or equal to 0 but got an negative number %s", minGasPrice)
 			}
-
+			readEnvs(&args)
 			//End Test keyring
 			return initTestnetFiles(clientCtx, cmd, serverCtx.Config, mbm, genBalIterator, args)
 		},
@@ -235,6 +240,14 @@ Example:
 	cmd.Flags().String(flagEnvFile, "", "Path to environment file to load (optional)")
 
 	return cmd
+}
+func readEnvs(args *initArgs) {
+	args.tag = []byte(os.Getenv("TAG"))
+	version, err := strconv.ParseUint(os.Getenv("VERSION"), 10, 32)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to parse version")
+	}
+	args.version = uint32(version)
 }
 
 // get cmd to start multi validator in-process testnet

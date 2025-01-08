@@ -3791,7 +3791,7 @@ custodians
 | ----- | ---- | ----- | ----------- |
 | `uid` | [string](#string) |  |  |
 | `name` | [string](#string) |  | e.g., "All" |
-| `btc_pubkey` | [string](#string) |  | e.g., |
+| `btc_pubkey` | [bytes](#bytes) |  | e.g., |
 | `quorum` | [uint32](#uint32) |  | "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
 
 quorum threshold e.g.,3 |
@@ -6745,7 +6745,7 @@ Query defines the gRPC querier service.
 | `pubkey` | [bytes](#bytes) |  | Scalar's pubkey |
 | `address` | [bytes](#bytes) |  | Scalar's address |
 | `name` | [string](#string) |  |  |
-| `tag` | [string](#string) |  |  |
+| `tag` | [bytes](#bytes) |  |  |
 | `attribute` | [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute) |  |  |
 | `status` | [Status](#scalar.protocol.v1beta1.Status) |  |  |
 | `custodian_group` | [scalar.covenant.v1beta1.CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
@@ -7650,6 +7650,8 @@ Params represent the genesis parameters for the module
 | `route_timeout_window` | [uint64](#uint64) |  | IBC packet route timeout window |
 | `transfer_limit` | [uint64](#uint64) |  |  |
 | `end_blocker_limit` | [uint64](#uint64) |  |  |
+| `version` | [uint32](#uint32) |  |  |
+| `tag` | [bytes](#bytes) |  |  |
 | `call_contracts_proposal_min_deposits` | [CallContractProposalMinDeposit](#scalar.scalarnet.v1beta1.CallContractProposalMinDeposit) | repeated |  |
 
 
