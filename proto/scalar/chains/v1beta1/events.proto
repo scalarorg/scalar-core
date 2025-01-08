@@ -186,12 +186,13 @@ message EventContractCallWithToken {
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string contract_address = 3;
   bytes payload_hash = 4
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ]; 
   string symbol = 5;
   bytes amount = 6 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
     (gogoproto.nullable) = false
   ];
+  bytes payload = 7;   
 }
 
 message EventTransfer {

@@ -1914,6 +1914,7 @@ PollParticipants should be embedded in poll events in other modules
 | `payload_hash` | [bytes](#bytes) |  |  |
 | `symbol` | [string](#string) |  |  |
 | `amount` | [bytes](#bytes) |  |  |
+| `payload` | [bytes](#bytes) |  |  |
 
 
 
@@ -3325,6 +3326,7 @@ ParamsRequest represents a message that queries the params
 | `params` | [QueryCommandResponse.ParamsEntry](#scalar.chains.v1beta1.QueryCommandResponse.ParamsEntry) | repeated |  |
 | `key_id` | [string](#string) |  |  |
 | `max_gas_cost` | [uint32](#uint32) |  |  |
+| `payload` | [bytes](#bytes) |  |  |
 
 
 
