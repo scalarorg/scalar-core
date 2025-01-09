@@ -69,40 +69,40 @@ func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsS
 }
 
 // 2025 Jan 06, Use EventTokenSent insteadof SourceTxConfirmation
-func (client *BtcClient) processSrcTxReceipt2(event *types.EventConfirmSourceTxsStarted, receipt BTCTxReceipt) []types.Event {
+// func (client *BtcClient) processSrcTxReceipt2(event *types.EventConfirmSourceTxsStarted, receipt BTCTxReceipt) []types.Event {
 
-	var events []types.Event
+// 	var events []types.Event
 
-	btcEvent, err := client.decodeSourceTxConfirmationEvent(&receipt)
-	if err != nil {
-		client.logger().Error(sdkerrors.Wrap(err, "decode event ContractCall failed").Error())
-		return nil
-	}
+// 	btcEvent, err := client.decodeSourceTxConfirmationEvent(&receipt)
+// 	if err != nil {
+// 		client.logger().Error(sdkerrors.Wrap(err, "decode event ContractCall failed").Error())
+// 		return nil
+// 	}
 
-	clog.Greenf("[BTC] btcEvent: %+v\n", btcEvent)
+// 	clog.Greenf("[BTC] btcEvent: %+v\n", btcEvent)
 
-	if err := btcEvent.ValidateBasic(); err != nil {
-		client.logger().Error(sdkerrors.Wrap(err, "invalid event ContractCall").Error())
-		return nil
-	}
+// 	if err := btcEvent.ValidateBasic(); err != nil {
+// 		client.logger().Error(sdkerrors.Wrap(err, "invalid event ContractCall").Error())
+// 		return nil
+// 	}
 
-	// Note: TxID is the reversed-order hash of the txid aka RPC TxID, aka Mempool TxID
-	txID, err := types.HashFromHex(receipt.Raw.TxID)
-	if err != nil {
-		client.logger().Error(sdkerrors.Wrap(err, "invalid tx id").Error())
-		return nil
-	}
-	//Support transfer only, not contract call
-	events = append(events, types.Event{
-		Chain: event.Chain,
-		TxID:  txID,
-		Event: &types.Event_SourceTxConfirmationEvent{
-			SourceTxConfirmationEvent: btcEvent,
-		},
-		Index: uint64(receipt.Raw.BlockIndex),
-	})
+// 	// Note: TxID is the reversed-order hash of the txid aka RPC TxID, aka Mempool TxID
+// 	txID, err := types.HashFromHex(receipt.Raw.TxID)
+// 	if err != nil {
+// 		client.logger().Error(sdkerrors.Wrap(err, "invalid tx id").Error())
+// 		return nil
+// 	}
+// 	//Support transfer only, not contract call
+// 	events = append(events, types.Event{
+// 		Chain: event.Chain,
+// 		TxID:  txID,
+// 		Event: &types.Event_SourceTxConfirmationEvent{
+// 			SourceTxConfirmationEvent: btcEvent,
+// 		},
+// 		Index: uint64(receipt.Raw.BlockIndex),
+// 	})
 
-	clog.Bluef("[BTC] SourceTxConfirmationEvent: %+v\n", events)
+// 	clog.Bluef("[BTC] SourceTxConfirmationEvent: %+v\n", events)
 
-	return events
-}
+// 	return events
+// }
