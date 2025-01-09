@@ -244,7 +244,7 @@ func GenerateGenesis(clientCtx client.Context,
 	}
 	//Covenant
 	custodians := make([]*covenanttypes.Custodian, len(validatorInfos))
-	custodianPubKeys := make([][]byte, len(validatorInfos))
+	custodianPubKeys := make([]vault.PublicKey, len(validatorInfos))
 	quorum := uint8(len(validatorInfos)/2 + 1)
 	for i, validator := range validatorInfos {
 		btcPrivKey, err := hex.DecodeString(validator.AdditionalKeys.BtcPrivKey)
@@ -262,10 +262,10 @@ func GenerateGenesis(clientCtx client.Context,
 			Status:    covenanttypes.Activated,
 			BtcPubkey: privKey.PubKey().SerializeCompressed(),
 		}
-		custodianPubKeys[i] = custodians[i].BtcPubkey
+		custodianPubKeys[i] = vault.PublicKey(custodians[i].BtcPubkey)
 	}
 	//Todo: Create custodian group pubkey
-	custodianGroupPubKey, err := vault.BuildCovenantScript(custodianPubKeys, quorum)
+	custodianGroupPubKey, err := vault.OnlyCovenantsLockingScript(custodianPubKeys, quorum)
 	if err != nil {
 		return appGenState, err
 	}
