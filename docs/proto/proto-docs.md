@@ -109,10 +109,6 @@
     - [Params](#scalar.chains.v1beta1.Params)
     - [Params.MetadataEntry](#scalar.chains.v1beta1.Params.MetadataEntry)
   
-- [scalar/multisig/exported/v1beta1/types.proto](#scalar/multisig/exported/v1beta1/types.proto)
-    - [KeyState](#scalar.multisig.exported.v1beta1.KeyState)
-    - [MultisigState](#scalar.multisig.exported.v1beta1.MultisigState)
-  
 - [scalar/chains/v1beta1/tokens.proto](#scalar/chains/v1beta1/tokens.proto)
     - [ERC20Deposit](#scalar.chains.v1beta1.ERC20Deposit)
     - [ERC20TokenMetadata](#scalar.chains.v1beta1.ERC20TokenMetadata)
@@ -209,6 +205,10 @@
   
     - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
     - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
+  
+- [scalar/multisig/exported/v1beta1/types.proto](#scalar/multisig/exported/v1beta1/types.proto)
+    - [KeyState](#scalar.multisig.exported.v1beta1.KeyState)
+    - [MultisigState](#scalar.multisig.exported.v1beta1.MultisigState)
   
 - [scalar/multisig/v1beta1/types.proto](#scalar/multisig/v1beta1/types.proto)
     - [Key](#scalar.multisig.v1beta1.Key)
@@ -2167,48 +2167,6 @@ PollParticipants should be embedded in poll events in other modules
 
 
 
-<a name="scalar/multisig/exported/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/multisig/exported/v1beta1/types.proto
-
-
- <!-- end messages -->
-
-
-<a name="scalar.multisig.exported.v1beta1.KeyState"></a>
-
-### KeyState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| KEY_STATE_UNSPECIFIED | 0 |  |
-| KEY_STATE_ASSIGNED | 1 |  |
-| KEY_STATE_ACTIVE | 2 |  |
-
-
-
-<a name="scalar.multisig.exported.v1beta1.MultisigState"></a>
-
-### MultisigState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| MULTISIG_STATE_UNSPECIFIED | 0 |  |
-| MULTISIG_STATE_PENDING | 1 |  |
-| MULTISIG_STATE_COMPLETED | 2 |  |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
 <a name="scalar/chains/v1beta1/tokens.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -3581,6 +3539,48 @@ QueryService defines the gRPC querier service.
 | PSBT_STATE_CREATING | 2 |  |
 | PSBT_STATE_SIGNING | 3 |  |
 | PSBT_STATE_COMPLETED | 4 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/multisig/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/multisig/exported/v1beta1/types.proto
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.multisig.exported.v1beta1.KeyState"></a>
+
+### KeyState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| KEY_STATE_UNSPECIFIED | 0 |  |
+| KEY_STATE_ASSIGNED | 1 |  |
+| KEY_STATE_ACTIVE | 2 |  |
+
+
+
+<a name="scalar.multisig.exported.v1beta1.MultisigState"></a>
+
+### MultisigState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| MULTISIG_STATE_UNSPECIFIED | 0 |  |
+| MULTISIG_STATE_PENDING | 1 |  |
+| MULTISIG_STATE_COMPLETED | 2 |  |
 
 
  <!-- end enums -->

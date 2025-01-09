@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "scalar/chains/v1beta1/query.proto";
 import "scalar/chains/v1beta1/tx.proto";
 
+
 option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
 option (gogoproto.goproto_registration) = true;
 

@@ -1,11 +1,13 @@
 syntax = "proto3";
 package scalar.protocol.v1beta1;
 
+import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "scalar/protocol/v1beta1/query.proto";
 import "scalar/protocol/v1beta1/tx.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
+option (gogoproto.goproto_registration) = true;
 
 service Msg {
   // Create protocol
