@@ -846,6 +846,8 @@ func createAppConfig(nodeDir string, args initArgs, index int) {
 	appConfig.MinGasPrices = args.minGasPrices
 	appConfig.API.Enable = true
 	appConfig.API.Address = fmt.Sprintf("tcp://0.0.0.0:%d", 1317+index*args.portOffset)
+	appConfig.API.Swagger = true
+	appConfig.API.EnableUnsafeCORS = true
 	appConfig.GRPC.Address = fmt.Sprintf("0.0.0.0:%d", 9090+index*args.portOffset)
 	appConfig.GRPCWeb.Address = fmt.Sprintf("0.0.0.0:%d", 9091+index*args.portOffset)
 	appConfig.Telemetry.Enabled = true
