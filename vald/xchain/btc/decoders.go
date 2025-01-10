@@ -31,7 +31,7 @@ var (
 
 const (
 	MinNumberOfOutputs = 2
-	SYMBOL_SCALAR_BTC  = "sBtc"
+	SYMBOL_SCALAR_BTC  = "sBtc" //Todo: get from keeper
 )
 
 func (client *BtcClient) createEventTokenSent(event *types.EventConfirmSourceTxsStarted, tx *BTCTxReceipt) (*chainsTypes.EventTokenSent, error) {
