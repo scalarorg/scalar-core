@@ -249,6 +249,7 @@ func GenerateGenesis(clientCtx client.Context,
 	for i, validator := range validatorInfos {
 		btcPrivKey, err := hex.DecodeString(validator.AdditionalKeys.BtcPrivKey)
 		if err != nil {
+			log.Error().Str("btc_priv_key", validator.AdditionalKeys.BtcPrivKey).Err(err).Msg("Failed to decode BTC private key")
 			return appGenState, err
 		}
 		if len(btcPrivKey) != 32 {
@@ -421,7 +422,7 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 				var gateway *chainsTypes.Gateway
 				if chainConfig.Gateway != "" {
 					gwHex, err := getByteAddress(chainConfig.Gateway)
-					fmt.Printf("Gateway %s, decoded %v", chainConfig.Gateway, gwHex)
+					fmt.Printf("Gateway %s, decoded %v\n", chainConfig.Gateway, gwHex)
 					if err == nil && len(gwHex) == 20 {
 						gateway = &chainsTypes.Gateway{
 							Address: chainsTypes.Address(gwHex),
