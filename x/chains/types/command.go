@@ -189,6 +189,30 @@ func NewApproveContractCallWithMintCommand(
 	}
 }
 
+func NewApproveContractCallWithMintCommandWithPayload(
+	chainID sdk.Int,
+	keyID multisig.KeyID,
+	sourceChain nexus.ChainName,
+	sourceTxID Hash,
+	sourceEventIndex uint64,
+	event EventContractCallWithToken,
+	amount sdk.Uint,
+	symbol string,
+	payload []byte,
+) Command {
+	sourceEventIndexBz := make([]byte, 8)
+	binary.LittleEndian.PutUint64(sourceEventIndexBz, sourceEventIndex)
+
+	return Command{
+		ID:         NewCommandID(append(sourceTxID.Bytes(), sourceEventIndexBz...), chainID),
+		Type:       COMMAND_TYPE_APPROVE_CONTRACT_CALL_WITH_MINT,
+		Params:     createApproveContractCallWithMintParams(sourceChain, sourceTxID, sourceEventIndex, event, amount, symbol),
+		Payload:    payload,
+		KeyID:      keyID,
+		MaxGasCost: uint32(approveContractCallWithMintMaxGasCost),
+	}
+}
+
 // NewApproveContractCallWithMintGeneric creates a command to approve contract call with mint
 func NewApproveContractCallWithMintGeneric(
 	chainID sdk.Int,

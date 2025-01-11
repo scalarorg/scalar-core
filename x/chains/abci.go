@@ -12,7 +12,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/chains/types"
-	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
+	multisigexported "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -59,7 +59,7 @@ func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.
 					"chain", chain.Name.String(),
 					"eventID", event.GetID(),
 				)
-
+				clog.Magentaf("[x/chains] [ABCI]-handleConfirmedEventsForChain %++v of type %T failed with error: %+v", event, event.GetEvent(), err)
 				return false, err
 			}
 
@@ -239,12 +239,76 @@ func handleContractCallWithToken(ctx sdk.Context, event types.Event, bk types.Ba
 
 	switch destinationChain.Module {
 	case types.ModuleName:
-		return handleContractCallWithTokenToEVM(ctx, event, bk, n, multisig, sourceChain.Name, destinationChain.Name, asset)
+		if types.IsEvmChain(destinationChain.Name) {
+			return handleContractCallWithTokenToEVM(ctx, event, bk, n, multisig, sourceChain.Name, destinationChain.Name, asset)
+		} else if types.IsBitcoinChain(destinationChain.Name) {
+			return handleContractCallWithTokenToBTC(ctx, event, bk, n, multisig, sourceChain.Name, destinationChain.Name, asset)
+		}
+		return nil
 	default:
 		coin := sdk.NewCoin(asset, sdk.Int(e.Amount))
 		// set as general message in nexus, so the dest module can handle the message
 		return setMessageToNexus(ctx, n, event, &coin)
 	}
+}
+
+func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, multisig types.MultisigKeeper, sourceChain, destinationChain nexus.ChainName, asset string) error {
+	e := event.GetContractCallWithToken()
+	if e == nil {
+		panic(fmt.Errorf("event is nil"))
+	}
+
+	destinationCk := funcs.Must(bk.ForChain(ctx, destinationChain))
+
+	destinationToken := destinationCk.GetERC20TokenByAsset(ctx, asset)
+	if !destinationToken.Is(types.Confirmed) {
+		return fmt.Errorf("token with asset %s not confirmed on destination chain", e.Symbol)
+	}
+
+	if !common.IsHexAddress(e.ContractAddress) {
+		return fmt.Errorf("invalid contract address %s", e.ContractAddress)
+	}
+
+	coin := sdk.NewCoin(asset, sdk.Int(e.Amount))
+
+	if err := n.RateLimitTransfer(ctx, destinationChain, coin, nexus.TransferDirectionTo); err != nil {
+		return err
+	}
+
+	keyId, ok := multisig.GetCurrentKeyID(ctx, destinationChain)
+	if !ok {
+		keyId = multisigexported.KeyID(destinationChain)
+	}
+	cmd := types.NewApproveContractCallWithMintCommandWithPayload(
+		funcs.MustOk(destinationCk.GetChainID(ctx)),
+		keyId,
+		sourceChain,
+		event.TxID,
+		event.Index,
+		*e,
+		e.Amount,
+		destinationToken.GetDetails().Symbol,
+		event.GetContractCallWithToken().Payload,
+	)
+	funcs.MustNoErr(destinationCk.EnqueueCommand(ctx, cmd))
+	bk.Logger(ctx).Debug(fmt.Sprintf("created %s command for event", cmd.Type),
+		"chain", destinationChain,
+		"eventID", event.GetID(),
+		"commandID", cmd.ID.Hex(),
+	)
+
+	events.Emit(ctx, &types.EventContractCallWithMintApproved{
+		Chain:            event.Chain,
+		EventID:          event.GetID(),
+		CommandID:        cmd.ID,
+		Sender:           e.Sender.Hex(),
+		DestinationChain: e.DestinationChain,
+		ContractAddress:  e.ContractAddress,
+		PayloadHash:      e.PayloadHash,
+		Asset:            coin,
+	})
+
+	return nil
 }
 
 func handleContractCallWithTokenToEVM(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, multisig types.MultisigKeeper, sourceChain, destinationChain nexus.ChainName, asset string) error {
@@ -589,7 +653,7 @@ func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types
 
 				chainID := funcs.MustOk(destCk.GetChainID(ctx))
 
-				var keyID multisig.KeyID
+				var keyID multisigexported.KeyID
 				if types.IsEvmChain(chain.Name) {
 					keyID = funcs.MustOk(m.GetCurrentKeyID(ctx, chain.Name))
 				} else if types.IsBitcoinChain(chain.Name) {
@@ -679,7 +743,7 @@ func validateMessage(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, m typ
 	}
 }
 
-func handleMessageWithToken(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, chainID sdk.Int, keyID multisig.KeyID, msg nexus.GeneralMessage) error {
+func handleMessageWithToken(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, chainID sdk.Int, keyID multisigexported.KeyID, msg nexus.GeneralMessage) error {
 	token := ck.GetERC20TokenByAsset(ctx, msg.Asset.GetDenom())
 
 	if err := n.RateLimitTransfer(ctx, msg.GetDestinationChain(), *msg.Asset, nexus.TransferDirectionTo); err != nil {
@@ -709,7 +773,7 @@ func handleMessageWithToken(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus
 	return nil
 }
 
-func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID multisig.KeyID, msg nexus.GeneralMessage) {
+func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID multisigexported.KeyID, msg nexus.GeneralMessage) {
 	params := &types.ApproveContractCallCommandParams{
 		ContractAddress:  common.HexToAddress(msg.GetDestinationAddress()),
 		PayloadHash:      common.BytesToHash(msg.PayloadHash),
