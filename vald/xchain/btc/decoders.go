@@ -38,6 +38,16 @@ func (client *BtcClient) createEventTokenSent(event *types.EventConfirmSourceTxs
 	if len(tx.MsgTx.TxOut) < MinNumberOfOutputs {
 		return nil, ErrInvalidTxOutCount
 	}
+
+	// Note: TxID is the reversed-order hash of the txid aka RPC TxID, aka Mempool TxID
+	txID, err := types.HashFromHex(tx.Raw.TxID)
+	if err != nil {
+		client.logger().Error(sdkerrors.Wrap(err, "invalid tx id").Error())
+		return nil, fmt.Errorf("invalid tx id %s", tx.Raw.TxID)
+	}
+
+	eventId := chainsTypes.NewEventID(txID, uint64(tx.Raw.BlockIndex))
+
 	embeddedDataTxOut := tx.MsgTx.TxOut[EmbeddedDataOutputIndex]
 	if embeddedDataTxOut == nil || embeddedDataTxOut.PkScript == nil || embeddedDataTxOut.PkScript[0] != txscript.OP_RETURN {
 		return nil, ErrInvalidOpReturn
@@ -58,27 +68,32 @@ func (client *BtcClient) createEventTokenSent(event *types.EventConfirmSourceTxs
 	if destinationChain == nil {
 		return nil, ErrInvalidDestinationChain
 	}
+
 	var destinationRecipientAddress chainsTypes.Address
 	err = destinationRecipientAddress.Unmarshal(output.DestinationRecipientAddress)
 	if err != nil {
 		return nil, err
 	}
-	// Note: TxID is the reversed-order hash of the txid aka RPC TxID, aka Mempool TxID
-	txID, err := types.HashFromHex(tx.Raw.TxID)
+
+	// queryClient := grpc_client.QueryManager.GetClient()
+
+	// tokenSymbol, err := queryClient.TokenSymbol(context.Background(), &chainsTypes.TokenInfoRequest{
+	// 	Chain: string(event.Chain),
+	// 	FindBy: IsNative?,
+	// })
+
 	if err != nil {
-		client.logger().Error(sdkerrors.Wrap(err, "invalid tx id").Error())
-		return nil, fmt.Errorf("invalid tx id %s", tx.Raw.TxID)
+		return nil, fmt.Errorf("error getting token symbol: %w", err)
 	}
 
-	eventId := chainsTypes.NewEventID(txID, uint64(tx.Raw.BlockIndex))
 	return &chainsTypes.EventTokenSent{
+		EventID:            eventId,
 		Sender:             tx.PrevTxOuts[0].ScriptPubKey.Address,
 		Chain:              nexus.ChainName(event.Chain),
-		DestinationChain:   nexus.ChainName(destinationChain.ToBytes().String()),
 		TransferID:         nexus.TransferID(1),
-		EventID:            eventId,
-		Asset:              sdk.NewCoin(SYMBOL_SCALAR_BTC, sdk.NewInt(stakingAmount)),
+		DestinationChain:   nexus.ChainName(destinationChain.ToBytes().String()),
 		DestinationAddress: chainsTypes.Address(destinationRecipientAddress).Hex(),
+		Asset:              sdk.NewCoin(SYMBOL_SCALAR_BTC, sdk.NewInt(stakingAmount)),
 	}, nil
 }
 

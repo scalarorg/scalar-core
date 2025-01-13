@@ -6,9 +6,12 @@ import (
 	"fmt"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/log"
+	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
 	"github.com/scalarorg/scalar-core/x/chains/types"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
@@ -22,14 +25,10 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 
 	mgrParticipant := mgr.valAddr.String()
 
-	clog.Yellowf("mgrParticipant: %s", mgrParticipant)
-
 	pubKey, ok := event.PubKeys[mgrParticipant]
 	if !ok {
 		return nil
 	}
-
-	clog.Yellow("pubKey: ", pubKey)
 
 	if !mgr.validatePubKey(pubKey) {
 		return fmt.Errorf("invalid pubKey")
@@ -40,10 +39,16 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 	keyUID := fmt.Sprintf("%s_%d", event.GetKeyID().String(), 0)
 	partyUID := mgr.valAddr.String()
 
-	clog.Yellowf("keyUID: %s", keyUID)
-	clog.Yellowf("partyUID: %s", partyUID)
+	chainParams, err := grpc_client.QueryManager.GetClient().Params(context.Background(), &chainsTypes.ParamsRequest{
+		Chain: event.Chain.String(),
+	})
+	if err != nil {
+		return err
+	}
 
-	listOfTapScriptSig, err := mgr.sign(keyUID, event.Psbt)
+	clog.Greenf("ProcessSigningPsbtStarted/chainParams: %+v", chainParams)
+
+	listOfTapScriptSig, err := mgr.sign(keyUID, event.Psbt, vault.NetworkKind(chainParams.Params.NetworkKind))
 	if err != nil {
 		return err
 	}

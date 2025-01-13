@@ -51,17 +51,15 @@ func (mgr Mgr) isParticipant(p sdk.ValAddress) bool {
 	return mgr.valAddr.Equals(p)
 }
 
-func (mgr Mgr) sign(keyUID string, psbt covenantTypes.Psbt) (*covenant.TapScriptSigList, error) {
+func (mgr Mgr) sign(keyUID string, psbt covenantTypes.Psbt, networkKind vault.NetworkKind) (*covenant.TapScriptSigList, error) {
 	if !mgr.validateKeyID(keyUID) {
 		return nil, fmt.Errorf("invalid keyID")
 	}
 
-	privkey := mgr.privKey
-
 	tapScriptSigs, err := vault.SignPsbtAndCollectSigs(
 		psbt,
-		privkey.Serialize(),
-		vault.NetworkKindTestnet, // TODO: call to chain to get the network kind
+		mgr.privKey.Serialize(),
+		networkKind,
 	)
 	if err != nil {
 		return nil, err

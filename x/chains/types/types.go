@@ -5,7 +5,6 @@ import (
 	"crypto/ecdsa"
 	"encoding/binary"
 	"encoding/hex"
-	"encoding/json"
 	"errors"
 	fmt "fmt"
 	"reflect"
@@ -223,38 +222,6 @@ func HashFromHex(hex string) (Hash, error) {
 		return Hash{}, fmt.Errorf("invalid hash length")
 	}
 	return Hash(common.HexToHash(hex)), nil
-}
-
-func (nk NetworkKind) Validate() error {
-	if nk != Mainnet && nk != Testnet {
-		return fmt.Errorf("invalid network kind: %d", nk)
-	}
-	return nil
-}
-
-func (nk NetworkKind) MarshalJSON() ([]byte, error) {
-	return json.Marshal(nk.String())
-}
-
-func (nk *NetworkKind) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
-		return err
-	}
-	return nk.FromString(s)
-}
-
-func (nk *NetworkKind) FromString(s string) error {
-	num, ok := NetworkKind_value[s]
-	if !ok {
-		return fmt.Errorf("invalid network kind: %s", s)
-	}
-	*nk = NetworkKind(num)
-	return nil
-}
-
-func (nk *NetworkKind) UnmarshalText(text []byte) error {
-	return nk.FromString(string(text))
 }
 
 // CommandBatch represents a batch of commands

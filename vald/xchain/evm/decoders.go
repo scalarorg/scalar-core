@@ -11,7 +11,7 @@ import (
 	geth "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/scalarorg/bitcoin-vault/go-utils/address"
+	btcUtils "github.com/scalarorg/bitcoin-vault/go-utils/btc"
 	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/clog"
@@ -264,7 +264,7 @@ func decodeAddress(chain nexus.ChainName, identifier []byte, metadata map[string
 			return "", fmt.Errorf("params is required")
 		}
 
-		addr, err := address.ScriptPubKeyToAddress(identifier, params)
+		addr, err := btcUtils.ScriptPubKeyToAddress(identifier, params)
 		if err != nil {
 			return "", fmt.Errorf("error decoding address: %w", err)
 		}

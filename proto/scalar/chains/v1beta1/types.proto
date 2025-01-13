@@ -8,13 +8,13 @@ import "google/protobuf/any.proto";
 option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
 option (gogoproto.goproto_getters_all) = false;
 
-enum NetworkKind {
-  option (gogoproto.goproto_enum_prefix) = false;
-  option (gogoproto.goproto_enum_stringer) = true;
+// enum NetworkKind {
+//   option (gogoproto.goproto_enum_prefix) = false;
+//   option (gogoproto.goproto_enum_stringer) = true;
 
-  NETWORK_KIND_MAINNET = 0 [ (gogoproto.enumvalue_customname) = "Mainnet" ];
-  NETWORK_KIND_TESTNET = 1 [ (gogoproto.enumvalue_customname) = "Testnet" ];
-}
+//   NETWORK_KIND_MAINNET = 0 [ (gogoproto.enumvalue_customname) = "Mainnet" ];
+//   NETWORK_KIND_TESTNET = 1 [ (gogoproto.enumvalue_customname) = "Testnet" ];
+// }
 
 enum BatchedCommandsStatus {
   option (gogoproto.goproto_enum_prefix) = false;

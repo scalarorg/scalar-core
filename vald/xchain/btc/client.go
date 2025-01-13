@@ -7,7 +7,7 @@ import (
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcd/rpcclient"
 	"github.com/btcsuite/btcd/wire"
-	btcChain "github.com/scalarorg/bitcoin-vault/go-utils/chain"
+	btcChain "github.com/scalarorg/bitcoin-vault/go-utils/btc"
 	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/vald/config"
 	"github.com/scalarorg/scalar-core/vald/xchain/common"
@@ -50,8 +50,7 @@ func NewClient(cfg *config.BTCConfig) (common.Client, error) {
 }
 
 func validateChain(cfg *config.BTCConfig) error {
-	_, ok := btcChain.BtcChainConfigValueInt[cfg.Chain]
-	if !ok {
+	if btcChain.BtcChainsRecords().GetChainParamsByName(cfg.Chain) == nil {
 		return fmt.Errorf("invalid chain %s", cfg.Chain)
 	}
 	return nil
@@ -65,8 +64,8 @@ func MapBTCConfigToRPCConfig(cfg *config.BTCConfig) *rpcclient.ConnConfig {
 
 	params := cfg.Chain
 
-	if params == btcChain.ChaincfgTestnet4ParamsName {
-		params = chaincfg.TestNet3Params.Name
+	if params == "testnet4" {
+		params = chaincfg.TestNet3Params.Name // TODO: update this field when btc supports
 	}
 
 	return &rpcclient.ConnConfig{

@@ -7141,11 +7141,8 @@ paths:
                         type: string
                         format: uint64
                       network_kind:
-                        type: string
-                        enum:
-                          - NETWORK_KIND_MAINNET
-                          - NETWORK_KIND_TESTNET
-                        default: NETWORK_KIND_MAINNET
+                        type: integer
+                        format: int64
                       token_code:
                         type: string
                         format: byte
@@ -52453,12 +52450,6 @@ components:
       properties:
         deposit_addr:
           type: string
-    scalar.chains.v1beta1.NetworkKind:
-      type: string
-      enum:
-        - NETWORK_KIND_MAINNET
-        - NETWORK_KIND_TESTNET
-      default: NETWORK_KIND_MAINNET
     scalar.chains.v1beta1.Params:
       type: object
       properties:
@@ -52468,11 +52459,8 @@ components:
           type: string
           format: uint64
         network_kind:
-          type: string
-          enum:
-            - NETWORK_KIND_MAINNET
-            - NETWORK_KIND_TESTNET
-          default: NETWORK_KIND_MAINNET
+          type: integer
+          format: int64
         token_code:
           type: string
           format: byte
@@ -52530,11 +52518,8 @@ components:
               type: string
               format: uint64
             network_kind:
-              type: string
-              enum:
-                - NETWORK_KIND_MAINNET
-                - NETWORK_KIND_TESTNET
-              default: NETWORK_KIND_MAINNET
+              type: integer
+              format: int64
             token_code:
               type: string
               format: byte

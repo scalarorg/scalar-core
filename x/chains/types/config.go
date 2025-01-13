@@ -1,6 +1,7 @@
 package types
 
 import (
+	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	"github.com/scalarorg/scalar-core/utils"
 )
 
@@ -8,7 +9,7 @@ type ChainConfig struct {
 	ID           string            `json:"id"`
 	ChainID      uint64            `json:"chain_id"`
 	Name         string            `json:"name"`
-	NetworkKind  NetworkKind       `json:"network_kind"`
+	NetworkKind  vault.NetworkKind `json:"network_kind"`
 	Gateway      string            `json:"gateway"`
 	AuthWeighted string            `json:"authWeighted"`
 	Metadata     map[string]string `json:"metadata"`
@@ -18,7 +19,7 @@ type ChainConfig struct {
 func DefaultConfig() []ChainConfig {
 	return []ChainConfig{{
 		ChainID:     4,
-		NetworkKind: Testnet,
+		NetworkKind: vault.NetworkKindTestnet,
 		Name:        "bitcoin-testnet4",
 		ID:          "bitcoin|4",
 	}}

@@ -8,9 +8,13 @@ import "scalar/utils/v1beta1/threshold.proto";
 option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
 
 message Params {
-  string chain = 1 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   uint64 confirmation_height = 2;
-  NetworkKind network_kind = 3;
+  uint32 network_kind = 3
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/bitcoin-vault/ffi/go-vault.NetworkKind" ];
   bytes token_code = 4;
   bytes burnable = 5;
   int64 revote_locking_period = 6;
@@ -19,7 +23,8 @@ message Params {
     (gogoproto.nullable) = false,
     (gogoproto.customname) = "ChainID"
   ];
-  scalar.utils.v1beta1.Threshold voting_threshold = 8 [(gogoproto.nullable) = false];
+  scalar.utils.v1beta1.Threshold voting_threshold = 8
+      [ (gogoproto.nullable) = false ];
   int64 min_voter_count = 9;
   uint32 commands_gas_limit = 10;
   int64 voting_grace_period = 11;

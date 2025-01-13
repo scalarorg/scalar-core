@@ -3,6 +3,7 @@ package types
 import (
 	fmt "fmt"
 
+	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	utils "github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/log"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -34,7 +35,7 @@ func KeyTable() params.KeyTable {
 }
 
 // DefaultParams returns the module's parameter set initialized with default values
-func DefaultChainParams(chainId sdk.Int, chain nexus.ChainName, networkKind NetworkKind, metadata map[string]string) Params {
+func DefaultChainParams(chainId sdk.Int, chain nexus.ChainName, networkKind vault.NetworkKind, metadata map[string]string) Params {
 	bzToken, err := utils.HexDecode(Token)
 	if err != nil {
 		panic(err)
@@ -105,11 +106,14 @@ func validateConfirmationHeight(i interface{}) error {
 }
 
 func validateNetworkKind(i interface{}) error {
-	networkKind, ok := i.(NetworkKind)
+	networkKind, ok := i.(vault.NetworkKind)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
-	return networkKind.Validate()
+	if !networkKind.Valid() {
+		return fmt.Errorf("invalid network kind: %v", networkKind)
+	}
+	return nil
 }
 
 func validateBytes(bytes interface{}) error {

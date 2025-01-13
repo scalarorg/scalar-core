@@ -46,7 +46,6 @@
     - [BatchedCommandsStatus](#scalar.chains.v1beta1.BatchedCommandsStatus)
     - [CommandType](#scalar.chains.v1beta1.CommandType)
     - [DepositStatus](#scalar.chains.v1beta1.DepositStatus)
-    - [NetworkKind](#scalar.chains.v1beta1.NetworkKind)
     - [SigType](#scalar.chains.v1beta1.SigType)
     - [SourceTxStatus](#scalar.chains.v1beta1.SourceTxStatus)
     - [Status](#scalar.chains.v1beta1.Status)
@@ -1232,18 +1231,6 @@ TransferKey contains information for a transfer operatorship
 
 
 
-<a name="scalar.chains.v1beta1.NetworkKind"></a>
-
-### NetworkKind
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| NETWORK_KIND_MAINNET | 0 |  |
-| NETWORK_KIND_TESTNET | 1 |  |
-
-
-
 <a name="scalar.chains.v1beta1.SigType"></a>
 
 ### SigType
@@ -2124,7 +2111,7 @@ PollParticipants should be embedded in poll events in other modules
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
-| `network_kind` | [NetworkKind](#scalar.chains.v1beta1.NetworkKind) |  |  |
+| `network_kind` | [uint32](#uint32) |  |  |
 | `token_code` | [bytes](#bytes) |  |  |
 | `burnable` | [bytes](#bytes) |  |  |
 | `revote_locking_period` | [int64](#int64) |  |  |
