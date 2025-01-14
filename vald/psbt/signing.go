@@ -47,6 +47,19 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 	}
 
 	clog.Greenf("ProcessSigningPsbtStarted/chainParams: %+v", chainParams)
+	// chainInfoBytes, err := scalarUtils.ChainInfoBytesFromID(event.Chain.String())
+	// if err != nil {
+	// 	return err
+	// }
+
+	// client, ok := mgr.rpcs[chainInfoBytes]
+	// if !ok {
+	// 	return fmt.Errorf("client not found for chain %s", event.Chain.String())
+	// }
+
+	// if err := mgr.ValidatePsbt(client, event.Psbt); err != nil {
+	// 	return err
+	// }
 
 	listOfTapScriptSig, err := mgr.sign(keyUID, event.Psbt, vault.NetworkKind(chainParams.Params.NetworkKind))
 	if err != nil {

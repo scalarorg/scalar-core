@@ -9,6 +9,7 @@ require (
 	github.com/btcsuite/btcd v0.24.2
 	github.com/btcsuite/btcd/btcec/v2 v2.3.2
 	github.com/btcsuite/btcd/btcutil v1.1.6
+	github.com/btcsuite/btcd/btcutil/psbt v1.1.9
 	github.com/btcsuite/btcd/chaincfg/chainhash v1.1.0
 	github.com/cometbft/cometbft v0.38.15
 	github.com/cosmos/cosmos-sdk v0.45.16
@@ -24,6 +25,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
+	github.com/joho/godotenv v1.5.1
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/osmosis-labs/osmosis/x/ibc-hooks v0.0.5
 	github.com/pkg/errors v0.9.1

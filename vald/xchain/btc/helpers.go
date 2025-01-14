@@ -2,6 +2,7 @@ package btc
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/btcsuite/btcd/btcjson"
 	"github.com/scalarorg/scalar-core/utils/clog"
@@ -13,26 +14,19 @@ func (c *BtcClient) logger(keyvals ...any) log.Logger {
 	return log.WithKeyVals(keyvals...)
 }
 
-func (client *BtcClient) isFinalized(txReceipt *btcjson.GetTransactionResult, confHeight uint64) (bool, error) {
-	blockHeightCache := client.blockHeightCache.Get(txReceipt.BlockHash)
-	if blockHeightCache == nil {
-		blockHeight, err := client.GetBlockHeight(txReceipt.BlockHash)
-		if err != nil {
-			return false, err
-		}
-
-		clog.Cyanf("block_height_not_found, block_hash: %s, conf_block_height: %d, block_height: %d", txReceipt.BlockHash, confHeight, blockHeight)
-		client.blockHeightCache.Set(txReceipt.BlockHash, blockHeight)
-		blockHeightCache = &blockHeight
-	} else {
-		clog.Cyanf("[BTC] blockHeightCache already exists, block_hash: %s, conf_block_height: %d, block_height: %d", txReceipt.BlockHash, confHeight, *blockHeightCache)
+func (client *BtcClient) isFinalized(txReceipt *btcjson.TxRawResult, confHeight uint64) (bool, error) {
+	block := client.blockCache.Get(txReceipt.BlockHash)
+	if block == nil {
+		return false, fmt.Errorf("block not found")
 	}
 
+	blockHeight := block.Height
+	clog.Cyanf("[BTC] block already exists, block_hash: %s, conf_block_height: %d, block_height: %d", txReceipt.BlockHash, confHeight, blockHeight)
+
 	latestFinalizedBlockCache := client.latestFinalizedBlockCache.Get()
-	clog.Cyanf("[BTC] blockHeightCache: %d", *blockHeightCache)
 	clog.Cyanf("[BTC] latestFinalizedBlockCache: %d", latestFinalizedBlockCache)
 
-	if latestFinalizedBlockCache != 0 && latestFinalizedBlockCache >= *blockHeightCache {
+	if latestFinalizedBlockCache != 0 && latestFinalizedBlockCache >= uint64(blockHeight) {
 		return true, nil
 	}
 
@@ -41,11 +35,10 @@ func (client *BtcClient) isFinalized(txReceipt *btcjson.GetTransactionResult, co
 		return false, err
 	}
 
-	client.blockHeightCache.Set(txReceipt.BlockHash, latestFinalizedBlockHeight)
 	client.latestFinalizedBlockCache.Set(latestFinalizedBlockHeight)
 
 	// This is a rare case, but it can happen if the block height is not updated in the cache
-	if latestFinalizedBlockHeight < *blockHeightCache {
+	if latestFinalizedBlockHeight < uint64(blockHeight) {
 		return false, nil
 	}
 

@@ -3,6 +3,7 @@ package btc
 import (
 	"bytes"
 	"encoding/hex"
+	"fmt"
 	"sync"
 
 	"github.com/btcsuite/btcd/btcjson"
@@ -30,8 +31,8 @@ func (client *BtcClient) GetTxReceiptsIfFinalized(txIDs []common.Hash, confHeigh
 			btcReceipt := receipt.(BTCTxReceipt)
 			isFinalized, err := client.isFinalized(btcReceipt.Raw, confHeight)
 			if err != nil {
-				return results.FromErr[common.TxReceipt](sdkerrors.Wrapf(errors.With(err, "tx_id", btcReceipt.Raw.TxID),
-					"cannot determine if the transaction %s is finalized", btcReceipt.Raw.TxID),
+				return results.FromErr[common.TxReceipt](sdkerrors.Wrapf(errors.With(err, "tx_id", btcReceipt.Raw.Txid),
+					"cannot determine if the transaction %s is finalized", btcReceipt.Raw.Txid),
 				)
 			}
 
@@ -39,8 +40,8 @@ func (client *BtcClient) GetTxReceiptsIfFinalized(txIDs []common.Hash, confHeigh
 				return results.FromErr[common.TxReceipt](common.ErrNotFinalized)
 			}
 
-			if btcReceipt.Raw.Confirmations < int64(confHeight) {
-				clog.Redf("[BTC] tx_id: %s, conf_height: %d, confirmations: %d", btcReceipt.Raw.TxID, confHeight, btcReceipt.Raw.Confirmations)
+			if btcReceipt.Raw.Confirmations < confHeight {
+				clog.Redf("[BTC] tx_id: %s, conf_height: %d, confirmations: %d", btcReceipt.Raw.Txid, confHeight, btcReceipt.Raw.Confirmations)
 				return results.FromErr[common.TxReceipt](common.ErrTxFailed)
 			}
 
@@ -79,7 +80,7 @@ func (c *BtcClient) GetTransaction(txID common.Hash) (BTCTxResult, error) {
 
 	// convert to string first to avoid the issue of reversed txid
 	chainHash := common.HashToChainHash(txID)
-	txResult, err := c.client.GetTransaction(&chainHash)
+	txResult, err := c.client.GetRawTransactionVerbose(&chainHash)
 	if err != nil {
 		clog.Cyanf("Failed to get BTC transaction %s: %+v", txID, err)
 		return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
@@ -106,9 +107,38 @@ func (c *BtcClient) GetTransaction(txID common.Hash) (BTCTxResult, error) {
 			return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
 		}
 
+		blockHash, err := chainhash.NewHashFromStr(txResult.BlockHash)
+		if err != nil {
+			c.logger("failed to create block hash", "blockHash", txResult.BlockHash, "error", err)
+			return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
+		}
+
+		block, err := c.client.GetBlockVerbose(blockHash)
+		if err != nil {
+			c.logger("failed to get block", "blockHash", txResult.BlockHash, "error", err)
+			return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
+		}
+
+		c.blockCache.Set(txResult.BlockHash, block)
+
+		blockIndex := -1
+		for i, txid := range block.Tx {
+			if txid == txResult.Txid {
+				blockIndex = i
+				break
+			}
+		}
+
+		clog.Redf("[BTC] blockIndex: %d", blockIndex)
+
+		if blockIndex == -1 {
+			return BTCTxResult(results.FromErr[common.TxReceipt](fmt.Errorf("transaction not found in block"))), fmt.Errorf("transaction not found in block")
+		}
+
 		tx.Raw = txResult
 		tx.PrevTxOuts = prevTxOuts
 		tx.MsgTx = msgTx
+		tx.TransactionIndex = blockIndex
 	}
 
 	return results.FromOk[common.TxReceipt](tx), nil

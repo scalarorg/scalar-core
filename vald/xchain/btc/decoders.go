@@ -40,13 +40,13 @@ func (client *BtcClient) createEventTokenSent(event *types.EventConfirmSourceTxs
 	}
 
 	// Note: TxID is the reversed-order hash of the txid aka RPC TxID, aka Mempool TxID
-	txID, err := types.HashFromHex(tx.Raw.TxID)
+	txID, err := types.HashFromHex(tx.Raw.Txid)
 	if err != nil {
 		client.logger().Error(sdkerrors.Wrap(err, "invalid tx id").Error())
-		return nil, fmt.Errorf("invalid tx id %s", tx.Raw.TxID)
+		return nil, fmt.Errorf("invalid tx id %s", tx.Raw.Txid)
 	}
 
-	eventId := chainsTypes.NewEventID(txID, uint64(tx.Raw.BlockIndex))
+	eventId := chainsTypes.NewEventID(txID, uint64(tx.TransactionIndex))
 
 	embeddedDataTxOut := tx.MsgTx.TxOut[EmbeddedDataOutputIndex]
 	if embeddedDataTxOut == nil || embeddedDataTxOut.PkScript == nil || embeddedDataTxOut.PkScript[0] != txscript.OP_RETURN {

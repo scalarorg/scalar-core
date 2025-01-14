@@ -16,13 +16,15 @@ import (
 type BtcClient struct {
 	client                    *rpcclient.Client
 	cfg                       *rpcclient.ConnConfig
-	blockHeightCache          *BlockHeightCache
+	blockCache                *BlockCache
 	latestFinalizedBlockCache common.LatestFinalizedBlockCache
 }
 type BTCTxReceipt struct {
-	Raw        *btcjson.GetTransactionResult
-	PrevTxOuts []*btcjson.Vout
-	MsgTx      *wire.MsgTx
+	Raw *btcjson.TxRawResult
+	// blockIndex field in "gettransaction" and the index of the transaction in the block in "getblock"
+	TransactionIndex int
+	PrevTxOuts       []*btcjson.Vout
+	MsgTx            *wire.MsgTx
 }
 
 type BTCTxResult = results.Result[common.TxReceipt]
@@ -36,13 +38,13 @@ func NewClient(cfg *config.BTCConfig) (common.Client, error) {
 		return nil, error
 	}
 
-	blockHeightCache := NewBlockHeightCache()
+	blockCache := NewBlockCache()
 	latestFinalizedBlockCache := common.NewLatestFinalizedBlockCache()
 
 	client := &BtcClient{
 		client:                    rpcClient,
 		cfg:                       rpcConfig,
-		blockHeightCache:          blockHeightCache,
+		blockCache:                blockCache,
 		latestFinalizedBlockCache: latestFinalizedBlockCache,
 	}
 

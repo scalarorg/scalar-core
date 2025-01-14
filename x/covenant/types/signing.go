@@ -272,3 +272,81 @@ func (m PsbtMultiSig) GetParticipants() []sdk.ValAddress {
 		slices.Map(maps.Keys(m.ParticipantTapScriptSigs), func(a string) sdk.ValAddress { return funcs.Must(sdk.ValAddressFromBech32(a)) }),
 	)
 }
+
+// verify tap script sig
+
+// func verifyTapScriptSigs(sigs *exported.TapScriptSigList, pubKeyHex string, psbt Psbt) error {
+//     // Parse the public key
+//     pubKeyBytes, err := hex.DecodeString(pubKeyHex)
+//     if err != nil {
+//         return fmt.Errorf("invalid public key hex: %w", err)
+//     }
+
+//     pubKey, err := schnorr.ParsePubKey(pubKeyBytes)
+//     if err != nil {
+//         return fmt.Errorf("invalid public key: %w", err)
+//     }
+
+//     // Verify each signature
+//     for i, sig := range sigs.TapScriptSigs {
+//         if err := verifyTapScriptSig(sig, pubKey, psbt, i); err != nil {
+//             return fmt.Errorf("invalid signature at index %d: %w", i, err)
+//         }
+//     }
+
+//     return nil
+// }
+
+// func verifyTapScriptSig(sig *exported.TapScriptSig, pubKey *btcec.PublicKey, psbt Psbt, inputIndex int) error {
+//     // Parse the signature
+//     schnorrSig, err := schnorr.ParseSignature(sig.Signature)
+//     if err != nil {
+//         return fmt.Errorf("invalid schnorr signature: %w", err)
+//     }
+
+//     // Parse leaf hash
+//     leafHash, err := txscript.NewTapLeaf(sig.LeafHash)
+//     if err != nil {
+//         return fmt.Errorf("invalid leaf hash: %w", err)
+//     }
+
+//     // Compute sighash for verification
+//     sighash, err := psbt.ComputeTaprootSighash(inputIndex, leafHash)
+//     if err != nil {
+//         return fmt.Errorf("failed to compute sighash: %w", err)
+//     }
+
+//     // Verify the signature
+//     if !schnorrSig.Verify(sighash, pubKey) {
+//         return fmt.Errorf("signature verification failed")
+//     }
+
+//     return nil
+// }
+
+// ComputeTaprootSighash computes the sighash for taproot signature verification
+// func (p Psbt) ComputeTaprootSighash(inputIndex int, leafHash txscript.TapLeaf) ([]byte, error) {
+//     // Parse the PSBT
+//     btcPsbt, err := p.ToBtcPsbt()
+//     if err != nil {
+//         return nil, fmt.Errorf("failed to parse PSBT: %w", err)
+//     }
+
+//     // Get the input
+//     if inputIndex >= len(btcPsbt.Inputs) {
+//         return nil, fmt.Errorf("input index out of range")
+//     }
+//     input := btcPsbt.Inputs[inputIndex]
+
+//     // Compute sighash
+//     sighash, err := input.TaprootSighash(
+//         btcPsbt.UnsignedTx,
+//         txscript.NewTxSigHashes(btcPsbt.UnsignedTx),
+//         leafHash,
+//     )
+//     if err != nil {
+//         return nil, fmt.Errorf("failed to compute sighash: %w", err)
+//     }
+
+//     return sighash, nil
+// }

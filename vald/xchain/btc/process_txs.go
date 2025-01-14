@@ -50,7 +50,7 @@ func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsS
 	}
 
 	// Note: TxID is the reversed-order hash of the txid aka RPC TxID, aka Mempool TxID
-	txID, err := types.HashFromHex(receipt.Raw.TxID)
+	txID, err := types.HashFromHex(receipt.Raw.Txid)
 	if err != nil {
 		client.logger().Error(sdkerrors.Wrap(err, "invalid tx id").Error())
 		return nil
@@ -61,7 +61,7 @@ func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsS
 		Event: &types.Event_TokenSent{
 			TokenSent: tokenSent,
 		},
-		Index: uint64(receipt.Raw.BlockIndex),
+		Index: uint64(receipt.TransactionIndex),
 	})
 
 	clog.Bluef("[BTC] SourceTxConfirmationEvent: %+v\n", events)
