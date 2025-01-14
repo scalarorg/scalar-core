@@ -1,9 +1,11 @@
 package types
 
 import (
+	"bytes"
 	"encoding/hex"
 	fmt "fmt"
 
+	"github.com/btcsuite/btcd/btcutil/psbt"
 	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/slices"
@@ -29,8 +31,10 @@ func PsbtFromHex(h string) (Psbt, error) {
 }
 
 func (p Psbt) ValidateBasic() error {
-	// TODO: validate psbt format by btcd-lib.packet
-	clog.Yellow("!! TODO: validate psbt", "psbt", p)
+	_, err := psbt.NewFromRawBytes(bytes.NewReader(p), false)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

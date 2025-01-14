@@ -10,16 +10,16 @@ import (
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/log"
 	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
-	"github.com/scalarorg/scalar-core/x/chains/types"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
+	// scalarUtils "github.com/scalarorg/scalar-core/utils"
 )
 
 // TODO: Validate psbt inputs whether they are available in the btc chain
 
 // ProcessSigningPsbtStarted handles event signing psbt started
 func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarted) error {
-	if !types.IsBitcoinChain(event.Chain) {
+	if !chainsTypes.IsBitcoinChain(event.Chain) {
 		return nil
 	}
 
