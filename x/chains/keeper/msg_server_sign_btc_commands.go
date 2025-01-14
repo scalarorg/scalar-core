@@ -44,8 +44,15 @@ func (s msgServer) SignBTCCommands(c context.Context, req *types.SignBTCCommands
 		return &types.SignBTCCommandsResponse{CommandCount: 0, BatchedCommandsID: nil}, nil
 	}
 
-	// TODO: validate the psbt with the commands: check the outputs map 1-1 with the command payloads, check the amount of inputs is greater than the amount of outputs, check the format of psbt by btcd-lib.packet
-	// use psbt.ValidateBasic()
+	// TODO: Form psbt with the commands in the batch, not use psbt request
+	// err = req.Psbt.ValidateBasic()
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	// if err := validatePsbtWithCommandBatch(req.Psbt, commandBatch); err != nil {
+	// 	return nil, err
+	// }
 
 	if err := s.covenant.SignPsbt(
 		ctx,
