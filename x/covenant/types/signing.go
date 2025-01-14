@@ -274,6 +274,7 @@ func (m PsbtMultiSig) GetParticipants() []sdk.ValAddress {
 }
 
 // verify tap script sig
+// TODO: Move validation logic into the method of the psbt or tapscriptlist
 
 // func verifyTapScriptSigs(sigs *exported.TapScriptSigList, pubKeyHex string, psbt Psbt) error {
 //     // Parse the public key
@@ -324,7 +325,7 @@ func (m PsbtMultiSig) GetParticipants() []sdk.ValAddress {
 //     return nil
 // }
 
-// ComputeTaprootSighash computes the sighash for taproot signature verification
+// // ComputeTaprootSighash computes the sighash for taproot signature verification
 // func (p Psbt) ComputeTaprootSighash(inputIndex int, leafHash txscript.TapLeaf) ([]byte, error) {
 //     // Parse the PSBT
 //     btcPsbt, err := p.ToBtcPsbt()
