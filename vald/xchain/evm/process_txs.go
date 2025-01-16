@@ -45,26 +45,27 @@ func (c *EthereumClient) processTxReceipt(event *types.EventConfirmSourceTxsStar
 
 		switch txlog.Topics[0] {
 		case ContractCallSig:
-			contractCallEvent, err := c.decodeSourceTxConfirmationEvent(txlog)
-			if err != nil {
-				c.logger().Error(sdkerrors.Wrap(err, "decode event ContractCall failed").Error())
-				continue
-			}
-			clog.Red("processTxReceipt", "contractCallEvent", contractCallEvent)
+			panic("ContractCallSig")
+			// contractCallEvent, err := c.decodeSourceTxConfirmationEvent(txlog)
+			// if err != nil {
+			// 	c.logger().Error(sdkerrors.Wrap(err, "decode event ContractCall failed").Error())
+			// 	continue
+			// }
+			// clog.Red("processTxReceipt", "contractCallEvent", contractCallEvent)
 
-			if err := contractCallEvent.ValidateBasic(); err != nil {
-				c.logger().Error(sdkerrors.Wrap(err, "invalid event ContractCall").Error())
-				continue
-			}
+			// if err := contractCallEvent.ValidateBasic(); err != nil {
+			// 	c.logger().Error(sdkerrors.Wrap(err, "invalid event ContractCall").Error())
+			// 	continue
+			// }
 
-			events = append(events, types.Event{
-				Chain: event.Chain,
-				TxID:  types.Hash(receipt.TxHash),
-				Event: &types.Event_SourceTxConfirmationEvent{
-					SourceTxConfirmationEvent: contractCallEvent,
-				},
-				Index: uint64(txlog.Index),
-			})
+			// events = append(events, types.Event{
+			// 	Chain: event.Chain,
+			// 	TxID:  types.Hash(receipt.TxHash),
+			// 	Event: &types.Event_SourceTxConfirmationEvent{
+			// 		SourceTxConfirmationEvent: contractCallEvent,
+			// 	},
+			// 	Index: uint64(txlog.Index),
+			// })
 		case ContractCallWithTokenSig:
 			gatewayEvent, err := DecodeEventContractCallWithToken(txlog)
 			if err != nil {

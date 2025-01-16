@@ -1,7 +1,6 @@
 package evm
 
 import (
-	"context"
 	"fmt"
 	"math/big"
 
@@ -11,15 +10,9 @@ import (
 	geth "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	btcUtils "github.com/scalarorg/bitcoin-vault/go-utils/btc"
-	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
-	"github.com/scalarorg/scalar-core/utils"
-	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
-	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
 	"github.com/scalarorg/scalar-core/x/chains/types"
-	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
@@ -193,88 +186,88 @@ func DecodeEventContractCall(log *geth.Log) (types.EventContractCall, error) {
 	}, nil
 }
 
-func (client *EthereumClient) decodeSourceTxConfirmationEvent(log *geth.Log) (*chainsTypes.SourceTxConfirmationEvent, error) {
-	params, err := chainsTypes.StrictDecode(ContractCallDataArgs, log.Data)
-	if err != nil {
-		return nil, err
-	}
+// func (client *EthereumClient) decodeSourceTxConfirmationEvent(log *geth.Log) (*chainsTypes.SourceTxConfirmationEvent, error) {
+// 	params, err := chainsTypes.StrictDecode(ContractCallDataArgs, log.Data)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	payload, ok := params[2].([]byte)
-	if !ok {
-		return nil, fmt.Errorf("invalid payload")
-	}
+// 	payload, ok := params[2].([]byte)
+// 	if !ok {
+// 		return nil, fmt.Errorf("invalid payload")
+// 	}
 
-	sender, _, symbol, metadata, err := encode.DecodeTransferRemotePayload(payload)
-	if err != nil {
-		return nil, fmt.Errorf("error decoding transfer remote payload: %w", err)
-	}
+// 	sender, _, symbol, metadata, err := encode.DecodeTransferRemotePayload(payload)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("error decoding transfer remote payload: %w", err)
+// 	}
 
-	amount, recipientChainIdentifier, _, err := encode.DecodeTransferRemoteMetadataPayload(metadata)
-	if err != nil {
-		return nil, fmt.Errorf("error decoding transfer remote metadata payload: %w", err)
-	}
+// 	amount, recipientChainIdentifier, _, err := encode.DecodeTransferRemoteMetadataPayload(metadata)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("error decoding transfer remote metadata payload: %w", err)
+// 	}
 
-	chainID := params[0].(string)
-	if !utils.ValidateChainID(chainID) {
-		return nil, fmt.Errorf("invalid chain id")
-	}
+// 	chainID := params[0].(string)
+// 	if !utils.ValidateChainID(chainID) {
+// 		return nil, fmt.Errorf("invalid chain id")
+// 	}
 
-	destinationChain := nexus.ChainName(chainID)
+// 	destinationChain := nexus.ChainName(chainID)
 
-	destinationContractAddress := common.HexToAddress(params[1].(string)).Hex()
+// 	destinationContractAddress := common.HexToAddress(params[1].(string)).Hex()
 
-	payloadHash := chainsTypes.Hash(common.BytesToHash(log.Topics[2].Bytes()))
+// 	payloadHash := chainsTypes.Hash(common.BytesToHash(log.Topics[2].Bytes()))
 
-	queryClient := grpc_client.QueryManager.GetClient()
+// 	queryClient := grpc_client.QueryManager.GetClient()
 
-	chainParams, err := queryClient.Params(context.Background(), &chainsTypes.ParamsRequest{
-		Chain: chainID,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("error getting chain metadata: %w", err)
-	}
+// 	chainParams, err := queryClient.Params(context.Background(), &chainsTypes.ParamsRequest{
+// 		Chain: chainID,
+// 	})
+// 	if err != nil {
+// 		return nil, fmt.Errorf("error getting chain metadata: %w", err)
+// 	}
 
-	chainMetadata := chainParams.Params.Metadata
+// 	chainMetadata := chainParams.Params.Metadata
 
-	destinationRecipientAddress, err := decodeAddress(destinationChain, recipientChainIdentifier, chainMetadata)
-	if err != nil {
-		return nil, fmt.Errorf("error decoding destination recipient address: %w", err)
-	}
+// 	destinationRecipientAddress, err := decodeAddress(destinationChain, recipientChainIdentifier, chainMetadata)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("error decoding destination recipient address: %w", err)
+// 	}
 
-	cfEvent := &chainsTypes.SourceTxConfirmationEvent{
-		Sender:                      sender.Hex(),
-		DestinationChain:            destinationChain,
-		Amount:                      amount,
-		Asset:                       symbol,
-		PayloadHash:                 payloadHash,
-		Payload:                     payload,
-		DestinationContractAddress:  destinationContractAddress,
-		DestinationRecipientAddress: destinationRecipientAddress,
-	}
+// 	cfEvent := &chainsTypes.SourceTxConfirmationEvent{
+// 		Sender:                      sender.Hex(),
+// 		DestinationChain:            destinationChain,
+// 		Amount:                      amount,
+// 		Asset:                       symbol,
+// 		PayloadHash:                 payloadHash,
+// 		Payload:                     payload,
+// 		DestinationContractAddress:  destinationContractAddress,
+// 		DestinationRecipientAddress: destinationRecipientAddress,
+// 	}
 
-	clog.Greenf("decoded event: %+v", cfEvent)
+// 	clog.Greenf("decoded event: %+v", cfEvent)
 
-	return cfEvent, nil
-}
+// 	return cfEvent, nil
+// }
 
-func decodeAddress(chain nexus.ChainName, identifier []byte, metadata map[string]string) (string, error) {
-	if chainsTypes.IsBitcoinChain(chain) {
-		params := metadata["params"]
-		if params == "" {
-			return "", fmt.Errorf("params is required")
-		}
+// func decodeAddress(chain nexus.ChainName, identifier []byte, metadata map[string]string) (string, error) {
+// 	if chainsTypes.IsBitcoinChain(chain) {
+// 		params := metadata["params"]
+// 		if params == "" {
+// 			return "", fmt.Errorf("params is required")
+// 		}
 
-		addr, err := btcUtils.ScriptPubKeyToAddress(identifier, params)
-		if err != nil {
-			return "", fmt.Errorf("error decoding address: %w", err)
-		}
-		return addr.String(), nil
-	}
+// 		addr, err := btcUtils.ScriptPubKeyToAddress(identifier, params)
+// 		if err != nil {
+// 			return "", fmt.Errorf("error decoding address: %w", err)
+// 		}
+// 		return addr.String(), nil
+// 	}
 
-	if chainsTypes.IsEvmChain(chain) {
-		address := common.BytesToAddress(identifier)
-		return address.String(), nil
-	}
+// 	if chainsTypes.IsEvmChain(chain) {
+// 		address := common.BytesToAddress(identifier)
+// 		return address.String(), nil
+// 	}
 
-	return "", fmt.Errorf("chain not supported")
-}
+// 	return "", fmt.Errorf("chain not supported")
+// }

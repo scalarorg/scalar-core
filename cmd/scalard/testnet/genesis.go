@@ -266,7 +266,7 @@ func GenerateGenesis(clientCtx client.Context,
 		custodianPubKeys[i] = vault.PublicKey(custodians[i].BtcPubkey)
 	}
 	//Todo: Create custodian group pubkey
-	custodianGroupPubKey, err := vault.OnlyCovenantsLockingScript(custodianPubKeys, quorum)
+	custodianGroupPubKey, err := vault.CustodiansOnlyLockingScript(custodianPubKeys, quorum)
 	if err != nil {
 		return appGenState, err
 	}
