@@ -2,6 +2,9 @@ syntax = "proto3";
 package scalar.protocol.v1beta1;
 
 import "scalar/protocol/v1beta1/types.proto";
+import "scalar/chains/v1beta1/types.proto";
+
+import "gogoproto/gogo.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
@@ -12,6 +15,16 @@ message ProtocolsRequest {
   Status status = 4;
 }
 
-message ProtocolsResponse {
-  repeated Protocol protocols = 1;
+message ProtocolsResponse { repeated Protocol protocols = 1; }
+
+message ProtocolAssetRequest {
+  string source_chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string destination_chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string token_address = 3;
 }
+
+message ProtocolAssetResponse { scalar.chains.v1beta1.Asset asset = 1; }

@@ -1,6 +1,8 @@
 package btc
 
 import (
+	"context"
+	"encoding/hex"
 	"errors"
 	"fmt"
 
@@ -9,9 +11,12 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	vault "github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
+	"github.com/scalarorg/scalar-core/utils/clog"
+	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	protocolTypes "github.com/scalarorg/scalar-core/x/protocol/types"
 )
 
 var (
@@ -75,16 +80,18 @@ func (client *BtcClient) createEventTokenSent(event *types.EventConfirmSourceTxs
 		return nil, err
 	}
 
-	// queryClient := grpc_client.QueryManager.GetClient()
+	queryClient := grpc_client.QueryManager().GetProtocolClient()
 
-	// tokenSymbol, err := queryClient.TokenSymbol(context.Background(), &chainsTypes.TokenInfoRequest{
-	// 	Chain: string(event.Chain),
-	// 	FindBy: IsNative?,
-	// })
-
+	response, err := queryClient.ProtocolAsset(context.Background(), &protocolTypes.ProtocolAssetRequest{
+		SourceChain:      event.Chain,
+		TokenAddress:     hex.EncodeToString(output.DestinationTokenAddress),
+		DestinationChain: nexus.ChainName(destinationChain.ToBytes().String()),
+	})
 	if err != nil {
-		return nil, fmt.Errorf("error getting token symbol: %w", err)
+		return nil, err
 	}
+
+	clog.Greenf("EventTokenSent/Asset Response: %+v", response.Asset)
 
 	return &chainsTypes.EventTokenSent{
 		EventID:            eventId,
@@ -93,7 +100,7 @@ func (client *BtcClient) createEventTokenSent(event *types.EventConfirmSourceTxs
 		TransferID:         nexus.TransferID(1),
 		DestinationChain:   nexus.ChainName(destinationChain.ToBytes().String()),
 		DestinationAddress: chainsTypes.Address(destinationRecipientAddress).Hex(),
-		Asset:              sdk.NewCoin(SYMBOL_SCALAR_BTC, sdk.NewInt(stakingAmount)),
+		Asset:              sdk.NewCoin(response.Asset.Name, sdk.NewInt(stakingAmount)),
 	}, nil
 }
 
