@@ -39,7 +39,7 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 	keyUID := fmt.Sprintf("%s_%d", event.GetKeyID().String(), 0)
 	partyUID := mgr.valAddr.String()
 
-	chainParams, err := grpc_client.QueryManager.GetClient().Params(context.Background(), &chainsTypes.ParamsRequest{
+	chainParams, err := grpc_client.QueryManager().GetChainsClient().Params(context.Background(), &chainsTypes.ParamsRequest{
 		Chain: event.Chain.String(),
 	})
 	if err != nil {

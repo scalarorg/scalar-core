@@ -453,6 +453,8 @@
     - [Params](#scalar.protocol.v1beta1.Params)
   
 - [scalar/protocol/v1beta1/query.proto](#scalar/protocol/v1beta1/query.proto)
+    - [ProtocolAssetRequest](#scalar.protocol.v1beta1.ProtocolAssetRequest)
+    - [ProtocolAssetResponse](#scalar.protocol.v1beta1.ProtocolAssetResponse)
     - [ProtocolsRequest](#scalar.protocol.v1beta1.ProtocolsRequest)
     - [ProtocolsResponse](#scalar.protocol.v1beta1.ProtocolsResponse)
   
@@ -6890,6 +6892,38 @@ Params represent the genesis parameters for the module
 
 
 
+<a name="scalar.protocol.v1beta1.ProtocolAssetRequest"></a>
+
+### ProtocolAssetRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `source_chain` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `token_address` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.protocol.v1beta1.ProtocolAssetResponse"></a>
+
+### ProtocolAssetResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  |  |
+
+
+
+
+
+
 <a name="scalar.protocol.v1beta1.ProtocolsRequest"></a>
 
 ### ProtocolsRequest
@@ -7113,6 +7147,7 @@ Query defines the gRPC querier service
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `Protocols` | [ProtocolsRequest](#scalar.protocol.v1beta1.ProtocolsRequest) | [ProtocolsResponse](#scalar.protocol.v1beta1.ProtocolsResponse) | GetProtocols returns all Protocol | GET|/scalar/protocol/v1beta1|
+| `ProtocolAsset` | [ProtocolAssetRequest](#scalar.protocol.v1beta1.ProtocolAssetRequest) | [ProtocolAssetResponse](#scalar.protocol.v1beta1.ProtocolAssetResponse) |  | GET|/scalar/protocol/v1beta1/protocol_asset|
 
  <!-- end services -->
 
