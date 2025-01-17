@@ -37,6 +37,15 @@ func (c *EthereumClient) processTxReceipt(event *types.EventConfirmSourceTxsStar
 	var events []types.Event
 
 	for _, txlog := range receipt.Logs {
+
+		// TODO: 🛑 validate the pool address from the event
+
+		// if !bytes.Equal(gatewayAddress.Bytes(), txlog.Address.Bytes()) {
+		// 	continue
+		// }
+
+
+
 		if len(txlog.Topics) == 0 {
 			continue
 		}

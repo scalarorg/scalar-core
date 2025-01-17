@@ -36,6 +36,8 @@ func (client *BtcClient) ProcessSourceTxsConfirmation(event *types.EventConfirmS
 	return votes, nil
 }
 func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsStarted, receipt BTCTxReceipt) []types.Event {
+	// TODO: 🛑 validate the btc protocol address from the event
+
 	var events []types.Event
 	tokenSent, err := client.createEventTokenSent(event, &receipt)
 	if err != nil {
