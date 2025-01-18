@@ -6729,8 +6729,9 @@ Query defines the gRPC querier service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `pubkey` | [bytes](#bytes) |  | Scalar's pubkey |
-| `address` | [bytes](#bytes) |  | Scalar's address |
+| `bitcoin_pubkey` | [bytes](#bytes) |  | BTC's pubkey |
+| `scalar_pubkey` | [bytes](#bytes) |  | Scalar's pubkey |
+| `scalar_address` | [bytes](#bytes) |  | Scalar's address |
 | `name` | [string](#string) |  |  |
 | `tag` | [bytes](#bytes) |  |  |
 | `attribute` | [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute) |  |  |

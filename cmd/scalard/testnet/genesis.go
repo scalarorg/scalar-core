@@ -37,8 +37,8 @@ import (
 )
 
 // DefaultProtocol returns the default chains for a genesis state
-func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfo Token, custodianGroup covenanttypes.CustodianGroup) protocoltypes.Protocol {
-	log.Debug().Any("TokenInfo", tokenInfo).Msg("Create defaultProtocol")
+func DefaultProtocols(scalarProtocol ScalarProtocol, tokenInfo Token, custodianGroup covenanttypes.CustodianGroup) []*protocoltypes.Protocol {
+	log.Debug().Any("TokenInfo", tokenInfo).Msg("Create defaultProtocols")
 	// chains := make([]*protocoltypes.SupportedChain, len(tokenInfos))
 	// for i, tokenInfo := range tokenInfos {
 	// 	tokenAddress := chainsTypes.Address(common.HexToAddress(tokenInfo.TokenAddress))
@@ -78,9 +78,7 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfo Token, custodianGr
 	// 	}
 
 	// }
-	attributes := protocoltypes.ProtocolAttribute{
-		Model: protocoltypes.Pooling,
-	}
+
 	supportedChains := []*protocoltypes.SupportedChain{}
 	for _, chain := range tokenInfo.Deployments {
 		supportedChains = append(supportedChains, &protocoltypes.SupportedChain{
@@ -89,10 +87,13 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfo Token, custodianGr
 			Address: chain.TokenAddress,
 		})
 	}
-	protocol := protocoltypes.Protocol{
-		Pubkey:         scalarProtocol.ScalarPubKey.Bytes(),
-		Address:        sdk.AccAddress(scalarProtocol.ScalarPubKey.Address()),
-		Attribute:      &attributes,
+	protocolPooling := protocoltypes.Protocol{
+		BitcoinPubkey: scalarProtocol.BitcoinPubKey,
+		ScalarPubkey:  scalarProtocol.ScalarPubKey.Bytes(),
+		ScalarAddress: sdk.AccAddress(scalarProtocol.ScalarPubKey.Address()),
+		Attribute: &protocoltypes.ProtocolAttribute{
+			Model: protocoltypes.Pooling,
+		},
 		Name:           protocoltypes.DefaultProtocolName,
 		Tag:            []byte("pools"),
 		Status:         protocoltypes.Activated,
@@ -100,7 +101,21 @@ func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfo Token, custodianGr
 		Asset:          &chainsTypes.Asset{Chain: nexus.ChainName(tokenInfo.ID), Name: tokenInfo.Asset},
 		Chains:         supportedChains,
 	}
-	return protocol
+	protocolTransactional := protocoltypes.Protocol{
+		BitcoinPubkey: scalarProtocol.BitcoinPubKey,
+		ScalarPubkey:  scalarProtocol.ScalarPubKey.Bytes(),
+		ScalarAddress: sdk.AccAddress(scalarProtocol.ScalarPubKey.Address()),
+		Attribute: &protocoltypes.ProtocolAttribute{
+			Model: protocoltypes.Transactional,
+		},
+		Name:           protocoltypes.DefaultProtocolName,
+		Tag:            []byte("trans"),
+		Status:         protocoltypes.Activated,
+		CustodianGroup: &custodianGroup,
+		Asset:          &chainsTypes.Asset{Chain: nexus.ChainName(tokenInfo.ID), Name: tokenInfo.Asset},
+		Chains:         supportedChains,
+	}
+	return []*protocoltypes.Protocol{&protocolPooling, &protocolTransactional}
 }
 func GenerateGenesis(clientCtx client.Context,
 	mbm module.BasicManager,
@@ -314,8 +329,8 @@ func generateProtocolGenesis(scalarProtocol ScalarProtocol, custodianGroup coven
 		log.Error().Msgf("Missing token infos in path %s", btcTokenPath)
 	}
 	log.Debug().Any("TokenInfo", tokenInfos).Msgf("Successfull parsed token config")
-	protocol := DefaultProtocol(scalarProtocol, tokenInfos[0], custodianGroup)
-	protocolGenState := protocoltypes.NewGenesisState([]*protocoltypes.Protocol{&protocol})
+	protocols := DefaultProtocols(scalarProtocol, tokenInfos[0], custodianGroup)
+	protocolGenState := protocoltypes.NewGenesisState(protocols)
 	return protocolGenState, nil
 }
 func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *stakingtypes.GenesisState {

@@ -48,12 +48,12 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 }
 
 func (k Keeper) SetProtocol(ctx sdk.Context, protocol *types.Protocol) {
-	k.getStore(ctx).Set(protocolPrefix.Append(utils.KeyFromBz(protocol.Address)), protocol)
+	k.getStore(ctx).Set(protocolPrefix.Append(utils.KeyFromBz(protocol.ScalarAddress)), protocol)
 }
 func (k Keeper) SetProtocols(ctx sdk.Context, protocols []*types.Protocol) {
 	store := k.getStore(ctx)
 	for _, protocol := range protocols {
-		store.Set(protocolPrefix.Append(utils.KeyFromBz(protocol.Address)), protocol)
+		store.Set(protocolPrefix.Append(utils.KeyFromBz(protocol.ScalarAddress)), protocol)
 	}
 }
 func (k Keeper) GetAllProtocols(ctx sdk.Context) ([]*types.Protocol, bool) {
@@ -91,7 +91,7 @@ func (k Keeper) getProtocolByAddress(ctx sdk.Context, address []byte) (*types.Pr
 	for ; iter.Valid(); iter.Next() {
 		protocol := types.Protocol{}
 		iter.UnmarshalValue(&protocol)
-		if bytes.Compare(protocol.Address, address) == 0 {
+		if bytes.Compare(protocol.ScalarAddress, address) == 0 {
 			return &protocol, true
 		}
 	}

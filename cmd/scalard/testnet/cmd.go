@@ -17,7 +17,7 @@ import (
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	hd "github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	sdksecp256k1 "github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdkserver "github.com/cosmos/cosmos-sdk/server"
 	sdkconfig "github.com/cosmos/cosmos-sdk/server/config"
@@ -28,6 +28,7 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/go-bip39"
+	"github.com/decred/dcrd/dcrec/secp256k1/v4"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
@@ -51,6 +52,7 @@ const (
 
 var (
 	flagScalarMnemonic      = "SCALAR_MNEMONIC"
+	flagProtocolPrivateKey  = "PROTOCOL_PRIVATE_KEY"
 	flagValidatorMnemonic   = "VALIDATOR_MNEMONIC"
 	flagBroadcasterMnemonic = "BROADCASTER_MNEMONIC"
 	flagGovernanceMnemonic  = "GOV_MNEMONIC"
@@ -352,8 +354,8 @@ func initTestnetFiles(
 		}
 		validatorInfos = append(validatorInfos, *validatorInfo)
 	}
-	scalarMnemonic := getNonQuoteEnv(flagScalarMnemonic)
 	scalarProtocol := ScalarProtocol{}
+	scalarMnemonic := getNonQuoteEnv(flagScalarMnemonic)
 	if scalarMnemonic != "" {
 		privKey, address, err := createScalarAccount(scalarMnemonic)
 		if err != nil {
@@ -365,6 +367,11 @@ func initTestnetFiles(
 			Coins:   sdk.Coins{ScalarCoin},
 		}
 		log.Debug().Str("ScalarMnemonic", scalarMnemonic).Str("Account", address.String()).Msg("ScalarAccount")
+	}
+	protocolBtcPrivkey := getNonQuoteEnv(flagProtocolPrivateKey)
+	if protocolBtcPrivkey != "" {
+		privKey := secp256k1.PrivKeyFromBytes([]byte(protocolBtcPrivkey))
+		scalarProtocol.BitcoinPubKey = privKey.PubKey().SerializeCompressed()
 	}
 	if err := generateFiles(clientCtx, mbm, nodeConfig, validatorInfos, scalarProtocol, args, genBalIterator); err != nil {
 		cmd.PrintErrf("failed to initGenFiles: %s", err.Error())
@@ -722,7 +729,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 }
 
 // Create scalar account for using in relayer
-func createScalarAccount(mnemonic string) (*secp256k1.PrivKey, sdk.AccAddress, error) {
+func createScalarAccount(mnemonic string) (*sdksecp256k1.PrivKey, sdk.AccAddress, error) {
 	// Derive the seed from mnemonic
 	seed := bip39.NewSeed(mnemonic, "")
 	path := "m/44'/118'/0'/0/0"
@@ -734,7 +741,7 @@ func createScalarAccount(mnemonic string) (*secp256k1.PrivKey, sdk.AccAddress, e
 		return nil, nil, err
 	}
 	// Create private key and get address
-	privKey := &secp256k1.PrivKey{Key: privKeyBytes}
+	privKey := &sdksecp256k1.PrivKey{Key: privKeyBytes}
 	addr := sdk.AccAddress(privKey.PubKey().Address())
 	return privKey, addr, nil
 }

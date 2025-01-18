@@ -20,6 +20,7 @@ const (
 type GenesisState map[string]json.RawMessage
 
 type ScalarProtocol struct {
+	BitcoinPubKey []byte
 	ScalarPubKey  cryptotypes.PubKey
 	ScalarBalance banktypes.Balance
 }
