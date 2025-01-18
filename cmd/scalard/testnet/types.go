@@ -19,10 +19,18 @@ const (
 
 type GenesisState map[string]json.RawMessage
 
-type ScalarProtocol struct {
+type Protocol struct {
 	BitcoinPubKey []byte
 	ScalarPubKey  cryptotypes.PubKey
 	ScalarBalance banktypes.Balance
+	Tag           string
+	Model         string
+}
+type ProtocolConfig struct {
+	ScalarMnemonic string `json:"scalar_mnemonic" mapstructure:"scalar_mnemonic"`
+	BitcoinPrivKey string `json:"bitcoin_privkey" mapstructure:"bitcoin_privkey"`
+	Tag            string `json:"tag" mapstructure:"tag"`
+	Model          string `json:"model" mapstructure:"model"`
 }
 type DeployInfo struct {
 	ID           string `json:"id" mapstructure:"id"`
