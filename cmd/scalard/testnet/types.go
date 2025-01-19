@@ -49,6 +49,7 @@ type Token struct {
 	Capacity       int64        `json:"capacity" mapstructure:"capacity"`
 	Decimals       uint8        `json:"decimals" mapstructure:"decimals"`
 	DailyMintLimit string       `json:"daily_mint_limit" mapstructure:"daily_mint_limit"`
+	Model          string       `json:"model" mapstructure:"model"`
 	TokenAddress   string       `json:"token_address" mapstructure:"token_address"`
 	Deployments    []DeployInfo `json:"deployments" mapstructure:"deployments"`
 }

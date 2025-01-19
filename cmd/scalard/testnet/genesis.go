@@ -420,8 +420,8 @@ func GenerateSupportedChains(clientCtx client.Context, configPath string, genesi
 				}
 				if chainsTypes.IsBitcoinChain(chainName) {
 					// Add default sBtc
-					sBtc := createDefaultSbtc()
-					chain.Tokens = append(chain.Tokens, sBtc)
+					sBtc := createDefaultSbtc(configPath)
+					chain.Tokens = append(chain.Tokens, sBtc...)
 				}
 				chainsState.Chains = append(chainsState.Chains, chain)
 			}
@@ -430,22 +430,39 @@ func GenerateSupportedChains(clientCtx client.Context, configPath string, genesi
 	}
 	return nil
 }
-func createDefaultSbtc() chainsTypes.ERC20TokenMetadata {
-	return chainsTypes.ERC20TokenMetadata{
-		Asset:   "sBtc",
-		ChainID: sdk.NewInt(4),
-		Details: chainsTypes.TokenDetails{
-			TokenName: "BtcTestnet4",
-			Symbol:    "sBtc",
-			Decimals:  8,
-			Capacity:  sdk.NewInt(0),
-		},
-		TokenAddress: chainsTypes.Address(common.HexToAddress("ffffffffffffffffffffffffffffffffffffffff")),
-		TxHash:       chainsTypes.ZeroHash,
-		Status:       chainsTypes.Confirmed,
-		IsExternal:   true,
-		BurnerCode:   nil, //burner code for external tokens must be nil
+func createDefaultSbtc(configPath string) []chainsTypes.ERC20TokenMetadata {
+	btcTokenPath := path.Join(configPath, "tokens/btc.json")
+	log.Debug().Msgf("Read token config in the path %s", btcTokenPath)
+	tokenInfos, err := ParseJsonArrayConfig[Token](btcTokenPath)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to parse btc token config")
 	}
+	tokens := make([]chainsTypes.ERC20TokenMetadata, len(tokenInfos))
+	for i, tokenInfo := range tokenInfos {
+		var model chainsTypes.TokenModel
+		if tokenInfo.Model == "pool" {
+			model = chainsTypes.Pool
+		} else if tokenInfo.Model == "utxo" {
+			model = chainsTypes.Utxo
+		}
+		tokens[i] = chainsTypes.ERC20TokenMetadata{
+			Asset:   tokenInfo.Asset,
+			ChainID: sdk.NewInt(tokenInfo.ChainID),
+			Details: chainsTypes.TokenDetails{
+				TokenName: tokenInfo.Name,
+				Symbol:    tokenInfo.Symbol,
+				Decimals:  tokenInfo.Decimals,
+				Capacity:  sdk.NewInt(0),
+				Model:     model,
+			},
+			TokenAddress: chainsTypes.Address(common.HexToAddress(tokenInfo.TokenAddress)),
+			TxHash:       chainsTypes.ZeroHash,
+			Status:       chainsTypes.Confirmed,
+			IsExternal:   true,
+			BurnerCode:   nil, //burner code for external tokens must be nil
+		}
+	}
+	return tokens
 }
 func getByteAddress(hexString string) ([]byte, error) {
 	if strings.HasPrefix(hexString, "0x") {
