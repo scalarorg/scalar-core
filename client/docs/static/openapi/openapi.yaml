@@ -5534,6 +5534,12 @@ paths:
                     capacity:
                       type: string
                       format: byte
+                    model:
+                      type: string
+                      enum:
+                        - TOKEN_MODEL_POOL
+                        - TOKEN_MODEL_UTXO
+                      default: TOKEN_MODEL_POOL
                 address:
                   type: string
                   format: byte
@@ -5951,6 +5957,12 @@ paths:
                           type: string
                         symbol:
                           type: string
+                        model:
+                          type: string
+                          enum:
+                            - TOKEN_MODEL_POOL
+                            - TOKEN_MODEL_UTXO
+                          default: TOKEN_MODEL_POOL
                 title: |-
                   ERC20TokensResponse describes the asset and symbol for all
                   ERC20 tokens requested for a chain
@@ -8402,6 +8414,12 @@ paths:
                       capacity:
                         type: string
                         format: byte
+                      model:
+                        type: string
+                        enum:
+                          - TOKEN_MODEL_POOL
+                          - TOKEN_MODEL_UTXO
+                        default: TOKEN_MODEL_POOL
                   address:
                     type: string
                   confirmed:
@@ -8622,10 +8640,13 @@ paths:
                     items:
                       type: object
                       properties:
-                        pubkey:
+                        bitcoin_pubkey:
                           type: string
                           format: byte
-                        address:
+                        scalar_pubkey:
+                          type: string
+                          format: byte
+                        scalar_address:
                           type: string
                           format: byte
                         name:
@@ -8932,10 +8953,13 @@ paths:
                   protocol:
                     type: object
                     properties:
-                      pubkey:
+                      bitcoin_pubkey:
                         type: string
                         format: byte
-                      address:
+                      scalar_pubkey:
+                        type: string
+                        format: byte
+                      scalar_address:
                         type: string
                         format: byte
                       name:
@@ -9236,10 +9260,13 @@ paths:
                   protocol:
                     type: object
                     properties:
-                      pubkey:
+                      bitcoin_pubkey:
                         type: string
                         format: byte
-                      address:
+                      scalar_pubkey:
+                        type: string
+                        format: byte
+                      scalar_address:
                         type: string
                         format: byte
                       name:
@@ -9605,10 +9632,13 @@ paths:
                   protocol:
                     type: object
                     properties:
-                      pubkey:
+                      bitcoin_pubkey:
                         type: string
                         format: byte
-                      address:
+                      scalar_pubkey:
+                        type: string
+                        format: byte
+                      scalar_address:
                         type: string
                         format: byte
                       name:
@@ -9904,10 +9934,13 @@ paths:
                   protocol:
                     type: object
                     properties:
-                      pubkey:
+                      bitcoin_pubkey:
                         type: string
                         format: byte
-                      address:
+                      scalar_pubkey:
+                        type: string
+                        format: byte
+                      scalar_address:
                         type: string
                         format: byte
                       name:
@@ -51858,6 +51891,12 @@ components:
             capacity:
               type: string
               format: byte
+            model:
+              type: string
+              enum:
+                - TOKEN_MODEL_POOL
+                - TOKEN_MODEL_UTXO
+              default: TOKEN_MODEL_POOL
         address:
           type: string
           format: byte
@@ -51907,6 +51946,12 @@ components:
                 type: string
               symbol:
                 type: string
+              model:
+                type: string
+                enum:
+                  - TOKEN_MODEL_POOL
+                  - TOKEN_MODEL_UTXO
+                default: TOKEN_MODEL_POOL
       title: |-
         ERC20TokensResponse describes the asset and symbol for all
         ERC20 tokens requested for a chain
@@ -51917,6 +51962,12 @@ components:
           type: string
         symbol:
           type: string
+        model:
+          type: string
+          enum:
+            - TOKEN_MODEL_POOL
+            - TOKEN_MODEL_UTXO
+          default: TOKEN_MODEL_POOL
     scalar.chains.v1beta1.Event:
       type: object
       properties:
@@ -52722,6 +52773,12 @@ components:
         capacity:
           type: string
           format: byte
+        model:
+          type: string
+          enum:
+            - TOKEN_MODEL_POOL
+            - TOKEN_MODEL_UTXO
+          default: TOKEN_MODEL_POOL
     scalar.chains.v1beta1.TokenInfoResponse:
       type: object
       properties:
@@ -52740,6 +52797,12 @@ components:
             capacity:
               type: string
               format: byte
+            model:
+              type: string
+              enum:
+                - TOKEN_MODEL_POOL
+                - TOKEN_MODEL_UTXO
+              default: TOKEN_MODEL_POOL
         address:
           type: string
         confirmed:
@@ -52750,6 +52813,12 @@ components:
           format: boolean
         burner_code_hash:
           type: string
+    scalar.chains.v1beta1.TokenModel:
+      type: string
+      enum:
+        - TOKEN_MODEL_POOL
+        - TOKEN_MODEL_UTXO
+      default: TOKEN_MODEL_POOL
     scalar.chains.v1beta1.TokenType:
       type: string
       enum:
@@ -52867,10 +52936,13 @@ components:
         protocol:
           type: object
           properties:
-            pubkey:
+            bitcoin_pubkey:
               type: string
               format: byte
-            address:
+            scalar_pubkey:
+              type: string
+              format: byte
+            scalar_address:
               type: string
               format: byte
             name:
@@ -53052,10 +53124,13 @@ components:
         protocol:
           type: object
           properties:
-            pubkey:
+            bitcoin_pubkey:
               type: string
               format: byte
-            address:
+            scalar_pubkey:
+              type: string
+              format: byte
+            scalar_address:
               type: string
               format: byte
             name:
@@ -53158,10 +53233,13 @@ components:
     scalar.protocol.v1beta1.Protocol:
       type: object
       properties:
-        pubkey:
+        bitcoin_pubkey:
           type: string
           format: byte
-        address:
+        scalar_pubkey:
+          type: string
+          format: byte
+        scalar_address:
           type: string
           format: byte
         name:
@@ -53272,10 +53350,13 @@ components:
           items:
             type: object
             properties:
-              pubkey:
+              bitcoin_pubkey:
                 type: string
                 format: byte
-              address:
+              scalar_pubkey:
+                type: string
+                format: byte
+              scalar_address:
                 type: string
                 format: byte
               name:
@@ -53403,10 +53484,13 @@ components:
         protocol:
           type: object
           properties:
-            pubkey:
+            bitcoin_pubkey:
               type: string
               format: byte
-            address:
+            scalar_pubkey:
+              type: string
+              format: byte
+            scalar_address:
               type: string
               format: byte
             name:
@@ -53524,10 +53608,13 @@ components:
         protocol:
           type: object
           properties:
-            pubkey:
+            bitcoin_pubkey:
               type: string
               format: byte
-            address:
+            scalar_pubkey:
+              type: string
+              format: byte
+            scalar_address:
               type: string
               format: byte
             name:

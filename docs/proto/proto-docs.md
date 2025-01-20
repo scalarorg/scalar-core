@@ -49,6 +49,7 @@
     - [SigType](#scalar.chains.v1beta1.SigType)
     - [SourceTxStatus](#scalar.chains.v1beta1.SourceTxStatus)
     - [Status](#scalar.chains.v1beta1.Status)
+    - [TokenModel](#scalar.chains.v1beta1.TokenModel)
   
 - [scalar/utils/v1beta1/threshold.proto](#scalar/utils/v1beta1/threshold.proto)
     - [Threshold](#scalar.utils.v1beta1.Threshold)
@@ -1162,6 +1163,7 @@ results to chains relay transaction types
 | `symbol` | [string](#string) |  |  |
 | `decimals` | [uint32](#uint32) |  |  |
 | `capacity` | [bytes](#bytes) |  |  |
+| `model` | [TokenModel](#scalar.chains.v1beta1.TokenModel) |  | defined for btc networks, not used for evm chains |
 
 
 
@@ -1269,6 +1271,18 @@ TransferKey contains information for a transfer operatorship
 | STATUS_INITIALIZED | 1 |  |
 | STATUS_PENDING | 2 |  |
 | STATUS_CONFIRMED | 4 |  |
+
+
+
+<a name="scalar.chains.v1beta1.TokenModel"></a>
+
+### TokenModel
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TOKEN_MODEL_POOL | 0 |  |
+| TOKEN_MODEL_UTXO | 1 |  |
 
 
  <!-- end enums -->
@@ -3067,6 +3081,7 @@ ERC20 tokens requested for a chain
 | ----- | ---- | ----- | ----------- |
 | `asset` | [string](#string) |  |  |
 | `symbol` | [string](#string) |  |  |
+| `model` | [TokenModel](#scalar.chains.v1beta1.TokenModel) |  |  |
 
 
 
@@ -6729,8 +6744,9 @@ Query defines the gRPC querier service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `pubkey` | [bytes](#bytes) |  | Scalar's pubkey |
-| `address` | [bytes](#bytes) |  | Scalar's address |
+| `bitcoin_pubkey` | [bytes](#bytes) |  | BTC's pubkey |
+| `scalar_pubkey` | [bytes](#bytes) |  | Scalar's pubkey |
+| `scalar_address` | [bytes](#bytes) |  | Scalar's address |
 | `name` | [string](#string) |  |  |
 | `tag` | [bytes](#bytes) |  |  |
 | `attribute` | [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute) |  |  |

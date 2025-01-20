@@ -138,8 +138,6 @@ docker-image:
 		--build-arg WASMVM_VERSION="${WASMVM_VERSION}" \
 		--build-arg IBC_WASM_HOOKS="${IBC_WASM_HOOKS}" \
 		--build-arg ARCH="${ARCH}" \
-		--build-arg USER_ID="${USER_ID}" \
-		--build-arg GROUP_ID="${GROUP_ID}" \
 		-t scalarorg/scalar-core .
 
 docker-run:
