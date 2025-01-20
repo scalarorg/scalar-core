@@ -8,8 +8,13 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/x/nexus/exported"
+	pexported "github.com/scalarorg/scalar-core/x/protocol/exported"
+
 	"github.com/scalarorg/scalar-core/x/protocol/types"
 	"github.com/tendermint/tendermint/libs/log"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 var (
@@ -96,6 +101,31 @@ func (k Keeper) getProtocolByAddress(ctx sdk.Context, address []byte) (*types.Pr
 		}
 	}
 	return nil, false
+}
+
+/*
+ * In scalar each asset is defined uniquely by its original chain (bitcoin networks: mainnet or testnets) and name.
+ * This function finds the protocol that supports the given asset.
+ */
+func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, originChain exported.ChainName, symbol string, minorChain exported.ChainName) (*pexported.ProtocolInfo, error) {
+	//ctx := sdk.UnwrapSDKContext(c)
+
+	protocols, ok := k.GetAllProtocols(ctx)
+	if !ok {
+		return nil, status.Errorf(codes.NotFound, "protocol not found")
+	}
+	for _, protocol := range protocols {
+		if originChain == protocol.Asset.Chain && symbol == protocol.Asset.Name {
+			//Check if the minor chain is supported by the protocol
+			for _, chain := range protocol.Chains {
+				if chain.Chain == minorChain {
+					return protocol.ToProtocolInfo(), nil
+				}
+			}
+		}
+	}
+
+	return nil, status.Errorf(codes.NotFound, "protocol asset not found")
 }
 
 // Todo: Implement Matching function

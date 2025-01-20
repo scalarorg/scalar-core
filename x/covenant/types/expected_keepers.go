@@ -27,7 +27,7 @@ type Keeper interface {
 	GetAllCustodianGroups(ctx sdk.Context) (custodianGroups []*CustodianGroup, ok bool)
 	GetCustodianGroup(ctx sdk.Context, groupId string) (custodianGroup *CustodianGroup, ok bool)
 
-	GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
+	//GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
 	GetKey(ctx sdk.Context, keyID multisig.KeyID) (multisig.Key, bool)
 	SetKey(ctx sdk.Context, key multisigTypes.Key)
 	SetCovenantRouter(router CovenantRouter)
@@ -55,12 +55,12 @@ type Snapshotter interface {
 }
 
 // Staker provides staking keeper functionality
-type Staker interface {
+type StakingKeeper interface {
 	GetBondedValidatorsByPower(ctx sdk.Context) []stakingTypes.Validator
 }
 
 // Slasher provides slashing keeper functionality
-type Slasher interface {
+type SlashingKeeper interface {
 	IsTombstoned(ctx sdk.Context, consAddr sdk.ConsAddress) bool
 }
 
@@ -73,4 +73,5 @@ type Rewarder interface {
 type Nexus interface {
 	GetChain(ctx sdk.Context, chain nexus.ChainName) (nexus.Chain, bool)
 	GetChains(ctx sdk.Context) []nexus.Chain
+	GetChainMaintainers(ctx sdk.Context, chain nexus.Chain) []sdk.ValAddress
 }

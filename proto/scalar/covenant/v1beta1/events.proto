@@ -44,3 +44,15 @@ message TapScriptSigsSubmitted {
                               "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
   scalar.covenant.exported.v1beta1.TapScriptSigList tap_script_sigs = 4;
 }
+
+message KeyRotated {
+  string module = 1;
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string key_id = 3 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+  ];
+}

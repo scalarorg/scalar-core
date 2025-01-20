@@ -1,11 +1,13 @@
 package keeper
 
 import (
+	"strings"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
-	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 )
 
@@ -42,24 +44,24 @@ func (k Keeper) SetKey(ctx sdk.Context, key multisigTypes.Key) {
 	k.getStore(ctx).Set(keyPrefix.Append(utils.LowerCaseKey(key.ID.String())), &key)
 
 	// TODO: FIX THIS PROBLEM
-	// participants := key.GetParticipants()
-	// k.Logger(ctx).Info("setting key",
-	// 	"key_id", key.ID,
-	// 	"participant_count", len(participants),
-	// 	"participants", strings.Join(slices.Map(participants, sdk.ValAddress.String), ", "),
-	// 	"participants_weight", key.GetParticipantsWeight().String(),
-	// 	"bonded_weight", key.Snapshot.BondedWeight.String(),
-	// 	"signing_threshold", key.SigningThreshold.String(),
-	// )
+	participants := key.GetParticipants()
+	k.Logger(ctx).Info("setting key",
+		"key_id", key.ID,
+		"participant_count", len(participants),
+		"participants", strings.Join(slices.Map(participants, sdk.ValAddress.String), ", "),
+		"participants_weight", key.GetParticipantsWeight().String(),
+		"bonded_weight", key.Snapshot.BondedWeight.String(),
+		"signing_threshold", key.SigningThreshold.String(),
+	)
 }
 
-func (k Keeper) GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool) {
-	return MOCK_CURRENT_KEY_ID, true
-}
+// func (k Keeper) GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool) {
+// 	return MOCK_CURRENT_KEY_ID, true
+// }
 
 func (k Keeper) getKey(ctx sdk.Context, id multisig.KeyID) (key multisigTypes.Key, ok bool) {
-	return k._MustRemoveFakeKey(ctx), true
-	// return key, k.getStore(ctx).Get(keyPrefix.Append(utils.LowerCaseKey(id.String())), &key)
+	//return k._MustRemoveFakeKey(ctx), true
+	return key, k.getStore(ctx).Get(keyPrefix.Append(utils.LowerCaseKey(id.String())), &key)
 }
 
 // ID               github_com_scalarorg_scalar_core_x_multisig_exported.KeyID                `protobuf:"bytes,1,opt,name=id,proto3,casttype=github.com/scalarorg/scalar-core/x/multisig/exported.KeyID" json:"id,omitempty"`

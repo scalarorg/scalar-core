@@ -51,38 +51,37 @@ const (
 )
 
 var (
-	flagScalarMnemonic         = "SCALAR_MNEMONIC"
-	flagProtocolScalarMnemonic = "PROTOCOL_SCALAR_MNEMONIC"
-	flagProtocolBtcPriKey      = "PROTOCOL_BTC_PRIKEY"
-	flagValidatorMnemonic      = "VALIDATOR_MNEMONIC"
-	flagBroadcasterMnemonic    = "BROADCASTER_MNEMONIC"
-	flagGovernanceMnemonic     = "GOV_MNEMONIC"
-	flagFaucetMnemonic         = "FAUCET_MNEMONIC"
-	flagBtcPubkey              = "BTC_PUBKEY"
-	flagBtcPrivkey             = "BTC_PRIVKEY"
-	flagNodeDirPrefix          = "node-dir-prefix"
-	flagNumValidators          = "v"
-	flagNumProtocols           = "p"
-	flagConfigPath             = "config-path"
-	flagOutputDir              = "output-dir"
-	flagBaseDir                = "base-dir"
-	flagTimeout                = "timeout"
-	flagBlockHeight            = "block-height"
-	flagNodeDaemonHome         = "node-daemon-home"
-	flagNodeDomain             = "node-domain"
-	flagPortOffset             = "port-offset"
-	flagBaseFee                = "base-fee"
-	flagMinGasPrice            = "min-gas-price"
-	flagKeyType                = "key-type"
-	flagEnvFile                = "env-file"
-	flagTag                    = "tag"
-	flagVersion                = "version"
-	flagEnableLogging          = "enable-logging"
-	flagRPCAddress             = "rpc.address"
-	flagAPIAddress             = "api.address"
-	flagPrintMnemonic          = "print-mnemonic"
-	flagGRPCAddress            = "grpc.address"
-	flagJSONRPCAddress         = "json-rpc.address"
+	flagScalarMnemonic      = "SCALAR_MNEMONIC"
+	flagProtocolBtcPriKey   = "PROTOCOL_BTC_PRIKEY"
+	flagValidatorMnemonic   = "VALIDATOR_MNEMONIC"
+	flagBroadcasterMnemonic = "BROADCASTER_MNEMONIC"
+	flagGovernanceMnemonic  = "GOV_MNEMONIC"
+	flagFaucetMnemonic      = "FAUCET_MNEMONIC"
+	flagBtcPubkey           = "BTC_PUBKEY"
+	flagBtcPrivkey          = "BTC_PRIVKEY"
+	flagNodeDirPrefix       = "node-dir-prefix"
+	flagNumValidators       = "v"
+	flagNumProtocols        = "p"
+	flagConfigPath          = "config-path"
+	flagOutputDir           = "output-dir"
+	flagBaseDir             = "base-dir"
+	flagTimeout             = "timeout"
+	flagBlockHeight         = "block-height"
+	flagNodeDaemonHome      = "node-daemon-home"
+	flagNodeDomain          = "node-domain"
+	flagPortOffset          = "port-offset"
+	flagBaseFee             = "base-fee"
+	flagMinGasPrice         = "min-gas-price"
+	flagKeyType             = "key-type"
+	flagEnvFile             = "env-file"
+	flagTag                 = "tag"
+	flagVersion             = "version"
+	flagEnableLogging       = "enable-logging"
+	flagRPCAddress          = "rpc.address"
+	flagAPIAddress          = "api.address"
+	flagPrintMnemonic       = "print-mnemonic"
+	flagGRPCAddress         = "grpc.address"
+	flagJSONRPCAddress      = "json-rpc.address"
 )
 
 type initArgs struct {
@@ -337,6 +336,8 @@ func initTestnetFiles(
 	var (
 		validatorInfos []ValidatorInfo
 	)
+	relayer := initRelayer(args)
+
 	protocols := initProtocols(args)
 
 	// generate private keys, node IDs, and initial transactions
@@ -358,7 +359,7 @@ func initTestnetFiles(
 		validatorInfos = append(validatorInfos, *validatorInfo)
 	}
 
-	if err := generateFiles(clientCtx, mbm, nodeConfig, validatorInfos, protocols, args, genBalIterator); err != nil {
+	if err := generateFiles(clientCtx, mbm, nodeConfig, relayer, validatorInfos, protocols, args, genBalIterator); err != nil {
 		cmd.PrintErrf("failed to initGenFiles: %s", err.Error())
 		return err
 	}
@@ -382,6 +383,20 @@ func initTestnetFiles(
 	cmd.PrintErrf("Successfully initialized %d node directories\n", args.numValidators)
 	return nil
 }
+func initRelayer(args initArgs) ScalarRelayer {
+	scalarMnemonic := getNonQuoteEnv(flagScalarMnemonic)
+	privKey, address, err := createScalarAccount(scalarMnemonic)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to create scalar account")
+	}
+	return ScalarRelayer{
+		PubKey: privKey.PubKey(),
+		Balance: banktypes.Balance{
+			Address: address.String(),
+			Coins:   sdk.Coins{ScalarCoin},
+		},
+	}
+}
 func initProtocols(args initArgs) []Protocol {
 	protocolConfigs, err := ParseJsonArrayConfig[ProtocolConfig](fmt.Sprintf("%s/protocols.json", args.configPath))
 	if err != nil {
@@ -398,8 +413,8 @@ func initProtocols(args initArgs) []Protocol {
 			if err != nil {
 				log.Debug().Err(err).Msg("Create scalar account with error")
 			}
-			protocols[i].ScalarPubKey = privKey.PubKey()
-			protocols[i].ScalarBalance = banktypes.Balance{
+			protocols[i].PubKey = privKey.PubKey()
+			protocols[i].Balance = banktypes.Balance{
 				Address: address.String(),
 				Coins:   sdk.Coins{ScalarCoin},
 			}
@@ -412,6 +427,7 @@ func initProtocols(args initArgs) []Protocol {
 	}
 	return protocols
 }
+
 func createPubkeyFromSecret(config *tmconfig.Config, secret []byte, pvKeyName string) (cryptotypes.PubKey, error) {
 	privKey := tmed25519.GenPrivKeyFromSecret(secret)
 	var pvKeyFile, pvStateFile string
@@ -789,7 +805,7 @@ func generateAccount(kr keyring.Keyring, algo keyring.SignatureAlgo, keyName str
 	return pubkey, address, nil
 }
 func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig *tmconfig.Config,
-	validatorInfos []ValidatorInfo, protocols []Protocol, args initArgs, genBalIterator banktypes.GenesisBalancesIterator,
+	relayer ScalarRelayer, validatorInfos []ValidatorInfo, protocols []Protocol, args initArgs, genBalIterator banktypes.GenesisBalancesIterator,
 ) error {
 	var appRawState json.RawMessage
 	var err error
@@ -797,7 +813,7 @@ func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig
 	for i, validatorInfo := range validatorInfos {
 		validators[i] = validatorInfo.GenesisValidator
 	}
-	appGenState, err := GenerateGenesis(clientCtx, mbm, GenesisAsset, validatorInfos, protocols, args)
+	appGenState, err := GenerateGenesis(clientCtx, mbm, GenesisAsset, relayer, validatorInfos, protocols, args)
 	if err != nil {
 		fmt.Printf("GenerateGenesis err: %s\n", err.Error())
 		return err
@@ -1029,11 +1045,12 @@ func initGenFiles(
 	mbm module.BasicManager,
 	nodeConfig *tmconfig.Config,
 	coinDenom string,
+	relayer ScalarRelayer,
 	validatorInfos []ValidatorInfo,
 	protocols []Protocol,
 	args initArgs,
 ) error {
-	appGenState, err := GenerateGenesis(clientCtx, mbm, coinDenom, validatorInfos, protocols, args)
+	appGenState, err := GenerateGenesis(clientCtx, mbm, coinDenom, relayer, validatorInfos, protocols, args)
 	if err != nil {
 		fmt.Printf("GenerateGenesis err: %s\n", err.Error())
 		return err

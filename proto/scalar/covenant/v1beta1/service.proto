@@ -61,6 +61,13 @@ service MsgService {
     };
   }
 
+  rpc RotateKey(RotateKeyRequest) returns (RotateKeyResponse) {
+    option (google.api.http) = {
+      post : "/scalar/covenant/v1beta1/rotate_key"
+      body : "*"
+    };
+  }
+
   rpc SubmitTapScriptSigs(SubmitTapScriptSigsRequest)
       returns (SubmitTapScriptSigsResponse) {
     option (google.api.http) = {
@@ -79,8 +86,8 @@ service QueryService {
   }
 
   // Get custodian groups
-  rpc CustodianGroups(CustodianGroupsRequest)
-      returns (CustodianGroupsResponse) {
+  rpc Groups(GroupsRequest)
+      returns (GroupsResponse) {
     option (google.api.http) = {
       get : "/scalar/covenant/v1beta1/custodian_groups"
     };
@@ -91,13 +98,4 @@ service QueryService {
       get : "/scalar/covenant/v1beta1/params"
     };
   }
-
-  //   rpc
-  //   GetAvailableCustodianGroupsByBtcNetworkName(GetAvailableCustodianGroupsByBtcNetworkNameRequest)
-  //   returns (GetAvailableCustodianGroupsByBtcNetworkNameResponse) {
-  //     option (google.api.http) = {get:
-  //         "/scalar/protocol/v1beta1/available_custodian_groups/btc_network/"
-  //         "{btc_network_name}"
-  // };
-  //   }
 }

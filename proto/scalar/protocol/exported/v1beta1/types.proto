@@ -1,0 +1,16 @@
+syntax = "proto3";
+package scalar.protocol.exported.v1beta1;
+
+option go_package = "github.com/scalarorg/scalar-core/x/protocol/exported";
+
+import "gogoproto/gogo.proto";
+
+option (gogoproto.goproto_getters_all) = false;
+
+message ProtocolInfo {
+    string key_id = 1 [
+        (gogoproto.customname) = "KeyID",
+        (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+    ];
+}

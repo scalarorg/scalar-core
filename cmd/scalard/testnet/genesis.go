@@ -63,8 +63,8 @@ func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGro
 		}
 		protocols = append(protocols, &protocoltypes.Protocol{
 			BitcoinPubkey: protocol.BitcoinPubKey,
-			ScalarPubkey:  protocol.ScalarPubKey.Bytes(),
-			ScalarAddress: sdk.AccAddress(protocol.ScalarPubKey.Address()),
+			ScalarPubkey:  protocol.PubKey.Bytes(),
+			ScalarAddress: sdk.AccAddress(protocol.PubKey.Address()),
 			Attribute: &protocoltypes.ProtocolAttribute{
 				Model: model,
 			},
@@ -81,16 +81,17 @@ func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGro
 func GenerateGenesis(clientCtx client.Context,
 	mbm module.BasicManager,
 	coinDenom string,
+	relayer ScalarRelayer,
 	validatorInfos []ValidatorInfo,
 	protocols []Protocol,
 	args initArgs,
 ) (GenesisState, error) {
 	appGenState := mbm.DefaultGenesis(clientCtx.Codec)
-	genBalances := []banktypes.Balance{}
-	genAccounts := []authtypes.GenesisAccount{}
+	genBalances := []banktypes.Balance{relayer.Balance}
+	genAccounts := []authtypes.GenesisAccount{authtypes.NewBaseAccount(sdk.AccAddress(relayer.PubKey.Address()), relayer.PubKey, 0, 0)}
 	for _, protocol := range protocols {
-		genBalances = append(genBalances, protocol.ScalarBalance)
-		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(protocol.ScalarPubKey.Address()), protocol.ScalarPubKey, 0, 0))
+		genBalances = append(genBalances, protocol.Balance)
+		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(protocol.PubKey.Address()), protocol.PubKey, 0, 0))
 	}
 	//allValAmount := sdk.NewCoins()
 	proxyValidators := []snapshottypes.ProxiedValidator{}
@@ -237,11 +238,11 @@ func GenerateGenesis(clientCtx client.Context,
 		}
 
 		privKey := secp256k1.PrivKeyFromBytes(btcPrivKey)
-
 		custodians[i] = &covenanttypes.Custodian{
-			Name:      validator.Host,
-			Status:    covenanttypes.Activated,
-			BtcPubkey: privKey.PubKey().SerializeCompressed(),
+			Name:       validator.Host,
+			ValAddress: sdk.ValAddress(validator.ValPubKey.Address()).String(),
+			Status:     covenanttypes.Activated,
+			BtcPubkey:  privKey.PubKey().SerializeCompressed(),
 		}
 		custodianPubKeys[i] = go_utils.PublicKey(custodians[i].BtcPubkey)
 	}
@@ -250,8 +251,9 @@ func GenerateGenesis(clientCtx client.Context,
 	if err != nil {
 		return appGenState, err
 	}
+	custodianGroupUid := hex.EncodeToString(custodianGroupPubKey)
 	custodianGroup := covenanttypes.CustodianGroup{
-		Uid:         "mock|123456789",
+		Uid:         custodianGroupUid,
 		Name:        "scalar",
 		Custodians:  custodians,
 		BtcPubkey:   []byte(custodianGroupPubKey),

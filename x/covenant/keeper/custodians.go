@@ -29,9 +29,8 @@ func (k Keeper) SetCustodians(ctx sdk.Context, custodians []*types.Custodian) {
 	}
 }
 func (k Keeper) GetAllCustodians(ctx sdk.Context) ([]*types.Custodian, bool) {
-	store := k.getStore(ctx)
 	protocols := []*types.Custodian{}
-	iter := store.Iterator(custodianPrefix)
+	iter := k.getStoreIterator(ctx, custodianPrefix)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 	for ; iter.Valid(); iter.Next() {
 		protocol := types.Custodian{}
@@ -42,9 +41,8 @@ func (k Keeper) GetAllCustodians(ctx sdk.Context) ([]*types.Custodian, bool) {
 }
 
 func (k Keeper) findCustodians(ctx sdk.Context, req *types.CustodiansRequest) ([]*types.Custodian, bool) {
-	store := k.getStore(ctx)
 	custodians := []*types.Custodian{}
-	iter := store.Iterator(custodianPrefix)
+	iter := k.getStoreIterator(ctx, custodianPrefix)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 	for ; iter.Valid(); iter.Next() {
 		custodian := types.Custodian{}
@@ -61,14 +59,13 @@ func (k Keeper) SetCustodianGroup(ctx sdk.Context, custodianGroup *types.Custodi
 }
 func (k Keeper) SetCustodianGroups(ctx sdk.Context, custodianGroups []*types.CustodianGroup) {
 	store := k.getStore(ctx)
-	for _, custodianGroup := range custodianGroups {
-		store.Set(custodianGroupPrefix.Append(utils.KeyFromBz([]byte(custodianGroup.Uid))), custodianGroup)
+	for _, group := range custodianGroups {
+		store.Set(custodianGroupPrefix.Append(utils.KeyFromBz([]byte(group.Uid))), group)
 	}
 }
 func (k Keeper) GetAllCustodianGroups(ctx sdk.Context) ([]*types.CustodianGroup, bool) {
-	store := k.getStore(ctx)
 	custodianGroups := []*types.CustodianGroup{}
-	iter := store.Iterator(custodianPrefix)
+	iter := k.getStoreIterator(ctx, custodianGroupPrefix)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 	for ; iter.Valid(); iter.Next() {
 		custodianGroup := types.CustodianGroup{}
@@ -78,10 +75,9 @@ func (k Keeper) GetAllCustodianGroups(ctx sdk.Context) ([]*types.CustodianGroup,
 	return custodianGroups, true
 }
 
-func (k Keeper) findCustodianGroups(ctx sdk.Context, req *types.CustodianGroupsRequest) ([]*types.CustodianGroup, bool) {
-	store := k.getStore(ctx)
+func (k Keeper) findCustodianGroups(ctx sdk.Context, req *types.GroupsRequest) ([]*types.CustodianGroup, bool) {
 	custodianGroups := []*types.CustodianGroup{}
-	iter := store.Iterator(custodianGroupPrefix)
+	iter := k.getStoreIterator(ctx, custodianGroupPrefix)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 	for ; iter.Valid(); iter.Next() {
 		custodianGroup := types.CustodianGroup{}
@@ -101,7 +97,7 @@ func isMatchCustodian(protocol *types.Custodian, req *types.CustodiansRequest) b
 }
 
 // Todo: Implement Matching function
-func isMatchCustodianGroup(protocol *types.CustodianGroup, req *types.CustodianGroupsRequest) bool {
+func isMatchCustodianGroup(protocol *types.CustodianGroup, req *types.GroupsRequest) bool {
 	match := true
 
 	return match

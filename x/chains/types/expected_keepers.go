@@ -6,16 +6,16 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	utils "github.com/scalarorg/scalar-core/utils"
-	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
-	"github.com/tendermint/tendermint/libs/log"
-
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
+	utils "github.com/scalarorg/scalar-core/utils"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	pexported "github.com/scalarorg/scalar-core/x/protocol/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
+	"github.com/tendermint/tendermint/libs/log"
 )
 
 //go:generate moq -out ./mock/expected_keepers.go -pkg mock . Voter Nexus Snapshotter BaseKeeper ChainKeeper Rewarder StakingKeeper SlashingKeeper MultisigKeeper
@@ -69,6 +69,8 @@ type ChainKeeper interface {
 	CreateNewBatchToSign(ctx sdk.Context) (CommandBatch, error)
 	SetLatestSignedCommandBatchID(ctx sdk.Context, id []byte)
 	GetLatestCommandBatch(ctx sdk.Context) CommandBatch
+	// CreateNewBtcBatchesToSign(ctx sdk.Context) ([]CommandBatch, error)
+	// GetLatestBtcCommandBatches(ctx sdk.Context) []CommandBatch
 	GetBatchByID(ctx sdk.Context, id []byte) CommandBatch
 	DeleteUnsignedCommandBatchID(ctx sdk.Context)
 
@@ -160,8 +162,9 @@ type MultisigKeeper interface {
 type CovenantKeeper interface {
 	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, psbt covenantTypes.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
 
-	GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
+	// GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
 }
 
 type ProtocolKeeper interface {
+	FindProtocolByExternalSymbol(ctx sdk.Context, originChain nexus.ChainName, symbol string, minorChain nexus.ChainName) (*pexported.ProtocolInfo, error)
 }
