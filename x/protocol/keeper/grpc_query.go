@@ -23,6 +23,7 @@ func (k Keeper) Protocols(c context.Context, req *types.ProtocolsRequest) (*type
 
 	return &types.ProtocolsResponse{
 		Protocols: protocols,
+		Total:     uint64(len(protocols)),
 	}, nil
 }
 

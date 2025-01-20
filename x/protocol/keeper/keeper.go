@@ -100,11 +100,10 @@ func (k Keeper) getProtocolByAddress(ctx sdk.Context, address []byte) (*types.Pr
 
 // Todo: Implement Matching function
 func isMatch(protocol *types.Protocol, req *types.ProtocolsRequest) bool {
-	match := true
-	if req.Address != "" {
-
+	if req.Name != "" {
+		return protocol.Name == req.Name
 	}
-	return match
+	return true
 }
 func (k Keeper) getStore(ctx sdk.Context) utils.KVStore {
 	return utils.NewNormalizedStore(ctx.KVStore(k.storeKey), k.cdc)

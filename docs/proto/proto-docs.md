@@ -6951,6 +6951,7 @@ Params represent the genesis parameters for the module
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `protocols` | [Protocol](#scalar.protocol.v1beta1.Protocol) | repeated |  |
+| `total` | [uint64](#uint64) |  |  |
 
 
 
