@@ -15,7 +15,10 @@ message ProtocolsRequest {
   Status status = 4;
 }
 
-message ProtocolsResponse { repeated Protocol protocols = 1; }
+message ProtocolsResponse {
+  repeated Protocol protocols = 1;
+  uint64 total = 2;
+}
 
 message ProtocolAssetRequest {
   string source_chain = 1

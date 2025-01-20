@@ -9559,6 +9559,9 @@ paths:
                         title: >-
                           DestinationChain represents a blockchain where tokens
                           can be sent
+              total:
+                type: string
+                format: uint64
         default:
           description: An unexpected error response
           schema:
@@ -58241,6 +58244,9 @@ definitions:
                 title: >-
                   DestinationChain represents a blockchain where tokens can be
                   sent
+      total:
+        type: string
+        format: uint64
   scalar.protocol.v1beta1.Status:
     type: string
     enum:
