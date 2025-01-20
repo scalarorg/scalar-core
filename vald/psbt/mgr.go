@@ -10,6 +10,7 @@ import (
 	btcRpcClient "github.com/btcsuite/btcd/rpcclient"
 	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
+	"github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
@@ -51,7 +52,7 @@ func (mgr Mgr) isParticipant(p sdk.ValAddress) bool {
 	return mgr.valAddr.Equals(p)
 }
 
-func (mgr Mgr) sign(keyUID string, psbt covenantTypes.Psbt, networkKind vault.NetworkKind) (*covenant.TapScriptSigList, error) {
+func (mgr Mgr) sign(keyUID string, psbt covenantTypes.Psbt, networkKind types.NetworkKind) (*covenant.TapScriptSigList, error) {
 	if !mgr.validateKeyID(keyUID) {
 		return nil, fmt.Errorf("invalid keyID")
 	}
@@ -66,7 +67,7 @@ func (mgr Mgr) sign(keyUID string, psbt covenantTypes.Psbt, networkKind vault.Ne
 	}
 
 	return &covenant.TapScriptSigList{
-		TapScriptSigs: slices.Map(tapScriptSigs, func(t vault.TapScriptSig) *covenant.TapScriptSig {
+		TapScriptSigs: slices.Map(tapScriptSigs, func(t types.TapScriptSig) *covenant.TapScriptSig {
 			keyXOnly := covenant.KeyXOnly(t.KeyXOnly)
 			signature := covenant.Signature(t.Signature)
 			leafHash := covenant.LeafHash(t.LeafHash)

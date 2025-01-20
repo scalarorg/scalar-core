@@ -22,7 +22,8 @@ import (
 	"github.com/decred/dcrd/dcrec/secp256k1/v4"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
-	vault "github.com/scalarorg/bitcoin-vault/ffi/go-vault"
+	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
+	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
@@ -223,7 +224,7 @@ func GenerateGenesis(clientCtx client.Context,
 	}
 	//Covenant
 	custodians := make([]*covenanttypes.Custodian, len(validatorInfos))
-	custodianPubKeys := make([]vault.PublicKey, len(validatorInfos))
+	custodianPubKeys := make([]go_utils.PublicKey, len(validatorInfos))
 	quorum := uint8(len(validatorInfos)/2 + 1)
 	for i, validator := range validatorInfos {
 		btcPrivKey, err := hex.DecodeString(validator.AdditionalKeys.BtcPrivKey)
@@ -242,7 +243,7 @@ func GenerateGenesis(clientCtx client.Context,
 			Status:    covenanttypes.Activated,
 			BtcPubkey: privKey.PubKey().SerializeCompressed(),
 		}
-		custodianPubKeys[i] = vault.PublicKey(custodians[i].BtcPubkey)
+		custodianPubKeys[i] = go_utils.PublicKey(custodians[i].BtcPubkey)
 	}
 	//Todo: Create custodian group pubkey
 	custodianGroupPubKey, err := vault.CustodiansOnlyLockingScript(custodianPubKeys, quorum)

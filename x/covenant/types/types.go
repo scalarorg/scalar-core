@@ -5,6 +5,7 @@ import (
 	fmt "fmt"
 
 	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
+	"github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
@@ -63,11 +64,11 @@ func (p *PsbtMultiSig) Finalize() error {
 	psbtBytes := p.Psbt.Bytes()
 	var err error
 	for _, list := range p.ParticipantTapScriptSigs {
-		inputTapscriptSigs := slices.Map(list.TapScriptSigs, func(sig *exported.TapScriptSig) vault.TapScriptSig {
+		inputTapscriptSigs := slices.Map(list.TapScriptSigs, func(sig *exported.TapScriptSig) types.TapScriptSig {
 			keyXOnly := sig.KeyXOnly.Bytes()
 			leafHash := sig.LeafHash.Bytes()
 			signature := sig.Signature.Bytes()
-			return vault.TapScriptSig{
+			return types.TapScriptSig{
 				KeyXOnly:  keyXOnly,
 				LeafHash:  leafHash,
 				Signature: signature,

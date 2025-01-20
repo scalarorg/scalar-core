@@ -11,6 +11,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	vault "github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
+	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
 	"github.com/scalarorg/scalar-core/x/chains/types"
@@ -63,7 +64,7 @@ func (client *BtcClient) createEventTokenSent(event *types.EventConfirmSourceTxs
 		return nil, ErrInvalidOpReturnData
 	}
 
-	if output.TransactionType != vault.TransactionTypeStaking {
+	if output.TransactionType != go_utils.TransactionTypeStaking {
 		return nil, ErrInvalidTransactionType
 	}
 

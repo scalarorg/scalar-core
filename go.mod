@@ -33,8 +33,6 @@ require (
 	github.com/rakyll/statik v0.1.7
 	github.com/regen-network/cosmos-proto v0.3.1
 	github.com/rs/zerolog v1.33.0
-	github.com/scalarorg/bitcoin-vault/ffi/go-vault v0.0.0-20250117030556-b1d021b41584
-	github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20250117030556-b1d021b41584
 	github.com/smallnest/chanx v1.0.1-0.20211205150931-349643806662
 	github.com/spf13/cast v1.7.0
 	github.com/spf13/cobra v1.8.1
@@ -182,6 +180,8 @@ require (
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/sasha-s/go-deadlock v0.3.5 // indirect
+	github.com/scalarorg/bitcoin-vault/ffi/go-vault v0.0.0-20250120050405-cc5e4dc794f6 // indirect
+	github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20250120044842-99c651bfdf84 // indirect
 	github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect

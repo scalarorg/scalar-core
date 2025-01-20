@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
+	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/log"
 	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
@@ -61,7 +61,7 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 	// 	return err
 	// }
 
-	listOfTapScriptSig, err := mgr.sign(keyUID, event.Psbt, vault.NetworkKind(chainParams.Params.NetworkKind))
+	listOfTapScriptSig, err := mgr.sign(keyUID, event.Psbt, go_utils.NetworkKind(chainParams.Params.NetworkKind))
 	if err != nil {
 		return err
 	}

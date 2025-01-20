@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	gethParams "github.com/ethereum/go-ethereum/params"
-	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
+	"github.com/scalarorg/bitcoin-vault/go-utils/types"
 	utils "github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
 )
@@ -15,7 +15,7 @@ func DefaultGenesisState() GenesisState {
 	return GenesisState{
 		Chains: []GenesisState_Chain{
 			{
-				Params:              DefaultChainParams(BTCMainnetChainID, exported.Bitcoin.Name, vault.NetworkKindMainnet, map[string]string{}),
+				Params:              DefaultChainParams(BTCMainnetChainID, exported.Bitcoin.Name, types.NetworkKindMainnet, map[string]string{}),
 				CommandQueue:        utils.QueueState{},
 				ConfirmedSourceTxs:  []SourceTx{},
 				CommandBatches:      []CommandBatchMetadata{},
@@ -24,7 +24,7 @@ func DefaultGenesisState() GenesisState {
 				ConfirmedEventQueue: utils.QueueState{},
 			},
 			{
-				Params:              DefaultChainParams(sdk.NewIntFromBigInt(gethParams.MainnetChainConfig.ChainID), exported.Ethereum.Name, vault.NetworkKindMainnet, map[string]string{}),
+				Params:              DefaultChainParams(sdk.NewIntFromBigInt(gethParams.MainnetChainConfig.ChainID), exported.Ethereum.Name, types.NetworkKindMainnet, map[string]string{}),
 				CommandQueue:        utils.QueueState{},
 				ConfirmedSourceTxs:  []SourceTx{},
 				CommandBatches:      []CommandBatchMetadata{},
