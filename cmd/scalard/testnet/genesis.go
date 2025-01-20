@@ -344,6 +344,19 @@ func generateNexusGenesis(configPath string, validatorAddrs []sdk.ValAddress, co
 		chainConfigs, err := ParseJsonArrayConfig[chainsTypes.ChainConfig](fmt.Sprintf("%s/chains/chains.json", configPath))
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to parse chains config")
+			panic(err)
+		}
+		//Parse btc token config
+		btcTokenPath := path.Join(configPath, "tokens/btc.json")
+		log.Debug().Msgf("Read token config in the path %s", btcTokenPath)
+		tokenInfos, err := ParseJsonArrayConfig[Token](btcTokenPath)
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to parse btc token config")
+			panic(err)
+		}
+		assets := make([]nexus.Asset, len(tokenInfos))
+		for i, tokenInfo := range tokenInfos {
+			assets[i] = nexus.NewAsset(tokenInfo.Asset, false)
 		}
 		for _, chainConfig := range chainConfigs {
 			err := chainConfig.ValidateBasic()
@@ -369,7 +382,7 @@ func generateNexusGenesis(configPath string, validatorAddrs []sdk.ValAddress, co
 				MaintainerStates: make([]nexustypes.MaintainerState, len(validatorAddrs)),
 			}
 			if chainsTypes.IsBitcoinChain(chainName) {
-				chainState.Assets = append(chainState.Assets, nexus.NewAsset("sBtc", false))
+				chainState.Assets = append(chainState.Assets, assets...)
 			}
 			for i, valAddr := range validatorAddrs {
 				chainState.MaintainerStates[i] = *nexustypes.NewMaintainerState(nexus.ChainName(chainConfig.ID), valAddr)
