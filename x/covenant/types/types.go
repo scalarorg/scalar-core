@@ -4,10 +4,7 @@ import (
 	"encoding/hex"
 	fmt "fmt"
 
-	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
-	"github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils/clog"
-	"github.com/scalarorg/scalar-core/utils/slices"
 	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
@@ -60,33 +57,33 @@ func (g CustodianGroup) CreateKey() multisigTypes.Key {
 
 var DefaultParticipantTapScriptSigs = make(map[string]*exported.TapScriptSigList)
 
-func (p *PsbtMultiSig) Finalize() error {
-	psbtBytes := p.Psbt.Bytes()
-	var err error
-	for _, list := range p.ParticipantTapScriptSigs {
-		inputTapscriptSigs := slices.Map(list.TapScriptSigs, func(sig *exported.TapScriptSig) types.TapScriptSig {
-			keyXOnly := sig.KeyXOnly.Bytes()
-			leafHash := sig.LeafHash.Bytes()
-			signature := sig.Signature.Bytes()
-			return types.TapScriptSig{
-				KeyXOnly:  keyXOnly,
-				LeafHash:  leafHash,
-				Signature: signature,
-			}
-		})
-		psbtBytes, err = vault.AggregateTapScriptSigs(psbtBytes, inputTapscriptSigs)
-		if err != nil {
-			return err
-		}
-	}
-	clog.Greenf("CovenantHandler: Finalize, Psbt: %x", psbtBytes)
+// func (p *PsbtMultiSig) Finalize() error {
+// 	psbtBytes := p.Psbt.Bytes()
+// 	var err error
+// 	for _, list := range p.ParticipantTapScriptSigs {
+// 		inputTapscriptSigs := slices.Map(list.TapScriptSigs, func(sig *exported.TapScriptSig) types.TapScriptSig {
+// 			keyXOnly := sig.KeyXOnly.Bytes()
+// 			leafHash := sig.LeafHash.Bytes()
+// 			signature := sig.Signature.Bytes()
+// 			return types.TapScriptSig{
+// 				KeyXOnly:  keyXOnly,
+// 				LeafHash:  leafHash,
+// 				Signature: signature,
+// 			}
+// 		})
+// 		psbtBytes, err = vault.AggregateTapScriptSigs(psbtBytes, inputTapscriptSigs)
+// 		if err != nil {
+// 			return err
+// 		}
+// 	}
+// 	clog.Greenf("CovenantHandler: Finalize, Psbt: %x", psbtBytes)
 
-	tx, err := vault.FinalizePsbtAndExtractTx(psbtBytes)
-	if err != nil {
-		return err
-	}
+// 	tx, err := vault.FinalizePsbtAndExtractTx(psbtBytes)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	p.FinalizedTx = tx
-	p.Psbt = psbtBytes
-	return nil
-}
+// 	p.FinalizedTx = tx
+// 	p.Psbt = psbtBytes
+// 	return nil
+// }
