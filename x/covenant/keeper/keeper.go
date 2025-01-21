@@ -58,10 +58,15 @@ func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
 	return params
 }
 
+func (k Keeper) setParams(ctx sdk.Context, params types.Params) {
+	k.paramSpace.SetParamSet(ctx, &params)
+}
+
 func (k Keeper) getStore(ctx sdk.Context) utils.KVStore {
 	return utils.NewNormalizedStore(ctx.KVStore(k.storeKey), k.cdc)
 }
 
-func (k Keeper) setParams(ctx sdk.Context, params types.Params) {
-	k.paramSpace.SetParamSet(ctx, &params)
+func (k Keeper) getStoreIterator(ctx sdk.Context, prefix utils.StringKey) utils.Iterator {
+	store := k.getStore(ctx)
+	return store.Iterator(prefix)
 }

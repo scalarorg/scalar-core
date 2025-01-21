@@ -5,17 +5,25 @@ package types
 
 import (
 	fmt "fmt"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
+	github_com_gogo_protobuf_types "github.com/gogo/protobuf/types"
+	exported "github.com/scalarorg/scalar-core/x/multisig/exported"
+	github_com_scalarorg_scalar_core_x_multisig_exported "github.com/scalarorg/scalar-core/x/multisig/exported"
+	types "github.com/scalarorg/scalar-core/x/multisig/types"
+	_ "google.golang.org/protobuf/types/known/timestamppb"
 	io "io"
 	math "math"
 	math_bits "math/bits"
+	time "time"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
+var _ = time.Kitchen
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -127,7 +135,7 @@ func (m *CustodiansResponse) GetCustodians() []*Custodian {
 	return nil
 }
 
-type CustodianGroupsRequest struct {
+type GroupsRequest struct {
 	Uid             string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
 	Name            string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	GroupPubkey     []byte `protobuf:"bytes,3,opt,name=group_pubkey,json=groupPubkey,proto3" json:"group_pubkey,omitempty"`
@@ -135,18 +143,18 @@ type CustodianGroupsRequest struct {
 	Status          Status `protobuf:"varint,5,opt,name=status,proto3,enum=scalar.covenant.v1beta1.Status" json:"status,omitempty"`
 }
 
-func (m *CustodianGroupsRequest) Reset()         { *m = CustodianGroupsRequest{} }
-func (m *CustodianGroupsRequest) String() string { return proto.CompactTextString(m) }
-func (*CustodianGroupsRequest) ProtoMessage()    {}
-func (*CustodianGroupsRequest) Descriptor() ([]byte, []int) {
+func (m *GroupsRequest) Reset()         { *m = GroupsRequest{} }
+func (m *GroupsRequest) String() string { return proto.CompactTextString(m) }
+func (*GroupsRequest) ProtoMessage()    {}
+func (*GroupsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_7b8372e44a779179, []int{2}
 }
-func (m *CustodianGroupsRequest) XXX_Unmarshal(b []byte) error {
+func (m *GroupsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *CustodianGroupsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *GroupsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_CustodianGroupsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_GroupsRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -156,69 +164,69 @@ func (m *CustodianGroupsRequest) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
-func (m *CustodianGroupsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CustodianGroupsRequest.Merge(m, src)
+func (m *GroupsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GroupsRequest.Merge(m, src)
 }
-func (m *CustodianGroupsRequest) XXX_Size() int {
+func (m *GroupsRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *CustodianGroupsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_CustodianGroupsRequest.DiscardUnknown(m)
+func (m *GroupsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GroupsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_CustodianGroupsRequest proto.InternalMessageInfo
+var xxx_messageInfo_GroupsRequest proto.InternalMessageInfo
 
-func (m *CustodianGroupsRequest) GetUid() string {
+func (m *GroupsRequest) GetUid() string {
 	if m != nil {
 		return m.Uid
 	}
 	return ""
 }
 
-func (m *CustodianGroupsRequest) GetName() string {
+func (m *GroupsRequest) GetName() string {
 	if m != nil {
 		return m.Name
 	}
 	return ""
 }
 
-func (m *CustodianGroupsRequest) GetGroupPubkey() []byte {
+func (m *GroupsRequest) GetGroupPubkey() []byte {
 	if m != nil {
 		return m.GroupPubkey
 	}
 	return nil
 }
 
-func (m *CustodianGroupsRequest) GetCustodianPubkey() []byte {
+func (m *GroupsRequest) GetCustodianPubkey() []byte {
 	if m != nil {
 		return m.CustodianPubkey
 	}
 	return nil
 }
 
-func (m *CustodianGroupsRequest) GetStatus() Status {
+func (m *GroupsRequest) GetStatus() Status {
 	if m != nil {
 		return m.Status
 	}
 	return Unspecified
 }
 
-type CustodianGroupsResponse struct {
+type GroupsResponse struct {
 	Groups []*CustodianGroup `protobuf:"bytes,1,rep,name=groups,proto3" json:"groups,omitempty"`
 }
 
-func (m *CustodianGroupsResponse) Reset()         { *m = CustodianGroupsResponse{} }
-func (m *CustodianGroupsResponse) String() string { return proto.CompactTextString(m) }
-func (*CustodianGroupsResponse) ProtoMessage()    {}
-func (*CustodianGroupsResponse) Descriptor() ([]byte, []int) {
+func (m *GroupsResponse) Reset()         { *m = GroupsResponse{} }
+func (m *GroupsResponse) String() string { return proto.CompactTextString(m) }
+func (*GroupsResponse) ProtoMessage()    {}
+func (*GroupsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_7b8372e44a779179, []int{3}
 }
-func (m *CustodianGroupsResponse) XXX_Unmarshal(b []byte) error {
+func (m *GroupsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *CustodianGroupsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *GroupsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_CustodianGroupsResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_GroupsResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -228,19 +236,19 @@ func (m *CustodianGroupsResponse) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *CustodianGroupsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CustodianGroupsResponse.Merge(m, src)
+func (m *GroupsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GroupsResponse.Merge(m, src)
 }
-func (m *CustodianGroupsResponse) XXX_Size() int {
+func (m *GroupsResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *CustodianGroupsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_CustodianGroupsResponse.DiscardUnknown(m)
+func (m *GroupsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GroupsResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_CustodianGroupsResponse proto.InternalMessageInfo
+var xxx_messageInfo_GroupsResponse proto.InternalMessageInfo
 
-func (m *CustodianGroupsResponse) GetGroups() []*CustodianGroup {
+func (m *GroupsResponse) GetGroups() []*CustodianGroup {
 	if m != nil {
 		return m.Groups
 	}
@@ -328,13 +336,139 @@ func (m *ParamsResponse) GetParams() Params {
 	return Params{}
 }
 
+type KeyRequest struct {
+	Chain string `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain,omitempty"`
+}
+
+func (m *KeyRequest) Reset()         { *m = KeyRequest{} }
+func (m *KeyRequest) String() string { return proto.CompactTextString(m) }
+func (*KeyRequest) ProtoMessage()    {}
+func (*KeyRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_7b8372e44a779179, []int{6}
+}
+func (m *KeyRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *KeyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_KeyRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *KeyRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_KeyRequest.Merge(m, src)
+}
+func (m *KeyRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *KeyRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_KeyRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_KeyRequest proto.InternalMessageInfo
+
+func (m *KeyRequest) GetChain() string {
+	if m != nil {
+		return m.Chain
+	}
+	return ""
+}
+
+// KeyResponse contains the key corresponding to a given key id.
+type KeyResponse struct {
+	KeyID              github_com_scalarorg_scalar_core_x_multisig_exported.KeyID `protobuf:"bytes,1,opt,name=key_id,json=keyId,proto3,casttype=github.com/scalarorg/scalar-core/x/multisig/exported.KeyID" json:"key_id,omitempty"`
+	State              exported.KeyState                                          `protobuf:"varint,2,opt,name=state,proto3,enum=scalar.multisig.exported.v1beta1.KeyState" json:"state,omitempty"`
+	StartedAt          int64                                                      `protobuf:"varint,3,opt,name=started_at,json=startedAt,proto3" json:"started_at,omitempty"`
+	StartedAtTimestamp time.Time                                                  `protobuf:"bytes,4,opt,name=started_at_timestamp,json=startedAtTimestamp,proto3,stdtime" json:"started_at_timestamp"`
+	ThresholdWeight    github_com_cosmos_cosmos_sdk_types.Uint                    `protobuf:"bytes,5,opt,name=threshold_weight,json=thresholdWeight,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Uint" json:"threshold_weight"`
+	BondedWeight       github_com_cosmos_cosmos_sdk_types.Uint                    `protobuf:"bytes,6,opt,name=bonded_weight,json=bondedWeight,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Uint" json:"bonded_weight"`
+	// Keygen participants in descending order by weight
+	Participants []types.KeygenParticipant `protobuf:"bytes,7,rep,name=participants,proto3" json:"participants"`
+}
+
+func (m *KeyResponse) Reset()         { *m = KeyResponse{} }
+func (m *KeyResponse) String() string { return proto.CompactTextString(m) }
+func (*KeyResponse) ProtoMessage()    {}
+func (*KeyResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_7b8372e44a779179, []int{7}
+}
+func (m *KeyResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *KeyResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_KeyResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *KeyResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_KeyResponse.Merge(m, src)
+}
+func (m *KeyResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *KeyResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_KeyResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_KeyResponse proto.InternalMessageInfo
+
+func (m *KeyResponse) GetKeyID() github_com_scalarorg_scalar_core_x_multisig_exported.KeyID {
+	if m != nil {
+		return m.KeyID
+	}
+	return ""
+}
+
+func (m *KeyResponse) GetState() exported.KeyState {
+	if m != nil {
+		return m.State
+	}
+	return exported.Inactive
+}
+
+func (m *KeyResponse) GetStartedAt() int64 {
+	if m != nil {
+		return m.StartedAt
+	}
+	return 0
+}
+
+func (m *KeyResponse) GetStartedAtTimestamp() time.Time {
+	if m != nil {
+		return m.StartedAtTimestamp
+	}
+	return time.Time{}
+}
+
+func (m *KeyResponse) GetParticipants() []types.KeygenParticipant {
+	if m != nil {
+		return m.Participants
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*CustodiansRequest)(nil), "scalar.covenant.v1beta1.CustodiansRequest")
 	proto.RegisterType((*CustodiansResponse)(nil), "scalar.covenant.v1beta1.CustodiansResponse")
-	proto.RegisterType((*CustodianGroupsRequest)(nil), "scalar.covenant.v1beta1.CustodianGroupsRequest")
-	proto.RegisterType((*CustodianGroupsResponse)(nil), "scalar.covenant.v1beta1.CustodianGroupsResponse")
+	proto.RegisterType((*GroupsRequest)(nil), "scalar.covenant.v1beta1.GroupsRequest")
+	proto.RegisterType((*GroupsResponse)(nil), "scalar.covenant.v1beta1.GroupsResponse")
 	proto.RegisterType((*ParamsRequest)(nil), "scalar.covenant.v1beta1.ParamsRequest")
 	proto.RegisterType((*ParamsResponse)(nil), "scalar.covenant.v1beta1.ParamsResponse")
+	proto.RegisterType((*KeyRequest)(nil), "scalar.covenant.v1beta1.KeyRequest")
+	proto.RegisterType((*KeyResponse)(nil), "scalar.covenant.v1beta1.KeyResponse")
 }
 
 func init() {
@@ -342,33 +476,51 @@ func init() {
 }
 
 var fileDescriptor_7b8372e44a779179 = []byte{
-	// 413 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x92, 0x41, 0x8f, 0xd2, 0x40,
-	0x14, 0xc7, 0x3b, 0x14, 0x9b, 0xf8, 0x40, 0xc0, 0xc6, 0x40, 0xc3, 0xa1, 0xd4, 0x6a, 0x62, 0x3d,
-	0xd8, 0x06, 0x3c, 0x78, 0x32, 0x26, 0x78, 0xf0, 0xe0, 0x41, 0x52, 0x2f, 0x86, 0x8b, 0x99, 0x96,
-	0x49, 0x25, 0x4a, 0xa7, 0x74, 0x66, 0x08, 0x7c, 0x0b, 0xbf, 0x94, 0x09, 0x47, 0x8e, 0x9e, 0x8c,
-	0x81, 0x2f, 0xb2, 0x61, 0x3a, 0xed, 0x92, 0xdd, 0x74, 0x37, 0x7b, 0x7b, 0x7d, 0xfd, 0xbd, 0xf7,
-	0xe6, 0xff, 0xcf, 0x1f, 0x5e, 0xb0, 0x18, 0xff, 0xc2, 0x79, 0x10, 0xd3, 0x0d, 0x49, 0x71, 0xca,
-	0x83, 0xcd, 0x38, 0x22, 0x1c, 0x8f, 0x83, 0xb5, 0x20, 0xf9, 0xce, 0xcf, 0x72, 0xca, 0xa9, 0x39,
-	0x28, 0x20, 0xbf, 0x84, 0x7c, 0x05, 0x0d, 0x9f, 0x25, 0x34, 0xa1, 0x92, 0x09, 0xce, 0x55, 0x81,
-	0x0f, 0x6b, 0x77, 0xf2, 0x5d, 0x46, 0x98, 0x82, 0x5e, 0xd6, 0x41, 0x19, 0xce, 0xf1, 0x4a, 0x51,
-	0xee, 0x16, 0x9e, 0x7e, 0x14, 0x8c, 0xd3, 0xc5, 0x12, 0xa7, 0x2c, 0x24, 0x6b, 0x41, 0x18, 0x37,
-	0x4d, 0x68, 0xa6, 0x78, 0x45, 0x2c, 0xe4, 0x20, 0xef, 0x71, 0x28, 0x6b, 0xb3, 0x0f, 0x46, 0x26,
-	0xa2, 0x9f, 0x64, 0x67, 0x35, 0x1c, 0xe4, 0xb5, 0x43, 0xf5, 0x65, 0xbe, 0x03, 0x83, 0x71, 0xcc,
-	0x05, 0xb3, 0x74, 0x07, 0x79, 0x9d, 0xc9, 0xc8, 0xaf, 0xd1, 0xe2, 0x7f, 0x95, 0x58, 0xa8, 0x70,
-	0xf7, 0x1b, 0x98, 0x97, 0x97, 0x59, 0x46, 0x53, 0x46, 0xcc, 0x29, 0x40, 0x5c, 0x75, 0x2d, 0xe4,
-	0xe8, 0x5e, 0x6b, 0xe2, 0xd6, 0xae, 0xac, 0x16, 0x84, 0x17, 0x53, 0xee, 0x1f, 0x04, 0xfd, 0xea,
-	0xcf, 0xa7, 0x9c, 0x8a, 0xac, 0x52, 0xd6, 0x03, 0x5d, 0x2c, 0x17, 0x4a, 0xd8, 0xb9, 0xac, 0xb4,
-	0x36, 0x2e, 0xb4, 0x3e, 0x87, 0x76, 0x72, 0x1e, 0xfb, 0xae, 0x14, 0xeb, 0x52, 0x71, 0x4b, 0xf6,
-	0x66, 0x85, 0xec, 0xd7, 0xd0, 0xab, 0x2e, 0x96, 0x58, 0x53, 0x62, 0xdd, 0xaa, 0x3f, 0xbb, 0xe9,
-	0xd0, 0xa3, 0x87, 0x39, 0x34, 0x87, 0xc1, 0x2d, 0x19, 0xca, 0xa6, 0x0f, 0x60, 0xc8, 0xd7, 0x94,
-	0x16, 0xbd, 0xba, 0xdf, 0x22, 0xb9, 0x21, 0x54, 0x63, 0x6e, 0x17, 0x9e, 0xcc, 0x64, 0x0e, 0x94,
-	0x33, 0xee, 0x17, 0xe8, 0x94, 0x0d, 0x75, 0xe3, 0x3d, 0x18, 0x45, 0x54, 0xa4, 0x5d, 0xad, 0x3b,
-	0xde, 0x5d, 0x0c, 0x4e, 0x9b, 0xfb, 0x7f, 0x23, 0x2d, 0x54, 0x43, 0xd3, 0xcf, 0xfb, 0xa3, 0x8d,
-	0x0e, 0x47, 0x1b, 0xfd, 0x3f, 0xda, 0xe8, 0xf7, 0xc9, 0xd6, 0x0e, 0x27, 0x5b, 0xfb, 0x7b, 0xb2,
-	0xb5, 0xf9, 0x38, 0x59, 0xf2, 0x1f, 0x22, 0xf2, 0x63, 0xba, 0x0a, 0x8a, 0x95, 0x34, 0x4f, 0x54,
-	0xf5, 0x26, 0xa6, 0x39, 0x09, 0xb6, 0xd7, 0xa9, 0x95, 0x91, 0x8e, 0x0c, 0x99, 0xd6, 0xb7, 0x57,
-	0x01, 0x00, 0x00, 0xff, 0xff, 0xb4, 0x19, 0xa6, 0x64, 0x4e, 0x03, 0x00, 0x00,
+	// 697 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x54, 0xcd, 0x6e, 0xd3, 0x4c,
+	0x14, 0x8d, 0x9b, 0x9f, 0xef, 0xeb, 0x4d, 0x9a, 0x16, 0xab, 0x82, 0x28, 0x12, 0x49, 0x30, 0x48,
+	0x0d, 0x88, 0xda, 0x6a, 0x58, 0x20, 0x21, 0x21, 0x20, 0x20, 0x55, 0x55, 0x16, 0x04, 0x53, 0x7e,
+	0xd4, 0x05, 0xd1, 0xc4, 0x1e, 0x1c, 0x2b, 0xb1, 0xc7, 0xf5, 0x8c, 0x4b, 0xfd, 0x16, 0x7d, 0x12,
+	0x9e, 0x80, 0x07, 0xe8, 0xb2, 0x4b, 0xc4, 0x22, 0xa0, 0xf4, 0x2d, 0x58, 0x21, 0x8f, 0xc7, 0xd3,
+	0xd0, 0x36, 0xfc, 0xad, 0x3c, 0x73, 0x7d, 0xce, 0xb9, 0xf7, 0x9e, 0xb9, 0x33, 0x70, 0x93, 0x5a,
+	0x68, 0x82, 0x42, 0xc3, 0x22, 0x07, 0xd8, 0x47, 0x3e, 0x33, 0x0e, 0xb6, 0x86, 0x98, 0xa1, 0x2d,
+	0x63, 0x3f, 0xc2, 0x61, 0xac, 0x07, 0x21, 0x61, 0x44, 0xbd, 0x96, 0x82, 0xf4, 0x0c, 0xa4, 0x0b,
+	0x50, 0x7d, 0xdd, 0x21, 0x0e, 0xe1, 0x18, 0x23, 0x59, 0xa5, 0xf0, 0x7a, 0xd3, 0x21, 0xc4, 0x99,
+	0x60, 0x83, 0xef, 0x86, 0xd1, 0x7b, 0x83, 0xb9, 0x1e, 0xa6, 0x0c, 0x79, 0x81, 0x00, 0x2c, 0x4c,
+	0xca, 0xe2, 0x00, 0x53, 0x01, 0xba, 0xb5, 0x08, 0x14, 0xa0, 0x10, 0x79, 0xf4, 0x9c, 0x94, 0x17,
+	0x4d, 0x98, 0x4b, 0x5d, 0xe7, 0xb2, 0xfa, 0xeb, 0x77, 0xcf, 0x83, 0xf0, 0x61, 0x40, 0x42, 0x86,
+	0xed, 0xcb, 0x12, 0x6b, 0x87, 0x70, 0xe5, 0x69, 0x44, 0x19, 0xb1, 0x5d, 0xe4, 0x53, 0x13, 0xef,
+	0x47, 0x98, 0x32, 0x55, 0x85, 0x82, 0x8f, 0x3c, 0x5c, 0x53, 0x5a, 0x4a, 0x7b, 0xd9, 0xe4, 0x6b,
+	0xf5, 0x2a, 0x94, 0x82, 0x68, 0x38, 0xc6, 0x71, 0x6d, 0xa9, 0xa5, 0xb4, 0x2b, 0xa6, 0xd8, 0xa9,
+	0xf7, 0xa1, 0x44, 0x19, 0x62, 0x11, 0xad, 0xe5, 0x5b, 0x4a, 0xbb, 0xda, 0x69, 0xea, 0x0b, 0xfc,
+	0xd3, 0x5f, 0x72, 0x98, 0x29, 0xe0, 0xda, 0x5b, 0x50, 0xe7, 0x33, 0xd3, 0x80, 0xf8, 0x14, 0xab,
+	0x5d, 0x00, 0x4b, 0x46, 0x6b, 0x4a, 0x2b, 0xdf, 0x2e, 0x77, 0xb4, 0x85, 0x92, 0x52, 0xc0, 0x9c,
+	0x63, 0x69, 0x9f, 0x14, 0x58, 0xd9, 0x0e, 0x49, 0x14, 0xc8, 0x86, 0xd6, 0x20, 0x1f, 0xb9, 0xb6,
+	0xe8, 0x27, 0x59, 0xca, 0x16, 0x97, 0xe6, 0x5a, 0xbc, 0x01, 0x15, 0x27, 0xa1, 0x0d, 0x44, 0xa3,
+	0x79, 0xde, 0x68, 0x99, 0xc7, 0xfa, 0x69, 0xb7, 0xb7, 0x61, 0x4d, 0x26, 0xca, 0x60, 0x05, 0x0e,
+	0x5b, 0x95, 0xf1, 0xfe, 0x79, 0x63, 0x8a, 0x7f, 0x67, 0xcc, 0x0b, 0xa8, 0x66, 0xd5, 0x0b, 0x53,
+	0x1e, 0x41, 0x89, 0x17, 0x91, 0x19, 0xb2, 0xf1, 0x7b, 0x43, 0xb8, 0x82, 0x29, 0x68, 0xda, 0x2a,
+	0xac, 0xf4, 0xf9, 0x20, 0x09, 0x43, 0xb4, 0xe7, 0x50, 0xcd, 0x02, 0x22, 0xc7, 0x43, 0x28, 0xa5,
+	0xb3, 0xc6, 0x5d, 0x2a, 0xff, 0xa2, 0xdc, 0x94, 0xd8, 0x2d, 0x1c, 0x4f, 0x9b, 0x39, 0x53, 0x90,
+	0x34, 0x0d, 0xa0, 0x87, 0xe3, 0xcc, 0xef, 0x75, 0x28, 0x5a, 0x23, 0xe4, 0xfa, 0xc2, 0xf1, 0x74,
+	0xa3, 0x7d, 0x2c, 0x40, 0x99, 0x83, 0x44, 0xca, 0x77, 0x50, 0x1a, 0xe3, 0x78, 0x90, 0x1d, 0x4c,
+	0x77, 0x7b, 0x36, 0x6d, 0x16, 0x7b, 0x38, 0xde, 0x79, 0xf6, 0x7d, 0xda, 0x7c, 0xe0, 0xb8, 0x6c,
+	0x14, 0x0d, 0x75, 0x8b, 0x78, 0x46, 0x5a, 0x09, 0x09, 0x1d, 0xb1, 0xda, 0xb4, 0x48, 0x88, 0x8d,
+	0xc3, 0x8b, 0x23, 0xae, 0x73, 0xb6, 0x59, 0x1c, 0xe3, 0x78, 0xc7, 0x56, 0x1f, 0x43, 0x31, 0xb1,
+	0x34, 0x3d, 0xe4, 0x6a, 0xe7, 0x4e, 0xd6, 0x51, 0x46, 0xd3, 0x25, 0x2d, 0x6b, 0xad, 0x87, 0xe3,
+	0xe4, 0x30, 0xb0, 0x99, 0x12, 0xd5, 0xeb, 0x00, 0x94, 0xa1, 0x04, 0x32, 0x40, 0x8c, 0xcf, 0x43,
+	0xde, 0x5c, 0x16, 0x91, 0x27, 0x4c, 0x7d, 0x0d, 0xeb, 0x67, 0xbf, 0x07, 0xf2, 0xe2, 0xf3, 0x89,
+	0x28, 0x77, 0xea, 0x7a, 0xfa, 0x34, 0xe8, 0xd9, 0xd3, 0xa0, 0xef, 0x66, 0x88, 0xee, 0xff, 0x89,
+	0x79, 0x47, 0x5f, 0x9b, 0x8a, 0xa9, 0x4a, 0x39, 0xf9, 0x57, 0xdd, 0x83, 0x35, 0x36, 0x0a, 0x31,
+	0x1d, 0x91, 0x89, 0x3d, 0xf8, 0x80, 0x5d, 0x67, 0xc4, 0xf8, 0x10, 0x55, 0xba, 0x46, 0xc2, 0xfb,
+	0x32, 0x6d, 0x6e, 0xcc, 0xb9, 0x63, 0x11, 0xea, 0x11, 0x2a, 0x3e, 0x9b, 0xd4, 0x1e, 0x8b, 0x0b,
+	0xfe, 0xca, 0xf5, 0x99, 0xb9, 0x2a, 0x85, 0xde, 0x70, 0x1d, 0x75, 0x17, 0x56, 0x86, 0xc4, 0xb7,
+	0xb1, 0x14, 0x2e, 0xfd, 0x9b, 0x70, 0x25, 0x55, 0x91, 0xaa, 0x95, 0x00, 0x85, 0xcc, 0xb5, 0xdc,
+	0x00, 0xf9, 0x8c, 0xd6, 0xfe, 0xe3, 0x73, 0x7a, 0xd1, 0xf1, 0x39, 0xa3, 0x1d, 0xec, 0xf7, 0xcf,
+	0x28, 0x62, 0x9c, 0x7e, 0x52, 0xe9, 0xf6, 0x8e, 0x67, 0x0d, 0xe5, 0x64, 0xd6, 0x50, 0xbe, 0xcd,
+	0x1a, 0xca, 0xd1, 0x69, 0x23, 0x77, 0x72, 0xda, 0xc8, 0x7d, 0x3e, 0x6d, 0xe4, 0xf6, 0xb6, 0xfe,
+	0x60, 0x3a, 0xe4, 0x5b, 0xca, 0xab, 0x1e, 0x96, 0xf8, 0x31, 0xdc, 0xfb, 0x11, 0x00, 0x00, 0xff,
+	0xff, 0x3a, 0xa6, 0x22, 0x70, 0x05, 0x06, 0x00, 0x00,
 }
 
 func (m *CustodiansRequest) Marshal() (dAtA []byte, err error) {
@@ -450,7 +602,7 @@ func (m *CustodiansResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *CustodianGroupsRequest) Marshal() (dAtA []byte, err error) {
+func (m *GroupsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -460,12 +612,12 @@ func (m *CustodianGroupsRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *CustodianGroupsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *GroupsRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *CustodianGroupsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *GroupsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -506,7 +658,7 @@ func (m *CustodianGroupsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *CustodianGroupsResponse) Marshal() (dAtA []byte, err error) {
+func (m *GroupsResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -516,12 +668,12 @@ func (m *CustodianGroupsResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *CustodianGroupsResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *GroupsResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *CustodianGroupsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *GroupsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -599,6 +751,118 @@ func (m *ParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *KeyRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *KeyRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *KeyRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Chain) > 0 {
+		i -= len(m.Chain)
+		copy(dAtA[i:], m.Chain)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Chain)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *KeyResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *KeyResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *KeyResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Participants) > 0 {
+		for iNdEx := len(m.Participants) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Participants[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x3a
+		}
+	}
+	{
+		size := m.BondedWeight.Size()
+		i -= size
+		if _, err := m.BondedWeight.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x32
+	{
+		size := m.ThresholdWeight.Size()
+		i -= size
+		if _, err := m.ThresholdWeight.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x2a
+	n2, err2 := github_com_gogo_protobuf_types.StdTimeMarshalTo(m.StartedAtTimestamp, dAtA[i-github_com_gogo_protobuf_types.SizeOfStdTime(m.StartedAtTimestamp):])
+	if err2 != nil {
+		return 0, err2
+	}
+	i -= n2
+	i = encodeVarintQuery(dAtA, i, uint64(n2))
+	i--
+	dAtA[i] = 0x22
+	if m.StartedAt != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.StartedAt))
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.State != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.State))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.KeyID) > 0 {
+		i -= len(m.KeyID)
+		copy(dAtA[i:], m.KeyID)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.KeyID)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -645,7 +909,7 @@ func (m *CustodiansResponse) Size() (n int) {
 	return n
 }
 
-func (m *CustodianGroupsRequest) Size() (n int) {
+func (m *GroupsRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -673,7 +937,7 @@ func (m *CustodianGroupsRequest) Size() (n int) {
 	return n
 }
 
-func (m *CustodianGroupsResponse) Size() (n int) {
+func (m *GroupsResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -705,6 +969,50 @@ func (m *ParamsResponse) Size() (n int) {
 	_ = l
 	l = m.Params.Size()
 	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *KeyRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Chain)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *KeyResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.KeyID)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	if m.State != 0 {
+		n += 1 + sovQuery(uint64(m.State))
+	}
+	if m.StartedAt != 0 {
+		n += 1 + sovQuery(uint64(m.StartedAt))
+	}
+	l = github_com_gogo_protobuf_types.SizeOfStdTime(m.StartedAtTimestamp)
+	n += 1 + l + sovQuery(uint64(l))
+	l = m.ThresholdWeight.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	l = m.BondedWeight.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	if len(m.Participants) > 0 {
+		for _, e := range m.Participants {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
 	return n
 }
 
@@ -933,7 +1241,7 @@ func (m *CustodiansResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *CustodianGroupsRequest) Unmarshal(dAtA []byte) error {
+func (m *GroupsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -956,10 +1264,10 @@ func (m *CustodianGroupsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: CustodianGroupsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: GroupsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: CustodianGroupsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: GroupsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1134,7 +1442,7 @@ func (m *CustodianGroupsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *CustodianGroupsResponse) Unmarshal(dAtA []byte) error {
+func (m *GroupsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1157,10 +1465,10 @@ func (m *CustodianGroupsResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: CustodianGroupsResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: GroupsResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: CustodianGroupsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: GroupsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1327,6 +1635,341 @@ func (m *ParamsResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if err := m.Params.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *KeyRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: KeyRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: KeyRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Chain", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Chain = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *KeyResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: KeyResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: KeyResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field KeyID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.KeyID = github_com_scalarorg_scalar_core_x_multisig_exported.KeyID(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field State", wireType)
+			}
+			m.State = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.State |= exported.KeyState(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field StartedAt", wireType)
+			}
+			m.StartedAt = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.StartedAt |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field StartedAtTimestamp", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := github_com_gogo_protobuf_types.StdTimeUnmarshal(&m.StartedAtTimestamp, dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ThresholdWeight", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.ThresholdWeight.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BondedWeight", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.BondedWeight.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Participants", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Participants = append(m.Participants, types.KeygenParticipant{})
+			if err := m.Participants[len(m.Participants)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

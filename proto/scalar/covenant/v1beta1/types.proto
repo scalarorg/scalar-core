@@ -14,10 +14,11 @@ option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 // Custodian represents an individual custodian configuration
 message Custodian {
   string name = 1; // e.g., "Custodian1"
-  bytes btc_pubkey = 2; // e.g.,
+  string val_address = 2; // e.g., "scalarvaloper1..."
+  bytes btc_pubkey = 3; // e.g.,
   // "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-  Status status = 3; // Whether the custodian is active
-  string description = 4;
+  Status status = 4; // Whether the custodian is active
+  string description = 5;
 }
 
 // CustodianGroup represents a group of custodians with their configuration

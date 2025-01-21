@@ -4,6 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
+	multisigExported "github.com/scalarorg/scalar-core/x/multisig/exported"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -44,5 +45,14 @@ func NewTapscriptSigsSubmitted(sigID uint64, participant sdk.ValAddress, tapscri
 		SigID:         sigID,
 		Participant:   participant,
 		TapScriptSigs: tapscriptSigs,
+	}
+}
+
+// NewKeyRotated is the constructor for event key rotated
+func NewKeyRotated(chain nexus.ChainName, keyID multisigExported.KeyID) *KeyRotated {
+	return &KeyRotated{
+		Module: ModuleName,
+		Chain:  chain,
+		KeyID:  keyID,
 	}
 }

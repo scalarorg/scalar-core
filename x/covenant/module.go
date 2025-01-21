@@ -85,7 +85,8 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 type AppModule struct {
 	AppModuleBasic
 	keeper      *keeper.Keeper
-	staker      types.Staker
+	staking     types.StakingKeeper
+	slashing    types.SlashingKeeper
 	snapshotter types.Snapshotter
 	rewarder    types.Rewarder
 	nexus       types.Nexus
@@ -93,7 +94,8 @@ type AppModule struct {
 
 // NewAppModule creates a new AppModule object
 func NewAppModule(k *keeper.Keeper,
-	staker types.Staker,
+	staking types.StakingKeeper,
+	slashing types.SlashingKeeper,
 	snapshotter types.Snapshotter,
 	rewarder types.Rewarder,
 	nexus types.Nexus,
@@ -101,7 +103,8 @@ func NewAppModule(k *keeper.Keeper,
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
 		keeper:         k,
-		staker:         staker,
+		staking:        staking,
+		slashing:       slashing,
 		snapshotter:    snapshotter,
 		rewarder:       rewarder,
 		nexus:          nexus,
@@ -149,7 +152,8 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 	msgServer := keeper.NewMsgServerImpl(&keeper.MsgServerConstructArgs{
 		Keeper:      *am.keeper,
 		Snapshotter: am.snapshotter,
-		Staker:      am.staker,
+		Staker:      am.staking,
+		Slashing:    am.slashing,
 		Nexus:       am.nexus,
 	})
 

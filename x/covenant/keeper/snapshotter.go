@@ -24,12 +24,12 @@ var _ Snapshotter = SnapshotCreator{}
 // SnapshotCreator is an implementation of Snapshotter
 type SnapshotCreator struct {
 	snapshotter types.Snapshotter
-	staker      types.Staker
-	slasher     types.Slasher
+	staker      types.StakingKeeper
+	slasher     types.SlashingKeeper
 }
 
 // NewSnapshotCreator is the constructor for snapshot creator
-func NewSnapshotCreator(snapshotter types.Snapshotter, staker types.Staker, slasher types.Slasher) SnapshotCreator {
+func NewSnapshotCreator(snapshotter types.Snapshotter, staker types.StakingKeeper, slasher types.SlashingKeeper) SnapshotCreator {
 	return SnapshotCreator{
 		snapshotter: snapshotter,
 		staker:      staker,

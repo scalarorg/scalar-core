@@ -620,6 +620,7 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 		covenant.NewAppModule(
 			GetKeeper[covenantKeeper.Keeper](keepers),
 			GetKeeper[stakingkeeper.Keeper](keepers),
+			GetKeeper[slashingkeeper.Keeper](keepers),
 			GetKeeper[snapKeeper.Keeper](keepers),
 			GetKeeper[rewardKeeper.Keeper](keepers),
 			GetKeeper[nexusKeeper.Keeper](keepers),

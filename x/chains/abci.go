@@ -23,23 +23,23 @@ import (
 func BeginBlocker(sdk.Context, abci.RequestBeginBlock, types.BaseKeeper) {}
 
 // EndBlocker called every block, process inflation, update validator set.
-func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, cov types.CovenantKeeper) ([]abci.ValidatorUpdate, error) {
+func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper) ([]abci.ValidatorUpdate, error) {
 	clog.Yellow("Chains ABCI ENDBLOCKER")
-	handleConfirmedEvents(ctx, bk, n, m)
-	handleMessages(ctx, bk, n, m, cov)
+	handleConfirmedEvents(ctx, bk, n, m, p)
+	handleMessages(ctx, bk, n, m)
 
 	return nil, nil
 }
 
-func handleConfirmedEvents(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) {
+func handleConfirmedEvents(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper) {
 
 	// This will handle all chains except Scalarnet.
 	for _, chain := range slices.Filter(n.GetChains(ctx), types.IsSupportedChain) {
-		handleConfirmedEventsForChain(ctx, chain, bk, n, m)
+		handleConfirmedEventsForChain(ctx, chain, bk, n, m, p)
 	}
 }
 
-func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) {
+func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper) {
 	ck := funcs.Must(bk.ForChain(ctx, chain.Name))
 	queue := ck.GetConfirmedEventQueue(ctx)
 	endBlockerLimit := ck.GetParams(ctx).EndBlockerLimit
@@ -54,7 +54,7 @@ func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.
 
 	for _, event := range events {
 		success := utils.RunCached(ctx, bk, func(ctx sdk.Context) (bool, error) {
-			if err := handleConfirmedEvent(ctx, event, bk, n, m); err != nil {
+			if err := handleConfirmedEvent(ctx, event, bk, n, m, p); err != nil {
 				ck.Logger(ctx).Debug(fmt.Sprintf("failed handling event: %s", err.Error()),
 					"chain", chain.Name.String(),
 					"eventID", event.GetID(),
@@ -80,7 +80,7 @@ func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.
 	}
 }
 
-func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) error {
+func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper) error {
 	if err := validateEvent(ctx, event, bk, n); err != nil {
 		return err
 	}
@@ -88,7 +88,7 @@ func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 	case *types.Event_SourceTxConfirmationEvent:
 		return handleSourceConfirmationEvent(ctx, event, bk, n, m)
 	case *types.Event_ContractCallWithToken:
-		return handleContractCallWithToken(ctx, event, bk, n, m)
+		return handleContractCallWithToken(ctx, event, bk, n, m, p)
 	case *types.Event_TokenSent:
 		return handleTokenSent(ctx, event, bk, n)
 	case *types.Event_Transfer:
@@ -217,7 +217,7 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 	return nil
 }
 
-func handleContractCallWithToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, multisig types.MultisigKeeper) error {
+func handleContractCallWithToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper) error {
 	e := event.GetContractCallWithToken()
 	if e == nil {
 		panic(fmt.Errorf("event is nil"))
@@ -240,9 +240,9 @@ func handleContractCallWithToken(ctx sdk.Context, event types.Event, bk types.Ba
 	switch destinationChain.Module {
 	case types.ModuleName:
 		if types.IsEvmChain(destinationChain.Name) {
-			return handleContractCallWithTokenToEVM(ctx, event, bk, n, multisig, sourceChain.Name, destinationChain.Name, asset)
+			return handleContractCallWithTokenToEVM(ctx, event, bk, n, m, sourceChain.Name, destinationChain.Name, asset)
 		} else if types.IsBitcoinChain(destinationChain.Name) {
-			return handleContractCallWithTokenToBTC(ctx, event, bk, n, multisig, sourceChain.Name, destinationChain.Name, asset)
+			return handleContractCallWithTokenToBTC(ctx, event, bk, n, m, p, sourceChain.Name, destinationChain.Name, asset)
 		}
 		return nil
 	default:
@@ -252,7 +252,7 @@ func handleContractCallWithToken(ctx sdk.Context, event types.Event, bk types.Ba
 	}
 }
 
-func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, multisig types.MultisigKeeper, sourceChain, destinationChain nexus.ChainName, asset string) error {
+func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper, sourceChain, destinationChain nexus.ChainName, asset string) error {
 	e := event.GetContractCallWithToken()
 	if e == nil {
 		panic(fmt.Errorf("event is nil"))
@@ -274,11 +274,15 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 	if err := n.RateLimitTransfer(ctx, destinationChain, coin, nexus.TransferDirectionTo); err != nil {
 		return err
 	}
-
-	keyId, ok := multisig.GetCurrentKeyID(ctx, destinationChain)
-	if !ok {
-		keyId = multisigexported.KeyID(destinationChain)
+	// keyId, ok := m.GetCurrentKeyID(ctx, destinationChain)
+	// if !ok {
+	// 	keyId = multisigexported.KeyID(destinationChain)
+	// }
+	protocolInfo, err := p.FindProtocolByExternalSymbol(ctx, destinationChain, e.Symbol, sourceChain)
+	if err != nil {
+		return err
 	}
+	keyId := protocolInfo.KeyID
 	cmd := types.NewApproveContractCallWithMintCommandWithPayload(
 		funcs.MustOk(destinationCk.GetChainID(ctx)),
 		keyId,
@@ -629,12 +633,16 @@ func handleMultisigTransferKey(ctx sdk.Context, event types.Event, bk types.Base
 	return nil
 }
 
-func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, cov types.CovenantKeeper) {
+func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) {
 	allChains := n.GetChains(ctx)
 
 	// This will handle all chains except Scalarnet.
 	for _, chain := range slices.Filter(allChains, types.IsSupportedChain) {
 		destCk := funcs.Must(bk.ForChain(ctx, chain.Name))
+		if types.IsBitcoinChain(chain.Name) {
+			bk.Logger(ctx).Info(fmt.Sprintf("Bitcoin network %s cannot receive general messages", chain.Name))
+			continue
+		}
 		endBlockerLimit := destCk.GetParams(ctx).EndBlockerLimit
 		msgs := n.GetProcessingMessages(ctx, chain.Name, endBlockerLimit)
 
@@ -656,8 +664,6 @@ func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types
 				var keyID multisigexported.KeyID
 				if types.IsEvmChain(chain.Name) {
 					keyID = funcs.MustOk(m.GetCurrentKeyID(ctx, chain.Name))
-				} else if types.IsBitcoinChain(chain.Name) {
-					keyID = funcs.MustOk(cov.GetCurrentKeyID(ctx, chain.Name))
 				} else {
 					return false, fmt.Errorf("unsupported chain %v for key id", chain.Name)
 				}

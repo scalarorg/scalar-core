@@ -9513,6 +9513,8 @@ paths:
                             properties:
                               name:
                                 type: string
+                              val_address:
+                                type: string
                               btc_pubkey:
                                 type: string
                                 format: byte
@@ -9852,6 +9854,8 @@ paths:
                           properties:
                             name:
                               type: string
+                            val_address:
+                              type: string
                             btc_pubkey:
                               type: string
                               format: byte
@@ -10188,6 +10192,8 @@ paths:
                           properties:
                             name:
                               type: string
+                            val_address:
+                              type: string
                             btc_pubkey:
                               type: string
                               format: byte
@@ -10479,6 +10485,8 @@ paths:
                       type: object
                       properties:
                         name:
+                          type: string
+                        val_address:
                           type: string
                         btc_pubkey:
                           type: string
@@ -10817,6 +10825,8 @@ paths:
                           properties:
                             name:
                               type: string
+                            val_address:
+                              type: string
                             btc_pubkey:
                               type: string
                               format: byte
@@ -11145,6 +11155,8 @@ paths:
                           type: object
                           properties:
                             name:
+                              type: string
+                            val_address:
                               type: string
                             btc_pubkey:
                               type: string
@@ -57611,6 +57623,8 @@ definitions:
     properties:
       name:
         type: string
+      val_address:
+        type: string
       btc_pubkey:
         type: string
         format: byte
@@ -57654,6 +57668,8 @@ definitions:
           type: object
           properties:
             name:
+              type: string
+            val_address:
               type: string
             btc_pubkey:
               type: string
@@ -57764,6 +57780,8 @@ definitions:
                   properties:
                     name:
                       type: string
+                    val_address:
+                      type: string
                     btc_pubkey:
                       type: string
                       format: byte
@@ -57856,6 +57874,8 @@ definitions:
               type: object
               properties:
                 name:
+                  type: string
+                val_address:
                   type: string
                 btc_pubkey:
                   type: string
@@ -57957,6 +57977,8 @@ definitions:
                   type: object
                   properties:
                     name:
+                      type: string
+                    val_address:
                       type: string
                     btc_pubkey:
                       type: string
@@ -58070,6 +58092,8 @@ definitions:
               type: object
               properties:
                 name:
+                  type: string
+                val_address:
                   type: string
                 btc_pubkey:
                   type: string
@@ -58199,6 +58223,8 @@ definitions:
                     type: object
                     properties:
                       name:
+                        type: string
+                      val_address:
                         type: string
                       btc_pubkey:
                         type: string
@@ -58342,6 +58368,8 @@ definitions:
                   properties:
                     name:
                       type: string
+                    val_address:
+                      type: string
                     btc_pubkey:
                       type: string
                       format: byte
@@ -58470,6 +58498,8 @@ definitions:
                   type: object
                   properties:
                     name:
+                      type: string
+                    val_address:
                       type: string
                     btc_pubkey:
                       type: string

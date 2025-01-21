@@ -230,6 +230,7 @@
     - [Status](#scalar.covenant.v1beta1.Status)
   
 - [scalar/covenant/v1beta1/events.proto](#scalar/covenant/v1beta1/events.proto)
+    - [KeyRotated](#scalar.covenant.v1beta1.KeyRotated)
     - [SigningPsbtCompleted](#scalar.covenant.v1beta1.SigningPsbtCompleted)
     - [SigningPsbtExpired](#scalar.covenant.v1beta1.SigningPsbtExpired)
     - [SigningPsbtStarted](#scalar.covenant.v1beta1.SigningPsbtStarted)
@@ -242,11 +243,29 @@
 - [scalar/covenant/v1beta1/genesis.proto](#scalar/covenant/v1beta1/genesis.proto)
     - [GenesisState](#scalar.covenant.v1beta1.GenesisState)
   
+- [scalar/multisig/v1beta1/params.proto](#scalar/multisig/v1beta1/params.proto)
+    - [Params](#scalar.multisig.v1beta1.Params)
+  
+- [scalar/multisig/v1beta1/query.proto](#scalar/multisig/v1beta1/query.proto)
+    - [KeyIDRequest](#scalar.multisig.v1beta1.KeyIDRequest)
+    - [KeyIDResponse](#scalar.multisig.v1beta1.KeyIDResponse)
+    - [KeyRequest](#scalar.multisig.v1beta1.KeyRequest)
+    - [KeyResponse](#scalar.multisig.v1beta1.KeyResponse)
+    - [KeygenParticipant](#scalar.multisig.v1beta1.KeygenParticipant)
+    - [KeygenSessionRequest](#scalar.multisig.v1beta1.KeygenSessionRequest)
+    - [KeygenSessionResponse](#scalar.multisig.v1beta1.KeygenSessionResponse)
+    - [NextKeyIDRequest](#scalar.multisig.v1beta1.NextKeyIDRequest)
+    - [NextKeyIDResponse](#scalar.multisig.v1beta1.NextKeyIDResponse)
+    - [ParamsRequest](#scalar.multisig.v1beta1.ParamsRequest)
+    - [ParamsResponse](#scalar.multisig.v1beta1.ParamsResponse)
+  
 - [scalar/covenant/v1beta1/query.proto](#scalar/covenant/v1beta1/query.proto)
-    - [CustodianGroupsRequest](#scalar.covenant.v1beta1.CustodianGroupsRequest)
-    - [CustodianGroupsResponse](#scalar.covenant.v1beta1.CustodianGroupsResponse)
     - [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest)
     - [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse)
+    - [GroupsRequest](#scalar.covenant.v1beta1.GroupsRequest)
+    - [GroupsResponse](#scalar.covenant.v1beta1.GroupsResponse)
+    - [KeyRequest](#scalar.covenant.v1beta1.KeyRequest)
+    - [KeyResponse](#scalar.covenant.v1beta1.KeyResponse)
     - [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest)
     - [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse)
   
@@ -258,6 +277,8 @@
     - [CreateCustodianResponse](#scalar.covenant.v1beta1.CreateCustodianResponse)
     - [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse)
     - [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest)
+    - [RotateKeyRequest](#scalar.covenant.v1beta1.RotateKeyRequest)
+    - [RotateKeyResponse](#scalar.covenant.v1beta1.RotateKeyResponse)
     - [SubmitTapScriptSigsRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigsRequest)
     - [SubmitTapScriptSigsResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigsResponse)
     - [UpdateCustodianGroupRequest](#scalar.covenant.v1beta1.UpdateCustodianGroupRequest)
@@ -284,24 +305,8 @@
     - [SigningStarted](#scalar.multisig.v1beta1.SigningStarted)
     - [SigningStarted.PubKeysEntry](#scalar.multisig.v1beta1.SigningStarted.PubKeysEntry)
   
-- [scalar/multisig/v1beta1/params.proto](#scalar/multisig/v1beta1/params.proto)
-    - [Params](#scalar.multisig.v1beta1.Params)
-  
 - [scalar/multisig/v1beta1/genesis.proto](#scalar/multisig/v1beta1/genesis.proto)
     - [GenesisState](#scalar.multisig.v1beta1.GenesisState)
-  
-- [scalar/multisig/v1beta1/query.proto](#scalar/multisig/v1beta1/query.proto)
-    - [KeyIDRequest](#scalar.multisig.v1beta1.KeyIDRequest)
-    - [KeyIDResponse](#scalar.multisig.v1beta1.KeyIDResponse)
-    - [KeyRequest](#scalar.multisig.v1beta1.KeyRequest)
-    - [KeyResponse](#scalar.multisig.v1beta1.KeyResponse)
-    - [KeygenParticipant](#scalar.multisig.v1beta1.KeygenParticipant)
-    - [KeygenSessionRequest](#scalar.multisig.v1beta1.KeygenSessionRequest)
-    - [KeygenSessionResponse](#scalar.multisig.v1beta1.KeygenSessionResponse)
-    - [NextKeyIDRequest](#scalar.multisig.v1beta1.NextKeyIDRequest)
-    - [NextKeyIDResponse](#scalar.multisig.v1beta1.NextKeyIDResponse)
-    - [ParamsRequest](#scalar.multisig.v1beta1.ParamsRequest)
-    - [ParamsResponse](#scalar.multisig.v1beta1.ParamsResponse)
   
 - [scalar/multisig/v1beta1/tx.proto](#scalar/multisig/v1beta1/tx.proto)
     - [KeygenOptInRequest](#scalar.multisig.v1beta1.KeygenOptInRequest)
@@ -437,6 +442,9 @@
 - [scalar/permission/v1beta1/service.proto](#scalar/permission/v1beta1/service.proto)
     - [Msg](#scalar.permission.v1beta1.Msg)
     - [Query](#scalar.permission.v1beta1.Query)
+  
+- [scalar/protocol/exported/v1beta1/types.proto](#scalar/protocol/exported/v1beta1/types.proto)
+    - [ProtocolInfo](#scalar.protocol.exported.v1beta1.ProtocolInfo)
   
 - [scalar/protocol/v1beta1/types.proto](#scalar/protocol/v1beta1/types.proto)
     - [Protocol](#scalar.protocol.v1beta1.Protocol)
@@ -3772,6 +3780,7 @@ Custodian represents an individual custodian configuration
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `name` | [string](#string) |  | e.g., "Custodian1" |
+| `val_address` | [string](#string) |  | e.g., "scalarvaloper1..." |
 | `btc_pubkey` | [bytes](#bytes) |  | e.g., |
 | `status` | [Status](#scalar.covenant.v1beta1.Status) |  | "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
 
@@ -3891,6 +3900,23 @@ quorum threshold e.g.,3 |
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/covenant/v1beta1/events.proto
+
+
+
+<a name="scalar.covenant.v1beta1.KeyRotated"></a>
+
+### KeyRotated
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `chain` | [string](#string) |  |  |
+| `key_id` | [string](#string) |  |  |
+
+
+
 
 
 
@@ -4058,44 +4084,241 @@ Params represent the genesis parameters for the module
 
 
 
+<a name="scalar/multisig/v1beta1/params.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/multisig/v1beta1/params.proto
+
+
+
+<a name="scalar.multisig.v1beta1.Params"></a>
+
+### Params
+Params represent the genesis parameters for the module
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `keygen_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `keygen_timeout` | [int64](#int64) |  |  |
+| `keygen_grace_period` | [int64](#int64) |  |  |
+| `signing_timeout` | [int64](#int64) |  |  |
+| `signing_grace_period` | [int64](#int64) |  |  |
+| `active_epoch_count` | [uint64](#uint64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/multisig/v1beta1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/multisig/v1beta1/query.proto
+
+
+
+<a name="scalar.multisig.v1beta1.KeyIDRequest"></a>
+
+### KeyIDRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeyIDResponse"></a>
+
+### KeyIDResponse
+KeyIDResponse contains the key ID of the key assigned to a given chain.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeyRequest"></a>
+
+### KeyRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeyResponse"></a>
+
+### KeyResponse
+KeyResponse contains the key corresponding to a given key id.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+| `state` | [scalar.multisig.exported.v1beta1.KeyState](#scalar.multisig.exported.v1beta1.KeyState) |  |  |
+| `started_at` | [int64](#int64) |  |  |
+| `started_at_timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+| `threshold_weight` | [bytes](#bytes) |  |  |
+| `bonded_weight` | [bytes](#bytes) |  |  |
+| `participants` | [KeygenParticipant](#scalar.multisig.v1beta1.KeygenParticipant) | repeated | Keygen participants in descending order by weight |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeygenParticipant"></a>
+
+### KeygenParticipant
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [string](#string) |  |  |
+| `weight` | [bytes](#bytes) |  |  |
+| `pub_key` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeygenSessionRequest"></a>
+
+### KeygenSessionRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeygenSessionResponse"></a>
+
+### KeygenSessionResponse
+KeygenSessionResponse contains the keygen session info for a given key ID.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `started_at` | [int64](#int64) |  |  |
+| `started_at_timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+| `expires_at` | [int64](#int64) |  |  |
+| `completed_at` | [int64](#int64) |  |  |
+| `grace_period` | [int64](#int64) |  |  |
+| `state` | [scalar.multisig.exported.v1beta1.MultisigState](#scalar.multisig.exported.v1beta1.MultisigState) |  |  |
+| `keygen_threshold_weight` | [bytes](#bytes) |  |  |
+| `signing_threshold_weight` | [bytes](#bytes) |  |  |
+| `bonded_weight` | [bytes](#bytes) |  |  |
+| `participants` | [KeygenParticipant](#scalar.multisig.v1beta1.KeygenParticipant) | repeated | Keygen candidates in descending order by weight |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.NextKeyIDRequest"></a>
+
+### NextKeyIDRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.NextKeyIDResponse"></a>
+
+### NextKeyIDResponse
+NextKeyIDResponse contains the key ID for the next rotation on the given
+chain
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.ParamsRequest"></a>
+
+### ParamsRequest
+ParamsRequest represents a message that queries the params
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.ParamsResponse"></a>
+
+### ParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.multisig.v1beta1.Params) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/covenant/v1beta1/query.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/covenant/v1beta1/query.proto
-
-
-
-<a name="scalar.covenant.v1beta1.CustodianGroupsRequest"></a>
-
-### CustodianGroupsRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `uid` | [string](#string) |  |  |
-| `name` | [string](#string) |  |  |
-| `group_pubkey` | [bytes](#bytes) |  |  |
-| `custodian_pubkey` | [bytes](#bytes) |  |  |
-| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.CustodianGroupsResponse"></a>
-
-### CustodianGroupsResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `groups` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) | repeated |  |
-
-
-
 
 
 
@@ -4125,6 +4348,76 @@ Params represent the genesis parameters for the module
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.GroupsRequest"></a>
+
+### GroupsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `uid` | [string](#string) |  |  |
+| `name` | [string](#string) |  |  |
+| `group_pubkey` | [bytes](#bytes) |  |  |
+| `custodian_pubkey` | [bytes](#bytes) |  |  |
+| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.GroupsResponse"></a>
+
+### GroupsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `groups` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.KeyRequest"></a>
+
+### KeyRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.KeyResponse"></a>
+
+### KeyResponse
+KeyResponse contains the key corresponding to a given key id.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+| `state` | [scalar.multisig.exported.v1beta1.KeyState](#scalar.multisig.exported.v1beta1.KeyState) |  |  |
+| `started_at` | [int64](#int64) |  |  |
+| `started_at_timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+| `threshold_weight` | [bytes](#bytes) |  |  |
+| `bonded_weight` | [bytes](#bytes) |  |  |
+| `participants` | [scalar.multisig.v1beta1.KeygenParticipant](#scalar.multisig.v1beta1.KeygenParticipant) | repeated | Keygen participants in descending order by weight |
 
 
 
@@ -4293,6 +4586,32 @@ ParamsRequest represents a message that queries the params
 
 
 
+<a name="scalar.covenant.v1beta1.RotateKeyRequest"></a>
+
+### RotateKeyRequest
+Rotate key for custodian group
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.RotateKeyResponse"></a>
+
+### RotateKeyResponse
+
+
+
+
+
+
+
 <a name="scalar.covenant.v1beta1.SubmitTapScriptSigsRequest"></a>
 
 ### SubmitTapScriptSigsRequest
@@ -4425,6 +4744,7 @@ Pubkey used as key for lookup custodian to update other values
 | `UpdateCustodianGroup` | [UpdateCustodianGroupRequest](#scalar.covenant.v1beta1.UpdateCustodianGroupRequest) | [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse) | Update Custodian group | POST|/scalar/covenant/v1beta1/update_custodian_group|
 | `AddCustodianToGroup` | [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Add Custodian to custodian group recalculate taproot pubkey when adding custodian to custodian group | POST|/scalar/covenant/v1beta1/add_custodian_to_group|
 | `RemoveCustodianFromGroup` | [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Remove Custodian from custodian group recalculate taproot address when deleting custodian from custodian group | POST|/scalar/covenant/v1beta1/remove_custodian_from_group|
+| `RotateKey` | [RotateKeyRequest](#scalar.covenant.v1beta1.RotateKeyRequest) | [RotateKeyResponse](#scalar.covenant.v1beta1.RotateKeyResponse) |  | POST|/scalar/covenant/v1beta1/rotate_key|
 | `SubmitTapScriptSigs` | [SubmitTapScriptSigsRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigsRequest) | [SubmitTapScriptSigsResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigsResponse) |  | POST|/scalar/covenant/v1beta1/submit_tap_script_sigs|
 
 
@@ -4436,7 +4756,7 @@ Pubkey used as key for lookup custodian to update other values
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `Custodians` | [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest) | [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse) | Get custodians | GET|/scalar/convenant/v1beta1/custodians|
-| `CustodianGroups` | [CustodianGroupsRequest](#scalar.covenant.v1beta1.CustodianGroupsRequest) | [CustodianGroupsResponse](#scalar.covenant.v1beta1.CustodianGroupsResponse) | Get custodian groups | GET|/scalar/covenant/v1beta1/custodian_groups|
+| `Groups` | [GroupsRequest](#scalar.covenant.v1beta1.GroupsRequest) | [GroupsResponse](#scalar.covenant.v1beta1.GroupsResponse) | Get custodian groups | GET|/scalar/covenant/v1beta1/custodian_groups|
 | `Params` | [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse) |  | GET|/scalar/covenant/v1beta1/params|
 
  <!-- end services -->
@@ -4676,43 +4996,6 @@ Pubkey used as key for lookup custodian to update other values
 
 
 
-<a name="scalar/multisig/v1beta1/params.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/multisig/v1beta1/params.proto
-
-
-
-<a name="scalar.multisig.v1beta1.Params"></a>
-
-### Params
-Params represent the genesis parameters for the module
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `keygen_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `keygen_timeout` | [int64](#int64) |  |  |
-| `keygen_grace_period` | [int64](#int64) |  |  |
-| `signing_timeout` | [int64](#int64) |  |  |
-| `signing_grace_period` | [int64](#int64) |  |  |
-| `active_epoch_count` | [uint64](#uint64) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
 <a name="scalar/multisig/v1beta1/genesis.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -4733,200 +5016,6 @@ GenesisState represents the genesis state
 | `signing_sessions` | [SigningSession](#scalar.multisig.v1beta1.SigningSession) | repeated |  |
 | `keys` | [Key](#scalar.multisig.v1beta1.Key) | repeated |  |
 | `key_epochs` | [KeyEpoch](#scalar.multisig.v1beta1.KeyEpoch) | repeated |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/multisig/v1beta1/query.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/multisig/v1beta1/query.proto
-
-
-
-<a name="scalar.multisig.v1beta1.KeyIDRequest"></a>
-
-### KeyIDRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeyIDResponse"></a>
-
-### KeyIDResponse
-KeyIDResponse contains the key ID of the key assigned to a given chain.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeyRequest"></a>
-
-### KeyRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeyResponse"></a>
-
-### KeyResponse
-KeyResponse contains the key corresponding to a given key id.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-| `state` | [scalar.multisig.exported.v1beta1.KeyState](#scalar.multisig.exported.v1beta1.KeyState) |  |  |
-| `started_at` | [int64](#int64) |  |  |
-| `started_at_timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
-| `threshold_weight` | [bytes](#bytes) |  |  |
-| `bonded_weight` | [bytes](#bytes) |  |  |
-| `participants` | [KeygenParticipant](#scalar.multisig.v1beta1.KeygenParticipant) | repeated | Keygen participants in descending order by weight |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeygenParticipant"></a>
-
-### KeygenParticipant
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `address` | [string](#string) |  |  |
-| `weight` | [bytes](#bytes) |  |  |
-| `pub_key` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeygenSessionRequest"></a>
-
-### KeygenSessionRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeygenSessionResponse"></a>
-
-### KeygenSessionResponse
-KeygenSessionResponse contains the keygen session info for a given key ID.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `started_at` | [int64](#int64) |  |  |
-| `started_at_timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
-| `expires_at` | [int64](#int64) |  |  |
-| `completed_at` | [int64](#int64) |  |  |
-| `grace_period` | [int64](#int64) |  |  |
-| `state` | [scalar.multisig.exported.v1beta1.MultisigState](#scalar.multisig.exported.v1beta1.MultisigState) |  |  |
-| `keygen_threshold_weight` | [bytes](#bytes) |  |  |
-| `signing_threshold_weight` | [bytes](#bytes) |  |  |
-| `bonded_weight` | [bytes](#bytes) |  |  |
-| `participants` | [KeygenParticipant](#scalar.multisig.v1beta1.KeygenParticipant) | repeated | Keygen candidates in descending order by weight |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.NextKeyIDRequest"></a>
-
-### NextKeyIDRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.NextKeyIDResponse"></a>
-
-### NextKeyIDResponse
-NextKeyIDResponse contains the key ID for the next rotation on the given
-chain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.ParamsRequest"></a>
-
-### ParamsRequest
-ParamsRequest represents a message that queries the params
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.ParamsResponse"></a>
-
-### ParamsResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `params` | [Params](#scalar.multisig.v1beta1.Params) |  |  |
 
 
 
@@ -6726,6 +6815,37 @@ Query defines the gRPC querier service.
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `GovernanceKey` | [QueryGovernanceKeyRequest](#scalar.permission.v1beta1.QueryGovernanceKeyRequest) | [QueryGovernanceKeyResponse](#scalar.permission.v1beta1.QueryGovernanceKeyResponse) | GovernanceKey returns the multisig governance key | GET|/scalar/permission/v1beta1/governance_key|
 | `Params` | [ParamsRequest](#scalar.permission.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.permission.v1beta1.ParamsResponse) |  | GET|/scalar/permission/v1beta1/params|
+
+ <!-- end services -->
+
+
+
+<a name="scalar/protocol/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/protocol/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.protocol.exported.v1beta1.ProtocolInfo"></a>
+
+### ProtocolInfo
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
 
  <!-- end services -->
 

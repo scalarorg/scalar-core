@@ -4,10 +4,13 @@ import (
 	"encoding/hex"
 	fmt "fmt"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 )
 
 type Psbt []byte
@@ -43,14 +46,23 @@ func (p PsbtPayload) ValidateBasic() error {
 
 type TapScriptSig []byte
 
-func (g CustodianGroup) CreateKey() multisigTypes.Key {
+func (g CustodianGroup) CreateKey(ctx sdk.Context, snapshot snapshot.Snapshot, threshold utils.Threshold) multisigTypes.Key {
 	pubKeys := map[string]multisig.PublicKey{}
 	for _, custodian := range g.Custodians {
-		pubKeys[custodian.Name] = custodian.BtcPubkey
+		pubKeys[custodian.ValAddress] = custodian.BtcPubkey
 	}
 	key := multisigTypes.Key{
-		ID:      multisig.KeyID(g.Uid),
-		PubKeys: pubKeys,
+		ID: multisig.KeyID(g.Uid),
+		// Snapshot: snapshot.Snapshot{
+		// 	Timestamp:    ctx.BlockTime(),
+		// 	Height:       ctx.BlockHeight(),
+		// 	Participants: participants,
+		// 	BondedWeight: sdk.NewUint(400),
+		// },
+		Snapshot:         snapshot,
+		PubKeys:          pubKeys,
+		SigningThreshold: threshold,
+		State:            multisig.Active,
 	}
 	return key
 }

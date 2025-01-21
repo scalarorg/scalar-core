@@ -34,7 +34,9 @@ func (s msgServer) SignBTCCommands(c context.Context, req *types.SignBTCCommands
 	if _, ok := keeper.GetChainID(ctx); !ok {
 		return nil, fmt.Errorf("could not find chain ID for '%s'", chain.Name)
 	}
-
+	// getCommandBatchToSign get latest command batch or create new one with common keyId as first enqueued commnand
+	// Other commands with different keyId will be process in next cycle
+	// Todo: Handle simultaneous command batches with different keyId
 	commandBatch, err := getCommandBatchToSign(ctx, keeper)
 	if err != nil {
 		return nil, err
@@ -46,7 +48,7 @@ func (s msgServer) SignBTCCommands(c context.Context, req *types.SignBTCCommands
 
 	// TODO: validate the psbt with the commands: check the outputs map 1-1 with the command payloads, check the amount of inputs is greater than the amount of outputs, check the format of psbt by btcd-lib.packet
 	// use psbt.ValidateBasic()
-
+	//Extract protocol info from commandBatch
 	if err := s.covenant.SignPsbt(
 		ctx,
 		commandBatch.GetKeyID(),

@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 import "scalar/covenant/v1beta1/types.proto";
 import "scalar/snapshot/exported/v1beta1/types.proto";
 import "scalar/covenant/exported/v1beta1/types.proto";
-
+import "scalar/permission/exported/v1beta1/types.proto";
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
 option (gogoproto.goproto_getters_all) = false;
@@ -86,3 +86,18 @@ message SubmitTapScriptSigsRequest {
 }
 
 message SubmitTapScriptSigsResponse {}
+
+//Rotate key for custodian group
+message RotateKeyRequest {
+  option (scalar.permission.exported.v1beta1.permission_role) =
+      ROLE_CHAIN_MANAGEMENT;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+}
+
+message RotateKeyResponse {
+ 
+}

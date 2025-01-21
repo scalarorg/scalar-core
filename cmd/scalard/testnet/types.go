@@ -19,10 +19,14 @@ const (
 
 type GenesisState map[string]json.RawMessage
 
+type ScalarRelayer struct {
+	PubKey  cryptotypes.PubKey
+	Balance banktypes.Balance
+}
 type Protocol struct {
 	BitcoinPubKey []byte
-	ScalarPubKey  cryptotypes.PubKey
-	ScalarBalance banktypes.Balance
+	PubKey        cryptotypes.PubKey
+	Balance       banktypes.Balance
 	Tag           string
 	Model         string
 }
