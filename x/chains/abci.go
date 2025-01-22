@@ -210,6 +210,7 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 		Chain:              event.Chain,
 		EventID:            event.GetID(),
 		TransferID:         transferID,
+		CommandID:          event.TxID.Hex(),
 		Sender:             e.Sender,
 		DestinationChain:   e.DestinationChain,
 		DestinationAddress: e.DestinationAddress,

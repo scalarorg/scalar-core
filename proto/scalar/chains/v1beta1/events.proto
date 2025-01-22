@@ -159,12 +159,13 @@ message EventTokenSent {
     (gogoproto.casttype) =
         "github.com/scalarorg/scalar-core/x/nexus/exported.TransferID"
   ];
-  string sender = 4;
-  string destination_chain = 5
+  string command_id = 4 [ (gogoproto.customname) = "CommandID"];
+  string sender = 5;
+  string destination_chain = 6
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  string destination_address = 6;
-  cosmos.base.v1beta1.Coin asset = 7 [ (gogoproto.nullable) = false ];
+  string destination_address = 7;
+  cosmos.base.v1beta1.Coin asset = 8 [ (gogoproto.nullable) = false ];
 }
 
 message EventContractCall {

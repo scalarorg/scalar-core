@@ -1996,6 +1996,7 @@ PollParticipants should be embedded in poll events in other modules
 | `chain` | [string](#string) |  |  |
 | `event_id` | [string](#string) |  |  |
 | `transfer_id` | [uint64](#uint64) |  |  |
+| `command_id` | [string](#string) |  |  |
 | `sender` | [string](#string) |  |  |
 | `destination_chain` | [string](#string) |  |  |
 | `destination_address` | [string](#string) |  |  |
