@@ -1,6 +1,7 @@
 package chains
 
 import (
+	"encoding/hex"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -12,8 +13,9 @@ import (
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/chains/types"
-	multisigexported "github.com/scalarorg/scalar-core/x/multisig/exported"
+	mexported "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	pexported "github.com/scalarorg/scalar-core/x/protocol/exported"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	abci "github.com/tendermint/tendermint/abci/types"
 )
@@ -194,7 +196,7 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 
 	recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: e.DestinationAddress}
 	amount := sdk.NewCoin(asset, sdk.Int(e.Asset.Amount))
-	transferID, err := n.EnqueueTransfer(ctx, sourceChain, recipient, amount)
+	transferID, err := n.EnqueueCrossChainTransfer(ctx, sourceChain, common.Hash(event.TxID), recipient, amount)
 	if err != nil {
 		return sdkerrors.Wrap(err, "failed enqueuing transfer for event")
 	}
@@ -282,7 +284,16 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 	if err != nil {
 		return err
 	}
-	keyId := protocolInfo.KeyID
+
+	var keyId mexported.KeyID
+	switch protocolInfo.LiquidityModel {
+	case pexported.Pooling:
+		keyId = protocolInfo.KeyID
+	case pexported.Transactional:
+		buffer := protocolInfo.CustodiansPubkey
+		buffer = append(buffer, event.TxID[:]...)
+		keyId = mexported.KeyID(hex.EncodeToString(buffer))
+	}
 	cmd := types.NewApproveContractCallWithMintCommandWithPayload(
 		funcs.MustOk(destinationCk.GetChainID(ctx)),
 		keyId,
@@ -470,7 +481,7 @@ func handleConfirmDeposit(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 	// }
 
 	amount := sdk.NewCoin(burnerInfo.Asset, sdk.NewIntFromBigInt(e.Amount.BigInt()))
-	transferID, err := n.EnqueueForTransfer(ctx, depositAddr, amount)
+	transferID, err := n.EnqueueForCrossChainTransfer(ctx, depositAddr, common.Hash(event.TxID), amount)
 	if err != nil {
 		return err
 	}
@@ -661,7 +672,7 @@ func handleMessages(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types
 
 				chainID := funcs.MustOk(destCk.GetChainID(ctx))
 
-				var keyID multisigexported.KeyID
+				var keyID mexported.KeyID
 				if types.IsEvmChain(chain.Name) {
 					keyID = funcs.MustOk(m.GetCurrentKeyID(ctx, chain.Name))
 				} else {
@@ -749,7 +760,7 @@ func validateMessage(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, m typ
 	}
 }
 
-func handleMessageWithToken(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, chainID sdk.Int, keyID multisigexported.KeyID, msg nexus.GeneralMessage) error {
+func handleMessageWithToken(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus, chainID sdk.Int, keyID mexported.KeyID, msg nexus.GeneralMessage) error {
 	token := ck.GetERC20TokenByAsset(ctx, msg.Asset.GetDenom())
 
 	if err := n.RateLimitTransfer(ctx, msg.GetDestinationChain(), *msg.Asset, nexus.TransferDirectionTo); err != nil {
@@ -779,7 +790,7 @@ func handleMessageWithToken(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus
 	return nil
 }
 
-func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID multisigexported.KeyID, msg nexus.GeneralMessage) {
+func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID mexported.KeyID, msg nexus.GeneralMessage) {
 	params := &types.ApproveContractCallCommandParams{
 		ContractAddress:  common.HexToAddress(msg.GetDestinationAddress()),
 		PayloadHash:      common.BytesToHash(msg.PayloadHash),

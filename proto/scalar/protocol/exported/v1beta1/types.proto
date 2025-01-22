@@ -7,10 +7,21 @@ import "gogoproto/gogo.proto";
 
 option (gogoproto.goproto_getters_all) = false;
 
+enum LiquidityModel {
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  LIQUIDITY_MODEL_POOLING = 0 [(gogoproto.enumvalue_customname) = "Pooling"];
+  LIQUIDITY_MODEL_TRANSACTIONAL = 1 [(gogoproto.enumvalue_customname) = "Transactional"];
+}
+
 message ProtocolInfo {
     string key_id = 1 [
         (gogoproto.customname) = "KeyID",
         (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
     ];
+    bytes custodians_pubkey = 2 [
+        (gogoproto.customname) = "CustodiansPubkey"
+    ];
+    LiquidityModel liquidity_model = 3 [(gogoproto.customname) = "LiquidityModel"];
 }

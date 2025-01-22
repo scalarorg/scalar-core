@@ -149,10 +149,11 @@
     - [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse)
     - [SetGatewayRequest](#scalar.chains.v1beta1.SetGatewayRequest)
     - [SetGatewayResponse](#scalar.chains.v1beta1.SetGatewayResponse)
-    - [SignBTCCommandsRequest](#scalar.chains.v1beta1.SignBTCCommandsRequest)
-    - [SignBTCCommandsResponse](#scalar.chains.v1beta1.SignBTCCommandsResponse)
+    - [SignBtcCommandsRequest](#scalar.chains.v1beta1.SignBtcCommandsRequest)
     - [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest)
     - [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse)
+    - [SignPsbtCommandRequest](#scalar.chains.v1beta1.SignPsbtCommandRequest)
+    - [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse)
   
 - [scalar/chains/v1beta1/query.proto](#scalar/chains/v1beta1/query.proto)
     - [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest)
@@ -446,12 +447,13 @@
 - [scalar/protocol/exported/v1beta1/types.proto](#scalar/protocol/exported/v1beta1/types.proto)
     - [ProtocolInfo](#scalar.protocol.exported.v1beta1.ProtocolInfo)
   
+    - [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel)
+  
 - [scalar/protocol/v1beta1/types.proto](#scalar/protocol/v1beta1/types.proto)
     - [Protocol](#scalar.protocol.v1beta1.Protocol)
     - [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute)
     - [SupportedChain](#scalar.protocol.v1beta1.SupportedChain)
   
-    - [LiquidityModel](#scalar.protocol.v1beta1.LiquidityModel)
     - [Status](#scalar.protocol.v1beta1.Status)
   
 - [scalar/protocol/v1beta1/genesis.proto](#scalar/protocol/v1beta1/genesis.proto)
@@ -2725,9 +2727,9 @@ address
 
 
 
-<a name="scalar.chains.v1beta1.SignBTCCommandsRequest"></a>
+<a name="scalar.chains.v1beta1.SignBtcCommandsRequest"></a>
 
-### SignBTCCommandsRequest
+### SignBtcCommandsRequest
 
 
 
@@ -2735,23 +2737,6 @@ address
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `psbt` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.SignBTCCommandsResponse"></a>
-
-### SignBTCCommandsResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `batched_commands_id` | [bytes](#bytes) |  |  |
-| `command_count` | [uint32](#uint32) |  |  |
 
 
 
@@ -2777,6 +2762,39 @@ address
 <a name="scalar.chains.v1beta1.SignCommandsResponse"></a>
 
 ### SignCommandsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `batched_commands_id` | [bytes](#bytes) |  |  |
+| `command_count` | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.SignPsbtCommandRequest"></a>
+
+### SignPsbtCommandRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `psbt` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.SignPsbtCommandResponse"></a>
+
+### SignPsbtCommandResponse
 
 
 
@@ -3455,7 +3473,8 @@ Msg defines the btc Msg service.
 | `CreatePendingTransfers` | [CreatePendingTransfersRequest](#scalar.chains.v1beta1.CreatePendingTransfersRequest) | [CreatePendingTransfersResponse](#scalar.chains.v1beta1.CreatePendingTransfersResponse) |  | POST|/scalar/chains/v1beta1/create_pending_transfers|
 | `CreateTransferOperatorship` | [CreateTransferOperatorshipRequest](#scalar.chains.v1beta1.CreateTransferOperatorshipRequest) | [CreateTransferOperatorshipResponse](#scalar.chains.v1beta1.CreateTransferOperatorshipResponse) |  | POST|/scalar/chains/v1beta1/create_transfer_operatorship|
 | `SignCommands` | [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest) | [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_commands|
-| `SignBTCCommands` | [SignBTCCommandsRequest](#scalar.chains.v1beta1.SignBTCCommandsRequest) | [SignBTCCommandsResponse](#scalar.chains.v1beta1.SignBTCCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
+| `SignBtcCommand` | [SignBtcCommandsRequest](#scalar.chains.v1beta1.SignBtcCommandsRequest) | [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
+| `SignPsbtCommand` | [SignPsbtCommandRequest](#scalar.chains.v1beta1.SignPsbtCommandRequest) | [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
 | `AddChain` | [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest) | [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse) |  | POST|/scalar/chains/v1beta1/add_chain|
 | `RetryFailedEvent` | [RetryFailedEventRequest](#scalar.chains.v1beta1.RetryFailedEventRequest) | [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse) |  | POST|/scalar/chains/v1beta1/retry-failed-event|
 
@@ -5320,6 +5339,7 @@ registered blockchain
 | `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `id` | [uint64](#uint64) |  |  |
 | `state` | [TransferState](#scalar.nexus.exported.v1beta1.TransferState) |  |  |
+| `source_tx_hash` | [bytes](#bytes) |  |  |
 
 
 
@@ -6836,12 +6856,26 @@ Query defines the gRPC querier service.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `key_id` | [string](#string) |  |  |
+| `custodians_pubkey` | [bytes](#bytes) |  |  |
+| `liquidity_model` | [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
 
 
 
 
 
  <!-- end messages -->
+
+
+<a name="scalar.protocol.exported.v1beta1.LiquidityModel"></a>
+
+### LiquidityModel
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| LIQUIDITY_MODEL_POOLING | 0 |  |
+| LIQUIDITY_MODEL_TRANSACTIONAL | 1 |  |
+
 
  <!-- end enums -->
 
@@ -6890,7 +6924,7 @@ Query defines the gRPC querier service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `model` | [LiquidityModel](#scalar.protocol.v1beta1.LiquidityModel) |  |  |
+| `model` | [scalar.protocol.exported.v1beta1.LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
 
 
 
@@ -6914,18 +6948,6 @@ DestinationChain represents a blockchain where tokens can be sent
 
 
  <!-- end messages -->
-
-
-<a name="scalar.protocol.v1beta1.LiquidityModel"></a>
-
-### LiquidityModel
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| LIQUIDITY_MODEL_POOLING | 0 |  |
-| LIQUIDITY_MODEL_TRANSACTIONAL | 1 |  |
-
 
 
 <a name="scalar.protocol.v1beta1.Status"></a>

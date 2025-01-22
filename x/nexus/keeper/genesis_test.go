@@ -17,9 +17,9 @@ import (
 	"github.com/scalarorg/scalar-core/testutils/fake"
 	"github.com/scalarorg/scalar-core/testutils/rand"
 	"github.com/scalarorg/scalar-core/utils"
-	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsKeepr "github.com/scalarorg/scalar-core/x/chains/keeper"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/nexus/types"
 	testutils "github.com/scalarorg/scalar-core/x/nexus/types/testutils"
@@ -146,7 +146,6 @@ func TestExportGenesisInitGenesis(t *testing.T) {
 	for i, linkedAddress := range expectedLinkedAddresses {
 		depositAddress := linkedAddress.DepositAddress
 		recipientAddress := linkedAddress.RecipientAddress
-
 		_, minFee, maxFee, err := keeper.getCrossChainFees(ctx, depositAddress.Chain, recipientAddress.Chain, scalarnet.NativeAsset)
 		assert.Nil(t, err)
 

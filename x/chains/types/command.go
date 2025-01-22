@@ -89,9 +89,15 @@ func NewDeployTokenCommand(chainID sdk.Int, keyID multisig.KeyID, asset string, 
 }
 
 // NewMintTokenCommand creates a command to mint token to the given address
-func NewMintTokenCommand(keyID multisig.KeyID, id nexus.TransferID, symbol string, address common.Address, amount *big.Int) Command {
+func NewMintTokenCommand(keyID multisig.KeyID, transfer nexus.CrossChainTransfer, symbol string, address common.Address, amount *big.Int) Command {
+	var commandID CommandID
+	if len(transfer.SourceTxHash) == commandIDSize {
+		commandID = CommandID(transfer.SourceTxHash)
+	} else {
+		commandID = CommandIDFromTransferID(transfer.ID)
+	}
 	return Command{
-		ID:         CommandIDFromTransferID(id),
+		ID:         commandID,
 		Type:       COMMAND_TYPE_MINT_TOKEN,
 		Params:     createMintTokenParams(symbol, address, amount),
 		KeyID:      keyID,

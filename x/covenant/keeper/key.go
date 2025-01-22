@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"encoding/hex"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -17,8 +18,19 @@ const (
 
 // GetKey returns the key of the given ID
 func (k Keeper) GetKey(ctx sdk.Context, keyID multisig.KeyID) (multisig.Key, bool) {
+	// For Transactional model, the keyID is the custodians pubkey + txid
+	id := keyID.String()
+	buffer, err := hex.DecodeString(id)
+	if err != nil {
+		return nil, false
+	}
+	if len(buffer) > 32 {
+		len := len(buffer) - 32
+		id = hex.EncodeToString(buffer[:len])
+		k.Logger(ctx).Info("Transactional model keyID", "fullFeyID", keyID, "originKeyId", id)
+	}
 	var key multisigTypes.Key
-	ok := k.getStore(ctx).Get(keyPrefix.Append(utils.LowerCaseKey(keyID.String())), &key)
+	ok := k.getStore(ctx).Get(keyPrefix.Append(utils.LowerCaseKey(id)), &key)
 	if !ok {
 		return nil, false
 	}

@@ -7,6 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
+	"github.com/ethereum/go-ethereum/common"
 	utils "github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	github_com_scalarorg_scalar_core_x_multisig_exported "github.com/scalarorg/scalar-core/x/multisig/exported"
@@ -110,6 +111,12 @@ var _ types.Nexus = &NexusMock{}
 //			ComputeTransferFeeFunc: func(ctx sdk.Context, sourceChain github_com_scalarorg_scalar_core_x_nexus_exported.Chain, destinationChain github_com_scalarorg_scalar_core_x_nexus_exported.Chain, asset sdk.Coin) (sdk.Coin, error) {
 //				panic("mock out the ComputeTransferFee method")
 //			},
+//			EnqueueCrossChainTransferFunc: func(ctx sdk.Context, senderChain github_com_scalarorg_scalar_core_x_nexus_exported.Chain, sourceTxID common.Hash, recipient github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress, asset sdk.Coin) (github_com_scalarorg_scalar_core_x_nexus_exported.TransferID, error) {
+//				panic("mock out the EnqueueCrossChainTransfer method")
+//			},
+//			EnqueueForCrossChainTransferFunc: func(ctx sdk.Context, sender github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress, sourceTxID common.Hash, amount sdk.Coin) (github_com_scalarorg_scalar_core_x_nexus_exported.TransferID, error) {
+//				panic("mock out the EnqueueForCrossChainTransfer method")
+//			},
 //			EnqueueForTransferFunc: func(ctx sdk.Context, sender github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress, amount sdk.Coin) (github_com_scalarorg_scalar_core_x_nexus_exported.TransferID, error) {
 //				panic("mock out the EnqueueForTransfer method")
 //			},
@@ -188,6 +195,12 @@ type NexusMock struct {
 
 	// ComputeTransferFeeFunc mocks the ComputeTransferFee method.
 	ComputeTransferFeeFunc func(ctx sdk.Context, sourceChain github_com_scalarorg_scalar_core_x_nexus_exported.Chain, destinationChain github_com_scalarorg_scalar_core_x_nexus_exported.Chain, asset sdk.Coin) (sdk.Coin, error)
+
+	// EnqueueCrossChainTransferFunc mocks the EnqueueCrossChainTransfer method.
+	EnqueueCrossChainTransferFunc func(ctx sdk.Context, senderChain github_com_scalarorg_scalar_core_x_nexus_exported.Chain, sourceTxID common.Hash, recipient github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress, asset sdk.Coin) (github_com_scalarorg_scalar_core_x_nexus_exported.TransferID, error)
+
+	// EnqueueForCrossChainTransferFunc mocks the EnqueueForCrossChainTransfer method.
+	EnqueueForCrossChainTransferFunc func(ctx sdk.Context, sender github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress, sourceTxID common.Hash, amount sdk.Coin) (github_com_scalarorg_scalar_core_x_nexus_exported.TransferID, error)
 
 	// EnqueueForTransferFunc mocks the EnqueueForTransfer method.
 	EnqueueForTransferFunc func(ctx sdk.Context, sender github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress, amount sdk.Coin) (github_com_scalarorg_scalar_core_x_nexus_exported.TransferID, error)
@@ -278,6 +291,30 @@ type NexusMock struct {
 			DestinationChain github_com_scalarorg_scalar_core_x_nexus_exported.Chain
 			// Asset is the asset argument value.
 			Asset sdk.Coin
+		}
+		// EnqueueCrossChainTransfer holds details about calls to the EnqueueCrossChainTransfer method.
+		EnqueueCrossChainTransfer []struct {
+			// Ctx is the ctx argument value.
+			Ctx sdk.Context
+			// SenderChain is the senderChain argument value.
+			SenderChain github_com_scalarorg_scalar_core_x_nexus_exported.Chain
+			// SourceTxID is the sourceTxID argument value.
+			SourceTxID common.Hash
+			// Recipient is the recipient argument value.
+			Recipient github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress
+			// Asset is the asset argument value.
+			Asset sdk.Coin
+		}
+		// EnqueueForCrossChainTransfer holds details about calls to the EnqueueForCrossChainTransfer method.
+		EnqueueForCrossChainTransfer []struct {
+			// Ctx is the ctx argument value.
+			Ctx sdk.Context
+			// Sender is the sender argument value.
+			Sender github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress
+			// SourceTxID is the sourceTxID argument value.
+			SourceTxID common.Hash
+			// Amount is the amount argument value.
+			Amount sdk.Coin
 		}
 		// EnqueueForTransfer holds details about calls to the EnqueueForTransfer method.
 		EnqueueForTransfer []struct {
@@ -456,6 +493,8 @@ type NexusMock struct {
 	lockAddTransferFee                sync.RWMutex
 	lockArchivePendingTransfer        sync.RWMutex
 	lockComputeTransferFee            sync.RWMutex
+	lockEnqueueCrossChainTransfer     sync.RWMutex
+	lockEnqueueForCrossChainTransfer  sync.RWMutex
 	lockEnqueueForTransfer            sync.RWMutex
 	lockEnqueueRouteMessage           sync.RWMutex
 	lockEnqueueTransfer               sync.RWMutex
@@ -592,6 +631,98 @@ func (mock *NexusMock) ComputeTransferFeeCalls() []struct {
 	mock.lockComputeTransferFee.RLock()
 	calls = mock.calls.ComputeTransferFee
 	mock.lockComputeTransferFee.RUnlock()
+	return calls
+}
+
+// EnqueueCrossChainTransfer calls EnqueueCrossChainTransferFunc.
+func (mock *NexusMock) EnqueueCrossChainTransfer(ctx sdk.Context, senderChain github_com_scalarorg_scalar_core_x_nexus_exported.Chain, sourceTxID common.Hash, recipient github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress, asset sdk.Coin) (github_com_scalarorg_scalar_core_x_nexus_exported.TransferID, error) {
+	if mock.EnqueueCrossChainTransferFunc == nil {
+		panic("NexusMock.EnqueueCrossChainTransferFunc: method is nil but Nexus.EnqueueCrossChainTransfer was just called")
+	}
+	callInfo := struct {
+		Ctx         sdk.Context
+		SenderChain github_com_scalarorg_scalar_core_x_nexus_exported.Chain
+		SourceTxID  common.Hash
+		Recipient   github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress
+		Asset       sdk.Coin
+	}{
+		Ctx:         ctx,
+		SenderChain: senderChain,
+		SourceTxID:  sourceTxID,
+		Recipient:   recipient,
+		Asset:       asset,
+	}
+	mock.lockEnqueueCrossChainTransfer.Lock()
+	mock.calls.EnqueueCrossChainTransfer = append(mock.calls.EnqueueCrossChainTransfer, callInfo)
+	mock.lockEnqueueCrossChainTransfer.Unlock()
+	return mock.EnqueueCrossChainTransferFunc(ctx, senderChain, sourceTxID, recipient, asset)
+}
+
+// EnqueueCrossChainTransferCalls gets all the calls that were made to EnqueueCrossChainTransfer.
+// Check the length with:
+//
+//	len(mockedNexus.EnqueueCrossChainTransferCalls())
+func (mock *NexusMock) EnqueueCrossChainTransferCalls() []struct {
+	Ctx         sdk.Context
+	SenderChain github_com_scalarorg_scalar_core_x_nexus_exported.Chain
+	SourceTxID  common.Hash
+	Recipient   github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress
+	Asset       sdk.Coin
+} {
+	var calls []struct {
+		Ctx         sdk.Context
+		SenderChain github_com_scalarorg_scalar_core_x_nexus_exported.Chain
+		SourceTxID  common.Hash
+		Recipient   github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress
+		Asset       sdk.Coin
+	}
+	mock.lockEnqueueCrossChainTransfer.RLock()
+	calls = mock.calls.EnqueueCrossChainTransfer
+	mock.lockEnqueueCrossChainTransfer.RUnlock()
+	return calls
+}
+
+// EnqueueForCrossChainTransfer calls EnqueueForCrossChainTransferFunc.
+func (mock *NexusMock) EnqueueForCrossChainTransfer(ctx sdk.Context, sender github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress, sourceTxID common.Hash, amount sdk.Coin) (github_com_scalarorg_scalar_core_x_nexus_exported.TransferID, error) {
+	if mock.EnqueueForCrossChainTransferFunc == nil {
+		panic("NexusMock.EnqueueForCrossChainTransferFunc: method is nil but Nexus.EnqueueForCrossChainTransfer was just called")
+	}
+	callInfo := struct {
+		Ctx        sdk.Context
+		Sender     github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress
+		SourceTxID common.Hash
+		Amount     sdk.Coin
+	}{
+		Ctx:        ctx,
+		Sender:     sender,
+		SourceTxID: sourceTxID,
+		Amount:     amount,
+	}
+	mock.lockEnqueueForCrossChainTransfer.Lock()
+	mock.calls.EnqueueForCrossChainTransfer = append(mock.calls.EnqueueForCrossChainTransfer, callInfo)
+	mock.lockEnqueueForCrossChainTransfer.Unlock()
+	return mock.EnqueueForCrossChainTransferFunc(ctx, sender, sourceTxID, amount)
+}
+
+// EnqueueForCrossChainTransferCalls gets all the calls that were made to EnqueueForCrossChainTransfer.
+// Check the length with:
+//
+//	len(mockedNexus.EnqueueForCrossChainTransferCalls())
+func (mock *NexusMock) EnqueueForCrossChainTransferCalls() []struct {
+	Ctx        sdk.Context
+	Sender     github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress
+	SourceTxID common.Hash
+	Amount     sdk.Coin
+} {
+	var calls []struct {
+		Ctx        sdk.Context
+		Sender     github_com_scalarorg_scalar_core_x_nexus_exported.CrossChainAddress
+		SourceTxID common.Hash
+		Amount     sdk.Coin
+	}
+	mock.lockEnqueueForCrossChainTransfer.RLock()
+	calls = mock.calls.EnqueueForCrossChainTransfer
+	mock.lockEnqueueForCrossChainTransfer.RUnlock()
 	return calls
 }
 

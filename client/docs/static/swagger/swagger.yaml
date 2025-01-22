@@ -8742,7 +8742,7 @@ paths:
         - MsgService
   /scalar/chains/v1beta1/sign_btc_commands:
     post:
-      operationId: SignBTCCommands
+      operationId: SignPsbtCommand
       responses:
         '200':
           description: A successful response.
@@ -18632,6 +18632,9 @@ paths:
                         - TRANSFER_STATE_INSUFFICIENT_AMOUNT
                         - TRANSFER_STATE_FAILED
                       default: TRANSFER_STATE_UNSPECIFIED
+                    source_tx_hash:
+                      type: string
+                      format: byte
                   title: >-
                     CrossChainTransfer represents a generalized transfer of some
                     asset to a
@@ -57481,7 +57484,32 @@ definitions:
         format: byte
   scalar.chains.v1beta1.SetGatewayResponse:
     type: object
-  scalar.chains.v1beta1.SignBTCCommandsRequest:
+  scalar.chains.v1beta1.SignBtcCommandsRequest:
+    type: object
+    properties:
+      sender:
+        type: string
+        format: byte
+      chain:
+        type: string
+  scalar.chains.v1beta1.SignCommandsRequest:
+    type: object
+    properties:
+      sender:
+        type: string
+        format: byte
+      chain:
+        type: string
+  scalar.chains.v1beta1.SignCommandsResponse:
+    type: object
+    properties:
+      batched_commands_id:
+        type: string
+        format: byte
+      command_count:
+        type: integer
+        format: int64
+  scalar.chains.v1beta1.SignPsbtCommandRequest:
     type: object
     properties:
       sender:
@@ -57492,24 +57520,7 @@ definitions:
       psbt:
         type: string
         format: byte
-  scalar.chains.v1beta1.SignBTCCommandsResponse:
-    type: object
-    properties:
-      batched_commands_id:
-        type: string
-        format: byte
-      command_count:
-        type: integer
-        format: int64
-  scalar.chains.v1beta1.SignCommandsRequest:
-    type: object
-    properties:
-      sender:
-        type: string
-        format: byte
-      chain:
-        type: string
-  scalar.chains.v1beta1.SignCommandsResponse:
+  scalar.chains.v1beta1.SignPsbtCommandResponse:
     type: object
     properties:
       batched_commands_id:
@@ -57697,6 +57708,12 @@ definitions:
       - STATUS_ACTIVATED
       - STATUS_DEACTIVATED
     default: STATUS_UNSPECIFIED
+  scalar.protocol.exported.v1beta1.LiquidityModel:
+    type: string
+    enum:
+      - LIQUIDITY_MODEL_POOLING
+      - LIQUIDITY_MODEL_TRANSACTIONAL
+    default: LIQUIDITY_MODEL_POOLING
   scalar.protocol.v1beta1.AddSupportedChainRequest:
     type: object
     properties:
@@ -58024,12 +58041,6 @@ definitions:
               title: >-
                 DestinationChain represents a blockchain where tokens can be
                 sent
-  scalar.protocol.v1beta1.LiquidityModel:
-    type: string
-    enum:
-      - LIQUIDITY_MODEL_POOLING
-      - LIQUIDITY_MODEL_TRANSACTIONAL
-    default: LIQUIDITY_MODEL_POOLING
   scalar.protocol.v1beta1.Protocol:
     type: object
     properties:
@@ -58992,6 +59003,9 @@ definitions:
           - TRANSFER_STATE_INSUFFICIENT_AMOUNT
           - TRANSFER_STATE_FAILED
         default: TRANSFER_STATE_UNSPECIFIED
+      source_tx_hash:
+        type: string
+        format: byte
     title: |-
       CrossChainTransfer represents a generalized transfer of some asset to a
       registered blockchain
@@ -59858,6 +59872,9 @@ definitions:
                 - TRANSFER_STATE_INSUFFICIENT_AMOUNT
                 - TRANSFER_STATE_FAILED
               default: TRANSFER_STATE_UNSPECIFIED
+            source_tx_hash:
+              type: string
+              format: byte
           title: >-
             CrossChainTransfer represents a generalized transfer of some asset
             to a

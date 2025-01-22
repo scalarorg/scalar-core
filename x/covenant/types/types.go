@@ -52,18 +52,27 @@ func (g CustodianGroup) CreateKey(ctx sdk.Context, snapshot snapshot.Snapshot, t
 		pubKeys[custodian.ValAddress] = custodian.BtcPubkey
 	}
 	key := multisigTypes.Key{
-		ID: multisig.KeyID(g.Uid),
-		// Snapshot: snapshot.Snapshot{
-		// 	Timestamp:    ctx.BlockTime(),
-		// 	Height:       ctx.BlockHeight(),
-		// 	Participants: participants,
-		// 	BondedWeight: sdk.NewUint(400),
-		// },
+		ID:               multisig.KeyID(hex.EncodeToString(g.BtcPubkey)),
 		Snapshot:         snapshot,
 		PubKeys:          pubKeys,
 		SigningThreshold: threshold,
 		State:            multisig.Active,
 	}
+	// fakeKey: = multisigTypes.Key{
+	// 	ID: MOCK_CURRENT_KEY_ID,
+	// 	Snapshot: snapshot.Snapshot{
+	// 		Timestamp:    ctx.BlockTime(),
+	// 		Height:       ctx.BlockHeight(),
+	// 		Participants: participants,
+	// 		BondedWeight: sdk.NewUint(400),
+	// 	},
+	// 	PubKeys: pubKeys,
+	// 	SigningThreshold: utils.Threshold{
+	// 		Numerator:   3,
+	// 		Denominator: 4,
+	// 	},
+	// 	State: multisig.Active,
+	// }
 	return key
 }
 

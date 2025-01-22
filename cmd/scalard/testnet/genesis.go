@@ -31,6 +31,7 @@ import (
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
 	permissionexported "github.com/scalarorg/scalar-core/x/permission/exported"
 	permissiontypes "github.com/scalarorg/scalar-core/x/permission/types"
+	pexported "github.com/scalarorg/scalar-core/x/protocol/exported"
 	protocoltypes "github.com/scalarorg/scalar-core/x/protocol/types"
 	scalarnettypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
 	snapshottypes "github.com/scalarorg/scalar-core/x/snapshot/types"
@@ -55,11 +56,11 @@ func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGro
 				Address: chain.TokenAddress,
 			})
 		}
-		var model protocoltypes.LiquidityModel
+		var model pexported.LiquidityModel
 		if protocol.Model == "transactional" {
-			model = protocoltypes.Transactional
+			model = pexported.Transactional
 		} else if protocol.Model == "pooling" {
-			model = protocoltypes.Pooling
+			model = pexported.Pooling
 		}
 		protocols = append(protocols, &protocoltypes.Protocol{
 			BitcoinPubkey: protocol.BitcoinPubKey,

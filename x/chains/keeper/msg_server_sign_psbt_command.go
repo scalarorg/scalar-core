@@ -7,12 +7,11 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 )
 
-func (s msgServer) SignBtcCommand(c context.Context, req *types.SignBtcCommandsRequest) (*types.SignCommandsResponse, error) {
+func (s msgServer) SignPsbtCommand(c context.Context, req *types.SignPsbtCommandRequest) (*types.SignPsbtCommandResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	chain, ok := s.nexus.GetChain(ctx, req.Chain)
 	if !ok {
@@ -44,30 +43,13 @@ func (s msgServer) SignBtcCommand(c context.Context, req *types.SignBtcCommandsR
 	}
 
 	if len(commandBatch.GetCommandIDs()) == 0 {
-		return &types.SignCommandsResponse{CommandCount: 0, BatchedCommandsID: nil}, nil
+		return &types.SignPsbtCommandResponse{CommandCount: 0, BatchedCommandsID: nil}, nil
 	}
 
-	clog.Yellowf("[keeper] [msg_server_sign_btc_commands] psbt is empty, try extract psbt from first command")
-	if len(commandBatch.GetCommandIDs()) > 1 {
-		clog.Yellowf("[keeper] [msg_server_sign_btc_commands] more than one command in batch, only support one command for now")
-		return nil, fmt.Errorf("more than one command in batch, only support one command for now")
-	}
-	commandId := commandBatch.GetCommandIDs()[0]
-	command, ok := keeper.GetCommand(ctx, commandId)
-	if !ok {
-		return nil, fmt.Errorf("command %s not found", commandId)
-	}
-	payload, err := encode.DecodeContractCallWithTokenPayload(command.Payload)
-	if err != nil {
-		return nil, err
-	}
-	if payload.PayloadType != encode.ContractCallWithTokenPayloadType_UPC {
-		return nil, fmt.Errorf("command %s is not a contract call with token in UPC model", commandId)
-	}
 	if err := s.covenant.SignPsbt(
 		ctx,
 		commandBatch.GetKeyID(),
-		payload.UPC.Psbt,
+		req.Psbt,
 		types.ModuleName,
 		chain.Name,
 		types.NewSigMetadata(types.SigCommand, chain.Name, commandBatch.GetID()),
@@ -105,5 +87,5 @@ func (s msgServer) SignBtcCommand(c context.Context, req *types.SignBtcCommandsR
 		),
 	)
 
-	return &types.SignCommandsResponse{CommandCount: uint32(len(commandBatch.GetCommandIDs())), BatchedCommandsID: commandBatch.GetID()}, nil
+	return &types.SignPsbtCommandResponse{CommandCount: uint32(len(commandBatch.GetCommandIDs())), BatchedCommandsID: commandBatch.GetID()}, nil
 }
