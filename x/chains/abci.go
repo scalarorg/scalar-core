@@ -194,7 +194,7 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 
 	recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: e.DestinationAddress}
 	amount := sdk.NewCoin(asset, sdk.Int(e.Asset.Amount))
-	transferID, err := n.EnqueueTransfer(ctx, sourceChain, recipient, amount)
+	transferID, err := n.EnqueueCrossChainTransfer(ctx, sourceChain, common.Hash(event.TxID), recipient, amount)
 	if err != nil {
 		return sdkerrors.Wrap(err, "failed enqueuing transfer for event")
 	}
@@ -470,7 +470,7 @@ func handleConfirmDeposit(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 	// }
 
 	amount := sdk.NewCoin(burnerInfo.Asset, sdk.NewIntFromBigInt(e.Amount.BigInt()))
-	transferID, err := n.EnqueueForTransfer(ctx, depositAddr, amount)
+	transferID, err := n.EnqueueForCrossChainTransfer(ctx, depositAddr, common.Hash(event.TxID), amount)
 	if err != nil {
 		return err
 	}

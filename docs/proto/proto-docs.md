@@ -5320,6 +5320,7 @@ registered blockchain
 | `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `id` | [uint64](#uint64) |  |  |
 | `state` | [TransferState](#scalar.nexus.exported.v1beta1.TransferState) |  |  |
+| `source_tx_hash` | [bytes](#bytes) |  |  |
 
 
 

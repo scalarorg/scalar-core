@@ -17002,6 +17002,9 @@ paths:
                             - TRANSFER_STATE_INSUFFICIENT_AMOUNT
                             - TRANSFER_STATE_FAILED
                           default: TRANSFER_STATE_UNSPECIFIED
+                        source_tx_hash:
+                          type: string
+                          format: byte
                       title: >-
                         CrossChainTransfer represents a generalized transfer of
                         some asset to a
@@ -54411,6 +54414,9 @@ components:
             - TRANSFER_STATE_INSUFFICIENT_AMOUNT
             - TRANSFER_STATE_FAILED
           default: TRANSFER_STATE_UNSPECIFIED
+        source_tx_hash:
+          type: string
+          format: byte
       title: |-
         CrossChainTransfer represents a generalized transfer of some asset to a
         registered blockchain
@@ -55270,6 +55276,9 @@ components:
                   - TRANSFER_STATE_INSUFFICIENT_AMOUNT
                   - TRANSFER_STATE_FAILED
                 default: TRANSFER_STATE_UNSPECIFIED
+              source_tx_hash:
+                type: string
+                format: byte
             title: >-
               CrossChainTransfer represents a generalized transfer of some asset
               to a

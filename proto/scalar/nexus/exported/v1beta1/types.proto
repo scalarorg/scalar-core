@@ -33,6 +33,7 @@ message CrossChainTransfer {
   uint64 id = 3
       [ (gogoproto.customname) = "ID", (gogoproto.casttype) = "TransferID" ];
   TransferState state = 4;
+  bytes source_tx_hash = 5 [ (gogoproto.customname) = "SourceTxHash" ];
 }
 
 enum TransferState {

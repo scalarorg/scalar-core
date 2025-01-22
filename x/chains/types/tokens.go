@@ -114,7 +114,7 @@ func (t *ERC20Token) CreateMintCommand(keyID multisig.KeyID, transfer nexus.Cros
 
 	return NewMintTokenCommand(
 		keyID,
-		transfer.ID,
+		transfer,
 		t.metadata.Details.Symbol,
 		common.HexToAddress(transfer.Recipient.Address),
 		transfer.Asset.Amount.BigInt(),

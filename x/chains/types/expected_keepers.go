@@ -7,6 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
+	"github.com/ethereum/go-ethereum/common"
 	utils "github.com/scalarorg/scalar-core/utils"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
@@ -96,7 +97,11 @@ type Voter interface {
 type Nexus interface {
 	LinkAddresses(ctx sdk.Context, sender nexus.CrossChainAddress, recipient nexus.CrossChainAddress) error
 	GetRecipient(ctx sdk.Context, sender nexus.CrossChainAddress) (nexus.CrossChainAddress, bool)
+	EnqueueCrossChainTransfer(ctx sdk.Context, senderChain nexus.Chain, sourceTxID common.Hash, recipient nexus.CrossChainAddress, asset sdk.Coin) (nexus.TransferID, error)
+	EnqueueForCrossChainTransfer(ctx sdk.Context, sender nexus.CrossChainAddress, sourceTxID common.Hash, amount sdk.Coin) (nexus.TransferID, error)
+	// Deprecated: Use EnqueueCrossChainTransfer instead
 	EnqueueTransfer(ctx sdk.Context, senderChain nexus.Chain, recipient nexus.CrossChainAddress, asset sdk.Coin) (nexus.TransferID, error)
+	// Deprecated: Use EnqueueForCrossChainTransfer instead
 	EnqueueForTransfer(ctx sdk.Context, sender nexus.CrossChainAddress, amount sdk.Coin) (nexus.TransferID, error)
 	GetTransfersForChainPaginated(ctx sdk.Context, chain nexus.Chain, state nexus.TransferState, pageRequest *query.PageRequest) ([]nexus.CrossChainTransfer, *query.PageResponse, error)
 	ArchivePendingTransfer(ctx sdk.Context, transfer nexus.CrossChainTransfer)
