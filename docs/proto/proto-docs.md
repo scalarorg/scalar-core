@@ -446,12 +446,13 @@
 - [scalar/protocol/exported/v1beta1/types.proto](#scalar/protocol/exported/v1beta1/types.proto)
     - [ProtocolInfo](#scalar.protocol.exported.v1beta1.ProtocolInfo)
   
+    - [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel)
+  
 - [scalar/protocol/v1beta1/types.proto](#scalar/protocol/v1beta1/types.proto)
     - [Protocol](#scalar.protocol.v1beta1.Protocol)
     - [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute)
     - [SupportedChain](#scalar.protocol.v1beta1.SupportedChain)
   
-    - [LiquidityModel](#scalar.protocol.v1beta1.LiquidityModel)
     - [Status](#scalar.protocol.v1beta1.Status)
   
 - [scalar/protocol/v1beta1/genesis.proto](#scalar/protocol/v1beta1/genesis.proto)
@@ -6837,12 +6838,26 @@ Query defines the gRPC querier service.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `key_id` | [string](#string) |  |  |
+| `custodians_pubkey` | [bytes](#bytes) |  |  |
+| `liquidity_model` | [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
 
 
 
 
 
  <!-- end messages -->
+
+
+<a name="scalar.protocol.exported.v1beta1.LiquidityModel"></a>
+
+### LiquidityModel
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| LIQUIDITY_MODEL_POOLING | 0 |  |
+| LIQUIDITY_MODEL_TRANSACTIONAL | 1 |  |
+
 
  <!-- end enums -->
 
@@ -6891,7 +6906,7 @@ Query defines the gRPC querier service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `model` | [LiquidityModel](#scalar.protocol.v1beta1.LiquidityModel) |  |  |
+| `model` | [scalar.protocol.exported.v1beta1.LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
 
 
 
@@ -6915,18 +6930,6 @@ DestinationChain represents a blockchain where tokens can be sent
 
 
  <!-- end messages -->
-
-
-<a name="scalar.protocol.v1beta1.LiquidityModel"></a>
-
-### LiquidityModel
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| LIQUIDITY_MODEL_POOLING | 0 |  |
-| LIQUIDITY_MODEL_TRANSACTIONAL | 1 |  |
-
 
 
 <a name="scalar.protocol.v1beta1.Status"></a>

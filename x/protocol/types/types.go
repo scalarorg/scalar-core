@@ -39,6 +39,8 @@ func (p *Protocol) GetKeyID() string {
 // Get Unique keyId, which later can tell us how to sign btc psbt
 func (p *Protocol) ToProtocolInfo() *exported.ProtocolInfo {
 	return &exported.ProtocolInfo{
-		KeyID: multisig.KeyID(p.GetKeyID()),
+		KeyID:            multisig.KeyID(p.GetKeyID()),
+		CustodiansPubkey: p.CustodianGroup.BtcPubkey,
+		LiquidityModel:   p.Attribute.Model,
 	}
 }

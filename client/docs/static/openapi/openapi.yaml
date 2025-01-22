@@ -53142,6 +53142,12 @@ components:
         - STATUS_ACTIVATED
         - STATUS_DEACTIVATED
       default: STATUS_UNSPECIFIED
+    scalar.protocol.exported.v1beta1.LiquidityModel:
+      type: string
+      enum:
+        - LIQUIDITY_MODEL_POOLING
+        - LIQUIDITY_MODEL_TRANSACTIONAL
+      default: LIQUIDITY_MODEL_POOLING
     scalar.protocol.v1beta1.AddSupportedChainRequest:
       type: object
       properties:
@@ -53458,12 +53464,6 @@ components:
                   address:
                     type: string
                 title: DestinationChain represents a blockchain where tokens can be sent
-    scalar.protocol.v1beta1.LiquidityModel:
-      type: string
-      enum:
-        - LIQUIDITY_MODEL_POOLING
-        - LIQUIDITY_MODEL_TRANSACTIONAL
-      default: LIQUIDITY_MODEL_POOLING
     scalar.protocol.v1beta1.Protocol:
       type: object
       properties:

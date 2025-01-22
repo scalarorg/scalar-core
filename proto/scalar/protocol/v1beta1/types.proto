@@ -7,11 +7,20 @@ import "scalar/chains/v1beta1/params.proto";
 import "scalar/chains/v1beta1/tokens.proto";
 import "scalar/chains/v1beta1/types.proto";
 import "scalar/covenant/v1beta1/types.proto";
+import "scalar/protocol/exported/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
+enum Status {
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Unspecified"];
+  STATUS_ACTIVATED = 1 [(gogoproto.enumvalue_customname) = "Activated"];
+  STATUS_DEACTIVATED = 2 [(gogoproto.enumvalue_customname) = "Deactivated"];
+}
+
 message ProtocolAttribute {
-  LiquidityModel model = 1;
+  scalar.protocol.exported.v1beta1.LiquidityModel model = 1;
 }
 
 // DestinationChain represents a blockchain where tokens can be sent
@@ -31,17 +40,4 @@ message Protocol {
   scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
   scalar.chains.v1beta1.Asset asset = 9; //External asset
   repeated SupportedChain chains = 10; //Other chains with internal asset
-}
-enum LiquidityModel {
-  option (gogoproto.goproto_enum_prefix) = false;
-
-  LIQUIDITY_MODEL_POOLING = 0 [(gogoproto.enumvalue_customname) = "Pooling"];
-  LIQUIDITY_MODEL_TRANSACTIONAL = 1 [(gogoproto.enumvalue_customname) = "Transactional"];
-}
-enum Status {
-  option (gogoproto.goproto_enum_prefix) = false;
-
-  STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Unspecified"];
-  STATUS_ACTIVATED = 1 [(gogoproto.enumvalue_customname) = "Activated"];
-  STATUS_DEACTIVATED = 2 [(gogoproto.enumvalue_customname) = "Deactivated"];
 }
