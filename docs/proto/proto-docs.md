@@ -149,10 +149,11 @@
     - [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse)
     - [SetGatewayRequest](#scalar.chains.v1beta1.SetGatewayRequest)
     - [SetGatewayResponse](#scalar.chains.v1beta1.SetGatewayResponse)
-    - [SignBTCCommandsRequest](#scalar.chains.v1beta1.SignBTCCommandsRequest)
-    - [SignBTCCommandsResponse](#scalar.chains.v1beta1.SignBTCCommandsResponse)
+    - [SignBtcCommandsRequest](#scalar.chains.v1beta1.SignBtcCommandsRequest)
     - [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest)
     - [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse)
+    - [SignPsbtCommandRequest](#scalar.chains.v1beta1.SignPsbtCommandRequest)
+    - [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse)
   
 - [scalar/chains/v1beta1/query.proto](#scalar/chains/v1beta1/query.proto)
     - [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest)
@@ -2726,9 +2727,9 @@ address
 
 
 
-<a name="scalar.chains.v1beta1.SignBTCCommandsRequest"></a>
+<a name="scalar.chains.v1beta1.SignBtcCommandsRequest"></a>
 
-### SignBTCCommandsRequest
+### SignBtcCommandsRequest
 
 
 
@@ -2736,23 +2737,6 @@ address
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `psbt` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.SignBTCCommandsResponse"></a>
-
-### SignBTCCommandsResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `batched_commands_id` | [bytes](#bytes) |  |  |
-| `command_count` | [uint32](#uint32) |  |  |
 
 
 
@@ -2778,6 +2762,39 @@ address
 <a name="scalar.chains.v1beta1.SignCommandsResponse"></a>
 
 ### SignCommandsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `batched_commands_id` | [bytes](#bytes) |  |  |
+| `command_count` | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.SignPsbtCommandRequest"></a>
+
+### SignPsbtCommandRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `psbt` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.SignPsbtCommandResponse"></a>
+
+### SignPsbtCommandResponse
 
 
 
@@ -3456,7 +3473,8 @@ Msg defines the btc Msg service.
 | `CreatePendingTransfers` | [CreatePendingTransfersRequest](#scalar.chains.v1beta1.CreatePendingTransfersRequest) | [CreatePendingTransfersResponse](#scalar.chains.v1beta1.CreatePendingTransfersResponse) |  | POST|/scalar/chains/v1beta1/create_pending_transfers|
 | `CreateTransferOperatorship` | [CreateTransferOperatorshipRequest](#scalar.chains.v1beta1.CreateTransferOperatorshipRequest) | [CreateTransferOperatorshipResponse](#scalar.chains.v1beta1.CreateTransferOperatorshipResponse) |  | POST|/scalar/chains/v1beta1/create_transfer_operatorship|
 | `SignCommands` | [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest) | [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_commands|
-| `SignBTCCommands` | [SignBTCCommandsRequest](#scalar.chains.v1beta1.SignBTCCommandsRequest) | [SignBTCCommandsResponse](#scalar.chains.v1beta1.SignBTCCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
+| `SignBtcCommand` | [SignBtcCommandsRequest](#scalar.chains.v1beta1.SignBtcCommandsRequest) | [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
+| `SignPsbtCommand` | [SignPsbtCommandRequest](#scalar.chains.v1beta1.SignPsbtCommandRequest) | [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
 | `AddChain` | [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest) | [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse) |  | POST|/scalar/chains/v1beta1/add_chain|
 | `RetryFailedEvent` | [RetryFailedEventRequest](#scalar.chains.v1beta1.RetryFailedEventRequest) | [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse) |  | POST|/scalar/chains/v1beta1/retry-failed-event|
 

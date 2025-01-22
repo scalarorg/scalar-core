@@ -16,8 +16,8 @@ import (
 
 	"github.com/scalarorg/scalar-core/x/chains/types"
 
-	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	covenant "github.com/scalarorg/scalar-core/x/covenant/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 const (
@@ -37,7 +37,6 @@ func GetTxCmd() *cobra.Command {
 
 	chainsTxCmd.AddCommand(
 		GetCmdCreateConfirmSourceTxs(),
-		GetCmdSignBtcCommands(),
 		GetCmdSetGateway(),
 		GetCmdLink(),
 		GetCmdConfirmERC20TokenDeployment(),
@@ -48,6 +47,8 @@ func GetTxCmd() *cobra.Command {
 		GetCmdCreateBurnTokens(),
 		GetCmdCreateTransferOperatorship(),
 		GetCmdSignCommands(),
+		GetCmdSignBtcCommands(),
+		GetCmdSignPsbtCommand(),
 		GetCmdAddChain(),
 	)
 	return chainsTxCmd
@@ -376,11 +377,32 @@ func GetCmdAddChain() *cobra.Command {
 	return cmd
 }
 
-// GetCmdSignBtcCommands returns the cli command to sign pending commands for a BTC chain contract
+// GetCmdSignBtcCommands returns the cli command to sign pending commands for a BTC transaction
 func GetCmdSignBtcCommands() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sign-btc-commands [chain]",
 		Short: "Sign pending commands for a BTC chain contract",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cliCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			msg := types.NewSignBtcCommandsRequest(cliCtx.GetFromAddress(), args[0])
+
+			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
+		},
+	}
+	flags.AddTxFlagsToCmd(cmd)
+	return cmd
+}
+
+// GetCmdSignPsbtCommand returns the cli command to sign psbt commands for a BTC transaction
+func GetCmdSignPsbtCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "sign-psbt [chain] [psbt]",
+		Short: "Sign psbt commands for a BTC transaction",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cliCtx, err := client.GetClientTxContext(cmd)
@@ -392,7 +414,7 @@ func GetCmdSignBtcCommands() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewSignBTCCommandsRequest(cliCtx.GetFromAddress(), args[0], psbt)
+			msg := types.NewSignPsbtCommandRequest(cliCtx.GetFromAddress(), args[0], psbt)
 
 			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
 		},

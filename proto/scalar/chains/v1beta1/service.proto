@@ -89,7 +89,14 @@ service MsgService {
     };
   }
 
-  rpc SignBTCCommands(SignBTCCommandsRequest) returns (SignBTCCommandsResponse) {
+  rpc SignBtcCommand(SignBtcCommandsRequest) returns (SignCommandsResponse) {
+    option (google.api.http) = {
+      post: "/scalar/chains/v1beta1/sign_btc_commands"
+      body: "*"
+    };
+  }
+
+  rpc SignPsbtCommand(SignPsbtCommandRequest) returns (SignPsbtCommandResponse) {
     option (google.api.http) = {
       post: "/scalar/chains/v1beta1/sign_btc_commands"
       body: "*"

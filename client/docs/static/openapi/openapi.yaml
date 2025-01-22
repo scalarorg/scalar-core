@@ -7984,7 +7984,7 @@ paths:
         - MsgService
   /scalar/chains/v1beta1/sign_btc_commands:
     post:
-      operationId: SignBTCCommands
+      operationId: SignPsbtCommand
       responses:
         "200":
           description: A successful response.
@@ -52925,7 +52925,32 @@ components:
           format: byte
     scalar.chains.v1beta1.SetGatewayResponse:
       type: object
-    scalar.chains.v1beta1.SignBTCCommandsRequest:
+    scalar.chains.v1beta1.SignBtcCommandsRequest:
+      type: object
+      properties:
+        sender:
+          type: string
+          format: byte
+        chain:
+          type: string
+    scalar.chains.v1beta1.SignCommandsRequest:
+      type: object
+      properties:
+        sender:
+          type: string
+          format: byte
+        chain:
+          type: string
+    scalar.chains.v1beta1.SignCommandsResponse:
+      type: object
+      properties:
+        batched_commands_id:
+          type: string
+          format: byte
+        command_count:
+          type: integer
+          format: int64
+    scalar.chains.v1beta1.SignPsbtCommandRequest:
       type: object
       properties:
         sender:
@@ -52936,24 +52961,7 @@ components:
         psbt:
           type: string
           format: byte
-    scalar.chains.v1beta1.SignBTCCommandsResponse:
-      type: object
-      properties:
-        batched_commands_id:
-          type: string
-          format: byte
-        command_count:
-          type: integer
-          format: int64
-    scalar.chains.v1beta1.SignCommandsRequest:
-      type: object
-      properties:
-        sender:
-          type: string
-          format: byte
-        chain:
-          type: string
-    scalar.chains.v1beta1.SignCommandsResponse:
+    scalar.chains.v1beta1.SignPsbtCommandResponse:
       type: object
       properties:
         batched_commands_id:
