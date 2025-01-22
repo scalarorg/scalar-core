@@ -6195,6 +6195,8 @@ paths:
                           transfer_id:
                             type: string
                             format: uint64
+                          command_id:
+                            type: string
                           sender:
                             type: string
                           destination_chain:
@@ -52221,6 +52223,8 @@ components:
             transfer_id:
               type: string
               format: uint64
+            command_id:
+              type: string
             sender:
               type: string
             destination_chain:
@@ -52485,6 +52489,8 @@ components:
                 transfer_id:
                   type: string
                   format: uint64
+                command_id:
+                  type: string
                 sender:
                   type: string
                 destination_chain:
@@ -52646,6 +52652,8 @@ components:
         transfer_id:
           type: string
           format: uint64
+        command_id:
+          type: string
         sender:
           type: string
         destination_chain:
