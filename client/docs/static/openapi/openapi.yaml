@@ -9631,9 +9631,9 @@ paths:
         required: true
       tags:
         - Msg
-  /scalar/protocol/v1beta1/protocol_asset:
+  /scalar/protocol/v1beta1/protocol:
     get:
-      operationId: ProtocolAsset
+      operationId: Protocol
       responses:
         "200":
           description: A successful response.
@@ -9642,13 +9642,33 @@ paths:
               schema:
                 type: object
                 properties:
-                  asset:
+                  protocol:
                     type: object
                     properties:
-                      chain:
+                      key_id:
                         type: string
-                      name:
+                      custodians_pubkey:
                         type: string
+                        format: byte
+                      liquidity_model:
+                        type: string
+                        enum:
+                          - LIQUIDITY_MODEL_POOLING
+                          - LIQUIDITY_MODEL_TRANSACTIONAL
+                        default: LIQUIDITY_MODEL_POOLING
+                      symbol:
+                        type: string
+                      origin_chain:
+                        type: string
+                      minor_addresses:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            chain_name:
+                              type: string
+                            address:
+                              type: string
         default:
           description: An unexpected error response
           content:
@@ -9820,17 +9840,22 @@ paths:
                               "value": "1.212s"
                             }
       parameters:
-        - name: source_chain
+        - name: origin_chain
           in: query
           required: false
           schema:
             type: string
-        - name: destination_chain
+        - name: minor_chain
           in: query
           required: false
           schema:
             type: string
-        - name: token_address
+        - name: symbol
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: address
           in: query
           required: false
           schema:
@@ -53164,6 +53189,40 @@ components:
         - LIQUIDITY_MODEL_POOLING
         - LIQUIDITY_MODEL_TRANSACTIONAL
       default: LIQUIDITY_MODEL_POOLING
+    scalar.protocol.exported.v1beta1.MinorAddress:
+      type: object
+      properties:
+        chain_name:
+          type: string
+        address:
+          type: string
+    scalar.protocol.exported.v1beta1.ProtocolInfo:
+      type: object
+      properties:
+        key_id:
+          type: string
+        custodians_pubkey:
+          type: string
+          format: byte
+        liquidity_model:
+          type: string
+          enum:
+            - LIQUIDITY_MODEL_POOLING
+            - LIQUIDITY_MODEL_TRANSACTIONAL
+          default: LIQUIDITY_MODEL_POOLING
+        symbol:
+          type: string
+        origin_chain:
+          type: string
+        minor_addresses:
+          type: array
+          items:
+            type: object
+            properties:
+              chain_name:
+                type: string
+              address:
+                type: string
     scalar.protocol.v1beta1.AddSupportedChainRequest:
       type: object
       properties:
@@ -53585,16 +53644,6 @@ components:
               address:
                 type: string
             title: DestinationChain represents a blockchain where tokens can be sent
-    scalar.protocol.v1beta1.ProtocolAssetResponse:
-      type: object
-      properties:
-        asset:
-          type: object
-          properties:
-            chain:
-              type: string
-            name:
-              type: string
     scalar.protocol.v1beta1.ProtocolAttribute:
       type: object
       properties:
@@ -53604,6 +53653,36 @@ components:
             - LIQUIDITY_MODEL_POOLING
             - LIQUIDITY_MODEL_TRANSACTIONAL
           default: LIQUIDITY_MODEL_POOLING
+    scalar.protocol.v1beta1.ProtocolResponse:
+      type: object
+      properties:
+        protocol:
+          type: object
+          properties:
+            key_id:
+              type: string
+            custodians_pubkey:
+              type: string
+              format: byte
+            liquidity_model:
+              type: string
+              enum:
+                - LIQUIDITY_MODEL_POOLING
+                - LIQUIDITY_MODEL_TRANSACTIONAL
+              default: LIQUIDITY_MODEL_POOLING
+            symbol:
+              type: string
+            origin_chain:
+              type: string
+            minor_addresses:
+              type: array
+              items:
+                type: object
+                properties:
+                  chain_name:
+                    type: string
+                  address:
+                    type: string
     scalar.protocol.v1beta1.ProtocolsResponse:
       type: object
       properties:

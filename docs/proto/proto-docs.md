@@ -447,6 +447,7 @@
     - [Query](#scalar.permission.v1beta1.Query)
   
 - [scalar/protocol/exported/v1beta1/types.proto](#scalar/protocol/exported/v1beta1/types.proto)
+    - [MinorAddress](#scalar.protocol.exported.v1beta1.MinorAddress)
     - [ProtocolInfo](#scalar.protocol.exported.v1beta1.ProtocolInfo)
   
     - [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel)
@@ -465,8 +466,8 @@
     - [Params](#scalar.protocol.v1beta1.Params)
   
 - [scalar/protocol/v1beta1/query.proto](#scalar/protocol/v1beta1/query.proto)
-    - [ProtocolAssetRequest](#scalar.protocol.v1beta1.ProtocolAssetRequest)
-    - [ProtocolAssetResponse](#scalar.protocol.v1beta1.ProtocolAssetResponse)
+    - [ProtocolRequest](#scalar.protocol.v1beta1.ProtocolRequest)
+    - [ProtocolResponse](#scalar.protocol.v1beta1.ProtocolResponse)
     - [ProtocolsRequest](#scalar.protocol.v1beta1.ProtocolsRequest)
     - [ProtocolsResponse](#scalar.protocol.v1beta1.ProtocolsResponse)
   
@@ -6881,6 +6882,22 @@ Query defines the gRPC querier service.
 
 
 
+<a name="scalar.protocol.exported.v1beta1.MinorAddress"></a>
+
+### MinorAddress
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain_name` | [string](#string) |  |  |
+| `address` | [string](#string) |  |  |
+
+
+
+
+
+
 <a name="scalar.protocol.exported.v1beta1.ProtocolInfo"></a>
 
 ### ProtocolInfo
@@ -6892,6 +6909,9 @@ Query defines the gRPC querier service.
 | `key_id` | [string](#string) |  |  |
 | `custodians_pubkey` | [bytes](#bytes) |  |  |
 | `liquidity_model` | [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `origin_chain` | [string](#string) |  |  |
+| `minor_addresses` | [MinorAddress](#scalar.protocol.exported.v1beta1.MinorAddress) | repeated |  |
 
 
 
@@ -7068,32 +7088,33 @@ Params represent the genesis parameters for the module
 
 
 
-<a name="scalar.protocol.v1beta1.ProtocolAssetRequest"></a>
+<a name="scalar.protocol.v1beta1.ProtocolRequest"></a>
 
-### ProtocolAssetRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `source_chain` | [string](#string) |  |  |
-| `destination_chain` | [string](#string) |  |  |
-| `token_address` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.ProtocolAssetResponse"></a>
-
-### ProtocolAssetResponse
+### ProtocolRequest
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  |  |
+| `origin_chain` | [string](#string) |  |  |
+| `minor_chain` | [string](#string) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `address` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.protocol.v1beta1.ProtocolResponse"></a>
+
+### ProtocolResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `protocol` | [scalar.protocol.exported.v1beta1.ProtocolInfo](#scalar.protocol.exported.v1beta1.ProtocolInfo) |  |  |
 
 
 
@@ -7324,7 +7345,7 @@ Query defines the gRPC querier service
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `Protocols` | [ProtocolsRequest](#scalar.protocol.v1beta1.ProtocolsRequest) | [ProtocolsResponse](#scalar.protocol.v1beta1.ProtocolsResponse) | GetProtocols returns all Protocol | GET|/scalar/protocol/v1beta1|
-| `ProtocolAsset` | [ProtocolAssetRequest](#scalar.protocol.v1beta1.ProtocolAssetRequest) | [ProtocolAssetResponse](#scalar.protocol.v1beta1.ProtocolAssetResponse) |  | GET|/scalar/protocol/v1beta1/protocol_asset|
+| `Protocol` | [ProtocolRequest](#scalar.protocol.v1beta1.ProtocolRequest) | [ProtocolResponse](#scalar.protocol.v1beta1.ProtocolResponse) |  | GET|/scalar/protocol/v1beta1/protocol|
 
  <!-- end services -->
 

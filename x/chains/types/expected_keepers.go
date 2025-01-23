@@ -171,5 +171,5 @@ type CovenantKeeper interface {
 }
 
 type ProtocolKeeper interface {
-	FindProtocolByExternalSymbol(ctx sdk.Context, originChain nexus.ChainName, symbol string, minorChain nexus.ChainName) (*pexported.ProtocolInfo, error)
+	FindProtocolByExternalSymbol(ctx sdk.Context, originChain nexus.ChainName, minorChain nexus.ChainName, symbol string) (*pexported.ProtocolInfo, error)
 }

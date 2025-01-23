@@ -6,9 +6,10 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/slices"
-	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
-	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
+	mexported "github.com/scalarorg/scalar-core/x/multisig/exported"
+	mtypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 )
 
@@ -17,34 +18,42 @@ const (
 )
 
 // GetKey returns the key of the given ID
-func (k Keeper) GetKey(ctx sdk.Context, keyID multisig.KeyID) (multisig.Key, bool) {
+func (k Keeper) GetKey(ctx sdk.Context, keyID mexported.KeyID) (mtypes.Key, bool) {
 	// For Transactional model, the keyID is the custodians pubkey + txid
+	var key mtypes.Key
+	clog.Yellowf("[CovenantKeeper] [GetKey] keyID: %s", keyID)
+	// First try get key by input id
+	ok := k.getStore(ctx).Get(keyPrefix.Append(utils.LowerCaseKey(keyID.String())), &key)
+	if ok {
+		return key, true
+	}
+	//If key not found, try get key by second part (first part is txid)
 	id := keyID.String()
 	buffer, err := hex.DecodeString(id)
 	if err != nil {
-		return nil, false
+		clog.Redf("[CovenantKeeper] [GetKey] error: %s", err)
+		return key, false
 	}
 	if len(buffer) > 32 {
-		len := len(buffer) - 32
-		id = hex.EncodeToString(buffer[:len])
+		id = hex.EncodeToString(buffer[32:])
 		k.Logger(ctx).Info("Transactional model keyID", "fullFeyID", keyID, "originKeyId", id)
 	}
-	var key multisigTypes.Key
-	ok := k.getStore(ctx).Get(keyPrefix.Append(utils.LowerCaseKey(id)), &key)
+
+	ok = k.getStore(ctx).Get(keyPrefix.Append(utils.LowerCaseKey(id)), &key)
 	if !ok {
-		return nil, false
+		clog.Redf("[CovenantKeeper] [GetKey] key not found: %s", id)
 	}
 
-	return &key, true
+	return key, ok
 }
 
-func (k Keeper) GetAllKeys(ctx sdk.Context) []multisigTypes.Key {
+func (k Keeper) GetAllKeys(ctx sdk.Context) []mtypes.Key {
 	store := k.getStore(ctx)
-	keys := []multisigTypes.Key{}
+	keys := []mtypes.Key{}
 	iter := store.Iterator(keyPrefix)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 	for ; iter.Valid(); iter.Next() {
-		key := multisigTypes.Key{}
+		key := mtypes.Key{}
 		iter.UnmarshalValue(&key)
 		keys = append(keys, key)
 	}
@@ -52,7 +61,7 @@ func (k Keeper) GetAllKeys(ctx sdk.Context) []multisigTypes.Key {
 }
 
 // SetKey sets the given key
-func (k Keeper) SetKey(ctx sdk.Context, key multisigTypes.Key) {
+func (k Keeper) SetKey(ctx sdk.Context, key mtypes.Key) {
 	k.getStore(ctx).Set(keyPrefix.Append(utils.LowerCaseKey(key.ID.String())), &key)
 
 	// TODO: FIX THIS PROBLEM
@@ -71,16 +80,11 @@ func (k Keeper) SetKey(ctx sdk.Context, key multisigTypes.Key) {
 // 	return MOCK_CURRENT_KEY_ID, true
 // }
 
-func (k Keeper) getKey(ctx sdk.Context, id multisig.KeyID) (key multisigTypes.Key, ok bool) {
-	//return k._MustRemoveFakeKey(ctx), true
-	return key, k.getStore(ctx).Get(keyPrefix.Append(utils.LowerCaseKey(id.String())), &key)
-}
-
 // ID               github_com_scalarorg_scalar_core_x_multisig_exported.KeyID                `protobuf:"bytes,1,opt,name=id,proto3,casttype=github.com/scalarorg/scalar-core/x/multisig/exported.KeyID" json:"id,omitempty"`
 // 	Snapshot         exported.Snapshot                                                         `protobuf:"bytes,2,opt,name=snapshot,proto3" json:"snapshot"`
 // 	PubKeys          map[string]github_com_scalarorg_scalar_core_x_multisig_exported.PublicKey `protobuf:"bytes,3,rep,name=pub_keys,json=pubKeys,proto3,castvalue=github.com/scalarorg/scalar-core/x/multisig/exported.PublicKey" json:"pub_keys,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 
-func (k Keeper) _MustRemoveFakeKey(ctx sdk.Context) multisigTypes.Key {
+func (k Keeper) _MustRemoveFakeKey(ctx sdk.Context) mtypes.Key {
 	mockPubKey := map[string]string{
 		"scalarvaloper1u8ennvwsshneu4nvec38e3jvcxmppf7lfq3pf5": "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488",
 		"scalarvaloper1qyhnraq6dwpl69heem9qd4phrd946lct6xdgqg": "02f0f3d9beaf7a3945bcaa147e041ae1d5ca029bde7e40d8251f0783d6ecbe8fb5",
@@ -88,11 +92,11 @@ func (k Keeper) _MustRemoveFakeKey(ctx sdk.Context) multisigTypes.Key {
 		"scalarvaloper105wsknjutftqksqtugr83avrlsxdz0tvc96yhk": "03b59e575cef873ea95273afd55956c84590507200d410e693e4b079a426cc6102",
 	}
 
-	pubKeys := make(map[string]multisig.PublicKey)
+	pubKeys := make(map[string]mexported.PublicKey)
 	participants := map[string]snapshot.Participant{}
 
 	for address, pubkey := range mockPubKey {
-		var pk multisig.PublicKey
+		var pk mexported.PublicKey
 		pk, err := pk.FromHex(pubkey)
 		if err != nil {
 			panic(err)
@@ -109,7 +113,7 @@ func (k Keeper) _MustRemoveFakeKey(ctx sdk.Context) multisigTypes.Key {
 		}
 	}
 
-	return multisigTypes.Key{
+	return mtypes.Key{
 		ID: MOCK_CURRENT_KEY_ID,
 		Snapshot: snapshot.Snapshot{
 			Timestamp:    ctx.BlockTime(),
@@ -122,6 +126,6 @@ func (k Keeper) _MustRemoveFakeKey(ctx sdk.Context) multisigTypes.Key {
 			Numerator:   3,
 			Denominator: 4,
 		},
-		State: multisig.Active,
+		State: mexported.Active,
 	}
 }

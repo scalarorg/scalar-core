@@ -53,9 +53,9 @@ service Query {
     };
   }
 
-  rpc ProtocolAsset(ProtocolAssetRequest) returns (ProtocolAssetResponse) {
+  rpc Protocol(ProtocolRequest) returns (ProtocolResponse) {
     option (google.api.http) = {
-      get : "/scalar/protocol/v1beta1/protocol_asset"
+      get : "/scalar/protocol/v1beta1/protocol"
     };
   }
 }

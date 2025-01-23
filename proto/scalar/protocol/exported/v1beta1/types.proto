@@ -4,7 +4,6 @@ package scalar.protocol.exported.v1beta1;
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/exported";
 
 import "gogoproto/gogo.proto";
-
 option (gogoproto.goproto_getters_all) = false;
 
 enum LiquidityModel {
@@ -13,15 +12,27 @@ enum LiquidityModel {
   LIQUIDITY_MODEL_POOLING = 0 [(gogoproto.enumvalue_customname) = "Pooling"];
   LIQUIDITY_MODEL_TRANSACTIONAL = 1 [(gogoproto.enumvalue_customname) = "Transactional"];
 }
-
+message MinorAddress {
+    string chain_name = 1 [
+        (gogoproto.customname) = "ChainName",
+        (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"
+    ];
+    string address = 2;
+}
 message ProtocolInfo {
     string key_id = 1 [
         (gogoproto.customname) = "KeyID",
-        (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+        (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
     ];
     bytes custodians_pubkey = 2 [
         (gogoproto.customname) = "CustodiansPubkey"
     ];
     LiquidityModel liquidity_model = 3 [(gogoproto.customname) = "LiquidityModel"];
+    string symbol = 4;
+    string origin_chain = 5 [
+        (gogoproto.customname) = "OriginChain",
+        (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"
+    ];
+    repeated MinorAddress minor_addresses = 6 [(gogoproto.customname) = "MinorAddresses"];
 }

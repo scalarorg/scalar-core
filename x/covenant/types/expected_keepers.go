@@ -8,7 +8,7 @@ import (
 
 	"github.com/scalarorg/scalar-core/utils"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
-	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
+	mtypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
@@ -28,8 +28,8 @@ type Keeper interface {
 	GetCustodianGroup(ctx sdk.Context, groupId string) (custodianGroup *CustodianGroup, ok bool)
 
 	//GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
-	GetKey(ctx sdk.Context, keyID multisig.KeyID) (multisig.Key, bool)
-	SetKey(ctx sdk.Context, key multisigTypes.Key)
+	GetKey(ctx sdk.Context, keyID multisig.KeyID) (mtypes.Key, bool)
+	SetKey(ctx sdk.Context, key mtypes.Key)
 	SetCovenantRouter(router CovenantRouter)
 
 	GetSigningSessions(ctx sdk.Context) (signingSessions []SigningSession, ok bool)

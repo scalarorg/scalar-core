@@ -245,7 +245,7 @@ func handleContractCallWithToken(ctx sdk.Context, event types.Event, bk types.Ba
 		if types.IsEvmChain(destinationChain.Name) {
 			return handleContractCallWithTokenToEVM(ctx, event, bk, n, m, sourceChain.Name, destinationChain.Name, asset)
 		} else if types.IsBitcoinChain(destinationChain.Name) {
-			return handleContractCallWithTokenToBTC(ctx, event, bk, n, m, p, sourceChain.Name, destinationChain.Name, asset)
+			return handleContractCallWithTokenToBTC(ctx, event, bk, n, p, sourceChain.Name, destinationChain.Name, asset)
 		}
 		return nil
 	default:
@@ -255,7 +255,7 @@ func handleContractCallWithToken(ctx sdk.Context, event types.Event, bk types.Ba
 	}
 }
 
-func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper, sourceChain, destinationChain nexus.ChainName, asset string) error {
+func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, p types.ProtocolKeeper, sourceChain, destinationChain nexus.ChainName, asset string) error {
 	e := event.GetContractCallWithToken()
 	if e == nil {
 		panic(fmt.Errorf("event is nil"))
@@ -281,7 +281,7 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 	// if !ok {
 	// 	keyId = multisigexported.KeyID(destinationChain)
 	// }
-	protocolInfo, err := p.FindProtocolByExternalSymbol(ctx, destinationChain, e.Symbol, sourceChain)
+	protocolInfo, err := p.FindProtocolByExternalSymbol(ctx, destinationChain, sourceChain, e.Symbol)
 	if err != nil {
 		return err
 	}
@@ -289,11 +289,13 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 	var keyId mexported.KeyID
 	switch protocolInfo.LiquidityModel {
 	case pexported.Pooling:
+		clog.Yellowf("[abci/chains] Pooling protocol: %+v", protocolInfo)
 		keyId = protocolInfo.KeyID
 	case pexported.Transactional:
-		buffer := protocolInfo.CustodiansPubkey
-		buffer = append(buffer, event.TxID[:]...)
+		buffer := event.TxID[:]
+		buffer = append(buffer, protocolInfo.CustodiansPubkey...)
 		keyId = mexported.KeyID(hex.EncodeToString(buffer))
+		clog.Yellowf("[abci/chains] Transactional protocol: %+v, keyId: %+v, txID: %s", protocolInfo, keyId, hex.EncodeToString(event.TxID[:]))
 	}
 	cmd := types.NewApproveContractCallWithMintCommandWithPayload(
 		funcs.MustOk(destinationCk.GetChainID(ctx)),

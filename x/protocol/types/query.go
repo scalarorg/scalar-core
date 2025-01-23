@@ -2,15 +2,15 @@ package types
 
 import "errors"
 
-func (req *ProtocolAssetRequest) ValidateBasic() error {
-	if req.DestinationChain == "" {
-		return errors.New("destination chain is required")
+func (req *ProtocolRequest) ValidateBasic() error {
+	if req.OriginChain == "" {
+		return errors.New("origin chain is required")
 	}
-	if req.TokenAddress == "" {
-		return errors.New("token address is required")
+	if req.MinorChain == "" {
+		return errors.New("minor chain is required")
 	}
-	if req.SourceChain == "" {
-		return errors.New("source chain is required")
+	if req.Symbol == "" && req.Address == "" {
+		return errors.New("symbol or address is required")
 	}
 	return nil
 }

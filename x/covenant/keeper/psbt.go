@@ -21,8 +21,8 @@ func (k Keeper) SignPsbt(ctx sdk.Context, keyID multisig.KeyID, psbt types.Psbt,
 	if !k.GetCovenantRouter().HasHandler(module) {
 		panic(fmt.Errorf("covenant handler not registered for module %s", module))
 	}
-
-	key, ok := k.getKey(ctx, keyID)
+	clog.Yellowf("[CovenantKeeper] [SignPsbt] keyID: %s, module: %s, chainName: %s", keyID, module, chainName)
+	key, ok := k.GetKey(ctx, keyID)
 	if !ok {
 		return fmt.Errorf("key %s not found", keyID)
 	}
