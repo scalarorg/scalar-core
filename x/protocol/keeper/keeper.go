@@ -3,7 +3,6 @@ package keeper
 import (
 	"bytes"
 	"fmt"
-	"strings"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -129,20 +128,19 @@ func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, originChain export
 }
 
 func (k Keeper) FindProtocolByInternalAddress(ctx sdk.Context, originChain exported.ChainName, minorChain exported.ChainName, internalAddress string) (*pexported.ProtocolInfo, error) {
-	//ctx := sdk.UnwrapSDKContext(c)
-
 	protocols, ok := k.GetAllProtocols(ctx)
 	if !ok {
 		return nil, status.Errorf(codes.NotFound, "protocol not found")
 	}
+
 	for _, protocol := range protocols {
 		if originChain == protocol.Asset.Chain {
-			//Check if the minor chain is supported by the protocol
-			for _, chain := range protocol.Chains {
-				if chain.Chain == minorChain && strings.TrimPrefix(chain.Address, "0x") == strings.TrimPrefix(internalAddress, "0x") {
-					return protocol.ToProtocolInfo(), nil
-				}
+			err := protocol.IsAssetSupported(minorChain, internalAddress)
+			if err != nil {
+				k.Logger(ctx).Error("error checking if asset is supported", "error", err)
+				continue
 			}
+			return protocol.ToProtocolInfo(), nil
 		}
 	}
 

@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	pexported "github.com/scalarorg/scalar-core/x/protocol/exported"
@@ -42,41 +41,25 @@ func (k Keeper) Protocol(c context.Context, req *types.ProtocolRequest) (*types.
 		if err != nil {
 			return nil, status.Errorf(codes.NotFound, "protocol not found")
 		}
-		if req.Address != "" {
-			//Check if the address is supported by the protocol
-			addressMatched := false
-			for _, chain := range protocol.MinorAddresses {
-				if chain.ChainName == req.MinorChain && strings.TrimPrefix(chain.Address, "0x") == strings.TrimPrefix(req.Address, "0x") {
-					addressMatched = true
-					break
-				}
-			}
-			if !addressMatched {
-				return nil, status.Errorf(codes.NotFound, "protocol with both symbol %s and address %s not found", req.Symbol, req.Address)
-			}
-		}
-	} else if req.Address != "" {
+
+		return &types.ProtocolResponse{
+			Protocol: protocol,
+		}, nil
+
+	}
+
+	if req.Address != "" {
 		protocol, err = k.FindProtocolByInternalAddress(ctx, req.OriginChain, req.MinorChain, req.Address)
 		if err != nil {
 			k.Logger(ctx).Error("Protocol with input address not found", "error", err)
 			return nil, status.Errorf(codes.NotFound, "protocol not found")
 		}
+
+		return &types.ProtocolResponse{
+			Protocol: protocol,
+		}, nil
 	}
 
-	// for _, protocol := range protocols {
-	// 	if req.SourceChain == protocol.Asset.Chain {
-	// 		err := protocol.IsAssetSupported(req.DestinationChain, req.TokenAddress)
-	// 		if err != nil {
-	// 			k.Logger(ctx).Error("error checking if asset is supported", "error", err)
-	// 			continue
-	// 		}
-	// 		return &types.ProtocolAssetResponse{
-	// 			Asset: protocol.Asset,
-	// 		}, nil
-	// 	}
-	// }
-
-	return &types.ProtocolResponse{
-		Protocol: protocol,
-	}, nil
+	// This should never happen because of the validation above, but it enstures in case of the validation is not working
+	return nil, status.Errorf(codes.NotFound, "protocol not found")
 }

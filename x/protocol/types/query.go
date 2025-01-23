@@ -12,5 +12,10 @@ func (req *ProtocolRequest) ValidateBasic() error {
 	if req.Symbol == "" && req.Address == "" {
 		return errors.New("symbol or address is required")
 	}
+
+	if req.Symbol != "" && req.Address != "" {
+		return errors.New("symbol and address cannot be set together")
+	}
+
 	return nil
 }
