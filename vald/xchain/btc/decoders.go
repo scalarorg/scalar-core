@@ -92,7 +92,7 @@ func (client *BtcClient) createEventTokenSent(event *types.EventConfirmSourceTxs
 		return nil, err
 	}
 
-	clog.Greenf("EventTokenSent/Asset Response: %+v", response.Protocol.Symbol)
+	clog.Greenf("EventTokenSent/Asset Response: %+v", response.Protocol)
 
 	return &chainsTypes.EventTokenSent{
 		EventID:            eventId,

@@ -38,9 +38,19 @@ func (p *Protocol) GetKeyID() string {
 
 // Get Unique keyId, which later can tell us how to sign btc psbt
 func (p *Protocol) ToProtocolInfo() *exported.ProtocolInfo {
+	minorAddreses := make([]*exported.MinorAddress, len(p.Chains))
+	for i, chain := range p.Chains {
+		minorAddreses[i] = &exported.MinorAddress{
+			ChainName: chain.Chain,
+			Address:   chain.Address,
+		}
+	}
 	return &exported.ProtocolInfo{
 		KeyID:            multisig.KeyID(p.GetKeyID()),
 		CustodiansPubkey: p.CustodianGroup.BtcPubkey,
 		LiquidityModel:   p.Attribute.Model,
+		OriginChain:      p.Asset.Chain,
+		Symbol:           p.Asset.Name,
+		MinorAddresses:   minorAddreses,
 	}
 }
