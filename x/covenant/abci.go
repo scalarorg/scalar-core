@@ -4,7 +4,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
-	utiltypes "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
@@ -82,18 +81,9 @@ func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 func FinalizePsbt(p *types.PsbtMultiSig) error {
 	psbtBytes := p.Psbt.Bytes()
 	var err error
-	for _, list := range p.ParticipantTapScriptSigs {
-		inputTapscriptSigs := slices.Map(list.TapScriptSigs, func(sig *exported.TapScriptSig) utiltypes.TapScriptSig {
-			keyXOnly := sig.KeyXOnly.Bytes()
-			leafHash := sig.LeafHash.Bytes()
-			signature := sig.Signature.Bytes()
-			return utiltypes.TapScriptSig{
-				KeyXOnly:  keyXOnly,
-				LeafHash:  leafHash,
-				Signature: signature,
-			}
-		})
-		psbtBytes, err = vault.AggregateTapScriptSigs(psbtBytes, inputTapscriptSigs)
+	for _, m := range p.ParticipantTapScriptSigs {
+		raw := m.ToRaw()
+		psbtBytes, err = vault.AggregateTapScriptSigs(psbtBytes, raw)
 		if err != nil {
 			return err
 		}

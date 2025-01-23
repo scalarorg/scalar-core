@@ -202,7 +202,9 @@
   
 - [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
     - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
-    - [TapScriptSigList](#scalar.covenant.exported.v1beta1.TapScriptSigList)
+    - [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList)
+    - [TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap)
+    - [TapScriptSigsMap.InnerEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsMap.InnerEntry)
   
     - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
     - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
@@ -3529,15 +3531,46 @@ QueryService defines the gRPC querier service.
 
 
 
-<a name="scalar.covenant.exported.v1beta1.TapScriptSigList"></a>
+<a name="scalar.covenant.exported.v1beta1.TapScriptSigsList"></a>
 
-### TapScriptSigList
+### TapScriptSigsList
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `tap_script_sigs` | [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig) | repeated |  |
+| `list` | [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSigsMap"></a>
+
+### TapScriptSigsMap
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `inner` | [TapScriptSigsMap.InnerEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsMap.InnerEntry) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSigsMap.InnerEntry"></a>
+
+### TapScriptSigsMap.InnerEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [uint64](#uint64) |  |  |
+| `value` | [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList) |  |  |
 
 
 
@@ -4020,7 +4053,7 @@ quorum threshold e.g.,3 |
 | `module` | [string](#string) |  |  |
 | `sig_id` | [uint64](#uint64) |  |  |
 | `participant` | [bytes](#bytes) |  |  |
-| `tap_script_sigs` | [scalar.covenant.exported.v1beta1.TapScriptSigList](#scalar.covenant.exported.v1beta1.TapScriptSigList) |  |  |
+| `tap_script_sigs_map` | [scalar.covenant.exported.v1beta1.TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) |  |  |
 
 
 
@@ -4642,7 +4675,7 @@ Rotate key for custodian group
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `sig_id` | [uint64](#uint64) |  |  |
-| `tap_script_sigs` | [scalar.covenant.exported.v1beta1.TapScriptSigList](#scalar.covenant.exported.v1beta1.TapScriptSigList) |  |  |
+| `tap_script_sigs_map` | [scalar.covenant.exported.v1beta1.TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) |  |  |
 
 
 

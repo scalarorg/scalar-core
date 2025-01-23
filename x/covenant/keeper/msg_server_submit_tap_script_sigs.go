@@ -24,7 +24,7 @@ func (s msgServer) SubmitTapScriptSigs(c context.Context, req *types.SubmitTapSc
 		return nil, fmt.Errorf("sender %s is not a registered proxy", req.Sender.String())
 	}
 
-	if err := signingSession.AddTapScriptSigs(ctx.BlockHeight(), participant, req.TapScriptSigs); err != nil {
+	if err := signingSession.AddTapScriptSigs(ctx.BlockHeight(), participant, req.TapScriptSigsMap); err != nil {
 		return nil, sdkerrors.Wrap(err, "unable to add signature for signing")
 	}
 
@@ -41,7 +41,7 @@ func (s msgServer) SubmitTapScriptSigs(c context.Context, req *types.SubmitTapSc
 		"expires_at", signingSession.ExpiresAt,
 	)
 
-	events.Emit(ctx, types.NewTapscriptSigsSubmitted(req.SigID, participant, req.TapScriptSigs))
+	events.Emit(ctx, types.NewTapscriptSigsSubmitted(req.SigID, participant, req.TapScriptSigsMap))
 
 	return &types.SubmitTapScriptSigsResponse{}, nil
 }
@@ -60,11 +60,12 @@ func logSigningSession(m types.SigningSession) {
 	clog.Redf("AddTapScriptSigs, PsbtMultiSig.Psbt: %+x", m.PsbtMultiSig.Psbt)
 	for participant, list := range m.PsbtMultiSig.ParticipantTapScriptSigs {
 		clog.Redf("Participant: %s", participant)
-		for _, tapScriptSig := range list.TapScriptSigs {
-			clog.Redf("TapScriptSig, KeyXOnly: %+v", tapScriptSig.KeyXOnly)
-			clog.Redf("TapScriptSig, Signature: %+v", tapScriptSig.Signature)
-			clog.Redf("TapScriptSig, LeafHash: %+v", tapScriptSig.LeafHash)
+		for _, tapScriptList := range list.Inner {
+			for _, tapScriptSig := range tapScriptList.List {
+				clog.Redf("TapScriptSig, KeyXOnly: %+v", tapScriptSig.KeyXOnly)
+				clog.Redf("TapScriptSig, Signature: %+v", tapScriptSig.Signature)
+				clog.Redf("TapScriptSig, LeafHash: %+v", tapScriptSig.LeafHash)
+			}
 		}
-		clog.Redf("--------------------------------\n")
 	}
 }

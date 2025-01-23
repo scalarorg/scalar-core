@@ -41,17 +41,21 @@ func TestCodec(t *testing.T) {
 		t.Fatalf("failed to marshal leaf hash: %v", err)
 	}
 
-	tapScriptList := exported.TapScriptSigList{
-		TapScriptSigs: []*exported.TapScriptSig{
-			{
-				KeyXOnly:  &mockKeyXOnly,
-				Signature: &mockSignature,
-				LeafHash:  &mockLeafHash,
+	tapScriptList := exported.TapScriptSigsMap{
+		Inner: map[uint64]*exported.TapScriptSigsList{
+			0: {
+				List: []*exported.TapScriptSig{
+					{
+						KeyXOnly:  &mockKeyXOnly,
+						Signature: &mockSignature,
+						LeafHash:  &mockLeafHash,
+					},
+				},
 			},
 		},
 	}
 
-	data := make([]byte, 137)
+	data := make([]byte, 145)
 
 	_, err = tapScriptList.MarshalTo(data)
 	if err != nil {
@@ -60,16 +64,18 @@ func TestCodec(t *testing.T) {
 
 	fmt.Println(hex.EncodeToString(data))
 
-	unmarshaled := exported.TapScriptSigList{}
+	unmarshaled := exported.TapScriptSigsMap{}
 	err = unmarshaled.Unmarshal(data)
 	if err != nil {
 		t.Fatalf("failed to unmarshal tap script list: %v", err)
 	}
 
-	for _, tapScriptSig := range unmarshaled.TapScriptSigs {
-		fmt.Printf("%+v\n", tapScriptSig.KeyXOnly)
-		fmt.Printf("%+v\n", tapScriptSig.Signature)
-		fmt.Printf("%+v\n", tapScriptSig.LeafHash)
+	for _, tapScriptList := range unmarshaled.Inner {
+		for _, tapScriptSig := range tapScriptList.List {
+			fmt.Printf("%+v\n", tapScriptSig.KeyXOnly)
+			fmt.Printf("%+v\n", tapScriptSig.Signature)
+			fmt.Printf("%+v\n", tapScriptSig.LeafHash)
+		}
 	}
 
 	if !reflect.DeepEqual(tapScriptList, unmarshaled) {

@@ -6,7 +6,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	utiltypes "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 )
 
@@ -141,7 +143,7 @@ func (s *Signature) Unmarshal(dAtA []byte) error {
 	return nil
 }
 
-func (t TapScriptSig) ValidateBasic() error {
+func (t *TapScriptSig) ValidateBasic() error {
 	err := t.KeyXOnly.ValidateBasic()
 	if err != nil {
 		return err
@@ -160,13 +162,55 @@ func (t TapScriptSig) ValidateBasic() error {
 	return nil
 }
 
-var EmptyTapScriptSigList = TapScriptSigList{}
+var EmptyTapScriptSigsList = TapScriptSigsList{}
 
-func (t TapScriptSigList) ValidateBasic() error {
-	for _, sig := range t.TapScriptSigs {
-		if err := sig.ValidateBasic(); err != nil {
-			return err
+var EmptyTapScriptSigsMap = TapScriptSigsMap{
+	Inner: make(map[uint64]*TapScriptSigsList),
+}
+
+func (t *TapScriptSigsMap) ValidateBasic() error {
+	for _, sig := range t.Inner {
+		for _, sig := range sig.List {
+			if err := sig.ValidateBasic(); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
+}
+
+func (t *TapScriptSigsMap) ToRaw() utiltypes.TapScriptSigsMap {
+	raw := make(utiltypes.TapScriptSigsMap)
+	for inputIndex, tapScriptList := range t.Inner {
+		raw[inputIndex] = []utiltypes.TapScriptSig{}
+		for _, tapScriptSig := range tapScriptList.List {
+			raw[inputIndex] = append(raw[inputIndex], utiltypes.TapScriptSig{
+				KeyXOnly:  tapScriptSig.KeyXOnly.Bytes(),
+				LeafHash:  tapScriptSig.LeafHash.Bytes(),
+				Signature: tapScriptSig.Signature.Bytes(),
+			})
+		}
+	}
+	return raw
+}
+
+func (t *TapScriptSigsMap) FromRaw(raw utiltypes.TapScriptSigsMap) *TapScriptSigsMap {
+	mapOfTapScriptSigs := make(map[uint64]*TapScriptSigsList)
+	for inputIndex, tapScriptSigs := range raw {
+		mapOfTapScriptSigs[inputIndex] = &TapScriptSigsList{
+			List: slices.Map(tapScriptSigs, func(t utiltypes.TapScriptSig) *TapScriptSig {
+				keyXOnly := KeyXOnly(t.KeyXOnly)
+				signature := Signature(t.Signature)
+				leafHash := LeafHash(t.LeafHash)
+				return &TapScriptSig{
+					KeyXOnly:  &keyXOnly,
+					Signature: &signature,
+					LeafHash:  &leafHash,
+				}
+			}),
+		}
+	}
+
+	t.Inner = mapOfTapScriptSigs
+	return t
 }

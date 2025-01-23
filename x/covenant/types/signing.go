@@ -116,9 +116,9 @@ func (m SigningSession) ValidateBasic() error {
 }
 
 // AddTapScriptSigs adds the given tapscript sigs to the signing session
-func (m *SigningSession) AddTapScriptSigs(blockHeight int64, participant sdk.ValAddress, inputSigs *exported.TapScriptSigList) error {
+func (m *SigningSession) AddTapScriptSigs(blockHeight int64, participant sdk.ValAddress, inputSigs *exported.TapScriptSigsMap) error {
 	if m.PsbtMultiSig.ParticipantTapScriptSigs == nil {
-		m.PsbtMultiSig.ParticipantTapScriptSigs = make(map[string]*exported.TapScriptSigList)
+		m.PsbtMultiSig.ParticipantTapScriptSigs = make(map[string]*exported.TapScriptSigsMap)
 	}
 
 	if m.isExpired(blockHeight) {
@@ -201,7 +201,7 @@ func (m SigningSession) GetMetadata() codec.ProtoMarshaler {
 	return m.ModuleMetadata.GetCachedValue().(codec.ProtoMarshaler)
 }
 
-func (m *SigningSession) addSig(participant sdk.ValAddress, sigs *exported.TapScriptSigList) {
+func (m *SigningSession) addSig(participant sdk.ValAddress, sigs *exported.TapScriptSigsMap) {
 	clog.Redf("addSig, participant: %+s", participant.String())
 	clog.Redf("addSig, sigs: %+v", sigs)
 	m.PsbtMultiSig.ParticipantTapScriptSigs[participant.String()] = sigs
@@ -231,6 +231,7 @@ func (m PsbtMultiSig) ValidateBasic() error {
 
 	signatureSeen := make(map[string]bool, len(m.ParticipantTapScriptSigs))
 	numSigs := -1
+	// TODO: numSigs just the number of inputs signed, not the number of sigs, we need to go through the sigs and count the number of sigs by map
 	for address, sigs := range m.ParticipantTapScriptSigs {
 		if numSigs == -1 {
 			numSigs = sigs.Size()
@@ -257,7 +258,7 @@ func (m PsbtMultiSig) ValidateBasic() error {
 }
 
 // GetSignature returns the ECDSA signature of the given participant
-func (m PsbtMultiSig) GetTapScriptSigs(p sdk.ValAddress) (*exported.TapScriptSigList, bool) {
+func (m PsbtMultiSig) GetTapScriptSigsMap(p sdk.ValAddress) (*exported.TapScriptSigsMap, bool) {
 	sigs, ok := m.ParticipantTapScriptSigs[p.String()]
 	if !ok {
 		return nil, false

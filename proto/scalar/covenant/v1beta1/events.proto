@@ -42,7 +42,7 @@ message TapScriptSigsSubmitted {
   uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
   bytes participant = 3 [ (gogoproto.casttype) =
                               "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
-  scalar.covenant.exported.v1beta1.TapScriptSigList tap_script_sigs = 4;
+  scalar.covenant.exported.v1beta1.TapScriptSigsMap tap_script_sigs_map = 4;
 }
 
 message KeyRotated {

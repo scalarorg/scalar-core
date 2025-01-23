@@ -61,18 +61,18 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 	// 	return err
 	// }
 
-	listOfTapScriptSig, err := mgr.sign(keyUID, event.Psbt, go_utils.NetworkKind(chainParams.Params.NetworkKind))
+	mapOfTapScriptSigs, err := mgr.sign(keyUID, event.Psbt, go_utils.NetworkKind(chainParams.Params.NetworkKind))
 	if err != nil {
 		return err
 	}
 
-	for i, tapScriptSig := range listOfTapScriptSig.TapScriptSigs {
+	for i, tapScriptSig := range mapOfTapScriptSigs.Inner {
 		clog.Yellowf("ProcessSigningPsbtStarted, tapScriptSig[%d]: %+v", i, tapScriptSig)
 	}
 
 	log.Infof("operator %s sending signature for signing %d", partyUID, event.GetSigID())
 
-	msg := covenantTypes.NewSubmitTapScriptSigsRequest(mgr.ctx.FromAddress, event.GetSigID(), listOfTapScriptSig)
+	msg := covenantTypes.NewSubmitTapScriptSigsRequest(mgr.ctx.FromAddress, event.GetSigID(), mapOfTapScriptSigs)
 	if _, err := mgr.b.Broadcast(context.Background(), msg); err != nil {
 		return sdkerrors.Wrap(err, "handler goroutine: failure to broadcast outgoing submit signature message")
 	}

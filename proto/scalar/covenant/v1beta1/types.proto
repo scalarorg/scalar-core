@@ -51,7 +51,7 @@ message PsbtMultiSig {
     (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
   bytes psbt = 2 [(gogoproto.casttype) = "Psbt"];
-  map<string, bytes> participant_tap_script_sigs = 3 [(gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/covenant/exported.TapScriptSigList"];
+  map<string, bytes> participant_tap_script_sigs = 3 [(gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/covenant/exported.TapScriptSigsMap"];
   bytes finalized_tx = 4;
 }
 

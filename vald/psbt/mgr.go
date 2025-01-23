@@ -12,7 +12,6 @@ import (
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	"github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
-	"github.com/scalarorg/scalar-core/utils/slices"
 	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 )
@@ -52,7 +51,7 @@ func (mgr Mgr) isParticipant(p sdk.ValAddress) bool {
 	return mgr.valAddr.Equals(p)
 }
 
-func (mgr Mgr) sign(keyUID string, psbt covenantTypes.Psbt, networkKind types.NetworkKind) (*covenant.TapScriptSigList, error) {
+func (mgr Mgr) sign(keyUID string, psbt covenantTypes.Psbt, networkKind types.NetworkKind) (*covenant.TapScriptSigsMap, error) {
 	if !mgr.validateKeyID(keyUID) {
 		return nil, fmt.Errorf("invalid keyID")
 	}
@@ -66,18 +65,10 @@ func (mgr Mgr) sign(keyUID string, psbt covenantTypes.Psbt, networkKind types.Ne
 		return nil, err
 	}
 
-	return &covenant.TapScriptSigList{
-		TapScriptSigs: slices.Map(tapScriptSigs, func(t types.TapScriptSig) *covenant.TapScriptSig {
-			keyXOnly := covenant.KeyXOnly(t.KeyXOnly)
-			signature := covenant.Signature(t.Signature)
-			leafHash := covenant.LeafHash(t.LeafHash)
-			return &covenant.TapScriptSig{
-				KeyXOnly:  &keyXOnly,
-				LeafHash:  &leafHash,
-				Signature: &signature,
-			}
-		}),
-	}, nil
+	var mapOfTapScriptSigs covenant.TapScriptSigsMap = covenant.TapScriptSigsMap{}
+	mapOfTapScriptSigs.FromRaw(tapScriptSigs)
+
+	return &mapOfTapScriptSigs, nil
 }
 
 func (mgr Mgr) validateKeyID(keyID string) bool {

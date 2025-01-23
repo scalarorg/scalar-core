@@ -10,11 +10,11 @@ import (
 var _ sdk.Msg = &SubmitTapScriptSigsRequest{}
 
 // NewSubmitTapScriptSigRequest constructor for SubmitTapScriptSigRequest
-func NewSubmitTapScriptSigsRequest(sender sdk.AccAddress, sigID uint64, tapScriptSigs *exported.TapScriptSigList) *SubmitTapScriptSigsRequest {
+func NewSubmitTapScriptSigsRequest(sender sdk.AccAddress, sigID uint64, tapScriptSigs *exported.TapScriptSigsMap) *SubmitTapScriptSigsRequest {
 	return &SubmitTapScriptSigsRequest{
-		Sender:        sender,
-		SigID:         sigID,
-		TapScriptSigs: tapScriptSigs,
+		Sender:           sender,
+		SigID:            sigID,
+		TapScriptSigsMap: tapScriptSigs,
 	}
 }
 
@@ -25,21 +25,23 @@ func (m SubmitTapScriptSigsRequest) ValidateBasic() error {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, sdkerrors.Wrap(err, "sender").Error())
 	}
 
-	if m.TapScriptSigs == nil {
+	if m.TapScriptSigsMap == nil {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "tap script sigs is nil")
 	}
 
-	if m.TapScriptSigs.TapScriptSigs == nil {
+	if m.TapScriptSigsMap.Inner == nil {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "tap script sigs is nil")
 	}
 
-	if len(m.TapScriptSigs.TapScriptSigs) == 0 {
+	if len(m.TapScriptSigsMap.Inner) == 0 {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "tap script sigs is empty")
 	}
 
-	for _, tapScriptSig := range m.TapScriptSigs.TapScriptSigs {
-		if err := tapScriptSig.ValidateBasic(); err != nil {
-			return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	for _, tapScriptList := range m.TapScriptSigsMap.Inner {
+		for _, tapScriptSig := range tapScriptList.List {
+			if err := tapScriptSig.ValidateBasic(); err != nil {
+				return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+			}
 		}
 	}
 

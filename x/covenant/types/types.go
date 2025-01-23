@@ -46,6 +46,8 @@ func (p PsbtPayload) ValidateBasic() error {
 
 type TapScriptSig []byte
 
+var DefaultParticipantTapScriptSigs = make(map[string]*exported.TapScriptSigsMap)
+
 func (g CustodianGroup) CreateKey(ctx sdk.Context, snapshot snapshot.Snapshot, threshold utils.Threshold) multisigTypes.Key {
 	pubKeys := map[string]multisig.PublicKey{}
 	for _, custodian := range g.Custodians {
@@ -58,53 +60,5 @@ func (g CustodianGroup) CreateKey(ctx sdk.Context, snapshot snapshot.Snapshot, t
 		SigningThreshold: threshold,
 		State:            multisig.Active,
 	}
-	// fakeKey: = multisigTypes.Key{
-	// 	ID: MOCK_CURRENT_KEY_ID,
-	// 	Snapshot: snapshot.Snapshot{
-	// 		Timestamp:    ctx.BlockTime(),
-	// 		Height:       ctx.BlockHeight(),
-	// 		Participants: participants,
-	// 		BondedWeight: sdk.NewUint(400),
-	// 	},
-	// 	PubKeys: pubKeys,
-	// 	SigningThreshold: utils.Threshold{
-	// 		Numerator:   3,
-	// 		Denominator: 4,
-	// 	},
-	// 	State: multisig.Active,
-	// }
 	return key
 }
-
-var DefaultParticipantTapScriptSigs = make(map[string]*exported.TapScriptSigList)
-
-// func (p *PsbtMultiSig) Finalize() error {
-// 	psbtBytes := p.Psbt.Bytes()
-// 	var err error
-// 	for _, list := range p.ParticipantTapScriptSigs {
-// 		inputTapscriptSigs := slices.Map(list.TapScriptSigs, func(sig *exported.TapScriptSig) types.TapScriptSig {
-// 			keyXOnly := sig.KeyXOnly.Bytes()
-// 			leafHash := sig.LeafHash.Bytes()
-// 			signature := sig.Signature.Bytes()
-// 			return types.TapScriptSig{
-// 				KeyXOnly:  keyXOnly,
-// 				LeafHash:  leafHash,
-// 				Signature: signature,
-// 			}
-// 		})
-// 		psbtBytes, err = vault.AggregateTapScriptSigs(psbtBytes, inputTapscriptSigs)
-// 		if err != nil {
-// 			return err
-// 		}
-// 	}
-// 	clog.Greenf("CovenantHandler: Finalize, Psbt: %x", psbtBytes)
-
-// 	tx, err := vault.FinalizePsbtAndExtractTx(psbtBytes)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	p.FinalizedTx = tx
-// 	p.Psbt = psbtBytes
-// 	return nil
-// }
