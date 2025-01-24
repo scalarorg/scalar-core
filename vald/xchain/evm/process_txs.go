@@ -44,8 +44,6 @@ func (c *EthereumClient) processTxReceipt(event *types.EventConfirmSourceTxsStar
 		// 	continue
 		// }
 
-
-
 		if len(txlog.Topics) == 0 {
 			continue
 		}
@@ -76,6 +74,7 @@ func (c *EthereumClient) processTxReceipt(event *types.EventConfirmSourceTxsStar
 			// 	Index: uint64(txlog.Index),
 			// })
 		case ContractCallWithTokenSig:
+			clog.Red("ContractCallWithTokenSig", "txlog", txlog)
 			gatewayEvent, err := DecodeEventContractCallWithToken(txlog)
 			if err != nil {
 				c.logger().Debug(sdkerrors.Wrap(err, "decode event ContractCallWithToken failed").Error())

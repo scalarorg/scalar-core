@@ -64,6 +64,8 @@ func (s msgServer) SignBtcCommand(c context.Context, req *types.SignBtcCommandsR
 	if payload.PayloadType != encode.ContractCallWithTokenPayloadType_UPC {
 		return nil, fmt.Errorf("command %s is not a contract call with token in UPC model", commandId)
 	}
+
+	clog.Redf("SignBtcCommand, [PSBT]>: %x", payload.UPC.Psbt)
 	if err := s.covenant.SignPsbt(
 		ctx,
 		commandBatch.GetKeyID(),

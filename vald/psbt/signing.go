@@ -8,7 +8,6 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils/clog"
-	"github.com/scalarorg/scalar-core/utils/log"
 	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
@@ -27,10 +26,12 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 
 	pubKey, ok := event.PubKeys[mgrParticipant]
 	if !ok {
+		clog.Redf("ProcessSigningPsbtStarted/pubKey not found for %s, got event.PubKeys: %+v", mgrParticipant, event.PubKeys)
 		return nil
 	}
 
 	if !mgr.validatePubKey(pubKey) {
+		clog.Redf("ProcessSigningPsbtStarted/invalid pubKey for %s", mgrParticipant)
 		return fmt.Errorf("invalid pubKey")
 	}
 
@@ -63,6 +64,7 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 
 	mapOfTapScriptSigs, err := mgr.sign(keyUID, event.Psbt, go_utils.NetworkKind(chainParams.Params.NetworkKind))
 	if err != nil {
+		clog.Redf("ProcessSigningPsbtStarted/sign error: %v", err)
 		return err
 	}
 
@@ -70,9 +72,11 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 		clog.Yellowf("ProcessSigningPsbtStarted, tapScriptSig[%d]: %+v", i, tapScriptSig)
 	}
 
-	log.Infof("operator %s sending signature for signing %d", partyUID, event.GetSigID())
+	clog.Greenf("operator %s sending signature for signing %d", partyUID, event.GetSigID())
 
 	msg := covenantTypes.NewSubmitTapScriptSigsRequest(mgr.ctx.FromAddress, event.GetSigID(), mapOfTapScriptSigs)
+
+	clog.Greenf("SubmitTapScriptSigsRequest: %+v", msg)
 	if _, err := mgr.b.Broadcast(context.Background(), msg); err != nil {
 		return sdkerrors.Wrap(err, "handler goroutine: failure to broadcast outgoing submit signature message")
 	}

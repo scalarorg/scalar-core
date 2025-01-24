@@ -245,7 +245,7 @@ cfs3:
 	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "bitcoin|4" 5188eea7ceb9f585f5ba8a2abebb82f9850dd671b6e2926263674af6882fd3f6 fc702634fc245b254d44585dfaa6527871899dbfe38d5585abecbb738f8865bf --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 537803
 
 cfd2:
-	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" cabc3140a564038f9f76e9d692309ea8d5be7d5a8a2133b97bf0579a73cfbb37 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 507368
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" 8062e7c01545e6bac064e675b5bec41d9536dbc3b849368385279e5b2c6e96fd --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 507368
 	
 cfd3:
 	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" be6668d3c6c00fde1e9e089fc37b837dc5d908afd9f3bf79ab3af66322170ef5 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
@@ -255,7 +255,7 @@ cfd4:
 
 .PHONY: sign-btc
 sign-btc:
-	$(SCALAR_BIN_PATH) tx chains sign-btc-commands "bitcoin|4" --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+	$(SCALAR_BIN_PATH) tx chains sign-btc-commands "bitcoin|4" --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 600535
 
 .PHONY: batch-command
 batch-command:

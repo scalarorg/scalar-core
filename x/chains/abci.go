@@ -297,6 +297,7 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 		keyId = mexported.KeyID(hex.EncodeToString(buffer))
 		clog.Yellowf("[abci/chains] Transactional protocol: %+v, keyId: %+v, txID: %s", protocolInfo, keyId, hex.EncodeToString(event.TxID[:]))
 	}
+
 	cmd := types.NewApproveContractCallWithMintCommandWithPayload(
 		funcs.MustOk(destinationCk.GetChainID(ctx)),
 		keyId,
@@ -308,14 +309,18 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 		destinationToken.GetDetails().Symbol,
 		event.GetContractCallWithToken().Payload,
 	)
+
+	clog.Magentaf("[abci/chains] created %s command for event: %+v", cmd.Type, cmd)
+
 	funcs.MustNoErr(destinationCk.EnqueueCommand(ctx, cmd))
-	bk.Logger(ctx).Debug(fmt.Sprintf("created %s command for event", cmd.Type),
+
+	bk.Logger(ctx).Info(fmt.Sprintf("created %s command for event", cmd.Type),
 		"chain", destinationChain,
 		"eventID", event.GetID(),
 		"commandID", cmd.ID.Hex(),
 	)
 
-	events.Emit(ctx, &types.EventContractCallWithMintApproved{
+	approvedEvent := &types.EventContractCallWithMintApproved{
 		Chain:            event.Chain,
 		EventID:          event.GetID(),
 		CommandID:        cmd.ID,
@@ -324,7 +329,11 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 		ContractAddress:  e.ContractAddress,
 		PayloadHash:      e.PayloadHash,
 		Asset:            coin,
-	})
+	}
+
+	clog.Yellowf("[abci/chains] emitted EventContractCallWithMintApproved event for event: %v", approvedEvent)
+
+	events.Emit(ctx, approvedEvent)
 
 	return nil
 }

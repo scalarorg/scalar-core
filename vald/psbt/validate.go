@@ -26,7 +26,7 @@ func (mgr Mgr) ValidatePsbt(client *rpcclient.Client, p covenantTypes.Psbt) erro
 	for i, input := range psbt.Inputs {
 		txIn := psbt.UnsignedTx.TxIn[i]
 
-		clog.Redf("input.WitnessUtxo: %+x", input)
+		clog.Redf("input.WitnessUtxo: %+v", input.WitnessUtxo)
 		clog.Redf("txIn: %+v", txIn)
 
 		// Create outpoint hash string

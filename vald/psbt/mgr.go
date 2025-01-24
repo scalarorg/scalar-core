@@ -12,6 +12,7 @@ import (
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	"github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 )
@@ -56,19 +57,28 @@ func (mgr Mgr) sign(keyUID string, psbt covenantTypes.Psbt, networkKind types.Ne
 		return nil, fmt.Errorf("invalid keyID")
 	}
 
+	clog.Greenf("signing psbt with keyID: %s", keyUID)
+	clog.Greenf("signing psbt with networkKind: %v", networkKind)
+	clog.Greenf("signing psbt with privKey: %x", mgr.privKey.Serialize())
+	clog.Greenf("signing psbt with PSBT: %x", psbt)
+
 	tapScriptSigs, err := vault.SignPsbtAndCollectSigs(
-		psbt,
+		psbt.Bytes(),
 		mgr.privKey.Serialize(),
 		networkKind,
 	)
 	if err != nil {
+		clog.Redf("[PsbtMgr] failed to sign PSBT: %s", err)
 		return nil, err
 	}
 
-	var mapOfTapScriptSigs covenant.TapScriptSigsMap = covenant.TapScriptSigsMap{}
-	mapOfTapScriptSigs.FromRaw(tapScriptSigs)
+	clog.Greenf("signing psbt with tapScriptSigs: %+v\n", tapScriptSigs)
 
-	return &mapOfTapScriptSigs, nil
+	mapOfTapScriptSigs := covenant.NewTapScriptSigsMapFromRaw(tapScriptSigs)
+
+	clog.Greenf("signing psbt with mapOfTapScriptSigs: %+v\n", mapOfTapScriptSigs)
+
+	return mapOfTapScriptSigs, nil
 }
 
 func (mgr Mgr) validateKeyID(keyID string) bool {

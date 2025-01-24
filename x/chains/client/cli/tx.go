@@ -382,7 +382,7 @@ func GetCmdSignBtcCommands() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sign-btc-commands [chain]",
 		Short: "Sign pending commands for a BTC chain contract",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cliCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {

@@ -10,6 +10,8 @@ import (
 	geth "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
+	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/chains/types"
@@ -130,6 +132,14 @@ func DecodeEventContractCallWithToken(log *geth.Log) (types.EventContractCallWit
 	if !ok {
 		return types.EventContractCallWithToken{}, fmt.Errorf("invalid payload")
 	}
+
+	_, err = encode.DecodeContractCallWithTokenPayload(payload)
+	if err != nil {
+		return types.EventContractCallWithToken{}, fmt.Errorf("error decoding contract call payload: %w", err)
+	}
+
+	clog.Greenf("[Vald/decoders] tx %x raw payload: %x", log.TxHash, payload)
+
 	return types.EventContractCallWithToken{
 		Sender:           types.Address(common.BytesToAddress(log.Topics[1].Bytes())),
 		DestinationChain: nexus.ChainName(params[0].(string)),

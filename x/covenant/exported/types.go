@@ -194,7 +194,7 @@ func (t *TapScriptSigsMap) ToRaw() utiltypes.TapScriptSigsMap {
 	return raw
 }
 
-func (t *TapScriptSigsMap) FromRaw(raw utiltypes.TapScriptSigsMap) *TapScriptSigsMap {
+func NewTapScriptSigsMapFromRaw(raw utiltypes.TapScriptSigsMap) *TapScriptSigsMap {
 	mapOfTapScriptSigs := make(map[uint64]*TapScriptSigsList)
 	for inputIndex, tapScriptSigs := range raw {
 		mapOfTapScriptSigs[inputIndex] = &TapScriptSigsList{
@@ -211,6 +211,7 @@ func (t *TapScriptSigsMap) FromRaw(raw utiltypes.TapScriptSigsMap) *TapScriptSig
 		}
 	}
 
-	t.Inner = mapOfTapScriptSigs
-	return t
+	return &TapScriptSigsMap{
+		Inner: mapOfTapScriptSigs,
+	}
 }
