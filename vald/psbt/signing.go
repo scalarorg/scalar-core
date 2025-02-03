@@ -47,7 +47,7 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 		return err
 	}
 
-	clog.Greenf("ProcessSigningPsbtStarted/chainParams: %+v", chainParams)
+	// clog.Greenf("ProcessSigningPsbtStarted/chainParams: %+v", chainParams)
 	// chainInfoBytes, err := scalarUtils.ChainInfoBytesFromID(event.Chain.String())
 	// if err != nil {
 	// 	return err

@@ -8,7 +8,7 @@ import (
 
 	utiltypes "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils"
-	"github.com/scalarorg/scalar-core/utils/slices"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 )
 
@@ -164,13 +164,11 @@ func (t *TapScriptSig) ValidateBasic() error {
 
 var EmptyTapScriptSigsList = TapScriptSigsList{}
 
-var EmptyTapScriptSigsMap = TapScriptSigsMap{
-	Inner: make(map[uint64]*TapScriptSigsList),
-}
+var EmptyTapScriptSigsMap = TapScriptSigsMap{}
 
-func (t *TapScriptSigsMap) ValidateBasic() error {
-	for _, sig := range t.Inner {
-		for _, sig := range sig.List {
+func (t TapScriptSigsMap) ValidateBasic() error {
+	for _, entry := range t.Inner {
+		for _, sig := range entry.Sigs.List {
 			if err := sig.ValidateBasic(); err != nil {
 				return err
 			}
@@ -179,12 +177,12 @@ func (t *TapScriptSigsMap) ValidateBasic() error {
 	return nil
 }
 
-func (t *TapScriptSigsMap) ToRaw() utiltypes.TapScriptSigsMap {
+func (t TapScriptSigsMap) ToRaw() utiltypes.TapScriptSigsMap {
 	raw := make(utiltypes.TapScriptSigsMap)
-	for inputIndex, tapScriptList := range t.Inner {
-		raw[inputIndex] = []utiltypes.TapScriptSig{}
-		for _, tapScriptSig := range tapScriptList.List {
-			raw[inputIndex] = append(raw[inputIndex], utiltypes.TapScriptSig{
+	for _, entry := range t.Inner {
+		raw[entry.Index] = []utiltypes.TapScriptSig{}
+		for _, tapScriptSig := range entry.Sigs.List {
+			raw[entry.Index] = append(raw[entry.Index], utiltypes.TapScriptSig{
 				KeyXOnly:  tapScriptSig.KeyXOnly.Bytes(),
 				LeafHash:  tapScriptSig.LeafHash.Bytes(),
 				Signature: tapScriptSig.Signature.Bytes(),
@@ -194,24 +192,28 @@ func (t *TapScriptSigsMap) ToRaw() utiltypes.TapScriptSigsMap {
 	return raw
 }
 
-func NewTapScriptSigsMapFromRaw(raw utiltypes.TapScriptSigsMap) *TapScriptSigsMap {
-	mapOfTapScriptSigs := make(map[uint64]*TapScriptSigsList)
+func NewTapScriptSigsMapFromRaw(raw utiltypes.TapScriptSigsMap) TapScriptSigsMap {
+	mapOfTapScriptSigs := make([]TapScriptSigsEntry, 0, len(raw))
 	for inputIndex, tapScriptSigs := range raw {
-		mapOfTapScriptSigs[inputIndex] = &TapScriptSigsList{
-			List: slices.Map(tapScriptSigs, func(t utiltypes.TapScriptSig) *TapScriptSig {
-				keyXOnly := KeyXOnly(t.KeyXOnly)
-				signature := Signature(t.Signature)
-				leafHash := LeafHash(t.LeafHash)
-				return &TapScriptSig{
-					KeyXOnly:  &keyXOnly,
-					Signature: &signature,
-					LeafHash:  &leafHash,
-				}
-			}),
+		rawList := make([]TapScriptSig, len(tapScriptSigs))
+		for i, tapScriptSig := range tapScriptSigs {
+			keyXOnly := KeyXOnly(tapScriptSig.KeyXOnly)
+			signature := Signature(tapScriptSig.Signature)
+			leafHash := LeafHash(tapScriptSig.LeafHash)
+			rawList[i] = TapScriptSig{
+				KeyXOnly:  &keyXOnly,
+				Signature: &signature,
+				LeafHash:  &leafHash,
+			}
 		}
+
+		mapOfTapScriptSigs = append(mapOfTapScriptSigs, TapScriptSigsEntry{
+			Index: inputIndex,
+			Sigs:  TapScriptSigsList{List: rawList},
+		})
 	}
 
-	return &TapScriptSigsMap{
-		Inner: mapOfTapScriptSigs,
-	}
+	clog.Greenf("\n===== len(mapOfTapScriptSigs): %+v =====\n", len(mapOfTapScriptSigs))
+
+	return TapScriptSigsMap{Inner: mapOfTapScriptSigs}
 }

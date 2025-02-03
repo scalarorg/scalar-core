@@ -21,14 +21,11 @@ func TestCodec(t *testing.T) {
 		t.Fatalf("failed to marshal key x only: %v", err)
 	}
 
-	fmt.Printf("XOnlyKey: %+v\n", hex.EncodeToString(keyXOnlyBuf))
-
 	var v exported.KeyXOnly
 	err = v.Unmarshal(keyXOnlyBuf)
 	if err != nil {
 		t.Fatalf("failed to unmarshal key x only: %v", err)
 	}
-	fmt.Printf("Unmarshaled KeyXOnly: %+v\n", v)
 
 	_, err = mockKeyXOnly.MarshalTo(keyXOnlyBuf)
 	if err != nil {
@@ -41,25 +38,28 @@ func TestCodec(t *testing.T) {
 		t.Fatalf("failed to marshal leaf hash: %v", err)
 	}
 
-	tapScriptList := exported.TapScriptSigsMap{
-		Inner: map[uint64]*exported.TapScriptSigsList{
-			0: {
-				List: []*exported.TapScriptSig{
-					{
-						KeyXOnly:  &mockKeyXOnly,
-						Signature: &mockSignature,
-						LeafHash:  &mockLeafHash,
+	mockTapScriptSigsMap := exported.TapScriptSigsMap{
+		Inner: []exported.TapScriptSigsEntry{
+			{
+				Index: 0,
+				Sigs: exported.TapScriptSigsList{
+					List: []exported.TapScriptSig{
+						{
+							KeyXOnly:  &mockKeyXOnly,
+							Signature: &mockSignature,
+							LeafHash:  &mockLeafHash,
+						},
 					},
 				},
 			},
 		},
 	}
 
-	data := make([]byte, 145)
+	data := make([]byte, mockTapScriptSigsMap.Size())
 
-	_, err = tapScriptList.MarshalTo(data)
+	_, err = mockTapScriptSigsMap.MarshalTo(data)
 	if err != nil {
-		t.Fatalf("failed to marshal tap script list: %v", err)
+		t.Fatalf("failed to marshal: %v", err)
 	}
 
 	fmt.Println(hex.EncodeToString(data))
@@ -67,19 +67,22 @@ func TestCodec(t *testing.T) {
 	unmarshaled := exported.TapScriptSigsMap{}
 	err = unmarshaled.Unmarshal(data)
 	if err != nil {
-		t.Fatalf("failed to unmarshal tap script list: %v", err)
+		t.Fatalf("failed to unmarshal: %v", err)
 	}
 
+	fmt.Printf("Unmarshaled TapScriptSigsMap: %+v\n", unmarshaled)
+
 	for _, tapScriptList := range unmarshaled.Inner {
-		for _, tapScriptSig := range tapScriptList.List {
+		for _, tapScriptSig := range tapScriptList.Sigs.List {
 			fmt.Printf("%+v\n", tapScriptSig.KeyXOnly)
 			fmt.Printf("%+v\n", tapScriptSig.Signature)
 			fmt.Printf("%+v\n", tapScriptSig.LeafHash)
 		}
 	}
 
-	if !reflect.DeepEqual(tapScriptList, unmarshaled) {
+	if !reflect.DeepEqual(mockTapScriptSigsMap, unmarshaled) {
+		fmt.Printf("mockTapScriptSigsMap: %+v\n", mockTapScriptSigsMap)
+		fmt.Printf("unmarshaled: %+v\n", unmarshaled)
 		t.Fatalf("failed to deep equal key x only")
 	}
-
 }

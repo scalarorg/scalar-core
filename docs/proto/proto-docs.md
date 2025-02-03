@@ -202,9 +202,9 @@
   
 - [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
     - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
+    - [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry)
     - [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList)
     - [TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap)
-    - [TapScriptSigsMap.InnerEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsMap.InnerEntry)
   
     - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
     - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
@@ -3532,6 +3532,22 @@ QueryService defines the gRPC querier service.
 
 
 
+<a name="scalar.covenant.exported.v1beta1.TapScriptSigsEntry"></a>
+
+### TapScriptSigsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `index` | [uint64](#uint64) |  |  |
+| `sigs` | [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList) |  |  |
+
+
+
+
+
+
 <a name="scalar.covenant.exported.v1beta1.TapScriptSigsList"></a>
 
 ### TapScriptSigsList
@@ -3550,28 +3566,13 @@ QueryService defines the gRPC querier service.
 <a name="scalar.covenant.exported.v1beta1.TapScriptSigsMap"></a>
 
 ### TapScriptSigsMap
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `inner` | [TapScriptSigsMap.InnerEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsMap.InnerEntry) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.covenant.exported.v1beta1.TapScriptSigsMap.InnerEntry"></a>
-
-### TapScriptSigsMap.InnerEntry
-
+The reason we use a list instead of a map is because the map is not ensured
+the deterministic order of the entries
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `key` | [uint64](#uint64) |  |  |
-| `value` | [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList) |  |  |
+| `inner` | [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry) | repeated |  |
 
 
 
@@ -3898,7 +3899,7 @@ quorum threshold e.g.,3 |
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `key` | [string](#string) |  |  |
-| `value` | [bytes](#bytes) |  |  |
+| `value` | [scalar.covenant.exported.v1beta1.TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) |  |  |
 
 
 

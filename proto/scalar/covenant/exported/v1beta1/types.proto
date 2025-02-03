@@ -25,9 +25,20 @@ message TapScriptSig {
   bytes signature = 3 [ (gogoproto.customtype) = "Signature" ];
 }
 
-message TapScriptSigsList { repeated TapScriptSig list = 1; }
+message TapScriptSigsList {
+  repeated TapScriptSig list = 1 [ (gogoproto.nullable) = false ];
+}
 
-message TapScriptSigsMap { map<uint64, TapScriptSigsList> inner = 1; }
+message TapScriptSigsEntry {
+  uint64 index = 1;
+  TapScriptSigsList sigs = 2 [ (gogoproto.nullable) = false ];
+}
+
+// The reason we use a list instead of a map is because the map is not ensured
+// the deterministic order of the entries
+message TapScriptSigsMap {
+  repeated TapScriptSigsEntry inner = 1 [ (gogoproto.nullable) = false ];
+}
 
 enum KeyState {
   option (gogoproto.goproto_enum_prefix) = false;

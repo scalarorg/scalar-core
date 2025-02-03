@@ -31,7 +31,6 @@ func TestSignPsbt(t *testing.T) {
 	mapOfTapScriptSigs := covenant.NewTapScriptSigsMapFromRaw(tapScriptSigs)
 
 	fmt.Println(mapOfTapScriptSigs)
-
 }
 
 func mustDecodeHex(hexStr string) []byte {

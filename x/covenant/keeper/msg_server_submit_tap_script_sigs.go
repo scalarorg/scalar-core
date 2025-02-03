@@ -61,7 +61,7 @@ func logSigningSession(m types.SigningSession) {
 	for participant, list := range m.PsbtMultiSig.ParticipantTapScriptSigs {
 		clog.Redf("Participant: %s", participant)
 		for _, tapScriptList := range list.Inner {
-			for _, tapScriptSig := range tapScriptList.List {
+			for _, tapScriptSig := range tapScriptList.Sigs.List {
 				clog.Redf("TapScriptSig, KeyXOnly: %+v", tapScriptSig.KeyXOnly)
 				clog.Redf("TapScriptSig, Signature: %+v", tapScriptSig.Signature)
 				clog.Redf("TapScriptSig, LeafHash: %+v", tapScriptSig.LeafHash)

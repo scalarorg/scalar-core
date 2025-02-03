@@ -7,6 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 	gogoprototypes "github.com/gogo/protobuf/types"
+	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 )
 
@@ -33,6 +34,10 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 
 	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
 		&PsbtMultiSig{},
+	)
+
+	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
+		&exported.TapScriptSigsList{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_MsgService_serviceDesc)

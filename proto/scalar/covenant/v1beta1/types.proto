@@ -13,9 +13,9 @@ option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
 // Custodian represents an individual custodian configuration
 message Custodian {
-  string name = 1; // e.g., "Custodian1"
+  string name = 1;        // e.g., "Custodian1"
   string val_address = 2; // e.g., "scalarvaloper1..."
-  bytes btc_pubkey = 3; // e.g.,
+  bytes btc_pubkey = 3;   // e.g.,
   // "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
   Status status = 4; // Whether the custodian is active
   string description = 5;
@@ -26,7 +26,7 @@ message Custodian {
 // custodians
 message CustodianGroup {
   string uid = 1;
-  string name = 2; // e.g., "All"
+  string name = 2;      // e.g., "All"
   bytes btc_pubkey = 3; // e.g.,
   // "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
   uint32 quorum = 4; // quorum threshold  e.g.,3
@@ -38,9 +38,9 @@ message CustodianGroup {
 enum Status {
   option (gogoproto.goproto_enum_prefix) = false;
 
-  STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Unspecified"];
-  STATUS_ACTIVATED = 1 [(gogoproto.enumvalue_customname) = "Activated"];
-  STATUS_DEACTIVATED = 2 [(gogoproto.enumvalue_customname) = "Deactivated"];
+  STATUS_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Unspecified" ];
+  STATUS_ACTIVATED = 1 [ (gogoproto.enumvalue_customname) = "Activated" ];
+  STATUS_DEACTIVATED = 2 [ (gogoproto.enumvalue_customname) = "Deactivated" ];
 }
 
 message PsbtMultiSig {
@@ -48,23 +48,27 @@ message PsbtMultiSig {
 
   string key_id = 1 [
     (gogoproto.customname) = "KeyID",
-    (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
-  bytes psbt = 2 [(gogoproto.casttype) = "Psbt"];
-  map<string, bytes> participant_tap_script_sigs = 3 [(gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/covenant/exported.TapScriptSigsMap"];
+  bytes psbt = 2 [ (gogoproto.casttype) = "Psbt" ];
+  map<string, scalar.covenant.exported.v1beta1.TapScriptSigsMap>
+      participant_tap_script_sigs = 3;
   bytes finalized_tx = 4;
 }
 
 message SigningSession {
   option (gogoproto.stable_marshaler) = true;
 
-  uint64 id = 1 [(gogoproto.customname) = "ID"];
-  PsbtMultiSig psbt_multi_sig = 2 [(gogoproto.nullable) = false];
+  uint64 id = 1 [ (gogoproto.customname) = "ID" ];
+  PsbtMultiSig psbt_multi_sig = 2 [ (gogoproto.nullable) = false ];
   exported.v1beta1.PsbtState state = 3;
-  scalar.multisig.v1beta1.Key key = 4 [(gogoproto.nullable) = false];
+  scalar.multisig.v1beta1.Key key = 4 [ (gogoproto.nullable) = false ];
   int64 expires_at = 5;
   int64 completed_at = 6;
   int64 grace_period = 7;
   string module = 8;
-  google.protobuf.Any module_metadata = 9 [(cosmos_proto.accepts_interface) = "github.com/cosmos/codec/ProtoMarshaler"];
+  google.protobuf.Any module_metadata = 9
+      [ (cosmos_proto.accepts_interface) =
+            "github.com/cosmos/codec/ProtoMarshaler" ];
 }

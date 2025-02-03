@@ -78,7 +78,7 @@ func (mgr Mgr) sign(keyUID string, psbt covenantTypes.Psbt, networkKind types.Ne
 
 	clog.Greenf("signing psbt with mapOfTapScriptSigs: %+v\n", mapOfTapScriptSigs)
 
-	return mapOfTapScriptSigs, nil
+	return &mapOfTapScriptSigs, nil
 }
 
 func (mgr Mgr) validateKeyID(keyID string) bool {

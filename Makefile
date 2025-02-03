@@ -255,7 +255,7 @@ cfd4:
 
 .PHONY: sign-btc
 sign-btc:
-	$(SCALAR_BIN_PATH) tx chains sign-btc-commands "bitcoin|4" --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 600535
+	$(SCALAR_BIN_PATH) tx chains sign-btc-commands "bitcoin|4" --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 1000535
 
 .PHONY: batch-command
 batch-command:

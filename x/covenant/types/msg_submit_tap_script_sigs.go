@@ -29,7 +29,7 @@ func (m SubmitTapScriptSigsRequest) ValidateBasic() error {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "tap script sigs is nil")
 	}
 
-	if m.TapScriptSigsMap.Inner == nil {
+	if m.TapScriptSigsMap == nil {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "tap script sigs is nil")
 	}
 
@@ -38,7 +38,7 @@ func (m SubmitTapScriptSigsRequest) ValidateBasic() error {
 	}
 
 	for _, tapScriptList := range m.TapScriptSigsMap.Inner {
-		for _, tapScriptSig := range tapScriptList.List {
+		for _, tapScriptSig := range tapScriptList.Sigs.List {
 			if err := tapScriptSig.ValidateBasic(); err != nil {
 				return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 			}

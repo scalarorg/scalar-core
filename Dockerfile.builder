@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:experimental
 
-FROM rust:1.82-alpine3.20 as libbuilder
-RUN apk add --no-cache git libc-dev
-# Build bitcoin-vault lib
-# Todo: select a specific feature, eg ffi
-RUN git clone https://github.com/scalarorg/bitcoin-vault.git
-WORKDIR /bitcoin-vault
-RUN cargo build --release
+# FROM rust:1.82-alpine3.20 as libbuilder
+# RUN apk add --no-cache git libc-dev
+# # Build bitcoin-vault lib
+# # Todo: select a specific feature, eg ffi
+# RUN git clone https://github.com/scalarorg/bitcoin-vault.git
+# WORKDIR /bitcoin-vault
+# RUN cargo build --release
 
 # Buil scalar-core
 
@@ -26,7 +26,7 @@ RUN apk add --no-cache --update \
   linux-headers
 
 # Copy the bitcoin-vault lib
-COPY --from=libbuilder /bitcoin-vault/target/release/libbitcoin_vault_ffi.* /usr/lib/
+COPY --from=scalar/bitcoin-vault /bitcoin-vault/target/release/libbitcoin_vault_ffi.* /usr/lib/
 
 WORKDIR scalar
 
