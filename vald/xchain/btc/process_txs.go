@@ -14,8 +14,6 @@ func (client *BtcClient) ProcessSourceTxsConfirmation(event *types.EventConfirmS
 	txIDs := slices.Map(event.PollMappings, func(m types.PollMapping) xcommon.Hash { return xcommon.Hash(m.TxID) })
 	txReceipts, _ := client.GetTxReceiptsIfFinalized(txIDs, event.ConfirmationHeight)
 
-	clog.Redf("[BTC] txReceipts: %+v", txReceipts)
-
 	var votes []sdk.Msg
 	// TODO: handle multiple tx receipts
 	for i, txReceipt := range txReceipts {
@@ -37,7 +35,9 @@ func (client *BtcClient) ProcessSourceTxsConfirmation(event *types.EventConfirmS
 }
 func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsStarted, receipt BTCTxReceipt) []types.Event {
 	// TODO: 🛑 validate the btc protocol address from the event
-
+	clog.Redf("[BTC] txReceipt.Raw.Txid: %+v", receipt.Raw)
+	clog.Redf("[BTC] txReceipt.TransactionIndex: %+v", receipt.TransactionIndex)
+	clog.Redf("[BTC] txReceipt.Raw.Hash: %+v", receipt.Raw.Hash)
 	var events []types.Event
 	tokenSent, err := client.createEventTokenSent(event, &receipt)
 	if err != nil {

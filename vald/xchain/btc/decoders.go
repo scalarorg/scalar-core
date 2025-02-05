@@ -21,8 +21,8 @@ import (
 )
 
 var (
-	StakingOutputIndex      = 0
-	EmbeddedDataOutputIndex = 1
+	EmbeddedDataOutputIndex = 0
+	StakingOutputIndex      = 1
 )
 
 var (
