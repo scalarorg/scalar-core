@@ -67,6 +67,9 @@ endif
 
 ifndef $(VERSION)
 VERSION := v0.0.1
+IMAGE_TAG := ${COMMIT}
+else
+IMAGE_TAG := ${VERSION}
 endif
 
 DENOM := scal
@@ -130,6 +133,24 @@ dbg: build
 	make dev
 
 
+# Build a release image
+.PHONY: docker-image-test
+docker-image-test:
+	@docker build \
+		--build-arg WASM="${WASM}" \
+		--build-arg WASMVM_VERSION="${WASMVM_VERSION}" \
+		--build-arg IBC_WASM_HOOKS="${IBC_WASM_HOOKS}" \
+		--build-arg ARCH="${ARCH}" \
+		-t scalarorg/scalar-core:${IMAGE_TAG} .
+
+.PHONY: docker-image-latest
+docker-image-latest:
+	@docker build \
+		--build-arg WASM="${WASM}" \
+		--build-arg WASMVM_VERSION="${WASMVM_VERSION}" \
+		--build-arg IBC_WASM_HOOKS="${IBC_WASM_HOOKS}" \
+		--build-arg ARCH="${ARCH}" \
+		-t scalarorg/scalar-core:latest .
 # Build a release image
 .PHONY: docker-image
 docker-image:
