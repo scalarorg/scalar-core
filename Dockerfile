@@ -11,7 +11,7 @@ RUN apk add --no-cache --update \
   build-base \
   linux-headers
 
-COPY --from=scalar/bitcoin-vault /bitcoin-vault/target/release/libbitcoin_vault_ffi.* /usr/lib/
+COPY --from=scalarorg/bitcoin-vault /bitcoin-vault/target/release/libbitcoin_vault_ffi.* /usr/lib/
 
 WORKDIR scalar
 
@@ -36,8 +36,8 @@ FROM alpine:3.20
 
 # Install libgcc and libstdc++ for bitcoin-vault ffi
 RUN apk add --no-cache \
-    libgcc \
-    libstdc++
+  libgcc \
+  libstdc++
 
 ARG USER_ID=1000
 ARG GROUP_ID=1001

@@ -143,14 +143,6 @@ docker-image-test:
 		--build-arg ARCH="${ARCH}" \
 		-t scalarorg/scalar-core:${IMAGE_TAG} .
 
-.PHONY: docker-image-latest
-docker-image-latest:
-	@docker build \
-		--build-arg WASM="${WASM}" \
-		--build-arg WASMVM_VERSION="${WASMVM_VERSION}" \
-		--build-arg IBC_WASM_HOOKS="${IBC_WASM_HOOKS}" \
-		--build-arg ARCH="${ARCH}" \
-		-t scalarorg/scalar-core:latest .
 # Build a release image
 .PHONY: docker-image
 docker-image:
