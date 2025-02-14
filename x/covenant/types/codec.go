@@ -7,6 +7,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 	gogoprototypes "github.com/gogo/protobuf/types"
+	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
+	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 )
 
 // RegisterLegacyAminoCodec registers concrete types on codec
@@ -20,11 +22,25 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&CreateCustodianRequest{},
 		&CreateCustodianGroupRequest{},
+		&SubmitTapScriptSigsRequest{},
 	)
 	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
 		&gogoprototypes.BoolValue{},
 	)
-	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
+
+	registry.RegisterImplementations((*reward.Refundable)(nil),
+		&SubmitTapScriptSigsRequest{},
+	)
+
+	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
+		&PsbtMultiSig{},
+	)
+
+	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
+		&exported.TapScriptSigsList{},
+	)
+
+	msgservice.RegisterMsgServiceDesc(registry, &_MsgService_serviceDesc)
 }
 
 var amino = codec.NewLegacyAmino()

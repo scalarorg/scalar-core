@@ -15,6 +15,7 @@ import (
 	chainsTypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/key"
@@ -81,7 +82,6 @@ func (k chainKeeper) GetRevoteLockingPeriod(ctx sdk.Context) int64 {
 
 func (k chainKeeper) GetPendingCommands(ctx sdk.Context) []types.Command {
 	var commands []types.Command
-
 	keys := k.getCommandQueue(ctx).Keys()
 	for _, queueKey := range keys {
 		var cmd types.Command
@@ -491,7 +491,7 @@ func (k chainKeeper) initTokenMetadata(ctx sdk.Context, asset string, details ty
 
 	gatewayAddr, found := k.GetGatewayAddress(ctx)
 	if !found {
-		return types.ERC20TokenMetadata{}, fmt.Errorf("axelar gateway address for chain '%s' not set", k.chain)
+		return types.ERC20TokenMetadata{}, fmt.Errorf("scalar gateway address for chain '%s' not set", k.chain)
 	}
 
 	tokenAddr, err := k.getTokenAddress(ctx, details, gatewayAddr)
@@ -680,6 +680,7 @@ func (k chainKeeper) CreateNewBatchToSign(ctx sdk.Context) (types.CommandBatch, 
 	gasLimit := k.getCommandsGasLimit(ctx)
 	gasCost := firstCmd.MaxGasCost
 	keyID := firstCmd.KeyID
+
 	filter := func(value codec.ProtoMarshaler) bool {
 		cmd, ok := value.(*types.Command)
 		gasCost += cmd.MaxGasCost
@@ -695,7 +696,11 @@ func (k chainKeeper) CreateNewBatchToSign(ctx sdk.Context) (types.CommandBatch, 
 			break
 		}
 
-		commands = append(commands, cmd.Clone())
+		clog.Magentaf("[keeper] [CreateNewBatchToSign] command: %+x", cmd)
+
+		// Note: Becareful with cmd.Clone() if you want to add more fields to the command, please update this function
+		clonedCmd := cmd.Clone()
+		commands = append(commands, clonedCmd)
 	}
 
 	commandBatch, err := types.NewCommandBatchMetadata(ctx.BlockHeight(), chainID, keyID, commands)
@@ -860,7 +865,7 @@ func (k chainKeeper) GetBurnerAddress(ctx sdk.Context, token types.ERC20Token, s
 		}
 
 		initCodeHash = types.Hash(crypto.Keccak256Hash(append(token.GetBurnerCode(), params...)))
-	case types.BurnerCodeHashV2, types.BurnerCodeHashV3, types.BurnerCodeHashV4, types.BurnerCodeHashV5:
+	case types.BurnerCodeHashV2, types.BurnerCodeHashV3, types.BurnerCodeHashV4, types.BurnerCodeHashV5, types.BurnerCodeHashV6:
 		initCodeHash = tokenBurnerCodeHash
 	default:
 		return types.Address{}, fmt.Errorf("unsupported burner code with hash %s for chain %s", tokenBurnerCodeHash.Hex(), k.chain)

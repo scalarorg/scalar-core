@@ -2,10 +2,12 @@ package vald
 
 import (
 	"context"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -24,6 +26,7 @@ import (
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 	"golang.org/x/sync/errgroup"
 
+	btcRpcClient "github.com/btcsuite/btcd/rpcclient"
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
@@ -38,14 +41,19 @@ import (
 	"github.com/scalarorg/scalar-core/utils/log"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/vald/config"
+	"github.com/scalarorg/scalar-core/vald/evm"
+	evmRPC "github.com/scalarorg/scalar-core/vald/evm/rpc"
 	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
 	"github.com/scalarorg/scalar-core/vald/multisig"
+	"github.com/scalarorg/scalar-core/vald/psbt"
 	grpc "github.com/scalarorg/scalar-core/vald/tofnd_grpc"
 	"github.com/scalarorg/scalar-core/vald/tss"
 	"github.com/scalarorg/scalar-core/vald/xchain"
 	"github.com/scalarorg/scalar-core/vald/xchain/btc"
-	"github.com/scalarorg/scalar-core/vald/xchain/evm"
+	xcommon "github.com/scalarorg/scalar-core/vald/xchain/common"
+	xevm "github.com/scalarorg/scalar-core/vald/xchain/evm"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	"github.com/scalarorg/scalar-core/x/tss/tofnd"
@@ -219,9 +227,13 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 
 	tssMgr := createTSSMgr(bc, clientCtx, scalarCfg, valAddr.String(), cdc)
 
+	evmMgr := createEVMMgr(scalarCfg, clientCtx, bc, valAddr)
+
 	xMgr := createXChainMgr(scalarCfg, clientCtx, bc, valAddr)
 
 	multisigMgr := createMultisigMgr(bc, clientCtx, scalarCfg, valAddr)
+
+	psbtMgr := createPSBTMgr(scalarCfg.BTCMgrConfig, clientCtx, bc, valAddr, scalarCfg.AdditionalKeys.BtcPrivKey)
 
 	nodeHeight, err := waitUntilNetworkSync(scalarCfg, robustClient)
 	if err != nil {
@@ -251,10 +263,10 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 			event.Attributes[sdk.AttributeKeyAction] == tssTypes.AttributeValueSend
 	})
 
-	// evmNewChain := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ChainAdded]())
-	// evmDepConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ConfirmDepositStarted]())
-	// evmTokConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ConfirmTokenStarted]())
-	// evmTraConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ConfirmKeyTransferStarted]())
+	evmNewChain := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ChainAdded]())
+	evmDepConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ConfirmDepositStarted]())
+	evmTokConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ConfirmTokenStarted]())
+	evmTraConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ConfirmKeyTransferStarted]())
 	// evmGatewayTxConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ConfirmGatewayTxStarted]())
 	// evmGatewayTxsConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ConfirmGatewayTxsStarted]())
 
@@ -263,6 +275,9 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 
 	// TODO: Version2: handle staking and unstaking events for multiple chains, currently it uses type of btc, we need to change it to more generic type
 	sourceEventConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.EventConfirmSourceTxsStarted]())
+
+	// creatingPsbt := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.CreatingPsbtStarted]())
+	covenantSigningPsbt := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.SigningPsbtStarted]())
 
 	eventCtx, cancelEventCtx := context.WithCancel(context.Background())
 	eGroup, eventCtx := errgroup.WithContext(eventCtx)
@@ -314,16 +329,19 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 		fetchEvents,
 		failOnTimeout,
 		createJob(heartbeat, tssMgr.ProcessHeartBeatEvent, cancelEventCtx),
-		// createJobTyped(evmNewChain, evmMgr.ProcessNewChain, cancelEventCtx),
-		// createJobTyped(evmDepConf, evmMgr.ProcessDepositConfirmation, cancelEventCtx),
-		// createJobTyped(evmTokConf, evmMgr.ProcessTokenConfirmation, cancelEventCtx),
-		// createJobTyped(evmTraConf, evmMgr.ProcessTransferKeyConfirmation, cancelEventCtx),
+		createJobTyped(evmNewChain, evmMgr.ProcessNewChain, cancelEventCtx),
+		createJobTyped(evmDepConf, evmMgr.ProcessDepositConfirmation, cancelEventCtx),
+		createJobTyped(evmTokConf, evmMgr.ProcessTokenConfirmation, cancelEventCtx),
+		createJobTyped(evmTraConf, evmMgr.ProcessTransferKeyConfirmation, cancelEventCtx),
 		// createJobTyped(evmGatewayTxConf, evmMgr.ProcessGatewayTxConfirmation, cancelEventCtx),
 		// createJobTyped(evmGatewayTxsConf, evmMgr.ProcessGatewayTxsConfirmation, cancelEventCtx),
 		createJobTyped(multisigKeygen, multisigMgr.ProcessKeygenStarted, cancelEventCtx),
 		createJobTyped(multisigSigning, multisigMgr.ProcessSigningStarted, cancelEventCtx),
 
 		createJobTyped(sourceEventConf, xMgr.ProcessSourceTxsConfirmation, cancelEventCtx),
+
+		// createJobTyped(creatingPsbt, xMgr.ProcessCreatingPsbtStarted, cancelEventCtx),
+		createJobTyped(covenantSigningPsbt, psbtMgr.ProcessSigningPsbtStarted, cancelEventCtx),
 	}
 
 	slices.ForEach(js, func(job jobs.Job) {
@@ -476,8 +494,45 @@ func createTSSMgr(broadcaster broadcast.Broadcaster, cliCtx sdkClient.Context, v
 	return mgr
 }
 
+func createEVMMgr(valdCfg config.ValdConfig, cliCtx sdkClient.Context, b broadcast.Broadcaster, valAddr sdk.ValAddress) *evm.Mgr {
+	rpcs := make(map[string]evmRPC.Client)
+
+	bridgedChains := slices.Filter(valdCfg.EVMMgrConfig, func(config config.EVMConfig) bool {
+		return config.WithBridge
+	})
+
+	slices.ForEach(bridgedChains, func(config config.EVMConfig) {
+		chainName := strings.ToLower(config.ID)
+		if _, ok := rpcs[chainName]; ok {
+			err := fmt.Errorf("duplicate bridge configuration found for EVM chain %s", config.ID)
+			log.Error(err.Error())
+			panic(err)
+		}
+		//Support finalityOverride Confirmation only
+		client, err := evmRPC.NewClient(config.RPCAddr, evmRPC.Confirmation)
+		if err != nil {
+			err = sdkerrors.Wrap(err, fmt.Sprintf("failed to create an RPC connection for EVM chain %s. Verify your RPC config.", config.ID))
+			log.Error(err.Error())
+			panic(err)
+		}
+
+		log.WithKeyVals("chain", config.ID, "url", config.RPCAddr).
+			Debugf("created JSON-RPC client of type %T", client)
+
+		// clean up evmRPC connection on process shutdown
+		cleanupCommands = append(cleanupCommands, client.Close)
+
+		rpcs[chainName] = client
+		log.Infof("successfully connected to EVM bridge for chain %s", chainName)
+	})
+
+	caches := evm.NewLatestFinalizedBlockCache()
+	return evm.NewMgr(rpcs, b, valAddr, cliCtx.FromAddress, caches)
+
+}
+
 func createXChainMgr(valdCfg config.ValdConfig, cliCtx sdkClient.Context, b broadcast.Broadcaster, valAddr sdk.ValAddress) *xchain.Manager {
-	rpcs := make(map[chain.ChainInfoBytes]xchain.Client)
+	rpcs := make(map[chain.ChainInfoBytes]xcommon.Client)
 
 	// Handle BTC chains
 	createBTCClients(valdCfg.BTCMgrConfig, rpcs)
@@ -488,7 +543,7 @@ func createXChainMgr(valdCfg config.ValdConfig, cliCtx sdkClient.Context, b broa
 	return xchain.NewManager(cliCtx, rpcs, b, valAddr)
 }
 
-func createBTCClients(configs []config.BTCConfig, rpcs map[chain.ChainInfoBytes]xchain.Client) {
+func createBTCClients(configs []config.BTCConfig, rpcs map[chain.ChainInfoBytes]xcommon.Client) {
 	bridgeConfigs := slices.Filter(configs, func(config config.BTCConfig) bool {
 		return config.WithBridge
 	})
@@ -503,7 +558,7 @@ func createBTCClients(configs []config.BTCConfig, rpcs map[chain.ChainInfoBytes]
 	})
 }
 
-func createEVMClients(configs []config.EVMConfig, rpcs map[chain.ChainInfoBytes]xchain.Client) {
+func createEVMClients(configs []config.EVMConfig, rpcs map[chain.ChainInfoBytes]xcommon.Client) {
 	bridgeConfigs := slices.Filter(configs, func(config config.EVMConfig) bool {
 		return config.WithBridge
 	})
@@ -518,6 +573,37 @@ func createEVMClients(configs []config.EVMConfig, rpcs map[chain.ChainInfoBytes]
 	})
 }
 
+func createPSBTMgr(configs []config.BTCConfig, cliCtx sdkClient.Context, b broadcast.Broadcaster, valAddr sdk.ValAddress, privKey string) *psbt.Mgr {
+	rpcs := make(map[chain.ChainInfoBytes]*btcRpcClient.Client)
+	bridgeConfigs := slices.Filter(configs, func(config config.BTCConfig) bool {
+		return config.WithBridge
+	})
+
+	slices.ForEach(bridgeConfigs, func(config config.BTCConfig) {
+		chainInfoBytes := getChainInfoBytes(config.ID)
+		if _, ok := rpcs[chainInfoBytes]; ok {
+			err := fmt.Errorf("duplicate bridge configuration found for BTC chain %s", config.ID)
+			log.Error(err.Error())
+			panic(err)
+		}
+
+		rpcConfig := btc.MapBTCConfigToRPCConfig(&config)
+		client, error := btcRpcClient.New(rpcConfig, nil)
+		if error != nil {
+			panic(error)
+		}
+
+		rpcs[chainInfoBytes] = client
+	})
+
+	privKeyBytes, err := hex.DecodeString(privKey)
+	if err != nil {
+		panic(fmt.Errorf("invalid private key %s", privKey))
+	}
+
+	return psbt.NewMgr(rpcs, cliCtx, valAddr, b, privKeyBytes)
+}
+
 func getChainInfoBytes(chainID string) chain.ChainInfoBytes {
 	chainInfoBytes, err := scalarUtils.ChainInfoBytesFromID(chainID)
 	if err != nil {
@@ -528,7 +614,7 @@ func getChainInfoBytes(chainID string) chain.ChainInfoBytes {
 	return chainInfoBytes
 }
 
-func validateNoDuplicateChain(rpcs map[chain.ChainInfoBytes]xchain.Client, chainInfoBytes chain.ChainInfoBytes, chainID string) {
+func validateNoDuplicateChain(rpcs map[chain.ChainInfoBytes]xcommon.Client, chainInfoBytes chain.ChainInfoBytes, chainID string) {
 	if _, ok := rpcs[chainInfoBytes]; ok {
 		err := fmt.Errorf("duplicate bridge configuration found for chain %s", chainID)
 		log.Error(err.Error())
@@ -536,7 +622,7 @@ func validateNoDuplicateChain(rpcs map[chain.ChainInfoBytes]xchain.Client, chain
 	}
 }
 
-func createBTCClient(config *config.BTCConfig) xchain.Client {
+func createBTCClient(config *config.BTCConfig) xcommon.Client {
 	client, err := btc.NewClient(config)
 	if err != nil {
 		err = sdkerrors.Wrap(err, fmt.Sprintf("failed to create an RPC connection for BTC chain %s. Verify your RPC config.", config.ID))
@@ -546,8 +632,8 @@ func createBTCClient(config *config.BTCConfig) xchain.Client {
 	return client
 }
 
-func createEVMClient(config config.EVMConfig) xchain.Client {
-	client, err := evm.NewClient(config.RPCAddr, config.FinalityOverride)
+func createEVMClient(config config.EVMConfig) xcommon.Client {
+	client, err := xevm.NewClient(config.RPCAddr, config.FinalityOverride)
 	if err != nil {
 		err = sdkerrors.Wrap(err, fmt.Sprintf("failed to create an RPC connection for EVM chain %s. Verify your RPC config.", config.ID))
 		log.Error(err.Error())
@@ -556,7 +642,7 @@ func createEVMClient(config config.EVMConfig) xchain.Client {
 	return client
 }
 
-func logClientCreation(chainID string, url string, client xchain.Client) {
+func logClientCreation(chainID string, url string, client xcommon.Client) {
 	log.WithKeyVals("chain", chainID, "url", url).
 		Debugf("created JSON-RPC client of type %T", client)
 }

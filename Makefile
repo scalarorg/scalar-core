@@ -26,7 +26,8 @@ SCALAR_HOME_DIR ?= .scalar/scalar
 SCALAR_CHAIN_ID ?= scalar-testnet-1
 SCALAR_KEYRING_BACKEND ?= test
 LOCAL_LIB_PATH ?= $(shell pwd)/lib
-
+USER_ID ?= $(shell id -u)
+GROUP_ID ?= $(shell id -g)
 export CGO_LDFLAGS := ${CGO_LDFLAGS} -lbitcoin_vault_ffi  -L${LOCAL_LIB_PATH}
 
 $(info ⛳️ Makefile Environment Variables ⛳️)
@@ -66,6 +67,9 @@ endif
 
 ifndef $(VERSION)
 VERSION := v0.0.1
+IMAGE_TAG := ${COMMIT}
+else
+IMAGE_TAG := ${VERSION}
 endif
 
 DENOM := scal
@@ -128,6 +132,16 @@ dev:
 dbg: build
 	make dev
 
+
+# Build a release image
+.PHONY: docker-image-test
+docker-image-test:
+	@docker build \
+		--build-arg WASM="${WASM}" \
+		--build-arg WASMVM_VERSION="${WASMVM_VERSION}" \
+		--build-arg IBC_WASM_HOOKS="${IBC_WASM_HOOKS}" \
+		--build-arg ARCH="${ARCH}" \
+		-t scalarorg/scalar-core:${IMAGE_TAG} .
 
 # Build a release image
 .PHONY: docker-image
@@ -228,22 +242,37 @@ prereqs:
 ######
 # Usage: SCALAR_HOME_DIR=.scalar/node1/scalard make cfst WALLET=node1 ARGS="bitcoin-testnet4 07b50c84f889e2f1315da875fc91734e2bac8d0153ff9a98d9da14caa4fc7d57"
 ######
-.PHONY: cfs
+.PHONY: cfs cfs2 cfs3 cfd2 cfd3 cfd4
 cfs:
 	@if [ -z "$(ARGS)" ]; then \
 		echo "ARGS is required"; \
 		exit 1; \
 	fi
 
-	$(SCALAR_BIN_PATH) tx chains confirm-source-txs $(ARGS) --from $(WALLET) --keyring-backend $(SCALAR_KEYRING_BACKEND) --home $(SCALAR_HOME_DIR) --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs $(ARGS) --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 400000
 
 cfs2:
-	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "bitcoin|4" 18fa2be86b54d9ff7e35aba97d57483f05500cd9301547607f67ea5b47fa1c87 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "bitcoin|4" 8c3016ba40444991be4b98dfbd964cce79c50dc628747e84d52aea8c312d13ce --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 500000
+
 cfs3:
 	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "bitcoin|4" 5188eea7ceb9f585f5ba8a2abebb82f9850dd671b6e2926263674af6882fd3f6 fc702634fc245b254d44585dfaa6527871899dbfe38d5585abecbb738f8865bf --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 537803
 
 cfd2:
-	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" cabc3140a564038f9f76e9d692309ea8d5be7d5a8a2133b97bf0579a73cfbb37 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" 8062e7c01545e6bac064e675b5bec41d9536dbc3b849368385279e5b2c6e96fd --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 507368
+	
+cfd3:
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" be6668d3c6c00fde1e9e089fc37b837dc5d908afd9f3bf79ab3af66322170ef5 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+
+cfd4:
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" a799b1e5c5a53142d31faeb663c18909fa1c7e748080ade0db960ca608005251 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+
+.PHONY: sign-btc
+sign-btc:
+	$(SCALAR_BIN_PATH) tx chains sign-btc-commands "bitcoin|4" --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 1000535
+
+.PHONY: batch-command
+batch-command:
+	$(SCALAR_BIN_PATH) query chains batched-commands "bitcoin|4" $(BATCH_ID)
 
 .PHONY: params
 params:
@@ -252,8 +281,6 @@ params:
 	else \
 		$(SCALAR_BIN_PATH) query chains params '$(CHAIN)'; \
 	fi
-
-	
 
 .PHONY: open-docs
 open-docs:

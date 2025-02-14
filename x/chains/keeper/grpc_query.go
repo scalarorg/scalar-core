@@ -19,6 +19,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/chains/types"
+	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -211,11 +212,31 @@ func commandBatchToResp(ctx sdk.Context, commandBatch types.CommandBatch, multis
 
 	switch {
 	case commandBatch.Is(types.BatchSigned) && commandBatch.GetSignature() != nil: // check signature for unmigrated batches
-		signature := commandBatch.GetSignature().(multisig.MultiSig)
-		executeData, proof, err := getExecuteDataAndSigs(ctx, multisigK, commandBatch, signature)
-		if err != nil {
-			return types.BatchedCommandsResponse{}, sdkerrors.Wrap(types.ErrEVM, err.Error())
+		signature, ok := commandBatch.GetSignature().(multisig.MultiSig)
+		if ok {
+			executeData, proof, err := getExecuteDataAndSigs(ctx, multisigK, commandBatch, signature)
+			if err != nil {
+				return types.BatchedCommandsResponse{}, sdkerrors.Wrap(types.ErrEVM, err.Error())
+			}
+
+			return types.BatchedCommandsResponse{
+				ID:                    id,
+				Data:                  hex.EncodeToString(commandBatch.GetData()),
+				Status:                commandBatch.GetStatus(),
+				KeyID:                 commandBatch.GetKeyID(),
+				ExecuteData:           hex.EncodeToString(executeData),
+				PrevBatchedCommandsID: prevID,
+				CommandIDs:            commandIDs,
+				Proof:                 &proof,
+			}, nil
 		}
+
+		psbtSig := commandBatch.GetSignature().(covenant.PsbtMultiSig)
+		// if !ok {
+		// 	return types.BatchedCommandsResponse{}, sdkerrors.Wrap(types.ErrEVM, fmt.Sprintf("not supported signature type %T", commandBatch.GetSignature()))
+		// }
+
+		executeData := psbtSig.GetFinalizedTx()
 
 		return types.BatchedCommandsResponse{
 			ID:                    id,
@@ -225,8 +246,9 @@ func commandBatchToResp(ctx sdk.Context, commandBatch types.CommandBatch, multis
 			ExecuteData:           hex.EncodeToString(executeData),
 			PrevBatchedCommandsID: prevID,
 			CommandIDs:            commandIDs,
-			Proof:                 &proof,
+			Proof:                 nil,
 		}, nil
+
 	default:
 		return types.BatchedCommandsResponse{
 			ID:                    id,
@@ -327,6 +349,7 @@ func GetCommandResponse(cmd types.Command) (types.QueryCommandResponse, error) {
 		KeyID:      string(cmd.KeyID),
 		MaxGasCost: cmd.MaxGasCost,
 		Params:     params,
+		Payload:    cmd.Payload,
 	}, nil
 }
 
@@ -466,6 +489,7 @@ func (q Querier) ERC20Tokens(c context.Context, req *types.ERC20TokensRequest) (
 			return types.ERC20TokensResponse_Token{
 				Asset:  token.GetAsset(),
 				Symbol: token.GetDetails().Symbol,
+				Model:  token.GetDetails().Model,
 			}
 		}),
 	}

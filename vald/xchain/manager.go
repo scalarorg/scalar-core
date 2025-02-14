@@ -2,12 +2,12 @@ package xchain
 
 import (
 	"context"
-	goerrors "errors"
 	"fmt"
 
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
 	"github.com/scalarorg/scalar-core/utils/log"
+	xcommon "github.com/scalarorg/scalar-core/vald/xchain/common"
 
 	sdkClient "github.com/cosmos/cosmos-sdk/client"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -16,27 +16,19 @@ import (
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
-// ErrNotFinalized is returned when a transaction is not finalized
-var ErrNotFinalized = goerrors.New("not finalized")
-
-// ErrTxFailed is returned when a transaction has failed
-var ErrTxFailed = goerrors.New("transaction failed")
-
-// ErrFailedToGetTransactions is returned when a transaction is not found
-var ErrFailedToGetTransactions = goerrors.New("failed to get transactions")
-
 // Manager manages all communication with Ethereum
 type Manager struct {
-	rpcs        map[chain.ChainInfoBytes]Client
-	broadcaster broadcast.Broadcaster
-	validator   sdk.ValAddress
-	proxy       sdk.AccAddress
+	rpcs                      map[chain.ChainInfoBytes]xcommon.Client
+	broadcaster               broadcast.Broadcaster
+	validator                 sdk.ValAddress
+	proxy                     sdk.AccAddress
+	latestFinalizedBlockCache xcommon.LatestFinalizedBlockCache
 }
 
 // NewManager returns a new Manager instance
 func NewManager(
 	clientCtx sdkClient.Context,
-	rpcs map[chain.ChainInfoBytes]Client,
+	rpcs map[chain.ChainInfoBytes]xcommon.Client,
 	broadcaster broadcast.Broadcaster,
 	valAddr sdk.ValAddress,
 ) *Manager {
@@ -77,7 +69,6 @@ func (mgr Manager) ProcessSourceTxsConfirmation(event *types.EventConfirmSourceT
 	_, err = mgr.broadcaster.Broadcast(context.TODO(), votes...)
 
 	return err
-
 }
 
 // isParticipantOf checks if the validator is in the poll participants list

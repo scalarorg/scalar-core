@@ -7,6 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/key"
@@ -50,6 +51,13 @@ func (k Keeper) deleteTransfer(ctx sdk.Context, transfer exported.CrossChainTran
 func (k Keeper) setNewTransfer(ctx sdk.Context, recipient exported.CrossChainAddress, amount sdk.Coin, state exported.TransferState) exported.TransferID {
 	id := k.getNonce(ctx)
 	k.setTransfer(ctx, exported.NewCrossChainTransfer(id, recipient, amount, state))
+	k.setNonce(ctx, id+1)
+	return exported.TransferID(id)
+}
+
+func (k Keeper) setNewTransferWithSourceTxHash(ctx sdk.Context, sourceTxID common.Hash, recipient exported.CrossChainAddress, amount sdk.Coin, state exported.TransferState) exported.TransferID {
+	id := k.getNonce(ctx)
+	k.setTransfer(ctx, exported.NewCrossChainTransferWithSourceTxHash(id, sourceTxID, recipient, amount, state))
 	k.setNonce(ctx, id+1)
 	return exported.TransferID(id)
 }
@@ -98,6 +106,8 @@ func (k Keeper) ComputeTransferFee(ctx sdk.Context, sourceChain exported.Chain, 
 	return sdk.NewCoin(asset.Denom, fee), nil
 }
 
+// Deprecated: To make sure the command created from CrossChainTransfer is executed one on the evm, use sourceTxID as TransferId instead of the nonce.
+// Use EnqueueCrossChainTransfer instead.
 // EnqueueTransfer enqueues an asset transfer to the given recipient address
 func (k Keeper) EnqueueTransfer(ctx sdk.Context, senderChain exported.Chain, recipient exported.CrossChainAddress, asset sdk.Coin) (exported.TransferID, error) {
 	if err := k.validateAsset(ctx, senderChain, asset.Denom); err != nil {
@@ -178,6 +188,86 @@ func (k Keeper) EnqueueTransfer(ctx sdk.Context, senderChain exported.Chain, rec
 	return transferID, nil
 }
 
+// EnqueueTransfer enqueues an asset transfer to the given recipient address
+func (k Keeper) EnqueueCrossChainTransfer(ctx sdk.Context, senderChain exported.Chain, sourceTxHash common.Hash, recipient exported.CrossChainAddress, asset sdk.Coin) (exported.TransferID, error) {
+	if err := k.validateAsset(ctx, senderChain, asset.Denom); err != nil {
+		return 0, err
+	}
+
+	if err := k.validateAsset(ctx, recipient.Chain, asset.Denom); err != nil {
+		return 0, err
+	}
+
+	if err := k.ValidateAddress(ctx, recipient); err != nil {
+		return 0, err
+	}
+
+	if err := k.RateLimitTransfer(ctx, senderChain.Name, asset, exported.TransferDirectionFrom); err != nil {
+		return 0, err
+	}
+
+	// merging transfers below minimum for the specified recipient
+	insufficientAmountTransfer, found := k.getTransfer(ctx, recipient, asset.Denom, exported.InsufficientAmount)
+	if found {
+		asset = asset.Add(insufficientAmountTransfer.Asset)
+		k.deleteTransfer(ctx, insufficientAmountTransfer)
+	}
+
+	// collect fee
+	fee, err := k.ComputeTransferFee(ctx, senderChain, recipient.Chain, asset)
+	if err != nil {
+		return 0, err
+	}
+
+	if fee.Amount.GTE(asset.Amount) {
+		k.Logger(ctx).Debug(fmt.Sprintf("skipping deposit from chain %s to chain %s and recipient %s due to deposited amount being below fees %s for asset %s",
+			senderChain.Name, recipient.Chain.Name, recipient.Address, fee.String(), asset.String()))
+
+		transferID := k.setNewTransferWithSourceTxHash(ctx, sourceTxHash, recipient, asset, exported.InsufficientAmount)
+
+		events.Emit(ctx, &types.InsufficientFee{
+			TransferID:       transferID,
+			RecipientChain:   recipient.Chain.Name,
+			RecipientAddress: recipient.Address,
+			Amount:           asset,
+			Fee:              fee,
+		})
+
+		return transferID, nil
+	}
+
+	if fee.IsPositive() {
+		k.AddTransferFee(ctx, fee)
+		asset = asset.Sub(fee)
+	}
+
+	if err := k.RateLimitTransfer(ctx, recipient.Chain.Name, asset, exported.TransferDirectionTo); err != nil {
+		return 0, err
+	}
+
+	// merging transfers for the specified recipient
+	previousTransfer, found := k.getTransfer(ctx, recipient, asset.Denom, exported.Pending)
+	if found {
+		asset = asset.Add(previousTransfer.Asset)
+		k.deleteTransfer(ctx, previousTransfer)
+	}
+
+	k.Logger(ctx).Info(fmt.Sprintf("transfer %s from chain %s to chain %s and recipient %s is successfully prepared",
+		asset.String(), senderChain.Name, recipient.Chain.Name, recipient.Address))
+
+	transferID := k.setNewTransferWithSourceTxHash(ctx, sourceTxHash, recipient, asset, exported.Pending)
+
+	events.Emit(ctx, &types.FeeDeducted{
+		TransferID:       transferID,
+		RecipientChain:   recipient.Chain.Name,
+		RecipientAddress: recipient.Address,
+		Amount:           asset,
+		Fee:              fee,
+	})
+
+	return transferID, nil
+}
+
 // validateAsset validates asset if
 // - chain supports foreign assets, and the asset is registered on the chain
 // - or asset is the native asset on the chain
@@ -194,6 +284,8 @@ func (k Keeper) validateAsset(ctx sdk.Context, chain exported.Chain, asset strin
 	return nil
 }
 
+// Deprecated: To make sure the command created from CrossChainTransfer is executed one on the evm, use sourceTxID as TransferId instead of the nonce.
+// Use EnqueueForCrossChainTransfer instead.
 // EnqueueForTransfer enqueues an asset transfer for the given deposit address
 func (k Keeper) EnqueueForTransfer(ctx sdk.Context, sender exported.CrossChainAddress, asset sdk.Coin) (exported.TransferID, error) {
 	recipient, ok := k.GetRecipient(ctx, sender)
@@ -202,6 +294,15 @@ func (k Keeper) EnqueueForTransfer(ctx sdk.Context, sender exported.CrossChainAd
 	}
 
 	return k.EnqueueTransfer(ctx, sender.Chain, recipient, asset)
+}
+
+func (k Keeper) EnqueueForCrossChainTransfer(ctx sdk.Context, sender exported.CrossChainAddress, sourceTxID common.Hash, asset sdk.Coin) (exported.TransferID, error) {
+	recipient, ok := k.GetRecipient(ctx, sender)
+	if !ok {
+		return 0, fmt.Errorf("no recipient linked to sender %s", sender.String())
+	}
+
+	return k.EnqueueCrossChainTransfer(ctx, sender.Chain, sourceTxID, recipient, asset)
 }
 
 func (k Keeper) getTransfer(ctx sdk.Context, recipient exported.CrossChainAddress, denom string, state exported.TransferState) (exported.CrossChainTransfer, bool) {

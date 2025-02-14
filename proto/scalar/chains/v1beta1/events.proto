@@ -100,18 +100,72 @@ message SourceTxConfirmationEvent {
   string destination_recipient_address = 8;
 }
 
-message EventTokenSent {
-  bytes sender = 1
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
-  string destination_chain = 2
+message ContractCallApproved {
+  string chain = 1
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  string destination_address = 3;
-  string symbol = 4;
-  bytes amount = 5 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
-    (gogoproto.nullable) = false
+  string event_id = 2
+      [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
+  bytes command_id = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "CommandID",
+    (gogoproto.customtype) = "CommandID"
   ];
+  string sender = 4;
+  string destination_chain = 5
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string contract_address = 6;
+  bytes payload_hash = 7
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+}
+
+message ContractCallFailed {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string message_id = 2 [ (gogoproto.customname) = "MessageID" ];
+}
+
+message EventContractCallWithMintApproved {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string event_id = 2
+      [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
+  bytes command_id = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "CommandID",
+    (gogoproto.customtype) = "CommandID"
+  ];
+  string sender = 4;
+  string destination_chain = 5
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string contract_address = 6;
+  bytes payload_hash = 7
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+  cosmos.base.v1beta1.Coin asset = 8 [ (gogoproto.nullable) = false ];
+}
+
+message EventTokenSent {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string event_id = 2
+      [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
+  uint64 transfer_id = 3 [
+    (gogoproto.customname) = "TransferID",
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/nexus/exported.TransferID"
+  ];
+  string command_id = 4 [ (gogoproto.customname) = "CommandID"];
+  string sender = 5;
+  string destination_chain = 6
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string destination_address = 7;
+  cosmos.base.v1beta1.Coin asset = 8 [ (gogoproto.nullable) = false ];
 }
 
 message EventContractCall {
@@ -133,12 +187,13 @@ message EventContractCallWithToken {
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string contract_address = 3;
   bytes payload_hash = 4
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ]; 
   string symbol = 5;
   bytes amount = 6 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
     (gogoproto.nullable) = false
   ];
+  bytes payload = 7;   
 }
 
 message EventTransfer {
@@ -216,13 +271,14 @@ message Event {
     EventTokenSent token_sent = 5;
     EventContractCall contract_call = 6;
     EventContractCallWithToken contract_call_with_token = 7;
-    EventTransfer transfer = 8;
-    EventTokenDeployed token_deployed = 9;
+    EventContractCallWithMintApproved contract_call_with_mint_approved = 8;
+    EventTransfer transfer = 9;
+    EventTokenDeployed token_deployed = 10;
 
-    EventMultisigOperatorshipTransferred multisig_operatorship_transferred = 10;
+    EventMultisigOperatorshipTransferred multisig_operatorship_transferred = 11;
 
     // for general chains
-    SourceTxConfirmationEvent source_tx_confirmation_event = 11;
+    SourceTxConfirmationEvent source_tx_confirmation_event = 12;
   }
 }
 
@@ -277,54 +333,6 @@ message ChainEventRetryFailed {
   string event_id = 2
       [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
   string type = 3;
-}
-
-message DestCallApproved {
-  string chain = 1
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  string event_id = 2
-      [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
-  bytes command_id = 3 [
-    (gogoproto.nullable) = false,
-    (gogoproto.customname) = "CommandID",
-    (gogoproto.customtype) = "CommandID"
-  ];
-  string sender = 4;
-  string destination_chain = 5
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  string contract_address = 6;
-  bytes payload_hash = 7
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
-}
-
-message DestCallFailed {
-  string chain = 1
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  string message_id = 2 [ (gogoproto.customname) = "MessageID" ];
-}
-
-message DestCallWithMintApproved {
-  string chain = 1
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  string event_id = 2
-      [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
-  bytes command_id = 3 [
-    (gogoproto.nullable) = false,
-    (gogoproto.customname) = "CommandID",
-    (gogoproto.customtype) = "CommandID"
-  ];
-  string sender = 4;
-  string destination_chain = 5
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  string contract_address = 6;
-  bytes payload_hash = 7
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
-  cosmos.base.v1beta1.Coin asset = 8 [ (gogoproto.nullable) = false ];
 }
 
 message MintCommand {

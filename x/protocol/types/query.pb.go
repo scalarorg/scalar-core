@@ -5,7 +5,11 @@ package types
 
 import (
 	fmt "fmt"
+	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
+	_ "github.com/scalarorg/scalar-core/x/chains/types"
+	github_com_scalarorg_scalar_core_x_nexus_exported "github.com/scalarorg/scalar-core/x/nexus/exported"
+	exported "github.com/scalarorg/scalar-core/x/protocol/exported"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -92,6 +96,7 @@ func (m *ProtocolsRequest) GetStatus() Status {
 
 type ProtocolsResponse struct {
 	Protocols []*Protocol `protobuf:"bytes,1,rep,name=protocols,proto3" json:"protocols,omitempty"`
+	Total     uint64      `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
 }
 
 func (m *ProtocolsResponse) Reset()         { *m = ProtocolsResponse{} }
@@ -134,9 +139,130 @@ func (m *ProtocolsResponse) GetProtocols() []*Protocol {
 	return nil
 }
 
+func (m *ProtocolsResponse) GetTotal() uint64 {
+	if m != nil {
+		return m.Total
+	}
+	return 0
+}
+
+type ProtocolRequest struct {
+	OriginChain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName `protobuf:"bytes,1,opt,name=origin_chain,json=originChain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"origin_chain,omitempty"`
+	MinorChain  github_com_scalarorg_scalar_core_x_nexus_exported.ChainName `protobuf:"bytes,2,opt,name=minor_chain,json=minorChain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"minor_chain,omitempty"`
+	Symbol      string                                                      `protobuf:"bytes,3,opt,name=symbol,proto3" json:"symbol,omitempty"`
+	Address     string                                                      `protobuf:"bytes,4,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *ProtocolRequest) Reset()         { *m = ProtocolRequest{} }
+func (m *ProtocolRequest) String() string { return proto.CompactTextString(m) }
+func (*ProtocolRequest) ProtoMessage()    {}
+func (*ProtocolRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{2}
+}
+func (m *ProtocolRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ProtocolRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ProtocolRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ProtocolRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ProtocolRequest.Merge(m, src)
+}
+func (m *ProtocolRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *ProtocolRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ProtocolRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ProtocolRequest proto.InternalMessageInfo
+
+func (m *ProtocolRequest) GetOriginChain() github_com_scalarorg_scalar_core_x_nexus_exported.ChainName {
+	if m != nil {
+		return m.OriginChain
+	}
+	return ""
+}
+
+func (m *ProtocolRequest) GetMinorChain() github_com_scalarorg_scalar_core_x_nexus_exported.ChainName {
+	if m != nil {
+		return m.MinorChain
+	}
+	return ""
+}
+
+func (m *ProtocolRequest) GetSymbol() string {
+	if m != nil {
+		return m.Symbol
+	}
+	return ""
+}
+
+func (m *ProtocolRequest) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+type ProtocolResponse struct {
+	Protocol *exported.ProtocolInfo `protobuf:"bytes,1,opt,name=protocol,proto3" json:"protocol,omitempty"`
+}
+
+func (m *ProtocolResponse) Reset()         { *m = ProtocolResponse{} }
+func (m *ProtocolResponse) String() string { return proto.CompactTextString(m) }
+func (*ProtocolResponse) ProtoMessage()    {}
+func (*ProtocolResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_17e7473aa0548727, []int{3}
+}
+func (m *ProtocolResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ProtocolResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ProtocolResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ProtocolResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ProtocolResponse.Merge(m, src)
+}
+func (m *ProtocolResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *ProtocolResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ProtocolResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ProtocolResponse proto.InternalMessageInfo
+
+func (m *ProtocolResponse) GetProtocol() *exported.ProtocolInfo {
+	if m != nil {
+		return m.Protocol
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*ProtocolsRequest)(nil), "scalar.protocol.v1beta1.ProtocolsRequest")
 	proto.RegisterType((*ProtocolsResponse)(nil), "scalar.protocol.v1beta1.ProtocolsResponse")
+	proto.RegisterType((*ProtocolRequest)(nil), "scalar.protocol.v1beta1.ProtocolRequest")
+	proto.RegisterType((*ProtocolResponse)(nil), "scalar.protocol.v1beta1.ProtocolResponse")
 }
 
 func init() {
@@ -144,24 +270,35 @@ func init() {
 }
 
 var fileDescriptor_17e7473aa0548727 = []byte{
-	// 269 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x90, 0xb1, 0x4e, 0xc3, 0x30,
-	0x10, 0x86, 0x63, 0x5a, 0x05, 0xd5, 0x48, 0x08, 0x3c, 0x80, 0xc5, 0x60, 0x42, 0x59, 0xb2, 0xe0,
-	0x28, 0x65, 0x60, 0x44, 0x62, 0x65, 0x41, 0x81, 0x89, 0xcd, 0x49, 0x4f, 0x05, 0xd1, 0xd6, 0xa9,
-	0xcf, 0x41, 0xe4, 0x2d, 0xe0, 0xad, 0x18, 0x3b, 0x32, 0xa2, 0xe4, 0x45, 0x90, 0x1c, 0x47, 0x65,
-	0xc9, 0x76, 0xff, 0xdd, 0xf7, 0x9d, 0x4e, 0x47, 0x2f, 0xb1, 0x50, 0x4b, 0x65, 0x92, 0xd2, 0x68,
-	0xab, 0x0b, 0xbd, 0x4c, 0xde, 0xd3, 0x1c, 0xac, 0x4a, 0x93, 0x4d, 0x05, 0xa6, 0x96, 0xae, 0xcd,
-	0x4e, 0x3b, 0x48, 0xf6, 0x90, 0xf4, 0xd0, 0xd9, 0xa0, 0x6d, 0xeb, 0x12, 0xb0, 0xe3, 0xa7, 0x5f,
-	0x84, 0x1e, 0x3d, 0x78, 0x00, 0x33, 0xd8, 0x54, 0x80, 0x96, 0x9d, 0xd0, 0xb0, 0xac, 0xf2, 0x37,
-	0xa8, 0x39, 0x89, 0x48, 0x3c, 0xc9, 0x7c, 0x62, 0x9c, 0xee, 0xab, 0xf9, 0xdc, 0x00, 0x22, 0xdf,
-	0x73, 0x83, 0x3e, 0x32, 0x46, 0xc7, 0x6b, 0xb5, 0x02, 0x3e, 0x72, 0x6d, 0x57, 0xb3, 0x1b, 0x1a,
-	0xa2, 0x55, 0xb6, 0x42, 0x3e, 0x8e, 0x48, 0x7c, 0x38, 0x3b, 0x97, 0x03, 0x97, 0xca, 0x47, 0x87,
-	0x65, 0x1e, 0x9f, 0x3e, 0xd1, 0xe3, 0x7f, 0x27, 0x61, 0xa9, 0xd7, 0x08, 0xec, 0x96, 0x4e, 0x7a,
-	0x0f, 0x39, 0x89, 0x46, 0xf1, 0xc1, 0xec, 0x62, 0x70, 0x61, 0xaf, 0x67, 0x3b, 0xe7, 0xee, 0xfe,
-	0xbb, 0x11, 0x64, 0xdb, 0x08, 0xf2, 0xdb, 0x08, 0xf2, 0xd9, 0x8a, 0x60, 0xdb, 0x8a, 0xe0, 0xa7,
-	0x15, 0xc1, 0x73, 0xba, 0x78, 0xb5, 0x2f, 0x55, 0x2e, 0x0b, 0xbd, 0x4a, 0xba, 0x8d, 0xda, 0x2c,
-	0x7c, 0x75, 0x55, 0x68, 0x03, 0xc9, 0xc7, 0xee, 0x89, 0xee, 0x79, 0x79, 0xe8, 0xf2, 0xf5, 0x5f,
-	0x00, 0x00, 0x00, 0xff, 0xff, 0x58, 0xac, 0x59, 0x61, 0xa2, 0x01, 0x00, 0x00,
+	// 438 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x93, 0xbf, 0xae, 0xd3, 0x30,
+	0x14, 0xc6, 0xeb, 0xde, 0x10, 0xb8, 0x0e, 0xe2, 0x8f, 0x75, 0x75, 0x89, 0xee, 0x90, 0xdb, 0x86,
+	0xa5, 0x03, 0x38, 0x6a, 0x19, 0x18, 0x18, 0x2a, 0x95, 0x09, 0x90, 0x10, 0x0a, 0x1b, 0x03, 0xe0,
+	0xa4, 0x26, 0x0d, 0x24, 0x71, 0x6a, 0x3b, 0xa8, 0x79, 0x04, 0x36, 0x78, 0x2b, 0xc6, 0x8e, 0x4c,
+	0x08, 0xb5, 0x6f, 0xc1, 0x84, 0x6a, 0x3b, 0x69, 0x29, 0xad, 0xc4, 0x70, 0xb7, 0x73, 0x4e, 0x7e,
+	0xe7, 0x7c, 0xf6, 0x77, 0x1c, 0x78, 0x5f, 0xc4, 0x24, 0x23, 0x3c, 0x28, 0x39, 0x93, 0x2c, 0x66,
+	0x59, 0xf0, 0x79, 0x18, 0x51, 0x49, 0x86, 0xc1, 0xbc, 0xa2, 0xbc, 0xc6, 0xaa, 0x8c, 0xee, 0x69,
+	0x08, 0x37, 0x10, 0x36, 0xd0, 0xc5, 0xd1, 0x6e, 0x59, 0x97, 0x54, 0x68, 0xfe, 0xe2, 0xc1, 0x3e,
+	0x44, 0x17, 0x25, 0xe3, 0x92, 0x4e, 0x0f, 0xd2, 0x7d, 0x43, 0xc7, 0x33, 0x92, 0x16, 0xe2, 0x20,
+	0x72, 0x96, 0xb0, 0x84, 0xa9, 0x30, 0xd8, 0x44, 0xba, 0xea, 0x7f, 0x03, 0xf0, 0xce, 0x2b, 0x23,
+	0x21, 0x42, 0x3a, 0xaf, 0xa8, 0x90, 0xe8, 0x1c, 0xda, 0x65, 0x15, 0x7d, 0xa2, 0xb5, 0x0b, 0x7a,
+	0x60, 0x70, 0x1a, 0x9a, 0x0c, 0xb9, 0xf0, 0x3a, 0x99, 0x4e, 0x39, 0x15, 0xc2, 0xed, 0xaa, 0x0f,
+	0x4d, 0x8a, 0x10, 0xb4, 0x0a, 0x92, 0x53, 0xf7, 0x44, 0x95, 0x55, 0x8c, 0x1e, 0x43, 0x5b, 0x48,
+	0x22, 0x2b, 0xe1, 0x5a, 0x3d, 0x30, 0xb8, 0x35, 0xba, 0xc4, 0x47, 0x0c, 0xc1, 0xaf, 0x15, 0x16,
+	0x1a, 0xdc, 0xff, 0x08, 0xef, 0xee, 0x1c, 0x49, 0x94, 0xac, 0x10, 0x14, 0x8d, 0xe1, 0x69, 0xd3,
+	0x27, 0x5c, 0xd0, 0x3b, 0x19, 0x38, 0xa3, 0xfe, 0xd1, 0x81, 0x4d, 0x7b, 0xb8, 0xed, 0x41, 0x67,
+	0xf0, 0x9a, 0x64, 0x92, 0x64, 0xea, 0xe8, 0x56, 0xa8, 0x13, 0xff, 0x4b, 0x17, 0xde, 0x6e, 0x69,
+	0x73, 0xfd, 0x08, 0xde, 0x64, 0x3c, 0x4d, 0xd2, 0xe2, 0x9d, 0xb2, 0x53, 0x9b, 0x30, 0x19, 0xff,
+	0xfe, 0x79, 0xf9, 0x24, 0x49, 0xe5, 0xac, 0x8a, 0x70, 0xcc, 0xf2, 0x40, 0x6b, 0x33, 0x9e, 0x98,
+	0xe8, 0x61, 0xcc, 0x38, 0x0d, 0x16, 0x41, 0x41, 0x17, 0x95, 0x68, 0xb7, 0x85, 0x9f, 0x6e, 0x46,
+	0xbc, 0x24, 0x39, 0x0d, 0x1d, 0x3d, 0x54, 0x15, 0xd0, 0x7b, 0xe8, 0xe4, 0x69, 0xc1, 0xb8, 0x91,
+	0xe8, 0x5e, 0x8d, 0x04, 0x54, 0x33, 0xb5, 0xc2, 0x39, 0xb4, 0x45, 0x9d, 0x47, 0x2c, 0x33, 0x4b,
+	0x31, 0xd9, 0xee, 0x12, 0xad, 0xbf, 0x96, 0xe8, 0xbf, 0xdd, 0x3e, 0x85, 0xd6, 0xf6, 0xe7, 0xf0,
+	0x46, 0x63, 0xa1, 0xf2, 0xc1, 0x19, 0xe1, 0x7f, 0x5c, 0x6f, 0x0f, 0xb2, 0x6f, 0xff, 0xb3, 0xe2,
+	0x03, 0x0b, 0xdb, 0xfe, 0xc9, 0x8b, 0xef, 0x2b, 0x0f, 0x2c, 0x57, 0x1e, 0xf8, 0xb5, 0xf2, 0xc0,
+	0xd7, 0xb5, 0xd7, 0x59, 0xae, 0xbd, 0xce, 0x8f, 0xb5, 0xd7, 0x79, 0x33, 0xfc, 0x8f, 0x4b, 0xb7,
+	0x3f, 0x82, 0x7a, 0xd4, 0x91, 0xad, 0xf2, 0x47, 0x7f, 0x02, 0x00, 0x00, 0xff, 0xff, 0x1f, 0xe7,
+	0x98, 0xb9, 0x8b, 0x03, 0x00, 0x00,
 }
 
 func (m *ProtocolsRequest) Marshal() (dAtA []byte, err error) {
@@ -233,6 +370,11 @@ func (m *ProtocolsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if m.Total != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.Total))
+		i--
+		dAtA[i] = 0x10
+	}
 	if len(m.Protocols) > 0 {
 		for iNdEx := len(m.Protocols) - 1; iNdEx >= 0; iNdEx-- {
 			{
@@ -246,6 +388,92 @@ func (m *ProtocolsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			i--
 			dAtA[i] = 0xa
 		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *ProtocolRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ProtocolRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ProtocolRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.Symbol) > 0 {
+		i -= len(m.Symbol)
+		copy(dAtA[i:], m.Symbol)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Symbol)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.MinorChain) > 0 {
+		i -= len(m.MinorChain)
+		copy(dAtA[i:], m.MinorChain)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.MinorChain)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.OriginChain) > 0 {
+		i -= len(m.OriginChain)
+		copy(dAtA[i:], m.OriginChain)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.OriginChain)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *ProtocolResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ProtocolResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ProtocolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Protocol != nil {
+		{
+			size, err := m.Protocol.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -296,6 +524,47 @@ func (m *ProtocolsResponse) Size() (n int) {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
+	}
+	if m.Total != 0 {
+		n += 1 + sovQuery(uint64(m.Total))
+	}
+	return n
+}
+
+func (m *ProtocolRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.OriginChain)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	l = len(m.MinorChain)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	l = len(m.Symbol)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *ProtocolResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Protocol != nil {
+		l = m.Protocol.Size()
+		n += 1 + l + sovQuery(uint64(l))
 	}
 	return n
 }
@@ -531,6 +800,289 @@ func (m *ProtocolsResponse) Unmarshal(dAtA []byte) error {
 			}
 			m.Protocols = append(m.Protocols, &Protocol{})
 			if err := m.Protocols[len(m.Protocols)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Total", wireType)
+			}
+			m.Total = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Total |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ProtocolRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ProtocolRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ProtocolRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OriginChain", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.OriginChain = github_com_scalarorg_scalar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MinorChain", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.MinorChain = github_com_scalarorg_scalar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Symbol", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Symbol = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ProtocolResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ProtocolResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ProtocolResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Protocol", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Protocol == nil {
+				m.Protocol = &exported.ProtocolInfo{}
+			}
+			if err := m.Protocol.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

@@ -7,41 +7,37 @@ import "scalar/chains/v1beta1/params.proto";
 import "scalar/chains/v1beta1/tokens.proto";
 import "scalar/chains/v1beta1/types.proto";
 import "scalar/covenant/v1beta1/types.proto";
+import "scalar/protocol/exported/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
-message ProtocolAttribute { LiquidityModel model = 1; }
-
-// DestinationChain represents a blockchain where tokens can be sent
-message SupportedChain {
-  scalar.chains.v1beta1.Params params = 1; // Chain params
-  string address = 2;
-  oneof token {
-    scalar.chains.v1beta1.ERC20TokenMetadata erc20 = 3;
-    scalar.chains.btc.v1beta1.BtcToken btc = 4;
-  }
-}
-message Protocol {
-  bytes pubkey = 1;
-  bytes address = 2;
-  string name = 3;
-  string tag = 4;
-  ProtocolAttribute attribute = 5;
-  Status status = 6;
-  scalar.covenant.v1beta1.CustodianGroup custodian_group = 7;
-  repeated SupportedChain chains = 8;
-}
-enum LiquidityModel {
-  option (gogoproto.goproto_enum_prefix) = false;
-
-  LIQUIDITY_MODEL_POOLING = 0 [ (gogoproto.enumvalue_customname) = "Pooling" ];
-  LIQUIDITY_MODEL_TRANSACTIONAL = 1
-      [ (gogoproto.enumvalue_customname) = "Transactional" ];
-}
 enum Status {
   option (gogoproto.goproto_enum_prefix) = false;
 
-  STATUS_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Unspecified" ];
-  STATUS_ACTIVATED = 1 [ (gogoproto.enumvalue_customname) = "Activated" ];
-  STATUS_DEACTIVATED = 2 [ (gogoproto.enumvalue_customname) = "Deactivated" ];
+  STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Unspecified"];
+  STATUS_ACTIVATED = 1 [(gogoproto.enumvalue_customname) = "Activated"];
+  STATUS_DEACTIVATED = 2 [(gogoproto.enumvalue_customname) = "Deactivated"];
+}
+
+message ProtocolAttribute {
+  scalar.protocol.exported.v1beta1.LiquidityModel model = 1;
+}
+
+// DestinationChain represents a blockchain where tokens can be sent
+message SupportedChain {
+  string chain = 1 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  string name = 2;
+  string address = 3; //Asset address on the chain
+}
+message Protocol {
+  bytes bitcoin_pubkey = 1; //BTC's pubkey
+  bytes scalar_pubkey = 2; //Scalar's pubkey
+  bytes scalar_address = 3; //Scalar's address
+  string name = 4;
+  bytes tag = 5;
+  ProtocolAttribute attribute = 6;
+  Status status = 7;
+  scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
+  scalar.chains.v1beta1.Asset asset = 9; //External asset
+  repeated SupportedChain chains = 10; //Other chains with internal asset
 }

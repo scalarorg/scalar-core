@@ -19,6 +19,8 @@ var (
 	KeyEndBlockerLimit    = []byte("endBlockerLimit")
 	// KeyCallContractsProposalMinDeposits represents the key for call contracts proposal min deposits
 	KeyCallContractsProposalMinDeposits = []byte("callContractsProposalMinDeposits")
+	KeyVersion                          = []byte("version")
+	KeyTag                              = []byte("tag")
 )
 
 // KeyTable retrieves a subspace table for the module
@@ -32,6 +34,8 @@ func DefaultParams() Params {
 		RouteTimeoutWindow:               17000,
 		TransferLimit:                    20,
 		EndBlockerLimit:                  50,
+		Version:                          0,
+		Tag:                              []byte("scalar"),
 		CallContractsProposalMinDeposits: nil,
 	}
 }
@@ -50,6 +54,8 @@ func (m *Params) ParamSetPairs() params.ParamSetPairs {
 		params.NewParamSetPair(KeyTransferLimit, &m.TransferLimit, validatePosUInt64("TransferLimit")),
 		params.NewParamSetPair(KeyEndBlockerLimit, &m.EndBlockerLimit, validatePosUInt64("EndBlockerLimit")),
 		params.NewParamSetPair(KeyCallContractsProposalMinDeposits, &m.CallContractsProposalMinDeposits, validateCallContractsProposalMinDeposits),
+		params.NewParamSetPair(KeyVersion, &m.Version, validateVersion),
+		params.NewParamSetPair(KeyTag, &m.Tag, validateTag),
 	}
 }
 
@@ -67,8 +73,38 @@ func (m Params) Validate() error {
 		return err
 	}
 
+	if err := validateVersion(m.Version); err != nil {
+		return err
+	}
+
+	if err := validateTag(m.Tag); err != nil {
+		return err
+	}
+
 	if err := validateCallContractsProposalMinDeposits(m.CallContractsProposalMinDeposits); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func validateTag(value interface{}) error {
+	_, ok := value.([]byte)
+	if !ok {
+		return fmt.Errorf("invalid parameter type for Tag: %T", value)
+	}
+
+	return nil
+}
+
+func validateVersion(value interface{}) error {
+	val, ok := value.(uint32)
+	if !ok {
+		return fmt.Errorf("invalid parameter type for Version: %T", value)
+	}
+
+	if val > 255 {
+		return fmt.Errorf("version must be between 0 and 255")
 	}
 
 	return nil

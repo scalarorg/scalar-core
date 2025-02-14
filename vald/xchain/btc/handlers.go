@@ -3,6 +3,7 @@ package btc
 import (
 	"bytes"
 	"encoding/hex"
+	"fmt"
 	"sync"
 
 	"github.com/btcsuite/btcd/btcjson"
@@ -13,10 +14,10 @@ import (
 	"github.com/scalarorg/scalar-core/utils/errors"
 	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/utils/slices"
-	"github.com/scalarorg/scalar-core/vald/xchain"
+	"github.com/scalarorg/scalar-core/vald/xchain/common"
 )
 
-func (client *BtcClient) GetTxReceiptsIfFinalized(txIDs []xchain.Hash, confHeight uint64) ([]BTCTxResult, error) {
+func (client *BtcClient) GetTxReceiptsIfFinalized(txIDs []common.Hash, confHeight uint64) ([]BTCTxResult, error) {
 	txResults, err := client.GetTransactions(txIDs)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(
@@ -25,22 +26,23 @@ func (client *BtcClient) GetTxReceiptsIfFinalized(txIDs []xchain.Hash, confHeigh
 		)
 	}
 
-	return slices.Map(txResults, func(receipt BTCTxResult) results.Result[xchain.TxReceipt] {
-		return results.Pipe(results.Result[xchain.TxReceipt](receipt), func(receipt xchain.TxReceipt) results.Result[xchain.TxReceipt] {
+	return slices.Map(txResults, func(receipt BTCTxResult) results.Result[common.TxReceipt] {
+		return results.Pipe(results.Result[common.TxReceipt](receipt), func(receipt common.TxReceipt) results.Result[common.TxReceipt] {
 			btcReceipt := receipt.(BTCTxReceipt)
 			isFinalized, err := client.isFinalized(btcReceipt.Raw, confHeight)
 			if err != nil {
-				return results.FromErr[xchain.TxReceipt](sdkerrors.Wrapf(errors.With(err, "tx_id", btcReceipt.Raw.Txid),
+				return results.FromErr[common.TxReceipt](sdkerrors.Wrapf(errors.With(err, "tx_id", btcReceipt.Raw.Txid),
 					"cannot determine if the transaction %s is finalized", btcReceipt.Raw.Txid),
 				)
 			}
 
 			if !isFinalized {
-				return results.FromErr[xchain.TxReceipt](xchain.ErrNotFinalized)
+				return results.FromErr[common.TxReceipt](common.ErrNotFinalized)
 			}
 
-			if btcReceipt.Raw.Confirmations <= confHeight {
-				return results.FromErr[xchain.TxReceipt](xchain.ErrTxFailed)
+			if btcReceipt.Raw.Confirmations < confHeight {
+				clog.Redf("[BTC] tx_id: %s, conf_height: %d, confirmations: %d", btcReceipt.Raw.Txid, confHeight, btcReceipt.Raw.Confirmations)
+				return results.FromErr[common.TxReceipt](common.ErrTxFailed)
 			}
 
 			return results.FromOk(receipt)
@@ -48,7 +50,7 @@ func (client *BtcClient) GetTxReceiptsIfFinalized(txIDs []xchain.Hash, confHeigh
 	}), nil
 }
 
-func (c *BtcClient) GetTransactions(txIDs []xchain.Hash) ([]BTCTxResult, error) {
+func (c *BtcClient) GetTransactions(txIDs []common.Hash) ([]BTCTxResult, error) {
 	txs := make([]BTCTxResult, len(txIDs))
 	var wg sync.WaitGroup
 
@@ -58,7 +60,7 @@ func (c *BtcClient) GetTransactions(txIDs []xchain.Hash) ([]BTCTxResult, error) 
 			defer wg.Done()
 			tx, err := c.GetTransaction(txIDs[index])
 			if err != nil {
-				txs[index] = BTCTxResult(results.FromErr[xchain.TxReceipt](err))
+				txs[index] = BTCTxResult(results.FromErr[common.TxReceipt](err))
 			} else {
 				txs[index] = tx
 			}
@@ -67,33 +69,33 @@ func (c *BtcClient) GetTransactions(txIDs []xchain.Hash) ([]BTCTxResult, error) 
 
 	wg.Wait()
 	if slices.Any(txs, func(tx BTCTxResult) bool { return tx.IsErr() }) {
-		return nil, xchain.ErrFailedToGetTransactions
+		return nil, common.ErrFailedToGetTransactions
 	}
 
 	return txs, nil
 }
 
-func (c *BtcClient) GetTransaction(txID xchain.Hash) (BTCTxResult, error) {
+func (c *BtcClient) GetTransaction(txID common.Hash) (BTCTxResult, error) {
 	var tx BTCTxReceipt
 
 	// convert to string first to avoid the issue of reversed txid
-	chainHash := xchain.HashToChainHash(txID)
-	txMetadata, err := c.client.GetRawTransactionVerbose(&chainHash)
+	chainHash := common.HashToChainHash(txID)
+	txResult, err := c.client.GetRawTransactionVerbose(&chainHash)
 	if err != nil {
 		clog.Cyanf("Failed to get BTC transaction %s: %+v", txID, err)
-		return BTCTxResult(results.FromErr[xchain.TxReceipt](err)), err
+		return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
 	} else {
-		txRaw, err := hex.DecodeString(txMetadata.Hex)
+		txRaw, err := hex.DecodeString(txResult.Hex)
 		if err != nil {
 			c.logger("failed to decode hex string", "txID", txID, "error", err)
-			return BTCTxResult(results.FromErr[xchain.TxReceipt](err)), err
+			return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
 		}
 
 		msgTx := wire.NewMsgTx(wire.TxVersion)
 		err = msgTx.Deserialize(bytes.NewReader(txRaw))
 		if err != nil {
 			c.logger("failed to parse transaction", "txID", txID, "error", err)
-			return BTCTxResult(results.FromErr[xchain.TxReceipt](err)), err
+			return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
 		}
 
 		prevTxOuts, err := c.GetTxOuts(slices.Map(msgTx.TxIn, func(txIn *wire.TxIn) wire.OutPoint {
@@ -102,15 +104,44 @@ func (c *BtcClient) GetTransaction(txID xchain.Hash) (BTCTxResult, error) {
 
 		if err != nil {
 			c.logger("failed to get BTC transaction", "txID", txID, "error", err)
-			return BTCTxResult(results.FromErr[xchain.TxReceipt](err)), err
+			return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
 		}
 
-		tx.Raw = *txMetadata
+		blockHash, err := chainhash.NewHashFromStr(txResult.BlockHash)
+		if err != nil {
+			c.logger("failed to create block hash", "blockHash", txResult.BlockHash, "error", err)
+			return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
+		}
+
+		block, err := c.client.GetBlockVerbose(blockHash)
+		if err != nil {
+			c.logger("failed to get block", "blockHash", txResult.BlockHash, "error", err)
+			return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
+		}
+
+		c.blockCache.Set(txResult.BlockHash, block)
+
+		blockIndex := -1
+		for i, txid := range block.Tx {
+			if txid == txResult.Txid {
+				blockIndex = i
+				break
+			}
+		}
+
+		clog.Redf("[BTC] blockIndex: %d", blockIndex)
+
+		if blockIndex == -1 {
+			return BTCTxResult(results.FromErr[common.TxReceipt](fmt.Errorf("transaction not found in block"))), fmt.Errorf("transaction not found in block")
+		}
+
+		tx.Raw = txResult
 		tx.PrevTxOuts = prevTxOuts
 		tx.MsgTx = msgTx
+		tx.TransactionIndex = blockIndex
 	}
 
-	return results.FromOk[xchain.TxReceipt](tx), nil
+	return results.FromOk[common.TxReceipt](tx), nil
 }
 
 func (c *BtcClient) GetTxOuts(outpoints []wire.OutPoint) ([]*btcjson.Vout, error) {

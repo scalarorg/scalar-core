@@ -29,6 +29,13 @@ func (s msgServer) ConfirmSourceTxs(c context.Context, req *types.ConfirmSourceT
 		return nil, err
 	}
 
+	// TODO: get gateway address if evm chain, gate pool address(p2tr) if btc chain
+	// TODO: include these address in the event
+	// gatewayAddress, ok := keeper.GetGatewayAddress(ctx)
+	// if !ok {
+	// 	return nil, fmt.Errorf("gateway address not found")
+	// }
+
 	snapshot, err := s.createSnapshot(ctx, chain)
 	if err != nil {
 		return nil, err

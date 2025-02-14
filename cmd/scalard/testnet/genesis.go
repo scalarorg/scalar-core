@@ -19,125 +19,81 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/decred/dcrd/dcrec/secp256k1/v4"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
+	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
+	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils"
-	btctypes "github.com/scalarorg/scalar-core/x/chains/btc/types"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
 	permissionexported "github.com/scalarorg/scalar-core/x/permission/exported"
 	permissiontypes "github.com/scalarorg/scalar-core/x/permission/types"
+	pexported "github.com/scalarorg/scalar-core/x/protocol/exported"
 	protocoltypes "github.com/scalarorg/scalar-core/x/protocol/types"
+	scalarnettypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
 	snapshottypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"
-
-	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 // DefaultProtocol returns the default chains for a genesis state
-func DefaultProtocol(scalarProtocol ScalarProtocol, tokenInfos []Token, custodianGroup covenanttypes.CustodianGroup) protocoltypes.Protocol {
-	log.Debug().Any("Infos", tokenInfos).Msg("Create defaultProtocol")
-	chains := make([]*protocoltypes.SupportedChain, len(tokenInfos))
-	for i, tokenInfo := range tokenInfos {
-		tokenAddress := chainsTypes.Address(common.HexToAddress(tokenInfo.TokenAddress))
-		log.Debug().Any("TokenAddress", tokenAddress).Msg("Parse Tokenaddress")
-		params := chainsTypes.Params{
-			Chain:       nexus.ChainName(tokenInfo.ID),
-			ChainID:     sdk.NewInt(tokenInfo.ChainID),
-			NetworkKind: chainsTypes.Testnet,
+// Each protocol has a token info with the same index
+func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGroup covenanttypes.CustodianGroup) []*protocoltypes.Protocol {
+	log.Debug().Any("TokenInfos", tokenInfos).Any("ProtocolInfos", protocolInfos).Msg("Create defaultProtocols")
+	protocols := []*protocoltypes.Protocol{}
+	for i, protocol := range protocolInfos {
+		if i >= len(tokenInfos) {
+			break
 		}
-		if strings.HasPrefix(tokenInfo.ID, "evm") {
-			token := chainsTypes.ERC20TokenMetadata{
-				Asset:   tokenInfo.Asset,
-				ChainID: sdk.NewInt(tokenInfo.ChainID),
-				TxHash:  chainsTypes.Hash(chainsTypes.ZeroHash),
-				//TokenAddress: tokenAddress,
-				Status: chainsTypes.Confirmed,
-				Details: chainsTypes.TokenDetails{
-					TokenName: tokenInfo.Name,
-					Symbol:    tokenInfo.Symbol,
-					Decimals:  tokenInfo.Decimals,
-					Capacity:  sdk.NewInt(tokenInfo.Capacity),
-				},
-			}
-			chains[i] = &protocoltypes.SupportedChain{
-				Params: &params,
-				Token: &protocoltypes.SupportedChain_Erc20{
-					Erc20: &token,
-				},
-				Address: scalarProtocol.EvmAddress,
-			}
-		} else if strings.HasPrefix(tokenInfo.ID, "bitcoin") {
-			token := btctypes.BtcToken{}
-			chains[i] = &protocoltypes.SupportedChain{
-				Params: &params,
-				Token: &protocoltypes.SupportedChain_Btc{
-					Btc: &token,
-				},
-				Address: scalarProtocol.EvmAddress,
-			}
+		tokenInfo := tokenInfos[i]
+		supportedChains := []*protocoltypes.SupportedChain{}
+		for _, chain := range tokenInfo.Deployments {
+			supportedChains = append(supportedChains, &protocoltypes.SupportedChain{
+				Chain:   nexus.ChainName(chain.ID),
+				Name:    chain.Name,
+				Address: chain.TokenAddress,
+			})
 		}
-
+		var model pexported.LiquidityModel
+		if protocol.Model == "transactional" {
+			model = pexported.Transactional
+		} else if protocol.Model == "pooling" {
+			model = pexported.Pooling
+		}
+		protocols = append(protocols, &protocoltypes.Protocol{
+			BitcoinPubkey: protocol.BitcoinPubKey,
+			ScalarPubkey:  protocol.PubKey.Bytes(),
+			ScalarAddress: sdk.AccAddress(protocol.PubKey.Address()),
+			Attribute: &protocoltypes.ProtocolAttribute{
+				Model: model,
+			},
+			Name:           protocoltypes.DefaultProtocolName,
+			Tag:            []byte(protocol.Tag),
+			Status:         protocoltypes.Activated,
+			CustodianGroup: &custodianGroup,
+			Asset:          &chainsTypes.Asset{Chain: nexus.ChainName(tokenInfo.ID), Name: tokenInfo.Asset},
+			Chains:         supportedChains,
+		})
 	}
-	attributes := protocoltypes.ProtocolAttribute{
-		Model: protocoltypes.Pooling,
-	}
-	protocol := protocoltypes.Protocol{
-		Pubkey:         scalarProtocol.ScalarPubKey.Bytes(),
-		Address:        sdk.AccAddress(scalarProtocol.ScalarPubKey.Address()),
-		Attribute:      &attributes,
-		Name:           protocoltypes.DefaultProtocolName,
-		Tag:            "pools",
-		Status:         protocoltypes.Activated,
-		CustodianGroup: &custodianGroup,
-		Chains:         chains,
-	}
-
-	// token := evmtypes.ERC20TokenMetadata{
-	// 	Asset:   "pBtc",
-	// 	ChainID: sdk.NewInt(1115511),
-	// 	//TokenAddress: evmtypes.Address(common.HexToAddress("0x25F23D37861210cdc3c694112cFa64bBca6D7143")),
-	// 	Status: evmtypes.Confirmed,
-	// 	Details: evmtypes.TokenDetails{
-	// 		TokenName: "pBtc",
-	// 		Symbol:    "pBtc",
-	// 		Decimals:  8,
-	// 		Capacity:  sdk.NewInt(100000000),
-	// 	},
-	// }
-
-	// params := chainsTypes.Params{
-	// 	Chain: "evm|11155111",
-	// }
-	// chain := protocoltypes.SupportedChain{
-	// 	Params: &params,
-	// 	Token: &protocoltypes.SupportedChain_Erc20{
-	// 		Erc20: &token,
-	// 	},
-	// 	Address: scalarProtocol.EvmAddress,
-	// }
-	// protocol := protocoltypes.Protocol{
-	// 	Pubkey:         scalarProtocol.ScalarPubKey.Bytes(),
-	// 	Address:        sdk.AccAddress(scalarProtocol.ScalarPubKey.Address()),
-	// 	Name:           protocoltypes.DefaultProtocolName,
-	// 	Tag:            "pools",
-	// 	Status:         protocoltypes.Activated,
-	// 	CustodianGroup: &custodianGroup,
-	// 	Chains:         []*protocoltypes.SupportedChain{&chain},
-	// }
-	return protocol
+	return protocols
 }
 func GenerateGenesis(clientCtx client.Context,
 	mbm module.BasicManager,
 	coinDenom string,
+	relayer ScalarRelayer,
 	validatorInfos []ValidatorInfo,
-	scalarProtocol ScalarProtocol,
+	protocols []Protocol,
 	args initArgs,
 ) (GenesisState, error) {
 	appGenState := mbm.DefaultGenesis(clientCtx.Codec)
-	genBalances := []banktypes.Balance{scalarProtocol.ScalarBalance}
-	genAccounts := []authtypes.GenesisAccount{authtypes.NewBaseAccount(sdk.AccAddress(scalarProtocol.ScalarPubKey.Address()), scalarProtocol.ScalarPubKey, 0, 0)}
+	genBalances := []banktypes.Balance{relayer.Balance}
+	genAccounts := []authtypes.GenesisAccount{authtypes.NewBaseAccount(sdk.AccAddress(relayer.PubKey.Address()), relayer.PubKey, 0, 0)}
+	for _, protocol := range protocols {
+		genBalances = append(genBalances, protocol.Balance)
+		genAccounts = append(genAccounts, authtypes.NewBaseAccount(sdk.AccAddress(protocol.PubKey.Address()), protocol.PubKey, 0, 0))
+	}
 	//allValAmount := sdk.NewCoins()
 	proxyValidators := []snapshottypes.ProxiedValidator{}
 
@@ -223,8 +179,13 @@ func GenerateGenesis(clientCtx client.Context,
 	for _, proxyValidator := range proxyValidators {
 		validatorAddrs = append(validatorAddrs, proxyValidator.Validator)
 	}
-	nexusGenState := generateNexusGenesis(args.chains, validatorAddrs, coinDenom)
+	nexusGenState := generateNexusGenesis(args.configPath, validatorAddrs, coinDenom)
 	appGenState[nexustypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(nexusGenState)
+	//scalarnet
+	scalarnetGenState := scalarnettypes.DefaultGenesisState()
+	scalarnetGenState.Params.Version = args.version
+	scalarnetGenState.Params.Tag = args.tag
+	appGenState[scalarnettypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(scalarnetGenState)
 	//pemission module
 	permissionGenState := permissiontypes.DefaultGenesisState()
 	govAccounts := []permissiontypes.GovAccount{}
@@ -259,36 +220,53 @@ func GenerateGenesis(clientCtx client.Context,
 	//set staking params
 	stakingGenState := generateStakingGenesis(coinDenom, validatorInfos)
 	appGenState[stakingtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(stakingGenState)
-	// supported chains
-	if err := GenerateSupportedChains(clientCtx, args.chains, appGenState); err != nil {
+	// scalar chains' module
+	if err := GenerateSupportedChains(clientCtx, args.configPath, appGenState); err != nil {
 		log.Error().Err(err).Msg("Failed to generate supported chains")
 	}
 	//Covenant
 	custodians := make([]*covenanttypes.Custodian, len(validatorInfos))
+	custodianPubKeys := make([]go_utils.PublicKey, len(validatorInfos))
+	quorum := uint8(len(validatorInfos)/2 + 1)
+	for i, validator := range validatorInfos {
+		btcPrivKey, err := hex.DecodeString(validator.AdditionalKeys.BtcPrivKey)
+		if err != nil {
+			log.Error().Str("btc_priv_key", validator.AdditionalKeys.BtcPrivKey).Err(err).Msg("Failed to decode BTC private key")
+			return appGenState, err
+		}
+		if len(btcPrivKey) != 32 {
+			return appGenState, fmt.Errorf("invalid private key length")
+		}
+
+		privKey := secp256k1.PrivKeyFromBytes(btcPrivKey)
+		custodians[i] = &covenanttypes.Custodian{
+			Name:       validator.Host,
+			ValAddress: sdk.ValAddress(validator.ValPubKey.Address()).String(),
+			Status:     covenanttypes.Activated,
+			BtcPubkey:  privKey.PubKey().SerializeCompressed(),
+		}
+		custodianPubKeys[i] = go_utils.PublicKey(custodians[i].BtcPubkey)
+	}
+	//Todo: Create custodian group pubkey
+	custodianGroupPubKey, err := vault.CustodiansOnlyLockingScript(custodianPubKeys, quorum)
+	if err != nil {
+		return appGenState, err
+	}
+	custodianGroupUid := hex.EncodeToString(custodianGroupPubKey)
 	custodianGroup := covenanttypes.CustodianGroup{
-		Uid:         "1c92b906-d5f8-477d-98c7-0d70d94ebb36",
+		Uid:         custodianGroupUid,
 		Name:        "scalar",
 		Custodians:  custodians,
-		Quorum:      3,
+		BtcPubkey:   []byte(custodianGroupPubKey),
+		Quorum:      uint32(quorum),
 		Status:      covenanttypes.Activated,
 		Description: "Default custodial group, which contains all custodians",
 	}
-	for i, validator := range validatorInfos {
-		btcPubkey, err := hex.DecodeString(validator.BtcPubkey)
-		if err != nil {
-			return appGenState, err
-		}
-		fmt.Printf("% x", btcPubkey)
-		custodians[i] = &covenanttypes.Custodian{
-			Name:      validator.Host,
-			Status:    covenanttypes.Activated,
-			BtcPubkey: btcPubkey,
-		}
-	}
-	covnantGenState := covenanttypes.NewGenesisState(custodians, &custodianGroup)
+	defaultCovenantState := covenanttypes.DefaultGenesisState()
+	covnantGenState := covenanttypes.NewGenesisState(&defaultCovenantState.Params, defaultCovenantState.SigningSessions, custodians, []*covenanttypes.CustodianGroup{&custodianGroup})
 	appGenState[covenanttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&covnantGenState)
 	//Protocol
-	protocolGenState, err := generateProtocolGenesis(scalarProtocol, custodianGroup, args.tokens)
+	protocolGenState, err := generateProtocolGenesis(protocols, custodianGroup, args.configPath)
 	if err == nil {
 		appGenState[protocoltypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(protocolGenState)
 	}
@@ -302,16 +280,25 @@ func GenerateGenesis(clientCtx client.Context,
 
 	return appGenState, nil
 }
-func generateProtocolGenesis(scalarProtocol ScalarProtocol, custodianGroup covenanttypes.CustodianGroup, tokensPath string) (*protocoltypes.GenesisState, error) {
-	evmTokenPath := path.Join(tokensPath, "tokens.json")
-	log.Debug().Msgf("Read token config in the path %s", evmTokenPath)
-	tokenInfos, err := ParseJsonArrayConfig[Token](evmTokenPath)
+func generateProtocolGenesis(protocolInfos []Protocol, custodianGroup covenanttypes.CustodianGroup, configPath string) (*protocoltypes.GenesisState, error) {
+	// evmTokenPath := path.Join(tokensPath, "evm.json")
+	// log.Debug().Msgf("Read token config in the path %s", evmTokenPath)
+	// tokenInfos, err := ParseJsonArrayConfig[Token](evmTokenPath)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	btcTokenPath := path.Join(configPath, "tokens/btc.json")
+	log.Debug().Msgf("Read token config in the path %s", btcTokenPath)
+	tokenInfos, err := ParseJsonArrayConfig[Token](btcTokenPath)
 	if err != nil {
 		return nil, err
 	}
+	if len(tokenInfos) == 0 {
+		log.Error().Msgf("Missing token infos in path %s", btcTokenPath)
+	}
 	log.Debug().Any("TokenInfo", tokenInfos).Msgf("Successfull parsed token config")
-	protocol := DefaultProtocol(scalarProtocol, tokenInfos, custodianGroup)
-	protocolGenState := protocoltypes.NewGenesisState([]*protocoltypes.Protocol{&protocol})
+	protocols := DefaultProtocols(protocolInfos, tokenInfos, custodianGroup)
+	protocolGenState := protocoltypes.NewGenesisState(protocols)
 	return protocolGenState, nil
 }
 func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *stakingtypes.GenesisState {
@@ -338,7 +325,7 @@ func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *s
 	// 	rate, _ := sdk.NewDecFromStr("0.1")
 	// 	maxRate, _ := sdk.NewDecFromStr("0.2")
 	// 	maxChangeRate, _ := sdk.NewDecFromStr("0.01")
-	// 	commission := types.NewCommissionWithTime(rate, maxRate, maxChangeRate, time.Now())
+	// 	commission := chainsTypesNewCommissionWithTime(rate, maxRate, maxChangeRate, time.Now())
 	// 	validator, err = validator.SetInitialCommission(commission)
 
 	// 	if err != nil {
@@ -355,27 +342,41 @@ func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *s
 	// }
 	return stakingGenState
 }
-func generateNexusGenesis(supportedChainsPath string, validatorAddrs []sdk.ValAddress, coinDenom string) *nexustypes.GenesisState {
+func generateNexusGenesis(configPath string, validatorAddrs []sdk.ValAddress, coinDenom string) *nexustypes.GenesisState {
 	nexusGenState := nexustypes.DefaultGenesisState()
-	if supportedChainsPath != "" {
-		chainConfigs, err := ParseJsonArrayConfig[chainsTypes.ChainConfig](fmt.Sprintf("%s/chains.json", supportedChainsPath))
+	if configPath != "" {
+		chainConfigs, err := ParseJsonArrayConfig[chainsTypes.ChainConfig](fmt.Sprintf("%s/chains/chains.json", configPath))
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to parse chains config")
+			panic(err)
+		}
+		//Parse btc token config
+		btcTokenPath := path.Join(configPath, "tokens/btc.json")
+		log.Debug().Msgf("Read token config in the path %s", btcTokenPath)
+		tokenInfos, err := ParseJsonArrayConfig[Token](btcTokenPath)
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to parse btc token config")
+			panic(err)
+		}
+		assets := make([]nexus.Asset, len(tokenInfos))
+		for i, tokenInfo := range tokenInfos {
+			assets[i] = nexus.NewAsset(tokenInfo.Asset, false)
 		}
 		for _, chainConfig := range chainConfigs {
 			err := chainConfig.ValidateBasic()
 			if err != nil {
 				log.Error().Err(err).Msg("Failed to validate chains config")
 			}
+			chainName := nexus.ChainName(chainConfig.ID)
 			nexusGenState.Chains = append(nexusGenState.Chains, nexus.Chain{
-				Name:                  nexus.ChainName(chainConfig.ID),
+				Name:                  chainName,
 				SupportsForeignAssets: true,
 				KeyType:               tss.Multisig,
 				Module:                chainsTypes.ModuleName,
 			})
 			chainState := nexustypes.ChainState{
 				Chain: nexus.Chain{
-					Name:                  nexus.ChainName(chainConfig.ID),
+					Name:                  chainName,
 					SupportsForeignAssets: true,
 					KeyType:               tss.Multisig,
 					Module:                chainsTypes.ModuleName,
@@ -383,6 +384,9 @@ func generateNexusGenesis(supportedChainsPath string, validatorAddrs []sdk.ValAd
 				Activated:        true,
 				Assets:           []nexus.Asset{nexus.NewAsset(coinDenom, true)},
 				MaintainerStates: make([]nexustypes.MaintainerState, len(validatorAddrs)),
+			}
+			if chainsTypes.IsBitcoinChain(chainName) {
+				chainState.Assets = append(chainState.Assets, assets...)
 			}
 			for i, valAddr := range validatorAddrs {
 				chainState.MaintainerStates[i] = *nexustypes.NewMaintainerState(nexus.ChainName(chainConfig.ID), valAddr)
@@ -392,9 +396,9 @@ func generateNexusGenesis(supportedChainsPath string, validatorAddrs []sdk.ValAd
 	}
 	return nexusGenState
 }
-func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath string, genesisState map[string]json.RawMessage) error {
-	if supportedChainsPath != "" {
-		chainConfigs, err := ParseJsonArrayConfig[chainsTypes.ChainConfig](fmt.Sprintf("%s/chains.json", supportedChainsPath))
+func GenerateSupportedChains(clientCtx client.Context, configPath string, genesisState map[string]json.RawMessage) error {
+	if configPath != "" {
+		chainConfigs, err := ParseJsonArrayConfig[chainsTypes.ChainConfig](fmt.Sprintf("%s/chains/chains.json", configPath))
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to parse chains config")
 		}
@@ -403,8 +407,9 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 		for _, chainConfig := range chainConfigs {
 			//Check if chainName is already in the genesis state
 			addChain := true
+			chainName := nexus.ChainName(chainConfig.ID)
 			for _, chain := range chainsState.Chains {
-				if chain.Params.Chain == nexus.ChainName(chainConfig.ID) {
+				if chain.Params.Chain == chainName {
 					addChain = false
 					log.Debug().Msgf("chain name %s already exists", chainConfig.ID)
 				}
@@ -413,14 +418,14 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 				var gateway *chainsTypes.Gateway
 				if chainConfig.Gateway != "" {
 					gwHex, err := getByteAddress(chainConfig.Gateway)
-					fmt.Printf("Gateway %s, decoded %v", chainConfig.Gateway, gwHex)
+					fmt.Printf("Gateway %s, decoded %v\n", chainConfig.Gateway, gwHex)
 					if err == nil && len(gwHex) == 20 {
 						gateway = &chainsTypes.Gateway{
 							Address: chainsTypes.Address(gwHex),
 						}
 					}
 				}
-				chainsState.Chains = append(chainsState.Chains, chainsTypes.GenesisState_Chain{
+				chain := chainsTypes.GenesisState_Chain{
 					Params:              chainsTypes.DefaultChainParams(sdk.NewInt(int64(chainConfig.ChainID)), nexus.ChainName(chainConfig.ID), chainConfig.NetworkKind, chainConfig.Metadata),
 					CommandQueue:        utils.QueueState{},
 					ConfirmedEventQueue: utils.QueueState{},
@@ -428,14 +433,54 @@ func GenerateSupportedChains(clientCtx client.Context, supportedChainsPath strin
 					CommandBatches:      make([]chainsTypes.CommandBatchMetadata, 0),
 					Gateway:             gateway,
 					Events:              make([]chainsTypes.Event, 0),
-				})
+					Tokens:              []chainsTypes.ERC20TokenMetadata{},
+				}
+				if chainsTypes.IsBitcoinChain(chainName) {
+					// Add default sBtc
+					sBtc := createDefaultSbtc(configPath)
+					chain.Tokens = append(chain.Tokens, sBtc...)
+				}
+				chainsState.Chains = append(chainsState.Chains, chain)
 			}
 		}
 		genesisState[chainsTypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&chainsState)
 	}
 	return nil
 }
-
+func createDefaultSbtc(configPath string) []chainsTypes.ERC20TokenMetadata {
+	btcTokenPath := path.Join(configPath, "tokens/btc.json")
+	log.Debug().Msgf("Read token config in the path %s", btcTokenPath)
+	tokenInfos, err := ParseJsonArrayConfig[Token](btcTokenPath)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to parse btc token config")
+	}
+	tokens := make([]chainsTypes.ERC20TokenMetadata, len(tokenInfos))
+	for i, tokenInfo := range tokenInfos {
+		var model chainsTypes.TokenModel
+		if tokenInfo.Model == "pool" {
+			model = chainsTypes.Pool
+		} else if tokenInfo.Model == "utxo" {
+			model = chainsTypes.Utxo
+		}
+		tokens[i] = chainsTypes.ERC20TokenMetadata{
+			Asset:   tokenInfo.Asset,
+			ChainID: sdk.NewInt(tokenInfo.ChainID),
+			Details: chainsTypes.TokenDetails{
+				TokenName: tokenInfo.Name,
+				Symbol:    tokenInfo.Symbol,
+				Decimals:  tokenInfo.Decimals,
+				Capacity:  sdk.NewInt(0),
+				Model:     model,
+			},
+			TokenAddress: chainsTypes.Address(common.HexToAddress(tokenInfo.TokenAddress)),
+			TxHash:       chainsTypes.ZeroHash,
+			Status:       chainsTypes.Confirmed,
+			IsExternal:   true,
+			BurnerCode:   nil, //burner code for external tokens must be nil
+		}
+	}
+	return tokens
+}
 func getByteAddress(hexString string) ([]byte, error) {
 	if strings.HasPrefix(hexString, "0x") {
 		return hex.DecodeString(hexString[2:])

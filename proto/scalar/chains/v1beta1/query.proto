@@ -148,6 +148,7 @@ message QueryCommandResponse {
   map<string, string> params = 3 [ (gogoproto.nullable) = false ];
   string key_id = 4 [ (gogoproto.customname) = "KeyID" ];
   uint32 max_gas_cost = 5;
+  bytes payload = 6;
 }
 
 message BurnerInfoRequest {
@@ -200,6 +201,7 @@ message ERC20TokensResponse {
   message Token {
     string asset = 1;
     string symbol = 2;
+    TokenModel model = 3;
   }
 
   repeated Token tokens = 1 [ (gogoproto.nullable) = false ];

@@ -46,10 +46,10 @@
     - [BatchedCommandsStatus](#scalar.chains.v1beta1.BatchedCommandsStatus)
     - [CommandType](#scalar.chains.v1beta1.CommandType)
     - [DepositStatus](#scalar.chains.v1beta1.DepositStatus)
-    - [NetworkKind](#scalar.chains.v1beta1.NetworkKind)
     - [SigType](#scalar.chains.v1beta1.SigType)
     - [SourceTxStatus](#scalar.chains.v1beta1.SourceTxStatus)
     - [Status](#scalar.chains.v1beta1.Status)
+    - [TokenModel](#scalar.chains.v1beta1.TokenModel)
   
 - [scalar/utils/v1beta1/threshold.proto](#scalar/utils/v1beta1/threshold.proto)
     - [Threshold](#scalar.utils.v1beta1.Threshold)
@@ -86,12 +86,12 @@
     - [ConfirmDepositStarted](#scalar.chains.v1beta1.ConfirmDepositStarted)
     - [ConfirmKeyTransferStarted](#scalar.chains.v1beta1.ConfirmKeyTransferStarted)
     - [ConfirmTokenStarted](#scalar.chains.v1beta1.ConfirmTokenStarted)
-    - [DestCallApproved](#scalar.chains.v1beta1.DestCallApproved)
-    - [DestCallFailed](#scalar.chains.v1beta1.DestCallFailed)
-    - [DestCallWithMintApproved](#scalar.chains.v1beta1.DestCallWithMintApproved)
+    - [ContractCallApproved](#scalar.chains.v1beta1.ContractCallApproved)
+    - [ContractCallFailed](#scalar.chains.v1beta1.ContractCallFailed)
     - [Event](#scalar.chains.v1beta1.Event)
     - [EventConfirmSourceTxsStarted](#scalar.chains.v1beta1.EventConfirmSourceTxsStarted)
     - [EventContractCall](#scalar.chains.v1beta1.EventContractCall)
+    - [EventContractCallWithMintApproved](#scalar.chains.v1beta1.EventContractCallWithMintApproved)
     - [EventContractCallWithToken](#scalar.chains.v1beta1.EventContractCallWithToken)
     - [EventMultisigOperatorshipTransferred](#scalar.chains.v1beta1.EventMultisigOperatorshipTransferred)
     - [EventMultisigOwnershipTransferred](#scalar.chains.v1beta1.EventMultisigOwnershipTransferred)
@@ -108,6 +108,10 @@
 - [scalar/chains/v1beta1/params.proto](#scalar/chains/v1beta1/params.proto)
     - [Params](#scalar.chains.v1beta1.Params)
     - [Params.MetadataEntry](#scalar.chains.v1beta1.Params.MetadataEntry)
+  
+- [scalar/chains/v1beta1/tokens.proto](#scalar/chains/v1beta1/tokens.proto)
+    - [ERC20Deposit](#scalar.chains.v1beta1.ERC20Deposit)
+    - [ERC20TokenMetadata](#scalar.chains.v1beta1.ERC20TokenMetadata)
   
 - [scalar/utils/v1beta1/queuer.proto](#scalar/utils/v1beta1/queuer.proto)
     - [QueueState](#scalar.utils.v1beta1.QueueState)
@@ -145,8 +149,11 @@
     - [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse)
     - [SetGatewayRequest](#scalar.chains.v1beta1.SetGatewayRequest)
     - [SetGatewayResponse](#scalar.chains.v1beta1.SetGatewayResponse)
+    - [SignBtcCommandsRequest](#scalar.chains.v1beta1.SignBtcCommandsRequest)
     - [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest)
     - [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse)
+    - [SignPsbtCommandRequest](#scalar.chains.v1beta1.SignPsbtCommandRequest)
+    - [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse)
   
 - [scalar/chains/v1beta1/query.proto](#scalar/chains/v1beta1/query.proto)
     - [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest)
@@ -193,31 +200,77 @@
     - [MsgService](#scalar.chains.v1beta1.MsgService)
     - [QueryService](#scalar.chains.v1beta1.QueryService)
   
+- [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
+    - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
+    - [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry)
+    - [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList)
+    - [TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap)
+  
+    - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
+    - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
+  
 - [scalar/multisig/exported/v1beta1/types.proto](#scalar/multisig/exported/v1beta1/types.proto)
     - [KeyState](#scalar.multisig.exported.v1beta1.KeyState)
     - [MultisigState](#scalar.multisig.exported.v1beta1.MultisigState)
   
-- [scalar/chains/v1beta1/tokens.proto](#scalar/chains/v1beta1/tokens.proto)
-    - [ERC20Deposit](#scalar.chains.v1beta1.ERC20Deposit)
-    - [ERC20TokenMetadata](#scalar.chains.v1beta1.ERC20TokenMetadata)
+- [scalar/multisig/v1beta1/types.proto](#scalar/multisig/v1beta1/types.proto)
+    - [Key](#scalar.multisig.v1beta1.Key)
+    - [Key.PubKeysEntry](#scalar.multisig.v1beta1.Key.PubKeysEntry)
+    - [KeyEpoch](#scalar.multisig.v1beta1.KeyEpoch)
+    - [KeygenSession](#scalar.multisig.v1beta1.KeygenSession)
+    - [KeygenSession.IsPubKeyReceivedEntry](#scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry)
+    - [MultiSig](#scalar.multisig.v1beta1.MultiSig)
+    - [MultiSig.SigsEntry](#scalar.multisig.v1beta1.MultiSig.SigsEntry)
+    - [SigningSession](#scalar.multisig.v1beta1.SigningSession)
   
 - [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
     - [Custodian](#scalar.covenant.v1beta1.Custodian)
     - [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup)
+    - [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig)
+    - [PsbtMultiSig.ParticipantTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantTapScriptSigsEntry)
+    - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
   
     - [Status](#scalar.covenant.v1beta1.Status)
   
-- [scalar/covenant/v1beta1/genesis.proto](#scalar/covenant/v1beta1/genesis.proto)
-    - [GenesisState](#scalar.covenant.v1beta1.GenesisState)
+- [scalar/covenant/v1beta1/events.proto](#scalar/covenant/v1beta1/events.proto)
+    - [KeyRotated](#scalar.covenant.v1beta1.KeyRotated)
+    - [SigningPsbtCompleted](#scalar.covenant.v1beta1.SigningPsbtCompleted)
+    - [SigningPsbtExpired](#scalar.covenant.v1beta1.SigningPsbtExpired)
+    - [SigningPsbtStarted](#scalar.covenant.v1beta1.SigningPsbtStarted)
+    - [SigningPsbtStarted.PubKeysEntry](#scalar.covenant.v1beta1.SigningPsbtStarted.PubKeysEntry)
+    - [TapScriptSigsSubmitted](#scalar.covenant.v1beta1.TapScriptSigsSubmitted)
   
 - [scalar/covenant/v1beta1/params.proto](#scalar/covenant/v1beta1/params.proto)
     - [Params](#scalar.covenant.v1beta1.Params)
   
+- [scalar/covenant/v1beta1/genesis.proto](#scalar/covenant/v1beta1/genesis.proto)
+    - [GenesisState](#scalar.covenant.v1beta1.GenesisState)
+  
+- [scalar/multisig/v1beta1/params.proto](#scalar/multisig/v1beta1/params.proto)
+    - [Params](#scalar.multisig.v1beta1.Params)
+  
+- [scalar/multisig/v1beta1/query.proto](#scalar/multisig/v1beta1/query.proto)
+    - [KeyIDRequest](#scalar.multisig.v1beta1.KeyIDRequest)
+    - [KeyIDResponse](#scalar.multisig.v1beta1.KeyIDResponse)
+    - [KeyRequest](#scalar.multisig.v1beta1.KeyRequest)
+    - [KeyResponse](#scalar.multisig.v1beta1.KeyResponse)
+    - [KeygenParticipant](#scalar.multisig.v1beta1.KeygenParticipant)
+    - [KeygenSessionRequest](#scalar.multisig.v1beta1.KeygenSessionRequest)
+    - [KeygenSessionResponse](#scalar.multisig.v1beta1.KeygenSessionResponse)
+    - [NextKeyIDRequest](#scalar.multisig.v1beta1.NextKeyIDRequest)
+    - [NextKeyIDResponse](#scalar.multisig.v1beta1.NextKeyIDResponse)
+    - [ParamsRequest](#scalar.multisig.v1beta1.ParamsRequest)
+    - [ParamsResponse](#scalar.multisig.v1beta1.ParamsResponse)
+  
 - [scalar/covenant/v1beta1/query.proto](#scalar/covenant/v1beta1/query.proto)
-    - [CustodianGroupsRequest](#scalar.covenant.v1beta1.CustodianGroupsRequest)
-    - [CustodianGroupsResponse](#scalar.covenant.v1beta1.CustodianGroupsResponse)
     - [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest)
     - [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse)
+    - [GroupsRequest](#scalar.covenant.v1beta1.GroupsRequest)
+    - [GroupsResponse](#scalar.covenant.v1beta1.GroupsResponse)
+    - [KeyRequest](#scalar.covenant.v1beta1.KeyRequest)
+    - [KeyResponse](#scalar.covenant.v1beta1.KeyResponse)
+    - [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest)
+    - [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse)
   
 - [scalar/covenant/v1beta1/tx.proto](#scalar/covenant/v1beta1/tx.proto)
     - [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest)
@@ -227,14 +280,18 @@
     - [CreateCustodianResponse](#scalar.covenant.v1beta1.CreateCustodianResponse)
     - [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse)
     - [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest)
+    - [RotateKeyRequest](#scalar.covenant.v1beta1.RotateKeyRequest)
+    - [RotateKeyResponse](#scalar.covenant.v1beta1.RotateKeyResponse)
+    - [SubmitTapScriptSigsRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigsRequest)
+    - [SubmitTapScriptSigsResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigsResponse)
     - [UpdateCustodianGroupRequest](#scalar.covenant.v1beta1.UpdateCustodianGroupRequest)
     - [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse)
     - [UpdateCustodianRequest](#scalar.covenant.v1beta1.UpdateCustodianRequest)
     - [UpdateCustodianResponse](#scalar.covenant.v1beta1.UpdateCustodianResponse)
   
 - [scalar/covenant/v1beta1/service.proto](#scalar/covenant/v1beta1/service.proto)
-    - [Msg](#scalar.covenant.v1beta1.Msg)
-    - [Query](#scalar.covenant.v1beta1.Query)
+    - [MsgService](#scalar.covenant.v1beta1.MsgService)
+    - [QueryService](#scalar.covenant.v1beta1.QueryService)
   
 - [scalar/multisig/v1beta1/events.proto](#scalar/multisig/v1beta1/events.proto)
     - [KeyAssigned](#scalar.multisig.v1beta1.KeyAssigned)
@@ -251,34 +308,8 @@
     - [SigningStarted](#scalar.multisig.v1beta1.SigningStarted)
     - [SigningStarted.PubKeysEntry](#scalar.multisig.v1beta1.SigningStarted.PubKeysEntry)
   
-- [scalar/multisig/v1beta1/params.proto](#scalar/multisig/v1beta1/params.proto)
-    - [Params](#scalar.multisig.v1beta1.Params)
-  
-- [scalar/multisig/v1beta1/types.proto](#scalar/multisig/v1beta1/types.proto)
-    - [Key](#scalar.multisig.v1beta1.Key)
-    - [Key.PubKeysEntry](#scalar.multisig.v1beta1.Key.PubKeysEntry)
-    - [KeyEpoch](#scalar.multisig.v1beta1.KeyEpoch)
-    - [KeygenSession](#scalar.multisig.v1beta1.KeygenSession)
-    - [KeygenSession.IsPubKeyReceivedEntry](#scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry)
-    - [MultiSig](#scalar.multisig.v1beta1.MultiSig)
-    - [MultiSig.SigsEntry](#scalar.multisig.v1beta1.MultiSig.SigsEntry)
-    - [SigningSession](#scalar.multisig.v1beta1.SigningSession)
-  
 - [scalar/multisig/v1beta1/genesis.proto](#scalar/multisig/v1beta1/genesis.proto)
     - [GenesisState](#scalar.multisig.v1beta1.GenesisState)
-  
-- [scalar/multisig/v1beta1/query.proto](#scalar/multisig/v1beta1/query.proto)
-    - [KeyIDRequest](#scalar.multisig.v1beta1.KeyIDRequest)
-    - [KeyIDResponse](#scalar.multisig.v1beta1.KeyIDResponse)
-    - [KeyRequest](#scalar.multisig.v1beta1.KeyRequest)
-    - [KeyResponse](#scalar.multisig.v1beta1.KeyResponse)
-    - [KeygenParticipant](#scalar.multisig.v1beta1.KeygenParticipant)
-    - [KeygenSessionRequest](#scalar.multisig.v1beta1.KeygenSessionRequest)
-    - [KeygenSessionResponse](#scalar.multisig.v1beta1.KeygenSessionResponse)
-    - [NextKeyIDRequest](#scalar.multisig.v1beta1.NextKeyIDRequest)
-    - [NextKeyIDResponse](#scalar.multisig.v1beta1.NextKeyIDResponse)
-    - [ParamsRequest](#scalar.multisig.v1beta1.ParamsRequest)
-    - [ParamsResponse](#scalar.multisig.v1beta1.ParamsResponse)
   
 - [scalar/multisig/v1beta1/tx.proto](#scalar/multisig/v1beta1/tx.proto)
     - [KeygenOptInRequest](#scalar.multisig.v1beta1.KeygenOptInRequest)
@@ -415,12 +446,17 @@
     - [Msg](#scalar.permission.v1beta1.Msg)
     - [Query](#scalar.permission.v1beta1.Query)
   
+- [scalar/protocol/exported/v1beta1/types.proto](#scalar/protocol/exported/v1beta1/types.proto)
+    - [MinorAddress](#scalar.protocol.exported.v1beta1.MinorAddress)
+    - [ProtocolInfo](#scalar.protocol.exported.v1beta1.ProtocolInfo)
+  
+    - [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel)
+  
 - [scalar/protocol/v1beta1/types.proto](#scalar/protocol/v1beta1/types.proto)
     - [Protocol](#scalar.protocol.v1beta1.Protocol)
     - [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute)
     - [SupportedChain](#scalar.protocol.v1beta1.SupportedChain)
   
-    - [LiquidityModel](#scalar.protocol.v1beta1.LiquidityModel)
     - [Status](#scalar.protocol.v1beta1.Status)
   
 - [scalar/protocol/v1beta1/genesis.proto](#scalar/protocol/v1beta1/genesis.proto)
@@ -430,6 +466,8 @@
     - [Params](#scalar.protocol.v1beta1.Params)
   
 - [scalar/protocol/v1beta1/query.proto](#scalar/protocol/v1beta1/query.proto)
+    - [ProtocolRequest](#scalar.protocol.v1beta1.ProtocolRequest)
+    - [ProtocolResponse](#scalar.protocol.v1beta1.ProtocolResponse)
     - [ProtocolsRequest](#scalar.protocol.v1beta1.ProtocolsRequest)
     - [ProtocolsResponse](#scalar.protocol.v1beta1.ProtocolsResponse)
   
@@ -944,6 +982,7 @@ Msg defines the nexus Msg service.
 | `key_id` | [string](#string) |  |  |
 | `max_gas_cost` | [uint32](#uint32) |  |  |
 | `type` | [CommandType](#scalar.chains.v1beta1.CommandType) |  |  |
+| `payload` | [bytes](#bytes) |  | This field is used as extra data for the command, metadata is encoded in the payload, it can be fee information, etc. |
 
 
 
@@ -966,6 +1005,7 @@ Msg defines the nexus Msg service.
 | `key_id` | [string](#string) |  |  |
 | `prev_batched_commands_id` | [bytes](#bytes) |  |  |
 | `signature` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+| `extra_data` | [bytes](#bytes) | repeated | extra data for the command, map 1:1 with the commands |
 
 
 
@@ -1138,6 +1178,7 @@ results to chains relay transaction types
 | `symbol` | [string](#string) |  |  |
 | `decimals` | [uint32](#uint32) |  |  |
 | `capacity` | [bytes](#bytes) |  |  |
+| `model` | [TokenModel](#scalar.chains.v1beta1.TokenModel) |  | defined for btc networks, not used for evm chains |
 
 
 
@@ -1190,7 +1231,6 @@ TransferKey contains information for a transfer operatorship
 | COMMAND_TYPE_TRANSFER_OPERATORSHIP | 4 |  |
 | COMMAND_TYPE_APPROVE_CONTRACT_CALL_WITH_MINT | 5 |  |
 | COMMAND_TYPE_APPROVE_CONTRACT_CALL | 6 |  |
-| COMMAND_TYPE_APPROVE_BRIDGE_CALL | 7 | For chains |
 
 
 
@@ -1205,18 +1245,6 @@ TransferKey contains information for a transfer operatorship
 | DEPOSIT_STATUS_PENDING | 1 |  |
 | DEPOSIT_STATUS_CONFIRMED | 2 |  |
 | DEPOSIT_STATUS_BURNED | 3 |  |
-
-
-
-<a name="scalar.chains.v1beta1.NetworkKind"></a>
-
-### NetworkKind
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| NETWORK_KIND_MAINNET | 0 |  |
-| NETWORK_KIND_TESTNET | 1 |  |
 
 
 
@@ -1258,6 +1286,18 @@ TransferKey contains information for a transfer operatorship
 | STATUS_INITIALIZED | 1 |  |
 | STATUS_PENDING | 2 |  |
 | STATUS_CONFIRMED | 4 |  |
+
+
+
+<a name="scalar.chains.v1beta1.TokenModel"></a>
+
+### TokenModel
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TOKEN_MODEL_POOL | 0 |  |
+| TOKEN_MODEL_UTXO | 1 |  |
 
 
  <!-- end enums -->
@@ -1755,9 +1795,9 @@ PollParticipants should be embedded in poll events in other modules
 
 
 
-<a name="scalar.chains.v1beta1.DestCallApproved"></a>
+<a name="scalar.chains.v1beta1.ContractCallApproved"></a>
 
-### DestCallApproved
+### ContractCallApproved
 
 
 
@@ -1776,9 +1816,9 @@ PollParticipants should be embedded in poll events in other modules
 
 
 
-<a name="scalar.chains.v1beta1.DestCallFailed"></a>
+<a name="scalar.chains.v1beta1.ContractCallFailed"></a>
 
-### DestCallFailed
+### ContractCallFailed
 
 
 
@@ -1786,28 +1826,6 @@ PollParticipants should be embedded in poll events in other modules
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
 | `message_id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.DestCallWithMintApproved"></a>
-
-### DestCallWithMintApproved
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `event_id` | [string](#string) |  |  |
-| `command_id` | [bytes](#bytes) |  |  |
-| `sender` | [string](#string) |  |  |
-| `destination_chain` | [string](#string) |  |  |
-| `contract_address` | [string](#string) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
@@ -1829,6 +1847,7 @@ PollParticipants should be embedded in poll events in other modules
 | `token_sent` | [EventTokenSent](#scalar.chains.v1beta1.EventTokenSent) |  |  |
 | `contract_call` | [EventContractCall](#scalar.chains.v1beta1.EventContractCall) |  |  |
 | `contract_call_with_token` | [EventContractCallWithToken](#scalar.chains.v1beta1.EventContractCallWithToken) |  |  |
+| `contract_call_with_mint_approved` | [EventContractCallWithMintApproved](#scalar.chains.v1beta1.EventContractCallWithMintApproved) |  |  |
 | `transfer` | [EventTransfer](#scalar.chains.v1beta1.EventTransfer) |  |  |
 | `token_deployed` | [EventTokenDeployed](#scalar.chains.v1beta1.EventTokenDeployed) |  |  |
 | `multisig_operatorship_transferred` | [EventMultisigOperatorshipTransferred](#scalar.chains.v1beta1.EventMultisigOperatorshipTransferred) |  |  |
@@ -1875,6 +1894,28 @@ PollParticipants should be embedded in poll events in other modules
 
 
 
+<a name="scalar.chains.v1beta1.EventContractCallWithMintApproved"></a>
+
+### EventContractCallWithMintApproved
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+| `command_id` | [bytes](#bytes) |  |  |
+| `sender` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `contract_address` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
 <a name="scalar.chains.v1beta1.EventContractCallWithToken"></a>
 
 ### EventContractCallWithToken
@@ -1889,6 +1930,7 @@ PollParticipants should be embedded in poll events in other modules
 | `payload_hash` | [bytes](#bytes) |  |  |
 | `symbol` | [string](#string) |  |  |
 | `amount` | [bytes](#bytes) |  |  |
+| `payload` | [bytes](#bytes) |  |  |
 
 
 
@@ -1954,11 +1996,14 @@ PollParticipants should be embedded in poll events in other modules
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+| `transfer_id` | [uint64](#uint64) |  |  |
+| `command_id` | [string](#string) |  |  |
+| `sender` | [string](#string) |  |  |
 | `destination_chain` | [string](#string) |  |  |
 | `destination_address` | [string](#string) |  |  |
-| `symbol` | [string](#string) |  |  |
-| `amount` | [bytes](#bytes) |  |  |
+| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
@@ -2096,7 +2141,9 @@ PollParticipants should be embedded in poll events in other modules
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
-| `network_kind` | [NetworkKind](#scalar.chains.v1beta1.NetworkKind) |  |  |
+| `network_kind` | [uint32](#uint32) |  |  |
+| `token_code` | [bytes](#bytes) |  |  |
+| `burnable` | [bytes](#bytes) |  |  |
 | `revote_locking_period` | [int64](#int64) |  |  |
 | `chain_id` | [bytes](#bytes) |  |  |
 | `voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
@@ -2122,6 +2169,64 @@ PollParticipants should be embedded in poll events in other modules
 | ----- | ---- | ----- | ----------- |
 | `key` | [string](#string) |  |  |
 | `value` | [string](#string) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/chains/v1beta1/tokens.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/chains/v1beta1/tokens.proto
+
+
+
+<a name="scalar.chains.v1beta1.ERC20Deposit"></a>
+
+### ERC20Deposit
+ERC20Deposit contains information for an ERC20 deposit
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `amount` | [bytes](#bytes) |  |  |
+| `asset` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `burner_address` | [bytes](#bytes) |  |  |
+| `log_index` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ERC20TokenMetadata"></a>
+
+### ERC20TokenMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `asset` | [string](#string) |  |  |
+| `chain_id` | [bytes](#bytes) |  |  |
+| `details` | [TokenDetails](#scalar.chains.v1beta1.TokenDetails) |  |  |
+| `token_address` | [string](#string) |  |  |
+| `tx_hash` | [string](#string) |  |  |
+| `status` | [Status](#scalar.chains.v1beta1.Status) |  |  |
+| `is_external` | [bool](#bool) |  |  |
+| `burner_code` | [bytes](#bytes) |  |  |
 
 
 
@@ -2235,6 +2340,7 @@ PollParticipants should be embedded in poll events in other modules
 | `confirmed_source_txs` | [SourceTx](#scalar.chains.v1beta1.SourceTx) | repeated |  |
 | `command_batches` | [CommandBatchMetadata](#scalar.chains.v1beta1.CommandBatchMetadata) | repeated |  |
 | `gateway` | [Gateway](#scalar.chains.v1beta1.Gateway) |  |  |
+| `tokens` | [ERC20TokenMetadata](#scalar.chains.v1beta1.ERC20TokenMetadata) | repeated |  |
 | `events` | [Event](#scalar.chains.v1beta1.Event) | repeated |  |
 | `confirmed_event_queue` | [scalar.utils.v1beta1.QueueState](#scalar.utils.v1beta1.QueueState) |  |  |
 
@@ -2625,6 +2731,22 @@ address
 
 
 
+<a name="scalar.chains.v1beta1.SignBtcCommandsRequest"></a>
+
+### SignBtcCommandsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
 <a name="scalar.chains.v1beta1.SignCommandsRequest"></a>
 
 ### SignCommandsRequest
@@ -2644,6 +2766,39 @@ address
 <a name="scalar.chains.v1beta1.SignCommandsResponse"></a>
 
 ### SignCommandsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `batched_commands_id` | [bytes](#bytes) |  |  |
+| `command_count` | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.SignPsbtCommandRequest"></a>
+
+### SignPsbtCommandRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `psbt` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.SignPsbtCommandResponse"></a>
+
+### SignPsbtCommandResponse
 
 
 
@@ -2958,6 +3113,7 @@ ERC20 tokens requested for a chain
 | ----- | ---- | ----- | ----------- |
 | `asset` | [string](#string) |  |  |
 | `symbol` | [string](#string) |  |  |
+| `model` | [TokenModel](#scalar.chains.v1beta1.TokenModel) |  |  |
 
 
 
@@ -3162,6 +3318,7 @@ ParamsRequest represents a message that queries the params
 | `params` | [QueryCommandResponse.ParamsEntry](#scalar.chains.v1beta1.QueryCommandResponse.ParamsEntry) | repeated |  |
 | `key_id` | [string](#string) |  |  |
 | `max_gas_cost` | [uint32](#uint32) |  |  |
+| `payload` | [bytes](#bytes) |  |  |
 
 
 
@@ -3320,6 +3477,8 @@ Msg defines the btc Msg service.
 | `CreatePendingTransfers` | [CreatePendingTransfersRequest](#scalar.chains.v1beta1.CreatePendingTransfersRequest) | [CreatePendingTransfersResponse](#scalar.chains.v1beta1.CreatePendingTransfersResponse) |  | POST|/scalar/chains/v1beta1/create_pending_transfers|
 | `CreateTransferOperatorship` | [CreateTransferOperatorshipRequest](#scalar.chains.v1beta1.CreateTransferOperatorshipRequest) | [CreateTransferOperatorshipResponse](#scalar.chains.v1beta1.CreateTransferOperatorshipResponse) |  | POST|/scalar/chains/v1beta1/create_transfer_operatorship|
 | `SignCommands` | [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest) | [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_commands|
+| `SignBtcCommand` | [SignBtcCommandsRequest](#scalar.chains.v1beta1.SignBtcCommandsRequest) | [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
+| `SignPsbtCommand` | [SignPsbtCommandRequest](#scalar.chains.v1beta1.SignPsbtCommandRequest) | [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
 | `AddChain` | [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest) | [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse) |  | POST|/scalar/chains/v1beta1/add_chain|
 | `RetryFailedEvent` | [RetryFailedEventRequest](#scalar.chains.v1beta1.RetryFailedEventRequest) | [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse) |  | POST|/scalar/chains/v1beta1/retry-failed-event|
 
@@ -3344,6 +3503,114 @@ QueryService defines the gRPC querier service.
 | `ERC20Tokens` | [ERC20TokensRequest](#scalar.chains.v1beta1.ERC20TokensRequest) | [ERC20TokensResponse](#scalar.chains.v1beta1.ERC20TokensResponse) | ERC20Tokens queries the ERC20 tokens registered for a chain | GET|/scalar/chains/v1beta1/erc20_tokens/{chain}|
 | `TokenInfo` | [TokenInfoRequest](#scalar.chains.v1beta1.TokenInfoRequest) | [TokenInfoResponse](#scalar.chains.v1beta1.TokenInfoResponse) | TokenInfo queries the token info for a registered ERC20 Token | GET|/scalar/chains/v1beta1/token_info/{chain}|
 | `Params` | [ParamsRequest](#scalar.chains.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.chains.v1beta1.ParamsResponse) |  | GET|/scalar/chains/v1beta1/params/{chain}|
+
+ <!-- end services -->
+
+
+
+<a name="scalar/covenant/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/covenant/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSig"></a>
+
+### TapScriptSig
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_x_only` | [bytes](#bytes) |  |  |
+| `leaf_hash` | [bytes](#bytes) |  |  |
+| `signature` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSigsEntry"></a>
+
+### TapScriptSigsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `index` | [uint64](#uint64) |  |  |
+| `sigs` | [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSigsList"></a>
+
+### TapScriptSigsList
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `list` | [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSigsMap"></a>
+
+### TapScriptSigsMap
+The reason we use a list instead of a map is because the map is not ensured
+the deterministic order of the entries
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `inner` | [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.covenant.exported.v1beta1.KeyState"></a>
+
+### KeyState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| KEY_STATE_UNSPECIFIED | 0 |  |
+| KEY_STATE_ASSIGNED | 1 |  |
+| KEY_STATE_ACTIVE | 2 |  |
+
+
+
+<a name="scalar.covenant.exported.v1beta1.PsbtState"></a>
+
+### PsbtState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| PSBT_STATE_UNSPECIFIED | 0 |  |
+| PSBT_STATE_PENDING | 1 |  |
+| PSBT_STATE_CREATING | 2 |  |
+| PSBT_STATE_SIGNING | 3 |  |
+| PSBT_STATE_COMPLETED | 4 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
 
  <!-- end services -->
 
@@ -3391,49 +3658,152 @@ QueryService defines the gRPC querier service.
 
 
 
-<a name="scalar/chains/v1beta1/tokens.proto"></a>
+<a name="scalar/multisig/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## scalar/chains/v1beta1/tokens.proto
+## scalar/multisig/v1beta1/types.proto
 
 
 
-<a name="scalar.chains.v1beta1.ERC20Deposit"></a>
+<a name="scalar.multisig.v1beta1.Key"></a>
 
-### ERC20Deposit
-ERC20Deposit contains information for an ERC20 deposit
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `tx_id` | [bytes](#bytes) |  |  |
-| `amount` | [bytes](#bytes) |  |  |
-| `asset` | [string](#string) |  |  |
-| `destination_chain` | [string](#string) |  |  |
-| `burner_address` | [bytes](#bytes) |  |  |
-| `log_index` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.ERC20TokenMetadata"></a>
-
-### ERC20TokenMetadata
+### Key
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `asset` | [string](#string) |  |  |
-| `chain_id` | [bytes](#bytes) |  |  |
-| `details` | [TokenDetails](#scalar.chains.v1beta1.TokenDetails) |  |  |
-| `token_address` | [string](#string) |  |  |
-| `tx_hash` | [string](#string) |  |  |
-| `status` | [Status](#scalar.chains.v1beta1.Status) |  |  |
-| `is_external` | [bool](#bool) |  |  |
-| `burner_code` | [bytes](#bytes) |  |  |
+| `id` | [string](#string) |  |  |
+| `snapshot` | [scalar.snapshot.exported.v1beta1.Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot) |  |  |
+| `pub_keys` | [Key.PubKeysEntry](#scalar.multisig.v1beta1.Key.PubKeysEntry) | repeated |  |
+| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `state` | [scalar.multisig.exported.v1beta1.KeyState](#scalar.multisig.exported.v1beta1.KeyState) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.Key.PubKeysEntry"></a>
+
+### Key.PubKeysEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeyEpoch"></a>
+
+### KeyEpoch
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `epoch` | [uint64](#uint64) |  |  |
+| `chain` | [string](#string) |  |  |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeygenSession"></a>
+
+### KeygenSession
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [Key](#scalar.multisig.v1beta1.Key) |  |  |
+| `state` | [scalar.multisig.exported.v1beta1.MultisigState](#scalar.multisig.exported.v1beta1.MultisigState) |  |  |
+| `keygen_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `expires_at` | [int64](#int64) |  |  |
+| `completed_at` | [int64](#int64) |  |  |
+| `is_pub_key_received` | [KeygenSession.IsPubKeyReceivedEntry](#scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry) | repeated |  |
+| `grace_period` | [int64](#int64) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry"></a>
+
+### KeygenSession.IsPubKeyReceivedEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.MultiSig"></a>
+
+### MultiSig
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `sigs` | [MultiSig.SigsEntry](#scalar.multisig.v1beta1.MultiSig.SigsEntry) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.MultiSig.SigsEntry"></a>
+
+### MultiSig.SigsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.SigningSession"></a>
+
+### SigningSession
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [uint64](#uint64) |  |  |
+| `multi_sig` | [MultiSig](#scalar.multisig.v1beta1.MultiSig) |  |  |
+| `state` | [scalar.multisig.exported.v1beta1.MultisigState](#scalar.multisig.exported.v1beta1.MultisigState) |  |  |
+| `key` | [Key](#scalar.multisig.v1beta1.Key) |  |  |
+| `expires_at` | [int64](#int64) |  |  |
+| `completed_at` | [int64](#int64) |  |  |
+| `grace_period` | [int64](#int64) |  |  |
+| `module` | [string](#string) |  |  |
+| `module_metadata` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
 
 
 
@@ -3465,6 +3835,7 @@ Custodian represents an individual custodian configuration
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `name` | [string](#string) |  | e.g., "Custodian1" |
+| `val_address` | [string](#string) |  | e.g., "scalarvaloper1..." |
 | `btc_pubkey` | [bytes](#bytes) |  | e.g., |
 | `status` | [Status](#scalar.covenant.v1beta1.Status) |  | "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
 
@@ -3480,20 +3851,78 @@ Whether the custodian is active |
 
 ### CustodianGroup
 CustodianGroup represents a group of custodians with their configuration
-uid is used as identity of the group, btc_pubkey is change by list of custodians
+uid is used as identity of the group, btc_pubkey is change by list of
+custodians
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `uid` | [string](#string) |  |  |
 | `name` | [string](#string) |  | e.g., "All" |
-| `btc_pubkey` | [string](#string) |  | e.g., |
+| `btc_pubkey` | [bytes](#bytes) |  | e.g., |
 | `quorum` | [uint32](#uint32) |  | "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
 
 quorum threshold e.g.,3 |
 | `status` | [Status](#scalar.covenant.v1beta1.Status) |  | Whether the custodian is active |
 | `description` | [string](#string) |  |  |
 | `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.PsbtMultiSig"></a>
+
+### PsbtMultiSig
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+| `psbt` | [bytes](#bytes) |  |  |
+| `participant_tap_script_sigs` | [PsbtMultiSig.ParticipantTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantTapScriptSigsEntry) | repeated |  |
+| `finalized_tx` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.PsbtMultiSig.ParticipantTapScriptSigsEntry"></a>
+
+### PsbtMultiSig.ParticipantTapScriptSigsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [scalar.covenant.exported.v1beta1.TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigningSession"></a>
+
+### SigningSession
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [uint64](#uint64) |  |  |
+| `psbt_multi_sig` | [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig) |  |  |
+| `state` | [scalar.covenant.exported.v1beta1.PsbtState](#scalar.covenant.exported.v1beta1.PsbtState) |  |  |
+| `key` | [scalar.multisig.v1beta1.Key](#scalar.multisig.v1beta1.Key) |  |  |
+| `expires_at` | [int64](#int64) |  |  |
+| `completed_at` | [int64](#int64) |  |  |
+| `grace_period` | [int64](#int64) |  |  |
+| `module` | [string](#string) |  |  |
+| `module_metadata` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
 
 
 
@@ -3522,23 +3951,111 @@ quorum threshold e.g.,3 |
 
 
 
-<a name="scalar/covenant/v1beta1/genesis.proto"></a>
+<a name="scalar/covenant/v1beta1/events.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## scalar/covenant/v1beta1/genesis.proto
+## scalar/covenant/v1beta1/events.proto
 
 
 
-<a name="scalar.covenant.v1beta1.GenesisState"></a>
+<a name="scalar.covenant.v1beta1.KeyRotated"></a>
 
-### GenesisState
+### KeyRotated
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
-| `groups` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) | repeated |  |
+| `module` | [string](#string) |  |  |
+| `chain` | [string](#string) |  |  |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigningPsbtCompleted"></a>
+
+### SigningPsbtCompleted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigningPsbtExpired"></a>
+
+### SigningPsbtExpired
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigningPsbtStarted"></a>
+
+### SigningPsbtStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `chain` | [string](#string) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+| `key_id` | [string](#string) |  |  |
+| `pub_keys` | [SigningPsbtStarted.PubKeysEntry](#scalar.covenant.v1beta1.SigningPsbtStarted.PubKeysEntry) | repeated |  |
+| `requesting_module` | [string](#string) |  |  |
+| `psbt` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigningPsbtStarted.PubKeysEntry"></a>
+
+### SigningPsbtStarted.PubKeysEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.TapScriptSigsSubmitted"></a>
+
+### TapScriptSigsSubmitted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+| `participant` | [bytes](#bytes) |  |  |
+| `tap_script_sigs_map` | [scalar.covenant.exported.v1beta1.TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) |  |  |
 
 
 
@@ -3567,6 +4084,279 @@ quorum threshold e.g.,3 |
 Params represent the genesis parameters for the module
 
 
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `signing_timeout` | [int64](#int64) |  |  |
+| `signing_grace_period` | [int64](#int64) |  |  |
+| `active_epoch_count` | [uint64](#uint64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/covenant/v1beta1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/covenant/v1beta1/genesis.proto
+
+
+
+<a name="scalar.covenant.v1beta1.GenesisState"></a>
+
+### GenesisState
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.covenant.v1beta1.Params) |  |  |
+| `signing_sessions` | [SigningSession](#scalar.covenant.v1beta1.SigningSession) | repeated |  |
+| `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
+| `groups` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/multisig/v1beta1/params.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/multisig/v1beta1/params.proto
+
+
+
+<a name="scalar.multisig.v1beta1.Params"></a>
+
+### Params
+Params represent the genesis parameters for the module
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `keygen_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `keygen_timeout` | [int64](#int64) |  |  |
+| `keygen_grace_period` | [int64](#int64) |  |  |
+| `signing_timeout` | [int64](#int64) |  |  |
+| `signing_grace_period` | [int64](#int64) |  |  |
+| `active_epoch_count` | [uint64](#uint64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/multisig/v1beta1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/multisig/v1beta1/query.proto
+
+
+
+<a name="scalar.multisig.v1beta1.KeyIDRequest"></a>
+
+### KeyIDRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeyIDResponse"></a>
+
+### KeyIDResponse
+KeyIDResponse contains the key ID of the key assigned to a given chain.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeyRequest"></a>
+
+### KeyRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeyResponse"></a>
+
+### KeyResponse
+KeyResponse contains the key corresponding to a given key id.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+| `state` | [scalar.multisig.exported.v1beta1.KeyState](#scalar.multisig.exported.v1beta1.KeyState) |  |  |
+| `started_at` | [int64](#int64) |  |  |
+| `started_at_timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+| `threshold_weight` | [bytes](#bytes) |  |  |
+| `bonded_weight` | [bytes](#bytes) |  |  |
+| `participants` | [KeygenParticipant](#scalar.multisig.v1beta1.KeygenParticipant) | repeated | Keygen participants in descending order by weight |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeygenParticipant"></a>
+
+### KeygenParticipant
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [string](#string) |  |  |
+| `weight` | [bytes](#bytes) |  |  |
+| `pub_key` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeygenSessionRequest"></a>
+
+### KeygenSessionRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.KeygenSessionResponse"></a>
+
+### KeygenSessionResponse
+KeygenSessionResponse contains the keygen session info for a given key ID.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `started_at` | [int64](#int64) |  |  |
+| `started_at_timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+| `expires_at` | [int64](#int64) |  |  |
+| `completed_at` | [int64](#int64) |  |  |
+| `grace_period` | [int64](#int64) |  |  |
+| `state` | [scalar.multisig.exported.v1beta1.MultisigState](#scalar.multisig.exported.v1beta1.MultisigState) |  |  |
+| `keygen_threshold_weight` | [bytes](#bytes) |  |  |
+| `signing_threshold_weight` | [bytes](#bytes) |  |  |
+| `bonded_weight` | [bytes](#bytes) |  |  |
+| `participants` | [KeygenParticipant](#scalar.multisig.v1beta1.KeygenParticipant) | repeated | Keygen candidates in descending order by weight |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.NextKeyIDRequest"></a>
+
+### NextKeyIDRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.NextKeyIDResponse"></a>
+
+### NextKeyIDResponse
+NextKeyIDResponse contains the key ID for the next rotation on the given
+chain
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.ParamsRequest"></a>
+
+### ParamsRequest
+ParamsRequest represents a message that queries the params
+
+
+
+
+
+
+<a name="scalar.multisig.v1beta1.ParamsResponse"></a>
+
+### ParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.multisig.v1beta1.Params) |  |  |
+
+
 
 
 
@@ -3584,40 +4374,6 @@ Params represent the genesis parameters for the module
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/covenant/v1beta1/query.proto
-
-
-
-<a name="scalar.covenant.v1beta1.CustodianGroupsRequest"></a>
-
-### CustodianGroupsRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `uid` | [string](#string) |  |  |
-| `name` | [string](#string) |  |  |
-| `group_pubkey` | [bytes](#bytes) |  |  |
-| `custodian_pubkey` | [bytes](#bytes) |  |  |
-| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.CustodianGroupsResponse"></a>
-
-### CustodianGroupsResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `groups` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) | repeated |  |
-
-
-
 
 
 
@@ -3647,6 +4403,101 @@ Params represent the genesis parameters for the module
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.GroupsRequest"></a>
+
+### GroupsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `uid` | [string](#string) |  |  |
+| `name` | [string](#string) |  |  |
+| `group_pubkey` | [bytes](#bytes) |  |  |
+| `custodian_pubkey` | [bytes](#bytes) |  |  |
+| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.GroupsResponse"></a>
+
+### GroupsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `groups` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.KeyRequest"></a>
+
+### KeyRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.KeyResponse"></a>
+
+### KeyResponse
+KeyResponse contains the key corresponding to a given key id.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+| `state` | [scalar.multisig.exported.v1beta1.KeyState](#scalar.multisig.exported.v1beta1.KeyState) |  |  |
+| `started_at` | [int64](#int64) |  |  |
+| `started_at_timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+| `threshold_weight` | [bytes](#bytes) |  |  |
+| `bonded_weight` | [bytes](#bytes) |  |  |
+| `participants` | [scalar.multisig.v1beta1.KeygenParticipant](#scalar.multisig.v1beta1.KeygenParticipant) | repeated | Keygen participants in descending order by weight |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.ParamsRequest"></a>
+
+### ParamsRequest
+ParamsRequest represents a message that queries the params
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.ParamsResponse"></a>
+
+### ParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.covenant.v1beta1.Params) |  |  |
 
 
 
@@ -3790,6 +4641,59 @@ Params represent the genesis parameters for the module
 
 
 
+<a name="scalar.covenant.v1beta1.RotateKeyRequest"></a>
+
+### RotateKeyRequest
+Rotate key for custodian group
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.RotateKeyResponse"></a>
+
+### RotateKeyResponse
+
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SubmitTapScriptSigsRequest"></a>
+
+### SubmitTapScriptSigsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `sig_id` | [uint64](#uint64) |  |  |
+| `tap_script_sigs_map` | [scalar.covenant.exported.v1beta1.TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SubmitTapScriptSigsResponse"></a>
+
+### SubmitTapScriptSigsResponse
+
+
+
+
+
+
+
 <a name="scalar.covenant.v1beta1.UpdateCustodianGroupRequest"></a>
 
 ### UpdateCustodianGroupRequest
@@ -3882,9 +4786,9 @@ Pubkey used as key for lookup custodian to update other values
  <!-- end HasExtensions -->
 
 
-<a name="scalar.covenant.v1beta1.Msg"></a>
+<a name="scalar.covenant.v1beta1.MsgService"></a>
 
-### Msg
+### MsgService
 
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
@@ -3895,17 +4799,20 @@ Pubkey used as key for lookup custodian to update other values
 | `UpdateCustodianGroup` | [UpdateCustodianGroupRequest](#scalar.covenant.v1beta1.UpdateCustodianGroupRequest) | [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse) | Update Custodian group | POST|/scalar/covenant/v1beta1/update_custodian_group|
 | `AddCustodianToGroup` | [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Add Custodian to custodian group recalculate taproot pubkey when adding custodian to custodian group | POST|/scalar/covenant/v1beta1/add_custodian_to_group|
 | `RemoveCustodianFromGroup` | [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Remove Custodian from custodian group recalculate taproot address when deleting custodian from custodian group | POST|/scalar/covenant/v1beta1/remove_custodian_from_group|
+| `RotateKey` | [RotateKeyRequest](#scalar.covenant.v1beta1.RotateKeyRequest) | [RotateKeyResponse](#scalar.covenant.v1beta1.RotateKeyResponse) |  | POST|/scalar/covenant/v1beta1/rotate_key|
+| `SubmitTapScriptSigs` | [SubmitTapScriptSigsRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigsRequest) | [SubmitTapScriptSigsResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigsResponse) |  | POST|/scalar/covenant/v1beta1/submit_tap_script_sigs|
 
 
-<a name="scalar.covenant.v1beta1.Query"></a>
+<a name="scalar.covenant.v1beta1.QueryService"></a>
 
-### Query
+### QueryService
 
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `GetCustodians` | [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest) | [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse) | Get custodians | GET|/scalar/convenant/v1beta1/custodians|
-| `CustodianGroups` | [CustodianGroupsRequest](#scalar.covenant.v1beta1.CustodianGroupsRequest) | [CustodianGroupsResponse](#scalar.covenant.v1beta1.CustodianGroupsResponse) | Get custodian groups | GET|/scalar/covenant/v1beta1/custodian_groups|
+| `Custodians` | [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest) | [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse) | Get custodians | GET|/scalar/convenant/v1beta1/custodians|
+| `Groups` | [GroupsRequest](#scalar.covenant.v1beta1.GroupsRequest) | [GroupsResponse](#scalar.covenant.v1beta1.GroupsResponse) | Get custodian groups | GET|/scalar/covenant/v1beta1/custodian_groups|
+| `Params` | [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse) |  | GET|/scalar/covenant/v1beta1/params|
 
  <!-- end services -->
 
@@ -4144,204 +5051,6 @@ Pubkey used as key for lookup custodian to update other values
 
 
 
-<a name="scalar/multisig/v1beta1/params.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/multisig/v1beta1/params.proto
-
-
-
-<a name="scalar.multisig.v1beta1.Params"></a>
-
-### Params
-Params represent the genesis parameters for the module
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `keygen_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `keygen_timeout` | [int64](#int64) |  |  |
-| `keygen_grace_period` | [int64](#int64) |  |  |
-| `signing_timeout` | [int64](#int64) |  |  |
-| `signing_grace_period` | [int64](#int64) |  |  |
-| `active_epoch_count` | [uint64](#uint64) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/multisig/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/multisig/v1beta1/types.proto
-
-
-
-<a name="scalar.multisig.v1beta1.Key"></a>
-
-### Key
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `id` | [string](#string) |  |  |
-| `snapshot` | [scalar.snapshot.exported.v1beta1.Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot) |  |  |
-| `pub_keys` | [Key.PubKeysEntry](#scalar.multisig.v1beta1.Key.PubKeysEntry) | repeated |  |
-| `signing_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `state` | [scalar.multisig.exported.v1beta1.KeyState](#scalar.multisig.exported.v1beta1.KeyState) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.Key.PubKeysEntry"></a>
-
-### Key.PubKeysEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [string](#string) |  |  |
-| `value` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeyEpoch"></a>
-
-### KeyEpoch
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `epoch` | [uint64](#uint64) |  |  |
-| `chain` | [string](#string) |  |  |
-| `key_id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeygenSession"></a>
-
-### KeygenSession
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [Key](#scalar.multisig.v1beta1.Key) |  |  |
-| `state` | [scalar.multisig.exported.v1beta1.MultisigState](#scalar.multisig.exported.v1beta1.MultisigState) |  |  |
-| `keygen_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `expires_at` | [int64](#int64) |  |  |
-| `completed_at` | [int64](#int64) |  |  |
-| `is_pub_key_received` | [KeygenSession.IsPubKeyReceivedEntry](#scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry) | repeated |  |
-| `grace_period` | [int64](#int64) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry"></a>
-
-### KeygenSession.IsPubKeyReceivedEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [string](#string) |  |  |
-| `value` | [bool](#bool) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.MultiSig"></a>
-
-### MultiSig
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `sigs` | [MultiSig.SigsEntry](#scalar.multisig.v1beta1.MultiSig.SigsEntry) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.MultiSig.SigsEntry"></a>
-
-### MultiSig.SigsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [string](#string) |  |  |
-| `value` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.SigningSession"></a>
-
-### SigningSession
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `id` | [uint64](#uint64) |  |  |
-| `multi_sig` | [MultiSig](#scalar.multisig.v1beta1.MultiSig) |  |  |
-| `state` | [scalar.multisig.exported.v1beta1.MultisigState](#scalar.multisig.exported.v1beta1.MultisigState) |  |  |
-| `key` | [Key](#scalar.multisig.v1beta1.Key) |  |  |
-| `expires_at` | [int64](#int64) |  |  |
-| `completed_at` | [int64](#int64) |  |  |
-| `grace_period` | [int64](#int64) |  |  |
-| `module` | [string](#string) |  |  |
-| `module_metadata` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
 <a name="scalar/multisig/v1beta1/genesis.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -4362,200 +5071,6 @@ GenesisState represents the genesis state
 | `signing_sessions` | [SigningSession](#scalar.multisig.v1beta1.SigningSession) | repeated |  |
 | `keys` | [Key](#scalar.multisig.v1beta1.Key) | repeated |  |
 | `key_epochs` | [KeyEpoch](#scalar.multisig.v1beta1.KeyEpoch) | repeated |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/multisig/v1beta1/query.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/multisig/v1beta1/query.proto
-
-
-
-<a name="scalar.multisig.v1beta1.KeyIDRequest"></a>
-
-### KeyIDRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeyIDResponse"></a>
-
-### KeyIDResponse
-KeyIDResponse contains the key ID of the key assigned to a given chain.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeyRequest"></a>
-
-### KeyRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeyResponse"></a>
-
-### KeyResponse
-KeyResponse contains the key corresponding to a given key id.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-| `state` | [scalar.multisig.exported.v1beta1.KeyState](#scalar.multisig.exported.v1beta1.KeyState) |  |  |
-| `started_at` | [int64](#int64) |  |  |
-| `started_at_timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
-| `threshold_weight` | [bytes](#bytes) |  |  |
-| `bonded_weight` | [bytes](#bytes) |  |  |
-| `participants` | [KeygenParticipant](#scalar.multisig.v1beta1.KeygenParticipant) | repeated | Keygen participants in descending order by weight |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeygenParticipant"></a>
-
-### KeygenParticipant
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `address` | [string](#string) |  |  |
-| `weight` | [bytes](#bytes) |  |  |
-| `pub_key` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeygenSessionRequest"></a>
-
-### KeygenSessionRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.KeygenSessionResponse"></a>
-
-### KeygenSessionResponse
-KeygenSessionResponse contains the keygen session info for a given key ID.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `started_at` | [int64](#int64) |  |  |
-| `started_at_timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
-| `expires_at` | [int64](#int64) |  |  |
-| `completed_at` | [int64](#int64) |  |  |
-| `grace_period` | [int64](#int64) |  |  |
-| `state` | [scalar.multisig.exported.v1beta1.MultisigState](#scalar.multisig.exported.v1beta1.MultisigState) |  |  |
-| `keygen_threshold_weight` | [bytes](#bytes) |  |  |
-| `signing_threshold_weight` | [bytes](#bytes) |  |  |
-| `bonded_weight` | [bytes](#bytes) |  |  |
-| `participants` | [KeygenParticipant](#scalar.multisig.v1beta1.KeygenParticipant) | repeated | Keygen candidates in descending order by weight |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.NextKeyIDRequest"></a>
-
-### NextKeyIDRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.NextKeyIDResponse"></a>
-
-### NextKeyIDResponse
-NextKeyIDResponse contains the key ID for the next rotation on the given
-chain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.ParamsRequest"></a>
-
-### ParamsRequest
-ParamsRequest represents a message that queries the params
-
-
-
-
-
-
-<a name="scalar.multisig.v1beta1.ParamsResponse"></a>
-
-### ParamsResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `params` | [Params](#scalar.multisig.v1beta1.Params) |  |  |
 
 
 
@@ -4860,6 +5375,7 @@ registered blockchain
 | `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `id` | [uint64](#uint64) |  |  |
 | `state` | [TransferState](#scalar.nexus.exported.v1beta1.TransferState) |  |  |
+| `source_tx_hash` | [bytes](#bytes) |  |  |
 
 
 
@@ -4901,6 +5417,7 @@ registered blockchain
 | `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `source_tx_id` | [bytes](#bytes) |  |  |
 | `source_tx_index` | [uint64](#uint64) |  |  |
+| `payload` | [bytes](#bytes) |  | Additional data for the message, metadata is encoded in the payload, it can be fee information, etc. It will be used later when enqueuing the command and batch command. Currently, the main purpose is use to form the psbt for btc |
 
 
 
@@ -6359,6 +6876,70 @@ Query defines the gRPC querier service.
 
 
 
+<a name="scalar/protocol/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/protocol/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.protocol.exported.v1beta1.MinorAddress"></a>
+
+### MinorAddress
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain_name` | [string](#string) |  |  |
+| `address` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.protocol.exported.v1beta1.ProtocolInfo"></a>
+
+### ProtocolInfo
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+| `custodians_pubkey` | [bytes](#bytes) |  |  |
+| `liquidity_model` | [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `origin_chain` | [string](#string) |  |  |
+| `minor_addresses` | [MinorAddress](#scalar.protocol.exported.v1beta1.MinorAddress) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.protocol.exported.v1beta1.LiquidityModel"></a>
+
+### LiquidityModel
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| LIQUIDITY_MODEL_POOLING | 0 |  |
+| LIQUIDITY_MODEL_TRANSACTIONAL | 1 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/protocol/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -6374,14 +6955,16 @@ Query defines the gRPC querier service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `pubkey` | [bytes](#bytes) |  |  |
-| `address` | [bytes](#bytes) |  |  |
+| `bitcoin_pubkey` | [bytes](#bytes) |  | BTC's pubkey |
+| `scalar_pubkey` | [bytes](#bytes) |  | Scalar's pubkey |
+| `scalar_address` | [bytes](#bytes) |  | Scalar's address |
 | `name` | [string](#string) |  |  |
-| `tag` | [string](#string) |  |  |
+| `tag` | [bytes](#bytes) |  |  |
 | `attribute` | [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute) |  |  |
 | `status` | [Status](#scalar.protocol.v1beta1.Status) |  |  |
 | `custodian_group` | [scalar.covenant.v1beta1.CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
-| `chains` | [SupportedChain](#scalar.protocol.v1beta1.SupportedChain) | repeated |  |
+| `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
+| `chains` | [SupportedChain](#scalar.protocol.v1beta1.SupportedChain) | repeated | Other chains with internal asset |
 
 
 
@@ -6396,7 +6979,7 @@ Query defines the gRPC querier service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `model` | [LiquidityModel](#scalar.protocol.v1beta1.LiquidityModel) |  |  |
+| `model` | [scalar.protocol.exported.v1beta1.LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
 
 
 
@@ -6411,28 +6994,15 @@ DestinationChain represents a blockchain where tokens can be sent
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `params` | [scalar.chains.v1beta1.Params](#scalar.chains.v1beta1.Params) |  | Chain params |
-| `address` | [string](#string) |  |  |
-| `erc20` | [scalar.chains.v1beta1.ERC20TokenMetadata](#scalar.chains.v1beta1.ERC20TokenMetadata) |  |  |
-| `btc` | [scalar.chains.btc.v1beta1.BtcToken](#scalar.chains.btc.v1beta1.BtcToken) |  |  |
+| `chain` | [string](#string) |  |  |
+| `name` | [string](#string) |  |  |
+| `address` | [string](#string) |  | Asset address on the chain |
 
 
 
 
 
  <!-- end messages -->
-
-
-<a name="scalar.protocol.v1beta1.LiquidityModel"></a>
-
-### LiquidityModel
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| LIQUIDITY_MODEL_POOLING | 0 |  |
-| LIQUIDITY_MODEL_TRANSACTIONAL | 1 |  |
-
 
 
 <a name="scalar.protocol.v1beta1.Status"></a>
@@ -6519,6 +7089,39 @@ Params represent the genesis parameters for the module
 
 
 
+<a name="scalar.protocol.v1beta1.ProtocolRequest"></a>
+
+### ProtocolRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `origin_chain` | [string](#string) |  |  |
+| `minor_chain` | [string](#string) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `address` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.protocol.v1beta1.ProtocolResponse"></a>
+
+### ProtocolResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `protocol` | [scalar.protocol.exported.v1beta1.ProtocolInfo](#scalar.protocol.exported.v1beta1.ProtocolInfo) |  |  |
+
+
+
+
+
+
 <a name="scalar.protocol.v1beta1.ProtocolsRequest"></a>
 
 ### ProtocolsRequest
@@ -6546,6 +7149,7 @@ Params represent the genesis parameters for the module
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `protocols` | [Protocol](#scalar.protocol.v1beta1.Protocol) | repeated |  |
+| `total` | [uint64](#uint64) |  |  |
 
 
 
@@ -6742,6 +7346,7 @@ Query defines the gRPC querier service
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `Protocols` | [ProtocolsRequest](#scalar.protocol.v1beta1.ProtocolsRequest) | [ProtocolsResponse](#scalar.protocol.v1beta1.ProtocolsResponse) | GetProtocols returns all Protocol | GET|/scalar/protocol/v1beta1|
+| `Protocol` | [ProtocolRequest](#scalar.protocol.v1beta1.ProtocolRequest) | [ProtocolResponse](#scalar.protocol.v1beta1.ProtocolResponse) |  | GET|/scalar/protocol/v1beta1/protocol|
 
  <!-- end services -->
 
@@ -7282,6 +7887,8 @@ Params represent the genesis parameters for the module
 | `route_timeout_window` | [uint64](#uint64) |  | IBC packet route timeout window |
 | `transfer_limit` | [uint64](#uint64) |  |  |
 | `end_blocker_limit` | [uint64](#uint64) |  |  |
+| `version` | [uint32](#uint32) |  |  |
+| `tag` | [bytes](#bytes) |  |  |
 | `call_contracts_proposal_min_deposits` | [CallContractProposalMinDeposit](#scalar.scalarnet.v1beta1.CallContractProposalMinDeposit) | repeated |  |
 
 

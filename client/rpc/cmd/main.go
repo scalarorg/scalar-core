@@ -10,7 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"github.com/scalarorg/scalar-core/client/rpc/cmd/handlers"
+	"github.com/scalarorg/scalar-core/client/rpc/cmd/processor"
 	"github.com/scalarorg/scalar-core/client/rpc/config"
 	"github.com/scalarorg/scalar-core/client/rpc/cosmos"
 	"github.com/scalarorg/scalar-core/client/rpc/jobs"
@@ -101,6 +101,8 @@ func main() {
 		panic(err)
 	}
 
+	proc := processor.NewProcessor(networkClient)
+
 	fmt.Println("address", addr.String())
 
 	// Start the network client
@@ -121,7 +123,7 @@ func main() {
 		wg.Add(1)
 		go func(j *jobs.EventJob) {
 			defer wg.Done()
-			jobs.RunJob(j, context.Background(), handlers.ProcessDestCallApproved)
+			jobs.RunJob(j, context.Background(), proc.ProcessContractCallApproved)
 		}(job)
 	}
 

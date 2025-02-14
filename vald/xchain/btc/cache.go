@@ -2,42 +2,45 @@ package btc
 
 import (
 	"sync"
+
+	"github.com/btcsuite/btcd/btcjson"
 )
 
-//go:generate moq -out ./mock/block_height_cache.go -pkg mock . BlockHeightCache
+//go:generate moq -out ./mock/block_cache.go -pkg mock . BlockCache
 
-type BlockHeightCache struct {
-	cache map[string]uint64
+type BlockCache struct {
+	// the key is the block hash in reverse order bytes aka rpc
+	cache map[string]*btcjson.GetBlockVerboseResult
 	lock  sync.RWMutex
 }
 
-func NewBlockHeightCache() *BlockHeightCache {
-	return &BlockHeightCache{
-		cache: make(map[string]uint64),
+func NewBlockCache() *BlockCache {
+	return &BlockCache{
+		cache: make(map[string]*btcjson.GetBlockVerboseResult),
 		lock:  sync.RWMutex{},
 	}
 }
 
-// Get returns the latest finalized block number for chain
-func (c *BlockHeightCache) Get(blockHash string) *uint64 {
+// Get returns the block for the given block hash
+func (c *BlockCache) Get(blockHash string) *btcjson.GetBlockVerboseResult {
 	c.lock.RLock()
 	defer c.lock.RUnlock()
 
-	height, ok := c.cache[blockHash]
+	block, ok := c.cache[blockHash]
 	if !ok {
 		return nil
 	}
 
-	return &height
+	return block
 }
 
-// Set sets the latest finalized block number for chain, if the given block number is greater than the current latest finalized block number
-func (c *BlockHeightCache) Set(blockHash string, blockHeight uint64) {
+// Set sets the block for the given block hash
+func (c *BlockCache) Set(blockHash string, block *btcjson.GetBlockVerboseResult) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 
 	_, ok := c.cache[blockHash]
 	if !ok {
-		c.cache[blockHash] = blockHeight
+		c.cache[blockHash] = block
 	}
 }

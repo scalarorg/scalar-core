@@ -17,7 +17,7 @@ import (
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	hd "github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	sdksecp256k1 "github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdkserver "github.com/cosmos/cosmos-sdk/server"
 	sdkconfig "github.com/cosmos/cosmos-sdk/server/config"
@@ -28,6 +28,7 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/go-bip39"
+	"github.com/decred/dcrd/dcrec/secp256k1/v4"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
@@ -51,16 +52,17 @@ const (
 
 var (
 	flagScalarMnemonic      = "SCALAR_MNEMONIC"
-	flagEvmContractAddress  = "PROTOCOL_EVM_CONTRACT_ADDRESS"
+	flagProtocolBtcPriKey   = "PROTOCOL_BTC_PRIKEY"
 	flagValidatorMnemonic   = "VALIDATOR_MNEMONIC"
 	flagBroadcasterMnemonic = "BROADCASTER_MNEMONIC"
 	flagGovernanceMnemonic  = "GOV_MNEMONIC"
 	flagFaucetMnemonic      = "FAUCET_MNEMONIC"
 	flagBtcPubkey           = "BTC_PUBKEY"
+	flagBtcPrivkey          = "BTC_PRIVKEY"
 	flagNodeDirPrefix       = "node-dir-prefix"
 	flagNumValidators       = "v"
-	flagChains              = "chains"
-	flagTokens              = "tokens"
+	flagNumProtocols        = "p"
+	flagConfigPath          = "config-path"
 	flagOutputDir           = "output-dir"
 	flagBaseDir             = "base-dir"
 	flagTimeout             = "timeout"
@@ -72,6 +74,8 @@ var (
 	flagMinGasPrice         = "min-gas-price"
 	flagKeyType             = "key-type"
 	flagEnvFile             = "env-file"
+	flagTag                 = "tag"
+	flagVersion             = "version"
 	flagEnableLogging       = "enable-logging"
 	flagRPCAddress          = "rpc.address"
 	flagAPIAddress          = "api.address"
@@ -83,13 +87,15 @@ var (
 type initArgs struct {
 	algo           string
 	chainID        string
+	tag            []byte
+	version        uint32
 	keyringBackend string
 	minGasPrices   string
 	nodeDaemonHome string
-	chains         string
-	tokens         string
+	configPath     string
 	nodeDirPrefix  string
 	numValidators  int
+	numProtocols   int
 	outputDir      string
 	nodeDomain     string
 	portOffset     int
@@ -110,6 +116,7 @@ type EnvKeys struct {
 	GovernanceMnemonic  string
 	FaucetMnemonic      string
 	BtcPubkey           string
+	BtcPrivkey          string
 }
 
 // createValidatorMsgGasLimit is the gas limit used in the MsgCreateValidator included in genesis transactions.
@@ -190,12 +197,13 @@ Example:
 			args.nodeDaemonHome, _ = cmd.Flags().GetString(flagNodeDaemonHome)
 			args.nodeDomain, _ = cmd.Flags().GetString(flagNodeDomain)
 			args.numValidators, _ = cmd.Flags().GetInt(flagNumValidators)
+			args.numProtocols, _ = cmd.Flags().GetInt(flagNumProtocols)
 			args.portOffset, _ = cmd.Flags().GetInt(flagPortOffset)
-			args.chains, _ = cmd.Flags().GetString(flagChains)
-			args.tokens, _ = cmd.Flags().GetString(flagTokens)
+			args.configPath, _ = cmd.Flags().GetString(flagConfigPath)
 			args.algo, _ = cmd.Flags().GetString(flagKeyType)
 			baseFee, _ := cmd.Flags().GetString(flagBaseFee)
 			minGasPrice, _ := cmd.Flags().GetString(flagMinGasPrice)
+
 			var ok bool
 			args.baseFee, ok = sdk.NewIntFromString(baseFee)
 			if !ok || args.baseFee.LT(sdk.ZeroInt()) {
@@ -209,7 +217,7 @@ Example:
 			if args.minGasPrice.LT(sdk.ZeroDec()) {
 				return fmt.Errorf("invalid value for --min-gas-price. expected a int or decimal greater than or equal to 0 but got an negative number %s", minGasPrice)
 			}
-
+			readEnvs(&args)
 			//End Test keyring
 			return initTestnetFiles(clientCtx, cmd, serverCtx.Config, mbm, genBalIterator, args)
 		},
@@ -223,17 +231,25 @@ Example:
 		*scalarnode* results in persistent peers list ID0@scalarnode1:46656, ID1@scalarnode2:46656, ...
 		*192.168.0.1* results in persistent peers list ID0@192.168.0.11:46656, ID1@192.168.0.12:46656, ...
 		`)
-	cmd.Flags().String(flagChains, "./chains", `Supported chains directory, each chain family is config in a seperated json file under this directory: 
+	cmd.Flags().String(flagConfigPath, "./configs", `Configs directory, keep supported chains in each family file such as evm.json or btc.json: 
 		*./chains/evm.json* stores all evm chain configs ...
 		*./chains/btc.json* stores all btc chain configs ...
-		`)
-	cmd.Flags().String(flagTokens, "./tokens", `Supported token for default protocol Scalar, each chain family is config in a seperated json file under this directory: 
+		*./protocols.json* stores all protocol configs ...
 		*./tokens/evm.json* stores all evm erc20 token configs ...
+		*./tokens/btc.json* stores all btc token configs ...
 		`)
 	cmd.Flags().String(flags.FlagKeyringBackend, flags.DefaultKeyringBackend, "Select keyring's backend (os|file|test)")
 	cmd.Flags().String(flagEnvFile, "", "Path to environment file to load (optional)")
 
 	return cmd
+}
+func readEnvs(args *initArgs) {
+	args.tag = []byte(os.Getenv("TAG"))
+	version, err := strconv.ParseUint(os.Getenv("VERSION"), 10, 32)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to parse version")
+	}
+	args.version = uint32(version)
 }
 
 // get cmd to start multi validator in-process testnet
@@ -268,23 +284,41 @@ Example:
 const nodeDirPerm = 0o755
 
 func readEnvKeys(index int) EnvKeys {
-	validatorMnemonic := os.Getenv(flagValidatorMnemonic + strconv.Itoa(index))
+	validatorMnemonic := getNonQuoteEnv(flagValidatorMnemonic + strconv.Itoa(index))
 	if validatorMnemonic == "" {
-		validatorMnemonic = os.Getenv(flagValidatorMnemonic)
+		validatorMnemonic = getNonQuoteEnv(flagValidatorMnemonic)
 	}
 	btcPubKey := os.Getenv(flagBtcPubkey + strconv.Itoa(index))
 	if btcPubKey == "" {
 		btcPubKey = os.Getenv(flagBtcPubkey)
 	}
+
+	btcPrivkey := os.Getenv(flagBtcPrivkey + strconv.Itoa(index))
+	if btcPrivkey == "" {
+		btcPrivkey = os.Getenv(flagBtcPrivkey)
+	}
 	envKeys := EnvKeys{
 		ValidatorMnemonic:   validatorMnemonic,
-		BroadcasterMnemonic: os.Getenv(flagBroadcasterMnemonic),
-		GovernanceMnemonic:  os.Getenv(flagGovernanceMnemonic),
-		FaucetMnemonic:      os.Getenv(flagFaucetMnemonic),
+		BroadcasterMnemonic: getNonQuoteEnv(flagBroadcasterMnemonic),
+		GovernanceMnemonic:  getNonQuoteEnv(flagGovernanceMnemonic),
+		FaucetMnemonic:      getNonQuoteEnv(flagFaucetMnemonic),
 		BtcPubkey:           btcPubKey,
+		BtcPrivkey:          btcPrivkey,
 	}
-	fmt.Printf("%+v", envKeys)
+	log.Debug().Any("EnvKeys", envKeys).Msg("Environment variables")
 	return envKeys
+}
+
+// Get environment variable then remove start and end quote '"'
+func getNonQuoteEnv(key string) string {
+	value := os.Getenv(key)
+	if value[0] == '"' {
+		value = value[1:]
+	}
+	if i := len(value) - 1; value[i] == '"' {
+		value = value[:i]
+	}
+	return value
 }
 
 // initTestnetFiles initializes testnet files for a testnet to be run in a separate process
@@ -299,10 +333,13 @@ func initTestnetFiles(
 	if args.chainID == "" {
 		args.chainID = fmt.Sprintf("scalar_%d-1", tmrand.Int63n(9999999999999)+1)
 	}
-	fmt.Printf("nodeConfig: %v\n", nodeConfig)
 	var (
 		validatorInfos []ValidatorInfo
 	)
+	relayer := initRelayer(args)
+
+	protocols := initProtocols(args)
+
 	// generate private keys, node IDs, and initial transactions
 	for i := 0; i < args.numValidators; i++ {
 		envKeys := readEnvKeys(i + 1)
@@ -321,22 +358,8 @@ func initTestnetFiles(
 		}
 		validatorInfos = append(validatorInfos, *validatorInfo)
 	}
-	scalarMnemonic := os.Getenv(flagScalarMnemonic)
-	scalarProtocol := ScalarProtocol{
-		EvmAddress: os.Getenv(flagEvmContractAddress),
-	}
-	if scalarMnemonic != "" {
-		privKey, address, err := createScalarAccount(scalarMnemonic)
-		if err != nil {
-			log.Debug().Err(err).Msg("Create scalar account with error")
-		}
-		scalarProtocol.ScalarPubKey = privKey.PubKey()
-		scalarProtocol.ScalarBalance = banktypes.Balance{
-			Address: address.String(),
-			Coins:   sdk.Coins{ScalarCoin},
-		}
-	}
-	if err := generateFiles(clientCtx, mbm, nodeConfig, validatorInfos, scalarProtocol, args, genBalIterator); err != nil {
+
+	if err := generateFiles(clientCtx, mbm, nodeConfig, relayer, validatorInfos, protocols, args, genBalIterator); err != nil {
 		cmd.PrintErrf("failed to initGenFiles: %s", err.Error())
 		return err
 	}
@@ -359,6 +382,50 @@ func initTestnetFiles(
 
 	cmd.PrintErrf("Successfully initialized %d node directories\n", args.numValidators)
 	return nil
+}
+func initRelayer(args initArgs) ScalarRelayer {
+	scalarMnemonic := getNonQuoteEnv(flagScalarMnemonic)
+	privKey, address, err := createScalarAccount(scalarMnemonic)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to create scalar account")
+	}
+	return ScalarRelayer{
+		PubKey: privKey.PubKey(),
+		Balance: banktypes.Balance{
+			Address: address.String(),
+			Coins:   sdk.Coins{ScalarCoin},
+		},
+	}
+}
+func initProtocols(args initArgs) []Protocol {
+	protocolConfigs, err := ParseJsonArrayConfig[ProtocolConfig](fmt.Sprintf("%s/protocols.json", args.configPath))
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to parse chains config")
+	}
+	protocols := make([]Protocol, len(protocolConfigs))
+	for i, config := range protocolConfigs {
+		protocols[i] = Protocol{
+			Tag:   config.Tag,
+			Model: config.Model,
+		}
+		if config.ScalarMnemonic != "" {
+			privKey, address, err := createScalarAccount(config.ScalarMnemonic)
+			if err != nil {
+				log.Debug().Err(err).Msg("Create scalar account with error")
+			}
+			protocols[i].PubKey = privKey.PubKey()
+			protocols[i].Balance = banktypes.Balance{
+				Address: address.String(),
+				Coins:   sdk.Coins{ScalarCoin},
+			}
+			log.Debug().Str("ProtocolMnemonic", config.ScalarMnemonic).Str("Account", address.String()).Msg("ScalarAccount")
+		}
+		if config.BitcoinPrivKey != "" {
+			privKey := secp256k1.PrivKeyFromBytes([]byte(config.BitcoinPrivKey))
+			protocols[i].BitcoinPubKey = privKey.PubKey().SerializeCompressed()
+		}
+	}
+	return protocols
 }
 
 func createPubkeyFromSecret(config *tmconfig.Config, secret []byte, pvKeyName string) (cryptotypes.PubKey, error) {
@@ -423,18 +490,20 @@ func createKeyringAccountFromMnemonic(keybase keyring.Keyring,
 		algo,
 	)
 	if err != nil {
+		log.Error().Err(err).Str("Mnemonic", mnemonic).Str("bip44path", bip44Path).Msg("[createKeyringAccountFromMnemonic] NewAccount error")
 		info, err = keybase.Key(keyName)
+		if err != nil {
+			log.Error().Err(err).Msg("[createKeyringAccountFromMnemonic] Get existing key error")
+			return nil, nil, err
+		}
 	}
-	if err != nil {
-		return nil, nil, err
-	}
+
 	ko, err := keyring.MkAccKeyOutput(info)
 	if err != nil {
 		log.Error().Err(err).Msg("[createKeyringAccountFromMnemonic] MkAccKeyOutput")
 		return nil, nil, err
 	}
 	log.Debug().Str("keyName", keyName).Msgf("MkAccKeyOutput: %v", ko)
-	// log.Debug().Str("keyName", keyName).Str("address", info.GetAddress().String()).Msg("Keyring account created")
 	return info.GetPubKey(), info.GetAddress(), nil
 }
 func storeValidatorAddress(valAddress sdk.ValAddress, keyName string, nodeDir string) error {
@@ -527,11 +596,13 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		Moniker:       nodeDirName,
 		NodeDir:       nodeDir,
 		GenFile:       nodeConfig.GenesisFile(),
-		BtcPubkey:     envKeys.BtcPubkey,
 		ValNodePubKey: valNodePubKey,
 		ValNodeBalance: banktypes.Balance{
 			Address: sdk.AccAddress(valNodePubKey.Address()).String(),
 			Coins:   sdk.Coins{ValidatorCoin},
+		},
+		AdditionalKeys: config.AdditionalKeys{
+			BtcPrivKey: envKeys.BtcPrivkey,
 		},
 	}
 
@@ -549,7 +620,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		fmt.Sprintf("m/%d'/%d'/0'/0/0",
 			PurposeValidator, uint32(index)))
 	if err != nil {
-		log.Error().Err(err).Msg("[initValidatorConfig] Create faucet keyring account from mnemonic")
+		log.Error().Err(err).Msg("[initValidatorConfig] Create validator account from Mnemonic")
 		key, err := kb.Key(ValidatorKeyName)
 		if err != nil {
 			log.Error().Err(err).Msg("[initValidatorConfig] Get faucet keyring account")
@@ -688,7 +759,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 }
 
 // Create scalar account for using in relayer
-func createScalarAccount(mnemonic string) (*secp256k1.PrivKey, sdk.AccAddress, error) {
+func createScalarAccount(mnemonic string) (*sdksecp256k1.PrivKey, sdk.AccAddress, error) {
 	// Derive the seed from mnemonic
 	seed := bip39.NewSeed(mnemonic, "")
 	path := "m/44'/118'/0'/0/0"
@@ -700,7 +771,7 @@ func createScalarAccount(mnemonic string) (*secp256k1.PrivKey, sdk.AccAddress, e
 		return nil, nil, err
 	}
 	// Create private key and get address
-	privKey := &secp256k1.PrivKey{Key: privKeyBytes}
+	privKey := &sdksecp256k1.PrivKey{Key: privKeyBytes}
 	addr := sdk.AccAddress(privKey.PubKey().Address())
 	return privKey, addr, nil
 }
@@ -734,7 +805,7 @@ func generateAccount(kr keyring.Keyring, algo keyring.SignatureAlgo, keyName str
 	return pubkey, address, nil
 }
 func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig *tmconfig.Config,
-	validatorInfos []ValidatorInfo, scalarProtocol ScalarProtocol, args initArgs, genBalIterator banktypes.GenesisBalancesIterator,
+	relayer ScalarRelayer, validatorInfos []ValidatorInfo, protocols []Protocol, args initArgs, genBalIterator banktypes.GenesisBalancesIterator,
 ) error {
 	var appRawState json.RawMessage
 	var err error
@@ -742,7 +813,7 @@ func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig
 	for i, validatorInfo := range validatorInfos {
 		validators[i] = validatorInfo.GenesisValidator
 	}
-	appGenState, err := GenerateGenesis(clientCtx, mbm, GenesisAsset, validatorInfos, scalarProtocol, args)
+	appGenState, err := GenerateGenesis(clientCtx, mbm, GenesisAsset, relayer, validatorInfos, protocols, args)
 	if err != nil {
 		fmt.Printf("GenerateGenesis err: %s\n", err.Error())
 		return err
@@ -777,7 +848,8 @@ func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig
 		}
 		createAppConfig(validatorInfo.NodeDir, args, i)
 		configPath := filepath.Join(validatorInfo.NodeDir, "config/config.toml")
-		appendBridgeConfig(configPath, args.chains)
+		appendBridgeConfig(configPath, args.configPath)
+		appendAdditionalKeys(configPath, validatorInfo)
 	}
 
 	return nil
@@ -811,6 +883,8 @@ func createAppConfig(nodeDir string, args initArgs, index int) {
 	appConfig.MinGasPrices = args.minGasPrices
 	appConfig.API.Enable = true
 	appConfig.API.Address = fmt.Sprintf("tcp://0.0.0.0:%d", 1317+index*args.portOffset)
+	appConfig.API.Swagger = true
+	appConfig.API.EnableUnsafeCORS = true
 	appConfig.GRPC.Address = fmt.Sprintf("0.0.0.0:%d", 9090+index*args.portOffset)
 	appConfig.GRPCWeb.Address = fmt.Sprintf("0.0.0.0:%d", 9091+index*args.portOffset)
 	appConfig.Telemetry.Enabled = true
@@ -850,12 +924,12 @@ func createConfigFiles(nodeConfig *tmconfig.Config, nodeDir string, args initArg
 	// }
 	return nil
 }
-func appendBridgeConfig(configPath string, supportedChainsPath string) error {
+func appendBridgeConfig(bridgeConfigPath string, configPath string) error {
 	//log.Info().Str("configPath", configPath).Str("supportedChainsPath", supportedChainsPath).Msg("Appending bridge config")
-	file, err := os.OpenFile(configPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(bridgeConfigPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 
 	if err != nil {
-		log.Error().Err(err).Str("configPath", configPath).Msg("Could not open config file")
+		log.Error().Err(err).Str("configPath", bridgeConfigPath).Msg("Could not open config file")
 		return err
 	}
 
@@ -868,13 +942,13 @@ func appendBridgeConfig(configPath string, supportedChainsPath string) error {
 	`)
 
 	if err != nil {
-		log.Error().Err(err).Str("configPath", configPath).Msg("Could not write text to config file")
+		log.Error().Err(err).Str("configPath", bridgeConfigPath).Msg("Could not write text to config file")
 		return err
 	}
 
-	if supportedChainsPath != "" {
+	if configPath != "" {
 		// Add evm bridge config
-		evmConfigs, err := ParseJsonArrayConfig[config.EVMConfig](fmt.Sprintf("%s/evm.json", supportedChainsPath))
+		evmConfigs, err := ParseJsonArrayConfig[config.EVMConfig](fmt.Sprintf("%s/chains/evm.json", configPath))
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to parse evm config")
 		}
@@ -895,7 +969,7 @@ finality_override = "confirmation"
 			log.Error().Err(err).Msg("Failed to write evm bridge config")
 		}
 
-		btcConfigs, err := ParseJsonArrayConfig[config.BTCConfig](fmt.Sprintf("%s/btc.json", supportedChainsPath))
+		btcConfigs, err := ParseJsonArrayConfig[config.BTCConfig](fmt.Sprintf("%s/chains/btc.json", configPath))
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to parse btc config")
 		}
@@ -926,6 +1000,38 @@ http_post_mode = true
 	return nil
 }
 
+func appendAdditionalKeys(configPath string, validatorInfo ValidatorInfo) error {
+	file, err := os.OpenFile(configPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Error().Err(err).Str("configPath", configPath).Msg("Could not open config file")
+		return err
+	}
+
+	defer file.Close()
+
+	_, err = file.WriteString(`
+#######################################################
+###         Additional Keys            ###
+#######################################################
+	`)
+
+	if err != nil {
+		log.Error().Err(err).Str("configPath", configPath).Msg("Could not write text to config file")
+		return err
+	}
+
+	_, err = file.WriteString(fmt.Sprintf(`
+[additional_keys]
+btc_priv_key = "%s"
+`, validatorInfo.AdditionalKeys.BtcPrivKey))
+	if err != nil {
+		log.Error().Err(err).Str("configPath", configPath).Msg("Could not write text to config file")
+		return err
+	}
+	return nil
+
+}
+
 func setCustomAppConfig(cmd *cobra.Command) error {
 	// Todo: add custom app config if needed
 	// customAppTemplate, customAppConfig := createCustomAppConfig(BaseDenom)
@@ -939,11 +1045,12 @@ func initGenFiles(
 	mbm module.BasicManager,
 	nodeConfig *tmconfig.Config,
 	coinDenom string,
+	relayer ScalarRelayer,
 	validatorInfos []ValidatorInfo,
-	scalarProtocol ScalarProtocol,
+	protocols []Protocol,
 	args initArgs,
 ) error {
-	appGenState, err := GenerateGenesis(clientCtx, mbm, coinDenom, validatorInfos, scalarProtocol, args)
+	appGenState, err := GenerateGenesis(clientCtx, mbm, coinDenom, relayer, validatorInfos, protocols, args)
 	if err != nil {
 		fmt.Printf("GenerateGenesis err: %s\n", err.Error())
 		return err

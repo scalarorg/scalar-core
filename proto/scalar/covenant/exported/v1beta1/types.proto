@@ -1,0 +1,50 @@
+syntax = "proto3";
+package scalar.covenant.exported.v1beta1;
+
+option go_package = "github.com/scalarorg/scalar-core/x/covenant/exported";
+
+import "gogoproto/gogo.proto";
+
+option (gogoproto.goproto_getters_all) = false;
+
+enum PsbtState {
+  option (gogoproto.goproto_enum_prefix) = false;
+  option (gogoproto.goproto_enum_stringer) = true;
+
+  PSBT_STATE_UNSPECIFIED = 0
+      [ (gogoproto.enumvalue_customname) = "NonExistent" ];
+  PSBT_STATE_PENDING = 1 [ (gogoproto.enumvalue_customname) = "Pending" ];
+  PSBT_STATE_CREATING = 2 [ (gogoproto.enumvalue_customname) = "Creating" ];
+  PSBT_STATE_SIGNING = 3 [ (gogoproto.enumvalue_customname) = "Signing" ];
+  PSBT_STATE_COMPLETED = 4 [ (gogoproto.enumvalue_customname) = "Completed" ];
+}
+
+message TapScriptSig {
+  bytes key_x_only = 1 [ (gogoproto.customtype) = "KeyXOnly" ];
+  bytes leaf_hash = 2 [ (gogoproto.customtype) = "LeafHash" ];
+  bytes signature = 3 [ (gogoproto.customtype) = "Signature" ];
+}
+
+message TapScriptSigsList {
+  repeated TapScriptSig list = 1 [ (gogoproto.nullable) = false ];
+}
+
+message TapScriptSigsEntry {
+  uint64 index = 1;
+  TapScriptSigsList sigs = 2 [ (gogoproto.nullable) = false ];
+}
+
+// The reason we use a list instead of a map is because the map is not ensured
+// the deterministic order of the entries
+message TapScriptSigsMap {
+  repeated TapScriptSigsEntry inner = 1 [ (gogoproto.nullable) = false ];
+}
+
+enum KeyState {
+  option (gogoproto.goproto_enum_prefix) = false;
+  option (gogoproto.goproto_enum_stringer) = true;
+
+  KEY_STATE_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Inactive" ];
+  KEY_STATE_ASSIGNED = 1 [ (gogoproto.enumvalue_customname) = "Assigned" ];
+  KEY_STATE_ACTIVE = 2 [ (gogoproto.enumvalue_customname) = "Active" ];
+}

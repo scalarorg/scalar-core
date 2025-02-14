@@ -120,6 +120,7 @@ func NewPendingCrossChainTransfer(id uint64, recipient CrossChainAddress, asset 
 	return NewCrossChainTransfer(id, recipient, asset, Pending)
 }
 
+// Deprecated: Use NewCrossChainTransferWithSourceTxHash instead
 // NewCrossChainTransfer returns a CrossChainTransfer
 func NewCrossChainTransfer(id uint64, recipient CrossChainAddress, asset sdk.Coin, state TransferState) CrossChainTransfer {
 	return CrossChainTransfer{
@@ -127,6 +128,16 @@ func NewCrossChainTransfer(id uint64, recipient CrossChainAddress, asset sdk.Coi
 		Recipient: recipient,
 		Asset:     asset,
 		State:     state,
+	}
+}
+
+func NewCrossChainTransferWithSourceTxHash(id uint64, sourceTxHash common.Hash, recipient CrossChainAddress, asset sdk.Coin, state TransferState) CrossChainTransfer {
+	return CrossChainTransfer{
+		ID:           TransferID(id),
+		Recipient:    recipient,
+		Asset:        asset,
+		State:        state,
+		SourceTxHash: sourceTxHash.Bytes(),
 	}
 }
 
@@ -299,6 +310,20 @@ func NewGeneralMessage(id string, sender CrossChainAddress, recipient CrossChain
 		Asset:         asset,
 		SourceTxID:    sourceTxID,
 		SourceTxIndex: sourceTxIndex,
+	}
+}
+
+func NewGeneralMessageWithPayload(id string, sender CrossChainAddress, recipient CrossChainAddress, payloadHash []byte, sourceTxID []byte, sourceTxIndex uint64, asset *sdk.Coin, payload []byte) GeneralMessage {
+	return GeneralMessage{
+		ID:            id,
+		Sender:        sender,
+		Recipient:     recipient,
+		PayloadHash:   payloadHash,
+		Status:        Approved,
+		Asset:         asset,
+		SourceTxID:    sourceTxID,
+		SourceTxIndex: sourceTxIndex,
+		Payload:       payload,
 	}
 }
 

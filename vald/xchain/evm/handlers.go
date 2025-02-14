@@ -13,10 +13,10 @@ import (
 	"github.com/scalarorg/scalar-core/utils/errors"
 	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/utils/slices"
-	"github.com/scalarorg/scalar-core/vald/xchain"
+	xcommon "github.com/scalarorg/scalar-core/vald/xchain/common"
 )
 
-func (client *EthereumClient) GetTxReceiptsIfFinalized(txIDs []xchain.Hash, confHeight uint64) ([]ETHTxResult, error) {
+func (client *EthereumClient) GetTxReceiptsIfFinalized(txIDs []xcommon.Hash, confHeight uint64) ([]ETHTxResult, error) {
 	txResults, err := client.GetTransactions(txIDs)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(
@@ -25,22 +25,22 @@ func (client *EthereumClient) GetTxReceiptsIfFinalized(txIDs []xchain.Hash, conf
 		)
 	}
 
-	return slices.Map(txResults, func(receipt ETHTxResult) results.Result[xchain.TxReceipt] {
-		return results.Pipe(results.Result[xchain.TxReceipt](receipt), func(receipt xchain.TxReceipt) results.Result[xchain.TxReceipt] {
+	return slices.Map(txResults, func(receipt ETHTxResult) results.Result[xcommon.TxReceipt] {
+		return results.Pipe(results.Result[xcommon.TxReceipt](receipt), func(receipt xcommon.TxReceipt) results.Result[xcommon.TxReceipt] {
 			ethReceipt := receipt.(ETHTxReceipt)
 			isFinalized, err := client.isFinalized(ethReceipt, confHeight)
 			if err != nil {
-				return results.FromErr[xchain.TxReceipt](sdkerrors.Wrapf(errors.With(err, "tx_id", ethReceipt.TxHash.Hex()),
+				return results.FromErr[xcommon.TxReceipt](sdkerrors.Wrapf(errors.With(err, "tx_id", ethReceipt.TxHash.Hex()),
 					"cannot determine if the transaction %s is finalized", ethReceipt.TxHash.Hex()),
 				)
 			}
 
 			if !isFinalized {
-				return results.FromErr[xchain.TxReceipt](xchain.ErrNotFinalized)
+				return results.FromErr[xcommon.TxReceipt](xcommon.ErrNotFinalized)
 			}
 
 			if ethReceipt.Status != types.ReceiptStatusSuccessful {
-				return results.FromErr[xchain.TxReceipt](xchain.ErrTxFailed)
+				return results.FromErr[xcommon.TxReceipt](xcommon.ErrTxFailed)
 			}
 
 			return results.FromOk(receipt)
@@ -48,9 +48,9 @@ func (client *EthereumClient) GetTxReceiptsIfFinalized(txIDs []xchain.Hash, conf
 	}), nil
 }
 
-func (c *EthereumClient) GetTransactions(txIDs []xchain.Hash) ([]ETHTxResult, error) {
+func (c *EthereumClient) GetTransactions(txIDs []xcommon.Hash) ([]ETHTxResult, error) {
 	ctx := context.Background()
-	batch := slices.Map(txIDs, func(txHash xchain.Hash) rpc.BatchElem {
+	batch := slices.Map(txIDs, func(txHash xcommon.Hash) rpc.BatchElem {
 		var receipt *types.Receipt
 		return rpc.BatchElem{
 			Method: "eth_getTransactionReceipt",
@@ -67,27 +67,27 @@ func (c *EthereumClient) GetTransactions(txIDs []xchain.Hash) ([]ETHTxResult, er
 
 	return slices.Map(batch, func(elem rpc.BatchElem) ETHTxResult {
 		if elem.Error != nil {
-			return ETHTxResult(results.FromErr[xchain.TxReceipt](elem.Error))
+			return ETHTxResult(results.FromErr[xcommon.TxReceipt](elem.Error))
 		}
 
 		receipt := elem.Result.(**ETHTxReceipt)
 		if *receipt == nil {
-			return ETHTxResult(results.FromErr[xchain.TxReceipt](ethereum.NotFound))
+			return ETHTxResult(results.FromErr[xcommon.TxReceipt](ethereum.NotFound))
 		}
 
-		return ETHTxResult(results.FromOk(xchain.TxReceipt(**receipt)))
+		return ETHTxResult(results.FromOk(xcommon.TxReceipt(**receipt)))
 	}), nil
 }
 
-func (c *EthereumClient) GetTransaction(txID xchain.Hash) (ETHTxResult, error) {
+func (c *EthereumClient) GetTransaction(txID xcommon.Hash) (ETHTxResult, error) {
 	ctx := context.Background()
 	receipt := &types.Receipt{}
 
 	if err := c.rpc.CallContext(ctx, receipt, "eth_getTransactionReceipt", txID); err != nil {
-		return ETHTxResult(results.FromErr[xchain.TxReceipt](err)), err
+		return ETHTxResult(results.FromErr[xcommon.TxReceipt](err)), err
 	}
 
-	return ETHTxResult(results.FromOk(xchain.TxReceipt(*receipt))), nil
+	return ETHTxResult(results.FromOk(xcommon.TxReceipt(*receipt))), nil
 }
 
 func (c *EthereumClient) LatestFinalizedBlockHeight(_ uint64) (uint64, error) {

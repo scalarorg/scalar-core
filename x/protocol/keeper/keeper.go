@@ -1,14 +1,19 @@
 package keeper
 
 import (
+	"bytes"
 	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/x/nexus/exported"
+	pexported "github.com/scalarorg/scalar-core/x/protocol/exported"
 	"github.com/scalarorg/scalar-core/x/protocol/types"
 	"github.com/tendermint/tendermint/libs/log"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 var (
@@ -47,12 +52,12 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 }
 
 func (k Keeper) SetProtocol(ctx sdk.Context, protocol *types.Protocol) {
-	k.getStore(ctx).Set(protocolPrefix.Append(utils.KeyFromBz(protocol.Address)), protocol)
+	k.getStore(ctx).Set(protocolPrefix.Append(utils.KeyFromBz(protocol.ScalarAddress)), protocol)
 }
 func (k Keeper) SetProtocols(ctx sdk.Context, protocols []*types.Protocol) {
 	store := k.getStore(ctx)
 	for _, protocol := range protocols {
-		store.Set(protocolPrefix.Append(utils.KeyFromBz(protocol.Address)), protocol)
+		store.Set(protocolPrefix.Append(utils.KeyFromBz(protocol.ScalarAddress)), protocol)
 	}
 }
 func (k Keeper) GetAllProtocols(ctx sdk.Context) ([]*types.Protocol, bool) {
@@ -83,13 +88,72 @@ func (k Keeper) findProtocols(ctx sdk.Context, req *types.ProtocolsRequest) ([]*
 	return protocols, true
 }
 
+func (k Keeper) getProtocolByAddress(ctx sdk.Context, address []byte) (*types.Protocol, bool) {
+	store := k.getStore(ctx)
+	iter := store.Iterator(protocolPrefix)
+	defer utils.CloseLogError(iter, k.Logger(ctx))
+	for ; iter.Valid(); iter.Next() {
+		protocol := types.Protocol{}
+		iter.UnmarshalValue(&protocol)
+		if bytes.Compare(protocol.ScalarAddress, address) == 0 {
+			return &protocol, true
+		}
+	}
+	return nil, false
+}
+
+/*
+ * In scalar each asset is defined uniquely by its original chain (bitcoin networks: mainnet or testnets) and name.
+ * This function finds the protocol that supports the given asset.
+ */
+func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, originChain exported.ChainName, minorChain exported.ChainName, symbol string) (*pexported.ProtocolInfo, error) {
+	//ctx := sdk.UnwrapSDKContext(c)
+
+	protocols, ok := k.GetAllProtocols(ctx)
+	if !ok {
+		return nil, status.Errorf(codes.NotFound, "protocol not found")
+	}
+	for _, protocol := range protocols {
+		if originChain == protocol.Asset.Chain && symbol == protocol.Asset.Name {
+			//Check if the minor chain is supported by the protocol
+			for _, chain := range protocol.Chains {
+				if chain.Chain == minorChain {
+					return protocol.ToProtocolInfo(), nil
+				}
+			}
+		}
+	}
+
+	return nil, status.Errorf(codes.NotFound, "protocol with asset %s on the chain %s does not support transfering to the minor chain %s", symbol, originChain, minorChain)
+}
+
+func (k Keeper) FindProtocolByInternalAddress(ctx sdk.Context, originChain exported.ChainName, minorChain exported.ChainName, internalAddress string) (*pexported.ProtocolInfo, error) {
+	protocols, ok := k.GetAllProtocols(ctx)
+	if !ok {
+		return nil, status.Errorf(codes.NotFound, "protocol not found")
+	}
+
+	for _, protocol := range protocols {
+		if originChain == protocol.Asset.Chain {
+			err := protocol.IsAssetSupported(minorChain, internalAddress)
+			if err != nil {
+				k.Logger(ctx).Error("error checking if asset is supported", "error", err)
+				continue
+			}
+			return protocol.ToProtocolInfo(), nil
+		}
+	}
+
+	return nil, status.Errorf(codes.NotFound, "protocol with origin chain %s does not support transfering to the token address %s on the minor chain %s",
+		originChain, internalAddress, minorChain)
+}
+
 // Todo: Implement Matching function
 func isMatch(protocol *types.Protocol, req *types.ProtocolsRequest) bool {
-	match := true
-	if req.Address != "" {
-
+	if req.Name != "" {
+		return protocol.Name == req.Name
 	}
-	return match
+	return true
 }
 func (k Keeper) getStore(ctx sdk.Context) utils.KVStore {
 	return utils.NewNormalizedStore(ctx.KVStore(k.storeKey), k.cdc)

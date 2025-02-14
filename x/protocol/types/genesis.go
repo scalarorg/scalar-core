@@ -1,10 +1,8 @@
 package types
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ethereum/go-ethereum/common"
-	evmtypes "github.com/scalarorg/scalar-core/x/chains/types"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
+	"github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 func NewGenesisState(protocols []*Protocol) *GenesisState {
@@ -23,26 +21,31 @@ func DefaultGenesisState() *GenesisState {
 }
 
 func DefaultProtocol() *Protocol {
-	sepoliaErc20token := evmtypes.ERC20TokenMetadata{
-		Asset:        "sBtc",
-		ChainID:      sdk.NewInt(1115511),
-		TokenAddress: evmtypes.Address(common.HexToAddress("0x5f214989a5f49ab3c56fd5003c2858e24959c018")),
-		Status:       evmtypes.Confirmed,
-		Details: evmtypes.TokenDetails{
-			TokenName: "pBtc",
-			Symbol:    "pBtc",
-			Decimals:  8,
-			Capacity:  sdk.NewInt(100000000),
-		},
+	// sepoliaErc20token := evmtypes.ERC20TokenMetadata{
+	// 	Asset:        "sBtc",
+	// 	ChainID:      sdk.NewInt(1115511),
+	// 	TokenAddress: evmtypes.Address(common.HexToAddress("0x5f214989a5f49ab3c56fd5003c2858e24959c018")),
+	// 	Status:       evmtypes.Confirmed,
+	// 	Details: evmtypes.TokenDetails{
+	// 		TokenName: "pBtc",
+	// 		Symbol:    "pBtc",
+	// 		Decimals:  8,
+	// 		Capacity:  sdk.NewInt(100000000),
+	// 	},
+	// }
+	sepoliaToken := SupportedChain{
+		Chain:   exported.ChainName("evm|111551111"),
+		Address: "0xaBbeEcbBfE4732b9DA50CE6b298EDf47E351Fc05",
 	}
-	sepoliaChain := SupportedChain{
-		Token: &SupportedChain_Erc20{Erc20: &sepoliaErc20token},
+	bnbToken := SupportedChain{
+		Chain:   exported.ChainName("evm|97"),
+		Address: "0xaa36A8a917D1804376A7b6Cd54AE1C74Cf83654d",
 	}
 	protocol := &Protocol{
 		Name:           DefaultProtocolName,
 		CustodianGroup: types.DefaultCustodianGroup(),
 		Chains: []*SupportedChain{
-			&sepoliaChain,
+			&sepoliaToken, &bnbToken,
 		},
 	}
 	return protocol

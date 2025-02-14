@@ -96,6 +96,20 @@ func (pk PublicKey) String() string {
 	return hex.EncodeToString(pk)
 }
 
+func (pk PublicKey) FromHex(s string) (PublicKey, error) {
+	pkBytes, err := hex.DecodeString(s)
+	if err != nil {
+		return nil, err
+	}
+
+	pk = PublicKey(pkBytes)
+	if err := pk.ValidateBasic(); err != nil {
+		return nil, err
+	}
+
+	return pk, nil
+}
+
 // ToECDSAPubKey returns the ECDSA public key
 func (pk PublicKey) ToECDSAPubKey() ecdsa.PublicKey {
 	btcecKey := funcs.Must(btcec.ParsePubKey(pk))

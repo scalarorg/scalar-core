@@ -52,7 +52,7 @@ func (sig Signature) toECDSASignature() ec.Signature {
 	return *funcs.Must(ec.ParseDERSignature(sig))
 }
 
-func sortAddresses[T sdk.Address](addrs []T) []T {
+func SortAddresses[T sdk.Address](addrs []T) []T {
 	sorted := make([]T, len(addrs))
 	copy(sorted, addrs)
 

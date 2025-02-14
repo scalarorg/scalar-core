@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "scalar/chains/v1beta1/query.proto";
 import "scalar/chains/v1beta1/tx.proto";
 
+
 option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
 option (gogoproto.goproto_registration) = true;
 
@@ -84,6 +85,20 @@ service MsgService {
   rpc SignCommands(SignCommandsRequest) returns (SignCommandsResponse) {
     option (google.api.http) = {
       post: "/scalar/chains/v1beta1/sign_commands"
+      body: "*"
+    };
+  }
+
+  rpc SignBtcCommand(SignBtcCommandsRequest) returns (SignCommandsResponse) {
+    option (google.api.http) = {
+      post: "/scalar/chains/v1beta1/sign_btc_commands"
+      body: "*"
+    };
+  }
+
+  rpc SignPsbtCommand(SignPsbtCommandRequest) returns (SignPsbtCommandResponse) {
+    option (google.api.http) = {
+      post: "/scalar/chains/v1beta1/sign_btc_commands"
       body: "*"
     };
   }

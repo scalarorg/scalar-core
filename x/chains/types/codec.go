@@ -20,6 +20,8 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&CreateBurnTokensRequest{},
 		&CreateTransferOperatorshipRequest{},
 		&SignCommandsRequest{},
+		&SignBtcCommandsRequest{},
+		&SignPsbtCommandRequest{},
 		&AddChainRequest{},
 		&SetGatewayRequest{},
 		&RetryFailedEventRequest{},

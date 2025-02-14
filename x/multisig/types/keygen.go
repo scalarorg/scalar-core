@@ -150,7 +150,7 @@ func (m *KeygenSession) addKey(participant sdk.ValAddress, pubKey exported.Publi
 
 // GetParticipants returns the participants of the given key
 func (m Key) GetParticipants() []sdk.ValAddress {
-	return sortAddresses(
+	return SortAddresses(
 		slices.Map(maps.Keys(m.PubKeys), func(a string) sdk.ValAddress { return funcs.Must(sdk.ValAddressFromBech32(a)) }),
 	)
 }

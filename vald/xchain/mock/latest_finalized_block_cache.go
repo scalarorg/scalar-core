@@ -4,13 +4,13 @@
 package mock
 
 import (
-	"github.com/scalarorg/scalar-core/vald/xchain"
+	xcommon "github.com/scalarorg/scalar-core/vald/xchain/common"
 	"sync"
 )
 
 // Ensure, that LatestFinalizedBlockCacheMock does implement xchain.LatestFinalizedBlockCache.
 // If this is not the case, regenerate this file with moq.
-var _ xchain.LatestFinalizedBlockCache = &LatestFinalizedBlockCacheMock{}
+var _ xcommon.LatestFinalizedBlockCache = &LatestFinalizedBlockCacheMock{}
 
 // LatestFinalizedBlockCacheMock is a mock implementation of xchain.LatestFinalizedBlockCache.
 //

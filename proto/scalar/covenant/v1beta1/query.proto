@@ -2,7 +2,11 @@ syntax = "proto3";
 package scalar.covenant.v1beta1;
 
 import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
 import "scalar/covenant/v1beta1/types.proto";
+import "scalar/covenant/v1beta1/params.proto";
+import "scalar/multisig/v1beta1/query.proto";
+import "scalar/multisig/exported/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
@@ -12,11 +16,9 @@ message CustodiansRequest {
   Status status = 3;
 }
 
-message CustodiansResponse {
-  repeated Custodian custodians = 1;
-}
+message CustodiansResponse { repeated Custodian custodians = 1; }
 
-message CustodianGroupsRequest {
+message GroupsRequest {
   string uid = 1;
   string name = 2;
   bytes group_pubkey = 3;
@@ -24,6 +26,34 @@ message CustodianGroupsRequest {
   Status status = 5;
 }
 
-message CustodianGroupsResponse {
-  repeated CustodianGroup groups = 1;
+message GroupsResponse { repeated CustodianGroup groups = 1; }
+
+// ParamsRequest represents a message that queries the params
+message ParamsRequest {}
+
+message ParamsResponse { Params params = 1 [ (gogoproto.nullable) = false ]; }
+
+message KeyRequest { string chain = 1; }
+
+// KeyResponse contains the key corresponding to a given key id.
+message KeyResponse {
+  string key_id = 1 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+  ];
+  multisig.exported.v1beta1.KeyState state = 2;
+  int64 started_at = 3;
+  google.protobuf.Timestamp started_at_timestamp = 4
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
+  bytes threshold_weight = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
+  bytes bonded_weight = 6 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
+  // Keygen participants in descending order by weight
+  repeated multisig.v1beta1.KeygenParticipant participants = 7 [ (gogoproto.nullable) = false ];
 }

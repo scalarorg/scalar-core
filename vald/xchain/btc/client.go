@@ -7,42 +7,44 @@ import (
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcd/rpcclient"
 	"github.com/btcsuite/btcd/wire"
+	btcChain "github.com/scalarorg/bitcoin-vault/go-utils/btc"
 	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/vald/config"
-	"github.com/scalarorg/scalar-core/vald/xchain"
-	btcChain "github.com/scalarorg/bitcoin-vault/go-utils/chain"
+	"github.com/scalarorg/scalar-core/vald/xchain/common"
 )
 
 type BtcClient struct {
 	client                    *rpcclient.Client
 	cfg                       *rpcclient.ConnConfig
-	blockHeightCache          *BlockHeightCache
-	latestFinalizedBlockCache xchain.LatestFinalizedBlockCache
+	blockCache                *BlockCache
+	latestFinalizedBlockCache common.LatestFinalizedBlockCache
 }
 type BTCTxReceipt struct {
-	Raw        btcjson.TxRawResult
-	PrevTxOuts []*btcjson.Vout
-	MsgTx      *wire.MsgTx
+	Raw *btcjson.TxRawResult
+	// blockIndex field in "gettransaction" and the index of the transaction in the block in "getblock"
+	TransactionIndex int
+	PrevTxOuts       []*btcjson.Vout
+	MsgTx            *wire.MsgTx
 }
 
-type BTCTxResult = results.Result[xchain.TxReceipt]
+type BTCTxResult = results.Result[common.TxReceipt]
 
-var _ xchain.Client = &BtcClient{}
+var _ common.Client = &BtcClient{}
 
-func NewClient(cfg *config.BTCConfig) (xchain.Client, error) {
-	rpcConfig := mapBTCConfigToRPCConfig(cfg)
+func NewClient(cfg *config.BTCConfig) (common.Client, error) {
+	rpcConfig := MapBTCConfigToRPCConfig(cfg)
 	rpcClient, error := rpcclient.New(rpcConfig, nil)
 	if error != nil {
 		return nil, error
 	}
 
-	blockHeightCache := NewBlockHeightCache()
-	latestFinalizedBlockCache := xchain.NewLatestFinalizedBlockCache()
+	blockCache := NewBlockCache()
+	latestFinalizedBlockCache := common.NewLatestFinalizedBlockCache()
 
 	client := &BtcClient{
 		client:                    rpcClient,
 		cfg:                       rpcConfig,
-		blockHeightCache:          blockHeightCache,
+		blockCache:                blockCache,
 		latestFinalizedBlockCache: latestFinalizedBlockCache,
 	}
 
@@ -50,14 +52,13 @@ func NewClient(cfg *config.BTCConfig) (xchain.Client, error) {
 }
 
 func validateChain(cfg *config.BTCConfig) error {
-	_, ok := btcChain.BtcChainConfigValueInt[cfg.Chain]
-	if !ok {
+	if btcChain.BtcChainsRecords().GetChainParamsByName(cfg.Chain) == nil {
 		return fmt.Errorf("invalid chain %s", cfg.Chain)
 	}
 	return nil
 }
 
-func mapBTCConfigToRPCConfig(cfg *config.BTCConfig) *rpcclient.ConnConfig {
+func MapBTCConfigToRPCConfig(cfg *config.BTCConfig) *rpcclient.ConnConfig {
 	err := validateChain(cfg)
 	if err != nil {
 		panic("invalid btc chain when setting the params")
@@ -65,8 +66,8 @@ func mapBTCConfigToRPCConfig(cfg *config.BTCConfig) *rpcclient.ConnConfig {
 
 	params := cfg.Chain
 
-	if params == btcChain.ChaincfgTestnet4ParamsName {
-		params = chaincfg.TestNet3Params.Name
+	if params == "testnet4" {
+		params = chaincfg.TestNet3Params.Name // TODO: update this field when btc supports
 	}
 
 	return &rpcclient.ConnConfig{

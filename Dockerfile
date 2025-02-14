@@ -1,15 +1,3 @@
-# syntax=docker/dockerfile:experimental
-
-FROM rust:1.82-alpine3.20 as libbuilder
-RUN apk add --no-cache git libc-dev
-# Build bitcoin-vault lib
-# Todo: select a specific feature, eg ffi
-RUN git clone https://github.com/scalarorg/bitcoin-vault.git
-WORKDIR /bitcoin-vault
-RUN cargo build --release
-
-# Buil scalar-core
-
 FROM golang:1.23.3-alpine3.20 as build
 
 ARG ARCH=x86_64
@@ -23,8 +11,7 @@ RUN apk add --no-cache --update \
   build-base \
   linux-headers
 
-# Copy the bitcoin-vault lib
-COPY --from=libbuilder /bitcoin-vault/target/release/libbitcoin_vault_ffi.* /usr/lib/
+COPY --from=scalarorg/bitcoin-vault /bitcoin-vault/target/release/libbitcoin_vault_ffi.* /usr/lib/
 
 WORKDIR scalar
 
@@ -47,10 +34,18 @@ RUN make LOCAL_LIB_PATH="/usr/lib"  MUSLC="${WASM}" WASM="${WASM}" IBC_WASM_HOOK
 
 FROM alpine:3.20
 
+# Install libgcc and libstdc++ for bitcoin-vault ffi
+RUN apk add --no-cache \
+  libgcc \
+  libstdc++
+
 ARG USER_ID=1000
 ARG GROUP_ID=1001
 RUN apk add jq bash
+
 COPY --from=build /go/scalar/bin/* /usr/local/bin/
+COPY --from=build /usr/lib/libbitcoin_vault_ffi.* /usr/lib/
+
 RUN addgroup -S -g ${GROUP_ID} scalard && adduser -S -u ${USER_ID} scalard -G scalard
 USER scalard
 COPY ./entrypoint.sh /entrypoint.sh

@@ -6,44 +6,30 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	gethParams "github.com/ethereum/go-ethereum/params"
+	"github.com/scalarorg/bitcoin-vault/go-utils/types"
 	utils "github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
-	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
-func DefaultChainParams(chainId sdk.Int, chain nexus.ChainName, networkKind NetworkKind, metadata map[string]string) Params {
-	return Params{
-		ChainID:             chainId,
-		Chain:               chain,
-		ConfirmationHeight:  2,
-		NetworkKind:         networkKind,
-		RevoteLockingPeriod: 50,
-		VotingThreshold:     utils.Threshold{Numerator: 51, Denominator: 100},
-		MinVoterCount:       1,
-		CommandsGasLimit:    5000000,
-		VotingGracePeriod:   50,
-		EndBlockerLimit:     50,
-		TransferLimit:       1000,
-		Metadata:            metadata,
-	}
-}
 func DefaultGenesisState() GenesisState {
 	return GenesisState{
 		Chains: []GenesisState_Chain{
 			{
-				Params:              DefaultChainParams(BTCMainnetChainID, exported.Bitcoin.Name, Mainnet, map[string]string{}),
+				Params:              DefaultChainParams(BTCMainnetChainID, exported.Bitcoin.Name, types.NetworkKindMainnet, map[string]string{}),
 				CommandQueue:        utils.QueueState{},
 				ConfirmedSourceTxs:  []SourceTx{},
 				CommandBatches:      []CommandBatchMetadata{},
 				Events:              []Event{},
+				Tokens:              []ERC20TokenMetadata{},
 				ConfirmedEventQueue: utils.QueueState{},
 			},
 			{
-				Params:              DefaultChainParams(sdk.NewIntFromBigInt(gethParams.MainnetChainConfig.ChainID), exported.Ethereum.Name, Mainnet, map[string]string{}),
+				Params:              DefaultChainParams(sdk.NewIntFromBigInt(gethParams.MainnetChainConfig.ChainID), exported.Ethereum.Name, types.NetworkKindMainnet, map[string]string{}),
 				CommandQueue:        utils.QueueState{},
 				ConfirmedSourceTxs:  []SourceTx{},
 				CommandBatches:      []CommandBatchMetadata{},
 				Events:              []Event{},
+				Tokens:              []ERC20TokenMetadata{},
 				ConfirmedEventQueue: utils.QueueState{},
 			},
 		},

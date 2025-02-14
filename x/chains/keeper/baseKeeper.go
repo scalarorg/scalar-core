@@ -84,8 +84,6 @@ func (k BaseKeeper) CreateChain(ctx sdk.Context, params types.Params) (err error
 
 	k.getBaseStore(ctx).SetRawNew(chainKey, []byte(params.Chain.String()))
 
-	clog.Red("CreateChain", "params", params)
-
 	k.createSubspace(ctx, params.Chain).SetParamSet(ctx, &params)
 
 	return nil

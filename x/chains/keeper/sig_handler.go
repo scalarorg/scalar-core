@@ -61,7 +61,7 @@ func (s sigHandler) HandleFailed(ctx sdk.Context, moduleMetadata codec.ProtoMars
 func (s sigHandler) getCommandBatch(ctx sdk.Context, sigMetadata *types.SigMetadata) (types.CommandBatch, error) {
 	ck, err := s.keeper.ForChain(ctx, sigMetadata.Chain)
 	if err != nil {
-		return types.CommandBatch{}, fmt.Errorf("chain %s does not exist as an EVM chain", sigMetadata.Chain)
+		return types.CommandBatch{}, fmt.Errorf("chain %s does not exist as a chain", sigMetadata.Chain)
 	}
 
 	commandBatch := ck.GetBatchByID(ctx, sigMetadata.CommandBatchID)

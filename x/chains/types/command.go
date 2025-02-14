@@ -10,8 +10,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
+	proto "github.com/gogo/protobuf/proto"
+	"github.com/stoewer/go-strcase"
 
-	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
@@ -28,6 +29,18 @@ const (
 	approveContractCallMaxGasCost         = 100000
 )
 
+func (c CommandType) String() string {
+	return strcase.LowerCamelCase(strings.TrimPrefix(proto.EnumName(CommandType_name, int32(c)), "COMMAND_TYPE_"))
+}
+
+// ValidateBasic returns an error if the given command type is invalid
+func (c CommandType) ValidateBasic() error {
+	if _, ok := CommandType_name[int32(c)]; !ok || c == COMMAND_TYPE_UNSPECIFIED {
+		return fmt.Errorf("%s is not a valid command type", c.String())
+	}
+	return nil
+}
+
 var (
 	stringType       = funcs.Must(abi.NewType("string", "string", nil))
 	addressType      = funcs.Must(abi.NewType("address", "address", nil))
@@ -43,51 +56,7 @@ var (
 	transferMultisigArguments            = abi.Arguments{{Type: addressesType}, {Type: uint256ArrayType}, {Type: uint256Type}}
 	approveContractCallArguments         = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: addressType}, {Type: bytes32Type}, {Type: bytes32Type}, {Type: uint256Type}}
 	approveContractCallWithMintArguments = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: addressType}, {Type: bytes32Type}, {Type: stringType}, {Type: uint256Type}, {Type: bytes32Type}, {Type: uint256Type}}
-
-	approveDestCallArguments = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: addressType}, {Type: bytes32Type}, {Type: bytes32Type}, {Type: uint256Type}}
 )
-
-// TODO: design for generic bridge call
-
-func NewApproveBridgeCallCommandGeneric(
-	chainID sdk.Int,
-	keyID multisig.KeyID,
-	contractAddress common.Address,
-	payloadHash common.Hash,
-	sourceTxID common.Hash,
-	sourceChain nexus.ChainName,
-	sender string,
-	sourceEventIndex uint64,
-	ID string,
-) Command {
-	commandID := NewCommandID([]byte(ID), chainID)
-	clog.Redf("[Chains] commandID: %+v", commandID.Hex())
-	return Command{
-		ID:         commandID,
-		Type:       COMMAND_TYPE_APPROVE_BRIDGE_CALL,
-		Params:     createApproveBridgeCallParamsGeneric(contractAddress, payloadHash, sourceTxID, string(sourceChain), sender, sourceEventIndex),
-		KeyID:      keyID,
-		MaxGasCost: approveContractCallMaxGasCost,
-	}
-}
-
-func createApproveBridgeCallParamsGeneric(
-	contractAddress common.Address,
-	payloadHash common.Hash,
-	txID common.Hash,
-	sourceChain string,
-	sender string,
-	sourceEventIndex uint64) []byte {
-
-	return funcs.Must(approveDestCallArguments.Pack(
-		sourceChain,
-		sender,
-		contractAddress,
-		payloadHash,
-		txID,
-		new(big.Int).SetUint64(sourceEventIndex),
-	))
-}
 
 // NewBurnTokenCommand creates a command to burn tokens with the given burner's information
 func NewBurnTokenCommand(chainID sdk.Int, keyID multisig.KeyID, height int64, burnerInfo BurnerInfo, isTokenExternal bool) Command {
@@ -120,9 +89,15 @@ func NewDeployTokenCommand(chainID sdk.Int, keyID multisig.KeyID, asset string, 
 }
 
 // NewMintTokenCommand creates a command to mint token to the given address
-func NewMintTokenCommand(keyID multisig.KeyID, id nexus.TransferID, symbol string, address common.Address, amount *big.Int) Command {
+func NewMintTokenCommand(keyID multisig.KeyID, transfer nexus.CrossChainTransfer, symbol string, address common.Address, amount *big.Int) Command {
+	var commandID CommandID
+	if len(transfer.SourceTxHash) == commandIDSize {
+		commandID = CommandID(transfer.SourceTxHash)
+	} else {
+		commandID = CommandIDFromTransferID(transfer.ID)
+	}
 	return Command{
-		ID:         CommandIDFromTransferID(id),
+		ID:         commandID,
 		Type:       COMMAND_TYPE_MINT_TOKEN,
 		Params:     createMintTokenParams(symbol, address, amount),
 		KeyID:      keyID,
@@ -169,23 +144,29 @@ func NewApproveContractCallCommand(
 	}
 }
 
+type ApproveContractCallCommandParams struct {
+	ContractAddress  common.Address
+	PayloadHash      common.Hash
+	SourceTxID       common.Hash
+	SourceChain      nexus.ChainName
+	Sender           string
+	SourceEventIndex uint64
+	Payload          []byte
+}
+
 // NewApproveContractCallCommandGeneric creates a command to approve contract call
 func NewApproveContractCallCommandGeneric(
 	chainID sdk.Int,
 	keyID multisig.KeyID,
-	contractAddress common.Address,
-	payloadHash common.Hash,
-	sourceTxID common.Hash,
-	sourceChain nexus.ChainName,
-	sender string,
-	sourceEventIndex uint64,
 	ID string,
+	params *ApproveContractCallCommandParams,
 ) Command {
 	commandID := NewCommandID([]byte(ID), chainID)
 	return Command{
 		ID:         commandID,
 		Type:       COMMAND_TYPE_APPROVE_CONTRACT_CALL,
-		Params:     createApproveContractCallParamsGeneric(contractAddress, payloadHash, sourceTxID, string(sourceChain), sender, sourceEventIndex),
+		Params:     createApproveContractCallParamsGeneric(params),
+		Payload:    params.Payload,
 		KeyID:      keyID,
 		MaxGasCost: approveContractCallMaxGasCost,
 	}
@@ -214,6 +195,30 @@ func NewApproveContractCallWithMintCommand(
 	}
 }
 
+func NewApproveContractCallWithMintCommandWithPayload(
+	chainID sdk.Int,
+	keyID multisig.KeyID,
+	sourceChain nexus.ChainName,
+	sourceTxID Hash,
+	sourceEventIndex uint64,
+	event EventContractCallWithToken,
+	amount sdk.Uint,
+	symbol string,
+	payload []byte,
+) Command {
+	sourceEventIndexBz := make([]byte, 8)
+	binary.LittleEndian.PutUint64(sourceEventIndexBz, sourceEventIndex)
+
+	return Command{
+		ID:         NewCommandID(append(sourceTxID.Bytes(), sourceEventIndexBz...), chainID),
+		Type:       COMMAND_TYPE_APPROVE_CONTRACT_CALL_WITH_MINT,
+		Params:     createApproveContractCallWithMintParams(sourceChain, sourceTxID, sourceEventIndex, event, amount, symbol),
+		Payload:    payload,
+		KeyID:      keyID,
+		MaxGasCost: uint32(approveContractCallWithMintMaxGasCost),
+	}
+}
+
 // NewApproveContractCallWithMintGeneric creates a command to approve contract call with mint
 func NewApproveContractCallWithMintGeneric(
 	chainID sdk.Int,
@@ -233,6 +238,7 @@ func NewApproveContractCallWithMintGeneric(
 		Params:     createApproveContractCallWithMintParamsGeneric(contractAddress, payloadHash, sourceTxID, message.Sender, sourceEventIndex, message.Asset.Amount.BigInt(), symbol),
 		KeyID:      keyID,
 		MaxGasCost: approveContractCallWithMintMaxGasCost,
+		Payload:    message.Payload,
 	}
 }
 
@@ -253,15 +259,6 @@ func (m Command) DecodeParams() (map[string]string, error) {
 		params["sourceTxHash"] = sourceTxID.Hex()
 		params["sourceEventIndex"] = sourceEventIndex.String()
 	case COMMAND_TYPE_APPROVE_CONTRACT_CALL:
-		sourceChain, sourceAddress, contractAddress, payloadHash, sourceTxID, sourceEventIndex := DecodeApproveContractCallParams(m.Params)
-
-		params["sourceChain"] = sourceChain
-		params["sourceAddress"] = sourceAddress
-		params["contractAddress"] = contractAddress.Hex()
-		params["payloadHash"] = payloadHash.Hex()
-		params["sourceTxHash"] = sourceTxID.Hex()
-		params["sourceEventIndex"] = sourceEventIndex.String()
-	case COMMAND_TYPE_APPROVE_BRIDGE_CALL:
 		sourceChain, sourceAddress, contractAddress, payloadHash, sourceTxID, sourceEventIndex := DecodeApproveContractCallParams(m.Params)
 
 		params["sourceChain"] = sourceChain
@@ -311,6 +308,8 @@ func (m Command) Clone() Command {
 		KeyID:      m.KeyID,
 		MaxGasCost: m.MaxGasCost,
 		Params:     make([]byte, len(m.Params)),
+		// Update here if you want to add more fields to the command
+		Payload: m.Payload,
 	}
 	copy(clone.Params, m.Params)
 
@@ -356,20 +355,16 @@ func createApproveContractCallParams(
 }
 
 func createApproveContractCallParamsGeneric(
-	contractAddress common.Address,
-	payloadHash common.Hash,
-	txID common.Hash,
-	sourceChain string,
-	sender string,
-	sourceEventIndex uint64) []byte {
+	params *ApproveContractCallCommandParams,
+) []byte {
 
 	return funcs.Must(approveContractCallArguments.Pack(
-		sourceChain,
-		sender,
-		contractAddress,
-		payloadHash,
-		txID,
-		new(big.Int).SetUint64(sourceEventIndex),
+		params.SourceChain,
+		params.Sender,
+		params.ContractAddress,
+		params.PayloadHash,
+		params.SourceTxID,
+		new(big.Int).SetUint64(params.SourceEventIndex),
 	))
 }
 

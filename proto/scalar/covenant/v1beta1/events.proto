@@ -1,0 +1,58 @@
+syntax = "proto3";
+package scalar.covenant.v1beta1;
+
+option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
+
+import "gogoproto/gogo.proto";
+import "scalar/covenant/v1beta1/types.proto";
+import "scalar/covenant/exported/v1beta1/types.proto";
+
+message SigningPsbtStarted {
+  option (gogoproto.stable_marshaler) = true;
+
+  string module = 1;
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  uint64 sig_id = 3 [ (gogoproto.customname) = "SigID" ];
+  string key_id = 4 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+  ];
+  map<string, bytes> pub_keys = 5
+      [ (gogoproto.castvalue) =
+            "github.com/scalarorg/scalar-core/x/multisig/exported.PublicKey" ];
+  string requesting_module = 6;
+  bytes psbt = 7 [ (gogoproto.casttype) = "Psbt" ];
+}
+
+message SigningPsbtCompleted {
+  string module = 1;
+  uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
+}
+
+message SigningPsbtExpired {
+  string module = 1;
+  uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
+}
+
+message TapScriptSigsSubmitted {
+  string module = 1;
+  uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
+  bytes participant = 3 [ (gogoproto.casttype) =
+                              "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
+  scalar.covenant.exported.v1beta1.TapScriptSigsMap tap_script_sigs_map = 4;
+}
+
+message KeyRotated {
+  string module = 1;
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string key_id = 3 [
+    (gogoproto.customname) = "KeyID",
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+  ];
+}

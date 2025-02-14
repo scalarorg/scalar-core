@@ -5,7 +5,6 @@ import (
 	"crypto/ecdsa"
 	"encoding/binary"
 	"encoding/hex"
-	"encoding/json"
 	"errors"
 	fmt "fmt"
 	"reflect"
@@ -24,13 +23,11 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
-	proto "github.com/gogo/protobuf/proto"
 	utils "github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
-	"github.com/stoewer/go-strcase"
 	"golang.org/x/exp/maps"
 )
 
@@ -56,6 +53,8 @@ const (
 	BurnerCodeHashV4 = "0x701d8db26f2d668fee8acf2346199a6b63b0173f212324d1c5a04b4d4de95666"
 	// BurnerCodeHashV5 is the hash of the bytecode of burner v5
 	BurnerCodeHashV5 = "0x9f217a79e864028081339cfcead3c3d1fe92e237fcbe9468d6bb4d1da7aa6352"
+
+	BurnerCodeHashV6 = "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
 )
 
 // ScalarGateway contract ABI and command selectors
@@ -225,42 +224,6 @@ func HashFromHex(hex string) (Hash, error) {
 	return Hash(common.HexToHash(hex)), nil
 }
 
-func (nk NetworkKind) Validate() error {
-	if nk != Mainnet && nk != Testnet {
-		return fmt.Errorf("invalid network kind: %d", nk)
-	}
-	return nil
-}
-
-func (nk NetworkKind) MarshalJSON() ([]byte, error) {
-	return json.Marshal(nk.String())
-}
-
-func (nk *NetworkKind) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
-		return err
-	}
-	return nk.FromString(s)
-}
-
-func (nk *NetworkKind) FromString(s string) error {
-	num, ok := NetworkKind_value[s]
-	if !ok {
-		return fmt.Errorf("invalid network kind: %s", s)
-	}
-	*nk = NetworkKind(num)
-	return nil
-}
-
-func (nk *NetworkKind) UnmarshalText(text []byte) error {
-	return nk.FromString(string(text))
-}
-
-func (c CommandType) String() string {
-	return strcase.LowerCamelCase(strings.TrimPrefix(proto.EnumName(CommandType_name, int32(c)), "COMMAND_TYPE_"))
-}
-
 // CommandBatch represents a batch of commands
 type CommandBatch struct {
 	metadata CommandBatchMetadata
@@ -291,6 +254,11 @@ func (b CommandBatch) GetStatus() BatchedCommandsStatus {
 // GetData returns the batch's data
 func (b CommandBatch) GetData() []byte {
 	return b.metadata.Data
+}
+
+// GetExtraData returns the batch's extra data
+func (b CommandBatch) GetExtraData() [][]byte {
+	return b.metadata.ExtraData
 }
 
 // GetID returns the batch ID
@@ -362,10 +330,13 @@ func NewCommandBatchMetadata(blockHeight int64, chainID sdk.Int, keyID multisig.
 	var commands []CommandType
 	var commandParams [][]byte
 
+	var extraData [][]byte
+
 	for _, cmd := range cmds {
 		commandIDs = append(commandIDs, cmd.ID)
 		commands = append(commands, cmd.Type)
 		commandParams = append(commandParams, cmd.Params)
+		extraData = append(extraData, cmd.Payload)
 	}
 
 	data, err := packArguments(chainID, commandIDs, commands, commandParams)
@@ -383,6 +354,8 @@ func NewCommandBatchMetadata(blockHeight int64, chainID sdk.Int, keyID multisig.
 		SigHash:    Hash(GetSignHash(data)),
 		Status:     BatchSigning,
 		KeyID:      keyID,
+		// new field
+		ExtraData: extraData,
 	}, nil
 }
 
@@ -682,6 +655,16 @@ func ParseMultisigKey(key multisig.Key) (map[string]sdk.Uint, sdk.Uint) {
 	return addressWeights, key.GetMinPassingWeight()
 }
 
+// NewTokenDetails returns a new TokenDetails instance
+func NewTokenDetails(tokenName, symbol string, decimals uint8, capacity sdk.Int) TokenDetails {
+	return TokenDetails{
+		TokenName: utils.NormalizeString(tokenName),
+		Symbol:    utils.NormalizeString(symbol),
+		Decimals:  decimals,
+		Capacity:  capacity,
+	}
+}
+
 func (m TokenDetails) Validate() error {
 	if err := utils.ValidateString(m.TokenName); err != nil {
 		return sdkerrors.Wrap(err, "invalid token name")
@@ -958,7 +941,7 @@ const maxReceiverLength = 128
 
 // ValidateBasic returns an error if the event token sent is invalid
 func (m EventTokenSent) ValidateBasic() error {
-	if m.Sender.IsZeroAddress() {
+	if err := utils.ValidateString(m.Sender); err != nil {
 		return fmt.Errorf("invalid sender")
 	}
 
@@ -974,11 +957,11 @@ func (m EventTokenSent) ValidateBasic() error {
 		return fmt.Errorf("receiver length %d is greater than %d", len(m.DestinationAddress), maxReceiverLength)
 	}
 
-	if err := utils.ValidateString(m.Symbol); err != nil {
+	if err := utils.ValidateString(m.Asset.Denom); err != nil {
 		return sdkerrors.Wrap(err, "invalid symbol")
 	}
 
-	if m.Amount.IsZero() {
+	if m.Asset.Amount.IsZero() {
 		return fmt.Errorf("invalid amount")
 	}
 
