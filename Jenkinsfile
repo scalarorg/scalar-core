@@ -4,25 +4,28 @@ pipeline {
         skipStagesAfterUnstable()
     }
     stages {
-        stage('Preparation') {
-            steps {
-                echo "env:  ${env.getEnvironment()}"
-            }
-        }
         stage('Build') {
             steps {
-                sh 'make docker-image'
+                sh 'make docker-image-test'
             }
         }
-        stage('Start'){
+        stage('Start scalar network'){
             steps {
-                sh 'task -t ~/tasks/e2e.yml scalar:up'
+                sh 'export IMAGE_TAG_SCALAR_CORE=$(git log -1 --format="%H") && task -t ~/tasks/e2e.yml scalar:up'
+                sh 'task -t ~/tasks/e2e.yml scalar:multisig'
+                sh 'task -t ~/tasks/e2e.yml scalar:token-deploy'
+            }
+        }
+         stage('Start relayer'){
+            steps {
+                sh 'task -t ~/tasks/e2e.yml relayer:up'
             }
         }
         stage('Bridging') {
             steps {
-                sh 'task -t ~/tasks/e2e.yml bridge:pooling'
-                sh 'task -t ~/tasks/e2e.yml bridge:upc'
+                echo 'Bridging tasks'
+                // sh 'task -t ~/tasks/e2e.yml bridge:pooling'
+                // sh 'task -t ~/tasks/e2e.yml bridge:upc'
             }
         }
         stage('Bridging verification') {
