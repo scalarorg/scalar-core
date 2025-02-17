@@ -4,7 +4,7 @@ pipeline {
         skipStagesAfterUnstable()
     }
     environment {
-        BTC_PRIVATE_KEY     = credentials('BTC_PRIVATE_KEY_ZWG')
+        BTC_PRIVATE_KEY = credentials('btc-private-key-zwg')
     }
     stages {
         stage('Build') {
