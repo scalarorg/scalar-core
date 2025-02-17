@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'make docker-image-test'
+                sh 'make USER_ID=$(id -u jenkins) GROUP_ID=$(id -g jenkins) docker-image-test'
             }
         }
         stage('Start scalar network'){

@@ -4,6 +4,8 @@ ARG ARCH=x86_64
 ARG WASM=true
 ARG IBC_WASM_HOOKS=false
 ARG WASMVM_VERSION=v1.3.1
+ARG USER_ID=1000
+ARG GROUP_ID=1000
 RUN apk add --no-cache --update \
   ca-certificates \
   git \
@@ -30,7 +32,7 @@ RUN if [[ "${WASM}" == "true" ]]; then \
 
 COPY . .
 
-RUN make LOCAL_LIB_PATH="/usr/lib"  MUSLC="${WASM}" WASM="${WASM}" IBC_WASM_HOOKS="${IBC_WASM_HOOKS}" build
+RUN make LOCAL_LIB_PATH="/usr/lib"  MUSLC="${WASM}" WASM="${WASM}" IBC_WASM_HOOKS="${IBC_WASM_HOOKS}" USER_ID="${USER_ID}" GROUP_ID="${GROUP_ID}" build
 
 FROM alpine:3.20
 
@@ -40,7 +42,7 @@ RUN apk add --no-cache \
   libstdc++
 
 ARG USER_ID=1000
-ARG GROUP_ID=1001
+ARG GROUP_ID=1000
 RUN apk add jq bash
 
 COPY --from=build /go/scalar/bin/* /usr/local/bin/

@@ -26,12 +26,17 @@ SCALAR_HOME_DIR ?= .scalar/scalar
 SCALAR_CHAIN_ID ?= scalar-testnet-1
 SCALAR_KEYRING_BACKEND ?= test
 LOCAL_LIB_PATH ?= $(shell pwd)/lib
+ifndef USER_ID
 USER_ID ?= $(shell id -u)
+endif
+ifndef GROUP_ID
 GROUP_ID ?= $(shell id -g)
+endif
 export CGO_LDFLAGS := ${CGO_LDFLAGS} -lbitcoin_vault_ffi  -L${LOCAL_LIB_PATH}
 
 $(info ⛳️ Makefile Environment Variables ⛳️)
-
+$(info $$USER_ID is [${USER_ID}])
+$(info $$GROUP_ID is [${GROUP_ID}])
 $(info $$WASM is [${WASM}])
 $(info $$IBC_WASM_HOOKS is [${IBC_WASM_HOOKS}])
 $(info $$MAX_WASM_SIZE is [${MAX_WASM_SIZE}])
