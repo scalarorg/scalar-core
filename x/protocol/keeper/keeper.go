@@ -137,7 +137,7 @@ func (k Keeper) FindProtocolByInternalAddress(ctx sdk.Context, originChain expor
 		if originChain == protocol.Asset.Chain {
 			err := protocol.IsAssetSupported(minorChain, internalAddress)
 			if err != nil {
-				k.Logger(ctx).Error("error checking if asset is supported", "error", err)
+				k.Logger(ctx).Debug("[WARNING] checking if asset is supported", "error", err)
 				continue
 			}
 			return protocol.ToProtocolInfo(), nil
