@@ -3,6 +3,9 @@ pipeline {
     options {
         skipStagesAfterUnstable()
     }
+    environment {
+        BTC_PRIVATE_KEY     = credentials('BTC_PRIVATE_KEY_ZWG')
+    }
     stages {
         stage('Build') {
             steps {
@@ -24,7 +27,13 @@ pipeline {
         stage('Bridging') {
             steps {
                 echo 'Bridging tasks'
-                // sh 'task -t ~/tasks/e2e.yml bridge:pooling'
+                sh '~/tvl_maker --db-path ~/tvl_maker.db tx --test-env ~/envs/e2e/tools.env  --service-tag pools bridge custodian-only \
+--amount 2000 \
+--wallet-address tb1q2rwweg2c48y8966qt4fzj0f4zyg9wty7tykzwg \
+--private-key ${BTC_PRIVATE_KEY} \
+--destination-chain 0100000000AA36A7 \
+--destination-token-address 156E2E35CCA2e106003a53c7bF96584A83A8BaBd \
+--destination-recipient-address 982321eb5693cdbAadFfe97056BEce07D09Ba49f'
                 // sh 'task -t ~/tasks/e2e.yml bridge:upc'
             }
         }
