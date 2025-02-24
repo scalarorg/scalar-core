@@ -51,10 +51,10 @@ var DefaultParticipantTapScriptSigs = make(map[string]*exported.TapScriptSigsMap
 func (g CustodianGroup) CreateKey(ctx sdk.Context, snapshot snapshot.Snapshot, threshold utils.Threshold) multisigTypes.Key {
 	pubKeys := map[string]multisig.PublicKey{}
 	for _, custodian := range g.Custodians {
-		pubKeys[custodian.ValAddress] = custodian.BtcPubkey
+		pubKeys[custodian.ValAddress] = custodian.BitcoinPubkey
 	}
 	key := multisigTypes.Key{
-		ID:               multisig.KeyID(hex.EncodeToString(g.BtcPubkey)),
+		ID:               multisig.KeyID(hex.EncodeToString(g.BitcoinPubkey)),
 		Snapshot:         snapshot,
 		PubKeys:          pubKeys,
 		SigningThreshold: threshold,

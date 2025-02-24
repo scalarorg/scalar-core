@@ -15,7 +15,7 @@ message CreateCustodianRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
 
   string name = 2;
-  bytes btc_pubkey = 3;
+  bytes bitcoin_pubkey = 3;
   Status status = 4;
   string description = 5;
 }
@@ -26,7 +26,7 @@ message CreateCustodianResponse { Custodian custodian = 1; }
 message UpdateCustodianRequest {
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
-  bytes btc_pubkey = 2;
+  bytes bitcoin_pubkey = 2;
   string name = 3;
   Status status = 4;
   string description = 5;

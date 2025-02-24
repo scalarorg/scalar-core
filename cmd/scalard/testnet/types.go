@@ -24,17 +24,17 @@ type ScalarRelayer struct {
 	Balance banktypes.Balance
 }
 type Protocol struct {
-	BitcoinPubKey []byte
-	PubKey        cryptotypes.PubKey
-	Balance       banktypes.Balance
-	Tag           string
-	Model         string
+	BitcoinPubKey  []byte
+	PubKey         cryptotypes.PubKey
+	Balance        banktypes.Balance
+	Tag            string
+	LiquidityModel string
 }
 type ProtocolConfig struct {
 	ScalarMnemonic string `json:"scalar_mnemonic" mapstructure:"scalar_mnemonic"`
 	BitcoinPrivKey string `json:"bitcoin_privkey" mapstructure:"bitcoin_privkey"`
 	Tag            string `json:"tag" mapstructure:"tag"`
-	Model          string `json:"model" mapstructure:"model"`
+	LiquidityModel string `json:"liquidity_model" mapstructure:"liquidity_model"`
 }
 type DeployInfo struct {
 	ID           string `json:"id" mapstructure:"id"`
@@ -53,7 +53,7 @@ type Token struct {
 	Capacity       int64        `json:"capacity" mapstructure:"capacity"`
 	Decimals       uint8        `json:"decimals" mapstructure:"decimals"`
 	DailyMintLimit string       `json:"daily_mint_limit" mapstructure:"daily_mint_limit"`
-	Model          string       `json:"model" mapstructure:"model"`
+	LiquidityModel string       `json:"liquidity_model" mapstructure:"liquidity_model"`
 	TokenAddress   string       `json:"token_address" mapstructure:"token_address"`
 	Deployments    []DeployInfo `json:"deployments" mapstructure:"deployments"`
 }

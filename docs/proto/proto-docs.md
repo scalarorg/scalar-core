@@ -26,6 +26,12 @@
 - [scalar/chains/btc/v1beta1/types.proto](#scalar/chains/btc/v1beta1/types.proto)
     - [BtcToken](#scalar.chains.btc.v1beta1.BtcToken)
   
+- [scalar/protocol/exported/v1beta1/types.proto](#scalar/protocol/exported/v1beta1/types.proto)
+    - [MinorAddress](#scalar.protocol.exported.v1beta1.MinorAddress)
+    - [ProtocolInfo](#scalar.protocol.exported.v1beta1.ProtocolInfo)
+  
+    - [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel)
+  
 - [scalar/chains/v1beta1/types.proto](#scalar/chains/v1beta1/types.proto)
     - [Asset](#scalar.chains.v1beta1.Asset)
     - [BurnerInfo](#scalar.chains.v1beta1.BurnerInfo)
@@ -49,7 +55,6 @@
     - [SigType](#scalar.chains.v1beta1.SigType)
     - [SourceTxStatus](#scalar.chains.v1beta1.SourceTxStatus)
     - [Status](#scalar.chains.v1beta1.Status)
-    - [TokenModel](#scalar.chains.v1beta1.TokenModel)
   
 - [scalar/utils/v1beta1/threshold.proto](#scalar/utils/v1beta1/threshold.proto)
     - [Threshold](#scalar.utils.v1beta1.Threshold)
@@ -445,12 +450,6 @@
 - [scalar/permission/v1beta1/service.proto](#scalar/permission/v1beta1/service.proto)
     - [Msg](#scalar.permission.v1beta1.Msg)
     - [Query](#scalar.permission.v1beta1.Query)
-  
-- [scalar/protocol/exported/v1beta1/types.proto](#scalar/protocol/exported/v1beta1/types.proto)
-    - [MinorAddress](#scalar.protocol.exported.v1beta1.MinorAddress)
-    - [ProtocolInfo](#scalar.protocol.exported.v1beta1.ProtocolInfo)
-  
-    - [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel)
   
 - [scalar/protocol/v1beta1/types.proto](#scalar/protocol/v1beta1/types.proto)
     - [Protocol](#scalar.protocol.v1beta1.Protocol)
@@ -926,6 +925,71 @@ Msg defines the nexus Msg service.
 
 
 
+<a name="scalar/protocol/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/protocol/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.protocol.exported.v1beta1.MinorAddress"></a>
+
+### MinorAddress
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain_name` | [string](#string) |  |  |
+| `address` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.protocol.exported.v1beta1.ProtocolInfo"></a>
+
+### ProtocolInfo
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+| `custodians_pubkey` | [bytes](#bytes) |  |  |
+| `liquidity_model` | [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `origin_chain` | [string](#string) |  |  |
+| `minor_addresses` | [MinorAddress](#scalar.protocol.exported.v1beta1.MinorAddress) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.protocol.exported.v1beta1.LiquidityModel"></a>
+
+### LiquidityModel
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| LIQUIDITY_MODEL_UNSPECIFIED | 0 |  |
+| LIQUIDITY_MODEL_POOL | 1 |  |
+| LIQUIDITY_MODEL_UPC | 2 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/chains/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -1178,7 +1242,6 @@ results to chains relay transaction types
 | `symbol` | [string](#string) |  |  |
 | `decimals` | [uint32](#uint32) |  |  |
 | `capacity` | [bytes](#bytes) |  |  |
-| `model` | [TokenModel](#scalar.chains.v1beta1.TokenModel) |  | defined for btc networks, not used for evm chains |
 
 
 
@@ -1286,18 +1349,6 @@ TransferKey contains information for a transfer operatorship
 | STATUS_INITIALIZED | 1 |  |
 | STATUS_PENDING | 2 |  |
 | STATUS_CONFIRMED | 4 |  |
-
-
-
-<a name="scalar.chains.v1beta1.TokenModel"></a>
-
-### TokenModel
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| TOKEN_MODEL_POOL | 0 |  |
-| TOKEN_MODEL_UTXO | 1 |  |
 
 
  <!-- end enums -->
@@ -3113,7 +3164,7 @@ ERC20 tokens requested for a chain
 | ----- | ---- | ----- | ----------- |
 | `asset` | [string](#string) |  |  |
 | `symbol` | [string](#string) |  |  |
-| `model` | [TokenModel](#scalar.chains.v1beta1.TokenModel) |  |  |
+| `model` | [scalar.protocol.exported.v1beta1.LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
 
 
 
@@ -3836,7 +3887,7 @@ Custodian represents an individual custodian configuration
 | ----- | ---- | ----- | ----------- |
 | `name` | [string](#string) |  | e.g., "Custodian1" |
 | `val_address` | [string](#string) |  | e.g., "scalarvaloper1..." |
-| `btc_pubkey` | [bytes](#bytes) |  | e.g., |
+| `bitcoin_pubkey` | [bytes](#bytes) |  | e.g., |
 | `status` | [Status](#scalar.covenant.v1beta1.Status) |  | "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
 
 Whether the custodian is active |
@@ -3859,7 +3910,7 @@ custodians
 | ----- | ---- | ----- | ----------- |
 | `uid` | [string](#string) |  |  |
 | `name` | [string](#string) |  | e.g., "All" |
-| `btc_pubkey` | [bytes](#bytes) |  | e.g., |
+| `bitcoin_pubkey` | [bytes](#bytes) |  | e.g., |
 | `quorum` | [uint32](#uint32) |  | "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
 
 quorum threshold e.g.,3 |
@@ -4584,7 +4635,7 @@ ParamsRequest represents a message that queries the params
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `name` | [string](#string) |  |  |
-| `btc_pubkey` | [bytes](#bytes) |  |  |
+| `bitcoin_pubkey` | [bytes](#bytes) |  |  |
 | `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
 | `description` | [string](#string) |  |  |
 
@@ -4739,7 +4790,7 @@ Pubkey used as key for lookup custodian to update other values
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
-| `btc_pubkey` | [bytes](#bytes) |  |  |
+| `bitcoin_pubkey` | [bytes](#bytes) |  |  |
 | `name` | [string](#string) |  |  |
 | `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
 | `description` | [string](#string) |  |  |
@@ -6876,70 +6927,6 @@ Query defines the gRPC querier service.
 
 
 
-<a name="scalar/protocol/exported/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/protocol/exported/v1beta1/types.proto
-
-
-
-<a name="scalar.protocol.exported.v1beta1.MinorAddress"></a>
-
-### MinorAddress
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain_name` | [string](#string) |  |  |
-| `address` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.exported.v1beta1.ProtocolInfo"></a>
-
-### ProtocolInfo
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-| `custodians_pubkey` | [bytes](#bytes) |  |  |
-| `liquidity_model` | [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
-| `symbol` | [string](#string) |  |  |
-| `origin_chain` | [string](#string) |  |  |
-| `minor_addresses` | [MinorAddress](#scalar.protocol.exported.v1beta1.MinorAddress) | repeated |  |
-
-
-
-
-
- <!-- end messages -->
-
-
-<a name="scalar.protocol.exported.v1beta1.LiquidityModel"></a>
-
-### LiquidityModel
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| LIQUIDITY_MODEL_POOLING | 0 |  |
-| LIQUIDITY_MODEL_TRANSACTIONAL | 1 |  |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
 <a name="scalar/protocol/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -6965,6 +6952,7 @@ Query defines the gRPC querier service.
 | `custodian_group` | [scalar.covenant.v1beta1.CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
 | `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
 | `chains` | [SupportedChain](#scalar.protocol.v1beta1.SupportedChain) | repeated | Other chains with internal asset |
+| `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
 
 
 

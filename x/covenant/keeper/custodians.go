@@ -20,12 +20,12 @@ func (k Keeper) CreateCustodianGroup(ctx sdk.Context, params types.Params) (err 
 }
 
 func (k Keeper) SetCustodian(ctx sdk.Context, custodian *types.Custodian) {
-	k.getStore(ctx).Set(custodianPrefix.Append(utils.KeyFromBz(custodian.BtcPubkey)), custodian)
+	k.getStore(ctx).Set(custodianPrefix.Append(utils.KeyFromBz(custodian.BitcoinPubkey)), custodian)
 }
 func (k Keeper) SetCustodians(ctx sdk.Context, custodians []*types.Custodian) {
 	store := k.getStore(ctx)
 	for _, custodian := range custodians {
-		store.Set(custodianPrefix.Append(utils.KeyFromBz(custodian.BtcPubkey)), custodian)
+		store.Set(custodianPrefix.Append(utils.KeyFromBz(custodian.BitcoinPubkey)), custodian)
 	}
 }
 func (k Keeper) GetAllCustodians(ctx sdk.Context) ([]*types.Custodian, bool) {
@@ -113,7 +113,7 @@ func (k Keeper) GetCustodianKeys(ctx sdk.Context, groupId string) ([]string, boo
 	}
 	keys := make([]string, len(group.Custodians))
 	for i, custodian := range group.Custodians {
-		keys[i] = hex.EncodeToString(custodian.BtcPubkey)
+		keys[i] = hex.EncodeToString(custodian.BitcoinPubkey)
 	}
 	return keys, true
 }

@@ -14,9 +14,9 @@ option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 enum Status {
   option (gogoproto.goproto_enum_prefix) = false;
 
-  STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Unspecified"];
-  STATUS_ACTIVATED = 1 [(gogoproto.enumvalue_customname) = "Activated"];
-  STATUS_DEACTIVATED = 2 [(gogoproto.enumvalue_customname) = "Deactivated"];
+  STATUS_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Unspecified" ];
+  STATUS_ACTIVATED = 1 [ (gogoproto.enumvalue_customname) = "Activated" ];
+  STATUS_DEACTIVATED = 2 [ (gogoproto.enumvalue_customname) = "Deactivated" ];
 }
 
 message ProtocolAttribute {
@@ -25,19 +25,22 @@ message ProtocolAttribute {
 
 // DestinationChain represents a blockchain where tokens can be sent
 message SupportedChain {
-  string chain = 1 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string name = 2;
-  string address = 3; //Asset address on the chain
+  string address = 3; // Asset address on the chain
 }
 message Protocol {
-  bytes bitcoin_pubkey = 1; //BTC's pubkey
-  bytes scalar_pubkey = 2; //Scalar's pubkey
-  bytes scalar_address = 3; //Scalar's address
+  bytes bitcoin_pubkey = 1; // BTC's pubkey
+  bytes scalar_pubkey = 2;  // Scalar's pubkey
+  bytes scalar_address = 3; // Scalar's address
   string name = 4;
   bytes tag = 5;
   ProtocolAttribute attribute = 6;
   Status status = 7;
   scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
-  scalar.chains.v1beta1.Asset asset = 9; //External asset
-  repeated SupportedChain chains = 10; //Other chains with internal asset
+  scalar.chains.v1beta1.Asset asset = 9; // External asset
+  repeated SupportedChain chains = 10;   // Other chains with internal asset
+  bytes avatar = 11; // Avatar of the protocol, base64 encoded
 }

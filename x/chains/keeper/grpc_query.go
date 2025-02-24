@@ -489,7 +489,6 @@ func (q Querier) ERC20Tokens(c context.Context, req *types.ERC20TokensRequest) (
 			return types.ERC20TokensResponse_Token{
 				Asset:  token.GetAsset(),
 				Symbol: token.GetDetails().Symbol,
-				Model:  token.GetDetails().Model,
 			}
 		}),
 	}

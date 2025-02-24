@@ -33,7 +33,7 @@ func (p *Protocol) IsAssetSupported(destinationChain nexus.ChainName, tokenAddre
 	return errors.New("asset not supported")
 }
 func (p *Protocol) GetKeyID() string {
-	return hex.EncodeToString(p.CustodianGroup.BtcPubkey)
+	return hex.EncodeToString(p.CustodianGroup.BitcoinPubkey)
 }
 
 // Get Unique keyId, which later can tell us how to sign btc psbt
@@ -47,7 +47,7 @@ func (p *Protocol) ToProtocolInfo() *exported.ProtocolInfo {
 	}
 	return &exported.ProtocolInfo{
 		KeyID:            multisig.KeyID(p.GetKeyID()),
-		CustodiansPubkey: p.CustodianGroup.BtcPubkey,
+		CustodiansPubkey: p.CustodianGroup.BitcoinPubkey,
 		LiquidityModel:   p.Attribute.Model,
 		OriginChain:      p.Asset.Chain,
 		Symbol:           p.Asset.Name,

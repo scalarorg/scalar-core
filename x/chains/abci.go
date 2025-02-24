@@ -288,10 +288,10 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 
 	var keyId mexported.KeyID
 	switch protocolInfo.LiquidityModel {
-	case pexported.Pooling:
+	case pexported.LIQUIDITY_MODEL_POOL:
 		clog.Yellowf("[abci/chains] Pooling protocol: %+v", protocolInfo)
 		keyId = protocolInfo.KeyID
-	case pexported.Transactional:
+	case pexported.LIQUIDITY_MODEL_UPC:
 		buffer := event.TxID[:]
 		buffer = append(buffer, protocolInfo.CustodiansPubkey...)
 		keyId = mexported.KeyID(hex.EncodeToString(buffer))

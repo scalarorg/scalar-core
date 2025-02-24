@@ -405,8 +405,8 @@ func initProtocols(args initArgs) []Protocol {
 	protocols := make([]Protocol, len(protocolConfigs))
 	for i, config := range protocolConfigs {
 		protocols[i] = Protocol{
-			Tag:   config.Tag,
-			Model: config.Model,
+			Tag:            config.Tag,
+			LiquidityModel: config.LiquidityModel,
 		}
 		if config.ScalarMnemonic != "" {
 			privKey, address, err := createScalarAccount(config.ScalarMnemonic)

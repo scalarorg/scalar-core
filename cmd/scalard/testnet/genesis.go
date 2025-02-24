@@ -57,10 +57,12 @@ func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGro
 			})
 		}
 		var model pexported.LiquidityModel
-		if protocol.Model == "transactional" {
-			model = pexported.Transactional
-		} else if protocol.Model == "pooling" {
-			model = pexported.Pooling
+		if protocol.LiquidityModel == "upc" {
+			model = pexported.LIQUIDITY_MODEL_UPC
+		} else if protocol.LiquidityModel == "pool" {
+			model = pexported.LIQUIDITY_MODEL_POOL
+		} else {
+			panic(fmt.Sprintf("invalid liquidity model: %s", protocol.LiquidityModel))
 		}
 		protocols = append(protocols, &protocoltypes.Protocol{
 			BitcoinPubkey: protocol.BitcoinPubKey,
@@ -240,12 +242,12 @@ func GenerateGenesis(clientCtx client.Context,
 
 		privKey := secp256k1.PrivKeyFromBytes(btcPrivKey)
 		custodians[i] = &covenanttypes.Custodian{
-			Name:       validator.Host,
-			ValAddress: sdk.ValAddress(validator.ValPubKey.Address()).String(),
-			Status:     covenanttypes.Activated,
-			BtcPubkey:  privKey.PubKey().SerializeCompressed(),
+			Name:          validator.Host,
+			ValAddress:    sdk.ValAddress(validator.ValPubKey.Address()).String(),
+			Status:        covenanttypes.Activated,
+			BitcoinPubkey: privKey.PubKey().SerializeCompressed(),
 		}
-		custodianPubKeys[i] = go_utils.PublicKey(custodians[i].BtcPubkey)
+		custodianPubKeys[i] = go_utils.PublicKey(custodians[i].BitcoinPubkey)
 	}
 	//Todo: Create custodian group pubkey
 	custodianGroupPubKey, err := vault.CustodiansOnlyLockingScript(custodianPubKeys, quorum)
@@ -254,13 +256,13 @@ func GenerateGenesis(clientCtx client.Context,
 	}
 	custodianGroupUid := hex.EncodeToString(custodianGroupPubKey)
 	custodianGroup := covenanttypes.CustodianGroup{
-		Uid:         custodianGroupUid,
-		Name:        "scalar",
-		Custodians:  custodians,
-		BtcPubkey:   []byte(custodianGroupPubKey),
-		Quorum:      uint32(quorum),
-		Status:      covenanttypes.Activated,
-		Description: "Default custodial group, which contains all custodians",
+		Uid:           custodianGroupUid,
+		Name:          "scalar",
+		Custodians:    custodians,
+		BitcoinPubkey: []byte(custodianGroupPubKey),
+		Quorum:        uint32(quorum),
+		Status:        covenanttypes.Activated,
+		Description:   "Default custodial group, which contains all custodians",
 	}
 	defaultCovenantState := covenanttypes.DefaultGenesisState()
 	covnantGenState := covenanttypes.NewGenesisState(&defaultCovenantState.Params, defaultCovenantState.SigningSessions, custodians, []*covenanttypes.CustodianGroup{&custodianGroup})
@@ -456,12 +458,6 @@ func createDefaultSbtc(configPath string) []chainsTypes.ERC20TokenMetadata {
 	}
 	tokens := make([]chainsTypes.ERC20TokenMetadata, len(tokenInfos))
 	for i, tokenInfo := range tokenInfos {
-		var model chainsTypes.TokenModel
-		if tokenInfo.Model == "pool" {
-			model = chainsTypes.Pool
-		} else if tokenInfo.Model == "utxo" {
-			model = chainsTypes.Utxo
-		}
 		tokens[i] = chainsTypes.ERC20TokenMetadata{
 			Asset:   tokenInfo.Asset,
 			ChainID: sdk.NewInt(tokenInfo.ChainID),
@@ -470,7 +466,6 @@ func createDefaultSbtc(configPath string) []chainsTypes.ERC20TokenMetadata {
 				Symbol:    tokenInfo.Symbol,
 				Decimals:  tokenInfo.Decimals,
 				Capacity:  sdk.NewInt(0),
-				Model:     model,
 			},
 			TokenAddress: chainsTypes.Address(common.HexToAddress(tokenInfo.TokenAddress)),
 			TxHash:       chainsTypes.ZeroHash,
