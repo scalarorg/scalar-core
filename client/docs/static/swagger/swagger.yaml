@@ -9473,65 +9473,13 @@ paths:
                         - STATUS_UNSPECIFIED
                         - STATUS_ACTIVATED
                         - STATUS_DEACTIVATED
+                        - STATUS_PENDING
                       default: STATUS_UNSPECIFIED
-                    custodian_group:
-                      type: object
-                      properties:
-                        uid:
-                          type: string
-                        name:
-                          type: string
-                        bitcoin_pubkey:
-                          type: string
-                          format: byte
-                        quorum:
-                          type: integer
-                          format: int64
-                          title: >-
-                            "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
-                        status:
-                          type: string
-                          enum:
-                            - STATUS_UNSPECIFIED
-                            - STATUS_ACTIVATED
-                            - STATUS_DEACTIVATED
-                          default: STATUS_UNSPECIFIED
-                        description:
-                          type: string
-                        custodians:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              name:
-                                type: string
-                              val_address:
-                                type: string
-                              bitcoin_pubkey:
-                                type: string
-                                format: byte
-                              status:
-                                type: string
-                                enum:
-                                  - STATUS_UNSPECIFIED
-                                  - STATUS_ACTIVATED
-                                  - STATUS_DEACTIVATED
-                                default: STATUS_UNSPECIFIED
-                                title: >-
-                                  "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-                              description:
-                                type: string
-                            title: >-
-                              Custodian represents an individual custodian
-                              configuration
+                    custodian_group_uid:
+                      type: string
                       title: >-
-                        CustodianGroup represents a group of custodians with
-                        their configuration
-
-                        uid is used as identity of the group, btc_pubkey is
-                        change by list of
-
-                        custodians
+                        scalar.covenant.v1beta1.CustodianGroup custodian_group =
+                        8;
                     asset:
                       type: object
                       properties:
@@ -9772,6 +9720,7 @@ paths:
             - STATUS_UNSPECIFIED
             - STATUS_ACTIVATED
             - STATUS_DEACTIVATED
+            - STATUS_PENDING
           default: STATUS_UNSPECIFIED
       tags:
         - Query
@@ -9818,65 +9767,13 @@ paths:
                       - STATUS_UNSPECIFIED
                       - STATUS_ACTIVATED
                       - STATUS_DEACTIVATED
+                      - STATUS_PENDING
                     default: STATUS_UNSPECIFIED
-                  custodian_group:
-                    type: object
-                    properties:
-                      uid:
-                        type: string
-                      name:
-                        type: string
-                      bitcoin_pubkey:
-                        type: string
-                        format: byte
-                      quorum:
-                        type: integer
-                        format: int64
-                        title: >-
-                          "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
-                      status:
-                        type: string
-                        enum:
-                          - STATUS_UNSPECIFIED
-                          - STATUS_ACTIVATED
-                          - STATUS_DEACTIVATED
-                        default: STATUS_UNSPECIFIED
-                      description:
-                        type: string
-                      custodians:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            name:
-                              type: string
-                            val_address:
-                              type: string
-                            bitcoin_pubkey:
-                              type: string
-                              format: byte
-                            status:
-                              type: string
-                              enum:
-                                - STATUS_UNSPECIFIED
-                                - STATUS_ACTIVATED
-                                - STATUS_DEACTIVATED
-                              default: STATUS_UNSPECIFIED
-                              title: >-
-                                "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-                            description:
-                              type: string
-                          title: >-
-                            Custodian represents an individual custodian
-                            configuration
+                  custodian_group_uid:
+                    type: string
                     title: >-
-                      CustodianGroup represents a group of custodians with their
-                      configuration
-
-                      uid is used as identity of the group, btc_pubkey is change
-                      by list of
-
-                      custodians
+                      scalar.covenant.v1beta1.CustodianGroup custodian_group =
+                      8;
                   asset:
                     type: object
                     properties:
@@ -10160,65 +10057,13 @@ paths:
                       - STATUS_UNSPECIFIED
                       - STATUS_ACTIVATED
                       - STATUS_DEACTIVATED
+                      - STATUS_PENDING
                     default: STATUS_UNSPECIFIED
-                  custodian_group:
-                    type: object
-                    properties:
-                      uid:
-                        type: string
-                      name:
-                        type: string
-                      bitcoin_pubkey:
-                        type: string
-                        format: byte
-                      quorum:
-                        type: integer
-                        format: int64
-                        title: >-
-                          "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
-                      status:
-                        type: string
-                        enum:
-                          - STATUS_UNSPECIFIED
-                          - STATUS_ACTIVATED
-                          - STATUS_DEACTIVATED
-                        default: STATUS_UNSPECIFIED
-                      description:
-                        type: string
-                      custodians:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            name:
-                              type: string
-                            val_address:
-                              type: string
-                            bitcoin_pubkey:
-                              type: string
-                              format: byte
-                            status:
-                              type: string
-                              enum:
-                                - STATUS_UNSPECIFIED
-                                - STATUS_ACTIVATED
-                                - STATUS_DEACTIVATED
-                              default: STATUS_UNSPECIFIED
-                              title: >-
-                                "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-                            description:
-                              type: string
-                          title: >-
-                            Custodian represents an individual custodian
-                            configuration
+                  custodian_group_uid:
+                    type: string
                     title: >-
-                      CustodianGroup represents a group of custodians with their
-                      configuration
-
-                      uid is used as identity of the group, btc_pubkey is change
-                      by list of
-
-                      custodians
+                      scalar.covenant.v1beta1.CustodianGroup custodian_group =
+                      8;
                   asset:
                     type: object
                     properties:
@@ -10445,6 +10290,12 @@ paths:
               sender:
                 type: string
                 format: byte
+              bitcoin_pubkey:
+                type: string
+                format: byte
+              scalar_pubkey:
+                type: string
+                format: byte
               name:
                 type: string
               tag:
@@ -10459,78 +10310,11 @@ paths:
                       - LIQUIDITY_MODEL_POOL
                       - LIQUIDITY_MODEL_UPC
                     default: LIQUIDITY_MODEL_UNSPECIFIED
-              custodian_group:
-                type: object
-                properties:
-                  uid:
-                    type: string
-                  name:
-                    type: string
-                  bitcoin_pubkey:
-                    type: string
-                    format: byte
-                  quorum:
-                    type: integer
-                    format: int64
-                    title: >-
-                      "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
-                  status:
-                    type: string
-                    enum:
-                      - STATUS_UNSPECIFIED
-                      - STATUS_ACTIVATED
-                      - STATUS_DEACTIVATED
-                    default: STATUS_UNSPECIFIED
-                  description:
-                    type: string
-                  custodians:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                        val_address:
-                          type: string
-                        bitcoin_pubkey:
-                          type: string
-                          format: byte
-                        status:
-                          type: string
-                          enum:
-                            - STATUS_UNSPECIFIED
-                            - STATUS_ACTIVATED
-                            - STATUS_DEACTIVATED
-                          default: STATUS_UNSPECIFIED
-                          title: >-
-                            "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-                        description:
-                          type: string
-                      title: >-
-                        Custodian represents an individual custodian
-                        configuration
-                title: >-
-                  CustodianGroup represents a group of custodians with their
-                  configuration
-
-                  uid is used as identity of the group, btc_pubkey is change by
-                  list of
-
-                  custodians
-              chains:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    chain:
-                      type: string
-                    name:
-                      type: string
-                    address:
-                      type: string
-                  title: >-
-                    DestinationChain represents a blockchain where tokens can be
-                    sent
+              custodian_group_uid:
+                type: string
+              avatar:
+                type: string
+                format: byte
       tags:
         - Msg
   /scalar/protocol/v1beta1/protocol:
@@ -10545,11 +10329,19 @@ paths:
               protocol:
                 type: object
                 properties:
-                  key_id:
+                  custodians_group_uid:
                     type: string
-                  custodians_pubkey:
-                    type: string
-                    format: byte
+                    title: >-
+                      string key_id = 1 [
+                        (gogoproto.customname) = "KeyID",
+                        (gogoproto.casttype) =
+                            "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+                      ];
+
+                      bytes custodians_pubkey = 2 [ (gogoproto.customname) =
+                      "CustodiansPubkey"
+
+                      ];
                   liquidity_model:
                     type: string
                     enum:
@@ -10823,65 +10615,13 @@ paths:
                       - STATUS_UNSPECIFIED
                       - STATUS_ACTIVATED
                       - STATUS_DEACTIVATED
+                      - STATUS_PENDING
                     default: STATUS_UNSPECIFIED
-                  custodian_group:
-                    type: object
-                    properties:
-                      uid:
-                        type: string
-                      name:
-                        type: string
-                      bitcoin_pubkey:
-                        type: string
-                        format: byte
-                      quorum:
-                        type: integer
-                        format: int64
-                        title: >-
-                          "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
-                      status:
-                        type: string
-                        enum:
-                          - STATUS_UNSPECIFIED
-                          - STATUS_ACTIVATED
-                          - STATUS_DEACTIVATED
-                        default: STATUS_UNSPECIFIED
-                      description:
-                        type: string
-                      custodians:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            name:
-                              type: string
-                            val_address:
-                              type: string
-                            bitcoin_pubkey:
-                              type: string
-                              format: byte
-                            status:
-                              type: string
-                              enum:
-                                - STATUS_UNSPECIFIED
-                                - STATUS_ACTIVATED
-                                - STATUS_DEACTIVATED
-                              default: STATUS_UNSPECIFIED
-                              title: >-
-                                "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-                            description:
-                              type: string
-                          title: >-
-                            Custodian represents an individual custodian
-                            configuration
+                  custodian_group_uid:
+                    type: string
                     title: >-
-                      CustodianGroup represents a group of custodians with their
-                      configuration
-
-                      uid is used as identity of the group, btc_pubkey is change
-                      by list of
-
-                      custodians
+                      scalar.covenant.v1beta1.CustodianGroup custodian_group =
+                      8;
                   asset:
                     type: object
                     properties:
@@ -11158,65 +10898,13 @@ paths:
                       - STATUS_UNSPECIFIED
                       - STATUS_ACTIVATED
                       - STATUS_DEACTIVATED
+                      - STATUS_PENDING
                     default: STATUS_UNSPECIFIED
-                  custodian_group:
-                    type: object
-                    properties:
-                      uid:
-                        type: string
-                      name:
-                        type: string
-                      bitcoin_pubkey:
-                        type: string
-                        format: byte
-                      quorum:
-                        type: integer
-                        format: int64
-                        title: >-
-                          "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
-                      status:
-                        type: string
-                        enum:
-                          - STATUS_UNSPECIFIED
-                          - STATUS_ACTIVATED
-                          - STATUS_DEACTIVATED
-                        default: STATUS_UNSPECIFIED
-                      description:
-                        type: string
-                      custodians:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            name:
-                              type: string
-                            val_address:
-                              type: string
-                            bitcoin_pubkey:
-                              type: string
-                              format: byte
-                            status:
-                              type: string
-                              enum:
-                                - STATUS_UNSPECIFIED
-                                - STATUS_ACTIVATED
-                                - STATUS_DEACTIVATED
-                              default: STATUS_UNSPECIFIED
-                              title: >-
-                                "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-                            description:
-                              type: string
-                          title: >-
-                            Custodian represents an individual custodian
-                            configuration
+                  custodian_group_uid:
+                    type: string
                     title: >-
-                      CustodianGroup represents a group of custodians with their
-                      configuration
-
-                      uid is used as identity of the group, btc_pubkey is change
-                      by list of
-
-                      custodians
+                      scalar.covenant.v1beta1.CustodianGroup custodian_group =
+                      8;
                   asset:
                     type: object
                     properties:
@@ -11454,6 +11142,7 @@ paths:
                   - STATUS_UNSPECIFIED
                   - STATUS_ACTIVATED
                   - STATUS_DEACTIVATED
+                  - STATUS_PENDING
                 default: STATUS_UNSPECIFIED
       tags:
         - Msg
@@ -57657,85 +57346,6 @@ definitions:
       denominator:
         type: string
         format: int64
-  scalar.covenant.v1beta1.Custodian:
-    type: object
-    properties:
-      name:
-        type: string
-      val_address:
-        type: string
-      bitcoin_pubkey:
-        type: string
-        format: byte
-      status:
-        type: string
-        enum:
-          - STATUS_UNSPECIFIED
-          - STATUS_ACTIVATED
-          - STATUS_DEACTIVATED
-        default: STATUS_UNSPECIFIED
-        title: '"0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"'
-      description:
-        type: string
-    title: Custodian represents an individual custodian configuration
-  scalar.covenant.v1beta1.CustodianGroup:
-    type: object
-    properties:
-      uid:
-        type: string
-      name:
-        type: string
-      bitcoin_pubkey:
-        type: string
-        format: byte
-      quorum:
-        type: integer
-        format: int64
-        title: '"tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"'
-      status:
-        type: string
-        enum:
-          - STATUS_UNSPECIFIED
-          - STATUS_ACTIVATED
-          - STATUS_DEACTIVATED
-        default: STATUS_UNSPECIFIED
-      description:
-        type: string
-      custodians:
-        type: array
-        items:
-          type: object
-          properties:
-            name:
-              type: string
-            val_address:
-              type: string
-            bitcoin_pubkey:
-              type: string
-              format: byte
-            status:
-              type: string
-              enum:
-                - STATUS_UNSPECIFIED
-                - STATUS_ACTIVATED
-                - STATUS_DEACTIVATED
-              default: STATUS_UNSPECIFIED
-              title: >-
-                "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-            description:
-              type: string
-          title: Custodian represents an individual custodian configuration
-    title: |-
-      CustodianGroup represents a group of custodians with their configuration
-      uid is used as identity of the group, btc_pubkey is change by list of
-      custodians
-  scalar.covenant.v1beta1.Status:
-    type: string
-    enum:
-      - STATUS_UNSPECIFIED
-      - STATUS_ACTIVATED
-      - STATUS_DEACTIVATED
-    default: STATUS_UNSPECIFIED
   scalar.protocol.exported.v1beta1.MinorAddress:
     type: object
     properties:
@@ -57746,11 +57356,19 @@ definitions:
   scalar.protocol.exported.v1beta1.ProtocolInfo:
     type: object
     properties:
-      key_id:
+      custodians_group_uid:
         type: string
-      custodians_pubkey:
-        type: string
-        format: byte
+        title: >-
+          string key_id = 1 [
+            (gogoproto.customname) = "KeyID",
+            (gogoproto.casttype) =
+                "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+          ];
+
+          bytes custodians_pubkey = 2 [ (gogoproto.customname) =
+          "CustodiansPubkey"
+
+          ];
       liquidity_model:
         type: string
         enum:
@@ -57823,63 +57441,11 @@ definitions:
               - STATUS_UNSPECIFIED
               - STATUS_ACTIVATED
               - STATUS_DEACTIVATED
+              - STATUS_PENDING
             default: STATUS_UNSPECIFIED
-          custodian_group:
-            type: object
-            properties:
-              uid:
-                type: string
-              name:
-                type: string
-              bitcoin_pubkey:
-                type: string
-                format: byte
-              quorum:
-                type: integer
-                format: int64
-                title: >-
-                  "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
-              status:
-                type: string
-                enum:
-                  - STATUS_UNSPECIFIED
-                  - STATUS_ACTIVATED
-                  - STATUS_DEACTIVATED
-                default: STATUS_UNSPECIFIED
-              description:
-                type: string
-              custodians:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    val_address:
-                      type: string
-                    bitcoin_pubkey:
-                      type: string
-                      format: byte
-                    status:
-                      type: string
-                      enum:
-                        - STATUS_UNSPECIFIED
-                        - STATUS_ACTIVATED
-                        - STATUS_DEACTIVATED
-                      default: STATUS_UNSPECIFIED
-                      title: >-
-                        "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-                    description:
-                      type: string
-                  title: Custodian represents an individual custodian configuration
-            title: >-
-              CustodianGroup represents a group of custodians with their
-              configuration
-
-              uid is used as identity of the group, btc_pubkey is change by list
-              of
-
-              custodians
+          custodian_group_uid:
+            type: string
+            title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
           asset:
             type: object
             properties:
@@ -57910,6 +57476,12 @@ definitions:
       sender:
         type: string
         format: byte
+      bitcoin_pubkey:
+        type: string
+        format: byte
+      scalar_pubkey:
+        type: string
+        format: byte
       name:
         type: string
       tag:
@@ -57924,72 +57496,11 @@ definitions:
               - LIQUIDITY_MODEL_POOL
               - LIQUIDITY_MODEL_UPC
             default: LIQUIDITY_MODEL_UNSPECIFIED
-      custodian_group:
-        type: object
-        properties:
-          uid:
-            type: string
-          name:
-            type: string
-          bitcoin_pubkey:
-            type: string
-            format: byte
-          quorum:
-            type: integer
-            format: int64
-            title: '"tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"'
-          status:
-            type: string
-            enum:
-              - STATUS_UNSPECIFIED
-              - STATUS_ACTIVATED
-              - STATUS_DEACTIVATED
-            default: STATUS_UNSPECIFIED
-          description:
-            type: string
-          custodians:
-            type: array
-            items:
-              type: object
-              properties:
-                name:
-                  type: string
-                val_address:
-                  type: string
-                bitcoin_pubkey:
-                  type: string
-                  format: byte
-                status:
-                  type: string
-                  enum:
-                    - STATUS_UNSPECIFIED
-                    - STATUS_ACTIVATED
-                    - STATUS_DEACTIVATED
-                  default: STATUS_UNSPECIFIED
-                  title: >-
-                    "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-                description:
-                  type: string
-              title: Custodian represents an individual custodian configuration
-        title: >-
-          CustodianGroup represents a group of custodians with their
-          configuration
-
-          uid is used as identity of the group, btc_pubkey is change by list of
-
-          custodians
-      chains:
-        type: array
-        items:
-          type: object
-          properties:
-            chain:
-              type: string
-            name:
-              type: string
-            address:
-              type: string
-          title: DestinationChain represents a blockchain where tokens can be sent
+      custodian_group_uid:
+        type: string
+      avatar:
+        type: string
+        format: byte
   scalar.protocol.v1beta1.CreateProtocolResponse:
     type: object
     properties:
@@ -58026,63 +57537,11 @@ definitions:
               - STATUS_UNSPECIFIED
               - STATUS_ACTIVATED
               - STATUS_DEACTIVATED
+              - STATUS_PENDING
             default: STATUS_UNSPECIFIED
-          custodian_group:
-            type: object
-            properties:
-              uid:
-                type: string
-              name:
-                type: string
-              bitcoin_pubkey:
-                type: string
-                format: byte
-              quorum:
-                type: integer
-                format: int64
-                title: >-
-                  "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
-              status:
-                type: string
-                enum:
-                  - STATUS_UNSPECIFIED
-                  - STATUS_ACTIVATED
-                  - STATUS_DEACTIVATED
-                default: STATUS_UNSPECIFIED
-              description:
-                type: string
-              custodians:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    val_address:
-                      type: string
-                    bitcoin_pubkey:
-                      type: string
-                      format: byte
-                    status:
-                      type: string
-                      enum:
-                        - STATUS_UNSPECIFIED
-                        - STATUS_ACTIVATED
-                        - STATUS_DEACTIVATED
-                      default: STATUS_UNSPECIFIED
-                      title: >-
-                        "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-                    description:
-                      type: string
-                  title: Custodian represents an individual custodian configuration
-            title: >-
-              CustodianGroup represents a group of custodians with their
-              configuration
-
-              uid is used as identity of the group, btc_pubkey is change by list
-              of
-
-              custodians
+          custodian_group_uid:
+            type: string
+            title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
           asset:
             type: object
             properties:
@@ -58140,61 +57599,11 @@ definitions:
           - STATUS_UNSPECIFIED
           - STATUS_ACTIVATED
           - STATUS_DEACTIVATED
+          - STATUS_PENDING
         default: STATUS_UNSPECIFIED
-      custodian_group:
-        type: object
-        properties:
-          uid:
-            type: string
-          name:
-            type: string
-          bitcoin_pubkey:
-            type: string
-            format: byte
-          quorum:
-            type: integer
-            format: int64
-            title: '"tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"'
-          status:
-            type: string
-            enum:
-              - STATUS_UNSPECIFIED
-              - STATUS_ACTIVATED
-              - STATUS_DEACTIVATED
-            default: STATUS_UNSPECIFIED
-          description:
-            type: string
-          custodians:
-            type: array
-            items:
-              type: object
-              properties:
-                name:
-                  type: string
-                val_address:
-                  type: string
-                bitcoin_pubkey:
-                  type: string
-                  format: byte
-                status:
-                  type: string
-                  enum:
-                    - STATUS_UNSPECIFIED
-                    - STATUS_ACTIVATED
-                    - STATUS_DEACTIVATED
-                  default: STATUS_UNSPECIFIED
-                  title: >-
-                    "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-                description:
-                  type: string
-              title: Custodian represents an individual custodian configuration
-        title: >-
-          CustodianGroup represents a group of custodians with their
-          configuration
-
-          uid is used as identity of the group, btc_pubkey is change by list of
-
-          custodians
+      custodian_group_uid:
+        type: string
+        title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
       asset:
         type: object
         properties:
@@ -58233,11 +57642,19 @@ definitions:
       protocol:
         type: object
         properties:
-          key_id:
+          custodians_group_uid:
             type: string
-          custodians_pubkey:
-            type: string
-            format: byte
+            title: >-
+              string key_id = 1 [
+                (gogoproto.customname) = "KeyID",
+                (gogoproto.casttype) =
+                    "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+              ];
+
+              bytes custodians_pubkey = 2 [ (gogoproto.customname) =
+              "CustodiansPubkey"
+
+              ];
           liquidity_model:
             type: string
             enum:
@@ -58296,63 +57713,11 @@ definitions:
                 - STATUS_UNSPECIFIED
                 - STATUS_ACTIVATED
                 - STATUS_DEACTIVATED
+                - STATUS_PENDING
               default: STATUS_UNSPECIFIED
-            custodian_group:
-              type: object
-              properties:
-                uid:
-                  type: string
-                name:
-                  type: string
-                bitcoin_pubkey:
-                  type: string
-                  format: byte
-                quorum:
-                  type: integer
-                  format: int64
-                  title: >-
-                    "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
-                status:
-                  type: string
-                  enum:
-                    - STATUS_UNSPECIFIED
-                    - STATUS_ACTIVATED
-                    - STATUS_DEACTIVATED
-                  default: STATUS_UNSPECIFIED
-                description:
-                  type: string
-                custodians:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                      val_address:
-                        type: string
-                      bitcoin_pubkey:
-                        type: string
-                        format: byte
-                      status:
-                        type: string
-                        enum:
-                          - STATUS_UNSPECIFIED
-                          - STATUS_ACTIVATED
-                          - STATUS_DEACTIVATED
-                        default: STATUS_UNSPECIFIED
-                        title: >-
-                          "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-                      description:
-                        type: string
-                    title: Custodian represents an individual custodian configuration
-              title: >-
-                CustodianGroup represents a group of custodians with their
-                configuration
-
-                uid is used as identity of the group, btc_pubkey is change by
-                list of
-
-                custodians
+            custodian_group_uid:
+              type: string
+              title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
             asset:
               type: object
               properties:
@@ -58386,6 +57751,7 @@ definitions:
       - STATUS_UNSPECIFIED
       - STATUS_ACTIVATED
       - STATUS_DEACTIVATED
+      - STATUS_PENDING
     default: STATUS_UNSPECIFIED
   scalar.protocol.v1beta1.SupportedChain:
     type: object
@@ -58444,63 +57810,11 @@ definitions:
               - STATUS_UNSPECIFIED
               - STATUS_ACTIVATED
               - STATUS_DEACTIVATED
+              - STATUS_PENDING
             default: STATUS_UNSPECIFIED
-          custodian_group:
-            type: object
-            properties:
-              uid:
-                type: string
-              name:
-                type: string
-              bitcoin_pubkey:
-                type: string
-                format: byte
-              quorum:
-                type: integer
-                format: int64
-                title: >-
-                  "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
-              status:
-                type: string
-                enum:
-                  - STATUS_UNSPECIFIED
-                  - STATUS_ACTIVATED
-                  - STATUS_DEACTIVATED
-                default: STATUS_UNSPECIFIED
-              description:
-                type: string
-              custodians:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    val_address:
-                      type: string
-                    bitcoin_pubkey:
-                      type: string
-                      format: byte
-                    status:
-                      type: string
-                      enum:
-                        - STATUS_UNSPECIFIED
-                        - STATUS_ACTIVATED
-                        - STATUS_DEACTIVATED
-                      default: STATUS_UNSPECIFIED
-                      title: >-
-                        "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-                    description:
-                      type: string
-                  title: Custodian represents an individual custodian configuration
-            title: >-
-              CustodianGroup represents a group of custodians with their
-              configuration
-
-              uid is used as identity of the group, btc_pubkey is change by list
-              of
-
-              custodians
+          custodian_group_uid:
+            type: string
+            title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
           asset:
             type: object
             properties:
@@ -58542,6 +57856,7 @@ definitions:
           - STATUS_UNSPECIFIED
           - STATUS_ACTIVATED
           - STATUS_DEACTIVATED
+          - STATUS_PENDING
         default: STATUS_UNSPECIFIED
   scalar.protocol.v1beta1.UpdateSupportedChainResponse:
     type: object
@@ -58579,63 +57894,11 @@ definitions:
               - STATUS_UNSPECIFIED
               - STATUS_ACTIVATED
               - STATUS_DEACTIVATED
+              - STATUS_PENDING
             default: STATUS_UNSPECIFIED
-          custodian_group:
-            type: object
-            properties:
-              uid:
-                type: string
-              name:
-                type: string
-              bitcoin_pubkey:
-                type: string
-                format: byte
-              quorum:
-                type: integer
-                format: int64
-                title: >-
-                  "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
-              status:
-                type: string
-                enum:
-                  - STATUS_UNSPECIFIED
-                  - STATUS_ACTIVATED
-                  - STATUS_DEACTIVATED
-                default: STATUS_UNSPECIFIED
-              description:
-                type: string
-              custodians:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    val_address:
-                      type: string
-                    bitcoin_pubkey:
-                      type: string
-                      format: byte
-                    status:
-                      type: string
-                      enum:
-                        - STATUS_UNSPECIFIED
-                        - STATUS_ACTIVATED
-                        - STATUS_DEACTIVATED
-                      default: STATUS_UNSPECIFIED
-                      title: >-
-                        "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-                    description:
-                      type: string
-                  title: Custodian represents an individual custodian configuration
-            title: >-
-              CustodianGroup represents a group of custodians with their
-              configuration
-
-              uid is used as identity of the group, btc_pubkey is change by list
-              of
-
-              custodians
+          custodian_group_uid:
+            type: string
+            title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
           asset:
             type: object
             properties:

@@ -25,23 +25,23 @@ import (
 func BeginBlocker(sdk.Context, abci.RequestBeginBlock, types.BaseKeeper) {}
 
 // EndBlocker called every block, process inflation, update validator set.
-func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper) ([]abci.ValidatorUpdate, error) {
+func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper, cov types.CovenantKeeper) ([]abci.ValidatorUpdate, error) {
 	clog.Yellow("Chains ABCI ENDBLOCKER")
-	handleConfirmedEvents(ctx, bk, n, m, p)
+	handleConfirmedEvents(ctx, bk, n, m, p, cov)
 	handleMessages(ctx, bk, n, m)
 
 	return nil, nil
 }
 
-func handleConfirmedEvents(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper) {
+func handleConfirmedEvents(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper, cov types.CovenantKeeper) {
 
 	// This will handle all chains except Scalarnet.
 	for _, chain := range slices.Filter(n.GetChains(ctx), types.IsSupportedChain) {
-		handleConfirmedEventsForChain(ctx, chain, bk, n, m, p)
+		handleConfirmedEventsForChain(ctx, chain, bk, n, m, p, cov)
 	}
 }
 
-func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper) {
+func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper, cov types.CovenantKeeper) {
 	ck := funcs.Must(bk.ForChain(ctx, chain.Name))
 	queue := ck.GetConfirmedEventQueue(ctx)
 	endBlockerLimit := ck.GetParams(ctx).EndBlockerLimit
@@ -56,7 +56,7 @@ func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.
 
 	for _, event := range events {
 		success := utils.RunCached(ctx, bk, func(ctx sdk.Context) (bool, error) {
-			if err := handleConfirmedEvent(ctx, event, bk, n, m, p); err != nil {
+			if err := handleConfirmedEvent(ctx, event, bk, n, m, p, cov); err != nil {
 				ck.Logger(ctx).Debug(fmt.Sprintf("failed handling event: %s", err.Error()),
 					"chain", chain.Name.String(),
 					"eventID", event.GetID(),
@@ -82,7 +82,7 @@ func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.
 	}
 }
 
-func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper) error {
+func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper, cov types.CovenantKeeper) error {
 	if err := validateEvent(ctx, event, bk, n); err != nil {
 		return err
 	}
@@ -90,7 +90,7 @@ func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 	case *types.Event_SourceTxConfirmationEvent:
 		return handleSourceConfirmationEvent(ctx, event, bk, n, m)
 	case *types.Event_ContractCallWithToken:
-		return handleContractCallWithToken(ctx, event, bk, n, m, p)
+		return handleContractCallWithToken(ctx, event, bk, n, m, p, cov)
 	case *types.Event_TokenSent:
 		return handleTokenSent(ctx, event, bk, n)
 	case *types.Event_Transfer:
@@ -220,7 +220,7 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 	return nil
 }
 
-func handleContractCallWithToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper) error {
+func handleContractCallWithToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper, cov types.CovenantKeeper) error {
 	e := event.GetContractCallWithToken()
 	if e == nil {
 		panic(fmt.Errorf("event is nil"))
@@ -245,7 +245,7 @@ func handleContractCallWithToken(ctx sdk.Context, event types.Event, bk types.Ba
 		if types.IsEvmChain(destinationChain.Name) {
 			return handleContractCallWithTokenToEVM(ctx, event, bk, n, m, sourceChain.Name, destinationChain.Name, asset)
 		} else if types.IsBitcoinChain(destinationChain.Name) {
-			return handleContractCallWithTokenToBTC(ctx, event, bk, n, p, sourceChain.Name, destinationChain.Name, asset)
+			return handleContractCallWithTokenToBTC(ctx, event, bk, n, p, cov, sourceChain.Name, destinationChain.Name, asset)
 		}
 		return nil
 	default:
@@ -255,7 +255,7 @@ func handleContractCallWithToken(ctx sdk.Context, event types.Event, bk types.Ba
 	}
 }
 
-func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, p types.ProtocolKeeper, sourceChain, destinationChain nexus.ChainName, asset string) error {
+func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, p types.ProtocolKeeper, cov types.CovenantKeeper, sourceChain, destinationChain nexus.ChainName, asset string) error {
 	e := event.GetContractCallWithToken()
 	if e == nil {
 		panic(fmt.Errorf("event is nil"))
@@ -286,14 +286,25 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 		return err
 	}
 
+	cusGr, ok := cov.GetCustodianGroup(ctx, protocolInfo.CustodiansGroupUID)
+	if !ok {
+		return fmt.Errorf("covenant not found")
+	}
+
+	clog.Yellowf("[abci/chains] covenant: %+v", cusGr)
+
+	keyID := protocolInfo.GetKeyID(cusGr.BitcoinPubkey)
+
+	// With Pool model, we can handle multiple command in one batch so dont need to different keyId for each command
+	// On the other hand, UPC model, we need to different keyId for each command
 	var keyId mexported.KeyID
 	switch protocolInfo.LiquidityModel {
 	case pexported.LIQUIDITY_MODEL_POOL:
 		clog.Yellowf("[abci/chains] Pooling protocol: %+v", protocolInfo)
-		keyId = protocolInfo.KeyID
+		keyId = keyID
 	case pexported.LIQUIDITY_MODEL_UPC:
 		buffer := event.TxID[:]
-		buffer = append(buffer, protocolInfo.CustodiansPubkey...)
+		buffer = append(buffer, cusGr.BitcoinPubkey...)
 		keyId = mexported.KeyID(hex.EncodeToString(buffer))
 		clog.Yellowf("[abci/chains] Transactional protocol: %+v, keyId: %+v, txID: %s", protocolInfo, keyId, hex.EncodeToString(event.TxID[:]))
 	}

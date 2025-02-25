@@ -85,7 +85,7 @@ message CommandBatchMetadata {
       [ (cosmos_proto.accepts_interface) =
             "github.com/cosmos/codec/ProtoMarshaler" ];
 
-  // extra data for the command, map 1:1 with the commands
+  // Store payload of each command to create psbt
   repeated bytes extra_data = 9;
 }
 

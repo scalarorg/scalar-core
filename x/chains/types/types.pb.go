@@ -271,7 +271,7 @@ type CommandBatchMetadata struct {
 	KeyID                 github_com_scalarorg_scalar_core_x_multisig_exported.KeyID `protobuf:"bytes,6,opt,name=key_id,json=keyId,proto3,casttype=github.com/scalarorg/scalar-core/x/multisig/exported.KeyID" json:"key_id,omitempty"`
 	PrevBatchedCommandsID []byte                                                     `protobuf:"bytes,7,opt,name=prev_batched_commands_id,json=prevBatchedCommandsId,proto3" json:"prev_batched_commands_id,omitempty"`
 	Signature             *types.Any                                                 `protobuf:"bytes,8,opt,name=signature,proto3" json:"signature,omitempty"`
-	// extra data for the command, map 1:1 with the commands
+	// Store payload of each command to create psbt
 	ExtraData [][]byte `protobuf:"bytes,9,rep,name=extra_data,json=extraData,proto3" json:"extra_data,omitempty"`
 }
 

@@ -42,8 +42,8 @@ func DefaultProtocol() *Protocol {
 		Address: "0xaa36A8a917D1804376A7b6Cd54AE1C74Cf83654d",
 	}
 	protocol := &Protocol{
-		Name:           DefaultProtocolName,
-		CustodianGroup: types.DefaultCustodianGroup(),
+		Name:              DefaultProtocolName,
+		CustodianGroupUID: types.DefaultCustodianGroup().UID,
 		Chains: []*SupportedChain{
 			&sepoliaToken, &bnbToken,
 		},

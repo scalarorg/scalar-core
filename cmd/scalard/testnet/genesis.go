@@ -40,7 +40,7 @@ import (
 
 // DefaultProtocol returns the default chains for a genesis state
 // Each protocol has a token info with the same index
-func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGroup covenanttypes.CustodianGroup) []*protocoltypes.Protocol {
+func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGroupUID string) []*protocoltypes.Protocol {
 	log.Debug().Any("TokenInfos", tokenInfos).Any("ProtocolInfos", protocolInfos).Msg("Create defaultProtocols")
 	protocols := []*protocoltypes.Protocol{}
 	for i, protocol := range protocolInfos {
@@ -71,12 +71,12 @@ func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGro
 			Attribute: &protocoltypes.ProtocolAttribute{
 				Model: model,
 			},
-			Name:           protocoltypes.DefaultProtocolName,
-			Tag:            []byte(protocol.Tag),
-			Status:         protocoltypes.Activated,
-			CustodianGroup: &custodianGroup,
-			Asset:          &chainsTypes.Asset{Chain: nexus.ChainName(tokenInfo.ID), Name: tokenInfo.Asset},
-			Chains:         supportedChains,
+			Name:              protocoltypes.DefaultProtocolName,
+			Tag:               []byte(protocol.Tag),
+			Status:            protocoltypes.Activated,
+			CustodianGroupUID: custodianGroupUID,
+			Asset:             &chainsTypes.Asset{Chain: nexus.ChainName(tokenInfo.ID), Name: tokenInfo.Asset},
+			Chains:            supportedChains,
 		})
 	}
 	return protocols
@@ -249,26 +249,22 @@ func GenerateGenesis(clientCtx client.Context,
 		}
 		custodianPubKeys[i] = go_utils.PublicKey(custodians[i].BitcoinPubkey)
 	}
-	//Todo: Create custodian group pubkey
+	//TODO: Create custodian group pubkey
 	custodianGroupPubKey, err := vault.CustodiansOnlyLockingScript(custodianPubKeys, quorum)
 	if err != nil {
 		return appGenState, err
 	}
-	custodianGroupUid := hex.EncodeToString(custodianGroupPubKey)
-	custodianGroup := covenanttypes.CustodianGroup{
-		Uid:           custodianGroupUid,
-		Name:          "scalar",
-		Custodians:    custodians,
-		BitcoinPubkey: []byte(custodianGroupPubKey),
-		Quorum:        uint32(quorum),
-		Status:        covenanttypes.Activated,
-		Description:   "Default custodial group, which contains all custodians",
-	}
+
+	custodiansGr := covenanttypes.NewCustodianGroup("scalar", []byte(custodianGroupPubKey), uint32(quorum), "Default custodial group, which contains all custodians", custodians)
+
+	// Activate the default custodian group
+	custodiansGr.Status = covenanttypes.Activated
+
 	defaultCovenantState := covenanttypes.DefaultGenesisState()
-	covnantGenState := covenanttypes.NewGenesisState(&defaultCovenantState.Params, defaultCovenantState.SigningSessions, custodians, []*covenanttypes.CustodianGroup{&custodianGroup})
+	covnantGenState := covenanttypes.NewGenesisState(&defaultCovenantState.Params, defaultCovenantState.SigningSessions, custodians, []*covenanttypes.CustodianGroup{custodiansGr})
 	appGenState[covenanttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&covnantGenState)
 	//Protocol
-	protocolGenState, err := generateProtocolGenesis(protocols, custodianGroup, args.configPath)
+	protocolGenState, err := generateProtocolGenesis(protocols, custodiansGr.UID, args.configPath)
 	if err == nil {
 		appGenState[protocoltypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(protocolGenState)
 	}
@@ -282,7 +278,7 @@ func GenerateGenesis(clientCtx client.Context,
 
 	return appGenState, nil
 }
-func generateProtocolGenesis(protocolInfos []Protocol, custodianGroup covenanttypes.CustodianGroup, configPath string) (*protocoltypes.GenesisState, error) {
+func generateProtocolGenesis(protocolInfos []Protocol, custodianGroupUID string, configPath string) (*protocoltypes.GenesisState, error) {
 	// evmTokenPath := path.Join(tokensPath, "evm.json")
 	// log.Debug().Msgf("Read token config in the path %s", evmTokenPath)
 	// tokenInfos, err := ParseJsonArrayConfig[Token](evmTokenPath)
@@ -299,7 +295,7 @@ func generateProtocolGenesis(protocolInfos []Protocol, custodianGroup covenantty
 		log.Error().Msgf("Missing token infos in path %s", btcTokenPath)
 	}
 	log.Debug().Any("TokenInfo", tokenInfos).Msgf("Successfull parsed token config")
-	protocols := DefaultProtocols(protocolInfos, tokenInfos, custodianGroup)
+	protocols := DefaultProtocols(protocolInfos, tokenInfos, custodianGroupUID)
 	protocolGenState := protocoltypes.NewGenesisState(protocols)
 	return protocolGenState, nil
 }

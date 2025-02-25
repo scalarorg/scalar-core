@@ -23,20 +23,23 @@ message MinorAddress {
   string address = 2;
 }
 message ProtocolInfo {
-  string key_id = 1 [
-    (gogoproto.customname) = "KeyID",
-    (gogoproto.casttype) =
-        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
-  ];
-  bytes custodians_pubkey = 2 [ (gogoproto.customname) = "CustodiansPubkey" ];
-  LiquidityModel liquidity_model = 3
+  // string key_id = 1 [
+  //   (gogoproto.customname) = "KeyID",
+  //   (gogoproto.casttype) =
+  //       "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+  // ];
+  // bytes custodians_pubkey = 2 [ (gogoproto.customname) = "CustodiansPubkey"
+  // ];
+  string custodians_group_uid = 1
+      [ (gogoproto.customname) = "CustodiansGroupUID" ];
+  LiquidityModel liquidity_model = 2
       [ (gogoproto.customname) = "LiquidityModel" ];
-  string symbol = 4;
-  string origin_chain = 5 [
+  string symbol = 3;
+  string origin_chain = 4 [
     (gogoproto.customname) = "OriginChain",
     (gogoproto.casttype) =
         "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"
   ];
-  repeated MinorAddress minor_addresses = 6
+  repeated MinorAddress minor_addresses = 5
       [ (gogoproto.customname) = "MinorAddresses" ];
 }

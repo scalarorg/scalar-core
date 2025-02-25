@@ -22,12 +22,14 @@ func (k Keeper) CreateCustodianGroup(ctx sdk.Context, params types.Params) (err 
 func (k Keeper) SetCustodian(ctx sdk.Context, custodian *types.Custodian) {
 	k.getStore(ctx).Set(custodianPrefix.Append(utils.KeyFromBz(custodian.BitcoinPubkey)), custodian)
 }
+
 func (k Keeper) SetCustodians(ctx sdk.Context, custodians []*types.Custodian) {
 	store := k.getStore(ctx)
 	for _, custodian := range custodians {
 		store.Set(custodianPrefix.Append(utils.KeyFromBz(custodian.BitcoinPubkey)), custodian)
 	}
 }
+
 func (k Keeper) GetAllCustodians(ctx sdk.Context) ([]*types.Custodian, bool) {
 	protocols := []*types.Custodian{}
 	iter := k.getStoreIterator(ctx, custodianPrefix)
@@ -54,15 +56,23 @@ func (k Keeper) findCustodians(ctx sdk.Context, req *types.CustodiansRequest) ([
 	return custodians, true
 }
 
-func (k Keeper) SetCustodianGroup(ctx sdk.Context, custodianGroup *types.CustodianGroup) {
-	k.getStore(ctx).Set(custodianGroupPrefix.Append(utils.KeyFromBz([]byte(custodianGroup.Uid))), custodianGroup)
+func (k Keeper) GetCustodianGroup(ctx sdk.Context, uid string) (custodianGroup *types.CustodianGroup, ok bool) {
+	group := types.CustodianGroup{}
+	ok = k.getStore(ctx).Get(custodianGroupPrefix.Append(utils.KeyFromBz([]byte(uid))), &group)
+	return &group, ok
 }
+
+func (k Keeper) SetCustodianGroup(ctx sdk.Context, custodianGroup *types.CustodianGroup) {
+	k.getStore(ctx).Set(custodianGroupPrefix.Append(utils.KeyFromBz([]byte(custodianGroup.UID))), custodianGroup)
+}
+
 func (k Keeper) SetCustodianGroups(ctx sdk.Context, custodianGroups []*types.CustodianGroup) {
 	store := k.getStore(ctx)
 	for _, group := range custodianGroups {
-		store.Set(custodianGroupPrefix.Append(utils.KeyFromBz([]byte(group.Uid))), group)
+		store.Set(custodianGroupPrefix.Append(utils.KeyFromBz([]byte(group.UID))), group)
 	}
 }
+
 func (k Keeper) GetAllCustodianGroups(ctx sdk.Context) ([]*types.CustodianGroup, bool) {
 	custodianGroups := []*types.CustodianGroup{}
 	iter := k.getStoreIterator(ctx, custodianGroupPrefix)
@@ -101,9 +111,6 @@ func isMatchCustodianGroup(protocol *types.CustodianGroup, req *types.GroupsRequ
 	match := true
 
 	return match
-}
-func (k Keeper) GetCustodianGroup(ctx sdk.Context, groupId string) (custodianGroup *types.CustodianGroup, ok bool) {
-	return &types.CustodianGroup{}, false
 }
 
 func (k Keeper) GetCustodianKeys(ctx sdk.Context, groupId string) ([]string, bool) {

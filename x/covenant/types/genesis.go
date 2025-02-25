@@ -35,7 +35,7 @@ func DefaultCustodian() *Custodian {
 
 func DefaultCustodianGroup() *CustodianGroup {
 	return &CustodianGroup{
-		Uid:  uuid.NewString(),
+		UID:  uuid.NewString(),
 		Name: DefaultCustodianName,
 	}
 }

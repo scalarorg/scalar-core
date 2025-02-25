@@ -1,12 +1,10 @@
 package types
 
 import (
-	"encoding/hex"
 	"errors"
 
 	"github.com/scalarorg/scalar-core/utils/evm"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
-	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/protocol/exported"
 )
@@ -32,9 +30,6 @@ func (p *Protocol) IsAssetSupported(destinationChain nexus.ChainName, tokenAddre
 	}
 	return errors.New("asset not supported")
 }
-func (p *Protocol) GetKeyID() string {
-	return hex.EncodeToString(p.CustodianGroup.BitcoinPubkey)
-}
 
 // Get Unique keyId, which later can tell us how to sign btc psbt
 func (p *Protocol) ToProtocolInfo() *exported.ProtocolInfo {
@@ -45,12 +40,13 @@ func (p *Protocol) ToProtocolInfo() *exported.ProtocolInfo {
 			Address:   chain.Address,
 		}
 	}
+
 	return &exported.ProtocolInfo{
-		KeyID:            multisig.KeyID(p.GetKeyID()),
-		CustodiansPubkey: p.CustodianGroup.BitcoinPubkey,
-		LiquidityModel:   p.Attribute.Model,
-		OriginChain:      p.Asset.Chain,
-		Symbol:           p.Asset.Name,
-		MinorAddresses:   minorAddreses,
+		// KeyID:            multisig.KeyID(keyID),
+		CustodiansGroupUID: p.CustodianGroupUID,
+		LiquidityModel:     p.Attribute.Model,
+		OriginChain:        p.Asset.Chain,
+		Symbol:             p.Asset.Name,
+		MinorAddresses:     minorAddreses,
 	}
 }

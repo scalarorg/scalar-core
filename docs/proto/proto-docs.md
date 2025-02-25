@@ -956,8 +956,7 @@ Msg defines the nexus Msg service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-| `custodians_pubkey` | [bytes](#bytes) |  |  |
+| `custodians_group_uid` | [string](#string) |  | string key_id = 1 [ (gogoproto.customname) = "KeyID", (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID" ]; bytes custodians_pubkey = 2 [ (gogoproto.customname) = "CustodiansPubkey" ]; |
 | `liquidity_model` | [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
 | `symbol` | [string](#string) |  |  |
 | `origin_chain` | [string](#string) |  |  |
@@ -1069,7 +1068,7 @@ Msg defines the nexus Msg service.
 | `key_id` | [string](#string) |  |  |
 | `prev_batched_commands_id` | [bytes](#bytes) |  |  |
 | `signature` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
-| `extra_data` | [bytes](#bytes) | repeated | extra data for the command, map 1:1 with the commands |
+| `extra_data` | [bytes](#bytes) | repeated | Store payload of each command to create psbt |
 
 
 
@@ -3908,7 +3907,7 @@ custodians
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `uid` | [string](#string) |  |  |
+| `uid` | [string](#string) |  | the UID is unique, to distinguish between custodian groups |
 | `name` | [string](#string) |  | e.g., "All" |
 | `bitcoin_pubkey` | [bytes](#bytes) |  | e.g., |
 | `quorum` | [uint32](#uint32) |  | "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
@@ -3992,6 +3991,7 @@ quorum threshold e.g.,3 |
 | STATUS_UNSPECIFIED | 0 |  |
 | STATUS_ACTIVATED | 1 |  |
 | STATUS_DEACTIVATED | 2 |  |
+| STATUS_PENDING | 3 |  |
 
 
  <!-- end enums -->
@@ -6949,7 +6949,7 @@ Query defines the gRPC querier service.
 | `tag` | [bytes](#bytes) |  |  |
 | `attribute` | [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute) |  |  |
 | `status` | [Status](#scalar.protocol.v1beta1.Status) |  |  |
-| `custodian_group` | [scalar.covenant.v1beta1.CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
+| `custodian_group_uid` | [string](#string) |  | scalar.covenant.v1beta1.CustodianGroup custodian_group = 8; |
 | `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
 | `chains` | [SupportedChain](#scalar.protocol.v1beta1.SupportedChain) | repeated | Other chains with internal asset |
 | `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
@@ -7003,6 +7003,7 @@ DestinationChain represents a blockchain where tokens can be sent
 | STATUS_UNSPECIFIED | 0 |  |
 | STATUS_ACTIVATED | 1 |  |
 | STATUS_DEACTIVATED | 2 |  |
+| STATUS_PENDING | 3 |  |
 
 
  <!-- end enums -->
@@ -7199,12 +7200,14 @@ Params represent the genesis parameters for the module
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `sender` | [bytes](#bytes) |  |  |
+| `sender` | [bytes](#bytes) |  | address |
+| `bitcoin_pubkey` | [bytes](#bytes) |  | BTC's pubkey |
+| `scalar_pubkey` | [bytes](#bytes) |  | Scalar's pubkey |
 | `name` | [string](#string) |  | e.g., "protocol-1" |
 | `tag` | [string](#string) |  | e.g., "pools" |
 | `attribute` | [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute) |  |  |
-| `custodian_group` | [scalar.covenant.v1beta1.CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
-| `chains` | [SupportedChain](#scalar.protocol.v1beta1.SupportedChain) | repeated |  |
+| `custodian_group_uid` | [string](#string) |  |  |
+| `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
 
 
 

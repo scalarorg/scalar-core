@@ -10,13 +10,22 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-var _ types.QueryServer = Keeper{}
+var _ types.QueryServer = (*Querier)(nil)
 
-// GovernanceKey returns the multisig governance key
-func (k Keeper) Protocols(c context.Context, req *types.ProtocolsRequest) (*types.ProtocolsResponse, error) {
+type Querier struct {
+	keeper   *Keeper
+	covenant types.CovenantKeeper
+}
+
+func NewGRPCQuerier(keeper *Keeper, covenant types.CovenantKeeper) *Querier {
+	return &Querier{keeper: keeper, covenant: covenant}
+}
+
+// GovernanceKey returns the xmultisig governance key
+func (k *Querier) Protocols(c context.Context, req *types.ProtocolsRequest) (*types.ProtocolsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	protocols, ok := k.findProtocols(ctx, req)
+	protocols, ok := k.keeper.findProtocols(ctx, req)
 	if !ok {
 		return nil, status.Errorf(codes.NotFound, "protocols not found")
 	}
@@ -27,7 +36,7 @@ func (k Keeper) Protocols(c context.Context, req *types.ProtocolsRequest) (*type
 	}, nil
 }
 
-func (k Keeper) Protocol(c context.Context, req *types.ProtocolRequest) (*types.ProtocolResponse, error) {
+func (q *Querier) Protocol(c context.Context, req *types.ProtocolRequest) (*types.ProtocolResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
 	err := req.ValidateBasic()
@@ -37,23 +46,33 @@ func (k Keeper) Protocol(c context.Context, req *types.ProtocolRequest) (*types.
 
 	var protocol *pexported.ProtocolInfo
 	if req.Symbol != "" {
-		protocol, err = k.FindProtocolByExternalSymbol(ctx, req.OriginChain, req.MinorChain, req.Symbol)
+		protocol, err = q.keeper.FindProtocolByExternalSymbol(ctx, req.OriginChain, req.MinorChain, req.Symbol)
 		if err != nil {
 			return nil, status.Errorf(codes.NotFound, "protocol not found")
 		}
+
+		// custodianGr, ok := q.covenant.GetCustodianGroup(ctx, protocol.CustodianGroupUID)
+		// if !ok {
+		// 	return nil, status.Errorf(codes.NotFound, "custodian group not found")
+		// }
+
+		// protocolInfo := protocol.ToProtocolInfo()
 
 		return &types.ProtocolResponse{
 			Protocol: protocol,
 		}, nil
-
 	}
 
 	if req.Address != "" {
-		protocol, err = k.FindProtocolByInternalAddress(ctx, req.OriginChain, req.MinorChain, req.Address)
+		protocol, err = q.keeper.FindProtocolByInternalAddress(ctx, req.OriginChain, req.MinorChain, req.Address)
 		if err != nil {
-			k.Logger(ctx).Error("Protocol with input address not found", "error", err)
 			return nil, status.Errorf(codes.NotFound, "protocol not found")
 		}
+
+		// custodianGr, ok := q.covenant.GetCustodianGroup(ctx, protocol.CustodianGroupUID)
+		// if !ok {
+		// 	return nil, status.Errorf(codes.NotFound, "custodian group not found")
+		// }
 
 		return &types.ProtocolResponse{
 			Protocol: protocol,

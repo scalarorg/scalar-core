@@ -11,8 +11,8 @@ import (
 )
 
 // NewHandler returns the handler of the Cosmos module
-func NewHandler(k keeper.Keeper) sdk.Handler {
-	server := keeper.NewMsgServerImpl(k)
+func NewHandler(k keeper.Keeper, covenant types.CovenantKeeper) sdk.Handler {
+	server := keeper.NewMsgServerImpl(k, covenant)
 	h := func(ctx sdk.Context, msg sdk.Msg) (*sdk.Result, error) {
 		ctx = ctx.WithEventManager(sdk.NewEventManager())
 		switch msg := msg.(type) {

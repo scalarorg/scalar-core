@@ -8,45 +8,45 @@ import "scalar/protocol/v1beta1/types.proto";
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
 message CreateProtocolRequest {
-  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-  string name = 2; // e.g., "protocol-1"
-  string tag = 3; // e.g., "pools"
-  ProtocolAttribute attribute = 4;
-  scalar.covenant.v1beta1.CustodianGroup custodian_group = 5;
-  repeated SupportedChain chains = 6;
+  bytes sender = 1
+      [ (gogoproto.casttype) =
+            "github.com/cosmos/cosmos-sdk/types.AccAddress" ]; // address
+
+  bytes bitcoin_pubkey = 2; // BTC's pubkey
+  bytes scalar_pubkey = 3;  // Scalar's pubkey
+  string name = 4;          // e.g., "protocol-1"
+  string tag = 5;           // e.g., "pools"
+  ProtocolAttribute attribute = 6;
+  string custodian_group_uid = 7;
+  bytes avatar = 8; // Avatar of the protocol, base64 encoded
 }
 
-message CreateProtocolResponse {
-  Protocol protocol = 1;
-}
+message CreateProtocolResponse { Protocol protocol = 1; }
 
 // pubkey used as protocol unique id
 message UpdateProtocolRequest {
-  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string name = 2;
   string tag = 3; // e.g., "pools"
 }
 
-message UpdateProtocolResponse {
-  Protocol protocol = 1;
-}
+message UpdateProtocolResponse { Protocol protocol = 1; }
 
 message AddSupportedChainRequest {
-  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   SupportedChain chain = 2;
 }
 
-message AddSupportedChainResponse {
-  Protocol protocol = 1;
-}
+message AddSupportedChainResponse { Protocol protocol = 1; }
 
 message UpdateSupportedChainRequest {
-  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain_family = 2;
   uint64 chain_id = 3;
   Status status = 4;
 }
 
-message UpdateSupportedChainResponse {
-  Protocol protocol = 1;
-}
+message UpdateSupportedChainResponse { Protocol protocol = 1; }

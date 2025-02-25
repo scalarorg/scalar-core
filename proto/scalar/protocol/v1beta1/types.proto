@@ -17,6 +17,7 @@ enum Status {
   STATUS_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Unspecified" ];
   STATUS_ACTIVATED = 1 [ (gogoproto.enumvalue_customname) = "Activated" ];
   STATUS_DEACTIVATED = 2 [ (gogoproto.enumvalue_customname) = "Deactivated" ];
+  STATUS_PENDING = 3 [ (gogoproto.enumvalue_customname) = "Pending" ];
 }
 
 message ProtocolAttribute {
@@ -31,6 +32,7 @@ message SupportedChain {
   string name = 2;
   string address = 3; // Asset address on the chain
 }
+
 message Protocol {
   bytes bitcoin_pubkey = 1; // BTC's pubkey
   bytes scalar_pubkey = 2;  // Scalar's pubkey
@@ -39,7 +41,9 @@ message Protocol {
   bytes tag = 5;
   ProtocolAttribute attribute = 6;
   Status status = 7;
-  scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
+  // scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
+  string custodian_group_uid = 8
+      [ (gogoproto.customname) = "CustodianGroupUID" ];
   scalar.chains.v1beta1.Asset asset = 9; // External asset
   repeated SupportedChain chains = 10;   // Other chains with internal asset
   bytes avatar = 11; // Avatar of the protocol, base64 encoded

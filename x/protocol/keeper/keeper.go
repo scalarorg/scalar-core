@@ -54,6 +54,7 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 func (k Keeper) SetProtocol(ctx sdk.Context, protocol *types.Protocol) {
 	k.getStore(ctx).Set(protocolPrefix.Append(utils.KeyFromBz(protocol.ScalarAddress)), protocol)
 }
+
 func (k Keeper) SetProtocols(ctx sdk.Context, protocols []*types.Protocol) {
 	store := k.getStore(ctx)
 	for _, protocol := range protocols {

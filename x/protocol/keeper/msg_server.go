@@ -2,33 +2,47 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/x/protocol/types"
 )
 
 type msgServer struct {
 	Keeper
+	covenant types.CovenantKeeper
 }
 
 // NewMsgServerImpl returns a new msg server instance
-func NewMsgServerImpl(keeper Keeper) types.MsgServer {
-	return msgServer{Keeper: keeper}
+func NewMsgServerImpl(keeper Keeper, covenant types.CovenantKeeper) types.MsgServer {
+	return msgServer{Keeper: keeper, covenant: covenant}
 }
 
 func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRequest) (*types.CreateProtocolResponse, error) {
-	// ctx := sdk.UnwrapSDKContext(c)
+	ctx := sdk.UnwrapSDKContext(c)
 
-	// if _, ok := s.getGovAccount(ctx, req.GovernanceKey.Address().Bytes()); ok {
-	// 	return nil, fmt.Errorf("account is already registered with a role")
-	// }
+	custodianGr, ok := s.covenant.GetCustodianGroup(ctx, req.CustodianGroupUid)
+	if !ok {
+		return nil, fmt.Errorf("custodian group not found")
+	}
 
-	// s.setGovernanceKey(ctx, req.GovernanceKey)
-	// // delete the existing governance account address
-	// s.deleteGovAccount(ctx, req.Sender)
+	protocol := types.Protocol{
+		BitcoinPubkey:     req.BitcoinPubkey,
+		ScalarAddress:     req.Sender.Bytes(),
+		ScalarPubkey:      req.ScalarPubkey,
+		Name:              req.Name,
+		Tag:               []byte(req.Tag), // ascii
+		Attribute:         req.Attribute,
+		Status:            types.Pending,
+		CustodianGroupUID: custodianGr.UID,
+		Avatar:            req.Avatar,
+	}
 
-	// s.setGovAccount(ctx, types.NewGovAccount(req.GovernanceKey.Address().Bytes(), exported.ROLE_ACCESS_CONTROL))
+	s.Keeper.SetProtocol(ctx, &protocol)
 
-	return &types.CreateProtocolResponse{}, nil
+	return &types.CreateProtocolResponse{
+		Protocol: &protocol,
+	}, nil
 }
 
 // RegisterController handles register a controller account
