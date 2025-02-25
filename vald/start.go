@@ -191,7 +191,46 @@ func setPersistentFlags(cmd *cobra.Command) {
 }
 
 func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdConfig, valAddr sdk.ValAddress, stateSource ReadWriter) {
+	// Maximum number of restart attempts
+	const maxRestarts = 100
+	restartCount := 0
+	backoff := time.Second
 
+	for {
+		if restartCount >= maxRestarts {
+			log.Error("exceeded maximum restart attempts, shutting down")
+			return
+		}
+
+		if restartCount > 0 {
+			log.Infof("attempting to reconnect in %v (attempt %d/%d)...", backoff, restartCount, maxRestarts)
+			time.Sleep(backoff)
+			// Exponential backoff with max of 1 minute
+			backoff *= 2
+			if backoff > time.Minute {
+				backoff = time.Minute
+			}
+		}
+
+		err := listenWithTimeout(clientCtx, txf, scalarCfg, valAddr, stateSource)
+		if err == nil {
+			//TODO:  Clean shutdown requested
+			return
+		}
+
+		log.Errorf("connection error: %v", err)
+		restartCount++
+
+		// Cleanup resources before retry
+		once.Do(cleanUp)
+		// Reset the once to allow cleanup on next iteration
+		once = sync.Once{}
+		cleanupCommands = nil
+	}
+}
+
+func listenWithTimeout(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdConfig, valAddr sdk.ValAddress, stateSource ReadWriter) error {
+	// Original validation code
 	for _, btcConfig := range scalarCfg.BTCMgrConfig {
 		btcConfig.ValidateBasic()
 	}
@@ -204,7 +243,7 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 	cdc := encCfg.Amino
 	sender, err := clientCtx.Keyring.Key(clientCtx.From)
 	if err != nil {
-		panic(sdkerrors.Wrap(err, "failed to read broadcaster account info from keyring"))
+		return sdkerrors.Wrap(err, "failed to read broadcaster account info from keyring")
 	}
 	clientCtx = clientCtx.
 		WithFromAddress(sender.GetAddress()).
@@ -226,24 +265,20 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 	})
 
 	tssMgr := createTSSMgr(bc, clientCtx, scalarCfg, valAddr.String(), cdc)
-
 	evmMgr := createEVMMgr(scalarCfg, clientCtx, bc, valAddr)
-
 	xMgr := createXChainMgr(scalarCfg, clientCtx, bc, valAddr)
-
 	multisigMgr := createMultisigMgr(bc, clientCtx, scalarCfg, valAddr)
-
 	psbtMgr := createPSBTMgr(scalarCfg.BTCMgrConfig, clientCtx, bc, valAddr, scalarCfg.AdditionalKeys.BtcPrivKey)
 
 	nodeHeight, err := waitUntilNetworkSync(scalarCfg, robustClient)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("failed to sync with network: %w", err)
 	}
 
 	stateStore := NewStateStore(stateSource)
 	startBlock, err := getStartBlock(scalarCfg, stateStore, nodeHeight)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("failed to get start block: %w", err)
 	}
 
 	eventBus := createEventBus(robustClient, startBlock, scalarCfg.EventNotificationsMaxRetries, scalarCfg.EventNotificationsBackOff)
@@ -348,8 +383,17 @@ func listen(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg config.ValdCo
 		eGroup.Go(func() error { return job(eventCtx) })
 	})
 
-	if err := eGroup.Wait(); err != nil {
-		log.Error(err.Error())
+	// Wait for either an error from the error group or a timeout
+	done := make(chan error, 1)
+	go func() {
+		done <- eGroup.Wait()
+	}()
+
+	select {
+	case err := <-done:
+		return err
+	case <-blockTimeout.Done():
+		return fmt.Errorf("connection timeout: no new blocks received within %v", scalarCfg.NoNewBlockPanicTimeout)
 	}
 }
 
