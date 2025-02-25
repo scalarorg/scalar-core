@@ -13,6 +13,7 @@ import (
 
 const (
 	FlagPubKey = "pubkey"
+	FlagUID    = "uid"
 	FlagName   = "name"
 	FlagStatus = "status"
 )
@@ -113,12 +114,6 @@ func readGroupFlags(cmd *cobra.Command, request *types.GroupsRequest) {
 	if request == nil {
 		return
 	}
-	var err error
-	pubkey, _ := cmd.Flags().GetString(FlagPubKey)
-	request.GroupPubkey, err = hex.DecodeString(pubkey)
-	if err != nil {
-		log.Fatal("Failed to decode pubkey", err)
-	}
-	name, _ := cmd.Flags().GetString(FlagName)
-	request.Name = name
+	uid, _ := cmd.Flags().GetString(FlagUID)
+	request.UID = uid
 }

@@ -48,9 +48,9 @@ func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGro
 			break
 		}
 		tokenInfo := tokenInfos[i]
-		supportedChains := []*protocoltypes.SupportedChain{}
+		supportedChains := []*pexported.SupportedChain{}
 		for _, chain := range tokenInfo.Deployments {
-			supportedChains = append(supportedChains, &protocoltypes.SupportedChain{
+			supportedChains = append(supportedChains, &pexported.SupportedChain{
 				Chain:   nexus.ChainName(chain.ID),
 				Name:    chain.Name,
 				Address: chain.TokenAddress,
@@ -68,12 +68,12 @@ func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGro
 			BitcoinPubkey: protocol.BitcoinPubKey,
 			ScalarPubkey:  protocol.PubKey.Bytes(),
 			ScalarAddress: sdk.AccAddress(protocol.PubKey.Address()),
-			Attribute: &protocoltypes.ProtocolAttribute{
+			Attributes: &pexported.ProtocolAttributes{
 				Model: model,
 			},
 			Name:              protocoltypes.DefaultProtocolName,
 			Tag:               []byte(protocol.Tag),
-			Status:            protocoltypes.Activated,
+			Status:            pexported.Activated,
 			CustodianGroupUID: custodianGroupUID,
 			Asset:             &chainsTypes.Asset{Chain: nexus.ChainName(tokenInfo.ID), Name: tokenInfo.Asset},
 			Chains:            supportedChains,

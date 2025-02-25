@@ -96,7 +96,7 @@ func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 	case *types.Event_Transfer:
 		return handleConfirmDeposit(ctx, event, bk, n)
 	case *types.Event_TokenDeployed:
-		return handleTokenDeployed(ctx, event, bk, n)
+		return handleTokenDeployed(ctx, event, bk, n, p)
 	case *types.Event_MultisigOperatorshipTransferred:
 		return handleMultisigTransferKey(ctx, event, bk, n, m)
 	// TODO: add other event types here
@@ -281,7 +281,7 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 	// if !ok {
 	// 	keyId = multisigexported.KeyID(destinationChain)
 	// }
-	protocolInfo, err := p.FindProtocolByExternalSymbol(ctx, destinationChain, sourceChain, e.Symbol)
+	protocolInfo, err := p.FindProtocolInfoByExternalSymbol(ctx, sourceChain, e.Symbol)
 	if err != nil {
 		return err
 	}
@@ -549,7 +549,7 @@ func handleConfirmDeposit(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 	return nil
 }
 
-func handleTokenDeployed(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus) error {
+func handleTokenDeployed(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, p types.ProtocolKeeper) error {
 	fmt.Println("HandleTokenDeployed")
 	e := event.GetEvent().(*types.Event_TokenDeployed).TokenDeployed
 	if e == nil {
@@ -578,6 +578,15 @@ func handleTokenDeployed(ctx sdk.Context, event types.Event, bk types.BaseKeeper
 		"eventID", event.GetID(),
 		"txID", event.TxID.Hex(),
 	)
+
+	tokenDetails := token.GetDetails()
+
+	err := p.AddTokenForProtocol(ctx, chain.Name, tokenDetails.Symbol, token.GetAddress().String(), tokenDetails.TokenName)
+	if err != nil {
+		return err
+	}
+
+	// clog.Yellowf("[abci/chains] protocolInfo: %+v", protocolInfo)
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(types.EventTypeTokenConfirmation,

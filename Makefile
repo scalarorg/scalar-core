@@ -291,6 +291,10 @@ params:
 		$(SCALAR_BIN_PATH) query chains params '$(CHAIN)'; \
 	fi
 
+.PHONY: add-protocol
+add-protocol:
+	$(SCALAR_BIN_PATH) tx protocol add '{"attribute":{"model":0},"avatar":"nVJ5","bitcoin_pubkey":"03620a0b56223990b75c28dded4f30c854e0918e52179d5a7dfbf79df89fce7bcd","custodian_group_uid":"310b805d-8d15-4dee-9a30-c5bd89214ce9","name":"lalaa","tag":"pepeS","asset":{"chain_name":"bitcoin|4","asset_name":"Zbtc"}}' --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 1000535 --sequence 5
+
 .PHONY: open-docs
 open-docs:
 	open client/docs/static/openapi/index.html

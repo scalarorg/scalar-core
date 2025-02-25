@@ -107,10 +107,12 @@ func isMatchCustodian(protocol *types.Custodian, req *types.CustodiansRequest) b
 }
 
 // Todo: Implement Matching function
-func isMatchCustodianGroup(protocol *types.CustodianGroup, req *types.GroupsRequest) bool {
-	match := true
+func isMatchCustodianGroup(group *types.CustodianGroup, req *types.GroupsRequest) bool {
+	if req.UID != "" && group.UID != req.UID {
+		return false
+	}
 
-	return match
+	return true
 }
 
 func (k Keeper) GetCustodianKeys(ctx sdk.Context, groupId string) ([]string, bool) {

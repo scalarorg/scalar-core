@@ -6534,13 +6534,6 @@ paths:
                       type: string
                     symbol:
                       type: string
-                    model:
-                      type: string
-                      enum:
-                        - LIQUIDITY_MODEL_UNSPECIFIED
-                        - LIQUIDITY_MODEL_POOL
-                        - LIQUIDITY_MODEL_UPC
-                      default: LIQUIDITY_MODEL_UNSPECIFIED
             title: |-
               ERC20TokensResponse describes the asset and symbol for all
               ERC20 tokens requested for a chain
@@ -9457,7 +9450,7 @@ paths:
                     tag:
                       type: string
                       format: byte
-                    attribute:
+                    attributes:
                       type: object
                       properties:
                         model:
@@ -9477,9 +9470,6 @@ paths:
                       default: STATUS_UNSPECIFIED
                     custodian_group_uid:
                       type: string
-                      title: >-
-                        scalar.covenant.v1beta1.CustodianGroup custodian_group =
-                        8;
                     asset:
                       type: object
                       properties:
@@ -9498,12 +9488,72 @@ paths:
                             type: string
                           address:
                             type: string
-                        title: >-
-                          DestinationChain represents a blockchain where tokens
-                          can be sent
                     avatar:
                       type: string
                       format: byte
+                    custodian_group:
+                      type: object
+                      properties:
+                        uid:
+                          type: string
+                          title: >-
+                            the UID is unique, to distinguish between custodian
+                            groups
+                        name:
+                          type: string
+                        bitcoin_pubkey:
+                          type: string
+                          format: byte
+                        quorum:
+                          type: integer
+                          format: int64
+                          title: >-
+                            "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
+                        status:
+                          type: string
+                          enum:
+                            - STATUS_UNSPECIFIED
+                            - STATUS_ACTIVATED
+                            - STATUS_DEACTIVATED
+                            - STATUS_PENDING
+                          default: STATUS_UNSPECIFIED
+                        description:
+                          type: string
+                        custodians:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              val_address:
+                                type: string
+                              bitcoin_pubkey:
+                                type: string
+                                format: byte
+                              status:
+                                type: string
+                                enum:
+                                  - STATUS_UNSPECIFIED
+                                  - STATUS_ACTIVATED
+                                  - STATUS_DEACTIVATED
+                                  - STATUS_PENDING
+                                default: STATUS_UNSPECIFIED
+                                title: >-
+                                  "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
+                              description:
+                                type: string
+                            title: >-
+                              Custodian represents an individual custodian
+                              configuration
+                      title: >-
+                        CustodianGroup represents a group of custodians with
+                        their configuration
+
+                        uid is used as identity of the group, btc_pubkey is
+                        change by list of
+
+                        custodians
               total:
                 type: string
                 format: uint64
@@ -9751,7 +9801,7 @@ paths:
                   tag:
                     type: string
                     format: byte
-                  attribute:
+                  attributes:
                     type: object
                     properties:
                       model:
@@ -9792,9 +9842,6 @@ paths:
                           type: string
                         address:
                           type: string
-                      title: >-
-                        DestinationChain represents a blockchain where tokens
-                        can be sent
                   avatar:
                     type: string
                     format: byte
@@ -10009,9 +10056,6 @@ paths:
                     type: string
                   address:
                     type: string
-                title: >-
-                  DestinationChain represents a blockchain where tokens can be
-                  sent
       tags:
         - Msg
   /scalar/protocol/v1beta1/create_protocol:
@@ -10041,7 +10085,7 @@ paths:
                   tag:
                     type: string
                     format: byte
-                  attribute:
+                  attributes:
                     type: object
                     properties:
                       model:
@@ -10082,9 +10126,6 @@ paths:
                           type: string
                         address:
                           type: string
-                      title: >-
-                        DestinationChain represents a blockchain where tokens
-                        can be sent
                   avatar:
                     type: string
                     format: byte
@@ -10300,7 +10341,7 @@ paths:
                 type: string
               tag:
                 type: string
-              attribute:
+              attributes:
                 type: object
                 properties:
                   model:
@@ -10312,6 +10353,13 @@ paths:
                     default: LIQUIDITY_MODEL_UNSPECIFIED
               custodian_group_uid:
                 type: string
+              asset:
+                type: object
+                properties:
+                  chain:
+                    type: string
+                  name:
+                    type: string
               avatar:
                 type: string
                 format: byte
@@ -10329,39 +10377,124 @@ paths:
               protocol:
                 type: object
                 properties:
-                  custodians_group_uid:
+                  bitcoin_pubkey:
                     type: string
-                    title: >-
-                      string key_id = 1 [
-                        (gogoproto.customname) = "KeyID",
-                        (gogoproto.casttype) =
-                            "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
-                      ];
-
-                      bytes custodians_pubkey = 2 [ (gogoproto.customname) =
-                      "CustodiansPubkey"
-
-                      ];
-                  liquidity_model:
+                    format: byte
+                  scalar_pubkey:
+                    type: string
+                    format: byte
+                  scalar_address:
+                    type: string
+                    format: byte
+                  name:
+                    type: string
+                  tag:
+                    type: string
+                    format: byte
+                  attributes:
+                    type: object
+                    properties:
+                      model:
+                        type: string
+                        enum:
+                          - LIQUIDITY_MODEL_UNSPECIFIED
+                          - LIQUIDITY_MODEL_POOL
+                          - LIQUIDITY_MODEL_UPC
+                        default: LIQUIDITY_MODEL_UNSPECIFIED
+                  status:
                     type: string
                     enum:
-                      - LIQUIDITY_MODEL_UNSPECIFIED
-                      - LIQUIDITY_MODEL_POOL
-                      - LIQUIDITY_MODEL_UPC
-                    default: LIQUIDITY_MODEL_UNSPECIFIED
-                  symbol:
+                      - STATUS_UNSPECIFIED
+                      - STATUS_ACTIVATED
+                      - STATUS_DEACTIVATED
+                      - STATUS_PENDING
+                    default: STATUS_UNSPECIFIED
+                  custodian_group_uid:
                     type: string
-                  origin_chain:
-                    type: string
-                  minor_addresses:
+                  asset:
+                    type: object
+                    properties:
+                      chain:
+                        type: string
+                      name:
+                        type: string
+                  chains:
                     type: array
                     items:
                       type: object
                       properties:
-                        chain_name:
+                        chain:
+                          type: string
+                        name:
                           type: string
                         address:
                           type: string
+                  avatar:
+                    type: string
+                    format: byte
+                  custodian_group:
+                    type: object
+                    properties:
+                      uid:
+                        type: string
+                        title: >-
+                          the UID is unique, to distinguish between custodian
+                          groups
+                      name:
+                        type: string
+                      bitcoin_pubkey:
+                        type: string
+                        format: byte
+                      quorum:
+                        type: integer
+                        format: int64
+                        title: >-
+                          "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
+                      status:
+                        type: string
+                        enum:
+                          - STATUS_UNSPECIFIED
+                          - STATUS_ACTIVATED
+                          - STATUS_DEACTIVATED
+                          - STATUS_PENDING
+                        default: STATUS_UNSPECIFIED
+                      description:
+                        type: string
+                      custodians:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            val_address:
+                              type: string
+                            bitcoin_pubkey:
+                              type: string
+                              format: byte
+                            status:
+                              type: string
+                              enum:
+                                - STATUS_UNSPECIFIED
+                                - STATUS_ACTIVATED
+                                - STATUS_DEACTIVATED
+                                - STATUS_PENDING
+                              default: STATUS_UNSPECIFIED
+                              title: >-
+                                "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
+                            description:
+                              type: string
+                          title: >-
+                            Custodian represents an individual custodian
+                            configuration
+                    title: >-
+                      CustodianGroup represents a group of custodians with their
+                      configuration
+
+                      uid is used as identity of the group, btc_pubkey is change
+                      by list of
+
+                      custodians
         default:
           description: An unexpected error response
           schema:
@@ -10599,7 +10732,7 @@ paths:
                   tag:
                     type: string
                     format: byte
-                  attribute:
+                  attributes:
                     type: object
                     properties:
                       model:
@@ -10640,9 +10773,6 @@ paths:
                           type: string
                         address:
                           type: string
-                      title: >-
-                        DestinationChain represents a blockchain where tokens
-                        can be sent
                   avatar:
                     type: string
                     format: byte
@@ -10882,7 +11012,7 @@ paths:
                   tag:
                     type: string
                     format: byte
-                  attribute:
+                  attributes:
                     type: object
                     properties:
                       model:
@@ -10923,9 +11053,6 @@ paths:
                           type: string
                         address:
                           type: string
-                      title: >-
-                        DestinationChain represents a blockchain where tokens
-                        can be sent
                   avatar:
                     type: string
                     format: byte
@@ -56445,13 +56572,6 @@ definitions:
               type: string
             symbol:
               type: string
-            model:
-              type: string
-              enum:
-                - LIQUIDITY_MODEL_UNSPECIFIED
-                - LIQUIDITY_MODEL_POOL
-                - LIQUIDITY_MODEL_UPC
-              default: LIQUIDITY_MODEL_UNSPECIFIED
     title: |-
       ERC20TokensResponse describes the asset and symbol for all
       ERC20 tokens requested for a chain
@@ -56462,13 +56582,6 @@ definitions:
         type: string
       symbol:
         type: string
-      model:
-        type: string
-        enum:
-          - LIQUIDITY_MODEL_UNSPECIFIED
-          - LIQUIDITY_MODEL_POOL
-          - LIQUIDITY_MODEL_UPC
-        default: LIQUIDITY_MODEL_UNSPECIFIED
   scalar.chains.v1beta1.Event:
     type: object
     properties:
@@ -57327,13 +57440,6 @@ definitions:
       - TOKEN_TYPE_INTERNAL
       - TOKEN_TYPE_EXTERNAL
     default: TOKEN_TYPE_UNSPECIFIED
-  scalar.protocol.exported.v1beta1.LiquidityModel:
-    type: string
-    enum:
-      - LIQUIDITY_MODEL_UNSPECIFIED
-      - LIQUIDITY_MODEL_POOL
-      - LIQUIDITY_MODEL_UPC
-    default: LIQUIDITY_MODEL_UNSPECIFIED
   scalar.utils.v1beta1.Threshold:
     type: object
     properties:
@@ -57346,49 +57452,124 @@ definitions:
       denominator:
         type: string
         format: int64
-  scalar.protocol.exported.v1beta1.MinorAddress:
+  scalar.covenant.v1beta1.Custodian:
     type: object
     properties:
-      chain_name:
+      name:
         type: string
-      address:
+      val_address:
         type: string
-  scalar.protocol.exported.v1beta1.ProtocolInfo:
+      bitcoin_pubkey:
+        type: string
+        format: byte
+      status:
+        type: string
+        enum:
+          - STATUS_UNSPECIFIED
+          - STATUS_ACTIVATED
+          - STATUS_DEACTIVATED
+          - STATUS_PENDING
+        default: STATUS_UNSPECIFIED
+        title: '"0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"'
+      description:
+        type: string
+    title: Custodian represents an individual custodian configuration
+  scalar.covenant.v1beta1.CustodianGroup:
     type: object
     properties:
-      custodians_group_uid:
+      uid:
         type: string
-        title: >-
-          string key_id = 1 [
-            (gogoproto.customname) = "KeyID",
-            (gogoproto.casttype) =
-                "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
-          ];
-
-          bytes custodians_pubkey = 2 [ (gogoproto.customname) =
-          "CustodiansPubkey"
-
-          ];
-      liquidity_model:
+        title: the UID is unique, to distinguish between custodian groups
+      name:
+        type: string
+      bitcoin_pubkey:
+        type: string
+        format: byte
+      quorum:
+        type: integer
+        format: int64
+        title: '"tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"'
+      status:
+        type: string
+        enum:
+          - STATUS_UNSPECIFIED
+          - STATUS_ACTIVATED
+          - STATUS_DEACTIVATED
+          - STATUS_PENDING
+        default: STATUS_UNSPECIFIED
+      description:
+        type: string
+      custodians:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            val_address:
+              type: string
+            bitcoin_pubkey:
+              type: string
+              format: byte
+            status:
+              type: string
+              enum:
+                - STATUS_UNSPECIFIED
+                - STATUS_ACTIVATED
+                - STATUS_DEACTIVATED
+                - STATUS_PENDING
+              default: STATUS_UNSPECIFIED
+              title: >-
+                "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
+            description:
+              type: string
+          title: Custodian represents an individual custodian configuration
+    title: |-
+      CustodianGroup represents a group of custodians with their configuration
+      uid is used as identity of the group, btc_pubkey is change by list of
+      custodians
+  scalar.covenant.v1beta1.Status:
+    type: string
+    enum:
+      - STATUS_UNSPECIFIED
+      - STATUS_ACTIVATED
+      - STATUS_DEACTIVATED
+      - STATUS_PENDING
+    default: STATUS_UNSPECIFIED
+  scalar.protocol.exported.v1beta1.LiquidityModel:
+    type: string
+    enum:
+      - LIQUIDITY_MODEL_UNSPECIFIED
+      - LIQUIDITY_MODEL_POOL
+      - LIQUIDITY_MODEL_UPC
+    default: LIQUIDITY_MODEL_UNSPECIFIED
+  scalar.protocol.exported.v1beta1.ProtocolAttributes:
+    type: object
+    properties:
+      model:
         type: string
         enum:
           - LIQUIDITY_MODEL_UNSPECIFIED
           - LIQUIDITY_MODEL_POOL
           - LIQUIDITY_MODEL_UPC
         default: LIQUIDITY_MODEL_UNSPECIFIED
-      symbol:
+  scalar.protocol.exported.v1beta1.Status:
+    type: string
+    enum:
+      - STATUS_UNSPECIFIED
+      - STATUS_ACTIVATED
+      - STATUS_DEACTIVATED
+      - STATUS_PENDING
+    default: STATUS_UNSPECIFIED
+  scalar.protocol.exported.v1beta1.SupportedChain:
+    type: object
+    properties:
+      chain:
         type: string
-      origin_chain:
+      name:
         type: string
-      minor_addresses:
-        type: array
-        items:
-          type: object
-          properties:
-            chain_name:
-              type: string
-            address:
-              type: string
+      address:
+        type: string
   scalar.protocol.v1beta1.AddSupportedChainRequest:
     type: object
     properties:
@@ -57404,7 +57585,6 @@ definitions:
             type: string
           address:
             type: string
-        title: DestinationChain represents a blockchain where tokens can be sent
   scalar.protocol.v1beta1.AddSupportedChainResponse:
     type: object
     properties:
@@ -57425,7 +57605,7 @@ definitions:
           tag:
             type: string
             format: byte
-          attribute:
+          attributes:
             type: object
             properties:
               model:
@@ -57464,9 +57644,6 @@ definitions:
                   type: string
                 address:
                   type: string
-              title: >-
-                DestinationChain represents a blockchain where tokens can be
-                sent
           avatar:
             type: string
             format: byte
@@ -57486,7 +57663,7 @@ definitions:
         type: string
       tag:
         type: string
-      attribute:
+      attributes:
         type: object
         properties:
           model:
@@ -57498,6 +57675,13 @@ definitions:
             default: LIQUIDITY_MODEL_UNSPECIFIED
       custodian_group_uid:
         type: string
+      asset:
+        type: object
+        properties:
+          chain:
+            type: string
+          name:
+            type: string
       avatar:
         type: string
         format: byte
@@ -57521,7 +57705,7 @@ definitions:
           tag:
             type: string
             format: byte
-          attribute:
+          attributes:
             type: object
             properties:
               model:
@@ -57560,9 +57744,6 @@ definitions:
                   type: string
                 address:
                   type: string
-              title: >-
-                DestinationChain represents a blockchain where tokens can be
-                sent
           avatar:
             type: string
             format: byte
@@ -57583,7 +57764,7 @@ definitions:
       tag:
         type: string
         format: byte
-      attribute:
+      attributes:
         type: object
         properties:
           model:
@@ -57622,59 +57803,244 @@ definitions:
               type: string
             address:
               type: string
-          title: DestinationChain represents a blockchain where tokens can be sent
       avatar:
         type: string
         format: byte
-  scalar.protocol.v1beta1.ProtocolAttribute:
+  scalar.protocol.v1beta1.ProtocolDetails:
     type: object
     properties:
-      model:
+      bitcoin_pubkey:
         type: string
-        enum:
-          - LIQUIDITY_MODEL_UNSPECIFIED
-          - LIQUIDITY_MODEL_POOL
-          - LIQUIDITY_MODEL_UPC
-        default: LIQUIDITY_MODEL_UNSPECIFIED
-  scalar.protocol.v1beta1.ProtocolResponse:
-    type: object
-    properties:
-      protocol:
+        format: byte
+      scalar_pubkey:
+        type: string
+        format: byte
+      scalar_address:
+        type: string
+        format: byte
+      name:
+        type: string
+      tag:
+        type: string
+        format: byte
+      attributes:
         type: object
         properties:
-          custodians_group_uid:
-            type: string
-            title: >-
-              string key_id = 1 [
-                (gogoproto.customname) = "KeyID",
-                (gogoproto.casttype) =
-                    "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
-              ];
-
-              bytes custodians_pubkey = 2 [ (gogoproto.customname) =
-              "CustodiansPubkey"
-
-              ];
-          liquidity_model:
+          model:
             type: string
             enum:
               - LIQUIDITY_MODEL_UNSPECIFIED
               - LIQUIDITY_MODEL_POOL
               - LIQUIDITY_MODEL_UPC
             default: LIQUIDITY_MODEL_UNSPECIFIED
-          symbol:
+      status:
+        type: string
+        enum:
+          - STATUS_UNSPECIFIED
+          - STATUS_ACTIVATED
+          - STATUS_DEACTIVATED
+          - STATUS_PENDING
+        default: STATUS_UNSPECIFIED
+      custodian_group_uid:
+        type: string
+      asset:
+        type: object
+        properties:
+          chain:
             type: string
-          origin_chain:
+          name:
             type: string
-          minor_addresses:
+      chains:
+        type: array
+        items:
+          type: object
+          properties:
+            chain:
+              type: string
+            name:
+              type: string
+            address:
+              type: string
+      avatar:
+        type: string
+        format: byte
+      custodian_group:
+        type: object
+        properties:
+          uid:
+            type: string
+            title: the UID is unique, to distinguish between custodian groups
+          name:
+            type: string
+          bitcoin_pubkey:
+            type: string
+            format: byte
+          quorum:
+            type: integer
+            format: int64
+            title: '"tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"'
+          status:
+            type: string
+            enum:
+              - STATUS_UNSPECIFIED
+              - STATUS_ACTIVATED
+              - STATUS_DEACTIVATED
+              - STATUS_PENDING
+            default: STATUS_UNSPECIFIED
+          description:
+            type: string
+          custodians:
             type: array
             items:
               type: object
               properties:
-                chain_name:
+                name:
+                  type: string
+                val_address:
+                  type: string
+                bitcoin_pubkey:
+                  type: string
+                  format: byte
+                status:
+                  type: string
+                  enum:
+                    - STATUS_UNSPECIFIED
+                    - STATUS_ACTIVATED
+                    - STATUS_DEACTIVATED
+                    - STATUS_PENDING
+                  default: STATUS_UNSPECIFIED
+                  title: >-
+                    "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
+                description:
+                  type: string
+              title: Custodian represents an individual custodian configuration
+        title: >-
+          CustodianGroup represents a group of custodians with their
+          configuration
+
+          uid is used as identity of the group, btc_pubkey is change by list of
+
+          custodians
+  scalar.protocol.v1beta1.ProtocolResponse:
+    type: object
+    properties:
+      protocol:
+        type: object
+        properties:
+          bitcoin_pubkey:
+            type: string
+            format: byte
+          scalar_pubkey:
+            type: string
+            format: byte
+          scalar_address:
+            type: string
+            format: byte
+          name:
+            type: string
+          tag:
+            type: string
+            format: byte
+          attributes:
+            type: object
+            properties:
+              model:
+                type: string
+                enum:
+                  - LIQUIDITY_MODEL_UNSPECIFIED
+                  - LIQUIDITY_MODEL_POOL
+                  - LIQUIDITY_MODEL_UPC
+                default: LIQUIDITY_MODEL_UNSPECIFIED
+          status:
+            type: string
+            enum:
+              - STATUS_UNSPECIFIED
+              - STATUS_ACTIVATED
+              - STATUS_DEACTIVATED
+              - STATUS_PENDING
+            default: STATUS_UNSPECIFIED
+          custodian_group_uid:
+            type: string
+          asset:
+            type: object
+            properties:
+              chain:
+                type: string
+              name:
+                type: string
+          chains:
+            type: array
+            items:
+              type: object
+              properties:
+                chain:
+                  type: string
+                name:
                   type: string
                 address:
                   type: string
+          avatar:
+            type: string
+            format: byte
+          custodian_group:
+            type: object
+            properties:
+              uid:
+                type: string
+                title: the UID is unique, to distinguish between custodian groups
+              name:
+                type: string
+              bitcoin_pubkey:
+                type: string
+                format: byte
+              quorum:
+                type: integer
+                format: int64
+                title: >-
+                  "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
+              status:
+                type: string
+                enum:
+                  - STATUS_UNSPECIFIED
+                  - STATUS_ACTIVATED
+                  - STATUS_DEACTIVATED
+                  - STATUS_PENDING
+                default: STATUS_UNSPECIFIED
+              description:
+                type: string
+              custodians:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    val_address:
+                      type: string
+                    bitcoin_pubkey:
+                      type: string
+                      format: byte
+                    status:
+                      type: string
+                      enum:
+                        - STATUS_UNSPECIFIED
+                        - STATUS_ACTIVATED
+                        - STATUS_DEACTIVATED
+                        - STATUS_PENDING
+                      default: STATUS_UNSPECIFIED
+                      title: >-
+                        "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
+                    description:
+                      type: string
+                  title: Custodian represents an individual custodian configuration
+            title: >-
+              CustodianGroup represents a group of custodians with their
+              configuration
+
+              uid is used as identity of the group, btc_pubkey is change by list
+              of
+
+              custodians
   scalar.protocol.v1beta1.ProtocolsResponse:
     type: object
     properties:
@@ -57697,7 +58063,7 @@ definitions:
             tag:
               type: string
               format: byte
-            attribute:
+            attributes:
               type: object
               properties:
                 model:
@@ -57717,7 +58083,6 @@ definitions:
               default: STATUS_UNSPECIFIED
             custodian_group_uid:
               type: string
-              title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
             asset:
               type: object
               properties:
@@ -57736,33 +58101,71 @@ definitions:
                     type: string
                   address:
                     type: string
-                title: >-
-                  DestinationChain represents a blockchain where tokens can be
-                  sent
             avatar:
               type: string
               format: byte
+            custodian_group:
+              type: object
+              properties:
+                uid:
+                  type: string
+                  title: the UID is unique, to distinguish between custodian groups
+                name:
+                  type: string
+                bitcoin_pubkey:
+                  type: string
+                  format: byte
+                quorum:
+                  type: integer
+                  format: int64
+                  title: >-
+                    "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
+                status:
+                  type: string
+                  enum:
+                    - STATUS_UNSPECIFIED
+                    - STATUS_ACTIVATED
+                    - STATUS_DEACTIVATED
+                    - STATUS_PENDING
+                  default: STATUS_UNSPECIFIED
+                description:
+                  type: string
+                custodians:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      val_address:
+                        type: string
+                      bitcoin_pubkey:
+                        type: string
+                        format: byte
+                      status:
+                        type: string
+                        enum:
+                          - STATUS_UNSPECIFIED
+                          - STATUS_ACTIVATED
+                          - STATUS_DEACTIVATED
+                          - STATUS_PENDING
+                        default: STATUS_UNSPECIFIED
+                        title: >-
+                          "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
+                      description:
+                        type: string
+                    title: Custodian represents an individual custodian configuration
+              title: >-
+                CustodianGroup represents a group of custodians with their
+                configuration
+
+                uid is used as identity of the group, btc_pubkey is change by
+                list of
+
+                custodians
       total:
         type: string
         format: uint64
-  scalar.protocol.v1beta1.Status:
-    type: string
-    enum:
-      - STATUS_UNSPECIFIED
-      - STATUS_ACTIVATED
-      - STATUS_DEACTIVATED
-      - STATUS_PENDING
-    default: STATUS_UNSPECIFIED
-  scalar.protocol.v1beta1.SupportedChain:
-    type: object
-    properties:
-      chain:
-        type: string
-      name:
-        type: string
-      address:
-        type: string
-    title: DestinationChain represents a blockchain where tokens can be sent
   scalar.protocol.v1beta1.UpdateProtocolRequest:
     type: object
     properties:
@@ -57794,7 +58197,7 @@ definitions:
           tag:
             type: string
             format: byte
-          attribute:
+          attributes:
             type: object
             properties:
               model:
@@ -57833,9 +58236,6 @@ definitions:
                   type: string
                 address:
                   type: string
-              title: >-
-                DestinationChain represents a blockchain where tokens can be
-                sent
           avatar:
             type: string
             format: byte
@@ -57878,7 +58278,7 @@ definitions:
           tag:
             type: string
             format: byte
-          attribute:
+          attributes:
             type: object
             properties:
               model:
@@ -57917,9 +58317,6 @@ definitions:
                   type: string
                 address:
                   type: string
-              title: >-
-                DestinationChain represents a blockchain where tokens can be
-                sent
           avatar:
             type: string
             format: byte

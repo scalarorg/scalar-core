@@ -26,12 +26,6 @@
 - [scalar/chains/btc/v1beta1/types.proto](#scalar/chains/btc/v1beta1/types.proto)
     - [BtcToken](#scalar.chains.btc.v1beta1.BtcToken)
   
-- [scalar/protocol/exported/v1beta1/types.proto](#scalar/protocol/exported/v1beta1/types.proto)
-    - [MinorAddress](#scalar.protocol.exported.v1beta1.MinorAddress)
-    - [ProtocolInfo](#scalar.protocol.exported.v1beta1.ProtocolInfo)
-  
-    - [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel)
-  
 - [scalar/chains/v1beta1/types.proto](#scalar/chains/v1beta1/types.proto)
     - [Asset](#scalar.chains.v1beta1.Asset)
     - [BurnerInfo](#scalar.chains.v1beta1.BurnerInfo)
@@ -160,6 +154,47 @@
     - [SignPsbtCommandRequest](#scalar.chains.v1beta1.SignPsbtCommandRequest)
     - [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse)
   
+- [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
+    - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
+    - [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry)
+    - [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList)
+    - [TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap)
+  
+    - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
+    - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
+  
+- [scalar/multisig/exported/v1beta1/types.proto](#scalar/multisig/exported/v1beta1/types.proto)
+    - [KeyState](#scalar.multisig.exported.v1beta1.KeyState)
+    - [MultisigState](#scalar.multisig.exported.v1beta1.MultisigState)
+  
+- [scalar/multisig/v1beta1/types.proto](#scalar/multisig/v1beta1/types.proto)
+    - [Key](#scalar.multisig.v1beta1.Key)
+    - [Key.PubKeysEntry](#scalar.multisig.v1beta1.Key.PubKeysEntry)
+    - [KeyEpoch](#scalar.multisig.v1beta1.KeyEpoch)
+    - [KeygenSession](#scalar.multisig.v1beta1.KeygenSession)
+    - [KeygenSession.IsPubKeyReceivedEntry](#scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry)
+    - [MultiSig](#scalar.multisig.v1beta1.MultiSig)
+    - [MultiSig.SigsEntry](#scalar.multisig.v1beta1.MultiSig.SigsEntry)
+    - [SigningSession](#scalar.multisig.v1beta1.SigningSession)
+  
+- [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
+    - [Custodian](#scalar.covenant.v1beta1.Custodian)
+    - [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup)
+    - [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig)
+    - [PsbtMultiSig.ParticipantTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantTapScriptSigsEntry)
+    - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
+  
+    - [Status](#scalar.covenant.v1beta1.Status)
+  
+- [scalar/protocol/exported/v1beta1/types.proto](#scalar/protocol/exported/v1beta1/types.proto)
+    - [MinorAddress](#scalar.protocol.exported.v1beta1.MinorAddress)
+    - [ProtocolAttributes](#scalar.protocol.exported.v1beta1.ProtocolAttributes)
+    - [ProtocolInfo](#scalar.protocol.exported.v1beta1.ProtocolInfo)
+    - [SupportedChain](#scalar.protocol.exported.v1beta1.SupportedChain)
+  
+    - [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel)
+    - [Status](#scalar.protocol.exported.v1beta1.Status)
+  
 - [scalar/chains/v1beta1/query.proto](#scalar/chains/v1beta1/query.proto)
     - [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest)
     - [BatchedCommandsResponse](#scalar.chains.v1beta1.BatchedCommandsResponse)
@@ -204,38 +239,6 @@
 - [scalar/chains/v1beta1/service.proto](#scalar/chains/v1beta1/service.proto)
     - [MsgService](#scalar.chains.v1beta1.MsgService)
     - [QueryService](#scalar.chains.v1beta1.QueryService)
-  
-- [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
-    - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
-    - [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry)
-    - [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList)
-    - [TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap)
-  
-    - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
-    - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
-  
-- [scalar/multisig/exported/v1beta1/types.proto](#scalar/multisig/exported/v1beta1/types.proto)
-    - [KeyState](#scalar.multisig.exported.v1beta1.KeyState)
-    - [MultisigState](#scalar.multisig.exported.v1beta1.MultisigState)
-  
-- [scalar/multisig/v1beta1/types.proto](#scalar/multisig/v1beta1/types.proto)
-    - [Key](#scalar.multisig.v1beta1.Key)
-    - [Key.PubKeysEntry](#scalar.multisig.v1beta1.Key.PubKeysEntry)
-    - [KeyEpoch](#scalar.multisig.v1beta1.KeyEpoch)
-    - [KeygenSession](#scalar.multisig.v1beta1.KeygenSession)
-    - [KeygenSession.IsPubKeyReceivedEntry](#scalar.multisig.v1beta1.KeygenSession.IsPubKeyReceivedEntry)
-    - [MultiSig](#scalar.multisig.v1beta1.MultiSig)
-    - [MultiSig.SigsEntry](#scalar.multisig.v1beta1.MultiSig.SigsEntry)
-    - [SigningSession](#scalar.multisig.v1beta1.SigningSession)
-  
-- [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
-    - [Custodian](#scalar.covenant.v1beta1.Custodian)
-    - [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup)
-    - [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig)
-    - [PsbtMultiSig.ParticipantTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantTapScriptSigsEntry)
-    - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
-  
-    - [Status](#scalar.covenant.v1beta1.Status)
   
 - [scalar/covenant/v1beta1/events.proto](#scalar/covenant/v1beta1/events.proto)
     - [KeyRotated](#scalar.covenant.v1beta1.KeyRotated)
@@ -453,10 +456,7 @@
   
 - [scalar/protocol/v1beta1/types.proto](#scalar/protocol/v1beta1/types.proto)
     - [Protocol](#scalar.protocol.v1beta1.Protocol)
-    - [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute)
-    - [SupportedChain](#scalar.protocol.v1beta1.SupportedChain)
-  
-    - [Status](#scalar.protocol.v1beta1.Status)
+    - [ProtocolDetails](#scalar.protocol.v1beta1.ProtocolDetails)
   
 - [scalar/protocol/v1beta1/genesis.proto](#scalar/protocol/v1beta1/genesis.proto)
     - [GenesisState](#scalar.protocol.v1beta1.GenesisState)
@@ -916,70 +916,6 @@ Msg defines the nexus Msg service.
 
 
  <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/protocol/exported/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/protocol/exported/v1beta1/types.proto
-
-
-
-<a name="scalar.protocol.exported.v1beta1.MinorAddress"></a>
-
-### MinorAddress
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain_name` | [string](#string) |  |  |
-| `address` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.exported.v1beta1.ProtocolInfo"></a>
-
-### ProtocolInfo
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `custodians_group_uid` | [string](#string) |  | string key_id = 1 [ (gogoproto.customname) = "KeyID", (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID" ]; bytes custodians_pubkey = 2 [ (gogoproto.customname) = "CustodiansPubkey" ]; |
-| `liquidity_model` | [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
-| `symbol` | [string](#string) |  |  |
-| `origin_chain` | [string](#string) |  |  |
-| `minor_addresses` | [MinorAddress](#scalar.protocol.exported.v1beta1.MinorAddress) | repeated |  |
-
-
-
-
-
- <!-- end messages -->
-
-
-<a name="scalar.protocol.exported.v1beta1.LiquidityModel"></a>
-
-### LiquidityModel
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| LIQUIDITY_MODEL_UNSPECIFIED | 0 |  |
-| LIQUIDITY_MODEL_POOL | 1 |  |
-| LIQUIDITY_MODEL_UPC | 2 |  |
-
 
  <!-- end enums -->
 
@@ -2871,693 +2807,6 @@ address
 
 
 
-<a name="scalar/chains/v1beta1/query.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/chains/v1beta1/query.proto
-
-
-
-<a name="scalar.chains.v1beta1.BatchedCommandsRequest"></a>
-
-### BatchedCommandsRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `id` | [string](#string) |  | id defines an optional id for the commandsbatch. If not specified the latest will be returned |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.BatchedCommandsResponse"></a>
-
-### BatchedCommandsResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `id` | [string](#string) |  |  |
-| `data` | [string](#string) |  |  |
-| `status` | [BatchedCommandsStatus](#scalar.chains.v1beta1.BatchedCommandsStatus) |  |  |
-| `key_id` | [string](#string) |  |  |
-| `execute_data` | [string](#string) |  |  |
-| `prev_batched_commands_id` | [string](#string) |  |  |
-| `command_ids` | [string](#string) | repeated |  |
-| `proof` | [Proof](#scalar.chains.v1beta1.Proof) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.BurnerInfoRequest"></a>
-
-### BurnerInfoRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `address` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.BurnerInfoResponse"></a>
-
-### BurnerInfoResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `burner_info` | [BurnerInfo](#scalar.chains.v1beta1.BurnerInfo) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.BytecodeRequest"></a>
-
-### BytecodeRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `contract` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.BytecodeResponse"></a>
-
-### BytecodeResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `bytecode` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.ChainsRequest"></a>
-
-### ChainsRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `status` | [ChainStatus](#scalar.chains.v1beta1.ChainStatus) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.ChainsResponse"></a>
-
-### ChainsResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chains` | [string](#string) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.CommandRequest"></a>
-
-### CommandRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.CommandResponse"></a>
-
-### CommandResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `id` | [string](#string) |  |  |
-| `type` | [string](#string) |  |  |
-| `params` | [CommandResponse.ParamsEntry](#scalar.chains.v1beta1.CommandResponse.ParamsEntry) | repeated |  |
-| `key_id` | [string](#string) |  |  |
-| `max_gas_cost` | [uint32](#uint32) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.CommandResponse.ParamsEntry"></a>
-
-### CommandResponse.ParamsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [string](#string) |  |  |
-| `value` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.ConfirmationHeightRequest"></a>
-
-### ConfirmationHeightRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.ConfirmationHeightResponse"></a>
-
-### ConfirmationHeightResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `height` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.DepositStateRequest"></a>
-
-### DepositStateRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `params` | [QueryDepositStateParams](#scalar.chains.v1beta1.QueryDepositStateParams) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.DepositStateResponse"></a>
-
-### DepositStateResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `status` | [DepositStatus](#scalar.chains.v1beta1.DepositStatus) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.ERC20TokensRequest"></a>
-
-### ERC20TokensRequest
-ERC20TokensRequest describes the chain for which the type of ERC20 tokens are
-requested.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `type` | [TokenType](#scalar.chains.v1beta1.TokenType) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.ERC20TokensResponse"></a>
-
-### ERC20TokensResponse
-ERC20TokensResponse describes the asset and symbol for all
-ERC20 tokens requested for a chain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `tokens` | [ERC20TokensResponse.Token](#scalar.chains.v1beta1.ERC20TokensResponse.Token) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.ERC20TokensResponse.Token"></a>
-
-### ERC20TokensResponse.Token
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `asset` | [string](#string) |  |  |
-| `symbol` | [string](#string) |  |  |
-| `model` | [scalar.protocol.exported.v1beta1.LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.EventRequest"></a>
-
-### EventRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `event_id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.EventResponse"></a>
-
-### EventResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `event` | [Event](#scalar.chains.v1beta1.Event) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.GatewayAddressRequest"></a>
-
-### GatewayAddressRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.GatewayAddressResponse"></a>
-
-### GatewayAddressResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `address` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.KeyAddressRequest"></a>
-
-### KeyAddressRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `key_id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.KeyAddressResponse"></a>
-
-### KeyAddressResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_id` | [string](#string) |  |  |
-| `addresses` | [KeyAddressResponse.WeightedAddress](#scalar.chains.v1beta1.KeyAddressResponse.WeightedAddress) | repeated |  |
-| `threshold` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.KeyAddressResponse.WeightedAddress"></a>
-
-### KeyAddressResponse.WeightedAddress
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `address` | [string](#string) |  |  |
-| `weight` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.ParamsRequest"></a>
-
-### ParamsRequest
-ParamsRequest represents a message that queries the params
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.ParamsResponse"></a>
-
-### ParamsResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `params` | [Params](#scalar.chains.v1beta1.Params) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.PendingCommandsRequest"></a>
-
-### PendingCommandsRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.PendingCommandsResponse"></a>
-
-### PendingCommandsResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `commands` | [QueryCommandResponse](#scalar.chains.v1beta1.QueryCommandResponse) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.QueryBurnerAddressResponse"></a>
-
-### QueryBurnerAddressResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `address` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.QueryCommandResponse"></a>
-
-### QueryCommandResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `id` | [string](#string) |  |  |
-| `type` | [string](#string) |  |  |
-| `params` | [QueryCommandResponse.ParamsEntry](#scalar.chains.v1beta1.QueryCommandResponse.ParamsEntry) | repeated |  |
-| `key_id` | [string](#string) |  |  |
-| `max_gas_cost` | [uint32](#uint32) |  |  |
-| `payload` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.QueryCommandResponse.ParamsEntry"></a>
-
-### QueryCommandResponse.ParamsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [string](#string) |  |  |
-| `value` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.QueryDepositStateParams"></a>
-
-### QueryDepositStateParams
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `tx_id` | [bytes](#bytes) |  |  |
-| `burner_address` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.QueryTokenAddressResponse"></a>
-
-### QueryTokenAddressResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `address` | [string](#string) |  |  |
-| `confirmed` | [bool](#bool) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.TokenInfoRequest"></a>
-
-### TokenInfoRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `asset` | [string](#string) |  |  |
-| `symbol` | [string](#string) |  |  |
-| `address` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.TokenInfoResponse"></a>
-
-### TokenInfoResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `asset` | [string](#string) |  |  |
-| `details` | [TokenDetails](#scalar.chains.v1beta1.TokenDetails) |  |  |
-| `address` | [string](#string) |  |  |
-| `confirmed` | [bool](#bool) |  |  |
-| `is_external` | [bool](#bool) |  |  |
-| `burner_code_hash` | [string](#string) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
-
-<a name="scalar.chains.v1beta1.ChainStatus"></a>
-
-### ChainStatus
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| CHAIN_STATUS_UNSPECIFIED | 0 |  |
-| CHAIN_STATUS_ACTIVATED | 1 |  |
-| CHAIN_STATUS_DEACTIVATED | 2 |  |
-
-
-
-<a name="scalar.chains.v1beta1.TokenType"></a>
-
-### TokenType
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| TOKEN_TYPE_UNSPECIFIED | 0 |  |
-| TOKEN_TYPE_INTERNAL | 1 |  |
-| TOKEN_TYPE_EXTERNAL | 2 |  |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/chains/v1beta1/service.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/chains/v1beta1/service.proto
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
-
-<a name="scalar.chains.v1beta1.MsgService"></a>
-
-### MsgService
-Msg defines the btc Msg service.
-
-| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
-| ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `ConfirmSourceTxs` | [ConfirmSourceTxsRequest](#scalar.chains.v1beta1.ConfirmSourceTxsRequest) | [ConfirmSourceTxsResponse](#scalar.chains.v1beta1.ConfirmSourceTxsResponse) |  | POST|/scalar/chains/v1beta1/confirm_source_txs|
-| `SetGateway` | [SetGatewayRequest](#scalar.chains.v1beta1.SetGatewayRequest) | [SetGatewayResponse](#scalar.chains.v1beta1.SetGatewayResponse) |  | POST|/scalar/chains/v1beta1/set_gateway|
-| `Link` | [LinkRequest](#scalar.chains.v1beta1.LinkRequest) | [LinkResponse](#scalar.chains.v1beta1.LinkResponse) |  | POST|/scalar/chains/v1beta1/link|
-| `ConfirmToken` | [ConfirmTokenRequest](#scalar.chains.v1beta1.ConfirmTokenRequest) | [ConfirmTokenResponse](#scalar.chains.v1beta1.ConfirmTokenResponse) |  | POST|/scalar/chains/v1beta1/confirm_token|
-| `ConfirmDeposit` | [ConfirmDepositRequest](#scalar.chains.v1beta1.ConfirmDepositRequest) | [ConfirmDepositResponse](#scalar.chains.v1beta1.ConfirmDepositResponse) |  | POST|/scalar/chains/v1beta1/confirm_deposit|
-| `ConfirmTransferKey` | [ConfirmTransferKeyRequest](#scalar.chains.v1beta1.ConfirmTransferKeyRequest) | [ConfirmTransferKeyResponse](#scalar.chains.v1beta1.ConfirmTransferKeyResponse) |  | POST|/scalar/chains/confirm_transfer_key|
-| `CreateDeployToken` | [CreateDeployTokenRequest](#scalar.chains.v1beta1.CreateDeployTokenRequest) | [CreateDeployTokenResponse](#scalar.chains.v1beta1.CreateDeployTokenResponse) |  | POST|/scalar/chains/v1beta1/create_deploy_token|
-| `CreateBurnTokens` | [CreateBurnTokensRequest](#scalar.chains.v1beta1.CreateBurnTokensRequest) | [CreateBurnTokensResponse](#scalar.chains.v1beta1.CreateBurnTokensResponse) |  | POST|/scalar/chains/v1beta1/create_burn_tokens|
-| `CreatePendingTransfers` | [CreatePendingTransfersRequest](#scalar.chains.v1beta1.CreatePendingTransfersRequest) | [CreatePendingTransfersResponse](#scalar.chains.v1beta1.CreatePendingTransfersResponse) |  | POST|/scalar/chains/v1beta1/create_pending_transfers|
-| `CreateTransferOperatorship` | [CreateTransferOperatorshipRequest](#scalar.chains.v1beta1.CreateTransferOperatorshipRequest) | [CreateTransferOperatorshipResponse](#scalar.chains.v1beta1.CreateTransferOperatorshipResponse) |  | POST|/scalar/chains/v1beta1/create_transfer_operatorship|
-| `SignCommands` | [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest) | [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_commands|
-| `SignBtcCommand` | [SignBtcCommandsRequest](#scalar.chains.v1beta1.SignBtcCommandsRequest) | [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
-| `SignPsbtCommand` | [SignPsbtCommandRequest](#scalar.chains.v1beta1.SignPsbtCommandRequest) | [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
-| `AddChain` | [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest) | [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse) |  | POST|/scalar/chains/v1beta1/add_chain|
-| `RetryFailedEvent` | [RetryFailedEventRequest](#scalar.chains.v1beta1.RetryFailedEventRequest) | [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse) |  | POST|/scalar/chains/v1beta1/retry-failed-event|
-
-
-<a name="scalar.chains.v1beta1.QueryService"></a>
-
-### QueryService
-QueryService defines the gRPC querier service.
-
-| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
-| ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `BatchedCommands` | [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest) | [BatchedCommandsResponse](#scalar.chains.v1beta1.BatchedCommandsResponse) | BatchedCommands queries the batched commands for a specified chain and BatchedCommandsID if no BatchedCommandsID is specified, then it returns the latest batched commands | GET|/scalar/chains/v1beta1/batched_commands/{chain}/{id}|
-| `BurnerInfo` | [BurnerInfoRequest](#scalar.chains.v1beta1.BurnerInfoRequest) | [BurnerInfoResponse](#scalar.chains.v1beta1.BurnerInfoResponse) |  | GET|/scalar/chains/v1beta1/burner_info|
-| `ConfirmationHeight` | [ConfirmationHeightRequest](#scalar.chains.v1beta1.ConfirmationHeightRequest) | [ConfirmationHeightResponse](#scalar.chains.v1beta1.ConfirmationHeightResponse) | ConfirmationHeight queries the confirmation height for the specified chain | GET|/scalar/chains/v1beta1/confirmation_height/{chain}|
-| `PendingCommands` | [PendingCommandsRequest](#scalar.chains.v1beta1.PendingCommandsRequest) | [PendingCommandsResponse](#scalar.chains.v1beta1.PendingCommandsResponse) | PendingCommands queries the pending commands for the specified chain | GET|/scalar/chains/v1beta1/pending_commands/{chain}|
-| `Chains` | [ChainsRequest](#scalar.chains.v1beta1.ChainsRequest) | [ChainsResponse](#scalar.chains.v1beta1.ChainsResponse) | Chains queries the available chains | GET|/scalar/chains/v1beta1/chains|
-| `Command` | [CommandRequest](#scalar.chains.v1beta1.CommandRequest) | [CommandResponse](#scalar.chains.v1beta1.CommandResponse) | Command queries the command of a chain provided the command id | GET|/scalar/chains/v1beta1/command_request|
-| `KeyAddress` | [KeyAddressRequest](#scalar.chains.v1beta1.KeyAddressRequest) | [KeyAddressResponse](#scalar.chains.v1beta1.KeyAddressResponse) | KeyAddress queries the address of key of a chain | GET|/scalar/chains/v1beta1/key_address/{chain}|
-| `GatewayAddress` | [GatewayAddressRequest](#scalar.chains.v1beta1.GatewayAddressRequest) | [GatewayAddressResponse](#scalar.chains.v1beta1.GatewayAddressResponse) | GatewayAddress queries the address of scalar gateway at the specified chain | GET|/scalar/chains/v1beta1/gateway_address/{chain}|
-| `Bytecode` | [BytecodeRequest](#scalar.chains.v1beta1.BytecodeRequest) | [BytecodeResponse](#scalar.chains.v1beta1.BytecodeResponse) | Bytecode queries the bytecode of a specified gateway at the specified chain | GET|/scalar/chains/v1beta1/bytecode/{chain}/{contract}|
-| `Event` | [EventRequest](#scalar.chains.v1beta1.EventRequest) | [EventResponse](#scalar.chains.v1beta1.EventResponse) | Event queries an event at the specified chain | GET|/scalar/chains/v1beta1/event/{chain}/{event_id}|
-| `ERC20Tokens` | [ERC20TokensRequest](#scalar.chains.v1beta1.ERC20TokensRequest) | [ERC20TokensResponse](#scalar.chains.v1beta1.ERC20TokensResponse) | ERC20Tokens queries the ERC20 tokens registered for a chain | GET|/scalar/chains/v1beta1/erc20_tokens/{chain}|
-| `TokenInfo` | [TokenInfoRequest](#scalar.chains.v1beta1.TokenInfoRequest) | [TokenInfoResponse](#scalar.chains.v1beta1.TokenInfoResponse) | TokenInfo queries the token info for a registered ERC20 Token | GET|/scalar/chains/v1beta1/token_info/{chain}|
-| `Params` | [ParamsRequest](#scalar.chains.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.chains.v1beta1.ParamsResponse) |  | GET|/scalar/chains/v1beta1/params/{chain}|
-
- <!-- end services -->
-
-
-
 <a name="scalar/covenant/exported/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -3997,6 +3246,802 @@ quorum threshold e.g.,3 |
  <!-- end enums -->
 
  <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/protocol/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/protocol/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.protocol.exported.v1beta1.MinorAddress"></a>
+
+### MinorAddress
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain_name` | [string](#string) |  |  |
+| `address` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.protocol.exported.v1beta1.ProtocolAttributes"></a>
+
+### ProtocolAttributes
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `model` | [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
+
+
+
+
+
+
+<a name="scalar.protocol.exported.v1beta1.ProtocolInfo"></a>
+
+### ProtocolInfo
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `custodians_group_uid` | [string](#string) |  | string key_id = 1 [ (gogoproto.customname) = "KeyID", (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID" ]; bytes custodians_pubkey = 2 [ (gogoproto.customname) = "CustodiansPubkey" ]; |
+| `liquidity_model` | [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `origin_chain` | [string](#string) |  |  |
+| `minor_addresses` | [MinorAddress](#scalar.protocol.exported.v1beta1.MinorAddress) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.protocol.exported.v1beta1.SupportedChain"></a>
+
+### SupportedChain
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `name` | [string](#string) |  |  |
+| `address` | [string](#string) |  | Asset address on the chain |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.protocol.exported.v1beta1.LiquidityModel"></a>
+
+### LiquidityModel
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| LIQUIDITY_MODEL_UNSPECIFIED | 0 |  |
+| LIQUIDITY_MODEL_POOL | 1 |  |
+| LIQUIDITY_MODEL_UPC | 2 |  |
+
+
+
+<a name="scalar.protocol.exported.v1beta1.Status"></a>
+
+### Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNSPECIFIED | 0 |  |
+| STATUS_ACTIVATED | 1 |  |
+| STATUS_DEACTIVATED | 2 |  |
+| STATUS_PENDING | 3 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/chains/v1beta1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/chains/v1beta1/query.proto
+
+
+
+<a name="scalar.chains.v1beta1.BatchedCommandsRequest"></a>
+
+### BatchedCommandsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `id` | [string](#string) |  | id defines an optional id for the commandsbatch. If not specified the latest will be returned |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.BatchedCommandsResponse"></a>
+
+### BatchedCommandsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `data` | [string](#string) |  |  |
+| `status` | [BatchedCommandsStatus](#scalar.chains.v1beta1.BatchedCommandsStatus) |  |  |
+| `key_id` | [string](#string) |  |  |
+| `execute_data` | [string](#string) |  |  |
+| `prev_batched_commands_id` | [string](#string) |  |  |
+| `command_ids` | [string](#string) | repeated |  |
+| `proof` | [Proof](#scalar.chains.v1beta1.Proof) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.BurnerInfoRequest"></a>
+
+### BurnerInfoRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.BurnerInfoResponse"></a>
+
+### BurnerInfoResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `burner_info` | [BurnerInfo](#scalar.chains.v1beta1.BurnerInfo) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.BytecodeRequest"></a>
+
+### BytecodeRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `contract` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.BytecodeResponse"></a>
+
+### BytecodeResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `bytecode` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ChainsRequest"></a>
+
+### ChainsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `status` | [ChainStatus](#scalar.chains.v1beta1.ChainStatus) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ChainsResponse"></a>
+
+### ChainsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chains` | [string](#string) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CommandRequest"></a>
+
+### CommandRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CommandResponse"></a>
+
+### CommandResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `type` | [string](#string) |  |  |
+| `params` | [CommandResponse.ParamsEntry](#scalar.chains.v1beta1.CommandResponse.ParamsEntry) | repeated |  |
+| `key_id` | [string](#string) |  |  |
+| `max_gas_cost` | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.CommandResponse.ParamsEntry"></a>
+
+### CommandResponse.ParamsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmationHeightRequest"></a>
+
+### ConfirmationHeightRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmationHeightResponse"></a>
+
+### ConfirmationHeightResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `height` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.DepositStateRequest"></a>
+
+### DepositStateRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `params` | [QueryDepositStateParams](#scalar.chains.v1beta1.QueryDepositStateParams) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.DepositStateResponse"></a>
+
+### DepositStateResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `status` | [DepositStatus](#scalar.chains.v1beta1.DepositStatus) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ERC20TokensRequest"></a>
+
+### ERC20TokensRequest
+ERC20TokensRequest describes the chain for which the type of ERC20 tokens are
+requested.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `type` | [TokenType](#scalar.chains.v1beta1.TokenType) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ERC20TokensResponse"></a>
+
+### ERC20TokensResponse
+ERC20TokensResponse describes the asset and symbol for all
+ERC20 tokens requested for a chain
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tokens` | [ERC20TokensResponse.Token](#scalar.chains.v1beta1.ERC20TokensResponse.Token) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ERC20TokensResponse.Token"></a>
+
+### ERC20TokensResponse.Token
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `asset` | [string](#string) |  |  |
+| `symbol` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventRequest"></a>
+
+### EventRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventResponse"></a>
+
+### EventResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `event` | [Event](#scalar.chains.v1beta1.Event) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.GatewayAddressRequest"></a>
+
+### GatewayAddressRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.GatewayAddressResponse"></a>
+
+### GatewayAddressResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.KeyAddressRequest"></a>
+
+### KeyAddressRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.KeyAddressResponse"></a>
+
+### KeyAddressResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_id` | [string](#string) |  |  |
+| `addresses` | [KeyAddressResponse.WeightedAddress](#scalar.chains.v1beta1.KeyAddressResponse.WeightedAddress) | repeated |  |
+| `threshold` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.KeyAddressResponse.WeightedAddress"></a>
+
+### KeyAddressResponse.WeightedAddress
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [string](#string) |  |  |
+| `weight` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ParamsRequest"></a>
+
+### ParamsRequest
+ParamsRequest represents a message that queries the params
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ParamsResponse"></a>
+
+### ParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#scalar.chains.v1beta1.Params) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.PendingCommandsRequest"></a>
+
+### PendingCommandsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.PendingCommandsResponse"></a>
+
+### PendingCommandsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `commands` | [QueryCommandResponse](#scalar.chains.v1beta1.QueryCommandResponse) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.QueryBurnerAddressResponse"></a>
+
+### QueryBurnerAddressResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.QueryCommandResponse"></a>
+
+### QueryCommandResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `type` | [string](#string) |  |  |
+| `params` | [QueryCommandResponse.ParamsEntry](#scalar.chains.v1beta1.QueryCommandResponse.ParamsEntry) | repeated |  |
+| `key_id` | [string](#string) |  |  |
+| `max_gas_cost` | [uint32](#uint32) |  |  |
+| `payload` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.QueryCommandResponse.ParamsEntry"></a>
+
+### QueryCommandResponse.ParamsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.QueryDepositStateParams"></a>
+
+### QueryDepositStateParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `burner_address` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.QueryTokenAddressResponse"></a>
+
+### QueryTokenAddressResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [string](#string) |  |  |
+| `confirmed` | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.TokenInfoRequest"></a>
+
+### TokenInfoRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `asset` | [string](#string) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `address` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.TokenInfoResponse"></a>
+
+### TokenInfoResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `asset` | [string](#string) |  |  |
+| `details` | [TokenDetails](#scalar.chains.v1beta1.TokenDetails) |  |  |
+| `address` | [string](#string) |  |  |
+| `confirmed` | [bool](#bool) |  |  |
+| `is_external` | [bool](#bool) |  |  |
+| `burner_code_hash` | [string](#string) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.chains.v1beta1.ChainStatus"></a>
+
+### ChainStatus
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| CHAIN_STATUS_UNSPECIFIED | 0 |  |
+| CHAIN_STATUS_ACTIVATED | 1 |  |
+| CHAIN_STATUS_DEACTIVATED | 2 |  |
+
+
+
+<a name="scalar.chains.v1beta1.TokenType"></a>
+
+### TokenType
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TOKEN_TYPE_UNSPECIFIED | 0 |  |
+| TOKEN_TYPE_INTERNAL | 1 |  |
+| TOKEN_TYPE_EXTERNAL | 2 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/chains/v1beta1/service.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/chains/v1beta1/service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="scalar.chains.v1beta1.MsgService"></a>
+
+### MsgService
+Msg defines the btc Msg service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `ConfirmSourceTxs` | [ConfirmSourceTxsRequest](#scalar.chains.v1beta1.ConfirmSourceTxsRequest) | [ConfirmSourceTxsResponse](#scalar.chains.v1beta1.ConfirmSourceTxsResponse) |  | POST|/scalar/chains/v1beta1/confirm_source_txs|
+| `SetGateway` | [SetGatewayRequest](#scalar.chains.v1beta1.SetGatewayRequest) | [SetGatewayResponse](#scalar.chains.v1beta1.SetGatewayResponse) |  | POST|/scalar/chains/v1beta1/set_gateway|
+| `Link` | [LinkRequest](#scalar.chains.v1beta1.LinkRequest) | [LinkResponse](#scalar.chains.v1beta1.LinkResponse) |  | POST|/scalar/chains/v1beta1/link|
+| `ConfirmToken` | [ConfirmTokenRequest](#scalar.chains.v1beta1.ConfirmTokenRequest) | [ConfirmTokenResponse](#scalar.chains.v1beta1.ConfirmTokenResponse) |  | POST|/scalar/chains/v1beta1/confirm_token|
+| `ConfirmDeposit` | [ConfirmDepositRequest](#scalar.chains.v1beta1.ConfirmDepositRequest) | [ConfirmDepositResponse](#scalar.chains.v1beta1.ConfirmDepositResponse) |  | POST|/scalar/chains/v1beta1/confirm_deposit|
+| `ConfirmTransferKey` | [ConfirmTransferKeyRequest](#scalar.chains.v1beta1.ConfirmTransferKeyRequest) | [ConfirmTransferKeyResponse](#scalar.chains.v1beta1.ConfirmTransferKeyResponse) |  | POST|/scalar/chains/confirm_transfer_key|
+| `CreateDeployToken` | [CreateDeployTokenRequest](#scalar.chains.v1beta1.CreateDeployTokenRequest) | [CreateDeployTokenResponse](#scalar.chains.v1beta1.CreateDeployTokenResponse) |  | POST|/scalar/chains/v1beta1/create_deploy_token|
+| `CreateBurnTokens` | [CreateBurnTokensRequest](#scalar.chains.v1beta1.CreateBurnTokensRequest) | [CreateBurnTokensResponse](#scalar.chains.v1beta1.CreateBurnTokensResponse) |  | POST|/scalar/chains/v1beta1/create_burn_tokens|
+| `CreatePendingTransfers` | [CreatePendingTransfersRequest](#scalar.chains.v1beta1.CreatePendingTransfersRequest) | [CreatePendingTransfersResponse](#scalar.chains.v1beta1.CreatePendingTransfersResponse) |  | POST|/scalar/chains/v1beta1/create_pending_transfers|
+| `CreateTransferOperatorship` | [CreateTransferOperatorshipRequest](#scalar.chains.v1beta1.CreateTransferOperatorshipRequest) | [CreateTransferOperatorshipResponse](#scalar.chains.v1beta1.CreateTransferOperatorshipResponse) |  | POST|/scalar/chains/v1beta1/create_transfer_operatorship|
+| `SignCommands` | [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest) | [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_commands|
+| `SignBtcCommand` | [SignBtcCommandsRequest](#scalar.chains.v1beta1.SignBtcCommandsRequest) | [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
+| `SignPsbtCommand` | [SignPsbtCommandRequest](#scalar.chains.v1beta1.SignPsbtCommandRequest) | [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
+| `AddChain` | [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest) | [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse) |  | POST|/scalar/chains/v1beta1/add_chain|
+| `RetryFailedEvent` | [RetryFailedEventRequest](#scalar.chains.v1beta1.RetryFailedEventRequest) | [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse) |  | POST|/scalar/chains/v1beta1/retry-failed-event|
+
+
+<a name="scalar.chains.v1beta1.QueryService"></a>
+
+### QueryService
+QueryService defines the gRPC querier service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `BatchedCommands` | [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest) | [BatchedCommandsResponse](#scalar.chains.v1beta1.BatchedCommandsResponse) | BatchedCommands queries the batched commands for a specified chain and BatchedCommandsID if no BatchedCommandsID is specified, then it returns the latest batched commands | GET|/scalar/chains/v1beta1/batched_commands/{chain}/{id}|
+| `BurnerInfo` | [BurnerInfoRequest](#scalar.chains.v1beta1.BurnerInfoRequest) | [BurnerInfoResponse](#scalar.chains.v1beta1.BurnerInfoResponse) |  | GET|/scalar/chains/v1beta1/burner_info|
+| `ConfirmationHeight` | [ConfirmationHeightRequest](#scalar.chains.v1beta1.ConfirmationHeightRequest) | [ConfirmationHeightResponse](#scalar.chains.v1beta1.ConfirmationHeightResponse) | ConfirmationHeight queries the confirmation height for the specified chain | GET|/scalar/chains/v1beta1/confirmation_height/{chain}|
+| `PendingCommands` | [PendingCommandsRequest](#scalar.chains.v1beta1.PendingCommandsRequest) | [PendingCommandsResponse](#scalar.chains.v1beta1.PendingCommandsResponse) | PendingCommands queries the pending commands for the specified chain | GET|/scalar/chains/v1beta1/pending_commands/{chain}|
+| `Chains` | [ChainsRequest](#scalar.chains.v1beta1.ChainsRequest) | [ChainsResponse](#scalar.chains.v1beta1.ChainsResponse) | Chains queries the available chains | GET|/scalar/chains/v1beta1/chains|
+| `Command` | [CommandRequest](#scalar.chains.v1beta1.CommandRequest) | [CommandResponse](#scalar.chains.v1beta1.CommandResponse) | Command queries the command of a chain provided the command id | GET|/scalar/chains/v1beta1/command_request|
+| `KeyAddress` | [KeyAddressRequest](#scalar.chains.v1beta1.KeyAddressRequest) | [KeyAddressResponse](#scalar.chains.v1beta1.KeyAddressResponse) | KeyAddress queries the address of key of a chain | GET|/scalar/chains/v1beta1/key_address/{chain}|
+| `GatewayAddress` | [GatewayAddressRequest](#scalar.chains.v1beta1.GatewayAddressRequest) | [GatewayAddressResponse](#scalar.chains.v1beta1.GatewayAddressResponse) | GatewayAddress queries the address of scalar gateway at the specified chain | GET|/scalar/chains/v1beta1/gateway_address/{chain}|
+| `Bytecode` | [BytecodeRequest](#scalar.chains.v1beta1.BytecodeRequest) | [BytecodeResponse](#scalar.chains.v1beta1.BytecodeResponse) | Bytecode queries the bytecode of a specified gateway at the specified chain | GET|/scalar/chains/v1beta1/bytecode/{chain}/{contract}|
+| `Event` | [EventRequest](#scalar.chains.v1beta1.EventRequest) | [EventResponse](#scalar.chains.v1beta1.EventResponse) | Event queries an event at the specified chain | GET|/scalar/chains/v1beta1/event/{chain}/{event_id}|
+| `ERC20Tokens` | [ERC20TokensRequest](#scalar.chains.v1beta1.ERC20TokensRequest) | [ERC20TokensResponse](#scalar.chains.v1beta1.ERC20TokensResponse) | ERC20Tokens queries the ERC20 tokens registered for a chain | GET|/scalar/chains/v1beta1/erc20_tokens/{chain}|
+| `TokenInfo` | [TokenInfoRequest](#scalar.chains.v1beta1.TokenInfoRequest) | [TokenInfoResponse](#scalar.chains.v1beta1.TokenInfoResponse) | TokenInfo queries the token info for a registered ERC20 Token | GET|/scalar/chains/v1beta1/token_info/{chain}|
+| `Params` | [ParamsRequest](#scalar.chains.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.chains.v1beta1.ParamsResponse) |  | GET|/scalar/chains/v1beta1/params/{chain}|
 
  <!-- end services -->
 
@@ -4469,10 +4514,6 @@ ParamsRequest represents a message that queries the params
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `uid` | [string](#string) |  |  |
-| `name` | [string](#string) |  |  |
-| `group_pubkey` | [bytes](#bytes) |  |  |
-| `custodian_pubkey` | [bytes](#bytes) |  |  |
-| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
 
 
 
@@ -6947,11 +6988,11 @@ Query defines the gRPC querier service.
 | `scalar_address` | [bytes](#bytes) |  | Scalar's address |
 | `name` | [string](#string) |  |  |
 | `tag` | [bytes](#bytes) |  |  |
-| `attribute` | [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute) |  |  |
-| `status` | [Status](#scalar.protocol.v1beta1.Status) |  |  |
+| `attributes` | [scalar.protocol.exported.v1beta1.ProtocolAttributes](#scalar.protocol.exported.v1beta1.ProtocolAttributes) |  |  |
+| `status` | [scalar.protocol.exported.v1beta1.Status](#scalar.protocol.exported.v1beta1.Status) |  |  |
 | `custodian_group_uid` | [string](#string) |  | scalar.covenant.v1beta1.CustodianGroup custodian_group = 8; |
 | `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
-| `chains` | [SupportedChain](#scalar.protocol.v1beta1.SupportedChain) | repeated | Other chains with internal asset |
+| `chains` | [scalar.protocol.exported.v1beta1.SupportedChain](#scalar.protocol.exported.v1beta1.SupportedChain) | repeated | Other chains with internal asset |
 | `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
 
 
@@ -6959,52 +7000,32 @@ Query defines the gRPC querier service.
 
 
 
-<a name="scalar.protocol.v1beta1.ProtocolAttribute"></a>
+<a name="scalar.protocol.v1beta1.ProtocolDetails"></a>
 
-### ProtocolAttribute
+### ProtocolDetails
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `model` | [scalar.protocol.exported.v1beta1.LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
-
-
-
-
-
-
-<a name="scalar.protocol.v1beta1.SupportedChain"></a>
-
-### SupportedChain
-DestinationChain represents a blockchain where tokens can be sent
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
+| `bitcoin_pubkey` | [bytes](#bytes) |  | BTC's pubkey |
+| `scalar_pubkey` | [bytes](#bytes) |  | Scalar's pubkey |
+| `scalar_address` | [bytes](#bytes) |  | Scalar's address |
 | `name` | [string](#string) |  |  |
-| `address` | [string](#string) |  | Asset address on the chain |
+| `tag` | [bytes](#bytes) |  |  |
+| `attributes` | [scalar.protocol.exported.v1beta1.ProtocolAttributes](#scalar.protocol.exported.v1beta1.ProtocolAttributes) |  |  |
+| `status` | [scalar.protocol.exported.v1beta1.Status](#scalar.protocol.exported.v1beta1.Status) |  |  |
+| `custodian_group_uid` | [string](#string) |  |  |
+| `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
+| `chains` | [scalar.protocol.exported.v1beta1.SupportedChain](#scalar.protocol.exported.v1beta1.SupportedChain) | repeated | Other chains with internal asset |
+| `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
+| `custodian_group` | [scalar.covenant.v1beta1.CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
 
 
 
 
 
  <!-- end messages -->
-
-
-<a name="scalar.protocol.v1beta1.Status"></a>
-
-### Status
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| STATUS_UNSPECIFIED | 0 |  |
-| STATUS_ACTIVATED | 1 |  |
-| STATUS_DEACTIVATED | 2 |  |
-| STATUS_PENDING | 3 |  |
-
 
  <!-- end enums -->
 
@@ -7104,7 +7125,7 @@ Params represent the genesis parameters for the module
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `protocol` | [scalar.protocol.exported.v1beta1.ProtocolInfo](#scalar.protocol.exported.v1beta1.ProtocolInfo) |  |  |
+| `protocol` | [ProtocolDetails](#scalar.protocol.v1beta1.ProtocolDetails) |  |  |
 
 
 
@@ -7122,7 +7143,7 @@ Params represent the genesis parameters for the module
 | `pubkey` | [string](#string) |  |  |
 | `address` | [string](#string) |  |  |
 | `name` | [string](#string) |  |  |
-| `status` | [Status](#scalar.protocol.v1beta1.Status) |  |  |
+| `status` | [scalar.protocol.exported.v1beta1.Status](#scalar.protocol.exported.v1beta1.Status) |  |  |
 
 
 
@@ -7137,7 +7158,7 @@ Params represent the genesis parameters for the module
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `protocols` | [Protocol](#scalar.protocol.v1beta1.Protocol) | repeated |  |
+| `protocols` | [ProtocolDetails](#scalar.protocol.v1beta1.ProtocolDetails) | repeated |  |
 | `total` | [uint64](#uint64) |  |  |
 
 
@@ -7170,7 +7191,7 @@ Params represent the genesis parameters for the module
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
-| `chain` | [SupportedChain](#scalar.protocol.v1beta1.SupportedChain) |  |  |
+| `chain` | [scalar.protocol.exported.v1beta1.SupportedChain](#scalar.protocol.exported.v1beta1.SupportedChain) |  |  |
 
 
 
@@ -7205,8 +7226,9 @@ Params represent the genesis parameters for the module
 | `scalar_pubkey` | [bytes](#bytes) |  | Scalar's pubkey |
 | `name` | [string](#string) |  | e.g., "protocol-1" |
 | `tag` | [string](#string) |  | e.g., "pools" |
-| `attribute` | [ProtocolAttribute](#scalar.protocol.v1beta1.ProtocolAttribute) |  |  |
+| `attributes` | [scalar.protocol.exported.v1beta1.ProtocolAttributes](#scalar.protocol.exported.v1beta1.ProtocolAttributes) |  |  |
 | `custodian_group_uid` | [string](#string) |  |  |
+| `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
 | `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
 
 
@@ -7272,7 +7294,7 @@ pubkey used as protocol unique id
 | `sender` | [bytes](#bytes) |  |  |
 | `chain_family` | [string](#string) |  |  |
 | `chain_id` | [uint64](#uint64) |  |  |
-| `status` | [Status](#scalar.protocol.v1beta1.Status) |  |  |
+| `status` | [scalar.protocol.exported.v1beta1.Status](#scalar.protocol.exported.v1beta1.Status) |  |  |
 
 
 

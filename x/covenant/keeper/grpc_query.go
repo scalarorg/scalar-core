@@ -42,8 +42,8 @@ func (q Querier) Custodians(c context.Context, req *types.CustodiansRequest) (*t
 func (q Querier) Groups(c context.Context, req *types.GroupsRequest) (*types.GroupsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	// groups, ok := q.keeper.findCustodianGroups(ctx, req)
-	groups, ok := q.keeper.GetAllCustodianGroups(ctx)
+	groups, ok := q.keeper.findCustodianGroups(ctx, req)
+	// groups, ok := q.keeper.GetAllCustodianGroups(ctx)
 	if !ok {
 		return nil, status.Errorf(codes.NotFound, "custodian groups not found")
 	}

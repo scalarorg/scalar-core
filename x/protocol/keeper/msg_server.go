@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	exported "github.com/scalarorg/scalar-core/x/protocol/exported"
 	"github.com/scalarorg/scalar-core/x/protocol/types"
 )
 
@@ -26,18 +28,35 @@ func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRe
 		return nil, fmt.Errorf("custodian group not found")
 	}
 
+	err := req.ValidateBasic()
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.Keeper.ValidateAsset(ctx, req.Asset)
+	if err != nil {
+		return nil, err
+	}
+
 	protocol := types.Protocol{
 		BitcoinPubkey:     req.BitcoinPubkey,
 		ScalarAddress:     req.Sender.Bytes(),
 		ScalarPubkey:      req.ScalarPubkey,
 		Name:              req.Name,
 		Tag:               []byte(req.Tag), // ascii
-		Attribute:         req.Attribute,
-		Status:            types.Pending,
+		Attributes:        req.Attributes,
+		Status:            exported.Pending,
+		Asset:             req.Asset,
 		CustodianGroupUID: custodianGr.UID,
 		Avatar:            req.Avatar,
+		Chains: []*exported.SupportedChain{
+			{
+				Chain:   nexus.ChainName(req.Asset.Chain),
+				Name:    req.Asset.Name,
+				Address: "",
+			},
+		},
 	}
-
 	s.Keeper.SetProtocol(ctx, &protocol)
 
 	return &types.CreateProtocolResponse{

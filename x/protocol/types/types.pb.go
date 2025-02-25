@@ -7,10 +7,8 @@ import (
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
-	_ "github.com/scalarorg/scalar-core/x/chains/btc/types"
 	types "github.com/scalarorg/scalar-core/x/chains/types"
-	_ "github.com/scalarorg/scalar-core/x/covenant/types"
-	github_com_scalarorg_scalar_core_x_nexus_exported "github.com/scalarorg/scalar-core/x/nexus/exported"
+	types1 "github.com/scalarorg/scalar-core/x/covenant/types"
 	exported "github.com/scalarorg/scalar-core/x/protocol/exported"
 	io "io"
 	math "math"
@@ -28,162 +26,26 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type Status int32
-
-const (
-	Unspecified Status = 0
-	Activated   Status = 1
-	Deactivated Status = 2
-	Pending     Status = 3
-)
-
-var Status_name = map[int32]string{
-	0: "STATUS_UNSPECIFIED",
-	1: "STATUS_ACTIVATED",
-	2: "STATUS_DEACTIVATED",
-	3: "STATUS_PENDING",
-}
-
-var Status_value = map[string]int32{
-	"STATUS_UNSPECIFIED": 0,
-	"STATUS_ACTIVATED":   1,
-	"STATUS_DEACTIVATED": 2,
-	"STATUS_PENDING":     3,
-}
-
-func (x Status) String() string {
-	return proto.EnumName(Status_name, int32(x))
-}
-
-func (Status) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_1d53a37c7b7ae195, []int{0}
-}
-
-type ProtocolAttribute struct {
-	Model exported.LiquidityModel `protobuf:"varint,1,opt,name=model,proto3,enum=scalar.protocol.exported.v1beta1.LiquidityModel" json:"model,omitempty"`
-}
-
-func (m *ProtocolAttribute) Reset()         { *m = ProtocolAttribute{} }
-func (m *ProtocolAttribute) String() string { return proto.CompactTextString(m) }
-func (*ProtocolAttribute) ProtoMessage()    {}
-func (*ProtocolAttribute) Descriptor() ([]byte, []int) {
-	return fileDescriptor_1d53a37c7b7ae195, []int{0}
-}
-func (m *ProtocolAttribute) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *ProtocolAttribute) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_ProtocolAttribute.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *ProtocolAttribute) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ProtocolAttribute.Merge(m, src)
-}
-func (m *ProtocolAttribute) XXX_Size() int {
-	return m.Size()
-}
-func (m *ProtocolAttribute) XXX_DiscardUnknown() {
-	xxx_messageInfo_ProtocolAttribute.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ProtocolAttribute proto.InternalMessageInfo
-
-func (m *ProtocolAttribute) GetModel() exported.LiquidityModel {
-	if m != nil {
-		return m.Model
-	}
-	return exported.LIQUIDITY_MODEL_UNSPECIFIED
-}
-
-// DestinationChain represents a blockchain where tokens can be sent
-type SupportedChain struct {
-	Chain   github_com_scalarorg_scalar_core_x_nexus_exported.ChainName `protobuf:"bytes,1,opt,name=chain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"chain,omitempty"`
-	Name    string                                                      `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Address string                                                      `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`
-}
-
-func (m *SupportedChain) Reset()         { *m = SupportedChain{} }
-func (m *SupportedChain) String() string { return proto.CompactTextString(m) }
-func (*SupportedChain) ProtoMessage()    {}
-func (*SupportedChain) Descriptor() ([]byte, []int) {
-	return fileDescriptor_1d53a37c7b7ae195, []int{1}
-}
-func (m *SupportedChain) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *SupportedChain) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_SupportedChain.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *SupportedChain) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SupportedChain.Merge(m, src)
-}
-func (m *SupportedChain) XXX_Size() int {
-	return m.Size()
-}
-func (m *SupportedChain) XXX_DiscardUnknown() {
-	xxx_messageInfo_SupportedChain.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_SupportedChain proto.InternalMessageInfo
-
-func (m *SupportedChain) GetChain() github_com_scalarorg_scalar_core_x_nexus_exported.ChainName {
-	if m != nil {
-		return m.Chain
-	}
-	return ""
-}
-
-func (m *SupportedChain) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *SupportedChain) GetAddress() string {
-	if m != nil {
-		return m.Address
-	}
-	return ""
-}
-
 type Protocol struct {
-	BitcoinPubkey []byte             `protobuf:"bytes,1,opt,name=bitcoin_pubkey,json=bitcoinPubkey,proto3" json:"bitcoin_pubkey,omitempty"`
-	ScalarPubkey  []byte             `protobuf:"bytes,2,opt,name=scalar_pubkey,json=scalarPubkey,proto3" json:"scalar_pubkey,omitempty"`
-	ScalarAddress []byte             `protobuf:"bytes,3,opt,name=scalar_address,json=scalarAddress,proto3" json:"scalar_address,omitempty"`
-	Name          string             `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-	Tag           []byte             `protobuf:"bytes,5,opt,name=tag,proto3" json:"tag,omitempty"`
-	Attribute     *ProtocolAttribute `protobuf:"bytes,6,opt,name=attribute,proto3" json:"attribute,omitempty"`
-	Status        Status             `protobuf:"varint,7,opt,name=status,proto3,enum=scalar.protocol.v1beta1.Status" json:"status,omitempty"`
+	BitcoinPubkey []byte                       `protobuf:"bytes,1,opt,name=bitcoin_pubkey,json=bitcoinPubkey,proto3" json:"bitcoin_pubkey,omitempty"`
+	ScalarPubkey  []byte                       `protobuf:"bytes,2,opt,name=scalar_pubkey,json=scalarPubkey,proto3" json:"scalar_pubkey,omitempty"`
+	ScalarAddress []byte                       `protobuf:"bytes,3,opt,name=scalar_address,json=scalarAddress,proto3" json:"scalar_address,omitempty"`
+	Name          string                       `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	Tag           []byte                       `protobuf:"bytes,5,opt,name=tag,proto3" json:"tag,omitempty"`
+	Attributes    *exported.ProtocolAttributes `protobuf:"bytes,6,opt,name=attributes,proto3" json:"attributes,omitempty"`
+	Status        exported.Status              `protobuf:"varint,7,opt,name=status,proto3,enum=scalar.protocol.exported.v1beta1.Status" json:"status,omitempty"`
 	// scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
-	CustodianGroupUID string            `protobuf:"bytes,8,opt,name=custodian_group_uid,json=custodianGroupUid,proto3" json:"custodian_group_uid,omitempty"`
-	Asset             *types.Asset      `protobuf:"bytes,9,opt,name=asset,proto3" json:"asset,omitempty"`
-	Chains            []*SupportedChain `protobuf:"bytes,10,rep,name=chains,proto3" json:"chains,omitempty"`
-	Avatar            []byte            `protobuf:"bytes,11,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	CustodianGroupUID string                     `protobuf:"bytes,8,opt,name=custodian_group_uid,json=custodianGroupUid,proto3" json:"custodian_group_uid,omitempty"`
+	Asset             *types.Asset               `protobuf:"bytes,9,opt,name=asset,proto3" json:"asset,omitempty"`
+	Chains            []*exported.SupportedChain `protobuf:"bytes,10,rep,name=chains,proto3" json:"chains,omitempty"`
+	Avatar            []byte                     `protobuf:"bytes,11,opt,name=avatar,proto3" json:"avatar,omitempty"`
 }
 
 func (m *Protocol) Reset()         { *m = Protocol{} }
 func (m *Protocol) String() string { return proto.CompactTextString(m) }
 func (*Protocol) ProtoMessage()    {}
 func (*Protocol) Descriptor() ([]byte, []int) {
-	return fileDescriptor_1d53a37c7b7ae195, []int{2}
+	return fileDescriptor_1d53a37c7b7ae195, []int{0}
 }
 func (m *Protocol) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -247,18 +109,18 @@ func (m *Protocol) GetTag() []byte {
 	return nil
 }
 
-func (m *Protocol) GetAttribute() *ProtocolAttribute {
+func (m *Protocol) GetAttributes() *exported.ProtocolAttributes {
 	if m != nil {
-		return m.Attribute
+		return m.Attributes
 	}
 	return nil
 }
 
-func (m *Protocol) GetStatus() Status {
+func (m *Protocol) GetStatus() exported.Status {
 	if m != nil {
 		return m.Status
 	}
-	return Unspecified
+	return exported.Unspecified
 }
 
 func (m *Protocol) GetCustodianGroupUID() string {
@@ -275,7 +137,7 @@ func (m *Protocol) GetAsset() *types.Asset {
 	return nil
 }
 
-func (m *Protocol) GetChains() []*SupportedChain {
+func (m *Protocol) GetChains() []*exported.SupportedChain {
 	if m != nil {
 		return m.Chains
 	}
@@ -289,11 +151,141 @@ func (m *Protocol) GetAvatar() []byte {
 	return nil
 }
 
+type ProtocolDetails struct {
+	BitcoinPubkey     []byte                       `protobuf:"bytes,1,opt,name=bitcoin_pubkey,json=bitcoinPubkey,proto3" json:"bitcoin_pubkey,omitempty"`
+	ScalarPubkey      []byte                       `protobuf:"bytes,2,opt,name=scalar_pubkey,json=scalarPubkey,proto3" json:"scalar_pubkey,omitempty"`
+	ScalarAddress     []byte                       `protobuf:"bytes,3,opt,name=scalar_address,json=scalarAddress,proto3" json:"scalar_address,omitempty"`
+	Name              string                       `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	Tag               []byte                       `protobuf:"bytes,5,opt,name=tag,proto3" json:"tag,omitempty"`
+	Attributes        *exported.ProtocolAttributes `protobuf:"bytes,6,opt,name=attributes,proto3" json:"attributes,omitempty"`
+	Status            exported.Status              `protobuf:"varint,7,opt,name=status,proto3,enum=scalar.protocol.exported.v1beta1.Status" json:"status,omitempty"`
+	CustodianGroupUID string                       `protobuf:"bytes,8,opt,name=custodian_group_uid,json=custodianGroupUid,proto3" json:"custodian_group_uid,omitempty"`
+	Asset             *types.Asset                 `protobuf:"bytes,9,opt,name=asset,proto3" json:"asset,omitempty"`
+	Chains            []*exported.SupportedChain   `protobuf:"bytes,10,rep,name=chains,proto3" json:"chains,omitempty"`
+	Avatar            []byte                       `protobuf:"bytes,11,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	CustodianGroup    *types1.CustodianGroup       `protobuf:"bytes,12,opt,name=custodian_group,json=custodianGroup,proto3" json:"custodian_group,omitempty"`
+}
+
+func (m *ProtocolDetails) Reset()         { *m = ProtocolDetails{} }
+func (m *ProtocolDetails) String() string { return proto.CompactTextString(m) }
+func (*ProtocolDetails) ProtoMessage()    {}
+func (*ProtocolDetails) Descriptor() ([]byte, []int) {
+	return fileDescriptor_1d53a37c7b7ae195, []int{1}
+}
+func (m *ProtocolDetails) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ProtocolDetails) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ProtocolDetails.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ProtocolDetails) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ProtocolDetails.Merge(m, src)
+}
+func (m *ProtocolDetails) XXX_Size() int {
+	return m.Size()
+}
+func (m *ProtocolDetails) XXX_DiscardUnknown() {
+	xxx_messageInfo_ProtocolDetails.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ProtocolDetails proto.InternalMessageInfo
+
+func (m *ProtocolDetails) GetBitcoinPubkey() []byte {
+	if m != nil {
+		return m.BitcoinPubkey
+	}
+	return nil
+}
+
+func (m *ProtocolDetails) GetScalarPubkey() []byte {
+	if m != nil {
+		return m.ScalarPubkey
+	}
+	return nil
+}
+
+func (m *ProtocolDetails) GetScalarAddress() []byte {
+	if m != nil {
+		return m.ScalarAddress
+	}
+	return nil
+}
+
+func (m *ProtocolDetails) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *ProtocolDetails) GetTag() []byte {
+	if m != nil {
+		return m.Tag
+	}
+	return nil
+}
+
+func (m *ProtocolDetails) GetAttributes() *exported.ProtocolAttributes {
+	if m != nil {
+		return m.Attributes
+	}
+	return nil
+}
+
+func (m *ProtocolDetails) GetStatus() exported.Status {
+	if m != nil {
+		return m.Status
+	}
+	return exported.Unspecified
+}
+
+func (m *ProtocolDetails) GetCustodianGroupUID() string {
+	if m != nil {
+		return m.CustodianGroupUID
+	}
+	return ""
+}
+
+func (m *ProtocolDetails) GetAsset() *types.Asset {
+	if m != nil {
+		return m.Asset
+	}
+	return nil
+}
+
+func (m *ProtocolDetails) GetChains() []*exported.SupportedChain {
+	if m != nil {
+		return m.Chains
+	}
+	return nil
+}
+
+func (m *ProtocolDetails) GetAvatar() []byte {
+	if m != nil {
+		return m.Avatar
+	}
+	return nil
+}
+
+func (m *ProtocolDetails) GetCustodianGroup() *types1.CustodianGroup {
+	if m != nil {
+		return m.CustodianGroup
+	}
+	return nil
+}
+
 func init() {
-	proto.RegisterEnum("scalar.protocol.v1beta1.Status", Status_name, Status_value)
-	proto.RegisterType((*ProtocolAttribute)(nil), "scalar.protocol.v1beta1.ProtocolAttribute")
-	proto.RegisterType((*SupportedChain)(nil), "scalar.protocol.v1beta1.SupportedChain")
 	proto.RegisterType((*Protocol)(nil), "scalar.protocol.v1beta1.Protocol")
+	proto.RegisterType((*ProtocolDetails)(nil), "scalar.protocol.v1beta1.ProtocolDetails")
 }
 
 func init() {
@@ -301,122 +293,39 @@ func init() {
 }
 
 var fileDescriptor_1d53a37c7b7ae195 = []byte{
-	// 682 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x93, 0x4f, 0x4f, 0xdb, 0x3e,
-	0x18, 0xc7, 0x1b, 0x4a, 0x0b, 0x75, 0xa1, 0xbf, 0xe2, 0xdf, 0xbf, 0x28, 0x9a, 0xd2, 0xae, 0x08,
-	0x81, 0xd0, 0x96, 0x8c, 0xee, 0xb0, 0xc3, 0x0e, 0x28, 0xb4, 0x85, 0x55, 0xdb, 0xaa, 0x2a, 0x6d,
-	0x77, 0xd8, 0x0e, 0x95, 0x93, 0x78, 0xc1, 0x82, 0xc6, 0x59, 0xe2, 0x54, 0xf0, 0x0e, 0x26, 0x4e,
-	0xbb, 0xec, 0xc8, 0x69, 0xd2, 0x5e, 0xcb, 0x8e, 0x1c, 0x77, 0x42, 0x53, 0x79, 0x17, 0x9c, 0xa6,
-	0xd8, 0x49, 0x29, 0x8c, 0x6a, 0xbb, 0xd9, 0x5f, 0x7f, 0x9e, 0xef, 0xf3, 0x3c, 0x7e, 0x6c, 0xb0,
-	0x1e, 0xda, 0xe8, 0x18, 0x05, 0xba, 0x1f, 0x50, 0x46, 0x6d, 0x7a, 0xac, 0x8f, 0x77, 0x2c, 0xcc,
-	0xd0, 0x8e, 0xce, 0x4e, 0x7d, 0x1c, 0x6a, 0x5c, 0x86, 0xff, 0x0b, 0x48, 0x4b, 0x21, 0x2d, 0x81,
-	0x94, 0x7f, 0x5c, 0xea, 0x52, 0xae, 0xea, 0xf1, 0x4a, 0x00, 0xca, 0x46, 0xe2, 0x69, 0x1f, 0x22,
-	0xe2, 0x85, 0xba, 0xc5, 0xec, 0xfb, 0x5c, 0x95, 0xda, 0x6d, 0x2c, 0x45, 0x7c, 0x14, 0xa0, 0xd1,
-	0x6f, 0x18, 0x46, 0x8f, 0xb0, 0x97, 0x32, 0x0f, 0xe7, 0x30, 0x33, 0xa9, 0xd2, 0x2e, 0x6d, 0x3a,
-	0xc6, 0x1e, 0xf2, 0xd8, 0xbd, 0xd0, 0xa3, 0xbb, 0x57, 0x81, 0x4f, 0x7c, 0x1a, 0x30, 0xec, 0xdc,
-	0x47, 0xd7, 0xde, 0x81, 0xb5, 0x6e, 0x02, 0x1a, 0x8c, 0x05, 0xc4, 0x8a, 0x18, 0x86, 0xfb, 0x20,
-	0x37, 0xa2, 0x0e, 0x3e, 0x96, 0xa5, 0xaa, 0xb4, 0x55, 0xaa, 0x3f, 0xd1, 0xee, 0x5e, 0x5c, 0x6a,
-	0x99, 0xde, 0xa0, 0xf6, 0x8a, 0x7c, 0x88, 0x88, 0x43, 0xd8, 0xe9, 0xeb, 0x38, 0xce, 0x14, 0xe1,
-	0xb5, 0xcf, 0x12, 0x28, 0xf5, 0x22, 0x5f, 0xb0, 0x8d, 0xb8, 0x2f, 0x38, 0x00, 0x39, 0xde, 0x20,
-	0xb7, 0x2e, 0xec, 0xed, 0x5e, 0x5f, 0x56, 0x9e, 0xbb, 0x84, 0x1d, 0x46, 0x96, 0x66, 0xd3, 0x91,
-	0x2e, 0x12, 0xd1, 0xc0, 0x4d, 0x56, 0x8f, 0x6d, 0x1a, 0x60, 0xfd, 0x44, 0xf7, 0xf0, 0x49, 0x14,
-	0x4e, 0x3b, 0xd1, 0xb8, 0x57, 0x07, 0x8d, 0xb0, 0x29, 0xdc, 0x20, 0x04, 0x8b, 0x1e, 0x1a, 0x61,
-	0x79, 0x21, 0x76, 0x35, 0xf9, 0x1a, 0xca, 0x60, 0x09, 0x39, 0x4e, 0x80, 0xc3, 0x50, 0xce, 0x72,
-	0x39, 0xdd, 0xd6, 0xae, 0xb3, 0x60, 0x39, 0xed, 0x1a, 0x6e, 0x80, 0x92, 0x45, 0x98, 0x4d, 0x89,
-	0x37, 0xf4, 0x23, 0xeb, 0x08, 0x9f, 0xf2, 0xd2, 0x56, 0xcc, 0xd5, 0x44, 0xed, 0x72, 0x11, 0xae,
-	0x83, 0x55, 0x51, 0x52, 0x4a, 0x2d, 0x70, 0x6a, 0x45, 0x88, 0x09, 0xb4, 0x01, 0x4a, 0x09, 0x34,
-	0x9b, 0x79, 0xc5, 0x4c, 0x42, 0x0d, 0x21, 0x4e, 0xab, 0x5d, 0x9c, 0xa9, 0xb6, 0x0c, 0xb2, 0x0c,
-	0xb9, 0x72, 0x8e, 0xf3, 0xf1, 0x12, 0xbe, 0x00, 0x05, 0x94, 0x8e, 0x44, 0xce, 0x57, 0xa5, 0xad,
-	0x62, 0x7d, 0x5b, 0x9b, 0xf3, 0x84, 0xb5, 0x5f, 0x86, 0x68, 0xde, 0x04, 0xc3, 0x67, 0x20, 0x1f,
-	0x32, 0xc4, 0xa2, 0x50, 0x5e, 0xe2, 0x03, 0xad, 0xcc, 0xb5, 0xe9, 0x71, 0xcc, 0x4c, 0x70, 0xd8,
-	0x02, 0x7f, 0xdb, 0x51, 0xc8, 0xa8, 0x43, 0x90, 0x37, 0x74, 0x03, 0x1a, 0xf9, 0xc3, 0x88, 0x38,
-	0xf2, 0x32, 0x9f, 0xdd, 0xbf, 0x93, 0xcb, 0xca, 0x5a, 0x23, 0x3d, 0x3e, 0x88, 0x4f, 0x07, 0xed,
-	0xa6, 0xb9, 0x66, 0xdf, 0x96, 0x88, 0x03, 0xeb, 0x20, 0x87, 0xc2, 0x10, 0x33, 0xb9, 0xc0, 0xbb,
-	0x78, 0x90, 0xa6, 0x17, 0x4f, 0x7d, 0x9a, 0xdc, 0x88, 0x19, 0x53, 0xa0, 0x70, 0x17, 0xe4, 0xc5,
-	0xb1, 0x0c, 0xaa, 0xd9, 0xad, 0x62, 0x7d, 0x73, 0x7e, 0xcd, 0xb7, 0x5e, 0x98, 0x99, 0x84, 0xc1,
-	0xff, 0x40, 0x1e, 0x8d, 0x11, 0x43, 0x81, 0x5c, 0xe4, 0x77, 0x9a, 0xec, 0xb6, 0xbf, 0x4a, 0x20,
-	0x2f, 0xda, 0x84, 0x9b, 0x00, 0xf6, 0xfa, 0x46, 0x7f, 0xd0, 0x1b, 0x0e, 0x3a, 0xbd, 0x6e, 0xab,
-	0xd1, 0xde, 0x6f, 0xb7, 0x9a, 0xe5, 0x8c, 0xf2, 0xd7, 0xd9, 0x79, 0xb5, 0x38, 0xf0, 0x42, 0x1f,
-	0xdb, 0xe4, 0x3d, 0xc1, 0x0e, 0x5c, 0x07, 0xe5, 0x04, 0x34, 0x1a, 0xfd, 0xf6, 0x1b, 0xa3, 0xdf,
-	0x6a, 0x96, 0x25, 0x65, 0xf5, 0xec, 0xbc, 0x5a, 0x30, 0x6c, 0x46, 0xc6, 0x88, 0x61, 0x67, 0xc6,
-	0xad, 0xd9, 0xba, 0xc1, 0x16, 0x84, 0x5b, 0x13, 0xa3, 0x29, 0x58, 0x01, 0xa5, 0x04, 0xec, 0xb6,
-	0x3a, 0xcd, 0x76, 0xe7, 0xa0, 0x9c, 0x55, 0x8a, 0x67, 0xe7, 0xd5, 0xa5, 0x2e, 0xf6, 0x1c, 0xe2,
-	0xb9, 0xca, 0xe2, 0xc7, 0x2f, 0x6a, 0x66, 0xef, 0xe5, 0xb7, 0x89, 0x2a, 0x5d, 0x4c, 0x54, 0xe9,
-	0xc7, 0x44, 0x95, 0x3e, 0x5d, 0xa9, 0x99, 0x8b, 0x2b, 0x35, 0xf3, 0xfd, 0x4a, 0xcd, 0xbc, 0xdd,
-	0xf9, 0x83, 0x1f, 0x33, 0xfd, 0xfe, 0xfc, 0xb7, 0x5b, 0x79, 0xbe, 0x7f, 0xfa, 0x33, 0x00, 0x00,
-	0xff, 0xff, 0x65, 0xc7, 0x7e, 0x69, 0x29, 0x05, 0x00, 0x00,
-}
-
-func (m *ProtocolAttribute) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *ProtocolAttribute) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *ProtocolAttribute) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.Model != 0 {
-		i = encodeVarintTypes(dAtA, i, uint64(m.Model))
-		i--
-		dAtA[i] = 0x8
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *SupportedChain) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *SupportedChain) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *SupportedChain) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Address) > 0 {
-		i -= len(m.Address)
-		copy(dAtA[i:], m.Address)
-		i = encodeVarintTypes(dAtA, i, uint64(len(m.Address)))
-		i--
-		dAtA[i] = 0x1a
-	}
-	if len(m.Name) > 0 {
-		i -= len(m.Name)
-		copy(dAtA[i:], m.Name)
-		i = encodeVarintTypes(dAtA, i, uint64(len(m.Name)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Chain) > 0 {
-		i -= len(m.Chain)
-		copy(dAtA[i:], m.Chain)
-		i = encodeVarintTypes(dAtA, i, uint64(len(m.Chain)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
+	// 499 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x94, 0x4d, 0x6e, 0xd3, 0x40,
+	0x14, 0xc7, 0x63, 0x92, 0x9a, 0x76, 0x92, 0xa6, 0x74, 0xf8, 0x1a, 0x45, 0xc8, 0x98, 0x56, 0x15,
+	0x5e, 0x80, 0x4d, 0x02, 0x07, 0x20, 0x6d, 0x11, 0x20, 0x36, 0x91, 0x81, 0x0d, 0x9b, 0x68, 0x6c,
+	0x8f, 0xdc, 0x11, 0xa9, 0xc7, 0x9a, 0x19, 0x47, 0xed, 0x2d, 0x58, 0x72, 0x24, 0x96, 0x5d, 0xb2,
+	0x42, 0x28, 0x39, 0x01, 0x37, 0x40, 0x9e, 0x8f, 0x94, 0x44, 0x91, 0xe8, 0x01, 0xb2, 0x7b, 0xfe,
+	0xcf, 0xef, 0xfd, 0xe7, 0xbd, 0xe7, 0xd1, 0x03, 0x87, 0x22, 0xc5, 0x13, 0xcc, 0xa3, 0x92, 0x33,
+	0xc9, 0x52, 0x36, 0x89, 0xa6, 0xfd, 0x84, 0x48, 0xdc, 0x8f, 0xe4, 0x65, 0x49, 0x44, 0xa8, 0x64,
+	0xf8, 0x50, 0x43, 0xa1, 0x85, 0x42, 0x03, 0xf5, 0xee, 0xe5, 0x2c, 0x67, 0x4a, 0x8d, 0xea, 0x48,
+	0x03, 0xbd, 0x67, 0xab, 0x9e, 0xe4, 0xa2, 0x64, 0x5c, 0x92, 0x6c, 0x9d, 0x79, 0xef, 0x89, 0xa1,
+	0xd3, 0x33, 0x4c, 0x0b, 0xb1, 0x16, 0xb1, 0x45, 0xa6, 0x6c, 0x4a, 0x0a, 0x5c, 0xc8, 0x75, 0xd0,
+	0xc1, 0xf7, 0x16, 0xd8, 0x1e, 0x99, 0x1b, 0xe1, 0x11, 0xe8, 0x26, 0x54, 0xa6, 0x8c, 0x16, 0xe3,
+	0xb2, 0x4a, 0xbe, 0x92, 0x4b, 0xe4, 0xf8, 0x4e, 0xd0, 0x89, 0x77, 0x8d, 0x3a, 0x52, 0x22, 0x3c,
+	0x04, 0xbb, 0xda, 0xda, 0x52, 0xb7, 0x14, 0xd5, 0xd1, 0xa2, 0x81, 0x8e, 0x40, 0xd7, 0x40, 0x38,
+	0xcb, 0x38, 0x11, 0x02, 0x35, 0xb5, 0x97, 0x56, 0x87, 0x5a, 0x84, 0x10, 0xb4, 0x0a, 0x7c, 0x4e,
+	0x50, 0xcb, 0x77, 0x82, 0x9d, 0x58, 0xc5, 0xf0, 0x0e, 0x68, 0x4a, 0x9c, 0xa3, 0x2d, 0xc5, 0xd7,
+	0x21, 0xfc, 0x04, 0x00, 0x96, 0x92, 0xd3, 0xa4, 0x92, 0x44, 0x20, 0xd7, 0x77, 0x82, 0xf6, 0xe0,
+	0x55, 0xb8, 0x3a, 0x5f, 0x3b, 0x30, 0x3b, 0xe8, 0xd0, 0x36, 0x36, 0x5c, 0xe4, 0xc6, 0xff, 0xf8,
+	0xc0, 0xd7, 0xc0, 0x15, 0x12, 0xcb, 0x4a, 0xa0, 0xdb, 0xbe, 0x13, 0x74, 0x07, 0xc1, 0xff, 0x1d,
+	0x3f, 0x2a, 0x3e, 0x36, 0x79, 0xf0, 0x0d, 0xb8, 0x9b, 0x56, 0x42, 0xb2, 0x8c, 0xe2, 0x62, 0x9c,
+	0x73, 0x56, 0x95, 0xe3, 0x8a, 0x66, 0x68, 0xbb, 0x6e, 0xe6, 0xf8, 0xfe, 0xec, 0xd7, 0xe3, 0xfd,
+	0x13, 0x7b, 0xfc, 0xb6, 0x3e, 0xfd, 0xfc, 0xfe, 0x34, 0xde, 0x4f, 0x97, 0x25, 0x9a, 0xc1, 0x01,
+	0xd8, 0xc2, 0x42, 0x10, 0x89, 0x76, 0x54, 0x67, 0x8f, 0x6c, 0x1d, 0xfa, 0xe7, 0x2e, 0x2e, 0x1f,
+	0xd6, 0x4c, 0xac, 0x51, 0xf8, 0x0e, 0xb8, 0xfa, 0x18, 0x01, 0xbf, 0x19, 0xb4, 0x07, 0x2f, 0x6e,
+	0x50, 0x7c, 0x55, 0x6a, 0xe5, 0xa4, 0x4e, 0x8c, 0x4d, 0x3e, 0x7c, 0x00, 0x5c, 0x3c, 0xc5, 0x12,
+	0x73, 0xd4, 0x56, 0x13, 0x37, 0x5f, 0x07, 0x7f, 0x5a, 0x60, 0xcf, 0x4e, 0xf0, 0x94, 0x48, 0x4c,
+	0x27, 0x62, 0xf3, 0x42, 0x36, 0x2f, 0xe4, 0xfa, 0x85, 0xc0, 0x11, 0xd8, 0x5b, 0x69, 0x0e, 0x75,
+	0x54, 0x7d, 0x4f, 0x17, 0xf5, 0x99, 0xdd, 0xb3, 0xb8, 0x61, 0xb9, 0xdb, 0xb8, 0xbb, 0xdc, 0xea,
+	0xf1, 0x87, 0x1f, 0x33, 0xcf, 0xb9, 0x9a, 0x79, 0xce, 0xef, 0x99, 0xe7, 0x7c, 0x9b, 0x7b, 0x8d,
+	0xab, 0xb9, 0xd7, 0xf8, 0x39, 0xf7, 0x1a, 0x5f, 0xfa, 0x39, 0x95, 0x67, 0x55, 0x12, 0xa6, 0xec,
+	0x3c, 0xd2, 0xe6, 0x8c, 0xe7, 0x26, 0x7a, 0x9e, 0x32, 0x4e, 0xa2, 0x8b, 0xeb, 0xd5, 0xa9, 0x36,
+	0x5c, 0xe2, 0xaa, 0xef, 0x97, 0x7f, 0x03, 0x00, 0x00, 0xff, 0xff, 0x8c, 0xae, 0x36, 0x39, 0xae,
+	0x05, 0x00, 0x00,
 }
 
 func (m *Protocol) Marshal() (dAtA []byte, err error) {
@@ -484,9 +393,136 @@ func (m *Protocol) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x38
 	}
-	if m.Attribute != nil {
+	if m.Attributes != nil {
 		{
-			size, err := m.Attribute.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.Attributes.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTypes(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x32
+	}
+	if len(m.Tag) > 0 {
+		i -= len(m.Tag)
+		copy(dAtA[i:], m.Tag)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Tag)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.ScalarAddress) > 0 {
+		i -= len(m.ScalarAddress)
+		copy(dAtA[i:], m.ScalarAddress)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.ScalarAddress)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.ScalarPubkey) > 0 {
+		i -= len(m.ScalarPubkey)
+		copy(dAtA[i:], m.ScalarPubkey)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.ScalarPubkey)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.BitcoinPubkey) > 0 {
+		i -= len(m.BitcoinPubkey)
+		copy(dAtA[i:], m.BitcoinPubkey)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.BitcoinPubkey)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *ProtocolDetails) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ProtocolDetails) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ProtocolDetails) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.CustodianGroup != nil {
+		{
+			size, err := m.CustodianGroup.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTypes(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x62
+	}
+	if len(m.Avatar) > 0 {
+		i -= len(m.Avatar)
+		copy(dAtA[i:], m.Avatar)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Avatar)))
+		i--
+		dAtA[i] = 0x5a
+	}
+	if len(m.Chains) > 0 {
+		for iNdEx := len(m.Chains) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Chains[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintTypes(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x52
+		}
+	}
+	if m.Asset != nil {
+		{
+			size, err := m.Asset.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTypes(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x4a
+	}
+	if len(m.CustodianGroupUID) > 0 {
+		i -= len(m.CustodianGroupUID)
+		copy(dAtA[i:], m.CustodianGroupUID)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.CustodianGroupUID)))
+		i--
+		dAtA[i] = 0x42
+	}
+	if m.Status != 0 {
+		i = encodeVarintTypes(dAtA, i, uint64(m.Status))
+		i--
+		dAtA[i] = 0x38
+	}
+	if m.Attributes != nil {
+		{
+			size, err := m.Attributes.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -545,39 +581,6 @@ func encodeVarintTypes(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *ProtocolAttribute) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if m.Model != 0 {
-		n += 1 + sovTypes(uint64(m.Model))
-	}
-	return n
-}
-
-func (m *SupportedChain) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Chain)
-	if l > 0 {
-		n += 1 + l + sovTypes(uint64(l))
-	}
-	l = len(m.Name)
-	if l > 0 {
-		n += 1 + l + sovTypes(uint64(l))
-	}
-	l = len(m.Address)
-	if l > 0 {
-		n += 1 + l + sovTypes(uint64(l))
-	}
-	return n
-}
-
 func (m *Protocol) Size() (n int) {
 	if m == nil {
 		return 0
@@ -604,8 +607,8 @@ func (m *Protocol) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTypes(uint64(l))
 	}
-	if m.Attribute != nil {
-		l = m.Attribute.Size()
+	if m.Attributes != nil {
+		l = m.Attributes.Size()
 		n += 1 + l + sovTypes(uint64(l))
 	}
 	if m.Status != 0 {
@@ -632,226 +635,69 @@ func (m *Protocol) Size() (n int) {
 	return n
 }
 
+func (m *ProtocolDetails) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.BitcoinPubkey)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	l = len(m.ScalarPubkey)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	l = len(m.ScalarAddress)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	l = len(m.Tag)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.Attributes != nil {
+		l = m.Attributes.Size()
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.Status != 0 {
+		n += 1 + sovTypes(uint64(m.Status))
+	}
+	l = len(m.CustodianGroupUID)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.Asset != nil {
+		l = m.Asset.Size()
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if len(m.Chains) > 0 {
+		for _, e := range m.Chains {
+			l = e.Size()
+			n += 1 + l + sovTypes(uint64(l))
+		}
+	}
+	l = len(m.Avatar)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.CustodianGroup != nil {
+		l = m.CustodianGroup.Size()
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	return n
+}
+
 func sovTypes(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
 func sozTypes(x uint64) (n int) {
 	return sovTypes(uint64((x << 1) ^ uint64((int64(x) >> 63))))
-}
-func (m *ProtocolAttribute) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTypes
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ProtocolAttribute: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ProtocolAttribute: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Model", wireType)
-			}
-			m.Model = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTypes
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Model |= exported.LiquidityModel(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTypes(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTypes
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *SupportedChain) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTypes
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: SupportedChain: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: SupportedChain: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Chain", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTypes
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTypes
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTypes
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Chain = github_com_scalarorg_scalar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTypes
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTypes
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTypes
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Name = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTypes
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTypes
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTypes
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Address = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTypes(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTypes
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
 }
 func (m *Protocol) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
@@ -1052,7 +898,7 @@ func (m *Protocol) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 6:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Attribute", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Attributes", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1079,10 +925,10 @@ func (m *Protocol) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Attribute == nil {
-				m.Attribute = &ProtocolAttribute{}
+			if m.Attributes == nil {
+				m.Attributes = &exported.ProtocolAttributes{}
 			}
-			if err := m.Attribute.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Attributes.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -1100,7 +946,7 @@ func (m *Protocol) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Status |= Status(b&0x7F) << shift
+				m.Status |= exported.Status(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1202,7 +1048,7 @@ func (m *Protocol) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Chains = append(m.Chains, &SupportedChain{})
+			m.Chains = append(m.Chains, &exported.SupportedChain{})
 			if err := m.Chains[len(m.Chains)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
@@ -1239,6 +1085,451 @@ func (m *Protocol) Unmarshal(dAtA []byte) error {
 			m.Avatar = append(m.Avatar[:0], dAtA[iNdEx:postIndex]...)
 			if m.Avatar == nil {
 				m.Avatar = []byte{}
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ProtocolDetails) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ProtocolDetails: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ProtocolDetails: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BitcoinPubkey", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BitcoinPubkey = append(m.BitcoinPubkey[:0], dAtA[iNdEx:postIndex]...)
+			if m.BitcoinPubkey == nil {
+				m.BitcoinPubkey = []byte{}
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ScalarPubkey", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ScalarPubkey = append(m.ScalarPubkey[:0], dAtA[iNdEx:postIndex]...)
+			if m.ScalarPubkey == nil {
+				m.ScalarPubkey = []byte{}
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ScalarAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ScalarAddress = append(m.ScalarAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.ScalarAddress == nil {
+				m.ScalarAddress = []byte{}
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Tag", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Tag = append(m.Tag[:0], dAtA[iNdEx:postIndex]...)
+			if m.Tag == nil {
+				m.Tag = []byte{}
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Attributes", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Attributes == nil {
+				m.Attributes = &exported.ProtocolAttributes{}
+			}
+			if err := m.Attributes.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= exported.Status(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CustodianGroupUID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CustodianGroupUID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Asset", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Asset == nil {
+				m.Asset = &types.Asset{}
+			}
+			if err := m.Asset.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Chains", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Chains = append(m.Chains, &exported.SupportedChain{})
+			if err := m.Chains[len(m.Chains)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 11:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Avatar", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Avatar = append(m.Avatar[:0], dAtA[iNdEx:postIndex]...)
+			if m.Avatar == nil {
+				m.Avatar = []byte{}
+			}
+			iNdEx = postIndex
+		case 12:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CustodianGroup", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.CustodianGroup == nil {
+				m.CustodianGroup = &types1.CustodianGroup{}
+			}
+			if err := m.CustodianGroup.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
 			}
 			iNdEx = postIndex
 		default:

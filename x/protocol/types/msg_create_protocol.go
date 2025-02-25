@@ -1,29 +1,25 @@
 package types
 
 import (
+	fmt "fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	types "github.com/scalarorg/scalar-core/x/chains/types"
+	"github.com/scalarorg/scalar-core/x/protocol/exported"
 )
 
-// Sender            github_com_cosmos_cosmos_sdk_types.AccAddress `protobuf:"bytes,1,opt,name=sender,proto3,casttype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"sender,omitempty"`
-// 	BitcoinPubkey     []byte                                        `protobuf:"bytes,2,opt,name=bitcoin_pubkey,json=bitcoinPubkey,proto3" json:"bitcoin_pubkey,omitempty"`
-// 	ScalarPubkey      []byte                                        `protobuf:"bytes,3,opt,name=scalar_pubkey,json=scalarPubkey,proto3" json:"scalar_pubkey,omitempty"`
-// 	Name              string                                        `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-// 	Tag               string                                        `protobuf:"bytes,5,opt,name=tag,proto3" json:"tag,omitempty"`
-// 	Attribute         *ProtocolAttribute                            `protobuf:"bytes,6,opt,name=attribute,proto3" json:"attribute,omitempty"`
-// 	CustodianGroupUid string                                        `protobuf:"bytes,7,opt,name=custodian_group_uid,json=custodianGroupUid,proto3" json:"custodian_group_uid,omitempty"`
-// 	Avatar            []byte                                        `protobuf:"bytes,8,opt,name=avatar,proto3" json:"avatar,omitempty"`
-
-func NewCreateProtocolRequest(sender sdk.AccAddress, name string, bitcoinPubkey []byte, scalarPubkey []byte, tag string, attribute *ProtocolAttribute, custodianGroupUid string, avatar []byte) *CreateProtocolRequest {
+func NewCreateProtocolRequest(sender sdk.AccAddress, name string, bitcoinPubkey []byte, scalarPubkey []byte, tag string, attributes *exported.ProtocolAttributes, custodianGroupUid string, avatar []byte, asset *types.Asset) *CreateProtocolRequest {
 	return &CreateProtocolRequest{
 		Sender:            sender,
 		Name:              name,
 		BitcoinPubkey:     bitcoinPubkey,
 		ScalarPubkey:      scalarPubkey,
 		Tag:               tag,
-		Attribute:         attribute,
+		Attributes:        attributes,
 		CustodianGroupUid: custodianGroupUid,
 		Avatar:            avatar,
+		Asset:             asset,
 	}
 }
 
@@ -38,10 +34,32 @@ func (m CreateProtocolRequest) Type() string {
 }
 
 // ValidateBasic executes a stateless message validation
-func (m CreateProtocolRequest) ValidateBasic() error {
+func (m *CreateProtocolRequest) ValidateBasic() error {
 	if err := sdk.VerifyAddressFormat(m.Sender); err != nil {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, sdkerrors.Wrap(err, "sender").Error())
 	}
+
+	if len(m.BitcoinPubkey) != 33 {
+		return fmt.Errorf("bitcoin pubkey must be 33 bytes")
+	}
+
+	if len(m.ScalarPubkey) != 33 {
+		return fmt.Errorf("scalar pubkey must be 33 bytes")
+	}
+
+	if len(m.Name) > 64 {
+		return fmt.Errorf("name must be less than 64 bytes")
+	}
+
+	if len(m.Tag) > 0 && len(m.Tag) > 64 {
+		return fmt.Errorf("tag must be less than 64 bytes")
+	}
+
+	if len(m.CustodianGroupUid) > 64 {
+		return fmt.Errorf("custodian group uid must be less than 64 bytes")
+	}
+
+	// TODO: validate asset name and chain is supported
 
 	return nil
 }

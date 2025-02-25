@@ -8,7 +8,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/scalarorg/scalar-core/utils"
+	chains "github.com/scalarorg/scalar-core/x/chains/types"
 	"github.com/scalarorg/scalar-core/x/nexus/exported"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	pexported "github.com/scalarorg/scalar-core/x/protocol/exported"
 	"github.com/scalarorg/scalar-core/x/protocol/types"
 	"github.com/tendermint/tendermint/libs/log"
@@ -107,7 +109,7 @@ func (k Keeper) getProtocolByAddress(ctx sdk.Context, address []byte) (*types.Pr
  * In scalar each asset is defined uniquely by its original chain (bitcoin networks: mainnet or testnets) and name.
  * This function finds the protocol that supports the given asset.
  */
-func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, originChain exported.ChainName, minorChain exported.ChainName, symbol string) (*pexported.ProtocolInfo, error) {
+func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, minorChain exported.ChainName, symbol string) (*types.Protocol, error) {
 	//ctx := sdk.UnwrapSDKContext(c)
 
 	protocols, ok := k.GetAllProtocols(ctx)
@@ -115,20 +117,31 @@ func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, originChain export
 		return nil, status.Errorf(codes.NotFound, "protocol not found")
 	}
 	for _, protocol := range protocols {
-		if originChain == protocol.Asset.Chain && symbol == protocol.Asset.Name {
-			//Check if the minor chain is supported by the protocol
-			for _, chain := range protocol.Chains {
-				if chain.Chain == minorChain {
-					return protocol.ToProtocolInfo(), nil
-				}
+		// if originChain == protocol.Asset.Chain && symbol == protocol.Asset.Name {
+		if !k.IsMatchAsset(protocol, symbol) {
+			continue
+		}
+		//Check if the minor chain is supported by the protocol
+		for _, chain := range protocol.Chains {
+			if chain.Chain != minorChain {
+				continue
 			}
+			return protocol, nil
 		}
 	}
 
-	return nil, status.Errorf(codes.NotFound, "protocol with asset %s on the chain %s does not support transfering to the minor chain %s", symbol, originChain, minorChain)
+	return nil, status.Errorf(codes.NotFound, "protocol with asset %s does not support transfering to the minor chain %s", symbol, minorChain)
 }
 
-func (k Keeper) FindProtocolByInternalAddress(ctx sdk.Context, originChain exported.ChainName, minorChain exported.ChainName, internalAddress string) (*pexported.ProtocolInfo, error) {
+func (k Keeper) FindProtocolInfoByExternalSymbol(ctx sdk.Context, minorChain exported.ChainName, symbol string) (*pexported.ProtocolInfo, error) {
+	protocol, err := k.FindProtocolByExternalSymbol(ctx, minorChain, symbol)
+	if err != nil {
+		return nil, err
+	}
+	return protocol.ToProtocolInfo(), nil
+}
+
+func (k Keeper) FindProtocolByInternalAddress(ctx sdk.Context, originChain exported.ChainName, minorChain exported.ChainName, internalAddress string) (*types.Protocol, error) {
 	protocols, ok := k.GetAllProtocols(ctx)
 	if !ok {
 		return nil, status.Errorf(codes.NotFound, "protocol not found")
@@ -141,7 +154,7 @@ func (k Keeper) FindProtocolByInternalAddress(ctx sdk.Context, originChain expor
 				k.Logger(ctx).Debug("[WARNING] checking if asset is supported", "error", err)
 				continue
 			}
-			return protocol.ToProtocolInfo(), nil
+			return protocol, nil
 		}
 	}
 
@@ -149,7 +162,20 @@ func (k Keeper) FindProtocolByInternalAddress(ctx sdk.Context, originChain expor
 		originChain, internalAddress, minorChain)
 }
 
-// Todo: Implement Matching function
+func (k Keeper) AddTokenForProtocol(ctx sdk.Context, chain nexus.ChainName, symbol, address string, name string) error {
+	protocol, err := k.FindProtocolByExternalSymbol(ctx, chain, symbol)
+	if err != nil {
+		return err
+	}
+
+	protocol.AddSupportedChain(chain, address, name)
+
+	k.SetProtocol(ctx, protocol)
+
+	return nil
+}
+
+// TODO: Implement Matching function
 func isMatch(protocol *types.Protocol, req *types.ProtocolsRequest) bool {
 	if req.Name != "" {
 		return protocol.Name == req.Name
@@ -158,4 +184,28 @@ func isMatch(protocol *types.Protocol, req *types.ProtocolsRequest) bool {
 }
 func (k Keeper) getStore(ctx sdk.Context) utils.KVStore {
 	return utils.NewNormalizedStore(ctx.KVStore(k.storeKey), k.cdc)
+}
+
+func (k Keeper) ValidateAsset(ctx sdk.Context, asset *chains.Asset) error {
+	if asset == nil {
+		return status.Errorf(codes.InvalidArgument, "asset is nil")
+	}
+
+	protocols, ok := k.GetAllProtocols(ctx)
+	if !ok {
+		return status.Errorf(codes.NotFound, "protocol not found")
+	}
+
+	for _, protocol := range protocols {
+		if k.IsMatchAsset(protocol, asset.Name) {
+			return status.Errorf(codes.InvalidArgument, "asset %s on chain %s already exists", asset.Name, asset.Chain)
+		}
+	}
+	return nil
+}
+
+// UniqueAssetCondition returns true if the asset is unique
+func (k Keeper) IsMatchAsset(protocol *types.Protocol, name string) bool {
+	// return protocol.Asset.Chain == asset.Chain && protocol.Asset.Name == asset.Name
+	return protocol.Asset.Name == name
 }

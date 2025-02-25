@@ -3,9 +3,10 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/scalarorg/scalar-core/x/protocol/exported"
 )
 
-func NewAddSupportedChainRequest(sender sdk.AccAddress, chain *SupportedChain) *AddSupportedChainRequest {
+func NewAddSupportedChainRequest(sender sdk.AccAddress, chain *exported.SupportedChain) *AddSupportedChainRequest {
 	return &AddSupportedChainRequest{
 		Sender: sender,
 		Chain:  chain,

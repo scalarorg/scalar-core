@@ -44,9 +44,17 @@ func (p *Protocol) ToProtocolInfo() *exported.ProtocolInfo {
 	return &exported.ProtocolInfo{
 		// KeyID:            multisig.KeyID(keyID),
 		CustodiansGroupUID: p.CustodianGroupUID,
-		LiquidityModel:     p.Attribute.Model,
+		LiquidityModel:     p.Attributes.Model,
 		OriginChain:        p.Asset.Chain,
 		Symbol:             p.Asset.Name,
 		MinorAddresses:     minorAddreses,
 	}
+}
+
+func (p *Protocol) AddSupportedChain(chain nexus.ChainName, address string, name string) {
+	p.Chains = append(p.Chains, &exported.SupportedChain{
+		Chain:   chain,
+		Address: address,
+		Name:    name,
+	})
 }

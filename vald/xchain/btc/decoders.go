@@ -84,9 +84,8 @@ func (client *BtcClient) createEventTokenSent(event *types.EventConfirmSourceTxs
 	queryClient := grpc_client.QueryManager().GetProtocolClient()
 
 	response, err := queryClient.Protocol(context.Background(), &protocolTypes.ProtocolRequest{
-		OriginChain: event.Chain,
-		MinorChain:  nexus.ChainName(destinationChain.ToBytes().String()),
-		Address:     hex.EncodeToString(output.DestinationTokenAddress),
+		MinorChain: nexus.ChainName(destinationChain.ToBytes().String()),
+		Address:    hex.EncodeToString(output.DestinationTokenAddress),
 	})
 	if err != nil {
 		return nil, err
@@ -101,7 +100,7 @@ func (client *BtcClient) createEventTokenSent(event *types.EventConfirmSourceTxs
 		TransferID:         nexus.TransferID(1),
 		DestinationChain:   nexus.ChainName(destinationChain.ToBytes().String()),
 		DestinationAddress: chainsTypes.Address(destinationRecipientAddress).Hex(),
-		Asset:              sdk.NewCoin(response.Protocol.Symbol, sdk.NewInt(stakingAmount)),
+		Asset:              sdk.NewCoin(response.Protocol.Asset.Name, sdk.NewInt(stakingAmount)),
 	}, nil
 }
 
