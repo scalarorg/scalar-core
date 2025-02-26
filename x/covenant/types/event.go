@@ -10,14 +10,14 @@ import (
 )
 
 // NewSigningPsbtStarted is the constructor for event signing started
-func NewSigningPsbtStarted(sigID uint64, key multisigTypes.Key, psbt []byte, requestingModule string, chainName nexus.ChainName) *SigningPsbtStarted {
+func NewSigningPsbtStarted(sigID uint64, key multisigTypes.Key, multiPsbt []Psbt, requestingModule string, chainName nexus.ChainName) *SigningPsbtStarted {
 	return &SigningPsbtStarted{
 		Module:           ModuleName,
 		Chain:            chainName,
 		SigID:            sigID,
 		KeyID:            key.GetID(),
 		PubKeys:          key.GetPubKeys(),
-		Psbt:             psbt,
+		MultiPsbt:        multiPsbt,
 		RequestingModule: requestingModule,
 	}
 }
@@ -39,12 +39,12 @@ func NewSigningPsbtCompleted(sigID uint64) *SigningPsbtCompleted {
 }
 
 // NewTapscriptSigsSubmitted is the constructor for event tapscript sig submitted
-func NewTapscriptSigsSubmitted(sigID uint64, participant sdk.ValAddress, tapscriptSigsMap *exported.TapScriptSigsMap) *TapScriptSigsSubmitted {
+func NewTapscriptSigsSubmitted(sigID uint64, participant sdk.ValAddress, list []*exported.TapScriptSigsMap) *TapScriptSigsSubmitted {
 	return &TapScriptSigsSubmitted{
-		Module:           ModuleName,
-		SigID:            sigID,
-		Participant:      participant,
-		TapScriptSigsMap: tapscriptSigsMap,
+		Module:                 ModuleName,
+		SigID:                  sigID,
+		Participant:            participant,
+		ListOfTapScriptSigsMap: list,
 	}
 }
 

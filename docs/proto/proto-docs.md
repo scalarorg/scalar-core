@@ -155,6 +155,7 @@
     - [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse)
   
 - [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
+    - [ListOfTapScriptSigsMap](#scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap)
     - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
     - [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry)
     - [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList)
@@ -181,7 +182,7 @@
     - [Custodian](#scalar.covenant.v1beta1.Custodian)
     - [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup)
     - [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig)
-    - [PsbtMultiSig.ParticipantTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantTapScriptSigsEntry)
+    - [PsbtMultiSig.ParticipantListTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantListTapScriptSigsEntry)
     - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
   
     - [Status](#scalar.covenant.v1beta1.Status)
@@ -2814,6 +2815,21 @@ address
 
 
 
+<a name="scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap"></a>
+
+### ListOfTapScriptSigsMap
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `inner` | [TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) | repeated |  |
+
+
+
+
+
+
 <a name="scalar.covenant.exported.v1beta1.TapScriptSig"></a>
 
 ### TapScriptSig
@@ -3180,25 +3196,25 @@ quorum threshold e.g.,3 |
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `key_id` | [string](#string) |  |  |
-| `psbt` | [bytes](#bytes) |  |  |
-| `participant_tap_script_sigs` | [PsbtMultiSig.ParticipantTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantTapScriptSigsEntry) | repeated |  |
-| `finalized_tx` | [bytes](#bytes) |  |  |
+| `multi_psbt` | [bytes](#bytes) | repeated |  |
+| `participant_list_tap_script_sigs` | [PsbtMultiSig.ParticipantListTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantListTapScriptSigsEntry) | repeated |  |
+| `finalized_txs` | [bytes](#bytes) | repeated |  |
 
 
 
 
 
 
-<a name="scalar.covenant.v1beta1.PsbtMultiSig.ParticipantTapScriptSigsEntry"></a>
+<a name="scalar.covenant.v1beta1.PsbtMultiSig.ParticipantListTapScriptSigsEntry"></a>
 
-### PsbtMultiSig.ParticipantTapScriptSigsEntry
+### PsbtMultiSig.ParticipantListTapScriptSigsEntry
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `key` | [string](#string) |  |  |
-| `value` | [scalar.covenant.exported.v1beta1.TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) |  |  |
+| `value` | [scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap](#scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap) |  |  |
 
 
 
@@ -4117,7 +4133,7 @@ QueryService defines the gRPC querier service.
 | `key_id` | [string](#string) |  |  |
 | `pub_keys` | [SigningPsbtStarted.PubKeysEntry](#scalar.covenant.v1beta1.SigningPsbtStarted.PubKeysEntry) | repeated |  |
 | `requesting_module` | [string](#string) |  |  |
-| `psbt` | [bytes](#bytes) |  |  |
+| `multi_psbt` | [bytes](#bytes) | repeated |  |
 
 
 
@@ -4151,7 +4167,7 @@ QueryService defines the gRPC querier service.
 | `module` | [string](#string) |  |  |
 | `sig_id` | [uint64](#uint64) |  |  |
 | `participant` | [bytes](#bytes) |  |  |
-| `tap_script_sigs_map` | [scalar.covenant.exported.v1beta1.TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) |  |  |
+| `list_of_tap_script_sigs_map` | [scalar.covenant.exported.v1beta1.TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) | repeated |  |
 
 
 
@@ -4769,7 +4785,7 @@ Rotate key for custodian group
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `sig_id` | [uint64](#uint64) |  |  |
-| `tap_script_sigs_map` | [scalar.covenant.exported.v1beta1.TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) |  |  |
+| `list_of_tap_script_sigs_map` | [scalar.covenant.exported.v1beta1.TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) | repeated |  |
 
 
 

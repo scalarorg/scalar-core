@@ -53,10 +53,10 @@ message PsbtMultiSig {
     (gogoproto.casttype) =
         "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
-  bytes psbt = 2 [ (gogoproto.casttype) = "Psbt" ];
-  map<string, scalar.covenant.exported.v1beta1.TapScriptSigsMap>
-      participant_tap_script_sigs = 3;
-  bytes finalized_tx = 4;
+  repeated bytes multi_psbt = 2 [ (gogoproto.casttype) = "Psbt" ];
+  map<string, scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap>
+      participant_list_tap_script_sigs = 3;
+  repeated bytes finalized_txs = 4;
 }
 
 message SigningSession {

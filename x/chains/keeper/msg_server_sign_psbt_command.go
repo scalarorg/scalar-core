@@ -9,6 +9,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/x/chains/types"
+	coventantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
 func (s msgServer) SignPsbtCommand(c context.Context, req *types.SignPsbtCommandRequest) (*types.SignPsbtCommandResponse, error) {
@@ -49,7 +50,9 @@ func (s msgServer) SignPsbtCommand(c context.Context, req *types.SignPsbtCommand
 	if err := s.covenant.SignPsbt(
 		ctx,
 		commandBatch.GetKeyID(),
-		req.Psbt,
+		[]coventantTypes.Psbt{
+			req.Psbt,
+		},
 		types.ModuleName,
 		chain.Name,
 		types.NewSigMetadata(types.SigCommand, chain.Name, commandBatch.GetID()),

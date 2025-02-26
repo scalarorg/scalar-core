@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"sync"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
@@ -11,8 +12,14 @@ import (
 	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	"github.com/scalarorg/scalar-core/x/covenant/exported"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 )
+
+type signResult struct {
+	index int
+	sigs  *exported.TapScriptSigsMap
+}
 
 // TODO: Validate psbt inputs whether they are available in the btc chain
 
@@ -62,19 +69,70 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 	// 	return err
 	// }
 
-	mapOfTapScriptSigs, err := mgr.sign(keyUID, event.Psbt, go_utils.NetworkKind(chainParams.Params.NetworkKind))
-	if err != nil {
-		clog.Redf("ProcessSigningPsbtStarted/sign error: %v", err)
-		return err
+	multiPsbt := event.GetMultiPsbt()
+	if multiPsbt == nil {
+		return fmt.Errorf("multiPsbt is nil")
 	}
 
-	for i, tapScriptSig := range mapOfTapScriptSigs.Inner {
-		clog.Yellowf("ProcessSigningPsbtStarted, tapScriptSig[%d]: %+v", i, tapScriptSig)
+	if !mgr.validateKeyID(keyUID) {
+		return fmt.Errorf("invalid keyID")
 	}
 
-	clog.Greenf("operator %s sending signature for signing %d", partyUID, event.GetSigID())
+	n := len(multiPsbt)
+	resultChan := make(chan signResult, n)
+	errChan := make(chan error, n)
+	orderedResults := make([]*exported.TapScriptSigsMap, n)
 
-	msg := covenantTypes.NewSubmitTapScriptSigsRequest(mgr.ctx.FromAddress, event.GetSigID(), mapOfTapScriptSigs)
+	var wg sync.WaitGroup
+	for i, psbt := range multiPsbt {
+		wg.Add(1)
+		go func(index int, p covenantTypes.Psbt) {
+			defer wg.Done()
+
+			mapOfTapScriptSigs, err := mgr.sign(keyUID, p, go_utils.NetworkKind(chainParams.Params.NetworkKind))
+			if err != nil {
+				clog.Redf("ProcessSigningPsbtStarted/sign error: %v", err)
+				errChan <- err
+				return
+			}
+
+			for i, tapScriptSig := range mapOfTapScriptSigs.Inner {
+				clog.Yellowf("ProcessSigningPsbtStarted, tapScriptSig[%d]: %+v", i, tapScriptSig)
+			}
+
+			clog.Greenf("operator %s sending signature for signing %d", partyUID, event.GetSigID())
+
+			resultChan <- signResult{
+				index: index,
+				sigs:  mapOfTapScriptSigs,
+			}
+		}(i, psbt)
+	}
+
+	go func() {
+		wg.Wait()
+		close(errChan)
+		close(resultChan)
+	}()
+
+	for i := 0; i < n; i++ {
+		select {
+		case err, ok := <-errChan:
+			if ok && err != nil {
+				return err
+			}
+		case result, ok := <-resultChan:
+			if ok {
+				if result.sigs == nil {
+					return fmt.Errorf("result.sigs is nil")
+				}
+				clog.Greenf("ProcessSigningPsbtStarted, result: %+v", result)
+				orderedResults[result.index] = result.sigs
+			}
+		}
+	}
+
+	msg := covenantTypes.NewSubmitTapScriptSigsRequest(mgr.ctx.FromAddress, event.GetSigID(), orderedResults)
 
 	clog.Greenf("SubmitTapScriptSigsRequest: %+v", msg)
 	if _, err := mgr.b.Broadcast(context.Background(), msg); err != nil {

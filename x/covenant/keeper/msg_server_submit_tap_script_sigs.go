@@ -24,7 +24,7 @@ func (s msgServer) SubmitTapScriptSigs(c context.Context, req *types.SubmitTapSc
 		return nil, fmt.Errorf("sender %s is not a registered proxy", req.Sender.String())
 	}
 
-	if err := signingSession.AddTapScriptSigs(ctx.BlockHeight(), participant, req.TapScriptSigsMap); err != nil {
+	if err := signingSession.AddListOfTapScriptSigs(ctx.BlockHeight(), participant, req.ListOfTapScriptSigsMap); err != nil {
 		return nil, sdkerrors.Wrap(err, "unable to add signature for signing")
 	}
 
@@ -41,30 +41,32 @@ func (s msgServer) SubmitTapScriptSigs(c context.Context, req *types.SubmitTapSc
 		"expires_at", signingSession.ExpiresAt,
 	)
 
-	events.Emit(ctx, types.NewTapscriptSigsSubmitted(req.SigID, participant, req.TapScriptSigsMap))
+	events.Emit(ctx, types.NewTapscriptSigsSubmitted(req.SigID, participant, req.ListOfTapScriptSigsMap))
 
 	return &types.SubmitTapScriptSigsResponse{}, nil
 }
 
 func logSigningSession(m types.SigningSession) {
-	clog.Greenf("AddTapScriptSigs, signing session, ID: %+v", m.ID)
-	clog.Greenf("AddTapScriptSigs, signing session, State: %+v", m.State)
-	clog.Greenf("AddTapScriptSigs, signing session, Key: %+v", m.Key)
-	clog.Greenf("AddTapScriptSigs, signing session, ExpiresAt: %+v", m.ExpiresAt)
-	clog.Greenf("AddTapScriptSigs, signing session, CompletedAt: %+v", m.CompletedAt)
-	clog.Greenf("AddTapScriptSigs, signing session, GracePeriod: %+v", m.GracePeriod)
-	clog.Greenf("AddTapScriptSigs, signing session, Module: %+v", m.Module)
-	clog.Greenf("AddTapScriptSigs, signing session, ModuleMetadata: %+v", m.ModuleMetadata)
+	clog.Greenf("AddListOfTapScriptSigs, signing session, ID: %+v", m.ID)
+	clog.Greenf("AddListOfTapScriptSigs, signing session, State: %+v", m.State)
+	clog.Greenf("AddListOfTapScriptSigs, signing session, Key: %+v", m.Key)
+	clog.Greenf("AddListOfTapScriptSigs, signing session, ExpiresAt: %+v", m.ExpiresAt)
+	clog.Greenf("AddListOfTapScriptSigs, signing session, CompletedAt: %+v", m.CompletedAt)
+	clog.Greenf("AddListOfTapScriptSigs, signing session, GracePeriod: %+v", m.GracePeriod)
+	clog.Greenf("AddListOfTapScriptSigs, signing session, Module: %+v", m.Module)
+	clog.Greenf("AddListOfTapScriptSigs, signing session, ModuleMetadata: %+v", m.ModuleMetadata)
 
-	clog.Redf("AddTapScriptSigs, PsbtMultiSig.KeyID: %+v", m.PsbtMultiSig.KeyID)
-	clog.Redf("AddTapScriptSigs, PsbtMultiSig.Psbt: %+x", m.PsbtMultiSig.Psbt)
-	for participant, list := range m.PsbtMultiSig.ParticipantTapScriptSigs {
-		clog.Redf("Participant: %s", participant)
-		for _, tapScriptList := range list.Inner {
-			for _, tapScriptSig := range tapScriptList.Sigs.List {
-				clog.Redf("TapScriptSig, KeyXOnly: %+v", tapScriptSig.KeyXOnly)
-				clog.Redf("TapScriptSig, Signature: %+v", tapScriptSig.Signature)
-				clog.Redf("TapScriptSig, LeafHash: %+v", tapScriptSig.LeafHash)
+	clog.Redf("AddListOfTapScriptSigs, PsbtMultiSig.KeyID: %+v", m.PsbtMultiSig.KeyID)
+	// clog.Redf("AddListOfTapScriptSigs, PsbtMultiSig.Psbt: %+x", m.PsbtMultiSig.MultiPsbt[])
+	for participant, list := range m.PsbtMultiSig.ParticipantListTapScriptSigs {
+		for _, sigsMap := range list.Inner {
+			clog.Redf("Participant: %s", participant)
+			for _, tapScriptList := range sigsMap.Inner {
+				for _, tapScriptSig := range tapScriptList.Sigs.List {
+					clog.Redf("TapScriptSig, KeyXOnly: %+v", tapScriptSig.KeyXOnly)
+					clog.Redf("TapScriptSig, Signature: %+v", tapScriptSig.Signature)
+					clog.Redf("TapScriptSig, LeafHash: %+v", tapScriptSig.LeafHash)
+				}
 			}
 		}
 	}

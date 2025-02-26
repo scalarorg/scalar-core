@@ -17,7 +17,7 @@ import (
 // TODO: Currently, we are mocking the psbt, we need to split it into two events
 // CreatingPsbtStarted and SigningPsbtStarted
 
-func (k Keeper) SignPsbt(ctx sdk.Context, keyID multisig.KeyID, psbt types.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error {
+func (k Keeper) SignPsbt(ctx sdk.Context, keyID multisig.KeyID, multiPsbt []types.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error {
 	if !k.GetCovenantRouter().HasHandler(module) {
 		panic(fmt.Errorf("covenant handler not registered for module %s", module))
 	}
@@ -38,7 +38,7 @@ func (k Keeper) SignPsbt(ctx sdk.Context, keyID multisig.KeyID, psbt types.Psbt,
 	signingSession := types.NewSigningSession(&types.NewSigningSessionParams{
 		ID:             k.nextSigID(ctx),
 		Key:            key,
-		Psbt:           psbt,
+		MultiPsbt:      multiPsbt,
 		ExpiresAt:      expiresAt,
 		GracePeriod:    params.SigningGracePeriod,
 		Module:         module,
@@ -51,7 +51,7 @@ func (k Keeper) SignPsbt(ctx sdk.Context, keyID multisig.KeyID, psbt types.Psbt,
 
 	k.setSigningSession(ctx, signingSession)
 
-	events.Emit(ctx, types.NewSigningPsbtStarted(signingSession.GetID(), key, psbt, module, chainName))
+	events.Emit(ctx, types.NewSigningPsbtStarted(signingSession.GetID(), key, multiPsbt, module, chainName))
 
 	k.Logger(ctx).Info("create and signing psbt started",
 		"sig_id", signingSession.GetID(),

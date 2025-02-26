@@ -82,7 +82,8 @@ message SubmitTapScriptSigsRequest {
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
-  scalar.covenant.exported.v1beta1.TapScriptSigsMap tap_script_sigs_map = 3;
+  repeated scalar.covenant.exported.v1beta1.TapScriptSigsMap
+      list_of_tap_script_sigs_map = 3;
 }
 
 message SubmitTapScriptSigsResponse {}

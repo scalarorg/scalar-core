@@ -48,7 +48,7 @@ func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 			}
 
 			// finalize the psbt
-			err := FinalizePsbt(&signing.PsbtMultiSig)
+			err := FinalizeMultiPsbt(&signing.PsbtMultiSig)
 			//serr := signing.PsbtMultiSig.Finalize()
 			if err != nil {
 				return nil, sdkerrors.Wrap(err, "failed to finalize psbt")
@@ -63,8 +63,11 @@ func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 				return nil, sdkerrors.Wrap(err, "failed to handle completed signature")
 			}
 
-			clog.Greenf("CovenantHandler: HandleCompleted, Psbt: %x", sig.GetPsbt().Bytes())
-			clog.Greenf("CovenantHandler: HandleCompleted, FinalizedTx: %x", sig.GetFinalizedTx())
+			for index, p := range sig.GetParticipants() {
+				clog.Greenf("CovenantHandler: HandleCompleted, Participant: %x", p)
+				clog.Greenf("CovenantHandler: HandleCompleted, Psbts: %x", sig.GetMultiPsbt()[index].Bytes())
+				clog.Greenf("CovenantHandler: HandleCompleted, FinalizedTx: %x", sig.GetFinalizedTxs()[index])
+			}
 
 			events.Emit(cachedCtx, types.NewSigningPsbtCompleted(signing.GetID()))
 			k.Logger(cachedCtx).Info("signing session completed",
@@ -78,24 +81,55 @@ func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 	}
 }
 
-func FinalizePsbt(p *types.PsbtMultiSig) error {
-	psbtBytes := p.Psbt.Bytes()
-	var err error
-	for _, m := range p.ParticipantTapScriptSigs {
-		raw := m.ToRaw()
-		psbtBytes, err = vault.AggregateTapScriptSigs(psbtBytes, raw)
+func FinalizeMultiPsbt(p *types.PsbtMultiSig) error {
+	var finalizedTxs [][]byte
+
+	var tapScriptSigsMapByEachPsbt = make([]map[string]*exported.TapScriptSigsMap, len(p.MultiPsbt))
+
+	// collect the map for each psbt
+	// ParticipantListTapScriptSigs = {
+	// "Alice": [sigOfPsbt1, sigOfPsbt2, sigOfPsbt3],
+	// "Bob": [sigOfPsbt1, sigOfPsbt2, sigOfPsbt3],
+	// "Charlie": [sigOfPsbt1, sigOfPsbt2, sigOfPsbt3],
+	//}
+	// => output: [
+	//    map[Alice:[sigOfPsbt1] Bob:[sigOfPsbt1] Charlie:[sigOfPsbt1]],
+	//    map[Alice:[sigOfPsbt2] Bob:[sigOfPsbt2] Charlie:[sigOfPsbt2]],
+	//    map[Alice:[sigOfPsbt3] Bob:[sigOfPsbt3] Charlie:[sigOfPsbt3]],
+	// ]
+
+	for party, listOfEachParty := range p.ParticipantListTapScriptSigs {
+		for index, sig := range listOfEachParty.Inner {
+			if tapScriptSigsMapByEachPsbt[index] == nil {
+				tapScriptSigsMapByEachPsbt[index] = make(map[string]*exported.TapScriptSigsMap)
+			}
+			tapScriptSigsMapByEachPsbt[index][party] = sig
+		}
+	}
+
+	for index, psbt := range p.MultiPsbt {
+		psbtBytes := psbt.Bytes()
+		var err error
+
+		tapScriptSigsMap := tapScriptSigsMapByEachPsbt[index]
+
+		for _, m := range tapScriptSigsMap {
+			raw := m.ToRaw()
+			psbtBytes, err = vault.AggregateTapScriptSigs(psbtBytes, raw)
+			if err != nil {
+				return err
+			}
+		}
+		clog.Greenf("CovenantHandler: Finalize, Psbt: %x", psbtBytes)
+
+		tx, err := vault.FinalizePsbtAndExtractTx(psbtBytes)
 		if err != nil {
 			return err
 		}
-	}
-	clog.Greenf("CovenantHandler: Finalize, Psbt: %x", psbtBytes)
 
-	tx, err := vault.FinalizePsbtAndExtractTx(psbtBytes)
-	if err != nil {
-		return err
+		p.FinalizedTxs = append(finalizedTxs, tx)
+		p.MultiPsbt[index] = psbtBytes
 	}
 
-	p.FinalizedTx = tx
-	p.Psbt = psbtBytes
 	return nil
 }
