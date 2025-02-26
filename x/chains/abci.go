@@ -293,25 +293,17 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 
 	clog.Yellowf("[abci/chains] covenant: %+v", cusGr)
 
-	keyID := protocolInfo.GetKeyID(cusGr.BitcoinPubkey)
-
 	// With Pool model, we can handle multiple command in one batch so dont need to different keyId for each command
 	// On the other hand, UPC model, we need to different keyId for each command
-	var keyId mexported.KeyID
-	switch protocolInfo.LiquidityModel {
-	case pexported.LIQUIDITY_MODEL_POOL:
-		clog.Yellowf("[abci/chains] Pooling protocol: %+v", protocolInfo)
-		keyId = keyID
-	case pexported.LIQUIDITY_MODEL_UPC:
-		buffer := event.TxID[:]
-		buffer = append(buffer, cusGr.BitcoinPubkey...)
-		keyId = mexported.KeyID(hex.EncodeToString(buffer))
-		clog.Yellowf("[abci/chains] Transactional protocol: %+v, keyId: %+v, txID: %s", protocolInfo, keyId, hex.EncodeToString(event.TxID[:]))
+	if protocolInfo.LiquidityModel == pexported.LIQUIDITY_MODEL_UNSPECIFIED {
+		return fmt.Errorf("invalid liquidity model, %s", protocolInfo.LiquidityModel.String())
 	}
+
+	keyID := calculateKeyIDForContractCallWithTokenToBTC(cusGr.BitcoinPubkey, protocolInfo.LiquidityModel)
 
 	cmd := types.NewApproveContractCallWithMintCommandWithPayload(
 		funcs.MustOk(destinationCk.GetChainID(ctx)),
-		keyId,
+		keyID,
 		sourceChain,
 		event.TxID,
 		event.Index,
@@ -862,4 +854,8 @@ func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID
 		types.AttributeKeyMessageID, msg.ID,
 		types.AttributeKeyCommandsID, cmd.ID,
 	)
+}
+
+func calculateKeyIDForContractCallWithTokenToBTC(bitcoinPubKey []byte, model pexported.LiquidityModel) mexported.KeyID {
+	return mexported.KeyID(model.String() + "|" + hex.EncodeToString(bitcoinPubKey))
 }
