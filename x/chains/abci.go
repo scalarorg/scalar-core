@@ -1,7 +1,6 @@
 package chains
 
 import (
-	"encoding/hex"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -303,7 +302,10 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 		return fmt.Errorf("invalid liquidity model, %s", protocolInfo.LiquidityModel.String())
 	}
 
-	keyID := calculateKeyIDForContractCallWithTokenToBTC(cusGr.BitcoinPubkey, protocolInfo.LiquidityModel)
+	keyID, err := pexported.FormatContractCallWithTokenToBTCKeyID(cusGr.BitcoinPubkey, protocolInfo.LiquidityModel)
+	if err != nil {
+		return err
+	}
 
 	cmd := types.NewApproveContractCallWithMintCommandWithPayload(
 		funcs.MustOk(destinationCk.GetChainID(ctx)),
@@ -577,9 +579,9 @@ func handleTokenDeployed(ctx sdk.Context, event types.Event, bk types.BaseKeeper
 
 	tokenDetails := token.GetDetails()
 
-	err := p.AddTokenForProtocol(ctx, chain.Name, tokenDetails.Symbol, token.GetAddress().String(), tokenDetails.TokenName)
-	if err != nil {
-		return err
+	ok := p.AddTokenForProtocol(ctx, chain.Name, tokenDetails.Symbol, token.GetAddress().String(), tokenDetails.TokenName)
+	if !ok {
+		clog.Redf("already added token for protocol")
 	}
 
 	// clog.Yellowf("[abci/chains] protocolInfo: %+v", protocolInfo)
@@ -858,8 +860,4 @@ func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID
 		types.AttributeKeyMessageID, msg.ID,
 		types.AttributeKeyCommandsID, cmd.ID,
 	)
-}
-
-func calculateKeyIDForContractCallWithTokenToBTC(bitcoinPubKey []byte, model pexported.LiquidityModel) mexported.KeyID {
-	return mexported.KeyID(model.String() + "|" + hex.EncodeToString(bitcoinPubKey))
 }

@@ -163,20 +163,20 @@ func (k Keeper) FindProtocolByInternalAddress(ctx sdk.Context, originChain expor
 		originChain, internalAddress, minorChain)
 }
 
-func (k Keeper) AddTokenForProtocol(ctx sdk.Context, chain nexus.ChainName, symbol, address string, name string) error {
+func (k Keeper) AddTokenForProtocol(ctx sdk.Context, chain nexus.ChainName, symbol, address string, name string) bool {
 	protocol, err := k.FindProtocolByExternalSymbol(ctx, symbol)
 	if err != nil {
-		return err
+		return false
 	}
 
 	err = protocol.AddSupportedChain(chain, address, name)
 	if err != nil {
-		return err
+		return false
 	}
 
 	k.SetProtocol(ctx, protocol)
 
-	return nil
+	return true
 }
 
 // TODO: Implement Matching function

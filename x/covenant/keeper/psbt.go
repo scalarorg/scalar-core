@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"encoding/hex"
 	"fmt"
 	"strings"
 
@@ -12,6 +13,7 @@ import (
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	pexported "github.com/scalarorg/scalar-core/x/protocol/exported"
 )
 
 // TODO: Currently, we are mocking the psbt, we need to split it into two events
@@ -22,7 +24,13 @@ func (k Keeper) SignPsbt(ctx sdk.Context, keyID multisig.KeyID, multiPsbt []type
 		panic(fmt.Errorf("covenant handler not registered for module %s", module))
 	}
 	clog.Yellowf("[CovenantKeeper] [SignPsbt] keyID: %s, module: %s, chainName: %s", keyID, module, chainName)
-	key, ok := k.GetKey(ctx, keyID)
+
+	bitcoinPubKey, _, err := pexported.ParseContractCallWithTokenToBTCKeyID(keyID)
+	if err != nil {
+		return fmt.Errorf("ParseContractCallWithTokenToBTCKeyID > invalid keyID: %s", err)
+	}
+
+	key, ok := k.GetKey(ctx, multisig.KeyID(hex.EncodeToString(bitcoinPubKey)))
 	if !ok {
 		return fmt.Errorf("key %s not found", keyID)
 	}

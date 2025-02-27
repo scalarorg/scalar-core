@@ -38,8 +38,9 @@ func NewSigningSession(params *NewSigningSessionParams) SigningSession {
 	return SigningSession{
 		ID: params.ID,
 		PsbtMultiSig: PsbtMultiSig{
-			KeyID:     params.Key.ID,
-			MultiPsbt: params.MultiPsbt,
+			KeyID:        params.Key.ID,
+			MultiPsbt:    params.MultiPsbt,
+			FinalizedTxs: make([][]byte, len(params.MultiPsbt)),
 		},
 		State:          exported.Pending,
 		Key:            params.Key,

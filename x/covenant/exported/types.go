@@ -18,7 +18,7 @@ import (
 type PsbtMultiSig interface {
 	GetKeyID() multisig.KeyID
 	ValidateBasic() error
-	GetFinalizedTx() []byte
+	GetFinalizedTxs() [][]byte
 }
 
 // CovenantHandler defines the interface for the requesting module to implement in

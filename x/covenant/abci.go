@@ -63,10 +63,12 @@ func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 				return nil, sdkerrors.Wrap(err, "failed to handle completed signature")
 			}
 
-			for index, p := range sig.GetParticipants() {
-				clog.Greenf("CovenantHandler: HandleCompleted, Participant: %x", p)
-				clog.Greenf("CovenantHandler: HandleCompleted, Psbts: %x", sig.GetMultiPsbt()[index].Bytes())
-				clog.Greenf("CovenantHandler: HandleCompleted, FinalizedTx: %x", sig.GetFinalizedTxs()[index])
+			for _, p := range sig.GetMultiPsbt() {
+				clog.Greenf("CovenantHandler: HandleCompleted, Psbts: %x", p.Bytes())
+			}
+
+			for _, tx := range sig.GetFinalizedTxs() {
+				clog.Greenf("CovenantHandler: HandleCompleted, FinalizedTx: %x", tx)
 			}
 
 			events.Emit(cachedCtx, types.NewSigningPsbtCompleted(signing.GetID()))
@@ -82,8 +84,6 @@ func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 }
 
 func FinalizeMultiPsbt(p *types.PsbtMultiSig) error {
-	var finalizedTxs [][]byte
-
 	var tapScriptSigsMapByEachPsbt = make([]map[string]*exported.TapScriptSigsMap, len(p.MultiPsbt))
 
 	// collect the map for each psbt
@@ -107,28 +107,57 @@ func FinalizeMultiPsbt(p *types.PsbtMultiSig) error {
 		}
 	}
 
+	return processPsbt(p, tapScriptSigsMapByEachPsbt)
+}
+
+func processPsbt(p *types.PsbtMultiSig, tapScriptSigsMapByEachPsbt []map[string]*exported.TapScriptSigsMap) error {
+	type result struct {
+		index     int
+		tx        []byte
+		psbtBytes []byte
+		err       error
+	}
+
+	resultChan := make(chan result, len(p.MultiPsbt))
+
+	// Launch goroutines for each PSBT
 	for index, psbt := range p.MultiPsbt {
-		psbtBytes := psbt.Bytes()
-		var err error
+		go func(idx int, psbtData []byte, tapScriptSigsMap map[string]*exported.TapScriptSigsMap) {
+			psbtBytes := psbtData
+			var err error
 
-		tapScriptSigsMap := tapScriptSigsMapByEachPsbt[index]
-
-		for _, m := range tapScriptSigsMap {
-			raw := m.ToRaw()
-			psbtBytes, err = vault.AggregateTapScriptSigs(psbtBytes, raw)
-			if err != nil {
-				return err
+			// Process tap script signatures
+			for _, m := range tapScriptSigsMap {
+				raw := m.ToRaw()
+				psbtBytes, err = vault.AggregateTapScriptSigs(psbtBytes, raw)
+				if err != nil {
+					resultChan <- result{idx, nil, nil, err}
+					return
+				}
 			}
-		}
-		clog.Greenf("CovenantHandler: Finalize, Psbt: %x", psbtBytes)
 
-		tx, err := vault.FinalizePsbtAndExtractTx(psbtBytes)
-		if err != nil {
-			return err
-		}
+			clog.Greenf("CovenantHandler: Finalize, Psbt: %x", psbtBytes)
 
-		p.FinalizedTxs = append(finalizedTxs, tx)
-		p.MultiPsbt[index] = psbtBytes
+			// Finalize PSBT and extract transaction
+			tx, err := vault.FinalizePsbtAndExtractTx(psbtBytes)
+			if err != nil {
+				clog.Redf("CovenantHandler: Finalize, Error: %s", err)
+				resultChan <- result{idx, nil, nil, err}
+				return
+			}
+
+			resultChan <- result{idx, tx, psbtBytes, nil}
+		}(index, psbt, tapScriptSigsMapByEachPsbt[index])
+	}
+
+	// Collect results
+	for i := 0; i < len(p.MultiPsbt); i++ {
+		res := <-resultChan
+		if res.err != nil {
+			return res.err
+		}
+		p.FinalizedTxs[res.index] = res.tx
+		p.MultiPsbt[res.index] = res.psbtBytes
 	}
 
 	return nil

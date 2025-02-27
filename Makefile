@@ -273,7 +273,7 @@ cfd2:
 
 .PHONY: cfd2b
 cfd2b:
-	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" 7be1c2b97798a5826d25a97b3f7f925360216f441f4befe0cd6617217aec80f7 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 507368
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" 71b4e2cae2e93b45586469febcc56cabc554b964e96ff788b2887d9070c8b7a7 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 507368
 
 	
 cfd3:

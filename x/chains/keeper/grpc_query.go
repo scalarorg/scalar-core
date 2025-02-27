@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"sort"
 	"strings"
@@ -236,14 +237,24 @@ func commandBatchToResp(ctx sdk.Context, commandBatch types.CommandBatch, multis
 		// 	return types.BatchedCommandsResponse{}, sdkerrors.Wrap(types.ErrEVM, fmt.Sprintf("not supported signature type %T", commandBatch.GetSignature()))
 		// }
 
-		executeData := psbtSig.GetFinalizedTx()
+		executeData := psbtSig.GetFinalizedTxs()
+
+		finalizedTxs := make([]string, 0, len(executeData))
+		for _, tx := range executeData {
+			finalizedTxs = append(finalizedTxs, hex.EncodeToString(tx))
+		}
+
+		jsonData, err := json.Marshal(finalizedTxs)
+		if err != nil {
+			return types.BatchedCommandsResponse{}, sdkerrors.Wrap(types.ErrEVM, err.Error())
+		}
 
 		return types.BatchedCommandsResponse{
 			ID:                    id,
 			Data:                  hex.EncodeToString(commandBatch.GetData()),
 			Status:                commandBatch.GetStatus(),
 			KeyID:                 commandBatch.GetKeyID(),
-			ExecuteData:           hex.EncodeToString(executeData),
+			ExecuteData:           string(jsonData),
 			PrevBatchedCommandsID: prevID,
 			CommandIDs:            commandIDs,
 			Proof:                 nil,
@@ -376,7 +387,7 @@ func (q Querier) PendingCommands(c context.Context, req *types.PendingCommandsRe
 
 func getAllPendingCommands(commands []types.Command) (*types.PendingCommandsResponse, error) {
 	responses := make([]types.QueryCommandResponse, 0, len(commands))
-	
+
 	for _, cmd := range commands {
 		cmdResp, err := GetCommandResponse(cmd)
 		if err != nil {
