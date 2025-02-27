@@ -281,9 +281,13 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 	// if !ok {
 	// 	keyId = multisigexported.KeyID(destinationChain)
 	// }
-	protocolInfo, err := p.FindProtocolInfoByExternalSymbol(ctx, sourceChain, e.Symbol)
+	protocolInfo, err := p.FindProtocolInfoByExternalSymbol(ctx, e.Symbol)
 	if err != nil {
 		return err
+	}
+
+	if !protocolInfo.IsSupportedChain(sourceChain) {
+		return fmt.Errorf("source chain %s is not supported by protocol %s", sourceChain, e.Symbol)
 	}
 
 	cusGr, ok := cov.GetCustodianGroup(ctx, protocolInfo.CustodiansGroupUID)

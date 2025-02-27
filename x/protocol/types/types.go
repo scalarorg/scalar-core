@@ -33,12 +33,18 @@ func (p *Protocol) IsAssetSupported(destinationChain nexus.ChainName, tokenAddre
 
 // Get Unique keyId, which later can tell us how to sign btc psbt
 func (p *Protocol) ToProtocolInfo() *exported.ProtocolInfo {
-	minorAddreses := make([]*exported.MinorAddress, len(p.Chains))
-	for i, chain := range p.Chains {
-		minorAddreses[i] = &exported.MinorAddress{
+	// minorAddreses := make([]*exported.MinorAddress, len(p.Chains))
+	var minorAddreses []*exported.MinorAddress
+	var originChain = p.Asset.Chain
+	for _, chain := range p.Chains {
+		if chain.Chain == originChain {
+			continue
+		}
+
+		minorAddreses = append(minorAddreses, &exported.MinorAddress{
 			ChainName: chain.Chain,
 			Address:   chain.Address,
-		}
+		})
 	}
 
 	return &exported.ProtocolInfo{
@@ -51,10 +57,25 @@ func (p *Protocol) ToProtocolInfo() *exported.ProtocolInfo {
 	}
 }
 
-func (p *Protocol) AddSupportedChain(chain nexus.ChainName, address string, name string) {
+func (p *Protocol) AddSupportedChain(chain nexus.ChainName, address string, name string) error {
+	if p.IsSupportedChain(chain) {
+		return errors.New("chain already supported")
+	}
+
 	p.Chains = append(p.Chains, &exported.SupportedChain{
 		Chain:   chain,
 		Address: address,
 		Name:    name,
 	})
+
+	return nil
+}
+
+func (p *Protocol) IsSupportedChain(chain nexus.ChainName) bool {
+	for _, c := range p.Chains {
+		if c.Chain == chain {
+			return true
+		}
+	}
+	return false
 }

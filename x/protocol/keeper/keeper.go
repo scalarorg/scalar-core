@@ -109,12 +109,12 @@ func (k Keeper) getProtocolByAddress(ctx sdk.Context, address []byte) (*types.Pr
  * In scalar each asset is defined uniquely by its original chain (bitcoin networks: mainnet or testnets) and name.
  * This function finds the protocol that supports the given asset.
  */
-func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, minorChain exported.ChainName, symbol string) (*types.Protocol, error) {
+func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, symbol string) (*types.Protocol, error) {
 	//ctx := sdk.UnwrapSDKContext(c)
 
 	protocols, ok := k.GetAllProtocols(ctx)
 	if !ok {
-		return nil, status.Errorf(codes.NotFound, "protocol not found")
+		return nil, status.Errorf(codes.NotFound, "all protocols not found")
 	}
 	for _, protocol := range protocols {
 		// if originChain == protocol.Asset.Chain && symbol == protocol.Asset.Name {
@@ -122,19 +122,20 @@ func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, minorChain exporte
 			continue
 		}
 		//Check if the minor chain is supported by the protocol
-		for _, chain := range protocol.Chains {
-			if chain.Chain != minorChain {
-				continue
-			}
-			return protocol, nil
-		}
+		// for _, chain := range protocol.Chains {
+		// 	if chain.Chain != minorChain {
+		// 		continue
+		// 	}
+		// 	return protocol, nil
+		// }
+		return protocol, nil
 	}
 
-	return nil, status.Errorf(codes.NotFound, "protocol with asset %s does not support transfering to the minor chain %s", symbol, minorChain)
+	return nil, status.Errorf(codes.NotFound, "protocol not found")
 }
 
-func (k Keeper) FindProtocolInfoByExternalSymbol(ctx sdk.Context, minorChain exported.ChainName, symbol string) (*pexported.ProtocolInfo, error) {
-	protocol, err := k.FindProtocolByExternalSymbol(ctx, minorChain, symbol)
+func (k Keeper) FindProtocolInfoByExternalSymbol(ctx sdk.Context, symbol string) (*pexported.ProtocolInfo, error) {
+	protocol, err := k.FindProtocolByExternalSymbol(ctx, symbol)
 	if err != nil {
 		return nil, err
 	}
@@ -163,12 +164,15 @@ func (k Keeper) FindProtocolByInternalAddress(ctx sdk.Context, originChain expor
 }
 
 func (k Keeper) AddTokenForProtocol(ctx sdk.Context, chain nexus.ChainName, symbol, address string, name string) error {
-	protocol, err := k.FindProtocolByExternalSymbol(ctx, chain, symbol)
+	protocol, err := k.FindProtocolByExternalSymbol(ctx, symbol)
 	if err != nil {
 		return err
 	}
 
-	protocol.AddSupportedChain(chain, address, name)
+	err = protocol.AddSupportedChain(chain, address, name)
+	if err != nil {
+		return err
+	}
 
 	k.SetProtocol(ctx, protocol)
 

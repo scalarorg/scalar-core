@@ -56,7 +56,7 @@ func (q *Querier) Protocol(c context.Context, req *types.ProtocolRequest) (*type
 
 	var protocol *types.Protocol
 	if req.Symbol != "" {
-		protocol, err = q.keeper.FindProtocolByExternalSymbol(ctx, req.MinorChain, req.Symbol)
+		protocol, err = q.keeper.FindProtocolByExternalSymbol(ctx, req.Symbol)
 		if err != nil {
 			return nil, status.Errorf(codes.NotFound, "protocol not found")
 		}
