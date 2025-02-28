@@ -12,7 +12,7 @@ const (
 
 // RegisterDenoms registers the base and display denominations to the SDK.
 func RegisterDenoms() {
-	if err := sdk.RegisterDenom(scalarnet.NativeAsset, sdk.OneDec()); err != nil {
+	if err := sdk.RegisterDenom(scalarnet.NativeAsset, sdk.ZeroDec()); err != nil {
 		panic(err)
 	}
 
