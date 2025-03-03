@@ -46,6 +46,18 @@
       }
     },
     {
+      "url": "../../tmp-swagger-gen/scalar/covenant/v1beta1/query.swagger.json"
+    },
+    {
+      "url": "../../tmp-swagger-gen/scalar/covenant/v1beta1/service.swagger.json",
+      "operationIds": {
+        "rename": {
+          "RotateKey": "CovenantRotateKey",
+          "Params": "CovenantParams"
+        }
+      }
+    },
+    {
       "url": "../../tmp-swagger-gen/scalar/multisig/v1beta1/query.swagger.json"
     },
     {
