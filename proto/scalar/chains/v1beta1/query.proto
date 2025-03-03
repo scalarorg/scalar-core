@@ -3,11 +3,9 @@ syntax = "proto3";
 package scalar.chains.v1beta1;
 
 import "gogoproto/gogo.proto";
-import "scalar/chains/v1beta1/tx.proto";
 import "scalar/chains/v1beta1/types.proto";
 import "scalar/chains/v1beta1/events.proto";
 import "scalar/chains/v1beta1/params.proto";
-import "scalar/protocol/exported/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
 

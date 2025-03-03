@@ -4,7 +4,6 @@ package scalar.snapshot.v1beta1;
 option go_package = "github.com/scalarorg/scalar-core/x/snapshot/types";
 
 import "gogoproto/gogo.proto";
-import "google/api/annotations.proto";
 
 option (gogoproto.goproto_getters_all) = false;
 

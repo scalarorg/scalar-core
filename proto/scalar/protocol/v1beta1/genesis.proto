@@ -3,7 +3,6 @@ package scalar.protocol.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "scalar/protocol/v1beta1/types.proto";
-import "scalar/utils/v1beta1/queuer.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 option (gogoproto.goproto_getters_all) = false;
