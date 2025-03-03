@@ -3,7 +3,7 @@ package scalar.protocol.v1beta1;
 
 import "scalar/protocol/v1beta1/types.proto";
 import "scalar/protocol/exported/v1beta1/types.proto";
-import "scalar/chains/v1beta1/types.proto";
+
 
 import "gogoproto/gogo.proto";
 
@@ -13,11 +13,11 @@ message ProtocolsRequest {
   string pubkey = 1;
   string address = 2;
   string name = 3;
-  Status status = 4;
+  scalar.protocol.exported.v1beta1.Status status = 4;
 }
 
 message ProtocolsResponse {
-  repeated Protocol protocols = 1;
+  repeated scalar.protocol.v1beta1.ProtocolDetails protocols = 1;
   uint64 total = 2;
 }
 
@@ -32,4 +32,4 @@ message ProtocolRequest {
   string address = 4;
 }
 
-message ProtocolResponse { scalar.protocol.exported.v1beta1.ProtocolInfo protocol = 1; }
+message ProtocolResponse { scalar.protocol.v1beta1.ProtocolDetails protocol = 1; }

@@ -8,14 +8,6 @@ import "google/protobuf/any.proto";
 option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
 option (gogoproto.goproto_getters_all) = false;
 
-// enum NetworkKind {
-//   option (gogoproto.goproto_enum_prefix) = false;
-//   option (gogoproto.goproto_enum_stringer) = true;
-
-//   NETWORK_KIND_MAINNET = 0 [ (gogoproto.enumvalue_customname) = "Mainnet" ];
-//   NETWORK_KIND_TESTNET = 1 [ (gogoproto.enumvalue_customname) = "Testnet" ];
-// }
-
 enum BatchedCommandsStatus {
   option (gogoproto.goproto_enum_prefix) = false;
 
@@ -84,7 +76,7 @@ message CommandBatchMetadata {
       [ (cosmos_proto.accepts_interface) =
             "github.com/cosmos/codec/ProtoMarshaler" ];
 
-  // extra data for the command, map 1:1 with the commands
+  // Store payload of each command to create psbt
   repeated bytes extra_data = 9;
 }
 
@@ -110,7 +102,8 @@ message Command {
   uint32 max_gas_cost = 4;
   CommandType type = 5;
 
-  // This field is used as extra data for the command, metadata is encoded in the payload, it can be fee information, etc.
+  // This field is used as extra data for the command, metadata is encoded in
+  // the payload, it can be fee information, etc.
   bytes payload = 6;
 }
 
@@ -243,14 +236,6 @@ message Asset {
   string name = 2;
 }
 
-enum TokenModel {
-  option (gogoproto.goproto_enum_prefix) = false;
-  option (gogoproto.goproto_enum_stringer) = true;
-
-  TOKEN_MODEL_POOL = 0 [ (gogoproto.enumvalue_customname) = "Pool" ];
-  TOKEN_MODEL_UTXO = 1 [ (gogoproto.enumvalue_customname) = "Utxo" ];
-}
-
 message TokenDetails {
   string token_name = 1;
   string symbol = 2;
@@ -259,7 +244,6 @@ message TokenDetails {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  TokenModel model = 5; // defined for btc networks, not used for evm chains
 }
 
 message Gateway {

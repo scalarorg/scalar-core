@@ -1,12 +1,10 @@
 package types
 
 import (
-	"encoding/hex"
 	"errors"
 
 	"github.com/scalarorg/scalar-core/utils/evm"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
-	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/protocol/exported"
 )
@@ -32,25 +30,52 @@ func (p *Protocol) IsAssetSupported(destinationChain nexus.ChainName, tokenAddre
 	}
 	return errors.New("asset not supported")
 }
-func (p *Protocol) GetKeyID() string {
-	return hex.EncodeToString(p.CustodianGroup.BtcPubkey)
-}
 
 // Get Unique keyId, which later can tell us how to sign btc psbt
 func (p *Protocol) ToProtocolInfo() *exported.ProtocolInfo {
-	minorAddreses := make([]*exported.MinorAddress, len(p.Chains))
-	for i, chain := range p.Chains {
-		minorAddreses[i] = &exported.MinorAddress{
+	// minorAddreses := make([]*exported.MinorAddress, len(p.Chains))
+	var minorAddreses []*exported.MinorAddress
+	var originChain = p.Asset.Chain
+	for _, chain := range p.Chains {
+		if chain.Chain == originChain {
+			continue
+		}
+
+		minorAddreses = append(minorAddreses, &exported.MinorAddress{
 			ChainName: chain.Chain,
 			Address:   chain.Address,
+		})
+	}
+
+	return &exported.ProtocolInfo{
+		// KeyID:            multisig.KeyID(keyID),
+		CustodiansGroupUID: p.CustodianGroupUID,
+		LiquidityModel:     p.Attributes.Model,
+		OriginChain:        p.Asset.Chain,
+		Symbol:             p.Asset.Name,
+		MinorAddresses:     minorAddreses,
+	}
+}
+
+func (p *Protocol) AddSupportedChain(chain nexus.ChainName, address string, name string) error {
+	if p.IsSupportedChain(chain) {
+		return errors.New("chain already supported")
+	}
+
+	p.Chains = append(p.Chains, &exported.SupportedChain{
+		Chain:   chain,
+		Address: address,
+		Name:    name,
+	})
+
+	return nil
+}
+
+func (p *Protocol) IsSupportedChain(chain nexus.ChainName) bool {
+	for _, c := range p.Chains {
+		if c.Chain == chain {
+			return true
 		}
 	}
-	return &exported.ProtocolInfo{
-		KeyID:            multisig.KeyID(p.GetKeyID()),
-		CustodiansPubkey: p.CustodianGroup.BtcPubkey,
-		LiquidityModel:   p.Attribute.Model,
-		OriginChain:      p.Asset.Chain,
-		Symbol:           p.Asset.Name,
-		MinorAddresses:   minorAddreses,
-	}
+	return false
 }

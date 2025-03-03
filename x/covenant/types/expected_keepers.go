@@ -38,7 +38,7 @@ type Keeper interface {
 	DeleteSigningSession(ctx sdk.Context, id uint64)
 	GetCovenantRouter() CovenantRouter
 
-	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, psbt Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
+	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, multiPsbt []Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
 }
 
 // Snapshotter provides snapshot keeper functionality

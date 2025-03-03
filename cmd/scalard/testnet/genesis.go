@@ -40,7 +40,7 @@ import (
 
 // DefaultProtocol returns the default chains for a genesis state
 // Each protocol has a token info with the same index
-func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGroup covenanttypes.CustodianGroup) []*protocoltypes.Protocol {
+func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGroupUID string) []*protocoltypes.Protocol {
 	log.Debug().Any("TokenInfos", tokenInfos).Any("ProtocolInfos", protocolInfos).Msg("Create defaultProtocols")
 	protocols := []*protocoltypes.Protocol{}
 	for i, protocol := range protocolInfos {
@@ -48,33 +48,35 @@ func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGro
 			break
 		}
 		tokenInfo := tokenInfos[i]
-		supportedChains := []*protocoltypes.SupportedChain{}
+		supportedChains := []*pexported.SupportedChain{}
 		for _, chain := range tokenInfo.Deployments {
-			supportedChains = append(supportedChains, &protocoltypes.SupportedChain{
+			supportedChains = append(supportedChains, &pexported.SupportedChain{
 				Chain:   nexus.ChainName(chain.ID),
 				Name:    chain.Name,
 				Address: chain.TokenAddress,
 			})
 		}
 		var model pexported.LiquidityModel
-		if protocol.Model == "transactional" {
-			model = pexported.Transactional
-		} else if protocol.Model == "pooling" {
-			model = pexported.Pooling
+		if protocol.LiquidityModel == "upc" {
+			model = pexported.LIQUIDITY_MODEL_UPC
+		} else if protocol.LiquidityModel == "pool" {
+			model = pexported.LIQUIDITY_MODEL_POOL
+		} else {
+			panic(fmt.Sprintf("invalid liquidity model: %s", protocol.LiquidityModel))
 		}
 		protocols = append(protocols, &protocoltypes.Protocol{
 			BitcoinPubkey: protocol.BitcoinPubKey,
 			ScalarPubkey:  protocol.PubKey.Bytes(),
 			ScalarAddress: sdk.AccAddress(protocol.PubKey.Address()),
-			Attribute: &protocoltypes.ProtocolAttribute{
+			Attributes: &pexported.ProtocolAttributes{
 				Model: model,
 			},
-			Name:           protocoltypes.DefaultProtocolName,
-			Tag:            []byte(protocol.Tag),
-			Status:         protocoltypes.Activated,
-			CustodianGroup: &custodianGroup,
-			Asset:          &chainsTypes.Asset{Chain: nexus.ChainName(tokenInfo.ID), Name: tokenInfo.Asset},
-			Chains:         supportedChains,
+			Name:              protocoltypes.DefaultProtocolName,
+			Tag:               []byte(protocol.Tag),
+			Status:            pexported.Activated,
+			CustodianGroupUID: custodianGroupUID,
+			Asset:             &chainsTypes.Asset{Chain: nexus.ChainName(tokenInfo.ID), Name: tokenInfo.Asset},
+			Chains:            supportedChains,
 		})
 	}
 	return protocols
@@ -240,33 +242,29 @@ func GenerateGenesis(clientCtx client.Context,
 
 		privKey := secp256k1.PrivKeyFromBytes(btcPrivKey)
 		custodians[i] = &covenanttypes.Custodian{
-			Name:       validator.Host,
-			ValAddress: sdk.ValAddress(validator.ValPubKey.Address()).String(),
-			Status:     covenanttypes.Activated,
-			BtcPubkey:  privKey.PubKey().SerializeCompressed(),
+			Name:          validator.Host,
+			ValAddress:    sdk.ValAddress(validator.ValPubKey.Address()).String(),
+			Status:        covenanttypes.Activated,
+			BitcoinPubkey: privKey.PubKey().SerializeCompressed(),
 		}
-		custodianPubKeys[i] = go_utils.PublicKey(custodians[i].BtcPubkey)
+		custodianPubKeys[i] = go_utils.PublicKey(custodians[i].BitcoinPubkey)
 	}
-	//Todo: Create custodian group pubkey
+	//TODO: Create custodian group pubkey
 	custodianGroupPubKey, err := vault.CustodiansOnlyLockingScript(custodianPubKeys, quorum)
 	if err != nil {
 		return appGenState, err
 	}
-	custodianGroupUid := hex.EncodeToString(custodianGroupPubKey)
-	custodianGroup := covenanttypes.CustodianGroup{
-		Uid:         custodianGroupUid,
-		Name:        "scalar",
-		Custodians:  custodians,
-		BtcPubkey:   []byte(custodianGroupPubKey),
-		Quorum:      uint32(quorum),
-		Status:      covenanttypes.Activated,
-		Description: "Default custodial group, which contains all custodians",
-	}
+
+	custodiansGr := covenanttypes.NewCustodianGroup("scalar", []byte(custodianGroupPubKey), uint32(quorum), "Default custodial group, which contains all custodians", custodians)
+
+	// Activate the default custodian group
+	custodiansGr.Status = covenanttypes.Activated
+
 	defaultCovenantState := covenanttypes.DefaultGenesisState()
-	covnantGenState := covenanttypes.NewGenesisState(&defaultCovenantState.Params, defaultCovenantState.SigningSessions, custodians, []*covenanttypes.CustodianGroup{&custodianGroup})
+	covnantGenState := covenanttypes.NewGenesisState(&defaultCovenantState.Params, defaultCovenantState.SigningSessions, custodians, []*covenanttypes.CustodianGroup{custodiansGr})
 	appGenState[covenanttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&covnantGenState)
 	//Protocol
-	protocolGenState, err := generateProtocolGenesis(protocols, custodianGroup, args.configPath)
+	protocolGenState, err := generateProtocolGenesis(protocols, custodiansGr.UID, args.configPath)
 	if err == nil {
 		appGenState[protocoltypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(protocolGenState)
 	}
@@ -280,7 +278,7 @@ func GenerateGenesis(clientCtx client.Context,
 
 	return appGenState, nil
 }
-func generateProtocolGenesis(protocolInfos []Protocol, custodianGroup covenanttypes.CustodianGroup, configPath string) (*protocoltypes.GenesisState, error) {
+func generateProtocolGenesis(protocolInfos []Protocol, custodianGroupUID string, configPath string) (*protocoltypes.GenesisState, error) {
 	// evmTokenPath := path.Join(tokensPath, "evm.json")
 	// log.Debug().Msgf("Read token config in the path %s", evmTokenPath)
 	// tokenInfos, err := ParseJsonArrayConfig[Token](evmTokenPath)
@@ -297,7 +295,7 @@ func generateProtocolGenesis(protocolInfos []Protocol, custodianGroup covenantty
 		log.Error().Msgf("Missing token infos in path %s", btcTokenPath)
 	}
 	log.Debug().Any("TokenInfo", tokenInfos).Msgf("Successfull parsed token config")
-	protocols := DefaultProtocols(protocolInfos, tokenInfos, custodianGroup)
+	protocols := DefaultProtocols(protocolInfos, tokenInfos, custodianGroupUID)
 	protocolGenState := protocoltypes.NewGenesisState(protocols)
 	return protocolGenState, nil
 }
@@ -456,12 +454,6 @@ func createDefaultSbtc(configPath string) []chainsTypes.ERC20TokenMetadata {
 	}
 	tokens := make([]chainsTypes.ERC20TokenMetadata, len(tokenInfos))
 	for i, tokenInfo := range tokenInfos {
-		var model chainsTypes.TokenModel
-		if tokenInfo.Model == "pool" {
-			model = chainsTypes.Pool
-		} else if tokenInfo.Model == "utxo" {
-			model = chainsTypes.Utxo
-		}
 		tokens[i] = chainsTypes.ERC20TokenMetadata{
 			Asset:   tokenInfo.Asset,
 			ChainID: sdk.NewInt(tokenInfo.ChainID),
@@ -470,7 +462,6 @@ func createDefaultSbtc(configPath string) []chainsTypes.ERC20TokenMetadata {
 				Symbol:    tokenInfo.Symbol,
 				Decimals:  tokenInfo.Decimals,
 				Capacity:  sdk.NewInt(0),
-				Model:     model,
 			},
 			TokenAddress: chainsTypes.Address(common.HexToAddress(tokenInfo.TokenAddress)),
 			TxHash:       chainsTypes.ZeroHash,

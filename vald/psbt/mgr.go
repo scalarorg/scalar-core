@@ -53,9 +53,7 @@ func (mgr Mgr) isParticipant(p sdk.ValAddress) bool {
 }
 
 func (mgr Mgr) sign(keyUID string, psbt covenantTypes.Psbt, networkKind types.NetworkKind) (*covenant.TapScriptSigsMap, error) {
-	if !mgr.validateKeyID(keyUID) {
-		return nil, fmt.Errorf("invalid keyID")
-	}
+	
 
 	clog.Greenf("signing psbt with keyID: %s", keyUID)
 	clog.Greenf("signing psbt with networkKind: %v", networkKind)

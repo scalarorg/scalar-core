@@ -2,7 +2,8 @@ package types
 
 import (
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
-	"github.com/scalarorg/scalar-core/x/nexus/exported"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	exported "github.com/scalarorg/scalar-core/x/protocol/exported"
 )
 
 func NewGenesisState(protocols []*Protocol) *GenesisState {
@@ -33,18 +34,18 @@ func DefaultProtocol() *Protocol {
 	// 		Capacity:  sdk.NewInt(100000000),
 	// 	},
 	// }
-	sepoliaToken := SupportedChain{
-		Chain:   exported.ChainName("evm|111551111"),
+	sepoliaToken := exported.SupportedChain{
+		Chain:   nexus.ChainName("evm|111551111"),
 		Address: "0xaBbeEcbBfE4732b9DA50CE6b298EDf47E351Fc05",
 	}
-	bnbToken := SupportedChain{
-		Chain:   exported.ChainName("evm|97"),
+	bnbToken := exported.SupportedChain{
+		Chain:   nexus.ChainName("evm|97"),
 		Address: "0xaa36A8a917D1804376A7b6Cd54AE1C74Cf83654d",
 	}
 	protocol := &Protocol{
-		Name:           DefaultProtocolName,
-		CustodianGroup: types.DefaultCustodianGroup(),
-		Chains: []*SupportedChain{
+		Name:              DefaultProtocolName,
+		CustodianGroupUID: types.DefaultCustodianGroup().UID,
+		Chains: []*exported.SupportedChain{
 			&sepoliaToken, &bnbToken,
 		},
 	}

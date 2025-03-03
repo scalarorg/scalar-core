@@ -4,6 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/scalarorg/scalar-core/utils"
+	covenant "github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
@@ -65,4 +66,8 @@ type StakingKeeper interface {
 // SlashingKeeper provides functionality to manage slashing info for a validator
 type SlashingKeeper interface {
 	IsTombstoned(ctx sdk.Context, consAddr sdk.ConsAddress) bool
+}
+
+type CovenantKeeper interface {
+	GetCustodianGroup(ctx sdk.Context, uid string) (group *covenant.CustodianGroup, ok bool)
 }

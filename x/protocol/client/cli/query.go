@@ -51,6 +51,7 @@ func addProtocolFlagsToCmd(cmd *cobra.Command) {
 	cmd.Flags().String(FlagName, "", "Name of the protocol")
 	cmd.Flags().StringP(FlagStatus, "", "Activated", "Status of the protocol (Unspecified|Activated|Deactived)")
 }
+
 func readProtocolFlags(cmd *cobra.Command, request *types.ProtocolsRequest) {
 	if request == nil {
 		return

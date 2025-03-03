@@ -18,13 +18,7 @@ message CustodiansRequest {
 
 message CustodiansResponse { repeated Custodian custodians = 1; }
 
-message GroupsRequest {
-  string uid = 1;
-  string name = 2;
-  bytes group_pubkey = 3;
-  bytes custodian_pubkey = 4;
-  Status status = 5;
-}
+message GroupsRequest { string uid = 1 [ (gogoproto.customname) = "UID" ]; }
 
 message GroupsResponse { repeated CustodianGroup groups = 1; }
 
@@ -55,5 +49,6 @@ message KeyResponse {
     (gogoproto.nullable) = false
   ];
   // Keygen participants in descending order by weight
-  repeated multisig.v1beta1.KeygenParticipant participants = 7 [ (gogoproto.nullable) = false ];
+  repeated multisig.v1beta1.KeygenParticipant participants = 7
+      [ (gogoproto.nullable) = false ];
 }

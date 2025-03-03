@@ -26,7 +26,7 @@ RUN apk add --no-cache --update \
   linux-headers
 
 # Copy the bitcoin-vault lib
-COPY --from=scalar/bitcoin-vault /bitcoin-vault/target/release/libbitcoin_vault_ffi.* /usr/lib/
+COPY --from=scalarorg/bitcoin-vault /bitcoin-vault/target/release/libbitcoin_vault_ffi.* /usr/lib/
 
 WORKDIR scalar
 

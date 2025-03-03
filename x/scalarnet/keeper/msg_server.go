@@ -271,10 +271,9 @@ func (s msgServer) ExecutePendingTransfers(c context.Context, _ *types.ExecutePe
 			s.nexus.ArchivePendingTransfer(ctx, pendingTransfer)
 			events.Emit(ctx,
 				&types.ScalarTransferCompleted{
-					ID:         pendingTransfer.ID,
-					Receipient: pendingTransfer.Recipient.Address,
-					Asset:      pendingTransfer.Asset,
-					Recipient:  pendingTransfer.Recipient.Address,
+					ID:        pendingTransfer.ID,
+					Asset:     pendingTransfer.Asset,
+					Recipient: pendingTransfer.Recipient.Address,
 				})
 
 			return true, nil

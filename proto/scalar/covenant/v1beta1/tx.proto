@@ -15,7 +15,7 @@ message CreateCustodianRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
 
   string name = 2;
-  bytes btc_pubkey = 3;
+  bytes bitcoin_pubkey = 3;
   Status status = 4;
   string description = 5;
 }
@@ -26,7 +26,7 @@ message CreateCustodianResponse { Custodian custodian = 1; }
 message UpdateCustodianRequest {
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
-  bytes btc_pubkey = 2;
+  bytes bitcoin_pubkey = 2;
   string name = 3;
   Status status = 4;
   string description = 5;
@@ -82,7 +82,8 @@ message SubmitTapScriptSigsRequest {
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
-  scalar.covenant.exported.v1beta1.TapScriptSigsMap tap_script_sigs_map = 3;
+  repeated scalar.covenant.exported.v1beta1.TapScriptSigsMap
+      list_of_tap_script_sigs_map = 3;
 }
 
 message SubmitTapScriptSigsResponse {}

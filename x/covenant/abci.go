@@ -48,7 +48,7 @@ func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 			}
 
 			// finalize the psbt
-			err := FinalizePsbt(&signing.PsbtMultiSig)
+			err := FinalizeMultiPsbt(&signing.PsbtMultiSig)
 			//serr := signing.PsbtMultiSig.Finalize()
 			if err != nil {
 				return nil, sdkerrors.Wrap(err, "failed to finalize psbt")
@@ -63,8 +63,13 @@ func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 				return nil, sdkerrors.Wrap(err, "failed to handle completed signature")
 			}
 
-			clog.Greenf("CovenantHandler: HandleCompleted, Psbt: %x", sig.GetPsbt().Bytes())
-			clog.Greenf("CovenantHandler: HandleCompleted, FinalizedTx: %x", sig.GetFinalizedTx())
+			for _, p := range sig.GetMultiPsbt() {
+				clog.Greenf("CovenantHandler: HandleCompleted, Psbts: %x", p.Bytes())
+			}
+
+			for _, tx := range sig.GetFinalizedTxs() {
+				clog.Greenf("CovenantHandler: HandleCompleted, FinalizedTx: %x", tx)
+			}
 
 			events.Emit(cachedCtx, types.NewSigningPsbtCompleted(signing.GetID()))
 			k.Logger(cachedCtx).Info("signing session completed",
@@ -78,24 +83,82 @@ func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 	}
 }
 
-func FinalizePsbt(p *types.PsbtMultiSig) error {
-	psbtBytes := p.Psbt.Bytes()
-	var err error
-	for _, m := range p.ParticipantTapScriptSigs {
-		raw := m.ToRaw()
-		psbtBytes, err = vault.AggregateTapScriptSigs(psbtBytes, raw)
-		if err != nil {
-			return err
+func FinalizeMultiPsbt(p *types.PsbtMultiSig) error {
+	var tapScriptSigsMapByEachPsbt = make([]map[string]*exported.TapScriptSigsMap, len(p.MultiPsbt))
+
+	// collect the map for each psbt
+	// ParticipantListTapScriptSigs = {
+	// "Alice": [sigOfPsbt1, sigOfPsbt2, sigOfPsbt3],
+	// "Bob": [sigOfPsbt1, sigOfPsbt2, sigOfPsbt3],
+	// "Charlie": [sigOfPsbt1, sigOfPsbt2, sigOfPsbt3],
+	//}
+	// => output: [
+	//    map[Alice:[sigOfPsbt1] Bob:[sigOfPsbt1] Charlie:[sigOfPsbt1]],
+	//    map[Alice:[sigOfPsbt2] Bob:[sigOfPsbt2] Charlie:[sigOfPsbt2]],
+	//    map[Alice:[sigOfPsbt3] Bob:[sigOfPsbt3] Charlie:[sigOfPsbt3]],
+	// ]
+
+	for party, listOfEachParty := range p.ParticipantListTapScriptSigs {
+		for index, sig := range listOfEachParty.Inner {
+			if tapScriptSigsMapByEachPsbt[index] == nil {
+				tapScriptSigsMapByEachPsbt[index] = make(map[string]*exported.TapScriptSigsMap)
+			}
+			tapScriptSigsMapByEachPsbt[index][party] = sig
 		}
 	}
-	clog.Greenf("CovenantHandler: Finalize, Psbt: %x", psbtBytes)
 
-	tx, err := vault.FinalizePsbtAndExtractTx(psbtBytes)
-	if err != nil {
-		return err
+	return processPsbt(p, tapScriptSigsMapByEachPsbt)
+}
+
+func processPsbt(p *types.PsbtMultiSig, tapScriptSigsMapByEachPsbt []map[string]*exported.TapScriptSigsMap) error {
+	type result struct {
+		index     int
+		tx        []byte
+		psbtBytes []byte
+		err       error
 	}
 
-	p.FinalizedTx = tx
-	p.Psbt = psbtBytes
+	resultChan := make(chan result, len(p.MultiPsbt))
+
+	// Launch goroutines for each PSBT
+	for index, psbt := range p.MultiPsbt {
+		go func(idx int, psbtData []byte, tapScriptSigsMap map[string]*exported.TapScriptSigsMap) {
+			psbtBytes := psbtData
+			var err error
+
+			// Process tap script signatures
+			for _, m := range tapScriptSigsMap {
+				raw := m.ToRaw()
+				psbtBytes, err = vault.AggregateTapScriptSigs(psbtBytes, raw)
+				if err != nil {
+					resultChan <- result{idx, nil, nil, err}
+					return
+				}
+			}
+
+			clog.Greenf("CovenantHandler: Finalize, Psbt: %x", psbtBytes)
+
+			// Finalize PSBT and extract transaction
+			tx, err := vault.FinalizePsbtAndExtractTx(psbtBytes)
+			if err != nil {
+				clog.Redf("CovenantHandler: Finalize, Error: %s", err)
+				resultChan <- result{idx, nil, nil, err}
+				return
+			}
+
+			resultChan <- result{idx, tx, psbtBytes, nil}
+		}(index, psbt, tapScriptSigsMapByEachPsbt[index])
+	}
+
+	// Collect results
+	for i := 0; i < len(p.MultiPsbt); i++ {
+		res := <-resultChan
+		if res.err != nil {
+			return res.err
+		}
+		p.FinalizedTxs[res.index] = res.tx
+		p.MultiPsbt[res.index] = res.psbtBytes
+	}
+
 	return nil
 }

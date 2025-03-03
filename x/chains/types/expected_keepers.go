@@ -165,11 +165,14 @@ type MultisigKeeper interface {
 }
 
 type CovenantKeeper interface {
-	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, psbt covenantTypes.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
+	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, multiPsbt []covenantTypes.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
+
+	GetCustodianGroup(ctx sdk.Context, uid string) (group *covenantTypes.CustodianGroup, ok bool)
 
 	// GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
 }
 
 type ProtocolKeeper interface {
-	FindProtocolByExternalSymbol(ctx sdk.Context, originChain nexus.ChainName, minorChain nexus.ChainName, symbol string) (*pexported.ProtocolInfo, error)
+	FindProtocolInfoByExternalSymbol(ctx sdk.Context, symbol string) (*pexported.ProtocolInfo, error)
+	AddTokenForProtocol(ctx sdk.Context, chain nexus.ChainName, symbol, address string, name string) bool
 }

@@ -126,6 +126,7 @@ func DecodeEventContractCallWithToken(log *geth.Log) (types.EventContractCallWit
 	}
 	params, err := types.StrictDecode(arguments, log.Data)
 	if err != nil {
+		clog.Greenf("[Vald/decoders] failed to StrictDecode Data: %+v\n, Argurments: (string, string, bytes, string, uint256)", log.Data)
 		return types.EventContractCallWithToken{}, err
 	}
 	payload, ok := params[2].([]byte)
@@ -133,12 +134,15 @@ func DecodeEventContractCallWithToken(log *geth.Log) (types.EventContractCallWit
 		return types.EventContractCallWithToken{}, fmt.Errorf("invalid payload")
 	}
 
+	clog.Greenf("[Vald/decoders] tx %x raw payload: %x", log.TxHash, payload)
+
 	_, err = encode.DecodeContractCallWithTokenPayload(payload)
 	if err != nil {
+		clog.Redf("[Vald/decoders] Payload is invalid, err: %+v\n", err)
 		return types.EventContractCallWithToken{}, fmt.Errorf("error decoding contract call payload: %w", err)
 	}
 
-	clog.Greenf("[Vald/decoders] tx %x raw payload: %x", log.TxHash, payload)
+	clog.Greenf("[Vald/decoders] Payload is valid")
 
 	return types.EventContractCallWithToken{
 		Sender:           types.Address(common.BytesToAddress(log.Topics[1].Bytes())),

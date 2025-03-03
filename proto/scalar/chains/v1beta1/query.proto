@@ -7,6 +7,7 @@ import "scalar/chains/v1beta1/tx.proto";
 import "scalar/chains/v1beta1/types.proto";
 import "scalar/chains/v1beta1/events.proto";
 import "scalar/chains/v1beta1/params.proto";
+import "scalar/protocol/exported/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
 
@@ -201,7 +202,6 @@ message ERC20TokensResponse {
   message Token {
     string asset = 1;
     string symbol = 2;
-    TokenModel model = 3;
   }
 
   repeated Token tokens = 1 [ (gogoproto.nullable) = false ];

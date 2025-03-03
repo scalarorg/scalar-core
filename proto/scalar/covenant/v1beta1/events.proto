@@ -24,7 +24,7 @@ message SigningPsbtStarted {
       [ (gogoproto.castvalue) =
             "github.com/scalarorg/scalar-core/x/multisig/exported.PublicKey" ];
   string requesting_module = 6;
-  bytes psbt = 7 [ (gogoproto.casttype) = "Psbt" ];
+  repeated bytes multi_psbt = 7 [ (gogoproto.casttype) = "Psbt" ];
 }
 
 message SigningPsbtCompleted {
@@ -42,7 +42,7 @@ message TapScriptSigsSubmitted {
   uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
   bytes participant = 3 [ (gogoproto.casttype) =
                               "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
-  scalar.covenant.exported.v1beta1.TapScriptSigsMap tap_script_sigs_map = 4;
+  repeated scalar.covenant.exported.v1beta1.TapScriptSigsMap list_of_tap_script_sigs_map = 4;
 }
 
 message KeyRotated {

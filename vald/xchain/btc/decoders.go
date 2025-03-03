@@ -101,7 +101,7 @@ func (client *BtcClient) createEventTokenSent(event *types.EventConfirmSourceTxs
 		TransferID:         nexus.TransferID(1),
 		DestinationChain:   nexus.ChainName(destinationChain.ToBytes().String()),
 		DestinationAddress: chainsTypes.Address(destinationRecipientAddress).Hex(),
-		Asset:              sdk.NewCoin(response.Protocol.Symbol, sdk.NewInt(stakingAmount)),
+		Asset:              sdk.NewCoin(response.Protocol.Asset.Name, sdk.NewInt(stakingAmount)),
 	}, nil
 }
 

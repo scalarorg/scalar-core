@@ -26,12 +26,17 @@ SCALAR_HOME_DIR ?= .scalar/scalar
 SCALAR_CHAIN_ID ?= scalar-testnet-1
 SCALAR_KEYRING_BACKEND ?= test
 LOCAL_LIB_PATH ?= $(shell pwd)/lib
+ifndef USER_ID
 USER_ID ?= $(shell id -u)
+endif
+ifndef GROUP_ID
 GROUP_ID ?= $(shell id -g)
+endif
 export CGO_LDFLAGS := ${CGO_LDFLAGS} -lbitcoin_vault_ffi  -L${LOCAL_LIB_PATH}
 
 $(info ⛳️ Makefile Environment Variables ⛳️)
-
+$(info $$USER_ID is [${USER_ID}])
+$(info $$GROUP_ID is [${GROUP_ID}])
 $(info $$WASM is [${WASM}])
 $(info $$IBC_WASM_HOOKS is [${IBC_WASM_HOOKS}])
 $(info $$MAX_WASM_SIZE is [${MAX_WASM_SIZE}])
@@ -141,6 +146,8 @@ docker-image-test:
 		--build-arg WASMVM_VERSION="${WASMVM_VERSION}" \
 		--build-arg IBC_WASM_HOOKS="${IBC_WASM_HOOKS}" \
 		--build-arg ARCH="${ARCH}" \
+		--build-arg USER_ID="${USER_ID}" \
+		--build-arg GROUP_ID="${GROUP_ID}" \
 		-t scalarorg/scalar-core:${IMAGE_TAG} .
 
 # Build a release image
@@ -151,6 +158,8 @@ docker-image:
 		--build-arg WASMVM_VERSION="${WASMVM_VERSION}" \
 		--build-arg IBC_WASM_HOOKS="${IBC_WASM_HOOKS}" \
 		--build-arg ARCH="${ARCH}" \
+		--build-arg USER_ID="${USER_ID}" \
+		--build-arg GROUP_ID="${GROUP_ID}" \
 		-t scalarorg/scalar-core .
 
 docker-run:
@@ -252,19 +261,26 @@ cfs:
 	$(SCALAR_BIN_PATH) tx chains confirm-source-txs $(ARGS) --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 400000
 
 cfs2:
-	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "bitcoin|4" 8c3016ba40444991be4b98dfbd964cce79c50dc628747e84d52aea8c312d13ce --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 500000
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "bitcoin|4" 35326772ac35ccf5c0c46087238073af9c11cbe7557448101f18af7826342f67 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 500000
+cftf:
+	$(SCALAR_BIN_PATH) tx chains create-pending-transfers "evm|11155111" --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 203590
 
 cfs3:
 	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "bitcoin|4" 5188eea7ceb9f585f5ba8a2abebb82f9850dd671b6e2926263674af6882fd3f6 fc702634fc245b254d44585dfaa6527871899dbfe38d5585abecbb738f8865bf --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 537803
 
 cfd2:
 	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" 8062e7c01545e6bac064e675b5bec41d9536dbc3b849368385279e5b2c6e96fd --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 507368
+
+.PHONY: cfd2b
+cfd2b:
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" 71b4e2cae2e93b45586469febcc56cabc554b964e96ff788b2887d9070c8b7a7 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 507368
+
 	
 cfd3:
-	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" be6668d3c6c00fde1e9e089fc37b837dc5d908afd9f3bf79ab3af66322170ef5 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" 691b0cc5eb8abcec4b56e3aea8044ddda8a4152ab00e87dfaecf3123bd7290a0 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 600000
 
 cfd4:
-	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" a799b1e5c5a53142d31faeb663c18909fa1c7e748080ade0db960ca608005251 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 300000
+	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" 4a21de48f14ae787a11cce77f6232fe52308590791829b54ecc2f82f36a2468f --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 400000
 
 .PHONY: sign-btc
 sign-btc:
@@ -281,6 +297,10 @@ params:
 	else \
 		$(SCALAR_BIN_PATH) query chains params '$(CHAIN)'; \
 	fi
+
+.PHONY: add-protocol
+add-protocol:
+	$(SCALAR_BIN_PATH) tx protocol add '{"attribute":{"model":0},"avatar":"nVJ5","bitcoin_pubkey":"03620a0b56223990b75c28dded4f30c854e0918e52179d5a7dfbf79df89fce7bcd","custodian_group_uid":"310b805d-8d15-4dee-9a30-c5bd89214ce9","name":"lalaa","tag":"pepeS","asset":{"chain_name":"bitcoin|4","asset_name":"Zbtc"}}' --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 1000535 --sequence 5
 
 .PHONY: open-docs
 open-docs:

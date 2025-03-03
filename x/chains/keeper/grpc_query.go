@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"sort"
 	"strings"
@@ -236,14 +237,24 @@ func commandBatchToResp(ctx sdk.Context, commandBatch types.CommandBatch, multis
 		// 	return types.BatchedCommandsResponse{}, sdkerrors.Wrap(types.ErrEVM, fmt.Sprintf("not supported signature type %T", commandBatch.GetSignature()))
 		// }
 
-		executeData := psbtSig.GetFinalizedTx()
+		executeData := psbtSig.GetFinalizedTxs()
+
+		finalizedTxs := make([]string, 0, len(executeData))
+		for _, tx := range executeData {
+			finalizedTxs = append(finalizedTxs, hex.EncodeToString(tx))
+		}
+
+		jsonData, err := json.Marshal(finalizedTxs)
+		if err != nil {
+			return types.BatchedCommandsResponse{}, sdkerrors.Wrap(types.ErrEVM, err.Error())
+		}
 
 		return types.BatchedCommandsResponse{
 			ID:                    id,
 			Data:                  hex.EncodeToString(commandBatch.GetData()),
 			Status:                commandBatch.GetStatus(),
 			KeyID:                 commandBatch.GetKeyID(),
-			ExecuteData:           hex.EncodeToString(executeData),
+			ExecuteData:           string(jsonData),
 			PrevBatchedCommandsID: prevID,
 			CommandIDs:            commandIDs,
 			Proof:                 nil,
@@ -362,16 +373,53 @@ func (q Querier) PendingCommands(c context.Context, req *types.PendingCommandsRe
 		return nil, status.Error(codes.NotFound, fmt.Sprintf("chain %s not found", req.Chain))
 	}
 
-	var commands []types.QueryCommandResponse
-	for _, cmd := range ck.GetPendingCommands(ctx) {
+	pendingCommands := ck.GetPendingCommands(ctx)
+	if len(pendingCommands) == 0 {
+		return &types.PendingCommandsResponse{Commands: nil}, nil
+	}
+
+	if types.IsBitcoinChain(nexustypes.ChainName(req.Chain)) {
+		return getBitcoinPendingCommands(pendingCommands)
+	}
+
+	return getAllPendingCommands(pendingCommands)
+}
+
+func getAllPendingCommands(commands []types.Command) (*types.PendingCommandsResponse, error) {
+	responses := make([]types.QueryCommandResponse, 0, len(commands))
+
+	for _, cmd := range commands {
 		cmdResp, err := GetCommandResponse(cmd)
 		if err != nil {
 			return nil, status.Error(codes.NotFound, err.Error())
 		}
-		commands = append(commands, cmdResp)
+		responses = append(responses, cmdResp)
 	}
 
-	return &types.PendingCommandsResponse{Commands: commands}, nil
+	return &types.PendingCommandsResponse{Commands: responses}, nil
+}
+
+func getBitcoinPendingCommands(commands []types.Command) (*types.PendingCommandsResponse, error) {
+	if len(commands) == 0 {
+		return &types.PendingCommandsResponse{Commands: nil}, nil
+	}
+
+	firstKeyID := commands[0].KeyID
+	responses := make([]types.QueryCommandResponse, 0, len(commands))
+
+	for _, cmd := range commands {
+		if cmd.KeyID != firstKeyID {
+			continue
+		}
+
+		cmdResp, err := GetCommandResponse(cmd)
+		if err != nil {
+			return nil, status.Error(codes.NotFound, err.Error())
+		}
+		responses = append(responses, cmdResp)
+	}
+
+	return &types.PendingCommandsResponse{Commands: responses}, nil
 }
 
 func queryAddressByKeyID(ctx sdk.Context, multisig types.MultisigKeeper, chain nexustypes.Chain, keyID multisig.KeyID) (types.KeyAddressResponse, error) {
@@ -489,7 +537,6 @@ func (q Querier) ERC20Tokens(c context.Context, req *types.ERC20TokensRequest) (
 			return types.ERC20TokensResponse_Token{
 				Asset:  token.GetAsset(),
 				Symbol: token.GetDetails().Symbol,
-				Model:  token.GetDetails().Model,
 			}
 		}),
 	}

@@ -684,7 +684,7 @@ func (k chainKeeper) CreateNewBatchToSign(ctx sdk.Context) (types.CommandBatch, 
 	filter := func(value codec.ProtoMarshaler) bool {
 		cmd, ok := value.(*types.Command)
 		gasCost += cmd.MaxGasCost
-
+		// Note: This is used to limit the number of commands in the batch
 		return ok && cmd.KeyID == keyID && gasCost <= gasLimit
 	}
 
