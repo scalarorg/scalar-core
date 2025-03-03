@@ -66,7 +66,6 @@ func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGro
 		}
 		protocols = append(protocols, &protocoltypes.Protocol{
 			BitcoinPubkey: protocol.BitcoinPubKey,
-			ScalarPubkey:  protocol.PubKey.Bytes(),
 			ScalarAddress: sdk.AccAddress(protocol.PubKey.Address()),
 			Attributes: &pexported.ProtocolAttributes{
 				Model: model,

@@ -14,13 +14,12 @@ message CreateProtocolRequest {
             "github.com/cosmos/cosmos-sdk/types.AccAddress" ]; // address
 
   bytes bitcoin_pubkey = 2; // BTC's pubkey
-  bytes scalar_pubkey = 3;  // Scalar's pubkey
-  string name = 4;          // e.g., "protocol-1"
-  string tag = 5;           // e.g., "pools"
-  scalar.protocol.exported.v1beta1.ProtocolAttributes attributes = 6;
-  string custodian_group_uid = 7;
-  scalar.chains.v1beta1.Asset asset = 8; // External asset
-  bytes avatar = 9; // Avatar of the protocol, base64 encoded
+  string name = 3;          // e.g., "protocol-1"
+  string tag = 4;           // e.g., "pools"
+  scalar.protocol.exported.v1beta1.ProtocolAttributes attributes = 5;
+  string custodian_group_uid = 6;
+  scalar.chains.v1beta1.Asset asset = 7; // External asset
+  bytes avatar = 8; // Avatar of the protocol, base64 encoded
 }
 
 message CreateProtocolResponse { Protocol protocol = 1; }

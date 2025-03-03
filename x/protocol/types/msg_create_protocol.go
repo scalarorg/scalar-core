@@ -9,12 +9,11 @@ import (
 	"github.com/scalarorg/scalar-core/x/protocol/exported"
 )
 
-func NewCreateProtocolRequest(sender sdk.AccAddress, name string, bitcoinPubkey []byte, scalarPubkey []byte, tag string, attributes *exported.ProtocolAttributes, custodianGroupUid string, avatar []byte, asset *types.Asset) *CreateProtocolRequest {
+func NewCreateProtocolRequest(sender sdk.AccAddress, name string, bitcoinPubkey []byte, tag string, attributes *exported.ProtocolAttributes, custodianGroupUid string, avatar []byte, asset *types.Asset) *CreateProtocolRequest {
 	return &CreateProtocolRequest{
 		Sender:            sender,
 		Name:              name,
 		BitcoinPubkey:     bitcoinPubkey,
-		ScalarPubkey:      scalarPubkey,
 		Tag:               tag,
 		Attributes:        attributes,
 		CustodianGroupUid: custodianGroupUid,
@@ -41,10 +40,6 @@ func (m *CreateProtocolRequest) ValidateBasic() error {
 
 	if len(m.BitcoinPubkey) != 33 {
 		return fmt.Errorf("bitcoin pubkey must be 33 bytes")
-	}
-
-	if len(m.ScalarPubkey) != 33 {
-		return fmt.Errorf("scalar pubkey must be 33 bytes")
 	}
 
 	if len(m.Name) > 64 {

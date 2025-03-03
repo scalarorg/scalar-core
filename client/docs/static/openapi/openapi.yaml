@@ -8955,9 +8955,6 @@ paths:
                       bitcoin_pubkey:
                         type: string
                         format: byte
-                      scalar_pubkey:
-                        type: string
-                        format: byte
                       scalar_address:
                         type: string
                         format: byte
@@ -9217,9 +9214,6 @@ paths:
                       bitcoin_pubkey:
                         type: string
                         format: byte
-                      scalar_pubkey:
-                        type: string
-                        format: byte
                       scalar_address:
                         type: string
                         format: byte
@@ -9450,9 +9444,6 @@ paths:
                   type: string
                   format: byte
                 bitcoin_pubkey:
-                  type: string
-                  format: byte
-                scalar_pubkey:
                   type: string
                   format: byte
                 name:
@@ -9819,9 +9810,6 @@ paths:
                       bitcoin_pubkey:
                         type: string
                         format: byte
-                      scalar_pubkey:
-                        type: string
-                        format: byte
                       scalar_address:
                         type: string
                         format: byte
@@ -10075,9 +10063,6 @@ paths:
                     type: object
                     properties:
                       bitcoin_pubkey:
-                        type: string
-                        format: byte
-                      scalar_pubkey:
                         type: string
                         format: byte
                       scalar_address:
@@ -54051,9 +54036,6 @@ components:
             bitcoin_pubkey:
               type: string
               format: byte
-            scalar_pubkey:
-              type: string
-              format: byte
             scalar_address:
               type: string
               format: byte
@@ -54113,9 +54095,6 @@ components:
         bitcoin_pubkey:
           type: string
           format: byte
-        scalar_pubkey:
-          type: string
-          format: byte
         name:
           type: string
         tag:
@@ -54149,9 +54128,6 @@ components:
           type: object
           properties:
             bitcoin_pubkey:
-              type: string
-              format: byte
-            scalar_pubkey:
               type: string
               format: byte
             scalar_address:
@@ -54208,9 +54184,6 @@ components:
       type: object
       properties:
         bitcoin_pubkey:
-          type: string
-          format: byte
-        scalar_pubkey:
           type: string
           format: byte
         scalar_address:
@@ -54636,9 +54609,6 @@ components:
             bitcoin_pubkey:
               type: string
               format: byte
-            scalar_pubkey:
-              type: string
-              format: byte
             scalar_address:
               type: string
               format: byte
@@ -54715,9 +54685,6 @@ components:
           type: object
           properties:
             bitcoin_pubkey:
-              type: string
-              format: byte
-            scalar_pubkey:
               type: string
               format: byte
             scalar_address:

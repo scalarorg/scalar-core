@@ -94,7 +94,6 @@ func (q *Querier) Protocol(c context.Context, req *types.ProtocolRequest) (*type
 func mapProtocolToProtocolDetails(protocol *types.Protocol, custodianGr *covenanttypes.CustodianGroup) *types.ProtocolDetails {
 	return &types.ProtocolDetails{
 		BitcoinPubkey:     protocol.BitcoinPubkey,
-		ScalarPubkey:      protocol.ScalarPubkey,
 		ScalarAddress:     protocol.ScalarAddress,
 		Name:              protocol.Name,
 		Tag:               protocol.Tag,

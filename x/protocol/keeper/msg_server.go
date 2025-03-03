@@ -41,7 +41,6 @@ func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRe
 	protocol := types.Protocol{
 		BitcoinPubkey:     req.BitcoinPubkey,
 		ScalarAddress:     req.Sender.Bytes(),
-		ScalarPubkey:      req.ScalarPubkey,
 		Name:              req.Name,
 		Tag:               []byte(req.Tag), // ascii
 		Attributes:        req.Attributes,

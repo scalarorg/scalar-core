@@ -91,7 +91,7 @@ $ scalard tx protocol add '{"attribute":{"model":0},"avatar":"base64_encoded_ava
 				return fmt.Errorf("invalid avatar base64: %w", err)
 			}
 
-			msg := types.NewCreateProtocolRequest(address, createProtocolArgs.Name, bitcoinPubkey, scalarPubkeyBytes, createProtocolArgs.Tag, createProtocolArgs.Attribute, createProtocolArgs.CustodianGroupUid, avatar, &chainTypes.Asset{
+			msg := types.NewCreateProtocolRequest(address, createProtocolArgs.Name, bitcoinPubkey, createProtocolArgs.Tag, createProtocolArgs.Attribute, createProtocolArgs.CustodianGroupUid, avatar, &chainTypes.Asset{
 				Chain: nexus.ChainName(createProtocolArgs.Asset.ChainName),
 				Name:  createProtocolArgs.Asset.AssetName,
 			})

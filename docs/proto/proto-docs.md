@@ -7000,7 +7000,6 @@ Query defines the gRPC querier service.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `bitcoin_pubkey` | [bytes](#bytes) |  | BTC's pubkey |
-| `scalar_pubkey` | [bytes](#bytes) |  | Scalar's pubkey |
 | `scalar_address` | [bytes](#bytes) |  | Scalar's address |
 | `name` | [string](#string) |  |  |
 | `tag` | [bytes](#bytes) |  |  |
@@ -7239,7 +7238,6 @@ Params represent the genesis parameters for the module
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  | address |
 | `bitcoin_pubkey` | [bytes](#bytes) |  | BTC's pubkey |
-| `scalar_pubkey` | [bytes](#bytes) |  | Scalar's pubkey |
 | `name` | [string](#string) |  | e.g., "protocol-1" |
 | `tag` | [string](#string) |  | e.g., "pools" |
 | `attributes` | [scalar.protocol.exported.v1beta1.ProtocolAttributes](#scalar.protocol.exported.v1beta1.ProtocolAttributes) |  |  |
