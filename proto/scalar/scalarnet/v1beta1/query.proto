@@ -4,8 +4,6 @@ package scalar.scalarnet.v1beta1;
 option go_package = "github.com/scalarorg/scalar-core/x/scalarnet/types";
 
 import "gogoproto/gogo.proto";
-import "scalar/scalarnet/v1beta1/types.proto";
-import "cosmos/base/query/v1beta1/pagination.proto";
 import "scalar/scalarnet/v1beta1/params.proto";
 
 option (gogoproto.goproto_getters_all) = false;
