@@ -116,11 +116,11 @@ func GetCmdSetGateway() *cobra.Command {
 	return cmd
 }
 
-// GetCmdLink links a cross chain address to an EVM chain address created by Axelar
+// GetCmdLink links a cross chain address to an EVM chain address created by Scalar
 func GetCmdLink() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "link [chain] [recipient chain] [recipient address] [asset name]",
-		Short: "Link a cross chain address to an EVM chain address created by Axelar",
+		Short: "Link a cross chain address to an EVM chain address created by Scalar",
 		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cliCtx, err := client.GetClientTxContext(cmd)
@@ -236,7 +236,7 @@ func GetCmdCreatePendingTransfers() *cobra.Command {
 func GetCmdCreateDeployToken() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-deploy-token [evm chain] [origin chain] [origin asset] [token name] [symbol] [decimals] [capacity] [mintLimit]",
-		Short: "Create a deploy token command with the AxelarGateway contract",
+		Short: "Create a deploy token command with the ScalarGateway contract",
 		Args:  cobra.ExactArgs(8),
 	}
 	address := cmd.Flags().String(flagAddress, types.ZeroAddress.Hex(), "existing ERC20 token's address")
