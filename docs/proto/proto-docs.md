@@ -40,7 +40,6 @@
     - [Proof](#scalar.chains.v1beta1.Proof)
     - [SigMetadata](#scalar.chains.v1beta1.SigMetadata)
     - [SourceTx](#scalar.chains.v1beta1.SourceTx)
-    - [TokenDetails](#scalar.chains.v1beta1.TokenDetails)
     - [TransferKey](#scalar.chains.v1beta1.TransferKey)
   
     - [BatchedCommandsStatus](#scalar.chains.v1beta1.BatchedCommandsStatus)
@@ -72,6 +71,21 @@
     - [PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants)
   
     - [PollState](#scalar.vote.exported.v1beta1.PollState)
+  
+- [scalar/nexus/exported/v1beta1/types.proto](#scalar/nexus/exported/v1beta1/types.proto)
+    - [Asset](#scalar.nexus.exported.v1beta1.Asset)
+    - [Chain](#scalar.nexus.exported.v1beta1.Chain)
+    - [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress)
+    - [CrossChainTransfer](#scalar.nexus.exported.v1beta1.CrossChainTransfer)
+    - [FeeInfo](#scalar.nexus.exported.v1beta1.FeeInfo)
+    - [GeneralMessage](#scalar.nexus.exported.v1beta1.GeneralMessage)
+    - [TokenDetails](#scalar.nexus.exported.v1beta1.TokenDetails)
+    - [TransferFee](#scalar.nexus.exported.v1beta1.TransferFee)
+    - [WasmMessage](#scalar.nexus.exported.v1beta1.WasmMessage)
+  
+    - [GeneralMessage.Status](#scalar.nexus.exported.v1beta1.GeneralMessage.Status)
+    - [TransferDirection](#scalar.nexus.exported.v1beta1.TransferDirection)
+    - [TransferState](#scalar.nexus.exported.v1beta1.TransferState)
   
 - [scalar/chains/v1beta1/events.proto](#scalar/chains/v1beta1/events.proto)
     - [BurnCommand](#scalar.chains.v1beta1.BurnCommand)
@@ -328,20 +342,6 @@
 - [scalar/multisig/v1beta1/service.proto](#scalar/multisig/v1beta1/service.proto)
     - [MsgService](#scalar.multisig.v1beta1.MsgService)
     - [QueryService](#scalar.multisig.v1beta1.QueryService)
-  
-- [scalar/nexus/exported/v1beta1/types.proto](#scalar/nexus/exported/v1beta1/types.proto)
-    - [Asset](#scalar.nexus.exported.v1beta1.Asset)
-    - [Chain](#scalar.nexus.exported.v1beta1.Chain)
-    - [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress)
-    - [CrossChainTransfer](#scalar.nexus.exported.v1beta1.CrossChainTransfer)
-    - [FeeInfo](#scalar.nexus.exported.v1beta1.FeeInfo)
-    - [GeneralMessage](#scalar.nexus.exported.v1beta1.GeneralMessage)
-    - [TransferFee](#scalar.nexus.exported.v1beta1.TransferFee)
-    - [WasmMessage](#scalar.nexus.exported.v1beta1.WasmMessage)
-  
-    - [GeneralMessage.Status](#scalar.nexus.exported.v1beta1.GeneralMessage.Status)
-    - [TransferDirection](#scalar.nexus.exported.v1beta1.TransferDirection)
-    - [TransferState](#scalar.nexus.exported.v1beta1.TransferState)
   
 - [scalar/nexus/v1beta1/events.proto](#scalar/nexus/v1beta1/events.proto)
     - [FeeDeducted](#scalar.nexus.v1beta1.FeeDeducted)
@@ -942,7 +942,7 @@ Msg defines the nexus Msg service.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
-| `name` | [string](#string) |  |  |
+| `symbol` | [string](#string) |  |  |
 
 
 
@@ -1160,24 +1160,6 @@ results to chains relay transaction types
 | `destination_chain` | [string](#string) |  |  |
 | `destination_recipient_address` | [bytes](#bytes) |  |  |
 | `log_index` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.TokenDetails"></a>
-
-### TokenDetails
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `token_name` | [string](#string) |  |  |
-| `symbol` | [string](#string) |  |  |
-| `decimals` | [uint32](#uint32) |  |  |
-| `capacity` | [bytes](#bytes) |  |  |
 
 
 
@@ -1580,6 +1562,233 @@ PollParticipants should be embedded in poll events in other modules
 
 
 
+<a name="scalar/nexus/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/nexus/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.nexus.exported.v1beta1.Asset"></a>
+
+### Asset
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom` | [string](#string) |  |  |
+| `is_native_asset` | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.Chain"></a>
+
+### Chain
+Chain represents the properties of a registered blockchain
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `name` | [string](#string) |  | The descriptor of the chain, e.g. "evm|11155111" |
+| `supports_foreign_assets` | [bool](#bool) |  |  |
+| `key_type` | [scalar.tss.exported.v1beta1.KeyType](#scalar.tss.exported.v1beta1.KeyType) |  |  |
+| `module` | [string](#string) |  | the module has two types: chains and scalarnet |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.CrossChainAddress"></a>
+
+### CrossChainAddress
+CrossChainAddress represents a generalized address on any registered chain
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [Chain](#scalar.nexus.exported.v1beta1.Chain) |  |  |
+| `address` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.CrossChainTransfer"></a>
+
+### CrossChainTransfer
+CrossChainTransfer represents a generalized transfer of some asset to a
+registered blockchain
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `recipient` | [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress) |  |  |
+| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `id` | [uint64](#uint64) |  |  |
+| `state` | [TransferState](#scalar.nexus.exported.v1beta1.TransferState) |  |  |
+| `source_tx_hash` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.FeeInfo"></a>
+
+### FeeInfo
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `asset` | [string](#string) |  |  |
+| `fee_rate` | [bytes](#bytes) |  |  |
+| `min_fee` | [bytes](#bytes) |  |  |
+| `max_fee` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.GeneralMessage"></a>
+
+### GeneralMessage
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `sender` | [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress) |  |  |
+| `recipient` | [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `status` | [GeneralMessage.Status](#scalar.nexus.exported.v1beta1.GeneralMessage.Status) |  |  |
+| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `source_tx_id` | [bytes](#bytes) |  |  |
+| `source_tx_index` | [uint64](#uint64) |  |  |
+| `payload` | [bytes](#bytes) |  | Additional data for the message, metadata is encoded in the payload, it can be fee information, etc. It will be used later when enqueuing the command and batch command. Currently, the main purpose is use to form the psbt for btc |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.TokenDetails"></a>
+
+### TokenDetails
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `token_name` | [string](#string) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `decimals` | [uint32](#uint32) |  |  |
+| `capacity` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.TransferFee"></a>
+
+### TransferFee
+TransferFee represents accumulated fees generated by the network
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `coins` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.nexus.exported.v1beta1.WasmMessage"></a>
+
+### WasmMessage
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `source_chain` | [string](#string) |  |  |
+| `source_address` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `destination_address` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `source_tx_id` | [bytes](#bytes) |  |  |
+| `source_tx_index` | [uint64](#uint64) |  |  |
+| `sender` | [bytes](#bytes) |  |  |
+| `id` | [string](#string) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.nexus.exported.v1beta1.GeneralMessage.Status"></a>
+
+### GeneralMessage.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNSPECIFIED | 0 |  |
+| STATUS_APPROVED | 1 |  |
+| STATUS_PROCESSING | 2 |  |
+| STATUS_EXECUTED | 3 |  |
+| STATUS_FAILED | 4 |  |
+
+
+
+<a name="scalar.nexus.exported.v1beta1.TransferDirection"></a>
+
+### TransferDirection
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TRANSFER_DIRECTION_UNSPECIFIED | 0 |  |
+| TRANSFER_DIRECTION_FROM | 1 |  |
+| TRANSFER_DIRECTION_TO | 2 |  |
+
+
+
+<a name="scalar.nexus.exported.v1beta1.TransferState"></a>
+
+### TransferState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TRANSFER_STATE_UNSPECIFIED | 0 |  |
+| TRANSFER_STATE_PENDING | 1 |  |
+| TRANSFER_STATE_ARCHIVED | 2 |  |
+| TRANSFER_STATE_INSUFFICIENT_AMOUNT | 3 |  |
+| TRANSFER_STATE_FAILED | 4 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/chains/v1beta1/events.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -1773,7 +1982,7 @@ PollParticipants should be embedded in poll events in other modules
 | `chain` | [string](#string) |  |  |
 | `gateway_address` | [bytes](#bytes) |  |  |
 | `token_address` | [bytes](#bytes) |  |  |
-| `token_details` | [TokenDetails](#scalar.chains.v1beta1.TokenDetails) |  |  |
+| `token_details` | [scalar.nexus.exported.v1beta1.TokenDetails](#scalar.nexus.exported.v1beta1.TokenDetails) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
 | `participants` | [scalar.vote.exported.v1beta1.PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants) |  |  |
 
@@ -2208,7 +2417,7 @@ ERC20Deposit contains information for an ERC20 deposit
 | ----- | ---- | ----- | ----------- |
 | `asset` | [string](#string) |  |  |
 | `chain_id` | [bytes](#bytes) |  |  |
-| `details` | [TokenDetails](#scalar.chains.v1beta1.TokenDetails) |  |  |
+| `details` | [scalar.nexus.exported.v1beta1.TokenDetails](#scalar.nexus.exported.v1beta1.TokenDetails) |  |  |
 | `token_address` | [string](#string) |  |  |
 | `tx_hash` | [string](#string) |  |  |
 | `status` | [Status](#scalar.chains.v1beta1.Status) |  |  |
@@ -2923,7 +3132,7 @@ ParamsRequest represents a message that queries the params
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `asset` | [string](#string) |  |  |
-| `details` | [TokenDetails](#scalar.chains.v1beta1.TokenDetails) |  |  |
+| `details` | [scalar.nexus.exported.v1beta1.TokenDetails](#scalar.nexus.exported.v1beta1.TokenDetails) |  |  |
 | `address` | [string](#string) |  |  |
 | `confirmed` | [bool](#bool) |  |  |
 | `is_external` | [bool](#bool) |  |  |
@@ -3152,10 +3361,9 @@ command for scalarGateway
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `asset` | [Asset](#scalar.chains.v1beta1.Asset) |  |  |
-| `token_details` | [TokenDetails](#scalar.chains.v1beta1.TokenDetails) |  |  |
+| `token_symbol` | [string](#string) |  |  |
+| `aliased_token_name` | [string](#string) |  |  |
 | `address` | [bytes](#bytes) |  |  |
-| `daily_mint_limit` | [string](#string) |  |  |
 
 
 
@@ -5303,215 +5511,6 @@ Query defines the gRPC querier service.
 
 
 
-<a name="scalar/nexus/exported/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/nexus/exported/v1beta1/types.proto
-
-
-
-<a name="scalar.nexus.exported.v1beta1.Asset"></a>
-
-### Asset
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `denom` | [string](#string) |  |  |
-| `is_native_asset` | [bool](#bool) |  |  |
-
-
-
-
-
-
-<a name="scalar.nexus.exported.v1beta1.Chain"></a>
-
-### Chain
-Chain represents the properties of a registered blockchain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  | The descriptor of the chain, e.g. "evm|11155111" |
-| `supports_foreign_assets` | [bool](#bool) |  |  |
-| `key_type` | [scalar.tss.exported.v1beta1.KeyType](#scalar.tss.exported.v1beta1.KeyType) |  |  |
-| `module` | [string](#string) |  | the module has two types: chains and scalarnet |
-
-
-
-
-
-
-<a name="scalar.nexus.exported.v1beta1.CrossChainAddress"></a>
-
-### CrossChainAddress
-CrossChainAddress represents a generalized address on any registered chain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [Chain](#scalar.nexus.exported.v1beta1.Chain) |  |  |
-| `address` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.nexus.exported.v1beta1.CrossChainTransfer"></a>
-
-### CrossChainTransfer
-CrossChainTransfer represents a generalized transfer of some asset to a
-registered blockchain
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `recipient` | [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress) |  |  |
-| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `id` | [uint64](#uint64) |  |  |
-| `state` | [TransferState](#scalar.nexus.exported.v1beta1.TransferState) |  |  |
-| `source_tx_hash` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.nexus.exported.v1beta1.FeeInfo"></a>
-
-### FeeInfo
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `asset` | [string](#string) |  |  |
-| `fee_rate` | [bytes](#bytes) |  |  |
-| `min_fee` | [bytes](#bytes) |  |  |
-| `max_fee` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.nexus.exported.v1beta1.GeneralMessage"></a>
-
-### GeneralMessage
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `id` | [string](#string) |  |  |
-| `sender` | [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress) |  |  |
-| `recipient` | [CrossChainAddress](#scalar.nexus.exported.v1beta1.CrossChainAddress) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `status` | [GeneralMessage.Status](#scalar.nexus.exported.v1beta1.GeneralMessage.Status) |  |  |
-| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `source_tx_id` | [bytes](#bytes) |  |  |
-| `source_tx_index` | [uint64](#uint64) |  |  |
-| `payload` | [bytes](#bytes) |  | Additional data for the message, metadata is encoded in the payload, it can be fee information, etc. It will be used later when enqueuing the command and batch command. Currently, the main purpose is use to form the psbt for btc |
-
-
-
-
-
-
-<a name="scalar.nexus.exported.v1beta1.TransferFee"></a>
-
-### TransferFee
-TransferFee represents accumulated fees generated by the network
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `coins` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.nexus.exported.v1beta1.WasmMessage"></a>
-
-### WasmMessage
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `source_chain` | [string](#string) |  |  |
-| `source_address` | [string](#string) |  |  |
-| `destination_chain` | [string](#string) |  |  |
-| `destination_address` | [string](#string) |  |  |
-| `payload_hash` | [bytes](#bytes) |  |  |
-| `source_tx_id` | [bytes](#bytes) |  |  |
-| `source_tx_index` | [uint64](#uint64) |  |  |
-| `sender` | [bytes](#bytes) |  |  |
-| `id` | [string](#string) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
-
-<a name="scalar.nexus.exported.v1beta1.GeneralMessage.Status"></a>
-
-### GeneralMessage.Status
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| STATUS_UNSPECIFIED | 0 |  |
-| STATUS_APPROVED | 1 |  |
-| STATUS_PROCESSING | 2 |  |
-| STATUS_EXECUTED | 3 |  |
-| STATUS_FAILED | 4 |  |
-
-
-
-<a name="scalar.nexus.exported.v1beta1.TransferDirection"></a>
-
-### TransferDirection
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| TRANSFER_DIRECTION_UNSPECIFIED | 0 |  |
-| TRANSFER_DIRECTION_FROM | 1 |  |
-| TRANSFER_DIRECTION_TO | 2 |  |
-
-
-
-<a name="scalar.nexus.exported.v1beta1.TransferState"></a>
-
-### TransferState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| TRANSFER_STATE_UNSPECIFIED | 0 |  |
-| TRANSFER_STATE_PENDING | 1 |  |
-| TRANSFER_STATE_ARCHIVED | 2 |  |
-| TRANSFER_STATE_INSUFFICIENT_AMOUNT | 3 |  |
-| TRANSFER_STATE_FAILED | 4 |  |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
 <a name="scalar/nexus/v1beta1/events.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -6925,6 +6924,8 @@ Query defines the gRPC querier service.
 | `symbol` | [string](#string) |  |  |
 | `origin_chain` | [string](#string) |  |  |
 | `minor_addresses` | [MinorAddress](#scalar.protocol.exported.v1beta1.MinorAddress) | repeated |  |
+| `token_daily_mint_limit` | [bytes](#bytes) |  |  |
+| `token_details` | [scalar.nexus.exported.v1beta1.TokenDetails](#scalar.nexus.exported.v1beta1.TokenDetails) |  |  |
 
 
 
@@ -7006,9 +7007,11 @@ Query defines the gRPC querier service.
 | `attributes` | [scalar.protocol.exported.v1beta1.ProtocolAttributes](#scalar.protocol.exported.v1beta1.ProtocolAttributes) |  |  |
 | `status` | [scalar.protocol.exported.v1beta1.Status](#scalar.protocol.exported.v1beta1.Status) |  |  |
 | `custodian_group_uid` | [string](#string) |  | scalar.covenant.v1beta1.CustodianGroup custodian_group = 8; |
-| `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
 | `chains` | [scalar.protocol.exported.v1beta1.SupportedChain](#scalar.protocol.exported.v1beta1.SupportedChain) | repeated | Other chains with internal asset |
 | `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
+| `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
+| `token_details` | [scalar.nexus.exported.v1beta1.TokenDetails](#scalar.nexus.exported.v1beta1.TokenDetails) |  |  |
+| `token_daily_mint_limit` | [bytes](#bytes) |  |  |
 
 
 
@@ -7030,10 +7033,12 @@ Query defines the gRPC querier service.
 | `attributes` | [scalar.protocol.exported.v1beta1.ProtocolAttributes](#scalar.protocol.exported.v1beta1.ProtocolAttributes) |  |  |
 | `status` | [scalar.protocol.exported.v1beta1.Status](#scalar.protocol.exported.v1beta1.Status) |  |  |
 | `custodian_group_uid` | [string](#string) |  |  |
-| `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
 | `chains` | [scalar.protocol.exported.v1beta1.SupportedChain](#scalar.protocol.exported.v1beta1.SupportedChain) | repeated | Other chains with internal asset |
 | `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
 | `custodian_group` | [scalar.covenant.v1beta1.CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
+| `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
+| `token_details` | [scalar.nexus.exported.v1beta1.TokenDetails](#scalar.nexus.exported.v1beta1.TokenDetails) |  |  |
+| `token_daily_mint_limit` | [bytes](#bytes) |  |  |
 
 
 
@@ -7242,8 +7247,12 @@ Params represent the genesis parameters for the module
 | `tag` | [string](#string) |  | e.g., "pools" |
 | `attributes` | [scalar.protocol.exported.v1beta1.ProtocolAttributes](#scalar.protocol.exported.v1beta1.ProtocolAttributes) |  |  |
 | `custodian_group_uid` | [string](#string) |  |  |
-| `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
 | `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
+| `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
+| `token_name` | [string](#string) |  |  |
+| `token_decimals` | [uint32](#uint32) |  |  |
+| `token_capacity` | [string](#string) |  |  |
+| `token_daily_mint_limit` | [string](#string) |  |  |
 
 
 

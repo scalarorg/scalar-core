@@ -49,11 +49,13 @@ func (p *Protocol) ToProtocolInfo() *exported.ProtocolInfo {
 
 	return &exported.ProtocolInfo{
 		// KeyID:            multisig.KeyID(keyID),
-		CustodiansGroupUID: p.CustodianGroupUID,
-		LiquidityModel:     p.Attributes.Model,
-		OriginChain:        p.Asset.Chain,
-		Symbol:             p.Asset.Name,
-		MinorAddresses:     minorAddreses,
+		CustodiansGroupUID:  p.CustodianGroupUID,
+		LiquidityModel:      p.Attributes.Model,
+		OriginChain:         p.Asset.Chain,
+		Symbol:              p.Asset.Symbol,
+		MinorAddresses:      minorAddreses,
+		TokenDailyMintLimit: p.TokenDailyMintLimit,
+		TokenDetails:        p.TokenDetails,
 	}
 }
 

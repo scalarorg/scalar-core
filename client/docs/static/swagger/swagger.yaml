@@ -5398,7 +5398,7 @@ paths:
                 properties:
                   chain:
                     type: string
-                  name:
+                  symbol:
                     type: string
             title: MsgConfirmToken represents a token deploy confirmation message
       tags:
@@ -6048,31 +6048,13 @@ paths:
                 format: byte
               chain:
                 type: string
-              asset:
-                type: object
-                properties:
-                  chain:
-                    type: string
-                  name:
-                    type: string
-              token_details:
-                type: object
-                properties:
-                  token_name:
-                    type: string
-                  symbol:
-                    type: string
-                  decimals:
-                    type: integer
-                    format: int64
-                  capacity:
-                    type: string
-                    format: byte
+              token_symbol:
+                type: string
+              aliased_token_name:
+                type: string
               address:
                 type: string
                 format: byte
-              daily_mint_limit:
-                type: string
             title: >-
               CreateDeployTokenRequest represents the message to create a deploy
               token
@@ -9467,13 +9449,6 @@ paths:
                       default: STATUS_UNSPECIFIED
                     custodian_group_uid:
                       type: string
-                    asset:
-                      type: object
-                      properties:
-                        chain:
-                          type: string
-                        name:
-                          type: string
                     chains:
                       type: array
                       items:
@@ -9551,6 +9526,29 @@ paths:
                         change by list of
 
                         custodians
+                    asset:
+                      type: object
+                      properties:
+                        chain:
+                          type: string
+                        symbol:
+                          type: string
+                    token_details:
+                      type: object
+                      properties:
+                        token_name:
+                          type: string
+                        symbol:
+                          type: string
+                        decimals:
+                          type: integer
+                          format: int64
+                        capacity:
+                          type: string
+                          format: byte
+                    token_daily_mint_limit:
+                      type: string
+                      format: byte
               total:
                 type: string
                 format: uint64
@@ -9818,13 +9816,6 @@ paths:
                     title: >-
                       scalar.covenant.v1beta1.CustodianGroup custodian_group =
                       8;
-                  asset:
-                    type: object
-                    properties:
-                      chain:
-                        type: string
-                      name:
-                        type: string
                   chains:
                     type: array
                     items:
@@ -9837,6 +9828,29 @@ paths:
                         address:
                           type: string
                   avatar:
+                    type: string
+                    format: byte
+                  asset:
+                    type: object
+                    properties:
+                      chain:
+                        type: string
+                      symbol:
+                        type: string
+                  token_details:
+                    type: object
+                    properties:
+                      token_name:
+                        type: string
+                      symbol:
+                        type: string
+                      decimals:
+                        type: integer
+                        format: int64
+                      capacity:
+                        type: string
+                        format: byte
+                  token_daily_mint_limit:
                     type: string
                     format: byte
         default:
@@ -10099,13 +10113,6 @@ paths:
                     title: >-
                       scalar.covenant.v1beta1.CustodianGroup custodian_group =
                       8;
-                  asset:
-                    type: object
-                    properties:
-                      chain:
-                        type: string
-                      name:
-                        type: string
                   chains:
                     type: array
                     items:
@@ -10118,6 +10125,29 @@ paths:
                         address:
                           type: string
                   avatar:
+                    type: string
+                    format: byte
+                  asset:
+                    type: object
+                    properties:
+                      chain:
+                        type: string
+                      symbol:
+                        type: string
+                  token_details:
+                    type: object
+                    properties:
+                      token_name:
+                        type: string
+                      symbol:
+                        type: string
+                      decimals:
+                        type: integer
+                        format: int64
+                      capacity:
+                        type: string
+                        format: byte
+                  token_daily_mint_limit:
                     type: string
                     format: byte
         default:
@@ -10341,16 +10371,25 @@ paths:
                     default: LIQUIDITY_MODEL_UNSPECIFIED
               custodian_group_uid:
                 type: string
+              avatar:
+                type: string
+                format: byte
               asset:
                 type: object
                 properties:
                   chain:
                     type: string
-                  name:
+                  symbol:
                     type: string
-              avatar:
+              token_name:
                 type: string
-                format: byte
+              token_decimals:
+                type: integer
+                format: int64
+              token_capacity:
+                type: string
+              token_daily_mint_limit:
+                type: string
       tags:
         - Msg
   /scalar/protocol/v1beta1/protocol:
@@ -10396,13 +10435,6 @@ paths:
                     default: STATUS_UNSPECIFIED
                   custodian_group_uid:
                     type: string
-                  asset:
-                    type: object
-                    properties:
-                      chain:
-                        type: string
-                      name:
-                        type: string
                   chains:
                     type: array
                     items:
@@ -10480,6 +10512,29 @@ paths:
                       by list of
 
                       custodians
+                  asset:
+                    type: object
+                    properties:
+                      chain:
+                        type: string
+                      symbol:
+                        type: string
+                  token_details:
+                    type: object
+                    properties:
+                      token_name:
+                        type: string
+                      symbol:
+                        type: string
+                      decimals:
+                        type: integer
+                        format: int64
+                      capacity:
+                        type: string
+                        format: byte
+                  token_daily_mint_limit:
+                    type: string
+                    format: byte
         default:
           description: An unexpected error response
           schema:
@@ -10742,13 +10797,6 @@ paths:
                     title: >-
                       scalar.covenant.v1beta1.CustodianGroup custodian_group =
                       8;
-                  asset:
-                    type: object
-                    properties:
-                      chain:
-                        type: string
-                      name:
-                        type: string
                   chains:
                     type: array
                     items:
@@ -10761,6 +10809,29 @@ paths:
                         address:
                           type: string
                   avatar:
+                    type: string
+                    format: byte
+                  asset:
+                    type: object
+                    properties:
+                      chain:
+                        type: string
+                      symbol:
+                        type: string
+                  token_details:
+                    type: object
+                    properties:
+                      token_name:
+                        type: string
+                      symbol:
+                        type: string
+                      decimals:
+                        type: integer
+                        format: int64
+                      capacity:
+                        type: string
+                        format: byte
+                  token_daily_mint_limit:
                     type: string
                     format: byte
         default:
@@ -11019,13 +11090,6 @@ paths:
                     title: >-
                       scalar.covenant.v1beta1.CustodianGroup custodian_group =
                       8;
-                  asset:
-                    type: object
-                    properties:
-                      chain:
-                        type: string
-                      name:
-                        type: string
                   chains:
                     type: array
                     items:
@@ -11038,6 +11102,29 @@ paths:
                         address:
                           type: string
                   avatar:
+                    type: string
+                    format: byte
+                  asset:
+                    type: object
+                    properties:
+                      chain:
+                        type: string
+                      symbol:
+                        type: string
+                  token_details:
+                    type: object
+                    properties:
+                      token_name:
+                        type: string
+                      symbol:
+                        type: string
+                      decimals:
+                        type: integer
+                        format: int64
+                      capacity:
+                        type: string
+                        format: byte
+                  token_daily_mint_limit:
                     type: string
                     format: byte
         default:
@@ -18025,9 +18112,14 @@ paths:
                     format: byte
                     title: >-
                       Additional data for the message, metadata is encoded in
-                      the payload, it can be fee information, etc. It will be
-                      used later when enqueuing the command and batch command.
-                      Currently, the main purpose is use to form the psbt for
+                      the payload, it can
+
+                      be fee information, etc. It will be used later when
+                      enqueuing the command
+
+                      and batch command. Currently, the main purpose is use to
+                      form the psbt for
+
                       btc
         default:
           description: An unexpected error response
@@ -57278,7 +57370,7 @@ definitions:
     properties:
       chain:
         type: string
-      name:
+      symbol:
         type: string
   scalar.chains.v1beta1.BatchedCommandsResponse:
     type: object
@@ -57457,7 +57549,7 @@ definitions:
         properties:
           chain:
             type: string
-          name:
+          symbol:
             type: string
     title: MsgConfirmToken represents a token deploy confirmation message
   scalar.chains.v1beta1.ConfirmTokenResponse:
@@ -57502,31 +57594,13 @@ definitions:
         format: byte
       chain:
         type: string
-      asset:
-        type: object
-        properties:
-          chain:
-            type: string
-          name:
-            type: string
-      token_details:
-        type: object
-        properties:
-          token_name:
-            type: string
-          symbol:
-            type: string
-          decimals:
-            type: integer
-            format: int64
-          capacity:
-            type: string
-            format: byte
+      token_symbol:
+        type: string
+      aliased_token_name:
+        type: string
       address:
         type: string
         format: byte
-      daily_mint_limit:
-        type: string
     title: |-
       CreateDeployTokenRequest represents the message to create a deploy token
       command for scalarGateway
@@ -58391,19 +58465,6 @@ definitions:
         type: string
       destination_recipient_address:
         type: string
-  scalar.chains.v1beta1.TokenDetails:
-    type: object
-    properties:
-      token_name:
-        type: string
-      symbol:
-        type: string
-      decimals:
-        type: integer
-        format: int64
-      capacity:
-        type: string
-        format: byte
   scalar.chains.v1beta1.TokenInfoResponse:
     type: object
     properties:
@@ -58439,6 +58500,19 @@ definitions:
       - TOKEN_TYPE_INTERNAL
       - TOKEN_TYPE_EXTERNAL
     default: TOKEN_TYPE_UNSPECIFIED
+  scalar.nexus.exported.v1beta1.TokenDetails:
+    type: object
+    properties:
+      token_name:
+        type: string
+      symbol:
+        type: string
+      decimals:
+        type: integer
+        format: int64
+      capacity:
+        type: string
+        format: byte
   scalar.utils.v1beta1.Threshold:
     type: object
     properties:
@@ -58622,13 +58696,6 @@ definitions:
           custodian_group_uid:
             type: string
             title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
-          asset:
-            type: object
-            properties:
-              chain:
-                type: string
-              name:
-                type: string
           chains:
             type: array
             items:
@@ -58641,6 +58708,29 @@ definitions:
                 address:
                   type: string
           avatar:
+            type: string
+            format: byte
+          asset:
+            type: object
+            properties:
+              chain:
+                type: string
+              symbol:
+                type: string
+          token_details:
+            type: object
+            properties:
+              token_name:
+                type: string
+              symbol:
+                type: string
+              decimals:
+                type: integer
+                format: int64
+              capacity:
+                type: string
+                format: byte
+          token_daily_mint_limit:
             type: string
             format: byte
   scalar.protocol.v1beta1.CreateProtocolRequest:
@@ -58668,16 +58758,25 @@ definitions:
             default: LIQUIDITY_MODEL_UNSPECIFIED
       custodian_group_uid:
         type: string
+      avatar:
+        type: string
+        format: byte
       asset:
         type: object
         properties:
           chain:
             type: string
-          name:
+          symbol:
             type: string
-      avatar:
+      token_name:
         type: string
-        format: byte
+      token_decimals:
+        type: integer
+        format: int64
+      token_capacity:
+        type: string
+      token_daily_mint_limit:
+        type: string
   scalar.protocol.v1beta1.CreateProtocolResponse:
     type: object
     properties:
@@ -58716,13 +58815,6 @@ definitions:
           custodian_group_uid:
             type: string
             title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
-          asset:
-            type: object
-            properties:
-              chain:
-                type: string
-              name:
-                type: string
           chains:
             type: array
             items:
@@ -58735,6 +58827,29 @@ definitions:
                 address:
                   type: string
           avatar:
+            type: string
+            format: byte
+          asset:
+            type: object
+            properties:
+              chain:
+                type: string
+              symbol:
+                type: string
+          token_details:
+            type: object
+            properties:
+              token_name:
+                type: string
+              symbol:
+                type: string
+              decimals:
+                type: integer
+                format: int64
+              capacity:
+                type: string
+                format: byte
+          token_daily_mint_limit:
             type: string
             format: byte
   scalar.protocol.v1beta1.Protocol:
@@ -58772,13 +58887,6 @@ definitions:
       custodian_group_uid:
         type: string
         title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
-      asset:
-        type: object
-        properties:
-          chain:
-            type: string
-          name:
-            type: string
       chains:
         type: array
         items:
@@ -58791,6 +58899,29 @@ definitions:
             address:
               type: string
       avatar:
+        type: string
+        format: byte
+      asset:
+        type: object
+        properties:
+          chain:
+            type: string
+          symbol:
+            type: string
+      token_details:
+        type: object
+        properties:
+          token_name:
+            type: string
+          symbol:
+            type: string
+          decimals:
+            type: integer
+            format: int64
+          capacity:
+            type: string
+            format: byte
+      token_daily_mint_limit:
         type: string
         format: byte
   scalar.protocol.v1beta1.ProtocolDetails:
@@ -58827,13 +58958,6 @@ definitions:
         default: STATUS_UNSPECIFIED
       custodian_group_uid:
         type: string
-      asset:
-        type: object
-        properties:
-          chain:
-            type: string
-          name:
-            type: string
       chains:
         type: array
         items:
@@ -58905,6 +59029,29 @@ definitions:
           uid is used as identity of the group, btc_pubkey is change by list of
 
           custodians
+      asset:
+        type: object
+        properties:
+          chain:
+            type: string
+          symbol:
+            type: string
+      token_details:
+        type: object
+        properties:
+          token_name:
+            type: string
+          symbol:
+            type: string
+          decimals:
+            type: integer
+            format: int64
+          capacity:
+            type: string
+            format: byte
+      token_daily_mint_limit:
+        type: string
+        format: byte
   scalar.protocol.v1beta1.ProtocolResponse:
     type: object
     properties:
@@ -58942,13 +59089,6 @@ definitions:
             default: STATUS_UNSPECIFIED
           custodian_group_uid:
             type: string
-          asset:
-            type: object
-            properties:
-              chain:
-                type: string
-              name:
-                type: string
           chains:
             type: array
             items:
@@ -59022,6 +59162,29 @@ definitions:
               of
 
               custodians
+          asset:
+            type: object
+            properties:
+              chain:
+                type: string
+              symbol:
+                type: string
+          token_details:
+            type: object
+            properties:
+              token_name:
+                type: string
+              symbol:
+                type: string
+              decimals:
+                type: integer
+                format: int64
+              capacity:
+                type: string
+                format: byte
+          token_daily_mint_limit:
+            type: string
+            format: byte
   scalar.protocol.v1beta1.ProtocolsResponse:
     type: object
     properties:
@@ -59061,13 +59224,6 @@ definitions:
               default: STATUS_UNSPECIFIED
             custodian_group_uid:
               type: string
-            asset:
-              type: object
-              properties:
-                chain:
-                  type: string
-                name:
-                  type: string
             chains:
               type: array
               items:
@@ -59141,6 +59297,29 @@ definitions:
                 list of
 
                 custodians
+            asset:
+              type: object
+              properties:
+                chain:
+                  type: string
+                symbol:
+                  type: string
+            token_details:
+              type: object
+              properties:
+                token_name:
+                  type: string
+                symbol:
+                  type: string
+                decimals:
+                  type: integer
+                  format: int64
+                capacity:
+                  type: string
+                  format: byte
+            token_daily_mint_limit:
+              type: string
+              format: byte
       total:
         type: string
         format: uint64
@@ -59193,13 +59372,6 @@ definitions:
           custodian_group_uid:
             type: string
             title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
-          asset:
-            type: object
-            properties:
-              chain:
-                type: string
-              name:
-                type: string
           chains:
             type: array
             items:
@@ -59212,6 +59384,29 @@ definitions:
                 address:
                   type: string
           avatar:
+            type: string
+            format: byte
+          asset:
+            type: object
+            properties:
+              chain:
+                type: string
+              symbol:
+                type: string
+          token_details:
+            type: object
+            properties:
+              token_name:
+                type: string
+              symbol:
+                type: string
+              decimals:
+                type: integer
+                format: int64
+              capacity:
+                type: string
+                format: byte
+          token_daily_mint_limit:
             type: string
             format: byte
   scalar.protocol.v1beta1.UpdateSupportedChainRequest:
@@ -59271,13 +59466,6 @@ definitions:
           custodian_group_uid:
             type: string
             title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
-          asset:
-            type: object
-            properties:
-              chain:
-                type: string
-              name:
-                type: string
           chains:
             type: array
             items:
@@ -59290,6 +59478,29 @@ definitions:
                 address:
                   type: string
           avatar:
+            type: string
+            format: byte
+          asset:
+            type: object
+            properties:
+              chain:
+                type: string
+              symbol:
+                type: string
+          token_details:
+            type: object
+            properties:
+              token_name:
+                type: string
+              symbol:
+                type: string
+              decimals:
+                type: integer
+                format: int64
+              capacity:
+                type: string
+                format: byte
+          token_daily_mint_limit:
             type: string
             format: byte
   scalar.covenant.exported.v1beta1.TapScriptSig:
@@ -60506,9 +60717,15 @@ definitions:
         format: byte
         title: >-
           Additional data for the message, metadata is encoded in the payload,
-          it can be fee information, etc. It will be used later when enqueuing
-          the command and batch command. Currently, the main purpose is use to
-          form the psbt for btc
+          it can
+
+          be fee information, etc. It will be used later when enqueuing the
+          command
+
+          and batch command. Currently, the main purpose is use to form the psbt
+          for
+
+          btc
   scalar.nexus.exported.v1beta1.GeneralMessage.Status:
     type: string
     enum:
@@ -60938,9 +61155,15 @@ definitions:
             format: byte
             title: >-
               Additional data for the message, metadata is encoded in the
-              payload, it can be fee information, etc. It will be used later
-              when enqueuing the command and batch command. Currently, the main
-              purpose is use to form the psbt for btc
+              payload, it can
+
+              be fee information, etc. It will be used later when enqueuing the
+              command
+
+              and batch command. Currently, the main purpose is use to form the
+              psbt for
+
+              btc
   scalar.nexus.v1beta1.Params:
     type: object
     properties:

@@ -29,7 +29,6 @@ message ProtocolRequest {
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string symbol = 3;
   string address = 4;
-
   bytes sender = 5;
 }
 

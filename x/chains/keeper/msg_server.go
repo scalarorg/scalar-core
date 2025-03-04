@@ -32,6 +32,7 @@ type msgServer struct {
 	staking     types.StakingKeeper
 	multisig    types.MultisigKeeper
 	covenant    types.CovenantKeeper
+	protocol    types.ProtocolKeeper
 }
 
 type MsgServerConstructArgs struct {
@@ -94,6 +95,7 @@ func NewMsgServerImpl(args MsgServerConstructArgs) types.MsgServiceServer {
 		staking:     args.Staking,
 		multisig:    args.Multisig,
 		covenant:    args.Covenant,
+		protocol:    args.Protocol,
 	}
 }
 
@@ -323,7 +325,7 @@ func (s msgServer) ConfirmToken(c context.Context, req *types.ConfirmTokenReques
 	if err != nil {
 		return nil, err
 	}
-	token := keeper.GetERC20TokenByAsset(ctx, req.Asset.Name)
+	token := keeper.GetERC20TokenByAsset(ctx, req.Asset.Symbol)
 
 	if err := token.RecordDeployment(req.TxID); err != nil {
 		return nil, err
@@ -454,30 +456,30 @@ func (s msgServer) CreateDeployToken(c context.Context, req *types.CreateDeployT
 		return nil, err
 	}
 
-	mintLimit, err := sdk.ParseUint(req.DailyMintLimit)
-	if err != nil {
-		return nil, err
-	}
-
 	keeper, err := s.ForChain(ctx, chain.Name)
 	if err != nil {
 		return nil, err
 	}
 
+	protocol, err := s.protocol.FindProtocolInfoByExternalSymbol(ctx, req.TokenSymbol)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find protocol info by symbol %s: %w", req.TokenSymbol, err)
+	}
+
 	switch req.Address.IsZeroAddress() {
 	case true:
-		originChain, found := s.nexus.GetChain(ctx, req.Asset.Chain)
+		originChain, found := s.nexus.GetChain(ctx, protocol.OriginChain)
 		if !found {
-			return nil, fmt.Errorf("%s is not a registered chain", req.Asset.Chain)
+			return nil, fmt.Errorf("%s is not a registered chain", protocol.OriginChain)
 		}
 
-		if !s.nexus.IsAssetRegistered(ctx, originChain, req.Asset.Name) {
-			return nil, fmt.Errorf("asset %s is not registered on the origin chain %s", req.Asset.Name, originChain.Name)
+		if !s.nexus.IsAssetRegistered(ctx, originChain, req.TokenSymbol) {
+			return nil, fmt.Errorf("asset %s is not registered on the origin chain %s", req.TokenSymbol, originChain.Name)
 		}
 	case false:
 		for _, c := range s.nexus.GetChains(ctx) {
-			if s.nexus.IsAssetRegistered(ctx, c, req.Asset.Name) {
-				return nil, fmt.Errorf("asset %s already registered on chain %s", req.Asset.Name, c.Name)
+			if s.nexus.IsAssetRegistered(ctx, c, req.TokenSymbol) {
+				return nil, fmt.Errorf("asset %s already registered on chain %s", req.TokenSymbol, c.Name)
 			}
 		}
 
@@ -493,12 +495,12 @@ func (s msgServer) CreateDeployToken(c context.Context, req *types.CreateDeployT
 		return nil, fmt.Errorf("current key not set for chain %s", chain.Name)
 	}
 
-	token, err := keeper.CreateERC20Token(ctx, req.Asset.Name, req.TokenDetails, req.Address)
+	token, err := keeper.CreateERC20Token(ctx, req.TokenSymbol, *protocol.TokenDetails, req.Address)
 	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "failed to initialize token %s(%s) for chain %s", req.TokenDetails.TokenName, req.TokenDetails.Symbol, chain.Name)
+		return nil, sdkerrors.Wrapf(err, "failed to initialize token %s(%s) for chain %s", protocol.TokenDetails.TokenName, protocol.TokenDetails.Symbol, chain.Name)
 	}
 
-	cmd, err := token.CreateDeployCommand(keyID, mintLimit)
+	cmd, err := token.CreateDeployCommand(keyID, protocol.TokenDailyMintLimit)
 	if err != nil {
 		return nil, err
 	}
@@ -507,10 +509,12 @@ func (s msgServer) CreateDeployToken(c context.Context, req *types.CreateDeployT
 		return nil, err
 	}
 
+	var mintLimit = protocol.TokenDailyMintLimit
+
 	if mintLimit.IsZero() {
 		mintLimit = utils.MaxUint
 	}
-	if err = s.nexus.RegisterAsset(ctx, chain, nexus.NewAsset(req.Asset.Name, false), mintLimit, types.DefaultRateLimitWindow); err != nil {
+	if err = s.nexus.RegisterAsset(ctx, chain, nexus.NewAsset(req.TokenSymbol, false), mintLimit, types.DefaultRateLimitWindow); err != nil {
 		return nil, err
 	}
 

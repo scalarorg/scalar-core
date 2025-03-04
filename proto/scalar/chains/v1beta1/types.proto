@@ -233,17 +233,7 @@ message Asset {
   string chain = 1
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  string name = 2;
-}
-
-message TokenDetails {
-  string token_name = 1;
   string symbol = 2;
-  uint32 decimals = 3 [ (gogoproto.casttype) = "uint8" ];
-  bytes capacity = 4 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
 }
 
 message Gateway {

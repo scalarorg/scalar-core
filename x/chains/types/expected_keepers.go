@@ -59,7 +59,7 @@ type ChainKeeper interface {
 	GetVotingThreshold(ctx sdk.Context) utils.Threshold
 	GetMinVoterCount(ctx sdk.Context) int64
 
-	CreateERC20Token(ctx sdk.Context, asset string, details TokenDetails, address Address) (ERC20Token, error)
+	CreateERC20Token(ctx sdk.Context, asset string, details nexus.TokenDetails, address Address) (ERC20Token, error)
 	GetERC20TokenByAsset(ctx sdk.Context, asset string) ERC20Token
 	GetERC20TokenBySymbol(ctx sdk.Context, symbol string) ERC20Token
 	GetERC20TokenByAddress(ctx sdk.Context, address Address) ERC20Token

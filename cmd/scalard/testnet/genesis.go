@@ -1,10 +1,12 @@
 package testnet
 
 import (
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"path"
+	"strconv"
 	"strings"
 	"time"
 
@@ -64,6 +66,17 @@ func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGro
 		} else {
 			panic(fmt.Sprintf("invalid liquidity model: %s", protocol.LiquidityModel))
 		}
+
+		mintLimit, err := strconv.ParseUint(tokenInfo.DailyMintLimit, 10, 64)
+		if err != nil {
+			panic(fmt.Sprintf("invalid daily mint limit: %s", tokenInfo.DailyMintLimit))
+		}
+
+		avatarBytes, err := base64.StdEncoding.DecodeString(tokenInfo.Avatar)
+		if err != nil {
+			panic(fmt.Sprintf("invalid avatar: %s", tokenInfo.Avatar))
+		}
+
 		protocols = append(protocols, &protocoltypes.Protocol{
 			BitcoinPubkey: protocol.BitcoinPubKey,
 			ScalarAddress: sdk.AccAddress(protocol.PubKey.Address()),
@@ -74,8 +87,16 @@ func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGro
 			Tag:               []byte(protocol.Tag),
 			Status:            pexported.Activated,
 			CustodianGroupUID: custodianGroupUID,
-			Asset:             &chainsTypes.Asset{Chain: nexus.ChainName(tokenInfo.ID), Name: tokenInfo.Asset},
+			Asset:             &chainsTypes.Asset{Chain: nexus.ChainName(tokenInfo.ID), Symbol: tokenInfo.Asset},
 			Chains:            supportedChains,
+			TokenDetails: &nexus.TokenDetails{
+				TokenName: tokenInfo.Name,
+				Symbol:    tokenInfo.Symbol,
+				Decimals:  tokenInfo.Decimals,
+				Capacity:  sdk.NewUint(uint64(tokenInfo.Capacity)),
+			},
+			TokenDailyMintLimit: sdk.NewUint(mintLimit),
+			Avatar:              avatarBytes,
 		})
 	}
 	return protocols
@@ -456,11 +477,11 @@ func createDefaultSbtc(configPath string) []chainsTypes.ERC20TokenMetadata {
 		tokens[i] = chainsTypes.ERC20TokenMetadata{
 			Asset:   tokenInfo.Asset,
 			ChainID: sdk.NewInt(tokenInfo.ChainID),
-			Details: chainsTypes.TokenDetails{
+			Details: nexus.TokenDetails{
 				TokenName: tokenInfo.Name,
 				Symbol:    tokenInfo.Symbol,
 				Decimals:  tokenInfo.Decimals,
-				Capacity:  sdk.NewInt(0),
+				Capacity:  sdk.NewUint(0),
 			},
 			TokenAddress: chainsTypes.Address(common.HexToAddress(tokenInfo.TokenAddress)),
 			TxHash:       chainsTypes.ZeroHash,

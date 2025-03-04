@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "scalar/protocol/exported/v1beta1/types.proto";
 import "scalar/chains/v1beta1/types.proto";
 import "scalar/covenant/v1beta1/types.proto";
+import "scalar/nexus/exported/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
@@ -20,10 +21,15 @@ message Protocol {
   // scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
   string custodian_group_uid = 7
       [ (gogoproto.customname) = "CustodianGroupUID" ];
-  scalar.chains.v1beta1.Asset asset = 8; // External asset
   repeated scalar.protocol.exported.v1beta1.SupportedChain chains =
-      9;             // Other chains with internal asset
-  bytes avatar = 10; // Avatar of the protocol, base64 encoded
+      8;            // Other chains with internal asset
+  bytes avatar = 9; // Avatar of the protocol, base64 encoded
+  scalar.chains.v1beta1.Asset asset = 10; // External asset
+  nexus.exported.v1beta1.TokenDetails token_details = 11;
+  bytes token_daily_mint_limit = 12 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
 }
 
 message ProtocolDetails {
@@ -35,9 +41,14 @@ message ProtocolDetails {
   scalar.protocol.exported.v1beta1.Status status = 6;
   string custodian_group_uid = 7
       [ (gogoproto.customname) = "CustodianGroupUID" ];
-  scalar.chains.v1beta1.Asset asset = 8; // External asset
   repeated scalar.protocol.exported.v1beta1.SupportedChain chains =
-      9;             // Other chains with internal asset
-  bytes avatar = 10; // Avatar of the protocol, base64 encoded
-  scalar.covenant.v1beta1.CustodianGroup custodian_group = 11;
+      8;            // Other chains with internal asset
+  bytes avatar = 9; // Avatar of the protocol, base64 encoded
+  scalar.covenant.v1beta1.CustodianGroup custodian_group = 10;
+  scalar.chains.v1beta1.Asset asset = 11; // External asset
+  scalar.nexus.exported.v1beta1.TokenDetails token_details = 12;
+  bytes token_daily_mint_limit = 13 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
 }

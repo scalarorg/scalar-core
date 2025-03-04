@@ -4,7 +4,6 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/scalarorg/scalar-core/utils/clog"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	"github.com/scalarorg/scalar-core/x/protocol/types"
 	"google.golang.org/grpc/codes"
@@ -35,7 +34,7 @@ func (k *Querier) Protocols(c context.Context, req *types.ProtocolsRequest) (*ty
 	for i, protocol := range protocols {
 		custodianGr, ok := k.covenant.GetCustodianGroup(ctx, protocol.CustodianGroupUID)
 		if !ok {
-			ctx.Logger().Error("custodian group not found", "protocol", protocol.Asset.Name, "custodian group uid", protocol.CustodianGroupUID)
+			ctx.Logger().Error("custodian group not found", "protocol", protocol.Asset.Symbol, "custodian group uid", protocol.CustodianGroupUID)
 			return nil, status.Errorf(codes.NotFound, "custodian group not found")
 		}
 		protocolDetails[i] = mapProtocolToProtocolDetails(protocol, custodianGr)
@@ -77,8 +76,6 @@ func (q *Querier) Protocol(c context.Context, req *types.ProtocolRequest) (*type
 		}
 	}
 
-	clog.Greenf("protocol: %+v", protocol)
-
 	if protocol == nil {
 		return nil, status.Errorf(codes.NotFound, "protocol not found")
 	}
@@ -95,16 +92,18 @@ func (q *Querier) Protocol(c context.Context, req *types.ProtocolRequest) (*type
 
 func mapProtocolToProtocolDetails(protocol *types.Protocol, custodianGr *covenanttypes.CustodianGroup) *types.ProtocolDetails {
 	return &types.ProtocolDetails{
-		BitcoinPubkey:     protocol.BitcoinPubkey,
-		ScalarAddress:     protocol.ScalarAddress,
-		Name:              protocol.Name,
-		Tag:               protocol.Tag,
-		Attributes:        protocol.Attributes,
-		Status:            protocol.Status,
-		CustodianGroupUID: protocol.CustodianGroupUID,
-		Asset:             protocol.Asset,
-		Chains:            protocol.Chains,
-		Avatar:            protocol.Avatar,
-		CustodianGroup:    custodianGr,
+		BitcoinPubkey:       protocol.BitcoinPubkey,
+		ScalarAddress:       protocol.ScalarAddress,
+		Name:                protocol.Name,
+		Tag:                 protocol.Tag,
+		Attributes:          protocol.Attributes,
+		Status:              protocol.Status,
+		CustodianGroupUID:   protocol.CustodianGroupUID,
+		Asset:               protocol.Asset,
+		Chains:              protocol.Chains,
+		Avatar:              protocol.Avatar,
+		CustodianGroup:      custodianGr,
+		TokenDetails:        protocol.TokenDetails,
+		TokenDailyMintLimit: protocol.TokenDailyMintLimit,
 	}
 }

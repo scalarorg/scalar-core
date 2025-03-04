@@ -445,7 +445,7 @@ func (k chainKeeper) EnqueueCommand(ctx sdk.Context, command types.Command) erro
 	return nil
 }
 
-func (k chainKeeper) CreateERC20Token(ctx sdk.Context, asset string, details types.TokenDetails, address types.Address) (types.ERC20Token, error) {
+func (k chainKeeper) CreateERC20Token(ctx sdk.Context, asset string, details nexus.TokenDetails, address types.Address) (types.ERC20Token, error) {
 	metadata, err := k.initTokenMetadata(ctx, asset, details, address)
 	if err != nil {
 		return types.NilToken, err
@@ -456,7 +456,7 @@ func (k chainKeeper) CreateERC20Token(ctx sdk.Context, asset string, details typ
 	}, metadata), nil
 }
 
-func (k chainKeeper) initTokenMetadata(ctx sdk.Context, asset string, details types.TokenDetails, address types.Address) (types.ERC20TokenMetadata, error) {
+func (k chainKeeper) initTokenMetadata(ctx sdk.Context, asset string, details nexus.TokenDetails, address types.Address) (types.ERC20TokenMetadata, error) {
 	if err := details.Validate(); err != nil {
 		return types.ERC20TokenMetadata{}, err
 	}
@@ -514,7 +514,7 @@ func (k chainKeeper) initTokenMetadata(ctx sdk.Context, asset string, details ty
 	return meta, nil
 }
 
-func (k chainKeeper) getTokenAddress(ctx sdk.Context, details types.TokenDetails, gatewayAddr types.Address) (types.Address, error) {
+func (k chainKeeper) getTokenAddress(ctx sdk.Context, details nexus.TokenDetails, gatewayAddr types.Address) (types.Address, error) {
 	var saltToken [32]byte
 	copy(saltToken[:], crypto.Keccak256Hash([]byte(details.Symbol)).Bytes())
 

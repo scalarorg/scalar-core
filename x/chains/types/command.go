@@ -78,7 +78,7 @@ func NewBurnTokenCommand(chainID sdk.Int, keyID multisig.KeyID, height int64, bu
 }
 
 // NewDeployTokenCommand creates a command to deploy a token
-func NewDeployTokenCommand(chainID sdk.Int, keyID multisig.KeyID, asset string, tokenDetails TokenDetails, address Address, dailyMintLimit sdk.Uint) Command {
+func NewDeployTokenCommand(chainID sdk.Int, keyID multisig.KeyID, asset string, tokenDetails nexus.TokenDetails, address Address, dailyMintLimit sdk.Uint) Command {
 	return Command{
 		ID:         NewCommandID([]byte(fmt.Sprintf("%s_%s", asset, tokenDetails.Symbol)), chainID),
 		Type:       COMMAND_TYPE_DEPLOY_TOKEN,
@@ -320,7 +320,7 @@ func createBurnTokenParams(symbol string, salt common.Hash) []byte {
 	return funcs.Must(burnTokenArguments.Pack(symbol, salt))
 }
 
-func createDeployTokenParams(tokenName string, symbol string, decimals uint8, capacity sdk.Int, address Address, dailyMintLimit sdk.Uint) []byte {
+func createDeployTokenParams(tokenName string, symbol string, decimals uint8, capacity sdk.Uint, address Address, dailyMintLimit sdk.Uint) []byte {
 	return funcs.Must(deployTokenArguments.Pack(
 		tokenName,
 		symbol,

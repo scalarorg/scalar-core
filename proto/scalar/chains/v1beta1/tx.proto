@@ -139,12 +139,10 @@ message CreateDeployTokenRequest {
   string chain = 2
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  Asset asset = 3 [ (gogoproto.nullable) = false ];
-  TokenDetails token_details = 4 [ (gogoproto.nullable) = false ];
-  reserved 5; // min_amount was removed in v0.15
-  bytes address = 6
+  string token_symbol = 3;
+  string aliased_token_name = 4;
+  bytes address = 5
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
-  string daily_mint_limit = 7;
 }
 
 message CreateDeployTokenResponse {}

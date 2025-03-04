@@ -4,12 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/spf13/cobra"
@@ -248,28 +246,13 @@ func GetCmdCreateDeployToken() *cobra.Command {
 		}
 
 		chain := args[0]
-		originChain := args[1]
-		originAsset := args[2]
-		tokenName := args[3]
-		symbol := args[4]
-		decs, err := strconv.ParseUint(args[5], 10, 8)
-		if err != nil {
-			return fmt.Errorf("could not parse decimals")
-		}
-		capacity, ok := sdk.NewIntFromString(args[6])
-		if !ok {
-			return fmt.Errorf("could not parse capacity")
-		}
-
+		tokenName := args[1]
+		symbol := args[2]
 		if !common.IsHexAddress(*address) {
 			return fmt.Errorf("could not parse address")
 		}
 
-		mintLimit := args[7]
-
-		asset := types.NewAsset(originChain, originAsset)
-		tokenDetails := types.NewTokenDetails(tokenName, symbol, uint8(decs), capacity)
-		msg := types.NewCreateDeployTokenRequest(cliCtx.GetFromAddress(), chain, asset, tokenDetails, types.Address(common.HexToAddress(*address)), mintLimit)
+		msg := types.NewCreateDeployTokenRequest(cliCtx.GetFromAddress(), chain, symbol, tokenName, types.Address(common.HexToAddress(*address)))
 
 		return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
 	}

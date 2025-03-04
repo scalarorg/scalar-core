@@ -37,7 +37,7 @@ func (t ERC20Token) GetTxID() Hash {
 }
 
 // GetDetails returns the details of the token
-func (t ERC20Token) GetDetails() TokenDetails {
+func (t ERC20Token) GetDetails() nexus.TokenDetails {
 	return t.metadata.Details
 }
 

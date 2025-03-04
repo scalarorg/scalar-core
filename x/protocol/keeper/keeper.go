@@ -211,6 +211,10 @@ func (k Keeper) ValidateAsset(ctx sdk.Context, asset *chains.Asset, sender sdk.A
 		return status.Errorf(codes.InvalidArgument, "asset is nil")
 	}
 
+	if asset.Symbol == "" {
+		return status.Errorf(codes.InvalidArgument, "asset symbol is empty")
+	}
+
 	protocols, ok := k.GetAllProtocols(ctx)
 	if !ok {
 		return status.Errorf(codes.NotFound, "protocol not found")
@@ -218,12 +222,12 @@ func (k Keeper) ValidateAsset(ctx sdk.Context, asset *chains.Asset, sender sdk.A
 
 	for _, protocol := range protocols {
 		clog.Redf("Protocol: %+v, Asset: %+v", protocol, protocol.Asset)
-		if k.IsMatchAsset(protocol, asset.Name) {
-			return status.Errorf(codes.InvalidArgument, "asset %s on chain %s already exists", asset.Name, asset.Chain)
+		if k.IsMatchAsset(protocol, asset.Symbol) {
+			return status.Errorf(codes.InvalidArgument, "asset %s on chain %s already exists", asset.Symbol, asset.Chain)
 		}
 
 		if bytes.Equal(protocol.ScalarAddress, sender.Bytes()) {
-			return status.Errorf(codes.InvalidArgument, "sender already created a protocol for asset %s on chain %s", protocol.Asset.Name, protocol.Asset.Chain)
+			return status.Errorf(codes.InvalidArgument, "sender already created a protocol for asset %s on chain %s", protocol.Asset.Symbol, protocol.Asset.Chain)
 		}
 	}
 
@@ -231,7 +235,7 @@ func (k Keeper) ValidateAsset(ctx sdk.Context, asset *chains.Asset, sender sdk.A
 }
 
 // UniqueAssetCondition returns true if the asset is unique
-func (k Keeper) IsMatchAsset(protocol *types.Protocol, name string) bool {
+func (k Keeper) IsMatchAsset(protocol *types.Protocol, symbol string) bool {
 	// return protocol.Asset.Chain == asset.Chain && protocol.Asset.Name == asset.Name
-	return protocol.Asset.Name == name
+	return protocol.Asset.Symbol == symbol
 }

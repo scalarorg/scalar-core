@@ -56,6 +56,7 @@ type Token struct {
 	LiquidityModel string       `json:"liquidity_model" mapstructure:"liquidity_model"`
 	TokenAddress   string       `json:"token_address" mapstructure:"token_address"`
 	Deployments    []DeployInfo `json:"deployments" mapstructure:"deployments"`
+	Avatar         string       `json:"avatar" mapstructure:"avatar"`
 }
 type InternalToken struct {
 	ChainID int64  `json:"chain_id" mapstructure:"chain_id"`

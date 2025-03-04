@@ -18,8 +18,12 @@ message CreateProtocolRequest {
   string tag = 4;           // e.g., "pools"
   scalar.protocol.exported.v1beta1.ProtocolAttributes attributes = 5;
   string custodian_group_uid = 6;
-  scalar.chains.v1beta1.Asset asset = 7; // External asset
-  bytes avatar = 8; // Avatar of the protocol, base64 encoded
+  bytes avatar = 7; // Avatar of the protocol, base64 encoded
+  scalar.chains.v1beta1.Asset asset = 8; // External asset
+  string token_name = 9;
+  uint32 token_decimals = 10;
+  string token_capacity = 11;
+  string token_daily_mint_limit = 12;
 }
 
 message CreateProtocolResponse { Protocol protocol = 1; }

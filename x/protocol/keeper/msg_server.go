@@ -38,6 +38,23 @@ func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRe
 		return nil, err
 	}
 
+	mintLimit, err := sdk.ParseUint(req.TokenDailyMintLimit)
+	if err != nil {
+		return nil, err
+	}
+
+	capacity, err := sdk.ParseUint(req.TokenCapacity)
+	if err != nil {
+		return nil, err
+	}
+
+	tokenDetails := &nexus.TokenDetails{
+		TokenName: req.TokenName,
+		Symbol:    req.Asset.Symbol,
+		Decimals:  uint8(req.TokenDecimals),
+		Capacity:  capacity,
+	}
+
 	protocol := types.Protocol{
 		BitcoinPubkey:     req.BitcoinPubkey,
 		ScalarAddress:     req.Sender.Bytes(),
@@ -48,13 +65,14 @@ func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRe
 		Asset:             req.Asset,
 		CustodianGroupUID: custodianGr.UID,
 		Avatar:            req.Avatar,
+		TokenDetails:      tokenDetails,
 		Chains: []*exported.SupportedChain{
 			{
-				Chain:   nexus.ChainName(req.Asset.Chain),
-				Name:    req.Asset.Name,
-				Address: "",
+				Chain: nexus.ChainName(req.Asset.Chain),
+				Name:  req.TokenName,
 			},
 		},
+		TokenDailyMintLimit: mintLimit,
 	}
 
 	s.Keeper.SetProtocol(ctx, &protocol)

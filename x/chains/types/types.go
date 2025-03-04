@@ -655,31 +655,7 @@ func ParseMultisigKey(key multisig.Key) (map[string]sdk.Uint, sdk.Uint) {
 	return addressWeights, key.GetMinPassingWeight()
 }
 
-// NewTokenDetails returns a new TokenDetails instance
-func NewTokenDetails(tokenName, symbol string, decimals uint8, capacity sdk.Int) TokenDetails {
-	return TokenDetails{
-		TokenName: utils.NormalizeString(tokenName),
-		Symbol:    utils.NormalizeString(symbol),
-		Decimals:  decimals,
-		Capacity:  capacity,
-	}
-}
 
-func (m TokenDetails) Validate() error {
-	if err := utils.ValidateString(m.TokenName); err != nil {
-		return sdkerrors.Wrap(err, "invalid token name")
-	}
-
-	if err := utils.ValidateString(m.Symbol); err != nil {
-		return sdkerrors.Wrap(err, "invalid token symbol")
-	}
-
-	if m.Capacity.IsNil() || m.Capacity.IsNegative() {
-		return fmt.Errorf("token capacity must be a non-negative number")
-	}
-
-	return nil
-}
 
 func (m *ERC20TokenMetadata) ValidateBasic() error {
 	if m.Status == NonExistent {
@@ -919,8 +895,8 @@ func ToSignature(sig ec.Signature, hash common.Hash, pk ecdsa.PublicKey) (Signat
 // NewAsset returns a new Asset instance
 func NewAsset(chain, name string) Asset {
 	return Asset{
-		Chain: nexus.ChainName(utils.NormalizeString(chain)),
-		Name:  utils.NormalizeString(name),
+		Chain:  nexus.ChainName(utils.NormalizeString(chain)),
+		Symbol: utils.NormalizeString(name),
 	}
 }
 
@@ -930,8 +906,8 @@ func (m Asset) Validate() error {
 		return sdkerrors.Wrap(err, "invalid chain")
 	}
 
-	if err := utils.ValidateString(m.Name); err != nil {
-		return sdkerrors.Wrap(err, "invalid name")
+	if err := utils.ValidateString(m.Symbol); err != nil {
+		return sdkerrors.Wrap(err, "invalid symbol")
 	}
 
 	return nil

@@ -5,7 +5,7 @@ option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
 
 import "gogoproto/gogo.proto";
 import "scalar/chains/v1beta1/types.proto";
-
+import "scalar/nexus/exported/v1beta1/types.proto";
 option (gogoproto.goproto_getters_all) = false;
 
 message ERC20TokenMetadata {
@@ -15,7 +15,8 @@ message ERC20TokenMetadata {
     (gogoproto.customname) = "ChainID",
     (gogoproto.nullable) = false
   ];
-  TokenDetails details = 3 [ (gogoproto.nullable) = false ];
+  nexus.exported.v1beta1.TokenDetails details = 3
+      [ (gogoproto.nullable) = false ];
   string token_address = 4
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
   string tx_hash = 5

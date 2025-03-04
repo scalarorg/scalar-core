@@ -34,7 +34,7 @@ func GetTxCmd() *cobra.Command {
 }
 
 type CreateProtocolArgs struct {
-	Attribute         *exported.ProtocolAttributes `json:"attribute"`
+	Attributes        *exported.ProtocolAttributes `json:"attributes"`
 	Avatar            string                       `json:"avatar"`
 	BitcoinPubkey     string                       `json:"bitcoin_pubkey"`
 	CustodianGroupUid string                       `json:"custodian_group_uid"`
@@ -44,6 +44,10 @@ type CreateProtocolArgs struct {
 		ChainName string `json:"chain_name"`
 		AssetName string `json:"asset_name"`
 	} `json:"asset"`
+	TokenName           string `json:"token_name"`
+	TokenDecimals       uint32 `json:"token_decimals"`
+	TokenCapacity       string `json:"token_capacity"`
+	TokenDailyMintLimit string `json:"token_daily_mint_limit"`
 }
 
 func GetCmdAddProtocol() *cobra.Command {
@@ -91,10 +95,24 @@ $ scalard tx protocol add '{"attribute":{"model":0},"avatar":"base64_encoded_ava
 				return fmt.Errorf("invalid avatar base64: %w", err)
 			}
 
-			msg := types.NewCreateProtocolRequest(address, createProtocolArgs.Name, bitcoinPubkey, createProtocolArgs.Tag, createProtocolArgs.Attribute, createProtocolArgs.CustodianGroupUid, avatar, &chainTypes.Asset{
-				Chain: nexus.ChainName(createProtocolArgs.Asset.ChainName),
-				Name:  createProtocolArgs.Asset.AssetName,
-			})
+			msg := &types.CreateProtocolRequest{
+				Sender:            address,
+				Name:              createProtocolArgs.Name,
+				BitcoinPubkey:     bitcoinPubkey,
+				Tag:               createProtocolArgs.Tag,
+				Attributes:        createProtocolArgs.Attributes,
+				CustodianGroupUid: createProtocolArgs.CustodianGroupUid,
+				Avatar:            avatar,
+				Asset: &chainTypes.Asset{
+					Chain:  nexus.ChainName(createProtocolArgs.Asset.ChainName),
+					Symbol: createProtocolArgs.Asset.AssetName,
+				},
+				TokenName:           createProtocolArgs.TokenName,
+				TokenDecimals:       createProtocolArgs.TokenDecimals,
+				TokenCapacity:       createProtocolArgs.TokenCapacity,
+				TokenDailyMintLimit: createProtocolArgs.TokenDailyMintLimit,
+			}
+
 			if err := msg.ValidateBasic(); err != nil {
 				return fmt.Errorf("failed to validate message: %w", err)
 			}
