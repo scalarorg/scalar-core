@@ -56,22 +56,17 @@ func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRe
 	}
 
 	protocol := types.Protocol{
-		BitcoinPubkey:     req.BitcoinPubkey,
-		ScalarAddress:     req.Sender.Bytes(),
-		Name:              req.Name,
-		Tag:               []byte(req.Tag), // ascii
-		Attributes:        req.Attributes,
-		Status:            exported.Pending,
-		Asset:             req.Asset,
-		CustodianGroupUID: custodianGr.UID,
-		Avatar:            req.Avatar,
-		TokenDetails:      tokenDetails,
-		Chains: []*exported.SupportedChain{
-			{
-				Chain: nexus.ChainName(req.Asset.Chain),
-				Name:  req.TokenName,
-			},
-		},
+		BitcoinPubkey:       req.BitcoinPubkey,
+		ScalarAddress:       req.Sender.Bytes(),
+		Name:                req.Name,
+		Tag:                 []byte(req.Tag), // ascii
+		Attributes:          req.Attributes,
+		Status:              exported.Pending,
+		Asset:               req.Asset,
+		CustodianGroupUID:   custodianGr.UID,
+		Avatar:              req.Avatar,
+		TokenDetails:        tokenDetails,
+		Chains:              []*exported.SupportedChain{},
 		TokenDailyMintLimit: mintLimit,
 	}
 
