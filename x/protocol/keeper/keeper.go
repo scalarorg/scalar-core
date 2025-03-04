@@ -8,8 +8,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	chains "github.com/scalarorg/scalar-core/x/chains/types"
-	"github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	pexported "github.com/scalarorg/scalar-core/x/protocol/exported"
 	"github.com/scalarorg/scalar-core/x/protocol/types"
@@ -53,6 +53,13 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
+func (k Keeper) GetProtocol(ctx sdk.Context, sender sdk.AccAddress) (*types.Protocol, error) {
+	store := k.getStore(ctx)
+	protocol := types.Protocol{}
+	store.Get(protocolPrefix.Append(utils.KeyFromBz(sender.Bytes())), &protocol)
+	return &protocol, nil
+}
+
 func (k Keeper) SetProtocol(ctx sdk.Context, protocol *types.Protocol) {
 	k.getStore(ctx).Set(protocolPrefix.Append(utils.KeyFromBz(protocol.ScalarAddress)), protocol)
 }
@@ -63,6 +70,7 @@ func (k Keeper) SetProtocols(ctx sdk.Context, protocols []*types.Protocol) {
 		store.Set(protocolPrefix.Append(utils.KeyFromBz(protocol.ScalarAddress)), protocol)
 	}
 }
+
 func (k Keeper) GetAllProtocols(ctx sdk.Context) ([]*types.Protocol, bool) {
 	store := k.getStore(ctx)
 	protocols := []*types.Protocol{}
@@ -91,19 +99,27 @@ func (k Keeper) findProtocols(ctx sdk.Context, req *types.ProtocolsRequest) ([]*
 	return protocols, true
 }
 
-func (k Keeper) getProtocolByAddress(ctx sdk.Context, address []byte) (*types.Protocol, bool) {
-	store := k.getStore(ctx)
-	iter := store.Iterator(protocolPrefix)
-	defer utils.CloseLogError(iter, k.Logger(ctx))
-	for ; iter.Valid(); iter.Next() {
-		protocol := types.Protocol{}
-		iter.UnmarshalValue(&protocol)
-		if bytes.Compare(protocol.ScalarAddress, address) == 0 {
-			return &protocol, true
-		}
+func (k Keeper) GetProtocolBySender(ctx sdk.Context, sender sdk.AccAddress) (*types.Protocol, error) {
+	protocol, err := k.GetProtocol(ctx, sender)
+	if err != nil {
+		return nil, err
 	}
-	return nil, false
+	return protocol, nil
 }
+
+// func (k Keeper) getProtocolByAddress(ctx sdk.Context, address []byte) (*types.Protocol, bool) {
+// 	store := k.getStore(ctx)
+// 	iter := store.Iterator(protocolPrefix)
+// 	defer utils.CloseLogError(iter, k.Logger(ctx))
+// 	for ; iter.Valid(); iter.Next() {
+// 		protocol := types.Protocol{}
+// 		iter.UnmarshalValue(&protocol)
+// 		if bytes.Equal(protocol.ScalarAddress, address) {
+// 			return &protocol, true
+// 		}
+// 	}
+// 	return nil, false
+// }
 
 /*
  * In scalar each asset is defined uniquely by its original chain (bitcoin networks: mainnet or testnets) and name.
@@ -142,7 +158,7 @@ func (k Keeper) FindProtocolInfoByExternalSymbol(ctx sdk.Context, symbol string)
 	return protocol.ToProtocolInfo(), nil
 }
 
-func (k Keeper) FindProtocolByInternalAddress(ctx sdk.Context, originChain exported.ChainName, minorChain exported.ChainName, internalAddress string) (*types.Protocol, error) {
+func (k Keeper) FindProtocolByInternalAddress(ctx sdk.Context, originChain nexus.ChainName, minorChain nexus.ChainName, internalAddress string) (*types.Protocol, error) {
 	protocols, ok := k.GetAllProtocols(ctx)
 	if !ok {
 		return nil, status.Errorf(codes.NotFound, "protocol not found")
@@ -190,7 +206,7 @@ func (k Keeper) getStore(ctx sdk.Context) utils.KVStore {
 	return utils.NewNormalizedStore(ctx.KVStore(k.storeKey), k.cdc)
 }
 
-func (k Keeper) ValidateAsset(ctx sdk.Context, asset *chains.Asset) error {
+func (k Keeper) ValidateAsset(ctx sdk.Context, asset *chains.Asset, sender sdk.AccAddress) error {
 	if asset == nil {
 		return status.Errorf(codes.InvalidArgument, "asset is nil")
 	}
@@ -201,10 +217,16 @@ func (k Keeper) ValidateAsset(ctx sdk.Context, asset *chains.Asset) error {
 	}
 
 	for _, protocol := range protocols {
+		clog.Redf("Protocol: %+v, Asset: %+v", protocol, protocol.Asset)
 		if k.IsMatchAsset(protocol, asset.Name) {
 			return status.Errorf(codes.InvalidArgument, "asset %s on chain %s already exists", asset.Name, asset.Chain)
 		}
+
+		if bytes.Equal(protocol.ScalarAddress, sender.Bytes()) {
+			return status.Errorf(codes.InvalidArgument, "sender already created a protocol for asset %s on chain %s", protocol.Asset.Name, protocol.Asset.Chain)
+		}
 	}
+
 	return nil
 }
 

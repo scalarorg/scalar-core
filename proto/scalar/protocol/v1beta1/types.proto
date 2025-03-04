@@ -27,18 +27,17 @@ message Protocol {
 }
 
 message ProtocolDetails {
-  bytes bitcoin_pubkey = 1; // BTC's pubkey
-  bytes scalar_pubkey = 2;  // Scalar's pubkey
-  bytes scalar_address = 3; // Scalar's address
-  string name = 4;
-  bytes tag = 5;
-  scalar.protocol.exported.v1beta1.ProtocolAttributes attributes = 6;
-  scalar.protocol.exported.v1beta1.Status status = 7;
-  string custodian_group_uid = 8
+  bytes scalar_address = 1; // Scalar's address
+  bytes bitcoin_pubkey = 2; // BTC's pubkey
+  string name = 3;
+  bytes tag = 4;
+  scalar.protocol.exported.v1beta1.ProtocolAttributes attributes = 5;
+  scalar.protocol.exported.v1beta1.Status status = 6;
+  string custodian_group_uid = 7
       [ (gogoproto.customname) = "CustodianGroupUID" ];
-  scalar.chains.v1beta1.Asset asset = 9; // External asset
+  scalar.chains.v1beta1.Asset asset = 8; // External asset
   repeated scalar.protocol.exported.v1beta1.SupportedChain chains =
-      10;            // Other chains with internal asset
-  bytes avatar = 11; // Avatar of the protocol, base64 encoded
-  scalar.covenant.v1beta1.CustodianGroup custodian_group = 12;
+      9;             // Other chains with internal asset
+  bytes avatar = 10; // Avatar of the protocol, base64 encoded
+  scalar.covenant.v1beta1.CustodianGroup custodian_group = 11;
 }

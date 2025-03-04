@@ -4,6 +4,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	"github.com/scalarorg/scalar-core/x/protocol/types"
 	"google.golang.org/grpc/codes"
@@ -60,15 +61,6 @@ func (q *Querier) Protocol(c context.Context, req *types.ProtocolRequest) (*type
 		if err != nil {
 			return nil, status.Errorf(codes.NotFound, "protocol not found")
 		}
-
-		custodianGr, ok := q.covenant.GetCustodianGroup(ctx, protocol.CustodianGroupUID)
-		if !ok {
-			return nil, status.Errorf(codes.NotFound, "custodian group not found")
-		}
-
-		return &types.ProtocolResponse{
-			Protocol: mapProtocolToProtocolDetails(protocol, custodianGr),
-		}, nil
 	}
 
 	if req.Address != "" {
@@ -76,19 +68,29 @@ func (q *Querier) Protocol(c context.Context, req *types.ProtocolRequest) (*type
 		if err != nil {
 			return nil, status.Errorf(codes.NotFound, "protocol not found")
 		}
-
-		custodianGr, ok := q.covenant.GetCustodianGroup(ctx, protocol.CustodianGroupUID)
-		if !ok {
-			return nil, status.Errorf(codes.NotFound, "custodian group not found")
-		}
-
-		return &types.ProtocolResponse{
-			Protocol: mapProtocolToProtocolDetails(protocol, custodianGr),
-		}, nil
 	}
 
-	// This should never happen because of the validation above, but it enstures in case of the validation is not working
-	return nil, status.Errorf(codes.NotFound, "protocol not found")
+	if len(req.Sender) != 0 {
+		protocol, err = q.keeper.GetProtocolBySender(ctx, req.Sender)
+		if err != nil {
+			return nil, status.Errorf(codes.NotFound, "protocol not found")
+		}
+	}
+
+	clog.Greenf("protocol: %+v", protocol)
+
+	if protocol == nil {
+		return nil, status.Errorf(codes.NotFound, "protocol not found")
+	}
+
+	custodianGr, ok := q.covenant.GetCustodianGroup(ctx, protocol.CustodianGroupUID)
+	if !ok {
+		return nil, status.Errorf(codes.NotFound, "custodian group not found")
+	}
+
+	return &types.ProtocolResponse{
+		Protocol: mapProtocolToProtocolDetails(protocol, custodianGr),
+	}, nil
 }
 
 func mapProtocolToProtocolDetails(protocol *types.Protocol, custodianGr *covenanttypes.CustodianGroup) *types.ProtocolDetails {

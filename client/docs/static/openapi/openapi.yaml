@@ -8624,13 +8624,10 @@ paths:
                     items:
                       type: object
                       properties:
-                        bitcoin_pubkey:
-                          type: string
-                          format: byte
-                        scalar_pubkey:
-                          type: string
-                          format: byte
                         scalar_address:
+                          type: string
+                          format: byte
+                        bitcoin_pubkey:
                           type: string
                           format: byte
                         name:
@@ -9489,13 +9486,10 @@ paths:
                   protocol:
                     type: object
                     properties:
-                      bitcoin_pubkey:
-                        type: string
-                        format: byte
-                      scalar_pubkey:
-                        type: string
-                        format: byte
                       scalar_address:
+                        type: string
+                        format: byte
+                      bitcoin_pubkey:
                         type: string
                         format: byte
                       name:
@@ -9791,6 +9785,12 @@ paths:
           required: false
           schema:
             type: string
+        - name: sender
+          in: query
+          required: false
+          schema:
+            type: string
+            format: byte
       tags:
         - Query
   /scalar/protocol/v1beta1/update_protocol:
@@ -54239,13 +54239,10 @@ components:
     scalar.protocol.v1beta1.ProtocolDetails:
       type: object
       properties:
-        bitcoin_pubkey:
-          type: string
-          format: byte
-        scalar_pubkey:
-          type: string
-          format: byte
         scalar_address:
+          type: string
+          format: byte
+        bitcoin_pubkey:
           type: string
           format: byte
         name:
@@ -54356,13 +54353,10 @@ components:
         protocol:
           type: object
           properties:
-            bitcoin_pubkey:
-              type: string
-              format: byte
-            scalar_pubkey:
-              type: string
-              format: byte
             scalar_address:
+              type: string
+              format: byte
+            bitcoin_pubkey:
               type: string
               format: byte
             name:
@@ -54475,13 +54469,10 @@ components:
           items:
             type: object
             properties:
-              bitcoin_pubkey:
-                type: string
-                format: byte
-              scalar_pubkey:
-                type: string
-                format: byte
               scalar_address:
+                type: string
+                format: byte
+              bitcoin_pubkey:
                 type: string
                 format: byte
               name:

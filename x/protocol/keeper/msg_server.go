@@ -33,7 +33,7 @@ func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRe
 		return nil, err
 	}
 
-	err = s.Keeper.ValidateAsset(ctx, req.Asset)
+	err = s.Keeper.ValidateAsset(ctx, req.Asset, req.Sender)
 	if err != nil {
 		return nil, err
 	}
@@ -56,6 +56,7 @@ func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRe
 			},
 		},
 	}
+
 	s.Keeper.SetProtocol(ctx, &protocol)
 
 	return &types.CreateProtocolResponse{

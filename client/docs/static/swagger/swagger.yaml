@@ -9436,13 +9436,10 @@ paths:
                 items:
                   type: object
                   properties:
-                    bitcoin_pubkey:
-                      type: string
-                      format: byte
-                    scalar_pubkey:
-                      type: string
-                      format: byte
                     scalar_address:
+                      type: string
+                      format: byte
+                    bitcoin_pubkey:
                       type: string
                       format: byte
                     name:
@@ -10368,13 +10365,10 @@ paths:
               protocol:
                 type: object
                 properties:
-                  bitcoin_pubkey:
-                    type: string
-                    format: byte
-                  scalar_pubkey:
-                    type: string
-                    format: byte
                   scalar_address:
+                    type: string
+                    format: byte
+                  bitcoin_pubkey:
                     type: string
                     format: byte
                   name:
@@ -10695,6 +10689,11 @@ paths:
           in: query
           required: false
           type: string
+        - name: sender
+          in: query
+          required: false
+          type: string
+          format: byte
       tags:
         - Query
   /scalar/protocol/v1beta1/update_protocol:
@@ -58797,13 +58796,10 @@ definitions:
   scalar.protocol.v1beta1.ProtocolDetails:
     type: object
     properties:
-      bitcoin_pubkey:
-        type: string
-        format: byte
-      scalar_pubkey:
-        type: string
-        format: byte
       scalar_address:
+        type: string
+        format: byte
+      bitcoin_pubkey:
         type: string
         format: byte
       name:
@@ -58915,13 +58911,10 @@ definitions:
       protocol:
         type: object
         properties:
-          bitcoin_pubkey:
-            type: string
-            format: byte
-          scalar_pubkey:
-            type: string
-            format: byte
           scalar_address:
+            type: string
+            format: byte
+          bitcoin_pubkey:
             type: string
             format: byte
           name:
@@ -59037,13 +59030,10 @@ definitions:
         items:
           type: object
           properties:
-            bitcoin_pubkey:
-              type: string
-              format: byte
-            scalar_pubkey:
-              type: string
-              format: byte
             scalar_address:
+              type: string
+              format: byte
+            bitcoin_pubkey:
               type: string
               format: byte
             name:

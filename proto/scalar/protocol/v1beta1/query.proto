@@ -4,7 +4,6 @@ package scalar.protocol.v1beta1;
 import "scalar/protocol/v1beta1/types.proto";
 import "scalar/protocol/exported/v1beta1/types.proto";
 
-
 import "gogoproto/gogo.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
@@ -30,6 +29,10 @@ message ProtocolRequest {
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string symbol = 3;
   string address = 4;
+
+  bytes sender = 5;
 }
 
-message ProtocolResponse { scalar.protocol.v1beta1.ProtocolDetails protocol = 1; }
+message ProtocolResponse {
+  scalar.protocol.v1beta1.ProtocolDetails protocol = 1;
+}
