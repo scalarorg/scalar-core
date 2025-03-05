@@ -8,6 +8,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/x/chains/types"
@@ -464,6 +465,14 @@ func (s msgServer) CreateDeployToken(c context.Context, req *types.CreateDeployT
 	protocol, err := s.protocol.FindProtocolInfoByExternalSymbol(ctx, req.TokenSymbol)
 	if err != nil {
 		return nil, fmt.Errorf("failed to find protocol info by symbol %s: %w", req.TokenSymbol, err)
+	}
+
+	clog.Redf("protocol: %v", protocol.ScalarAddress)
+	clog.Redf("sender: %v", req.Sender)
+
+	if !bytes.Equal(protocol.ScalarAddress, req.Address.Bytes()) {
+		clog.Redf("Sender does not match protocol address")
+		return nil, fmt.Errorf("sender %s does not match protocol address %s", req.Sender, protocol.ScalarAddress)
 	}
 
 	switch req.Address.IsZeroAddress() {

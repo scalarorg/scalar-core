@@ -70,4 +70,5 @@ message ProtocolInfo {
     (gogoproto.nullable) = false
   ];
   nexus.exported.v1beta1.TokenDetails token_details = 8;
+  bytes scalar_address = 9;
 }
