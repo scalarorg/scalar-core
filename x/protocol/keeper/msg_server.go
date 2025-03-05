@@ -12,12 +12,13 @@ import (
 
 type msgServer struct {
 	Keeper
-	covenant types.CovenantKeeper
+	covenant   types.CovenantKeeper
+	permission types.PermissionKeeper
 }
 
 // NewMsgServerImpl returns a new msg server instance
-func NewMsgServerImpl(keeper Keeper, covenant types.CovenantKeeper) types.MsgServer {
-	return msgServer{Keeper: keeper, covenant: covenant}
+func NewMsgServerImpl(keeper Keeper, covenant types.CovenantKeeper, permission types.PermissionKeeper) types.MsgServer {
+	return msgServer{Keeper: keeper, covenant: covenant, permission: permission}
 }
 
 func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRequest) (*types.CreateProtocolResponse, error) {
@@ -68,6 +69,11 @@ func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRe
 		TokenDetails:        tokenDetails,
 		Chains:              []*exported.SupportedChain{},
 		TokenDailyMintLimit: mintLimit,
+	}
+
+	err = s.permission.AddProtocolManagementAccount(ctx, req.Sender)
+	if err != nil {
+		return nil, err
 	}
 
 	s.Keeper.SetProtocol(ctx, &protocol)
