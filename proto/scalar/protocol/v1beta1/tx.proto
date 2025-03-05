@@ -9,6 +9,9 @@ import "scalar/protocol/exported/v1beta1/types.proto";
 option go_package = "github.com/scalarorg/scalar-core/x/protocol/types";
 
 message CreateProtocolRequest {
+  // // TODO: Consider to add rbac for this message
+  // option (permission.exported.v1beta1.permission_role) =
+  // ROLE_CHAIN_MANAGEMENT;
   bytes sender = 1
       [ (gogoproto.casttype) =
             "github.com/cosmos/cosmos-sdk/types.AccAddress" ]; // address

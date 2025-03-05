@@ -9470,6 +9470,10 @@ paths:
                 sender:
                   type: string
                   format: byte
+                  title: |-
+                    // TODO: Consider to add rbac for this message
+                    option (permission.exported.v1beta1.permission_role) =
+                    ROLE_CHAIN_MANAGEMENT;
                 bitcoin_pubkey:
                   type: string
                   format: byte
@@ -54181,6 +54185,10 @@ components:
         sender:
           type: string
           format: byte
+          title: |-
+            // TODO: Consider to add rbac for this message
+            option (permission.exported.v1beta1.permission_role) =
+            ROLE_CHAIN_MANAGEMENT;
         bitcoin_pubkey:
           type: string
           format: byte
