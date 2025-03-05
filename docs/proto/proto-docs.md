@@ -793,6 +793,7 @@ GenesisState represents the genesis state
 | ROLE_UNRESTRICTED | 1 |  |
 | ROLE_CHAIN_MANAGEMENT | 2 |  |
 | ROLE_ACCESS_CONTROL | 3 |  |
+| ROLE_PROTOCOL_MANAGEMENT | 4 |  |
 
 
  <!-- end enums -->
@@ -7242,7 +7243,9 @@ Params represent the genesis parameters for the module
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `sender` | [bytes](#bytes) |  | address |
+| `sender` | [bytes](#bytes) |  | TODO: Consider to add rbac for this message option (permission.exported.v1beta1.permission_role) = ROLE_CHAIN_MANAGEMENT;
+
+address |
 | `bitcoin_pubkey` | [bytes](#bytes) |  | BTC's pubkey |
 | `name` | [string](#string) |  | e.g., "protocol-1" |
 | `tag` | [string](#string) |  | e.g., "pools" |

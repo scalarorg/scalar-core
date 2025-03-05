@@ -27,6 +27,9 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type CreateProtocolRequest struct {
+	// // TODO: Consider to add rbac for this message
+	// option (permission.exported.v1beta1.permission_role) =
+	// ROLE_CHAIN_MANAGEMENT;
 	Sender              github_com_cosmos_cosmos_sdk_types.AccAddress `protobuf:"bytes,1,opt,name=sender,proto3,casttype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"sender,omitempty"`
 	BitcoinPubkey       []byte                                        `protobuf:"bytes,2,opt,name=bitcoin_pubkey,json=bitcoinPubkey,proto3" json:"bitcoin_pubkey,omitempty"`
 	Name                string                                        `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
