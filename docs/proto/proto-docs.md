@@ -6926,6 +6926,7 @@ Query defines the gRPC querier service.
 | `minor_addresses` | [MinorAddress](#scalar.protocol.exported.v1beta1.MinorAddress) | repeated |  |
 | `token_daily_mint_limit` | [bytes](#bytes) |  |  |
 | `token_details` | [scalar.nexus.exported.v1beta1.TokenDetails](#scalar.nexus.exported.v1beta1.TokenDetails) |  |  |
+| `scalar_address` | [bytes](#bytes) |  |  |
 
 
 
