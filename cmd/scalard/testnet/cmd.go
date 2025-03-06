@@ -402,18 +402,30 @@ func initProtocols(args initArgs) []Protocol {
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to parse chains config")
 	}
+	kb, algo, err := createKeyring(bufio.NewReader(os.Stdin), args, "/tmp")
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to create keyring")
+	}
 	protocols := make([]Protocol, len(protocolConfigs))
 	for i, config := range protocolConfigs {
+		name := fmt.Sprintf("protocol-%d", i)
 		protocols[i] = Protocol{
 			Tag:            config.Tag,
 			LiquidityModel: config.LiquidityModel,
 		}
 		if config.ScalarMnemonic != "" {
-			privKey, address, err := createScalarAccount(config.ScalarMnemonic)
+			//Create privKey and address of protocol by keyring algorithm
+			pubkey, address, err := generateAccount(kb, algo, name, config.ScalarMnemonic, "")
 			if err != nil {
 				log.Debug().Err(err).Msg("Create scalar account with error")
 			}
-			protocols[i].PubKey = privKey.PubKey()
+			protocols[i].PubKey = pubkey
+			// privKey, address, err := createScalarAccount(config.ScalarMnemonic)
+			// if err != nil {
+			// 	log.Debug().Err(err).Msg("Create scalar account with error")
+			// }
+			// protocols[i].PubKey = privKey.PubKey()
+
 			protocols[i].Balance = banktypes.Balance{
 				Address: address.String(),
 				Coins:   sdk.Coins{ScalarCoin},
