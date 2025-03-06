@@ -229,6 +229,14 @@ func GenerateGenesis(clientCtx client.Context,
 		)
 
 	}
+	//Grant ROLE_PROTOCOL_MANAGEMENT to protocol accounts
+	for _, protocol := range protocols {
+		govPubKeys = append(govPubKeys, protocol.PubKey)
+		govAccounts = append(govAccounts, permissiontypes.GovAccount{
+			Address: sdk.AccAddress(protocol.PubKey.Address()),
+			Role:    permissionexported.ROLE_PROTOCOL_MANAGEMENT,
+		})
+	}
 	//Use first governance account as role access control.
 	//Scalar allow an unique account with role access control
 	govAccounts = append(govAccounts, permissiontypes.GovAccount{
