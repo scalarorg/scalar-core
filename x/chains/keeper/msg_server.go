@@ -468,11 +468,11 @@ func (s msgServer) CreateDeployToken(c context.Context, req *types.CreateDeployT
 	}
 
 	clog.Redf("protocol: %v", protocol.ScalarAddress)
-	clog.Redf("sender: %v", req.Sender)
+	clog.Redf("sender: %v, %s", req.Sender.Bytes(), req.Sender.String())
 
-	if !bytes.Equal(protocol.ScalarAddress, req.Address.Bytes()) {
+	if !bytes.Equal(protocol.ScalarAddress, req.Sender.Bytes()) {
 		clog.Redf("Sender does not match protocol address")
-		return nil, fmt.Errorf("sender %s does not match protocol address %s", req.Sender, protocol.ScalarAddress)
+		return nil, fmt.Errorf("sender %v does not match protocol address %v", req.Sender.Bytes(), protocol.ScalarAddress)
 	}
 
 	switch req.Address.IsZeroAddress() {

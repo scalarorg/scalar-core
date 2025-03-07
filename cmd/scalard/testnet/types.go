@@ -31,6 +31,7 @@ type Protocol struct {
 	LiquidityModel string
 }
 type ProtocolConfig struct {
+	Name           string
 	ScalarMnemonic string `json:"scalar_mnemonic" mapstructure:"scalar_mnemonic"`
 	BitcoinPrivKey string `json:"bitcoin_privkey" mapstructure:"bitcoin_privkey"`
 	Tag            string `json:"tag" mapstructure:"tag"`
