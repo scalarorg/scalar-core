@@ -35,9 +35,8 @@ func (s msgServer) SubmitTapScriptSigs(c context.Context, req *types.SubmitTapSc
 	s.Logger(ctx).Info("new signature submitted",
 		"sig_id", signingSession.GetID(),
 		"participant", participant.String(),
-		"participants_weight", signingSession.GetParticipantsWeight().String(),
-		"bonded_weight", signingSession.Key.Snapshot.BondedWeight.String(),
-		"signing_threshold", signingSession.Key.SigningThreshold.String(),
+		"number_of_signed_psbt_participants", signingSession.GetNumberOfSignedPsbtParticipants().String(),
+		"min_passing_signed_participants", signingSession.GetMinPassingSignedParticipants().String(),
 		"expires_at", signingSession.ExpiresAt,
 	)
 
