@@ -523,6 +523,8 @@ func (s msgServer) CreateDeployToken(c context.Context, req *types.CreateDeployT
 	if mintLimit.IsZero() {
 		mintLimit = utils.MaxUint
 	}
+
+	// TODO: Why register asset here?
 	if err = s.nexus.RegisterAsset(ctx, chain, nexus.NewAsset(req.TokenSymbol, false), mintLimit, types.DefaultRateLimitWindow); err != nil {
 		return nil, err
 	}

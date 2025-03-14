@@ -633,6 +633,7 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 			GetKeeper[slashingkeeper.Keeper](keepers),
 			GetKeeper[covenantKeeper.Keeper](keepers),
 			GetKeeper[permissionKeeper.Keeper](keepers),
+			GetKeeper[nexusKeeper.Keeper](keepers),
 		),
 		reward.NewAppModule(
 			*GetKeeper[rewardKeeper.Keeper](keepers),

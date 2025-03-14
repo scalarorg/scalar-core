@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	chainTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	exported "github.com/scalarorg/scalar-core/x/protocol/exported"
 	"github.com/scalarorg/scalar-core/x/protocol/types"
@@ -14,11 +15,12 @@ type msgServer struct {
 	Keeper
 	covenant   types.CovenantKeeper
 	permission types.PermissionKeeper
+	nexus      types.NexusKeeper
 }
 
 // NewMsgServerImpl returns a new msg server instance
-func NewMsgServerImpl(keeper Keeper, covenant types.CovenantKeeper, permission types.PermissionKeeper) types.MsgServer {
-	return msgServer{Keeper: keeper, covenant: covenant, permission: permission}
+func NewMsgServerImpl(keeper Keeper, covenant types.CovenantKeeper, permission types.PermissionKeeper, nexus types.NexusKeeper) types.MsgServer {
+	return msgServer{Keeper: keeper, covenant: covenant, permission: permission, nexus: nexus}
 }
 
 func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRequest) (*types.CreateProtocolResponse, error) {
@@ -77,6 +79,17 @@ func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRe
 	}
 
 	s.Keeper.SetProtocol(ctx, &protocol)
+
+	chain, found := s.nexus.GetChain(ctx, req.Asset.Chain)
+	if !found {
+		return nil, fmt.Errorf("chain '%s' not found", req.Asset.Chain)
+	}
+
+	// TODO: validate bitcoin chain	
+
+	if err = s.nexus.RegisterAsset(ctx, chain, nexus.NewAsset(req.Asset.Symbol, false), mintLimit, chainTypes.DefaultRateLimitWindow); err != nil {
+		return nil, err
+	}
 
 	return &types.CreateProtocolResponse{
 		Protocol: &protocol,

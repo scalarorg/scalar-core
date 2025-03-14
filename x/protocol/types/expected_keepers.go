@@ -1,6 +1,8 @@
 package types
 
 import (
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/scalarorg/scalar-core/utils"
@@ -74,4 +76,9 @@ type CovenantKeeper interface {
 
 type PermissionKeeper interface {
 	AddProtocolManagementAccount(ctx sdk.Context, address sdk.AccAddress) error
+}
+
+type NexusKeeper interface {
+	RegisterAsset(ctx sdk.Context, chain nexus.Chain, asset nexus.Asset, limit sdk.Uint, window time.Duration) error
+	GetChain(ctx sdk.Context, chain nexus.ChainName) (nexus.Chain, bool)
 }
