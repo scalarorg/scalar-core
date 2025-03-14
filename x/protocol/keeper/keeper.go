@@ -190,6 +190,10 @@ func (k Keeper) AddTokenForProtocol(ctx sdk.Context, chain nexus.ChainName, symb
 		return false
 	}
 
+	if protocol.Status == pexported.Pending {
+		protocol.Status = pexported.Activated
+	}
+
 	k.SetProtocol(ctx, protocol)
 
 	return true
