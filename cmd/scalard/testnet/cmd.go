@@ -52,7 +52,6 @@ const (
 
 var (
 	flagScalarMnemonic      = "SCALAR_MNEMONIC"
-	flagProtocolBtcPriKey   = "PROTOCOL_BTC_PRIKEY"
 	flagValidatorMnemonic   = "VALIDATOR_MNEMONIC"
 	flagBroadcasterMnemonic = "BROADCASTER_MNEMONIC"
 	flagGovernanceMnemonic  = "GOV_MNEMONIC"
@@ -402,6 +401,14 @@ func initProtocols(args initArgs) []Protocol {
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to parse chains config")
 	}
+	//Generate protocol's keyring in the first node, then mount to de deployment container
+	workingDir := filepath.Join(args.outputDir, fmt.Sprintf("%s%d", args.nodeDirPrefix, 1), args.nodeDaemonHome)
+	os.RemoveAll(fmt.Sprintf("%s/keyring-test", workingDir))
+	kb, algo, err := createKeyring(bufio.NewReader(os.Stdin), args, workingDir)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to create keyring")
+	}
+	bip44Path := "m/44'/118'/0'/0/0"
 	protocols := make([]Protocol, len(protocolConfigs))
 	for i, config := range protocolConfigs {
 		protocols[i] = Protocol{
@@ -409,16 +416,28 @@ func initProtocols(args initArgs) []Protocol {
 			LiquidityModel: config.LiquidityModel,
 		}
 		if config.ScalarMnemonic != "" {
-			privKey, address, err := createScalarAccount(config.ScalarMnemonic)
+			// Create privKey and address of protocol by keyring algorithm
+			//Default bip44 path is m/44'/118'/0'/0/0 if bip44Path is not set
+			pubkey, address, err := generateAccount(kb, algo, config.Name, config.ScalarMnemonic, bip44Path)
 			if err != nil {
 				log.Debug().Err(err).Msg("Create scalar account with error")
 			}
-			protocols[i].PubKey = privKey.PubKey()
+			protocols[i].PubKey = pubkey
+			// privKey, address, err := createScalarAccount(config.ScalarMnemonic)
+			// if err != nil {
+			// 	log.Debug().Err(err).Msg("Create scalar account with error")
+			// }
+			// protocols[i].PubKey = privKey.PubKey()
 			protocols[i].Balance = banktypes.Balance{
 				Address: address.String(),
 				Coins:   sdk.Coins{ScalarCoin},
 			}
-			log.Debug().Str("ProtocolMnemonic", config.ScalarMnemonic).Str("Account", address.String()).Msg("ScalarAccount")
+			log.Debug().Str("Mnemonic", config.ScalarMnemonic).
+				Str("PublicKey", pubkey.String()).
+				Str("Address", address.String()).
+				Str("Name", config.Name).
+				Str("bip44Path", bip44Path).
+				Msg("Generate protocol account")
 		}
 		if config.BitcoinPrivKey != "" {
 			privKey := secp256k1.PrivKeyFromBytes([]byte(config.BitcoinPrivKey))

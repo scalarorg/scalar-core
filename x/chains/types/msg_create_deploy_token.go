@@ -1,8 +1,6 @@
 package types
 
 import (
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -11,14 +9,13 @@ import (
 )
 
 // NewCreateDeployTokenRequest is the constructor for CreateDeployTokenRequest
-func NewCreateDeployTokenRequest(sender sdk.AccAddress, chain string, asset Asset, tokenDetails TokenDetails, address Address, dailyMintLimit string) *CreateDeployTokenRequest {
+func NewCreateDeployTokenRequest(sender sdk.AccAddress, chain string, tokenSymbol string, tokenName string, address Address) *CreateDeployTokenRequest {
 	return &CreateDeployTokenRequest{
-		Sender:         sender,
-		Chain:          nexus.ChainName(utils.NormalizeString(chain)),
-		Asset:          asset,
-		TokenDetails:   tokenDetails,
-		Address:        address,
-		DailyMintLimit: dailyMintLimit,
+		Sender:           sender,
+		Chain:            nexus.ChainName(utils.NormalizeString(chain)),
+		TokenSymbol:      tokenSymbol,
+		AliasedTokenName: tokenName,
+		Address:          address,
 	}
 }
 
@@ -53,28 +50,28 @@ func (m CreateDeployTokenRequest) ValidateBasic() error {
 		return sdkerrors.Wrap(err, "invalid chain")
 	}
 
-	if err := m.Asset.Validate(); err != nil {
-		return err
-	}
+	// if err := m.Asset.Validate(); err != nil {
+	// 	return err
+	// }
 
-	switch m.Address.IsZeroAddress() {
-	case true:
-		if m.Chain.Equals(m.Asset.Chain) {
-			return fmt.Errorf("cannot deploy token on the origin chain")
-		}
-	case false:
-		if !m.Chain.Equals(m.Asset.Chain) {
-			return fmt.Errorf("cannot link token on a different chain")
-		}
-	}
+	// switch m.Address.IsZeroAddress() {
+	// case true:
+	// 	if m.Chain.Equals(m.Asset.Chain) {
+	// 		return fmt.Errorf("cannot deploy token on the origin chain")
+	// 	}
+	// case false:
+	// 	if !m.Chain.Equals(m.Asset.Chain) {
+	// 		return fmt.Errorf("cannot link token on a different chain")
+	// 	}
+	// }
 
-	if err := m.TokenDetails.Validate(); err != nil {
-		return err
-	}
+	// if err := m.TokenDetails.Validate(); err != nil {
+	// 	return err
+	// }
 
-	if _, err := sdk.ParseUint(m.DailyMintLimit); err != nil {
-		return err
-	}
+	// if _, err := sdk.ParseUint(m.DailyMintLimit); err != nil {
+	// 	return err
+	// }
 
 	return nil
 }

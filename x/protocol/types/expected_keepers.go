@@ -71,3 +71,7 @@ type SlashingKeeper interface {
 type CovenantKeeper interface {
 	GetCustodianGroup(ctx sdk.Context, uid string) (group *covenant.CustodianGroup, ok bool)
 }
+
+type PermissionKeeper interface {
+	AddProtocolManagementAccount(ctx sdk.Context, address sdk.AccAddress) error
+}

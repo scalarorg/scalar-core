@@ -16,6 +16,7 @@ enum Role {
   ROLE_UNRESTRICTED = 1;
   ROLE_CHAIN_MANAGEMENT = 2;
   ROLE_ACCESS_CONTROL = 3;
+  ROLE_PROTOCOL_MANAGEMENT = 4;
 }
 
 extend google.protobuf.MessageOptions {

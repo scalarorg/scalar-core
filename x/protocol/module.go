@@ -89,6 +89,7 @@ type AppModule struct {
 	staking     types.StakingKeeper
 	slashing    types.SlashingKeeper
 	covenant    types.CovenantKeeper
+	permission  types.PermissionKeeper
 }
 
 // NewAppModule creates a new AppModule object
@@ -99,6 +100,7 @@ func NewAppModule(
 	staking types.StakingKeeper,
 	slashing types.SlashingKeeper,
 	covenant types.CovenantKeeper,
+	permission types.PermissionKeeper,
 ) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
@@ -108,6 +110,7 @@ func NewAppModule(
 		staking:        staking,
 		slashing:       slashing,
 		covenant:       covenant,
+		permission:     permission,
 	}
 }
 
@@ -132,7 +135,7 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 
 // Route returns the module's route
 func (am AppModule) Route() sdk.Route {
-	return sdk.NewRoute(types.RouterKey, NewHandler(am.keeper, am.covenant))
+	return sdk.NewRoute(types.RouterKey, NewHandler(am.keeper, am.covenant, am.permission))
 }
 
 // QuerierRoute returns this module's query route
@@ -148,7 +151,7 @@ func (am AppModule) LegacyQuerierHandler(*codec.LegacyAmino) sdk.Querier {
 // RegisterServices registers a GRPC query service to respond to the
 // module-specific GRPC queries.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
-	msgServer := keeper.NewMsgServerImpl(am.keeper, am.covenant)
+	msgServer := keeper.NewMsgServerImpl(am.keeper, am.covenant, am.permission)
 	types.RegisterMsgServer(grpc.ServerWithSDKErrors{Server: cfg.MsgServer(), Err: types.ErrProtocol, Logger: am.keeper.Logger}, msgServer)
 
 	queryServer := keeper.NewGRPCQuerier(&am.keeper, am.covenant)

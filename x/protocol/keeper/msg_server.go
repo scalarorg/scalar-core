@@ -12,12 +12,13 @@ import (
 
 type msgServer struct {
 	Keeper
-	covenant types.CovenantKeeper
+	covenant   types.CovenantKeeper
+	permission types.PermissionKeeper
 }
 
 // NewMsgServerImpl returns a new msg server instance
-func NewMsgServerImpl(keeper Keeper, covenant types.CovenantKeeper) types.MsgServer {
-	return msgServer{Keeper: keeper, covenant: covenant}
+func NewMsgServerImpl(keeper Keeper, covenant types.CovenantKeeper, permission types.PermissionKeeper) types.MsgServer {
+	return msgServer{Keeper: keeper, covenant: covenant, permission: permission}
 }
 
 func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRequest) (*types.CreateProtocolResponse, error) {
@@ -33,29 +34,48 @@ func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRe
 		return nil, err
 	}
 
-	err = s.Keeper.ValidateAsset(ctx, req.Asset)
+	err = s.Keeper.ValidateAsset(ctx, req.Asset, req.Sender)
 	if err != nil {
 		return nil, err
 	}
 
-	protocol := types.Protocol{
-		BitcoinPubkey:     req.BitcoinPubkey,
-		ScalarAddress:     req.Sender.Bytes(),
-		Name:              req.Name,
-		Tag:               []byte(req.Tag), // ascii
-		Attributes:        req.Attributes,
-		Status:            exported.Pending,
-		Asset:             req.Asset,
-		CustodianGroupUID: custodianGr.UID,
-		Avatar:            req.Avatar,
-		Chains: []*exported.SupportedChain{
-			{
-				Chain:   nexus.ChainName(req.Asset.Chain),
-				Name:    req.Asset.Name,
-				Address: "",
-			},
-		},
+	mintLimit, err := sdk.ParseUint(req.TokenDailyMintLimit)
+	if err != nil {
+		return nil, err
 	}
+
+	capacity, err := sdk.ParseUint(req.TokenCapacity)
+	if err != nil {
+		return nil, err
+	}
+
+	tokenDetails := &nexus.TokenDetails{
+		TokenName: req.TokenName,
+		Symbol:    req.Asset.Symbol,
+		Decimals:  uint8(req.TokenDecimals),
+		Capacity:  capacity,
+	}
+
+	protocol := types.Protocol{
+		BitcoinPubkey:       req.BitcoinPubkey,
+		ScalarAddress:       req.Sender.Bytes(),
+		Name:                req.Name,
+		Tag:                 []byte(req.Tag), // ascii
+		Attributes:          req.Attributes,
+		Status:              exported.Pending,
+		Asset:               req.Asset,
+		CustodianGroupUID:   custodianGr.UID,
+		Avatar:              req.Avatar,
+		TokenDetails:        tokenDetails,
+		Chains:              []*exported.SupportedChain{},
+		TokenDailyMintLimit: mintLimit,
+	}
+
+	err = s.permission.AddProtocolManagementAccount(ctx, req.Sender)
+	if err != nil {
+		return nil, err
+	}
+
 	s.Keeper.SetProtocol(ctx, &protocol)
 
 	return &types.CreateProtocolResponse{

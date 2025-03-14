@@ -9,6 +9,16 @@ import "scalar/tss/exported/v1beta1/types.proto";
 
 option (gogoproto.goproto_getters_all) = false;
 
+message TokenDetails {
+  string token_name = 1;
+  string symbol = 2;
+  uint32 decimals = 3 [ (gogoproto.casttype) = "uint8" ];
+  bytes capacity = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
+}
+
 // Chain represents the properties of a registered blockchain
 message Chain {
   // The descriptor of the chain, e.g. "evm|11155111"
@@ -112,7 +122,10 @@ message GeneralMessage {
   bytes source_tx_id = 7 [ (gogoproto.customname) = "SourceTxID" ];
   uint64 source_tx_index = 8;
 
-  // Additional data for the message, metadata is encoded in the payload, it can be fee information, etc. It will be used later when enqueuing the command and batch command. Currently, the main purpose is use to form the psbt for btc
+  // Additional data for the message, metadata is encoded in the payload, it can
+  // be fee information, etc. It will be used later when enqueuing the command
+  // and batch command. Currently, the main purpose is use to form the psbt for
+  // btc
   bytes payload = 9;
 }
 

@@ -69,7 +69,7 @@ func TestMgr_ProccessTokenConfirmation(t *testing.T) {
 			Chain:              "Ethereum",
 			GatewayAddress:     types.Address(common.BytesToAddress(gatewayAddrBytes)),
 			TokenAddress:       types.Address(common.BytesToAddress(tokenAddrBytes)),
-			TokenDetails:       types.TokenDetails{Symbol: symbol},
+			TokenDetails:       nexus.TokenDetails{Symbol: symbol},
 			ConfirmationHeight: uint64(confHeight),
 			PollParticipants: vote.PollParticipants{
 				PollID:       pollID,

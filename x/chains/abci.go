@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
@@ -264,7 +265,8 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 
 	destinationToken := destinationCk.GetERC20TokenByAsset(ctx, asset)
 	if !destinationToken.Is(types.Confirmed) {
-		return fmt.Errorf("token with asset %s not confirmed on destination chain", e.Symbol)
+		log.Debug().Any("destinationToken", destinationToken).Msg("[handleContractCallWithTokenToBTC]")
+		return fmt.Errorf("token with asset %s not confirmed on destination chain %s", e.Symbol, destinationChain)
 	}
 
 	if !common.IsHexAddress(e.ContractAddress) {
@@ -357,7 +359,8 @@ func handleContractCallWithTokenToEVM(ctx sdk.Context, event types.Event, bk typ
 
 	destinationToken := destinationCk.GetERC20TokenByAsset(ctx, asset)
 	if !destinationToken.Is(types.Confirmed) {
-		return fmt.Errorf("token with asset %s not confirmed on destination chain", e.Symbol)
+		log.Debug().Any("destinationToken", destinationToken).Msg("[handleContractCallWithTokenToEVM]")
+		return fmt.Errorf("token with asset %s not confirmed on destination chain %s", e.Symbol, destinationChain)
 	}
 
 	if !common.IsHexAddress(e.ContractAddress) {

@@ -5,22 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	types "github.com/scalarorg/scalar-core/x/chains/types"
-	"github.com/scalarorg/scalar-core/x/protocol/exported"
 )
-
-func NewCreateProtocolRequest(sender sdk.AccAddress, name string, bitcoinPubkey []byte, tag string, attributes *exported.ProtocolAttributes, custodianGroupUid string, avatar []byte, asset *types.Asset) *CreateProtocolRequest {
-	return &CreateProtocolRequest{
-		Sender:            sender,
-		Name:              name,
-		BitcoinPubkey:     bitcoinPubkey,
-		Tag:               tag,
-		Attributes:        attributes,
-		CustodianGroupUid: custodianGroupUid,
-		Avatar:            avatar,
-		Asset:             asset,
-	}
-}
 
 // Route returns the route for this message
 func (m CreateProtocolRequest) Route() string {

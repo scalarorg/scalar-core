@@ -34,7 +34,7 @@ func (k *Querier) Protocols(c context.Context, req *types.ProtocolsRequest) (*ty
 	for i, protocol := range protocols {
 		custodianGr, ok := k.covenant.GetCustodianGroup(ctx, protocol.CustodianGroupUID)
 		if !ok {
-			ctx.Logger().Error("custodian group not found", "protocol", protocol.Asset.Name, "custodian group uid", protocol.CustodianGroupUID)
+			ctx.Logger().Error("custodian group not found", "protocol", protocol.Asset.Symbol, "custodian group uid", protocol.CustodianGroupUID)
 			return nil, status.Errorf(codes.NotFound, "custodian group not found")
 		}
 		protocolDetails[i] = mapProtocolToProtocolDetails(protocol, custodianGr)
@@ -60,15 +60,6 @@ func (q *Querier) Protocol(c context.Context, req *types.ProtocolRequest) (*type
 		if err != nil {
 			return nil, status.Errorf(codes.NotFound, "protocol not found")
 		}
-
-		custodianGr, ok := q.covenant.GetCustodianGroup(ctx, protocol.CustodianGroupUID)
-		if !ok {
-			return nil, status.Errorf(codes.NotFound, "custodian group not found")
-		}
-
-		return &types.ProtocolResponse{
-			Protocol: mapProtocolToProtocolDetails(protocol, custodianGr),
-		}, nil
 	}
 
 	if req.Address != "" {
@@ -76,33 +67,43 @@ func (q *Querier) Protocol(c context.Context, req *types.ProtocolRequest) (*type
 		if err != nil {
 			return nil, status.Errorf(codes.NotFound, "protocol not found")
 		}
-
-		custodianGr, ok := q.covenant.GetCustodianGroup(ctx, protocol.CustodianGroupUID)
-		if !ok {
-			return nil, status.Errorf(codes.NotFound, "custodian group not found")
-		}
-
-		return &types.ProtocolResponse{
-			Protocol: mapProtocolToProtocolDetails(protocol, custodianGr),
-		}, nil
 	}
 
-	// This should never happen because of the validation above, but it enstures in case of the validation is not working
-	return nil, status.Errorf(codes.NotFound, "protocol not found")
+	if len(req.Sender) != 0 {
+		protocol, err = q.keeper.GetProtocolBySender(ctx, req.Sender)
+		if err != nil {
+			return nil, status.Errorf(codes.NotFound, "protocol not found")
+		}
+	}
+
+	if protocol == nil {
+		return nil, status.Errorf(codes.NotFound, "protocol not found")
+	}
+
+	custodianGr, ok := q.covenant.GetCustodianGroup(ctx, protocol.CustodianGroupUID)
+	if !ok {
+		return nil, status.Errorf(codes.NotFound, "custodian group not found")
+	}
+
+	return &types.ProtocolResponse{
+		Protocol: mapProtocolToProtocolDetails(protocol, custodianGr),
+	}, nil
 }
 
 func mapProtocolToProtocolDetails(protocol *types.Protocol, custodianGr *covenanttypes.CustodianGroup) *types.ProtocolDetails {
 	return &types.ProtocolDetails{
-		BitcoinPubkey:     protocol.BitcoinPubkey,
-		ScalarAddress:     protocol.ScalarAddress,
-		Name:              protocol.Name,
-		Tag:               protocol.Tag,
-		Attributes:        protocol.Attributes,
-		Status:            protocol.Status,
-		CustodianGroupUID: protocol.CustodianGroupUID,
-		Asset:             protocol.Asset,
-		Chains:            protocol.Chains,
-		Avatar:            protocol.Avatar,
-		CustodianGroup:    custodianGr,
+		BitcoinPubkey:       protocol.BitcoinPubkey,
+		ScalarAddress:       protocol.ScalarAddress,
+		Name:                protocol.Name,
+		Tag:                 protocol.Tag,
+		Attributes:          protocol.Attributes,
+		Status:              protocol.Status,
+		CustodianGroupUID:   protocol.CustodianGroupUID,
+		Asset:               protocol.Asset,
+		Chains:              protocol.Chains,
+		Avatar:              protocol.Avatar,
+		CustodianGroup:      custodianGr,
+		TokenDetails:        protocol.TokenDetails,
+		TokenDailyMintLimit: protocol.TokenDailyMintLimit,
 	}
 }

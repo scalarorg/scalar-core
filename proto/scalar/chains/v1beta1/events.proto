@@ -5,6 +5,7 @@ import "cosmos/base/v1beta1/coin.proto";
 import "gogoproto/gogo.proto";
 import "scalar/chains/v1beta1/types.proto";
 import "scalar/vote/exported/v1beta1/types.proto";
+import "scalar/nexus/exported/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
 option (gogoproto.goproto_getters_all) = false;
@@ -55,7 +56,8 @@ message ConfirmTokenStarted {
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
   bytes token_address = 4
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
-  TokenDetails token_details = 5 [ (gogoproto.nullable) = false ];
+  nexus.exported.v1beta1.TokenDetails token_details = 5
+      [ (gogoproto.nullable) = false ];
   uint64 confirmation_height = 6;
   vote.exported.v1beta1.PollParticipants participants = 7
       [ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
@@ -159,7 +161,7 @@ message EventTokenSent {
     (gogoproto.casttype) =
         "github.com/scalarorg/scalar-core/x/nexus/exported.TransferID"
   ];
-  string command_id = 4 [ (gogoproto.customname) = "CommandID"];
+  string command_id = 4 [ (gogoproto.customname) = "CommandID" ];
   string sender = 5;
   string destination_chain = 6
       [ (gogoproto.casttype) =
@@ -187,13 +189,13 @@ message EventContractCallWithToken {
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string contract_address = 3;
   bytes payload_hash = 4
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ]; 
+      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
   string symbol = 5;
   bytes amount = 6 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
     (gogoproto.nullable) = false
   ];
-  bytes payload = 7;   
+  bytes payload = 7;
 }
 
 message EventTransfer {

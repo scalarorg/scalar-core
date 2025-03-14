@@ -503,3 +503,25 @@ type IsChainRegisteredRequest struct {
 type WasmQueryIsChainRegisteredResponse struct {
 	IsRegistered bool `json:"is_registered"`
 }
+
+// NewTokenDetails returns a new TokenDetails instance
+func NewTokenDetails(tokenName, symbol string, decimals uint8, capacity sdk.Uint) TokenDetails {
+	return TokenDetails{
+		TokenName: utils.NormalizeString(tokenName),
+		Symbol:    utils.NormalizeString(symbol),
+		Decimals:  decimals,
+		Capacity:  capacity,
+	}
+}
+
+func (m TokenDetails) Validate() error {
+	if err := utils.ValidateString(m.TokenName); err != nil {
+		return sdkerrors.Wrap(err, "invalid token name")
+	}
+
+	if err := utils.ValidateString(m.Symbol); err != nil {
+		return sdkerrors.Wrap(err, "invalid token symbol")
+	}
+
+	return nil
+}

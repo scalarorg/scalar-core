@@ -5,10 +5,12 @@ package types
 
 import (
 	fmt "fmt"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	types "github.com/scalarorg/scalar-core/x/chains/types"
 	types1 "github.com/scalarorg/scalar-core/x/covenant/types"
+	exported1 "github.com/scalarorg/scalar-core/x/nexus/exported"
 	exported "github.com/scalarorg/scalar-core/x/protocol/exported"
 	io "io"
 	math "math"
@@ -34,10 +36,12 @@ type Protocol struct {
 	Attributes    *exported.ProtocolAttributes `protobuf:"bytes,5,opt,name=attributes,proto3" json:"attributes,omitempty"`
 	Status        exported.Status              `protobuf:"varint,6,opt,name=status,proto3,enum=scalar.protocol.exported.v1beta1.Status" json:"status,omitempty"`
 	// scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
-	CustodianGroupUID string                     `protobuf:"bytes,7,opt,name=custodian_group_uid,json=custodianGroupUid,proto3" json:"custodian_group_uid,omitempty"`
-	Asset             *types.Asset               `protobuf:"bytes,8,opt,name=asset,proto3" json:"asset,omitempty"`
-	Chains            []*exported.SupportedChain `protobuf:"bytes,9,rep,name=chains,proto3" json:"chains,omitempty"`
-	Avatar            []byte                     `protobuf:"bytes,10,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	CustodianGroupUID   string                                  `protobuf:"bytes,7,opt,name=custodian_group_uid,json=custodianGroupUid,proto3" json:"custodian_group_uid,omitempty"`
+	Chains              []*exported.SupportedChain              `protobuf:"bytes,8,rep,name=chains,proto3" json:"chains,omitempty"`
+	Avatar              []byte                                  `protobuf:"bytes,9,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Asset               *types.Asset                            `protobuf:"bytes,10,opt,name=asset,proto3" json:"asset,omitempty"`
+	TokenDetails        *exported1.TokenDetails                 `protobuf:"bytes,11,opt,name=token_details,json=tokenDetails,proto3" json:"token_details,omitempty"`
+	TokenDailyMintLimit github_com_cosmos_cosmos_sdk_types.Uint `protobuf:"bytes,12,opt,name=token_daily_mint_limit,json=tokenDailyMintLimit,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Uint" json:"token_daily_mint_limit"`
 }
 
 func (m *Protocol) Reset()         { *m = Protocol{} }
@@ -122,13 +126,6 @@ func (m *Protocol) GetCustodianGroupUID() string {
 	return ""
 }
 
-func (m *Protocol) GetAsset() *types.Asset {
-	if m != nil {
-		return m.Asset
-	}
-	return nil
-}
-
 func (m *Protocol) GetChains() []*exported.SupportedChain {
 	if m != nil {
 		return m.Chains
@@ -143,19 +140,34 @@ func (m *Protocol) GetAvatar() []byte {
 	return nil
 }
 
+func (m *Protocol) GetAsset() *types.Asset {
+	if m != nil {
+		return m.Asset
+	}
+	return nil
+}
+
+func (m *Protocol) GetTokenDetails() *exported1.TokenDetails {
+	if m != nil {
+		return m.TokenDetails
+	}
+	return nil
+}
+
 type ProtocolDetails struct {
-	BitcoinPubkey     []byte                       `protobuf:"bytes,1,opt,name=bitcoin_pubkey,json=bitcoinPubkey,proto3" json:"bitcoin_pubkey,omitempty"`
-	ScalarPubkey      []byte                       `protobuf:"bytes,2,opt,name=scalar_pubkey,json=scalarPubkey,proto3" json:"scalar_pubkey,omitempty"`
-	ScalarAddress     []byte                       `protobuf:"bytes,3,opt,name=scalar_address,json=scalarAddress,proto3" json:"scalar_address,omitempty"`
-	Name              string                       `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-	Tag               []byte                       `protobuf:"bytes,5,opt,name=tag,proto3" json:"tag,omitempty"`
-	Attributes        *exported.ProtocolAttributes `protobuf:"bytes,6,opt,name=attributes,proto3" json:"attributes,omitempty"`
-	Status            exported.Status              `protobuf:"varint,7,opt,name=status,proto3,enum=scalar.protocol.exported.v1beta1.Status" json:"status,omitempty"`
-	CustodianGroupUID string                       `protobuf:"bytes,8,opt,name=custodian_group_uid,json=custodianGroupUid,proto3" json:"custodian_group_uid,omitempty"`
-	Asset             *types.Asset                 `protobuf:"bytes,9,opt,name=asset,proto3" json:"asset,omitempty"`
-	Chains            []*exported.SupportedChain   `protobuf:"bytes,10,rep,name=chains,proto3" json:"chains,omitempty"`
-	Avatar            []byte                       `protobuf:"bytes,11,opt,name=avatar,proto3" json:"avatar,omitempty"`
-	CustodianGroup    *types1.CustodianGroup       `protobuf:"bytes,12,opt,name=custodian_group,json=custodianGroup,proto3" json:"custodian_group,omitempty"`
+	ScalarAddress       []byte                                  `protobuf:"bytes,1,opt,name=scalar_address,json=scalarAddress,proto3" json:"scalar_address,omitempty"`
+	BitcoinPubkey       []byte                                  `protobuf:"bytes,2,opt,name=bitcoin_pubkey,json=bitcoinPubkey,proto3" json:"bitcoin_pubkey,omitempty"`
+	Name                string                                  `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Tag                 []byte                                  `protobuf:"bytes,4,opt,name=tag,proto3" json:"tag,omitempty"`
+	Attributes          *exported.ProtocolAttributes            `protobuf:"bytes,5,opt,name=attributes,proto3" json:"attributes,omitempty"`
+	Status              exported.Status                         `protobuf:"varint,6,opt,name=status,proto3,enum=scalar.protocol.exported.v1beta1.Status" json:"status,omitempty"`
+	CustodianGroupUID   string                                  `protobuf:"bytes,7,opt,name=custodian_group_uid,json=custodianGroupUid,proto3" json:"custodian_group_uid,omitempty"`
+	Chains              []*exported.SupportedChain              `protobuf:"bytes,8,rep,name=chains,proto3" json:"chains,omitempty"`
+	Avatar              []byte                                  `protobuf:"bytes,9,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	CustodianGroup      *types1.CustodianGroup                  `protobuf:"bytes,10,opt,name=custodian_group,json=custodianGroup,proto3" json:"custodian_group,omitempty"`
+	Asset               *types.Asset                            `protobuf:"bytes,11,opt,name=asset,proto3" json:"asset,omitempty"`
+	TokenDetails        *exported1.TokenDetails                 `protobuf:"bytes,12,opt,name=token_details,json=tokenDetails,proto3" json:"token_details,omitempty"`
+	TokenDailyMintLimit github_com_cosmos_cosmos_sdk_types.Uint `protobuf:"bytes,13,opt,name=token_daily_mint_limit,json=tokenDailyMintLimit,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Uint" json:"token_daily_mint_limit"`
 }
 
 func (m *ProtocolDetails) Reset()         { *m = ProtocolDetails{} }
@@ -191,23 +203,16 @@ func (m *ProtocolDetails) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_ProtocolDetails proto.InternalMessageInfo
 
-func (m *ProtocolDetails) GetBitcoinPubkey() []byte {
-	if m != nil {
-		return m.BitcoinPubkey
-	}
-	return nil
-}
-
-func (m *ProtocolDetails) GetScalarPubkey() []byte {
-	if m != nil {
-		return m.ScalarPubkey
-	}
-	return nil
-}
-
 func (m *ProtocolDetails) GetScalarAddress() []byte {
 	if m != nil {
 		return m.ScalarAddress
+	}
+	return nil
+}
+
+func (m *ProtocolDetails) GetBitcoinPubkey() []byte {
+	if m != nil {
+		return m.BitcoinPubkey
 	}
 	return nil
 }
@@ -247,13 +252,6 @@ func (m *ProtocolDetails) GetCustodianGroupUID() string {
 	return ""
 }
 
-func (m *ProtocolDetails) GetAsset() *types.Asset {
-	if m != nil {
-		return m.Asset
-	}
-	return nil
-}
-
 func (m *ProtocolDetails) GetChains() []*exported.SupportedChain {
 	if m != nil {
 		return m.Chains
@@ -275,6 +273,20 @@ func (m *ProtocolDetails) GetCustodianGroup() *types1.CustodianGroup {
 	return nil
 }
 
+func (m *ProtocolDetails) GetAsset() *types.Asset {
+	if m != nil {
+		return m.Asset
+	}
+	return nil
+}
+
+func (m *ProtocolDetails) GetTokenDetails() *exported1.TokenDetails {
+	if m != nil {
+		return m.TokenDetails
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*Protocol)(nil), "scalar.protocol.v1beta1.Protocol")
 	proto.RegisterType((*ProtocolDetails)(nil), "scalar.protocol.v1beta1.ProtocolDetails")
@@ -285,40 +297,46 @@ func init() {
 }
 
 var fileDescriptor_1d53a37c7b7ae195 = []byte{
-	// 526 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x94, 0xcf, 0x6e, 0xd3, 0x30,
-	0x1c, 0xc7, 0x1b, 0xd2, 0x66, 0xad, 0x5b, 0x3a, 0x66, 0xfe, 0x59, 0x15, 0x0a, 0x61, 0x13, 0x22,
-	0x07, 0x48, 0x68, 0xe1, 0x01, 0xe8, 0x36, 0x04, 0x88, 0x4b, 0x15, 0xe0, 0xc2, 0xa5, 0x72, 0x12,
-	0x2b, 0x8b, 0xe8, 0xe2, 0x28, 0x76, 0xaa, 0xed, 0x2d, 0x78, 0x2c, 0x8e, 0x3b, 0x72, 0x42, 0xa8,
-	0x7d, 0x02, 0xc4, 0x0b, 0xa0, 0xf8, 0x4f, 0x59, 0x4b, 0xc7, 0xa6, 0xa9, 0x37, 0xfb, 0xeb, 0x8f,
-	0x7f, 0xfe, 0xfd, 0xf9, 0xca, 0x60, 0x8f, 0x45, 0x78, 0x82, 0x0b, 0x3f, 0x2f, 0x28, 0xa7, 0x11,
-	0x9d, 0xf8, 0xd3, 0x7e, 0x48, 0x38, 0xee, 0xfb, 0xfc, 0x34, 0x27, 0xcc, 0x13, 0x32, 0xbc, 0x2f,
-	0x21, 0x4f, 0x43, 0x9e, 0x82, 0x7a, 0x77, 0x12, 0x9a, 0x50, 0xa1, 0xfa, 0xd5, 0x4a, 0x02, 0xbd,
-	0xa7, 0xab, 0x31, 0xc9, 0x49, 0x4e, 0x0b, 0x4e, 0xe2, 0x75, 0xc1, 0x7b, 0x8f, 0x14, 0x1d, 0x1d,
-	0xe1, 0x34, 0x63, 0x6b, 0x11, 0x9d, 0x64, 0x44, 0xa7, 0x24, 0xc3, 0x19, 0x5f, 0x07, 0xed, 0xfe,
-	0x36, 0x41, 0x73, 0xa4, 0x5e, 0x84, 0x8f, 0x41, 0x37, 0x4c, 0x79, 0x44, 0xd3, 0x6c, 0x9c, 0x97,
-	0xe1, 0x17, 0x72, 0x8a, 0x0c, 0xc7, 0x70, 0x3b, 0xc1, 0x4d, 0xa5, 0x8e, 0x84, 0x58, 0x61, 0x32,
-	0xf4, 0x18, 0xc7, 0x71, 0x41, 0x18, 0x43, 0x37, 0x24, 0x26, 0xd5, 0xa1, 0x14, 0x21, 0x04, 0xf5,
-	0x0c, 0x1f, 0x13, 0x64, 0x3a, 0x86, 0xdb, 0x0a, 0xc4, 0x1a, 0xde, 0x02, 0x26, 0xc7, 0x09, 0xaa,
-	0x0b, 0xbe, 0x5a, 0xc2, 0x8f, 0x00, 0x60, 0xce, 0x8b, 0x34, 0x2c, 0x39, 0x61, 0xa8, 0xe1, 0x18,
-	0x6e, 0x7b, 0xf0, 0xd2, 0x5b, 0x6d, 0x9d, 0xee, 0x85, 0xee, 0xa1, 0xa7, 0x73, 0x1e, 0x2e, 0xee,
-	0x06, 0xe7, 0xe2, 0xc0, 0x57, 0xc0, 0x62, 0x1c, 0xf3, 0x92, 0x21, 0xcb, 0x31, 0xdc, 0xee, 0xc0,
-	0xbd, 0x3c, 0xe2, 0x07, 0xc1, 0x07, 0xea, 0x1e, 0x7c, 0x0d, 0x6e, 0x47, 0x25, 0xe3, 0x34, 0x4e,
-	0x71, 0x36, 0x4e, 0x0a, 0x5a, 0xe6, 0xe3, 0x32, 0x8d, 0xd1, 0x56, 0x55, 0xcc, 0xfe, 0xdd, 0xd9,
-	0x8f, 0x87, 0x3b, 0x07, 0xfa, 0xf8, 0x4d, 0x75, 0xfa, 0xe9, 0xdd, 0x61, 0xb0, 0x13, 0x2d, 0x4b,
-	0x69, 0x0c, 0x07, 0xa0, 0x81, 0x19, 0x23, 0x1c, 0x35, 0x45, 0x65, 0x0f, 0x74, 0x1e, 0x72, 0x6e,
-	0x8b, 0xc7, 0x87, 0x15, 0x13, 0x48, 0x14, 0xbe, 0x05, 0x96, 0x3c, 0x46, 0x2d, 0xc7, 0x74, 0xdb,
-	0x83, 0xe7, 0x57, 0x48, 0xbe, 0xcc, 0xa5, 0x72, 0x50, 0x5d, 0x0c, 0xd4, 0x7d, 0x78, 0x0f, 0x58,
-	0x78, 0x8a, 0x39, 0x2e, 0x10, 0x10, 0x1d, 0x57, 0xbb, 0xdd, 0x5f, 0x75, 0xb0, 0xad, 0x3b, 0x78,
-	0x48, 0x38, 0x4e, 0x27, 0xec, 0xaa, 0xc3, 0xdf, 0x03, 0x6a, 0xcc, 0x9a, 0x92, 0xb3, 0xef, 0x48,
-	0xf1, 0x42, 0x87, 0x98, 0xff, 0x73, 0x48, 0xfd, 0x5f, 0x87, 0x34, 0x2e, 0x72, 0x88, 0xb5, 0x71,
-	0x87, 0x6c, 0x6d, 0xd6, 0x21, 0xcd, 0xeb, 0x3a, 0xa4, 0x75, 0x1d, 0x87, 0x80, 0x8d, 0x39, 0xa4,
-	0x7d, 0xde, 0x21, 0x70, 0x04, 0xb6, 0x57, 0x8a, 0x43, 0x1d, 0x91, 0xdf, 0x93, 0x45, 0x7e, 0xea,
-	0x5b, 0x59, 0xbc, 0xb0, 0x5c, 0x6d, 0xd0, 0x5d, 0x2e, 0x75, 0xff, 0xfd, 0xb7, 0x99, 0x6d, 0x9c,
-	0xcd, 0x6c, 0xe3, 0xe7, 0xcc, 0x36, 0xbe, 0xce, 0xed, 0xda, 0xd9, 0xdc, 0xae, 0x7d, 0x9f, 0xdb,
-	0xb5, 0xcf, 0xfd, 0x24, 0xe5, 0x47, 0x65, 0xe8, 0x45, 0xf4, 0xd8, 0x97, 0xc1, 0x69, 0x91, 0xa8,
-	0xd5, 0xb3, 0x88, 0x16, 0xc4, 0x3f, 0xf9, 0xfb, 0x2b, 0x8a, 0xcf, 0x2b, 0xb4, 0xc4, 0xfe, 0xc5,
-	0x9f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xa7, 0x66, 0x17, 0xf6, 0x89, 0x05, 0x00, 0x00,
+	// 609 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x55, 0xdd, 0x6e, 0xd3, 0x30,
+	0x18, 0x6d, 0xf6, 0x13, 0x36, 0xb7, 0xdb, 0x98, 0x07, 0xc3, 0x9a, 0x50, 0x56, 0x86, 0xd0, 0x82,
+	0x60, 0x09, 0x2b, 0x3c, 0x00, 0xfb, 0x41, 0x80, 0x00, 0xa9, 0x0a, 0xdb, 0x0d, 0x37, 0x91, 0x93,
+	0x58, 0x99, 0xb5, 0x36, 0x8e, 0x62, 0x67, 0x6a, 0xef, 0x79, 0x00, 0xde, 0x83, 0x17, 0xd9, 0xe5,
+	0x2e, 0x11, 0x17, 0x15, 0x6a, 0x5f, 0x04, 0xc5, 0x76, 0xba, 0xfe, 0x09, 0x90, 0xf8, 0xb9, 0xe2,
+	0xaa, 0xf6, 0x97, 0x73, 0xce, 0x77, 0xec, 0x9c, 0xaf, 0x01, 0xf7, 0x79, 0x88, 0x5b, 0x38, 0x73,
+	0xd3, 0x8c, 0x09, 0x16, 0xb2, 0x96, 0x7b, 0xb1, 0x1f, 0x10, 0x81, 0xf7, 0x5d, 0xd1, 0x4d, 0x09,
+	0x77, 0x64, 0x19, 0xde, 0x51, 0x20, 0xa7, 0x04, 0x39, 0x1a, 0xb4, 0x75, 0x2b, 0x66, 0x31, 0x93,
+	0x55, 0xb7, 0x58, 0x29, 0xc0, 0xd6, 0xe3, 0x49, 0x4d, 0xd2, 0x49, 0x59, 0x26, 0x48, 0x34, 0x4b,
+	0x7c, 0xeb, 0x9e, 0x46, 0x87, 0x67, 0x98, 0x26, 0x7c, 0x26, 0xa4, 0x34, 0x19, 0xb2, 0x0b, 0x92,
+	0xe0, 0x44, 0xcc, 0x04, 0x3d, 0xd4, 0xa0, 0x84, 0x74, 0x72, 0xfe, 0xc3, 0x96, 0x3b, 0x9f, 0x17,
+	0xc1, 0x52, 0x53, 0x9b, 0x83, 0x0f, 0xc0, 0x6a, 0x40, 0x45, 0xc8, 0x68, 0xe2, 0xa7, 0x79, 0x70,
+	0x4e, 0xba, 0xc8, 0xa8, 0x1b, 0x76, 0xcd, 0x5b, 0xd1, 0xd5, 0xa6, 0x2c, 0x16, 0x30, 0xd5, 0xc0,
+	0xc7, 0x51, 0x94, 0x11, 0xce, 0xd1, 0x9c, 0x82, 0xa9, 0xea, 0x81, 0x2a, 0x42, 0x08, 0x16, 0x12,
+	0xdc, 0x26, 0x68, 0xbe, 0x6e, 0xd8, 0xcb, 0x9e, 0x5c, 0xc3, 0x9b, 0x60, 0x5e, 0xe0, 0x18, 0x2d,
+	0x48, 0x7c, 0xb1, 0x84, 0x27, 0x00, 0x60, 0x21, 0x32, 0x1a, 0xe4, 0x82, 0x70, 0xb4, 0x58, 0x37,
+	0xec, 0x6a, 0xe3, 0x99, 0x33, 0x79, 0xcb, 0xe5, 0x19, 0xca, 0xeb, 0x76, 0x4a, 0xcf, 0x07, 0x43,
+	0xae, 0x37, 0xa2, 0x03, 0x9f, 0x03, 0x93, 0x0b, 0x2c, 0x72, 0x8e, 0xcc, 0xba, 0x61, 0xaf, 0x36,
+	0xec, 0x9f, 0x2b, 0xbe, 0x97, 0x78, 0x4f, 0xf3, 0xe0, 0x0b, 0xb0, 0x11, 0xe6, 0x5c, 0xb0, 0x88,
+	0xe2, 0xc4, 0x8f, 0x33, 0x96, 0xa7, 0x7e, 0x4e, 0x23, 0x74, 0xa3, 0x38, 0xcc, 0xe1, 0xed, 0x7e,
+	0x6f, 0x7b, 0xfd, 0xa8, 0x7c, 0xfc, 0xb2, 0x78, 0x7a, 0xfa, 0xfa, 0xd8, 0x5b, 0x0f, 0xc7, 0x4b,
+	0x34, 0x82, 0xaf, 0x80, 0xa9, 0xde, 0x26, 0x5a, 0xaa, 0xcf, 0xdb, 0xd5, 0xc6, 0x93, 0x5f, 0x30,
+	0x92, 0xa7, 0xaa, 0x72, 0x54, 0x10, 0x3d, 0xcd, 0x87, 0x9b, 0xc0, 0xc4, 0x17, 0x58, 0xe0, 0x0c,
+	0x2d, 0xcb, 0xdb, 0xd3, 0x3b, 0xd8, 0x00, 0x8b, 0x98, 0x73, 0x22, 0x10, 0x90, 0x77, 0x77, 0xb7,
+	0x6c, 0xa0, 0x68, 0x43, 0xd5, 0x83, 0x02, 0xe3, 0x29, 0x28, 0x6c, 0x82, 0x15, 0xc1, 0xce, 0x49,
+	0xe2, 0x47, 0x44, 0x60, 0xda, 0xe2, 0xa8, 0x2a, 0xb9, 0x8f, 0x4a, 0xae, 0x0c, 0xce, 0xb4, 0xb3,
+	0x93, 0x82, 0x73, 0xac, 0x28, 0x5e, 0x4d, 0x8c, 0xec, 0x60, 0x04, 0x36, 0xb5, 0x22, 0xa6, 0xad,
+	0xae, 0xdf, 0xa6, 0x89, 0xf0, 0x5b, 0xb4, 0x4d, 0x05, 0xaa, 0x15, 0x6e, 0x0f, 0xdd, 0xcb, 0xde,
+	0x76, 0xe5, 0x6b, 0x6f, 0x7b, 0x37, 0xa6, 0xe2, 0x2c, 0x0f, 0x9c, 0x90, 0xb5, 0xdd, 0x90, 0xf1,
+	0x36, 0xe3, 0xfa, 0x67, 0x8f, 0x47, 0xe7, 0x3a, 0x99, 0xa7, 0x34, 0x11, 0xde, 0x86, 0x92, 0x2f,
+	0xd4, 0xde, 0xd1, 0x44, 0xbc, 0x2d, 0xb4, 0x76, 0x3e, 0x9a, 0x60, 0xad, 0x7c, 0xf3, 0x65, 0xe7,
+	0xe9, 0x34, 0x1a, 0xb3, 0xd2, 0x38, 0x9d, 0xed, 0xb9, 0x59, 0xd9, 0xfe, 0x1f, 0xda, 0x7f, 0x12,
+	0xda, 0x26, 0x58, 0x9b, 0x30, 0xaa, 0xe3, 0xbb, 0x3b, 0x8c, 0xaf, 0xfe, 0x83, 0x1b, 0x76, 0x18,
+	0x77, 0xee, 0xad, 0x8e, 0xdb, 0xbe, 0x1e, 0x83, 0xea, 0x6f, 0x8c, 0x41, 0xed, 0xef, 0x8d, 0xc1,
+	0xca, 0x9f, 0x1b, 0x83, 0xc3, 0x37, 0x97, 0x7d, 0xcb, 0xb8, 0xea, 0x5b, 0xc6, 0xb7, 0xbe, 0x65,
+	0x7c, 0x1a, 0x58, 0x95, 0xab, 0x81, 0x55, 0xf9, 0x32, 0xb0, 0x2a, 0x1f, 0xf6, 0x47, 0x74, 0xd5,
+	0x21, 0x58, 0x16, 0xeb, 0xd5, 0x5e, 0xc8, 0x32, 0xe2, 0x76, 0xae, 0xbf, 0x45, 0xb2, 0x4d, 0x60,
+	0xca, 0xfd, 0xd3, 0xef, 0x01, 0x00, 0x00, 0xff, 0xff, 0x19, 0x83, 0x68, 0xcb, 0xff, 0x06, 0x00,
+	0x00,
 }
 
 func (m *Protocol) Marshal() (dAtA []byte, err error) {
@@ -341,12 +359,46 @@ func (m *Protocol) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	{
+		size := m.TokenDailyMintLimit.Size()
+		i -= size
+		if _, err := m.TokenDailyMintLimit.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTypes(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x62
+	if m.TokenDetails != nil {
+		{
+			size, err := m.TokenDetails.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTypes(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x5a
+	}
+	if m.Asset != nil {
+		{
+			size, err := m.Asset.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTypes(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x52
+	}
 	if len(m.Avatar) > 0 {
 		i -= len(m.Avatar)
 		copy(dAtA[i:], m.Avatar)
 		i = encodeVarintTypes(dAtA, i, uint64(len(m.Avatar)))
 		i--
-		dAtA[i] = 0x52
+		dAtA[i] = 0x4a
 	}
 	if len(m.Chains) > 0 {
 		for iNdEx := len(m.Chains) - 1; iNdEx >= 0; iNdEx-- {
@@ -359,20 +411,8 @@ func (m *Protocol) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 				i = encodeVarintTypes(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0x4a
+			dAtA[i] = 0x42
 		}
-	}
-	if m.Asset != nil {
-		{
-			size, err := m.Asset.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintTypes(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0x42
 	}
 	if len(m.CustodianGroupUID) > 0 {
 		i -= len(m.CustodianGroupUID)
@@ -449,6 +489,40 @@ func (m *ProtocolDetails) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	{
+		size := m.TokenDailyMintLimit.Size()
+		i -= size
+		if _, err := m.TokenDailyMintLimit.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTypes(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x6a
+	if m.TokenDetails != nil {
+		{
+			size, err := m.TokenDetails.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTypes(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x62
+	}
+	if m.Asset != nil {
+		{
+			size, err := m.Asset.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTypes(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x5a
+	}
 	if m.CustodianGroup != nil {
 		{
 			size, err := m.CustodianGroup.MarshalToSizedBuffer(dAtA[:i])
@@ -459,14 +533,14 @@ func (m *ProtocolDetails) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			i = encodeVarintTypes(dAtA, i, uint64(size))
 		}
 		i--
-		dAtA[i] = 0x62
+		dAtA[i] = 0x52
 	}
 	if len(m.Avatar) > 0 {
 		i -= len(m.Avatar)
 		copy(dAtA[i:], m.Avatar)
 		i = encodeVarintTypes(dAtA, i, uint64(len(m.Avatar)))
 		i--
-		dAtA[i] = 0x5a
+		dAtA[i] = 0x4a
 	}
 	if len(m.Chains) > 0 {
 		for iNdEx := len(m.Chains) - 1; iNdEx >= 0; iNdEx-- {
@@ -479,32 +553,20 @@ func (m *ProtocolDetails) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 				i = encodeVarintTypes(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0x52
+			dAtA[i] = 0x42
 		}
-	}
-	if m.Asset != nil {
-		{
-			size, err := m.Asset.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintTypes(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0x4a
 	}
 	if len(m.CustodianGroupUID) > 0 {
 		i -= len(m.CustodianGroupUID)
 		copy(dAtA[i:], m.CustodianGroupUID)
 		i = encodeVarintTypes(dAtA, i, uint64(len(m.CustodianGroupUID)))
 		i--
-		dAtA[i] = 0x42
+		dAtA[i] = 0x3a
 	}
 	if m.Status != 0 {
 		i = encodeVarintTypes(dAtA, i, uint64(m.Status))
 		i--
-		dAtA[i] = 0x38
+		dAtA[i] = 0x30
 	}
 	if m.Attributes != nil {
 		{
@@ -516,40 +578,33 @@ func (m *ProtocolDetails) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			i = encodeVarintTypes(dAtA, i, uint64(size))
 		}
 		i--
-		dAtA[i] = 0x32
+		dAtA[i] = 0x2a
 	}
 	if len(m.Tag) > 0 {
 		i -= len(m.Tag)
 		copy(dAtA[i:], m.Tag)
 		i = encodeVarintTypes(dAtA, i, uint64(len(m.Tag)))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
 	if len(m.Name) > 0 {
 		i -= len(m.Name)
 		copy(dAtA[i:], m.Name)
 		i = encodeVarintTypes(dAtA, i, uint64(len(m.Name)))
 		i--
-		dAtA[i] = 0x22
-	}
-	if len(m.ScalarAddress) > 0 {
-		i -= len(m.ScalarAddress)
-		copy(dAtA[i:], m.ScalarAddress)
-		i = encodeVarintTypes(dAtA, i, uint64(len(m.ScalarAddress)))
-		i--
 		dAtA[i] = 0x1a
-	}
-	if len(m.ScalarPubkey) > 0 {
-		i -= len(m.ScalarPubkey)
-		copy(dAtA[i:], m.ScalarPubkey)
-		i = encodeVarintTypes(dAtA, i, uint64(len(m.ScalarPubkey)))
-		i--
-		dAtA[i] = 0x12
 	}
 	if len(m.BitcoinPubkey) > 0 {
 		i -= len(m.BitcoinPubkey)
 		copy(dAtA[i:], m.BitcoinPubkey)
 		i = encodeVarintTypes(dAtA, i, uint64(len(m.BitcoinPubkey)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ScalarAddress) > 0 {
+		i -= len(m.ScalarAddress)
+		copy(dAtA[i:], m.ScalarAddress)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.ScalarAddress)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -600,10 +655,6 @@ func (m *Protocol) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTypes(uint64(l))
 	}
-	if m.Asset != nil {
-		l = m.Asset.Size()
-		n += 1 + l + sovTypes(uint64(l))
-	}
 	if len(m.Chains) > 0 {
 		for _, e := range m.Chains {
 			l = e.Size()
@@ -614,6 +665,16 @@ func (m *Protocol) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTypes(uint64(l))
 	}
+	if m.Asset != nil {
+		l = m.Asset.Size()
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.TokenDetails != nil {
+		l = m.TokenDetails.Size()
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	l = m.TokenDailyMintLimit.Size()
+	n += 1 + l + sovTypes(uint64(l))
 	return n
 }
 
@@ -623,15 +684,11 @@ func (m *ProtocolDetails) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.BitcoinPubkey)
-	if l > 0 {
-		n += 1 + l + sovTypes(uint64(l))
-	}
-	l = len(m.ScalarPubkey)
-	if l > 0 {
-		n += 1 + l + sovTypes(uint64(l))
-	}
 	l = len(m.ScalarAddress)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	l = len(m.BitcoinPubkey)
 	if l > 0 {
 		n += 1 + l + sovTypes(uint64(l))
 	}
@@ -654,10 +711,6 @@ func (m *ProtocolDetails) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTypes(uint64(l))
 	}
-	if m.Asset != nil {
-		l = m.Asset.Size()
-		n += 1 + l + sovTypes(uint64(l))
-	}
 	if len(m.Chains) > 0 {
 		for _, e := range m.Chains {
 			l = e.Size()
@@ -672,6 +725,16 @@ func (m *ProtocolDetails) Size() (n int) {
 		l = m.CustodianGroup.Size()
 		n += 1 + l + sovTypes(uint64(l))
 	}
+	if m.Asset != nil {
+		l = m.Asset.Size()
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.TokenDetails != nil {
+		l = m.TokenDetails.Size()
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	l = m.TokenDailyMintLimit.Size()
+	n += 1 + l + sovTypes(uint64(l))
 	return n
 }
 
@@ -933,6 +996,74 @@ func (m *Protocol) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 8:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Chains", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Chains = append(m.Chains, &exported.SupportedChain{})
+			if err := m.Chains[len(m.Chains)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Avatar", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Avatar = append(m.Avatar[:0], dAtA[iNdEx:postIndex]...)
+			if m.Avatar == nil {
+				m.Avatar = []byte{}
+			}
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Asset", wireType)
 			}
 			var msglen int
@@ -967,9 +1098,9 @@ func (m *Protocol) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 9:
+		case 11:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Chains", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenDetails", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -996,14 +1127,16 @@ func (m *Protocol) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Chains = append(m.Chains, &exported.SupportedChain{})
-			if err := m.Chains[len(m.Chains)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if m.TokenDetails == nil {
+				m.TokenDetails = &exported1.TokenDetails{}
+			}
+			if err := m.TokenDetails.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
-		case 10:
+		case 12:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Avatar", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenDailyMintLimit", wireType)
 			}
 			var byteLen int
 			for shift := uint(0); ; shift += 7 {
@@ -1030,9 +1163,8 @@ func (m *Protocol) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Avatar = append(m.Avatar[:0], dAtA[iNdEx:postIndex]...)
-			if m.Avatar == nil {
-				m.Avatar = []byte{}
+			if err := m.TokenDailyMintLimit.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
 			}
 			iNdEx = postIndex
 		default:
@@ -1087,74 +1219,6 @@ func (m *ProtocolDetails) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BitcoinPubkey", wireType)
-			}
-			var byteLen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTypes
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				byteLen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if byteLen < 0 {
-				return ErrInvalidLengthTypes
-			}
-			postIndex := iNdEx + byteLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTypes
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.BitcoinPubkey = append(m.BitcoinPubkey[:0], dAtA[iNdEx:postIndex]...)
-			if m.BitcoinPubkey == nil {
-				m.BitcoinPubkey = []byte{}
-			}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ScalarPubkey", wireType)
-			}
-			var byteLen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTypes
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				byteLen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if byteLen < 0 {
-				return ErrInvalidLengthTypes
-			}
-			postIndex := iNdEx + byteLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTypes
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.ScalarPubkey = append(m.ScalarPubkey[:0], dAtA[iNdEx:postIndex]...)
-			if m.ScalarPubkey == nil {
-				m.ScalarPubkey = []byte{}
-			}
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ScalarAddress", wireType)
 			}
 			var byteLen int
@@ -1187,7 +1251,41 @@ func (m *ProtocolDetails) Unmarshal(dAtA []byte) error {
 				m.ScalarAddress = []byte{}
 			}
 			iNdEx = postIndex
-		case 4:
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BitcoinPubkey", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BitcoinPubkey = append(m.BitcoinPubkey[:0], dAtA[iNdEx:postIndex]...)
+			if m.BitcoinPubkey == nil {
+				m.BitcoinPubkey = []byte{}
+			}
+			iNdEx = postIndex
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
@@ -1219,7 +1317,7 @@ func (m *ProtocolDetails) Unmarshal(dAtA []byte) error {
 			}
 			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Tag", wireType)
 			}
@@ -1253,7 +1351,7 @@ func (m *ProtocolDetails) Unmarshal(dAtA []byte) error {
 				m.Tag = []byte{}
 			}
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Attributes", wireType)
 			}
@@ -1289,7 +1387,7 @@ func (m *ProtocolDetails) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 7:
+		case 6:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
@@ -1308,7 +1406,7 @@ func (m *ProtocolDetails) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 8:
+		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CustodianGroupUID", wireType)
 			}
@@ -1340,7 +1438,111 @@ func (m *ProtocolDetails) Unmarshal(dAtA []byte) error {
 			}
 			m.CustodianGroupUID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Chains", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Chains = append(m.Chains, &exported.SupportedChain{})
+			if err := m.Chains[len(m.Chains)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Avatar", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Avatar = append(m.Avatar[:0], dAtA[iNdEx:postIndex]...)
+			if m.Avatar == nil {
+				m.Avatar = []byte{}
+			}
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CustodianGroup", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.CustodianGroup == nil {
+				m.CustodianGroup = &types1.CustodianGroup{}
+			}
+			if err := m.CustodianGroup.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 11:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Asset", wireType)
 			}
@@ -1376,9 +1578,9 @@ func (m *ProtocolDetails) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 10:
+		case 12:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Chains", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenDetails", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1405,14 +1607,16 @@ func (m *ProtocolDetails) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Chains = append(m.Chains, &exported.SupportedChain{})
-			if err := m.Chains[len(m.Chains)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if m.TokenDetails == nil {
+				m.TokenDetails = &exported1.TokenDetails{}
+			}
+			if err := m.TokenDetails.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
-		case 11:
+		case 13:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Avatar", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenDailyMintLimit", wireType)
 			}
 			var byteLen int
 			for shift := uint(0); ; shift += 7 {
@@ -1439,44 +1643,7 @@ func (m *ProtocolDetails) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Avatar = append(m.Avatar[:0], dAtA[iNdEx:postIndex]...)
-			if m.Avatar == nil {
-				m.Avatar = []byte{}
-			}
-			iNdEx = postIndex
-		case 12:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CustodianGroup", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTypes
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTypes
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTypes
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.CustodianGroup == nil {
-				m.CustodianGroup = &types1.CustodianGroup{}
-			}
-			if err := m.CustodianGroup.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.TokenDailyMintLimit.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

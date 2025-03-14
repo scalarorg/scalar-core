@@ -91,7 +91,7 @@ func (m SigningSession) ValidateBasic() error {
 			return err
 		}
 
-		if m.GetParticipantsWeight().LT(m.Key.GetMinPassingWeight()) {
+		if m.GetNumberOfSignedPsbtParticipants().LT(m.GetMinPassingSignedParticipants()) {
 			return fmt.Errorf("completed signing session must have completed multi signature")
 		}
 	default:
@@ -144,8 +144,10 @@ func (m *SigningSession) AddListOfTapScriptSigs(blockHeight int64, participant s
 	// 	return fmt.Errorf("invalid signature received from participant %s for signing %d", participant.String(), m.GetID())
 	// }
 
-	if m.GetState() == exported.Completed && !m.isWithinGracePeriod(blockHeight) {
-		return fmt.Errorf("signing session %d has closed", m.GetID())
+	// TODO: use isWithinGracePeriod to determine who is signed to reward
+	//if m.GetState() == exported.Completed && !m.isWithinGracePeriod(blockHeight) {
+	if m.GetState() == exported.Completed {
+		return fmt.Errorf("psbts were completed in session %d", m.GetID())
 	}
 
 	if len(m.PsbtMultiSig.MultiPsbt) != len(list) {
@@ -154,7 +156,13 @@ func (m *SigningSession) AddListOfTapScriptSigs(blockHeight int64, participant s
 
 	m.addSig(participant, list)
 
-	if m.GetState() != exported.Completed && m.GetParticipantsWeight().GTE(m.Key.GetMinPassingWeight()) {
+	total := m.GetNumberOfSignedPsbtParticipants()
+	min := m.GetMinPassingSignedParticipants()
+
+	clog.Greenf(">>> [AddListOfTapScriptSigs], total: %+v", total)
+	clog.Greenf(">>> [AddListOfTapScriptSigs], min: %+v", min)
+
+	if m.GetState() != exported.Completed && total.GTE(min) {
 		m.CompletedAt = blockHeight
 		m.State = exported.Completed
 	}
@@ -179,7 +187,7 @@ func (m SigningSession) Result() (PsbtMultiSig, error) {
 		return PsbtMultiSig{}, fmt.Errorf("signing %d is not completed yet", m.GetID())
 	}
 
-	if m.GetParticipantsWeight().LT(m.Key.GetMinPassingWeight()) {
+	if m.GetNumberOfSignedPsbtParticipants().LT(m.GetMinPassingSignedParticipants()) {
 		panic(fmt.Errorf("multi sig is not completed yet"))
 	}
 	funcs.MustNoErr(m.PsbtMultiSig.ValidateBasic())
@@ -187,11 +195,12 @@ func (m SigningSession) Result() (PsbtMultiSig, error) {
 	return m.PsbtMultiSig, nil
 }
 
-// GetParticipantsWeight returns the total weights of the participants
-func (m SigningSession) GetParticipantsWeight() sdk.Uint {
-	return slices.Reduce(m.PsbtMultiSig.GetParticipants(), sdk.ZeroUint(), func(total sdk.Uint, p sdk.ValAddress) sdk.Uint {
-		return total.Add(m.Key.Snapshot.GetParticipantWeight(p))
-	})
+func (m SigningSession) GetMinPassingSignedParticipants() sdk.Uint {
+	return sdk.NewUint(uint64(m.Key.SigningThreshold.Numerator))
+}
+
+func (m SigningSession) GetNumberOfSignedPsbtParticipants() sdk.Uint {
+	return sdk.NewUint(uint64(len(m.PsbtMultiSig.ParticipantListTapScriptSigs)))
 }
 
 // UnpackInterfaces implements UnpackInterfacesMessage

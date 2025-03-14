@@ -6,6 +6,7 @@ import "gogoproto/gogo.proto";
 import "scalar/chains/v1beta1/types.proto";
 import "scalar/chains/v1beta1/events.proto";
 import "scalar/chains/v1beta1/params.proto";
+import "scalar/nexus/exported/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
 
@@ -216,7 +217,8 @@ message TokenInfoRequest {
 
 message TokenInfoResponse {
   string asset = 1;
-  TokenDetails details = 2 [ (gogoproto.nullable) = false ];
+  nexus.exported.v1beta1.TokenDetails details = 2
+      [ (gogoproto.nullable) = false ];
   string address = 3;
   bool confirmed = 4;
   bool is_external = 5;

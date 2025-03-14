@@ -79,6 +79,16 @@ func (k Keeper) GetRole(ctx sdk.Context, address sdk.AccAddress) exported.Role {
 	return govAccount.Role
 }
 
+func (k Keeper) AddProtocolManagementAccount(ctx sdk.Context, address sdk.AccAddress) error {
+	if _, ok := k.getGovAccount(ctx, address); ok {
+		return fmt.Errorf("account is already registered with a role")
+	}
+
+	k.setGovAccount(ctx, types.NewGovAccount(address, exported.ROLE_PROTOCOL_MANAGEMENT))
+
+	return nil
+}
+
 func (k Keeper) setGovAccount(ctx sdk.Context, govAccount types.GovAccount) {
 	k.getStore(ctx).Set(accountPrefix.Append(utils.KeyFromBz(govAccount.Address)), &govAccount)
 }

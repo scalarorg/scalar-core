@@ -632,6 +632,7 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 			GetKeeper[stakingkeeper.Keeper](keepers),
 			GetKeeper[slashingkeeper.Keeper](keepers),
 			GetKeeper[covenantKeeper.Keeper](keepers),
+			GetKeeper[permissionKeeper.Keeper](keepers),
 		),
 		reward.NewAppModule(
 			*GetKeeper[rewardKeeper.Keeper](keepers),
