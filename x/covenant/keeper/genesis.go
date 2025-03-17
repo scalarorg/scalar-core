@@ -4,6 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
+	cov "github.com/scalarorg/scalar-core/x/covenant/exported"
 )
 
 // InitGenesis initializes the state from a genesis file
@@ -21,11 +22,11 @@ func (k Keeper) InitGenesis(ctx sdk.Context, state types.GenesisState) {
 func (k Keeper) ExportGenesis(ctx sdk.Context) types.GenesisState {
 	custodians, ok := k.GetAllCustodians(ctx)
 	if !ok {
-		custodians = []*types.Custodian{}
+		custodians = []*cov.Custodian{}
 	}
 	custodianGroups, ok := k.GetAllCustodianGroups(ctx)
 	if !ok {
-		custodianGroups = []*types.CustodianGroup{}
+		custodianGroups = []*cov.CustodianGroup{}
 	}
 
 	signingSessions, ok := k.GetSigningSessions(ctx)

@@ -9,39 +9,6 @@ import "scalar/multisig/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
-// Custodian represents an individual custodian configuration
-message Custodian {
-  string name = 1;          // e.g., "Custodian1"
-  string val_address = 2;   // e.g., "scalarvaloper1..."
-  bytes bitcoin_pubkey = 3; // e.g.,
-  // "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-  Status status = 4; // Whether the custodian is active
-  string description = 5;
-}
-
-// CustodianGroup represents a group of custodians with their configuration
-// uid is used as identity of the group, btc_pubkey is change by list of
-// custodians
-message CustodianGroup {
-  // the UID is unique, to distinguish between custodian groups
-  string uid = 1 [ (gogoproto.customname) = "UID" ];
-  string name = 2;          // e.g., "All"
-  bytes bitcoin_pubkey = 3; // e.g.,
-  // "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
-  uint32 quorum = 4; // quorum threshold  e.g.,3
-  Status status = 5; // Whether the custodian is active
-  string description = 6;
-  repeated Custodian custodians = 7;
-}
-
-enum Status {
-  option (gogoproto.goproto_enum_prefix) = false;
-
-  STATUS_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Unspecified" ];
-  STATUS_ACTIVATED = 1 [ (gogoproto.enumvalue_customname) = "Activated" ];
-  STATUS_DEACTIVATED = 2 [ (gogoproto.enumvalue_customname) = "Deactivated" ];
-  STATUS_PENDING = 3 [ (gogoproto.enumvalue_customname) = "Pending" ];
-}
 
 message PsbtMultiSig {
   option (gogoproto.stable_marshaler) = true;
@@ -51,7 +18,7 @@ message PsbtMultiSig {
     (gogoproto.casttype) =
         "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
-  repeated bytes multi_psbt = 2 [ (gogoproto.casttype) = "Psbt" ];
+  repeated bytes multi_psbt = 2 [ (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/covenant/exported.Psbt" ];
   map<string, scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap>
       participant_list_tap_script_sigs = 3;
   repeated bytes finalized_txs = 4;

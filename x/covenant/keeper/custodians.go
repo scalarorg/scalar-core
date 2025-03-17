@@ -5,13 +5,14 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils"
+	cov "github.com/scalarorg/scalar-core/x/covenant/exported"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
 func (k Keeper) CreateCustodian(ctx sdk.Context, params types.Params) (err error) {
 	return nil
 }
-func (k Keeper) GetCustodians(ctx sdk.Context) (custodians []*types.Custodian, ok bool) {
+func (k Keeper) GetCustodians(ctx sdk.Context) (custodians []*cov.Custodian, ok bool) {
 	return nil, false
 }
 
@@ -19,35 +20,35 @@ func (k Keeper) CreateCustodianGroup(ctx sdk.Context, params types.Params) (err 
 	return nil
 }
 
-func (k Keeper) SetCustodian(ctx sdk.Context, custodian *types.Custodian) {
+func (k Keeper) SetCustodian(ctx sdk.Context, custodian *cov.Custodian) {
 	k.getStore(ctx).Set(custodianPrefix.Append(utils.KeyFromBz(custodian.BitcoinPubkey)), custodian)
 }
 
-func (k Keeper) SetCustodians(ctx sdk.Context, custodians []*types.Custodian) {
+func (k Keeper) SetCustodians(ctx sdk.Context, custodians []*cov.Custodian) {
 	store := k.getStore(ctx)
 	for _, custodian := range custodians {
 		store.Set(custodianPrefix.Append(utils.KeyFromBz(custodian.BitcoinPubkey)), custodian)
 	}
 }
 
-func (k Keeper) GetAllCustodians(ctx sdk.Context) ([]*types.Custodian, bool) {
-	protocols := []*types.Custodian{}
+func (k Keeper) GetAllCustodians(ctx sdk.Context) ([]*cov.Custodian, bool) {
+	protocols := []*cov.Custodian{}
 	iter := k.getStoreIterator(ctx, custodianPrefix)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 	for ; iter.Valid(); iter.Next() {
-		protocol := types.Custodian{}
+		protocol := cov.Custodian{}
 		iter.UnmarshalValue(&protocol)
 		protocols = append(protocols, &protocol)
 	}
 	return protocols, true
 }
 
-func (k Keeper) findCustodians(ctx sdk.Context, req *types.CustodiansRequest) ([]*types.Custodian, bool) {
-	custodians := []*types.Custodian{}
+func (k Keeper) findCustodians(ctx sdk.Context, req *types.CustodiansRequest) ([]*cov.Custodian, bool) {
+	custodians := []*cov.Custodian{}
 	iter := k.getStoreIterator(ctx, custodianPrefix)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 	for ; iter.Valid(); iter.Next() {
-		custodian := types.Custodian{}
+		custodian := cov.Custodian{}
 		iter.UnmarshalValue(&custodian)
 		if isMatchCustodian(&custodian, req) {
 			custodians = append(custodians, &custodian)
@@ -56,41 +57,41 @@ func (k Keeper) findCustodians(ctx sdk.Context, req *types.CustodiansRequest) ([
 	return custodians, true
 }
 
-func (k Keeper) GetCustodianGroup(ctx sdk.Context, uid string) (custodianGroup *types.CustodianGroup, ok bool) {
-	group := types.CustodianGroup{}
+func (k Keeper) GetCustodianGroup(ctx sdk.Context, uid string) (custodianGroup *cov.CustodianGroup, ok bool) {
+	group := cov.CustodianGroup{}
 	ok = k.getStore(ctx).Get(custodianGroupPrefix.Append(utils.KeyFromBz([]byte(uid))), &group)
 	return &group, ok
 }
 
-func (k Keeper) SetCustodianGroup(ctx sdk.Context, custodianGroup *types.CustodianGroup) {
+func (k Keeper) SetCustodianGroup(ctx sdk.Context, custodianGroup *cov.CustodianGroup) {
 	k.getStore(ctx).Set(custodianGroupPrefix.Append(utils.KeyFromBz([]byte(custodianGroup.UID))), custodianGroup)
 }
 
-func (k Keeper) SetCustodianGroups(ctx sdk.Context, custodianGroups []*types.CustodianGroup) {
+func (k Keeper) SetCustodianGroups(ctx sdk.Context, custodianGroups []*cov.CustodianGroup) {
 	store := k.getStore(ctx)
 	for _, group := range custodianGroups {
 		store.Set(custodianGroupPrefix.Append(utils.KeyFromBz([]byte(group.UID))), group)
 	}
 }
 
-func (k Keeper) GetAllCustodianGroups(ctx sdk.Context) ([]*types.CustodianGroup, bool) {
-	custodianGroups := []*types.CustodianGroup{}
+func (k Keeper) GetAllCustodianGroups(ctx sdk.Context) ([]*cov.CustodianGroup, bool) {
+	custodianGroups := []*cov.CustodianGroup{}
 	iter := k.getStoreIterator(ctx, custodianGroupPrefix)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 	for ; iter.Valid(); iter.Next() {
-		custodianGroup := types.CustodianGroup{}
+		custodianGroup := cov.CustodianGroup{}
 		iter.UnmarshalValue(&custodianGroup)
 		custodianGroups = append(custodianGroups, &custodianGroup)
 	}
 	return custodianGroups, true
 }
 
-func (k Keeper) findCustodianGroups(ctx sdk.Context, req *types.GroupsRequest) ([]*types.CustodianGroup, bool) {
-	custodianGroups := []*types.CustodianGroup{}
+func (k Keeper) findCustodianGroups(ctx sdk.Context, req *types.GroupsRequest) ([]*cov.CustodianGroup, bool) {
+	custodianGroups := []*cov.CustodianGroup{}
 	iter := k.getStoreIterator(ctx, custodianGroupPrefix)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 	for ; iter.Valid(); iter.Next() {
-		custodianGroup := types.CustodianGroup{}
+		custodianGroup := cov.CustodianGroup{}
 		iter.UnmarshalValue(&custodianGroup)
 		if isMatchCustodianGroup(&custodianGroup, req) {
 			custodianGroups = append(custodianGroups, &custodianGroup)
@@ -100,14 +101,14 @@ func (k Keeper) findCustodianGroups(ctx sdk.Context, req *types.GroupsRequest) (
 }
 
 // Todo: Implement Matching function
-func isMatchCustodian(protocol *types.Custodian, req *types.CustodiansRequest) bool {
+func isMatchCustodian(protocol *cov.Custodian, req *types.CustodiansRequest) bool {
 	match := true
 
 	return match
 }
 
 // Todo: Implement Matching function
-func isMatchCustodianGroup(group *types.CustodianGroup, req *types.GroupsRequest) bool {
+func isMatchCustodianGroup(group *cov.CustodianGroup, req *types.GroupsRequest) bool {
 	if req.UID != "" && group.UID != req.UID {
 		return false
 	}

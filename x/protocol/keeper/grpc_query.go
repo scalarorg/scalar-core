@@ -4,7 +4,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
+	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	"github.com/scalarorg/scalar-core/x/protocol/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -90,7 +90,7 @@ func (q *Querier) Protocol(c context.Context, req *types.ProtocolRequest) (*type
 	}, nil
 }
 
-func mapProtocolToProtocolDetails(protocol *types.Protocol, custodianGr *covenanttypes.CustodianGroup) *types.ProtocolDetails {
+func mapProtocolToProtocolDetails(protocol *types.Protocol, custodianGr *covenant.CustodianGroup) *types.ProtocolDetails {
 	return &types.ProtocolDetails{
 		BitcoinPubkey:       protocol.BitcoinPubkey,
 		ScalarAddress:       protocol.ScalarAddress,

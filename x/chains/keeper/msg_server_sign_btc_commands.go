@@ -10,7 +10,7 @@ import (
 	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/x/chains/types"
-	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
+	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/exported"
 )
 
 func (s msgServer) SignBtcCommand(c context.Context, req *types.SignBtcCommandsRequest) (*types.SignCommandsResponse, error) {

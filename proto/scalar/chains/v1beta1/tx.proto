@@ -226,7 +226,7 @@ message SignPsbtCommandRequest {
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   bytes psbt = 3
       [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/covenant/types.Psbt" ];
+            "github.com/scalarorg/scalar-core/x/covenant/exported.Psbt" ];
 }
 
 message SignPsbtCommandResponse {

@@ -5,6 +5,9 @@ import "gogoproto/gogo.proto";
 import "scalar/covenant/v1beta1/types.proto";
 import "scalar/covenant/exported/v1beta1/types.proto";
 import "scalar/permission/exported/v1beta1/types.proto";
+import "scalar/covenant/exported/v1beta1/custodian.proto";
+
+
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
 option (gogoproto.goproto_getters_all) = false;
@@ -15,11 +18,11 @@ message CreateCustodianRequest {
 
   string name = 2;
   bytes bitcoin_pubkey = 3;
-  Status status = 4;
+  scalar.covenant.exported.v1beta1.Status status = 4;
   string description = 5;
 }
 
-message CreateCustodianResponse { Custodian custodian = 1; }
+message CreateCustodianResponse { scalar.covenant.exported.v1beta1.Custodian custodian = 1; }
 
 // Pubkey used as key for lookup custodian to update other values
 message UpdateCustodianRequest {
@@ -27,11 +30,11 @@ message UpdateCustodianRequest {
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   bytes bitcoin_pubkey = 2;
   string name = 3;
-  Status status = 4;
+  scalar.covenant.exported.v1beta1.Status status = 4;
   string description = 5;
 }
 
-message UpdateCustodianResponse { Custodian custodian = 1; }
+message UpdateCustodianResponse { scalar.covenant.exported.v1beta1.Custodian custodian = 1; }
 
 message CreateCustodianGroupRequest {
   bytes sender = 1 [ (gogoproto.casttype) =
@@ -39,12 +42,12 @@ message CreateCustodianGroupRequest {
   string uid = 2;
   string name = 3;
   uint32 quorum = 4;
-  Status status = 5;
+  scalar.covenant.exported.v1beta1.Status status = 5;
   string description = 6;
   repeated bytes custodian = 7;
 }
 
-message CreateCustodianGroupResponse { CustodianGroup group = 1; }
+message CreateCustodianGroupResponse { scalar.covenant.exported.v1beta1.CustodianGroup group = 1; }
 
 message UpdateCustodianGroupRequest {
   bytes sender = 1 [ (gogoproto.casttype) =
@@ -52,12 +55,12 @@ message UpdateCustodianGroupRequest {
   string uid = 2;
   string name = 3;
   uint32 quorum = 4;
-  Status status = 5;
+  scalar.covenant.exported.v1beta1.Status status = 5;
   string description = 6;
   repeated bytes custodian = 7;
 }
 
-message UpdateCustodianGroupResponse { CustodianGroup group = 1; }
+message UpdateCustodianGroupResponse { scalar.covenant.exported.v1beta1.CustodianGroup group = 1; }
 
 message AddCustodianToGroupRequest {
   bytes sender = 1 [ (gogoproto.casttype) =
@@ -75,7 +78,7 @@ message RemoveCustodianFromGroupRequest {
   string description = 4;
 }
 
-message CustodianToGroupResponse { CustodianGroup group = 1; }
+message CustodianToGroupResponse { scalar.covenant.exported.v1beta1.CustodianGroup group = 1; }
 
 message SubmitTapScriptSigsRequest {
   bytes sender = 1 [ (gogoproto.casttype) =

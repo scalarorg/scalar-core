@@ -7,10 +7,10 @@ import (
 	"github.com/btcsuite/btcd/btcutil/psbt"
 	"github.com/btcsuite/btcd/rpcclient"
 	"github.com/scalarorg/scalar-core/utils/clog"
-	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
+	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 )
 
-func (mgr Mgr) ValidatePsbt(client *rpcclient.Client, p covenantTypes.Psbt) error {
+func (mgr Mgr) ValidatePsbt(client *rpcclient.Client, p covenant.Psbt) error {
 	psbt, err := psbt.NewFromRawBytes(bytes.NewReader(p), false)
 	if err != nil {
 		return fmt.Errorf("failed to parse PSBT: %w", err)

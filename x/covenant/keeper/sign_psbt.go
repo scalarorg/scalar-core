@@ -10,6 +10,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/slices"
+	"github.com/scalarorg/scalar-core/x/covenant/exported"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -19,7 +20,7 @@ import (
 // TODO: Currently, we are mocking the psbt, we need to split it into two events
 // CreatingPsbtStarted and SigningPsbtStarted
 
-func (k Keeper) SignPsbt(ctx sdk.Context, keyID multisig.KeyID, multiPsbt []types.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error {
+func (k Keeper) SignPsbt(ctx sdk.Context, keyID multisig.KeyID, multiPsbt []exported.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error {
 	if !k.GetCovenantRouter().HasHandler(module) {
 		panic(fmt.Errorf("covenant handler not registered for module %s", module))
 	}

@@ -28,6 +28,7 @@ import (
 	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	covenantexported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
@@ -255,7 +256,7 @@ func GenerateGenesis(clientCtx client.Context,
 		log.Error().Err(err).Msg("Failed to generate supported chains")
 	}
 	//Covenant
-	custodians := make([]*covenanttypes.Custodian, len(validatorInfos))
+	custodians := make([]*covenantexported.Custodian, len(validatorInfos))
 	custodianPubKeys := make([]go_utils.PublicKey, len(validatorInfos))
 	quorum := uint8(len(validatorInfos)/2 + 1)
 	for i, validator := range validatorInfos {
@@ -269,10 +270,10 @@ func GenerateGenesis(clientCtx client.Context,
 		}
 
 		privKey := secp256k1.PrivKeyFromBytes(btcPrivKey)
-		custodians[i] = &covenanttypes.Custodian{
+		custodians[i] = &covenantexported.Custodian{
 			Name:          validator.Host,
 			ValAddress:    sdk.ValAddress(validator.ValPubKey.Address()).String(),
-			Status:        covenanttypes.Activated,
+			Status:        covenantexported.Custodian_Activated,
 			BitcoinPubkey: privKey.PubKey().SerializeCompressed(),
 		}
 		custodianPubKeys[i] = go_utils.PublicKey(custodians[i].BitcoinPubkey)
@@ -283,13 +284,13 @@ func GenerateGenesis(clientCtx client.Context,
 		return appGenState, err
 	}
 
-	custodiansGr := covenanttypes.NewCustodianGroup("scalar", []byte(custodianGroupPubKey), uint32(quorum), "Default custodial group, which contains all custodians", custodians)
+	custodiansGr := covenantexported.NewCustodianGroup("scalar", []byte(custodianGroupPubKey), uint32(quorum), "Default custodial group, which contains all custodians", custodians)
 
 	// Activate the default custodian group
-	custodiansGr.Status = covenanttypes.Activated
+	custodiansGr.Status = covenantexported.Custodian_Activated
 
 	defaultCovenantState := covenanttypes.DefaultGenesisState()
-	covnantGenState := covenanttypes.NewGenesisState(&defaultCovenantState.Params, defaultCovenantState.SigningSessions, custodians, []*covenanttypes.CustodianGroup{custodiansGr})
+	covnantGenState := covenanttypes.NewGenesisState(&defaultCovenantState.Params, defaultCovenantState.SigningSessions, custodians, []*covenantexported.CustodianGroup{custodiansGr})
 	appGenState[covenanttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&covnantGenState)
 	//Protocol
 	protocolGenState, err := generateProtocolGenesis(protocols, custodiansGr.UID, args.configPath)

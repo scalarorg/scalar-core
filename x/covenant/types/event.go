@@ -10,7 +10,7 @@ import (
 )
 
 // NewSigningPsbtStarted is the constructor for event signing started
-func NewSigningPsbtStarted(sigID uint64, key multisigTypes.Key, multiPsbt []Psbt, requestingModule string, chainName nexus.ChainName) *SigningPsbtStarted {
+func NewSigningPsbtStarted(sigID uint64, key multisigTypes.Key, multiPsbt []exported.Psbt, requestingModule string, chainName nexus.ChainName) *SigningPsbtStarted {
 	return &SigningPsbtStarted{
 		Module:           ModuleName,
 		Chain:            chainName,

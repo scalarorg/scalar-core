@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/scalarorg/scalar-core/utils"
-	covenant "github.com/scalarorg/scalar-core/x/covenant/types"
+	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"

@@ -12,13 +12,13 @@ import (
 	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
-	"github.com/scalarorg/scalar-core/x/covenant/exported"
+	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
 type signResult struct {
 	index int
-	sigs  *exported.TapScriptSigsMap
+	sigs  *covenant.TapScriptSigsMap
 }
 
 // TODO: Validate psbt inputs whether they are available in the btc chain
@@ -81,12 +81,12 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 	n := len(multiPsbt)
 	resultChan := make(chan signResult, n)
 	errChan := make(chan error, n)
-	orderedResults := make([]*exported.TapScriptSigsMap, n)
+	orderedResults := make([]*covenant.TapScriptSigsMap, n)
 
 	var wg sync.WaitGroup
 	for i, psbt := range multiPsbt {
 		wg.Add(1)
-		go func(index int, p covenantTypes.Psbt) {
+		go func(index int, p covenant.Psbt) {
 			defer wg.Done()
 
 			mapOfTapScriptSigs, err := mgr.sign(keyUID, p, go_utils.NetworkKind(chainParams.Params.NetworkKind))

@@ -9,7 +9,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/x/chains/types"
-	coventantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
+	coventantTypes "github.com/scalarorg/scalar-core/x/covenant/exported"
 )
 
 func (s msgServer) SignPsbtCommand(c context.Context, req *types.SignPsbtCommandRequest) (*types.SignPsbtCommandResponse, error) {

@@ -1,7 +1,7 @@
 package types
 
 import (
-	types "github.com/scalarorg/scalar-core/x/covenant/types"
+	cov "github.com/scalarorg/scalar-core/x/covenant/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	exported "github.com/scalarorg/scalar-core/x/protocol/exported"
 )
@@ -44,7 +44,7 @@ func DefaultProtocol() *Protocol {
 	}
 	protocol := &Protocol{
 		Name:              DefaultProtocolName,
-		CustodianGroupUID: types.DefaultCustodianGroup().UID,
+		CustodianGroupUID: cov.DefaultCustodianGroup().UID,
 		Chains: []*exported.SupportedChain{
 			&sepoliaToken, &bnbToken,
 		},

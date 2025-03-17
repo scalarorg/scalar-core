@@ -53972,7 +53972,7 @@ components:
         denominator:
           type: string
           format: int64
-    scalar.covenant.v1beta1.Custodian:
+    scalar.covenant.exported.v1beta1.Custodian:
       type: object
       properties:
         name:
@@ -53994,7 +53994,7 @@ components:
         description:
           type: string
       title: Custodian represents an individual custodian configuration
-    scalar.covenant.v1beta1.CustodianGroup:
+    scalar.covenant.exported.v1beta1.CustodianGroup:
       type: object
       properties:
         uid:
@@ -54047,7 +54047,7 @@ components:
         CustodianGroup represents a group of custodians with their configuration
         uid is used as identity of the group, btc_pubkey is change by list of
         custodians
-    scalar.covenant.v1beta1.Status:
+    scalar.covenant.exported.v1beta1.Status:
       type: string
       enum:
         - STATUS_UNSPECIFIED

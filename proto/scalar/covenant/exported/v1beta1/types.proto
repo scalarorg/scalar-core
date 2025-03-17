@@ -40,9 +40,7 @@ message TapScriptSigsMap {
   repeated TapScriptSigsEntry inner = 1 [ (gogoproto.nullable) = false ];
 }
 
-message ListOfTapScriptSigsMap {
-  repeated TapScriptSigsMap inner = 1;
-}
+message ListOfTapScriptSigsMap { repeated TapScriptSigsMap inner = 1; }
 
 enum KeyState {
   option (gogoproto.goproto_enum_prefix) = false;

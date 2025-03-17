@@ -213,6 +213,12 @@
     - [MsgService](#scalar.chains.v1beta1.MsgService)
     - [QueryService](#scalar.chains.v1beta1.QueryService)
   
+- [scalar/covenant/exported/v1beta1/custodian.proto](#scalar/covenant/exported/v1beta1/custodian.proto)
+    - [Custodian](#scalar.covenant.exported.v1beta1.Custodian)
+    - [CustodianGroup](#scalar.covenant.exported.v1beta1.CustodianGroup)
+  
+    - [Status](#scalar.covenant.exported.v1beta1.Status)
+  
 - [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
     - [ListOfTapScriptSigsMap](#scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap)
     - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
@@ -246,13 +252,9 @@
     - [SigningSession](#scalar.multisig.v1beta1.SigningSession)
   
 - [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
-    - [Custodian](#scalar.covenant.v1beta1.Custodian)
-    - [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup)
     - [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig)
     - [PsbtMultiSig.ParticipantListTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantListTapScriptSigsEntry)
     - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
-  
-    - [Status](#scalar.covenant.v1beta1.Status)
   
 - [scalar/covenant/v1beta1/params.proto](#scalar/covenant/v1beta1/params.proto)
     - [Params](#scalar.covenant.v1beta1.Params)
@@ -285,6 +287,11 @@
     - [KeyResponse](#scalar.covenant.v1beta1.KeyResponse)
     - [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest)
     - [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse)
+  
+- [scalar/covenant/v1beta1/redeem.proto](#scalar/covenant/v1beta1/redeem.proto)
+    - [RedeemSession](#scalar.covenant.v1beta1.RedeemSession)
+  
+    - [Phase](#scalar.covenant.v1beta1.Phase)
   
 - [scalar/covenant/v1beta1/tx.proto](#scalar/covenant/v1beta1/tx.proto)
     - [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest)
@@ -3703,6 +3710,82 @@ QueryService defines the gRPC querier service.
 
 
 
+<a name="scalar/covenant/exported/v1beta1/custodian.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/covenant/exported/v1beta1/custodian.proto
+
+
+
+<a name="scalar.covenant.exported.v1beta1.Custodian"></a>
+
+### Custodian
+Custodian represents an individual custodian configuration
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `name` | [string](#string) |  | e.g., "Custodian1" |
+| `val_address` | [string](#string) |  | e.g., "scalarvaloper1..." |
+| `bitcoin_pubkey` | [bytes](#bytes) |  | e.g., |
+| `status` | [Status](#scalar.covenant.exported.v1beta1.Status) |  | "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
+
+Whether the custodian is active |
+| `description` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.exported.v1beta1.CustodianGroup"></a>
+
+### CustodianGroup
+CustodianGroup represents a group of custodians with their configuration
+uid is used as identity of the group, btc_pubkey is change by list of
+custodians
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `uid` | [string](#string) |  | the UID is unique, to distinguish between custodian groups |
+| `name` | [string](#string) |  | e.g., "All" |
+| `bitcoin_pubkey` | [bytes](#bytes) |  | e.g., |
+| `quorum` | [uint32](#uint32) |  | "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
+
+quorum threshold e.g.,3 |
+| `status` | [Status](#scalar.covenant.exported.v1beta1.Status) |  | Whether the custodian is active |
+| `description` | [string](#string) |  |  |
+| `custodians` | [Custodian](#scalar.covenant.exported.v1beta1.Custodian) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.covenant.exported.v1beta1.Status"></a>
+
+### Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNSPECIFIED | 0 |  |
+| STATUS_ACTIVATED | 1 |  |
+| STATUS_DEACTIVATED | 2 |  |
+| STATUS_PENDING | 3 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/covenant/exported/v1beta1/types.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -4156,52 +4239,6 @@ the deterministic order of the entries
 
 
 
-<a name="scalar.covenant.v1beta1.Custodian"></a>
-
-### Custodian
-Custodian represents an individual custodian configuration
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  | e.g., "Custodian1" |
-| `val_address` | [string](#string) |  | e.g., "scalarvaloper1..." |
-| `bitcoin_pubkey` | [bytes](#bytes) |  | e.g., |
-| `status` | [Status](#scalar.covenant.v1beta1.Status) |  | "0215da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488"
-
-Whether the custodian is active |
-| `description` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.CustodianGroup"></a>
-
-### CustodianGroup
-CustodianGroup represents a group of custodians with their configuration
-uid is used as identity of the group, btc_pubkey is change by list of
-custodians
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `uid` | [string](#string) |  | the UID is unique, to distinguish between custodian groups |
-| `name` | [string](#string) |  | e.g., "All" |
-| `bitcoin_pubkey` | [bytes](#bytes) |  | e.g., |
-| `quorum` | [uint32](#uint32) |  | "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
-
-quorum threshold e.g.,3 |
-| `status` | [Status](#scalar.covenant.v1beta1.Status) |  | Whether the custodian is active |
-| `description` | [string](#string) |  |  |
-| `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
-
-
-
-
-
-
 <a name="scalar.covenant.v1beta1.PsbtMultiSig"></a>
 
 ### PsbtMultiSig
@@ -4259,20 +4296,6 @@ quorum threshold e.g.,3 |
 
 
  <!-- end messages -->
-
-
-<a name="scalar.covenant.v1beta1.Status"></a>
-
-### Status
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| STATUS_UNSPECIFIED | 0 |  |
-| STATUS_ACTIVATED | 1 |  |
-| STATUS_DEACTIVATED | 2 |  |
-| STATUS_PENDING | 3 |  |
-
 
  <!-- end enums -->
 
@@ -4333,8 +4356,8 @@ Params represent the genesis parameters for the module
 | ----- | ---- | ----- | ----------- |
 | `params` | [Params](#scalar.covenant.v1beta1.Params) |  |  |
 | `signing_sessions` | [SigningSession](#scalar.covenant.v1beta1.SigningSession) | repeated |  |
-| `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
-| `groups` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) | repeated |  |
+| `custodians` | [scalar.covenant.exported.v1beta1.Custodian](#scalar.covenant.exported.v1beta1.Custodian) | repeated |  |
+| `groups` | [scalar.covenant.exported.v1beta1.CustodianGroup](#scalar.covenant.exported.v1beta1.CustodianGroup) | repeated |  |
 
 
 
@@ -4598,7 +4621,7 @@ ParamsRequest represents a message that queries the params
 | ----- | ---- | ----- | ----------- |
 | `name` | [string](#string) |  |  |
 | `pubkey` | [bytes](#bytes) |  |  |
-| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
+| `status` | [scalar.covenant.exported.v1beta1.Status](#scalar.covenant.exported.v1beta1.Status) |  |  |
 
 
 
@@ -4613,7 +4636,7 @@ ParamsRequest represents a message that queries the params
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `custodians` | [Custodian](#scalar.covenant.v1beta1.Custodian) | repeated |  |
+| `custodians` | [scalar.covenant.exported.v1beta1.Custodian](#scalar.covenant.exported.v1beta1.Custodian) | repeated |  |
 
 
 
@@ -4643,7 +4666,7 @@ ParamsRequest represents a message that queries the params
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `groups` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) | repeated |  |
+| `groups` | [scalar.covenant.exported.v1beta1.CustodianGroup](#scalar.covenant.exported.v1beta1.CustodianGroup) | repeated |  |
 
 
 
@@ -4720,6 +4743,52 @@ ParamsRequest represents a message that queries the params
 
 
 
+<a name="scalar/covenant/v1beta1/redeem.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/covenant/v1beta1/redeem.proto
+
+
+
+<a name="scalar.covenant.v1beta1.RedeemSession"></a>
+
+### RedeemSession
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sequence` | [uint64](#uint64) |  |  |
+| `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
+| `tx_ids` | [bytes](#bytes) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.covenant.v1beta1.Phase"></a>
+
+### Phase
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| PHASE_PREPARING | 0 |  |
+| PHASE_EXECUTING | 1 |  |
+| PHASE_SWITCHING | 2 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/covenant/v1beta1/tx.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -4757,7 +4826,7 @@ ParamsRequest represents a message that queries the params
 | `uid` | [string](#string) |  |  |
 | `name` | [string](#string) |  |  |
 | `quorum` | [uint32](#uint32) |  |  |
-| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
+| `status` | [scalar.covenant.exported.v1beta1.Status](#scalar.covenant.exported.v1beta1.Status) |  |  |
 | `description` | [string](#string) |  |  |
 | `custodian` | [bytes](#bytes) | repeated |  |
 
@@ -4774,7 +4843,7 @@ ParamsRequest represents a message that queries the params
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `group` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
+| `group` | [scalar.covenant.exported.v1beta1.CustodianGroup](#scalar.covenant.exported.v1beta1.CustodianGroup) |  |  |
 
 
 
@@ -4792,7 +4861,7 @@ ParamsRequest represents a message that queries the params
 | `sender` | [bytes](#bytes) |  |  |
 | `name` | [string](#string) |  |  |
 | `bitcoin_pubkey` | [bytes](#bytes) |  |  |
-| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
+| `status` | [scalar.covenant.exported.v1beta1.Status](#scalar.covenant.exported.v1beta1.Status) |  |  |
 | `description` | [string](#string) |  |  |
 
 
@@ -4808,7 +4877,7 @@ ParamsRequest represents a message that queries the params
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `custodian` | [Custodian](#scalar.covenant.v1beta1.Custodian) |  |  |
+| `custodian` | [scalar.covenant.exported.v1beta1.Custodian](#scalar.covenant.exported.v1beta1.Custodian) |  |  |
 
 
 
@@ -4823,7 +4892,7 @@ ParamsRequest represents a message that queries the params
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `group` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
+| `group` | [scalar.covenant.exported.v1beta1.CustodianGroup](#scalar.covenant.exported.v1beta1.CustodianGroup) |  |  |
 
 
 
@@ -4913,7 +4982,7 @@ Rotate key for custodian group
 | `uid` | [string](#string) |  |  |
 | `name` | [string](#string) |  |  |
 | `quorum` | [uint32](#uint32) |  |  |
-| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
+| `status` | [scalar.covenant.exported.v1beta1.Status](#scalar.covenant.exported.v1beta1.Status) |  |  |
 | `description` | [string](#string) |  |  |
 | `custodian` | [bytes](#bytes) | repeated |  |
 
@@ -4930,7 +4999,7 @@ Rotate key for custodian group
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `group` | [CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
+| `group` | [scalar.covenant.exported.v1beta1.CustodianGroup](#scalar.covenant.exported.v1beta1.CustodianGroup) |  |  |
 
 
 
@@ -4948,7 +5017,7 @@ Pubkey used as key for lookup custodian to update other values
 | `sender` | [bytes](#bytes) |  |  |
 | `bitcoin_pubkey` | [bytes](#bytes) |  |  |
 | `name` | [string](#string) |  |  |
-| `status` | [Status](#scalar.covenant.v1beta1.Status) |  |  |
+| `status` | [scalar.covenant.exported.v1beta1.Status](#scalar.covenant.exported.v1beta1.Status) |  |  |
 | `description` | [string](#string) |  |  |
 
 
@@ -4964,7 +5033,7 @@ Pubkey used as key for lookup custodian to update other values
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `custodian` | [Custodian](#scalar.covenant.v1beta1.Custodian) |  |  |
+| `custodian` | [scalar.covenant.exported.v1beta1.Custodian](#scalar.covenant.exported.v1beta1.Custodian) |  |  |
 
 
 
@@ -7037,7 +7106,7 @@ Query defines the gRPC querier service.
 | `custodian_group_uid` | [string](#string) |  |  |
 | `chains` | [scalar.protocol.exported.v1beta1.SupportedChain](#scalar.protocol.exported.v1beta1.SupportedChain) | repeated | Other chains with internal asset |
 | `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
-| `custodian_group` | [scalar.covenant.v1beta1.CustodianGroup](#scalar.covenant.v1beta1.CustodianGroup) |  |  |
+| `custodian_group` | [scalar.covenant.exported.v1beta1.CustodianGroup](#scalar.covenant.exported.v1beta1.CustodianGroup) |  |  |
 | `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
 | `token_details` | [scalar.nexus.exported.v1beta1.TokenDetails](#scalar.nexus.exported.v1beta1.TokenDetails) |  |  |
 | `token_daily_mint_limit` | [bytes](#bytes) |  |  |

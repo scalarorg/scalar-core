@@ -7,11 +7,13 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/scalarorg/scalar-core/utils"
+	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	mtypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
+	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 )
 
 // Keeper provides keeper functionality of this module
@@ -22,10 +24,10 @@ type Keeper interface {
 	GetParams(ctx sdk.Context) (params Params)
 
 	CreateCustodian(ctx sdk.Context, params Params) (err error)
-	GetCustodians(ctx sdk.Context) (custodians []*Custodian, ok bool)
+	GetCustodians(ctx sdk.Context) (custodians []*covenant.Custodian, ok bool)
 	CreateCustodianGroup(ctx sdk.Context, params Params) (err error)
-	GetAllCustodianGroups(ctx sdk.Context) (custodianGroups []*CustodianGroup, ok bool)
-	GetCustodianGroup(ctx sdk.Context, groupId string) (custodianGroup *CustodianGroup, ok bool)
+	GetAllCustodianGroups(ctx sdk.Context) (custodianGroups []*covenant.CustodianGroup, ok bool)
+	GetCustodianGroup(ctx sdk.Context, groupId string) (custodianGroup *covenant.CustodianGroup, ok bool)
 
 	//GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
 	GetKey(ctx sdk.Context, keyID multisig.KeyID) (mtypes.Key, bool)
@@ -38,7 +40,7 @@ type Keeper interface {
 	DeleteSigningSession(ctx sdk.Context, id uint64)
 	GetCovenantRouter() CovenantRouter
 
-	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, multiPsbt []Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
+	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, multiPsbt []exported.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
 }
 
 // Snapshotter provides snapshot keeper functionality

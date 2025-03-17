@@ -14,7 +14,6 @@ import (
 	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
-	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
 // Mgr represents an object that manages all communication with the psbt process
@@ -52,8 +51,7 @@ func (mgr Mgr) isParticipant(p sdk.ValAddress) bool {
 	return mgr.valAddr.Equals(p)
 }
 
-func (mgr Mgr) sign(keyUID string, psbt covenantTypes.Psbt, networkKind types.NetworkKind) (*covenant.TapScriptSigsMap, error) {
-	
+func (mgr Mgr) sign(keyUID string, psbt covenant.Psbt, networkKind types.NetworkKind) (*covenant.TapScriptSigsMap, error) {
 
 	clog.Greenf("signing psbt with keyID: %s", keyUID)
 	clog.Greenf("signing psbt with networkKind: %v", networkKind)

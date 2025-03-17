@@ -25,7 +25,7 @@ type NewSigningSessionParams struct {
 	GracePeriod    int64
 	Module         string
 	ModuleMetadata []codec.ProtoMarshaler
-	MultiPsbt      []Psbt
+	MultiPsbt      []exported.Psbt
 }
 
 // NewSigningSession is the contructor for signing session

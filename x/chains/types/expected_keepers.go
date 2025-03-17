@@ -9,7 +9,7 @@ import (
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/ethereum/go-ethereum/common"
 	utils "github.com/scalarorg/scalar-core/utils"
-	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/types"
+	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	pexported "github.com/scalarorg/scalar-core/x/protocol/exported"

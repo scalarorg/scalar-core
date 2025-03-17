@@ -7,20 +7,21 @@ import "scalar/covenant/v1beta1/types.proto";
 import "scalar/covenant/v1beta1/params.proto";
 import "scalar/multisig/v1beta1/query.proto";
 import "scalar/multisig/exported/v1beta1/types.proto";
+import "scalar/covenant/exported/v1beta1/custodian.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
 message CustodiansRequest {
   string name = 1;
   bytes pubkey = 2;
-  Status status = 3;
+  scalar.covenant.exported.v1beta1.Status status = 3;
 }
 
-message CustodiansResponse { repeated Custodian custodians = 1; }
+message CustodiansResponse { repeated scalar.covenant.exported.v1beta1.Custodian custodians = 1; }
 
 message GroupsRequest { string uid = 1 [ (gogoproto.customname) = "UID" ]; }
 
-message GroupsResponse { repeated CustodianGroup groups = 1; }
+message GroupsResponse { repeated scalar.covenant.exported.v1beta1.CustodianGroup groups = 1; }
 
 // ParamsRequest represents a message that queries the params
 message ParamsRequest {}

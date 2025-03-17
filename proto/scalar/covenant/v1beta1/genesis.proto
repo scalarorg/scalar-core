@@ -4,6 +4,7 @@ package scalar.covenant.v1beta1;
 import "gogoproto/gogo.proto";
 import "scalar/covenant/v1beta1/types.proto";
 import "scalar/covenant/v1beta1/params.proto";
+import "scalar/covenant/exported/v1beta1/custodian.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 option (gogoproto.goproto_getters_all) = false;
@@ -15,6 +16,6 @@ message GenesisState {
 
   repeated SigningSession signing_sessions = 2 [ (gogoproto.nullable) = false ];
 
-  repeated Custodian custodians = 3;
-  repeated CustodianGroup groups = 4;
+  repeated scalar.covenant.exported.v1beta1.Custodian custodians = 3;
+  repeated scalar.covenant.exported.v1beta1.CustodianGroup groups = 4;
 }

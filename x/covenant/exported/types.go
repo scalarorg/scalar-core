@@ -1,6 +1,7 @@
 package exported
 
 import (
+	"encoding/hex"
 	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -28,10 +29,41 @@ type CovenantHandler interface {
 	HandleFailed(ctx sdk.Context, moduleMetadata codec.ProtoMarshaler) error
 }
 
+type Psbt []byte
+
+func (p Psbt) Bytes() []byte {
+	return p
+}
+
+var EmptyPsbt = []byte{}
+
+func PsbtFromHex(h string) (Psbt, error) {
+	psbt, err := hex.DecodeString(h)
+	if err != nil {
+		return nil, err
+	}
+	return psbt, nil
+}
+
+func (p Psbt) ValidateBasic() error {
+	// TODO: validate psbt format by btcd-lib.packet
+	clog.Yellow("!! TODO: validate psbt", "psbt", p)
+	return nil
+}
+
+type PsbtPayload []byte
+
+func (p PsbtPayload) ValidateBasic() error {
+	if len(p) == 0 {
+		return fmt.Errorf("can't be empty")
+	}
+	return nil
+}
+
+var DefaultParticipantTapScriptSigs = make(map[string]*TapScriptSigsMap)
+
 // key id length range bounds dictated by tofnd
 const (
-	KeyIDLengthMin  = 4
-	KeyIDLengthMax  = 256
 	KeyXOnlyLength  = 32
 	LeafHashLength  = 32
 	SignatureLength = 64

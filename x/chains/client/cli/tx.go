@@ -14,7 +14,7 @@ import (
 
 	"github.com/scalarorg/scalar-core/x/chains/types"
 
-	covenant "github.com/scalarorg/scalar-core/x/covenant/types"
+	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 

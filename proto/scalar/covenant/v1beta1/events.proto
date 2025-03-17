@@ -23,7 +23,7 @@ message SigningPsbtStarted {
       [ (gogoproto.castvalue) =
             "github.com/scalarorg/scalar-core/x/multisig/exported.PublicKey" ];
   string requesting_module = 6;
-  repeated bytes multi_psbt = 7 [ (gogoproto.casttype) = "Psbt" ];
+  repeated bytes multi_psbt = 7 [ (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/covenant/exported.Psbt" ];
 }
 
 message SigningPsbtCompleted {
