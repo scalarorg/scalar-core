@@ -14,12 +14,26 @@ enum Phase {
   PHASE_SWITCHING = 2 [ (gogoproto.enumvalue_customname) = "Switching" ];
 }
 
+message UTXO {
+  bytes txid = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/types.Hash",
+    (gogoproto.customname) = "TxID"
+  ];
+  uint32 vout = 2;
+  bytes script_pubkey = 3;
+  uint64 amount_in_sats = 4;
+}
+
 message RedeemSession {
   uint64 sequence = 1;
   Phase current_phase = 2;
-  bytes tx_ids = 3 [
+  bytes last_redeem_tx = 3 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/types.Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/types.Hash",
     (gogoproto.customname) = "TxID"
   ];
+  repeated UTXO utxos = 4;
 }

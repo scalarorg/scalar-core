@@ -290,6 +290,7 @@
   
 - [scalar/covenant/v1beta1/redeem.proto](#scalar/covenant/v1beta1/redeem.proto)
     - [RedeemSession](#scalar.covenant.v1beta1.RedeemSession)
+    - [UTXO](#scalar.covenant.v1beta1.UTXO)
   
     - [Phase](#scalar.covenant.v1beta1.Phase)
   
@@ -4760,7 +4761,26 @@ ParamsRequest represents a message that queries the params
 | ----- | ---- | ----- | ----------- |
 | `sequence` | [uint64](#uint64) |  |  |
 | `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
-| `tx_ids` | [bytes](#bytes) |  |  |
+| `last_redeem_tx` | [bytes](#bytes) |  |  |
+| `utxos` | [UTXO](#scalar.covenant.v1beta1.UTXO) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UTXO"></a>
+
+### UTXO
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `txid` | [bytes](#bytes) |  |  |
+| `vout` | [uint32](#uint32) |  |  |
+| `script_pubkey` | [bytes](#bytes) |  |  |
+| `amount_in_sats` | [uint64](#uint64) |  |  |
 
 
 
