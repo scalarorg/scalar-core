@@ -1,57 +1,65 @@
 syntax = "proto3";
 package scalar.covenant.v1beta1;
 
-option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
-
 import "gogoproto/gogo.proto";
 import "scalar/covenant/exported/v1beta1/types.proto";
+import "scalar/covenant/v1beta1/redeem.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
 message SigningPsbtStarted {
   option (gogoproto.stable_marshaler) = true;
 
   string module = 1;
-  string chain = 2
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  uint64 sig_id = 3 [ (gogoproto.customname) = "SigID" ];
+  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  uint64 sig_id = 3 [(gogoproto.customname) = "SigID"];
   string key_id = 4 [
     (gogoproto.customname) = "KeyID",
-    (gogoproto.casttype) =
-        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+    (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
-  map<string, bytes> pub_keys = 5
-      [ (gogoproto.castvalue) =
-            "github.com/scalarorg/scalar-core/x/multisig/exported.PublicKey" ];
+  map<string, bytes> pub_keys = 5 [(gogoproto.castvalue) = "github.com/scalarorg/scalar-core/x/multisig/exported.PublicKey"];
   string requesting_module = 6;
-  repeated bytes multi_psbt = 7 [ (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/covenant/exported.Psbt" ];
+  repeated bytes multi_psbt = 7 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/covenant/exported.Psbt"];
 }
 
 message SigningPsbtCompleted {
   string module = 1;
-  uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
+  uint64 sig_id = 2 [(gogoproto.customname) = "SigID"];
 }
 
 message SigningPsbtExpired {
   string module = 1;
-  uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
+  uint64 sig_id = 2 [(gogoproto.customname) = "SigID"];
 }
 
 message TapScriptSigsSubmitted {
   string module = 1;
-  uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
-  bytes participant = 3 [ (gogoproto.casttype) =
-                              "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
+  uint64 sig_id = 2 [(gogoproto.customname) = "SigID"];
+  bytes participant = 3 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
   repeated scalar.covenant.exported.v1beta1.TapScriptSigsMap list_of_tap_script_sigs_map = 4;
 }
 
 message KeyRotated {
   string module = 1;
-  string chain = 2
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
   string key_id = 3 [
     (gogoproto.customname) = "KeyID",
-    (gogoproto.casttype) =
-        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+    (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
+}
+
+message SwitchPhaseStarted {
+  string module = 1;
+  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  uint64 sequence = 3;
+  //Current phase
+  Phase phase = 4;
+  //Next sequence and phase encoded in the payload
+  bytes payload = 5;
+}
+
+message SwitchPhaseCompleted {
+  string module = 1;
+  uint64 sequence = 2;
+  Phase phase = 3;
 }

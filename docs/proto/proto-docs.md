@@ -229,12 +229,20 @@
     - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
     - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
   
+- [scalar/covenant/v1beta1/redeem.proto](#scalar/covenant/v1beta1/redeem.proto)
+    - [RedeemSession](#scalar.covenant.v1beta1.RedeemSession)
+    - [UTXO](#scalar.covenant.v1beta1.UTXO)
+  
+    - [Phase](#scalar.covenant.v1beta1.Phase)
+  
 - [scalar/covenant/v1beta1/events.proto](#scalar/covenant/v1beta1/events.proto)
     - [KeyRotated](#scalar.covenant.v1beta1.KeyRotated)
     - [SigningPsbtCompleted](#scalar.covenant.v1beta1.SigningPsbtCompleted)
     - [SigningPsbtExpired](#scalar.covenant.v1beta1.SigningPsbtExpired)
     - [SigningPsbtStarted](#scalar.covenant.v1beta1.SigningPsbtStarted)
     - [SigningPsbtStarted.PubKeysEntry](#scalar.covenant.v1beta1.SigningPsbtStarted.PubKeysEntry)
+    - [SwitchPhaseCompleted](#scalar.covenant.v1beta1.SwitchPhaseCompleted)
+    - [SwitchPhaseStarted](#scalar.covenant.v1beta1.SwitchPhaseStarted)
     - [TapScriptSigsSubmitted](#scalar.covenant.v1beta1.TapScriptSigsSubmitted)
   
 - [scalar/multisig/exported/v1beta1/types.proto](#scalar/multisig/exported/v1beta1/types.proto)
@@ -288,14 +296,12 @@
     - [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest)
     - [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse)
   
-- [scalar/covenant/v1beta1/redeem.proto](#scalar/covenant/v1beta1/redeem.proto)
-    - [RedeemSession](#scalar.covenant.v1beta1.RedeemSession)
-    - [UTXO](#scalar.covenant.v1beta1.UTXO)
-  
-    - [Phase](#scalar.covenant.v1beta1.Phase)
-  
 - [scalar/covenant/v1beta1/tx.proto](#scalar/covenant/v1beta1/tx.proto)
     - [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest)
+    - [ConfirmRedeemTxRequest](#scalar.covenant.v1beta1.ConfirmRedeemTxRequest)
+    - [ConfirmRedeemTxResponse](#scalar.covenant.v1beta1.ConfirmRedeemTxResponse)
+    - [ConfirmSwitchedPhaseRequest](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest)
+    - [ConfirmSwitchedPhaseResponse](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseResponse)
     - [CreateCustodianGroupRequest](#scalar.covenant.v1beta1.CreateCustodianGroupRequest)
     - [CreateCustodianGroupResponse](#scalar.covenant.v1beta1.CreateCustodianGroupResponse)
     - [CreateCustodianRequest](#scalar.covenant.v1beta1.CreateCustodianRequest)
@@ -310,6 +316,8 @@
     - [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse)
     - [UpdateCustodianRequest](#scalar.covenant.v1beta1.UpdateCustodianRequest)
     - [UpdateCustodianResponse](#scalar.covenant.v1beta1.UpdateCustodianResponse)
+    - [UpdateNewBtcBlockRequest](#scalar.covenant.v1beta1.UpdateNewBtcBlockRequest)
+    - [UpdateNewBtcBlockResponse](#scalar.covenant.v1beta1.UpdateNewBtcBlockResponse)
   
 - [scalar/covenant/v1beta1/service.proto](#scalar/covenant/v1beta1/service.proto)
     - [MsgService](#scalar.covenant.v1beta1.MsgService)
@@ -3910,6 +3918,71 @@ the deterministic order of the entries
 
 
 
+<a name="scalar/covenant/v1beta1/redeem.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/covenant/v1beta1/redeem.proto
+
+
+
+<a name="scalar.covenant.v1beta1.RedeemSession"></a>
+
+### RedeemSession
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sequence` | [uint64](#uint64) |  |  |
+| `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
+| `last_redeem_tx` | [bytes](#bytes) |  |  |
+| `utxos` | [UTXO](#scalar.covenant.v1beta1.UTXO) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UTXO"></a>
+
+### UTXO
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `txid` | [bytes](#bytes) |  |  |
+| `vout` | [uint32](#uint32) |  |  |
+| `script_pubkey` | [bytes](#bytes) |  |  |
+| `amount_in_sats` | [uint64](#uint64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.covenant.v1beta1.Phase"></a>
+
+### Phase
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| PHASE_PREPARING | 0 |  |
+| PHASE_EXECUTING | 1 |  |
+| PHASE_SWITCHING | 2 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/covenant/v1beta1/events.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -3997,6 +4070,42 @@ the deterministic order of the entries
 | ----- | ---- | ----- | ----------- |
 | `key` | [string](#string) |  |  |
 | `value` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SwitchPhaseCompleted"></a>
+
+### SwitchPhaseCompleted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `sequence` | [uint64](#uint64) |  |  |
+| `phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SwitchPhaseStarted"></a>
+
+### SwitchPhaseStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `chain` | [string](#string) |  |  |
+| `sequence` | [uint64](#uint64) |  |  |
+| `phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  | Current phase |
+| `payload` | [bytes](#bytes) |  | Next sequence and phase encoded in the payload |
 
 
 
@@ -4744,71 +4853,6 @@ ParamsRequest represents a message that queries the params
 
 
 
-<a name="scalar/covenant/v1beta1/redeem.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/covenant/v1beta1/redeem.proto
-
-
-
-<a name="scalar.covenant.v1beta1.RedeemSession"></a>
-
-### RedeemSession
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `sequence` | [uint64](#uint64) |  |  |
-| `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
-| `last_redeem_tx` | [bytes](#bytes) |  |  |
-| `utxos` | [UTXO](#scalar.covenant.v1beta1.UTXO) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.UTXO"></a>
-
-### UTXO
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `txid` | [bytes](#bytes) |  |  |
-| `vout` | [uint32](#uint32) |  |  |
-| `script_pubkey` | [bytes](#bytes) |  |  |
-| `amount_in_sats` | [uint64](#uint64) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
-
-<a name="scalar.covenant.v1beta1.Phase"></a>
-
-### Phase
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| PHASE_PREPARING | 0 |  |
-| PHASE_EXECUTING | 1 |  |
-| PHASE_SWITCHING | 2 |  |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
 <a name="scalar/covenant/v1beta1/tx.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -4828,6 +4872,60 @@ ParamsRequest represents a message that queries the params
 | `guid` | [string](#string) |  | CustodianGroup uid |
 | `custodian_pubkey` | [bytes](#bytes) |  |  |
 | `description` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.ConfirmRedeemTxRequest"></a>
+
+### ConfirmRedeemTxRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.ConfirmRedeemTxResponse"></a>
+
+### ConfirmRedeemTxResponse
+
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest"></a>
+
+### ConfirmSwitchedPhaseRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.ConfirmSwitchedPhaseResponse"></a>
+
+### ConfirmSwitchedPhaseResponse
+
 
 
 
@@ -5059,6 +5157,33 @@ Pubkey used as key for lookup custodian to update other values
 
 
 
+
+<a name="scalar.covenant.v1beta1.UpdateNewBtcBlockRequest"></a>
+
+### UpdateNewBtcBlockRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `height` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UpdateNewBtcBlockResponse"></a>
+
+### UpdateNewBtcBlockResponse
+
+
+
+
+
+
  <!-- end messages -->
 
  <!-- end enums -->
@@ -5097,6 +5222,9 @@ Pubkey used as key for lookup custodian to update other values
 | `RemoveCustodianFromGroup` | [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Remove Custodian from custodian group recalculate taproot address when deleting custodian from custodian group | POST|/scalar/covenant/v1beta1/remove_custodian_from_group|
 | `RotateKey` | [RotateKeyRequest](#scalar.covenant.v1beta1.RotateKeyRequest) | [RotateKeyResponse](#scalar.covenant.v1beta1.RotateKeyResponse) |  | POST|/scalar/covenant/v1beta1/rotate_key|
 | `SubmitTapScriptSigs` | [SubmitTapScriptSigsRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigsRequest) | [SubmitTapScriptSigsResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigsResponse) |  | POST|/scalar/covenant/v1beta1/submit_tap_script_sigs|
+| `ConfirmRedeemTx` | [ConfirmRedeemTxRequest](#scalar.covenant.v1beta1.ConfirmRedeemTxRequest) | [ConfirmRedeemTxResponse](#scalar.covenant.v1beta1.ConfirmRedeemTxResponse) |  | POST|/scalar/covenant/v1beta1/confirm_redeem_tx|
+| `ConfirmSwitchedPhase` | [ConfirmSwitchedPhaseRequest](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest) | [ConfirmSwitchedPhaseResponse](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseResponse) |  | POST|/scalar/covenant/v1beta1/confirm_switched_phase|
+| `UpdateNewBtcBlock` | [UpdateNewBtcBlockRequest](#scalar.covenant.v1beta1.UpdateNewBtcBlockRequest) | [UpdateNewBtcBlockResponse](#scalar.covenant.v1beta1.UpdateNewBtcBlockResponse) |  | POST|/scalar/covenant/v1beta1/update_new_btc_block|
 
 
 <a name="scalar.covenant.v1beta1.QueryService"></a>
