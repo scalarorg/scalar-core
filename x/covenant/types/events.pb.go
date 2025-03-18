@@ -425,7 +425,7 @@ func (m *SwitchPhaseStarted) GetPhase() Phase {
 	if m != nil {
 		return m.Phase
 	}
-	return Preparing
+	return Unspecified
 }
 
 func (m *SwitchPhaseStarted) GetExecuteData() string {
@@ -492,7 +492,7 @@ func (m *SwitchPhaseCompleted) GetPhase() Phase {
 	if m != nil {
 		return m.Phase
 	}
-	return Preparing
+	return Unspecified
 }
 
 func init() {

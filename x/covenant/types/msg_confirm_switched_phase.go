@@ -4,6 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 var _ sdk.Msg = &ConfirmSwitchedPhaseRequest{}
@@ -12,7 +13,7 @@ func NewConfirmSwitchedPhaseRequest(sender sdk.AccAddress, chain string, txID st
 	return &ConfirmSwitchedPhaseRequest{
 		Sender: sender,
 		Chain:  nexus.ChainName(chain),
-		TxID:   Hash(common.HexToHash(txID)),
+		TxID:   chainsTypes.Hash(common.HexToHash(txID)),
 	}
 }
 

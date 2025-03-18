@@ -106,15 +106,17 @@ message UpdateNewBtcBlockRequest {
 }
 message UpdateNewBtcBlockResponse {}
 
+// Confirm exectuted transaction on bitcoin
 message ConfirmRedeemTxRequest {
   bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
   string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
   bytes tx_id = 3 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/types.Hash",
     (gogoproto.customname) = "TxID"
   ];
 }
+
 message ConfirmRedeemTxResponse {}
 
 message ConfirmSwitchedPhaseRequest {
@@ -122,7 +124,7 @@ message ConfirmSwitchedPhaseRequest {
   string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
   bytes tx_id = 3 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/types.Hash",
     (gogoproto.customname) = "TxID"
   ];
 }

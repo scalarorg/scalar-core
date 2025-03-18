@@ -8,10 +8,10 @@ option (gogoproto.goproto_getters_all) = false;
 
 enum Phase {
   option (gogoproto.goproto_enum_prefix) = false;
-
-  PHASE_PREPARING = 0 [ (gogoproto.enumvalue_customname) = "Preparing" ];
-  PHASE_EXECUTING = 1 [ (gogoproto.enumvalue_customname) = "Executing" ];
+  PHASE_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Unspecified" ];
+  PHASE_PREPARING = 1 [ (gogoproto.enumvalue_customname) = "Preparing" ];
   PHASE_SWITCHING = 2 [ (gogoproto.enumvalue_customname) = "Switching" ];
+  PHASE_EXECUTING = 3 [ (gogoproto.enumvalue_customname) = "Executing" ];
 }
 
 message UTXO {
@@ -27,13 +27,15 @@ message UTXO {
 }
 
 message RedeemSession {
-  uint64 sequence = 1;
-  Phase current_phase = 2;
-  bytes last_redeem_tx = 3 [
-    (gogoproto.nullable) = false,
+  string symbol = 1;
+  uint64 sequence = 2;
+  Phase current_phase = 3;
+  bytes last_redeem_tx = 4 [
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/chains/types.Hash",
-    (gogoproto.customname) = "TxID"
+    (gogoproto.customname) = "LastRedeemTx"
   ];
-  repeated UTXO utxos = 4;
+  repeated UTXO utxos = 5;
+  // map of evm hex address and the number of sats requested
+  map<string, uint64> requested_amount_in_sats = 6;
 }

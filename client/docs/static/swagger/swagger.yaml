@@ -12096,6 +12096,7 @@ paths:
               tx_id:
                 type: string
                 format: byte
+            title: Confirm exectuted transaction on bitcoin
       tags:
         - MsgService
   /scalar/covenant/v1beta1/confirm_switched_phase:
@@ -60271,6 +60272,7 @@ definitions:
       tx_id:
         type: string
         format: byte
+    title: Confirm exectuted transaction on bitcoin
   scalar.covenant.v1beta1.ConfirmRedeemTxResponse:
     type: object
   scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest:

@@ -231,6 +231,7 @@
   
 - [scalar/covenant/v1beta1/redeem.proto](#scalar/covenant/v1beta1/redeem.proto)
     - [RedeemSession](#scalar.covenant.v1beta1.RedeemSession)
+    - [RedeemSession.RequestedAmountInSatsEntry](#scalar.covenant.v1beta1.RedeemSession.RequestedAmountInSatsEntry)
     - [UTXO](#scalar.covenant.v1beta1.UTXO)
   
     - [Phase](#scalar.covenant.v1beta1.Phase)
@@ -3933,10 +3934,28 @@ the deterministic order of the entries
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
+| `symbol` | [string](#string) |  |  |
 | `sequence` | [uint64](#uint64) |  |  |
 | `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
 | `last_redeem_tx` | [bytes](#bytes) |  |  |
 | `utxos` | [UTXO](#scalar.covenant.v1beta1.UTXO) | repeated |  |
+| `requested_amount_in_sats` | [RedeemSession.RequestedAmountInSatsEntry](#scalar.covenant.v1beta1.RedeemSession.RequestedAmountInSatsEntry) | repeated | map of evm hex address and the number of sats requested |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.RedeemSession.RequestedAmountInSatsEntry"></a>
+
+### RedeemSession.RequestedAmountInSatsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [uint64](#uint64) |  |  |
 
 
 
@@ -3970,9 +3989,10 @@ the deterministic order of the entries
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| PHASE_PREPARING | 0 |  |
-| PHASE_EXECUTING | 1 |  |
+| PHASE_UNSPECIFIED | 0 |  |
+| PHASE_PREPARING | 1 |  |
 | PHASE_SWITCHING | 2 |  |
+| PHASE_EXECUTING | 3 |  |
 
 
  <!-- end enums -->
@@ -4882,7 +4902,7 @@ ParamsRequest represents a message that queries the params
 <a name="scalar.covenant.v1beta1.ConfirmRedeemTxRequest"></a>
 
 ### ConfirmRedeemTxRequest
-
+Confirm exectuted transaction on bitcoin
 
 
 | Field | Type | Label | Description |

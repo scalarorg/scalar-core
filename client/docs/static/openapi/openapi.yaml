@@ -11044,7 +11044,21 @@ paths:
                               "value": "1.212s"
                             }
       requestBody:
-        $ref: "#/components/requestBodies/ConfirmTransferKeyBody"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sender:
+                  type: string
+                  format: byte
+                chain:
+                  type: string
+                tx_id:
+                  type: string
+                  format: byte
+              title: Confirm exectuted transaction on bitcoin
+        required: true
       tags:
         - MsgService
   /scalar/covenant/v1beta1/confirm_switched_phase:
@@ -55622,6 +55636,7 @@ components:
         tx_id:
           type: string
           format: byte
+      title: Confirm exectuted transaction on bitcoin
     scalar.covenant.v1beta1.ConfirmRedeemTxResponse:
       type: object
     scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest:
