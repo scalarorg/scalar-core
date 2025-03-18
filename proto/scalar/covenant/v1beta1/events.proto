@@ -51,11 +51,12 @@ message KeyRotated {
 message SwitchPhaseStarted {
   string module = 1;
   string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
-  uint64 sequence = 3;
+  string symbol = 3;
+  uint64 sequence = 4;
   //Current phase
-  Phase phase = 4;
+  Phase phase = 5;
   //Next sequence and phase encoded in the payload
-  bytes payload = 5;
+  string execute_data = 6 [(gogoproto.customname) = "ExecuteData"];
 }
 
 message SwitchPhaseCompleted {

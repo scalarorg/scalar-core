@@ -4103,9 +4103,10 @@ the deterministic order of the entries
 | ----- | ---- | ----- | ----------- |
 | `module` | [string](#string) |  |  |
 | `chain` | [string](#string) |  |  |
+| `symbol` | [string](#string) |  |  |
 | `sequence` | [uint64](#uint64) |  |  |
 | `phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  | Current phase |
-| `payload` | [bytes](#bytes) |  | Next sequence and phase encoded in the payload |
+| `execute_data` | [string](#string) |  | Next sequence and phase encoded in the payload |
 
 
 
