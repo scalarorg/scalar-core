@@ -37,6 +37,7 @@ const (
 	EventTypeGateway                 = "gateway"
 	EventTypeDepositConfirmation     = "depositConfirmation"
 	EventTypeTokenConfirmation       = "tokenConfirmation"
+	EventTypeRedeemConfirmation      = "redeemConfirmation"
 	EventTypeTransferKeyConfirmation = "transferKeyConfirmation"
 	EventTypeLink                    = "link"
 	EventTypeSign                    = "sign"
@@ -993,5 +994,12 @@ func (m EventMultisigOperatorshipTransferred) ValidateBasic() error {
 		return fmt.Errorf("invalid new threshold")
 	}
 
+	return nil
+}
+
+func (m RedeemTxConfirmed) ValidateBasic() error {
+	if !IsBitcoinChain(m.Chain) {
+		return fmt.Errorf("invalid chain")
+	}
 	return nil
 }

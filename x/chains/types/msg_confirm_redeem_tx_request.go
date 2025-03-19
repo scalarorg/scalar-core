@@ -3,8 +3,8 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
-	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 var _ sdk.Msg = &ConfirmRedeemTxRequest{}

@@ -2,10 +2,13 @@ syntax = "proto3";
 package scalar.covenant.v1beta1;
 
 import "gogoproto/gogo.proto";
-import "scalar/covenant/exported/v1beta1/types.proto";
 import "scalar/covenant/v1beta1/redeem.proto";
+import "scalar/covenant/exported/v1beta1/types.proto";
+import "scalar/chains/v1beta1/types.proto";
+
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
+
 
 message SigningPsbtStarted {
   option (gogoproto.stable_marshaler) = true;
@@ -54,7 +57,7 @@ message SwitchPhaseStarted {
   string symbol = 3;
   uint64 sequence = 4;
   //Current phase
-  Phase phase = 5;
+  scalar.covenant.v1beta1.Phase phase = 5;
   //Next sequence and phase encoded in the payload
   string execute_data = 6 [(gogoproto.customname) = "ExecuteData"];
 }
@@ -62,5 +65,87 @@ message SwitchPhaseStarted {
 message SwitchPhaseCompleted {
   string module = 1;
   uint64 sequence = 2;
-  Phase phase = 3;
+  scalar.covenant.v1beta1.Phase phase = 3;
 }
+
+
+message UpdateUtxoListsStarted {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string taproot_address = 2;
+  uint64 poll_id = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "PollID",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
+  ];
+  repeated bytes participants = 4
+      [ (gogoproto.casttype) =
+            "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
+}
+
+message UpdateUtxoListsCompleted {
+  string module = 1;
+  string taproot_address = 2;
+  string block_height = 3;
+}
+
+message ConfirmRedeemTxStarted {
+  repeated scalar.chains.v1beta1.PollMapping poll_mappings = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "poll_mappings,omitempty"
+  ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  uint64 confirmation_height = 3;
+  repeated bytes participants = 4
+      [ (gogoproto.casttype) =
+            "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
+}
+
+
+message Event {
+  enum Status {
+    option (gogoproto.goproto_enum_prefix) = false;
+    option (gogoproto.goproto_enum_stringer) = true;
+
+    STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "EventNonExistent"];
+    STATUS_CONFIRMED = 1 [(gogoproto.enumvalue_customname) = "EventConfirmed"];
+    STATUS_COMPLETED = 2 [(gogoproto.enumvalue_customname) = "EventCompleted"];
+    STATUS_FAILED = 3 [(gogoproto.enumvalue_customname) = "EventFailed"];
+  }
+
+  string chain = 1 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  bytes hash = 2 [
+    (gogoproto.customname) = "Hash",
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
+  ];
+  Status status = 3;
+  uint64 index = 4;
+  oneof event {
+    RedeemTxConfirmed redeem_tx_confirmed = 13;
+    UtxoListConfirmed utxo_list_confirmed = 14;
+    SessionConfirmed session_confirmed = 15;
+  }
+}
+
+message RedeemTxConfirmed {
+  string event_id = 1
+      [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string destination_address = 3
+      [ (gogoproto.customname) = "DestinationAddress" ];
+  int64 redeem_amount = 4 [ (gogoproto.customname) = "RedeemAmount" ];
+}
+message UtxoListConfirmed { repeated UTXO utxos = 1; }
+
+message SessionConfirmed {
+  uint64 session_sequence = 1 [ (gogoproto.customname) = "SessionSequence" ];
+  uint64 phase_sequence = 2 [ (gogoproto.customname) = "PhaseSequence" ];
+}
+

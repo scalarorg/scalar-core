@@ -71,6 +71,64 @@ func (mgr Manager) ProcessSourceTxsConfirmation(event *types.EventConfirmSourceT
 	return err
 }
 
+func (mgr Manager) ProcessRedeemTxConfirmation(event *types.ConfirmRedeemTxStarted) error {
+	if !mgr.isParticipantOf(event.Participants) {
+		pollIDs := slices.Map(event.PollMappings, func(m types.PollMapping) vote.PollID { return m.PollID })
+		mgr.logger("poll_ids", pollIDs).Debug("ignoring redeem tx confirmation poll: not a participant")
+		return nil
+	}
+
+	mgr.logger("event", event).Debug("processing redeem tx confirmation poll")
+
+	chainInfoBytes := chain.ChainInfoBytes{}
+
+	err := chainInfoBytes.FromString(event.Chain.String())
+	if err != nil {
+		return err
+	}
+
+	btcClient, ok := mgr.rpcs[chainInfoBytes].(xcommon.BtcClient)
+	if !ok {
+		return fmt.Errorf("rpc client not found for chain %s", event.Chain.String())
+	}
+
+	votes, err := btcClient.ProcessRedeemTxConfirmation(event, mgr.proxy)
+	if err != nil {
+		return err
+	}
+	_, err = mgr.broadcaster.Broadcast(context.TODO(), votes...)
+	return err
+
+}
+
+func (mgr Manager) ProcessUpdateUtxoListsStarted(event *types.UpdateUtxoListsStarted) error {
+	if !mgr.isParticipantOf(event.Participants) {
+		mgr.logger("poll_id", event.PollID).Debug("ignoring staking txs confirmation poll: not a participant")
+		return nil
+	}
+
+	mgr.logger("event", event).Debug("processing redeem tx confirmation poll")
+
+	chainInfoBytes := chain.ChainInfoBytes{}
+
+	err := chainInfoBytes.FromString(event.Chain.String())
+	if err != nil {
+		return err
+	}
+
+	btcClient, ok := mgr.rpcs[chainInfoBytes].(xcommon.BtcClient)
+	if !ok {
+		return fmt.Errorf("rpc client not found for chain %s", event.Chain.String())
+	}
+
+	votes, err := btcClient.GetUtxoLists(event, mgr.proxy)
+	if err != nil {
+		return err
+	}
+	_, err = mgr.broadcaster.Broadcast(context.TODO(), votes...)
+	return err
+}
+
 // isParticipantOf checks if the validator is in the poll participants list
 func (mgr Manager) isParticipantOf(participants []sdk.ValAddress) bool {
 	return slices.Any(participants, func(v sdk.ValAddress) bool { return v.Equals(mgr.validator) })

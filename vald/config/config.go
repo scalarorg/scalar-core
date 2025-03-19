@@ -24,6 +24,8 @@ type BTCConfig struct {
 	DisableConnectOnNew  bool `json:"disable_connect_on_new" mapstructure:"disable_connect_on_new"`
 	DisableAutoReconnect bool `json:"disable_auto_reconnect" mapstructure:"disable_auto_reconnect"`
 	HttpPostMode         bool `json:"http_post_mode" mapstructure:"http_post_mode"`
+
+	MempoolUrl string `json:"mempool_url" mapstructure:"mempool_url"`
 }
 
 func (c *BTCConfig) ValidateBasic() error {

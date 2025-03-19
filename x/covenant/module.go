@@ -89,6 +89,7 @@ type AppModule struct {
 	slashing    types.SlashingKeeper
 	snapshotter types.Snapshotter
 	rewarder    types.Rewarder
+	multisig    types.MultisigKeeper
 	nexus       types.Nexus
 	protocol    types.ProtocolKeeper
 }
@@ -99,6 +100,7 @@ func NewAppModule(k *keeper.Keeper,
 	slashing types.SlashingKeeper,
 	snapshotter types.Snapshotter,
 	rewarder types.Rewarder,
+	multisig types.MultisigKeeper,
 	nexus types.Nexus,
 	protocol types.ProtocolKeeper,
 ) AppModule {
@@ -109,6 +111,7 @@ func NewAppModule(k *keeper.Keeper,
 		slashing:       slashing,
 		snapshotter:    snapshotter,
 		rewarder:       rewarder,
+		multisig:       multisig,
 		nexus:          nexus,
 		protocol:       protocol,
 	}
@@ -157,6 +160,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 		Snapshotter: am.snapshotter,
 		Staker:      am.staking,
 		Slashing:    am.slashing,
+		Multisig:    am.multisig,
 		Nexus:       am.nexus,
 		Protocol:    am.protocol,
 	})

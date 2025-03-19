@@ -4,6 +4,7 @@ package scalar.covenant.v1beta1;
 import "gogoproto/gogo.proto";
 import "scalar/covenant/exported/v1beta1/custodian.proto";
 import "scalar/covenant/exported/v1beta1/types.proto";
+import "scalar/covenant/v1beta1/redeem.proto";
 import "scalar/covenant/v1beta1/types.proto";
 import "scalar/covenant/v1beta1/redeem.proto";
 import "scalar/permission/exported/v1beta1/types.proto";
@@ -112,33 +113,6 @@ message RotateKeyRequest {
 
 message RotateKeyResponse {}
 
-message UpdateNewBtcBlockRequest {
-  bytes sender = 1 [ (gogoproto.casttype) =
-                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
-  string chain = 2
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  uint64 height = 3;
-}
-message UpdateNewBtcBlockResponse {}
-
-// Confirm exectuted transaction on bitcoin
-message ConfirmRedeemTxRequest {
-  bytes sender = 1 [ (gogoproto.casttype) =
-                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
-  string chain = 2
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  bytes tx_id = 3 [
-    (gogoproto.nullable) = false,
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
-    (gogoproto.customname) = "TxID"
-  ];
-}
-
-message ConfirmRedeemTxResponse {}
-
 message ConfirmSwitchedPhaseRequest {
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
@@ -175,3 +149,34 @@ message UpdateSequenceAndPhaseForRedeemSessionRequest {
 message UpdateSequenceAndPhaseForRedeemSessionResponse {
   RedeemSession session = 1;
 }
+message ReserveRedeemUtxoRequest {
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string req_id = 2;  // Request id for get response in async mode
+  string address = 3; // User evm address
+  string chain = 4 [
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"
+  ];                 // Evm chain
+  string symbol = 5; // Token symbol
+  uint64 amount = 6; // Redeem amount
+}
+
+message ReserveRedeemUtxoResponse {}
+
+// Confirm exectuted transaction on bitcoin
+message ConfirmRedeemTxRequest {
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  bytes tx_id = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "TxID"
+  ];
+}
+
+message ConfirmRedeemTxResponse {}

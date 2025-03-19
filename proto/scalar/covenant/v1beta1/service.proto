@@ -84,18 +84,18 @@ service MsgService {
     };
   }
 
-  rpc ConfirmSwitchedPhase(ConfirmSwitchedPhaseRequest)
-      returns (ConfirmSwitchedPhaseResponse) {
+  rpc ReserveRedeemUtxo(ReserveRedeemUtxoRequest)
+      returns (ReserveRedeemUtxoResponse) {
     option (google.api.http) = {
-      post : "/scalar/covenant/v1beta1/confirm_switched_phase"
+      post : "/scalar/chains/v1beta1/reserve_redeem_utxo"
       body : "*"
     };
   }
 
-  rpc UpdateNewBtcBlock(UpdateNewBtcBlockRequest)
-      returns (UpdateNewBtcBlockResponse) {
+  rpc ConfirmSwitchedPhase(ConfirmSwitchedPhaseRequest)
+      returns (ConfirmSwitchedPhaseResponse) {
     option (google.api.http) = {
-      post : "/scalar/covenant/v1beta1/update_new_btc_block"
+      post : "/scalar/covenant/v1beta1/confirm_switched_phase"
       body : "*"
     };
   }
@@ -112,7 +112,8 @@ service MsgService {
       UpdateSequenceAndPhaseForRedeemSessionRequest)
       returns (UpdateSequenceAndPhaseForRedeemSessionResponse) {
     option (google.api.http) = {
-      post : "/scalar/covenant/v1beta1/update_sequence_and_phase_for_redeem_session"
+      post : "/scalar/covenant/v1beta1/"
+             "update_sequence_and_phase_for_redeem_session"
       body : "*"
     };
   }
