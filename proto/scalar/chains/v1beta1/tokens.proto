@@ -19,8 +19,11 @@ message ERC20TokenMetadata {
       [ (gogoproto.nullable) = false ];
   string token_address = 4
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
-  string tx_hash = 5
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+  string tx_hash = 5 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
+  ];
   reserved 6; // min_amount was removed in v0.15
   Status status = 7;
   bool is_external = 8;
@@ -31,7 +34,8 @@ message ERC20TokenMetadata {
 message ERC20Deposit {
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   bytes amount = 2 [

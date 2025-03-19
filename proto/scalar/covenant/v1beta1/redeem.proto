@@ -18,7 +18,7 @@ message UTXO {
   bytes txid = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/types.Hash",
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   uint32 vout = 2;
@@ -32,7 +32,7 @@ message RedeemSession {
   Phase current_phase = 3;
   bytes last_redeem_tx = 4 [
     (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/types.Hash",
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "LastRedeemTx"
   ];
   repeated UTXO utxos = 5;

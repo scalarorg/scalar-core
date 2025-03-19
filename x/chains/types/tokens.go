@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -32,7 +33,7 @@ func (t ERC20Token) GetAsset() string {
 }
 
 // GetTxID returns the tx ID set with StartConfirmation
-func (t ERC20Token) GetTxID() Hash {
+func (t ERC20Token) GetTxID() exported.Hash {
 	return t.metadata.TxHash
 }
 
@@ -61,12 +62,12 @@ func (t ERC20Token) GetBurnerCode() []byte {
 }
 
 // GetBurnerCodeHash returns the version of the burner the token is deployed with if it exists
-func (t ERC20Token) GetBurnerCodeHash() (Hash, bool) {
+func (t ERC20Token) GetBurnerCodeHash() (exported.Hash, bool) {
 	if t.metadata.BurnerCode == nil {
-		return Hash{}, false
+		return exported.Hash{}, false
 	}
 
-	return Hash(crypto.Keccak256Hash(t.metadata.BurnerCode)), true
+	return exported.Hash(crypto.Keccak256Hash(t.metadata.BurnerCode)), true
 }
 
 // CreateDeployCommand returns a token deployment command for the token
@@ -128,7 +129,7 @@ func (t ERC20Token) GetAddress() Address {
 }
 
 // RecordDeployment signals that the token confirmation is underway for the given tx ID
-func (t *ERC20Token) RecordDeployment(txID Hash) error {
+func (t *ERC20Token) RecordDeployment(txID exported.Hash) error {
 	switch {
 	case t.Is(NonExistent):
 		return fmt.Errorf("token %s non-existent", t.metadata.Asset)
@@ -153,7 +154,7 @@ func (t *ERC20Token) RejectDeployment() error {
 	}
 
 	t.metadata.Status = Initialized
-	t.metadata.TxHash = Hash{}
+	t.metadata.TxHash = exported.Hash{}
 	t.setMeta(t.metadata)
 	return nil
 }

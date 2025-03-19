@@ -19,6 +19,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/key"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -98,7 +99,7 @@ func (k chainKeeper) GetMinVoterCount(ctx sdk.Context) int64 {
 	return getParam[int64](k, ctx, types.KeyMinVoterCount)
 }
 
-func (k chainKeeper) GetDepositsByTxID(ctx sdk.Context, txID types.Hash, status types.DepositStatus) ([]types.ERC20Deposit, error) {
+func (k chainKeeper) GetDepositsByTxID(ctx sdk.Context, txID exported.Hash, status types.DepositStatus) ([]types.ERC20Deposit, error) {
 	var prefix key.Key
 	switch status {
 	case types.DepositStatus_Confirmed:
@@ -123,7 +124,7 @@ func (k chainKeeper) GetDepositsByTxID(ctx sdk.Context, txID types.Hash, status 
 	return deposits, nil
 }
 
-func (k chainKeeper) GetDeposit(ctx sdk.Context, txID types.Hash, logIndex uint64) (types.ERC20Deposit, types.DepositStatus, bool) {
+func (k chainKeeper) GetDeposit(ctx sdk.Context, txID exported.Hash, logIndex uint64) (types.ERC20Deposit, types.DepositStatus, bool) {
 	var deposit types.ERC20Deposit
 
 	if k.getStore(ctx).GetNew(confirmedDepositPrefix.Append(key.FromStr(txID.Hex())).Append(key.FromUInt(logIndex)), &deposit) {
@@ -817,11 +818,11 @@ func (k chainKeeper) EnqueueConfirmedEvent(ctx sdk.Context, id types.EventID) er
 	return nil
 }
 
-func (k chainKeeper) GenerateSalt(ctx sdk.Context, recipient string) types.Hash {
+func (k chainKeeper) GenerateSalt(ctx sdk.Context, recipient string) exported.Hash {
 	nonce := utils.GetNonce(ctx.HeaderHash(), ctx.BlockGasMeter())
 	bz := []byte(recipient)
 	bz = append(bz, nonce[:]...)
-	salt := types.Hash(common.BytesToHash(crypto.Keccak256Hash(bz).Bytes()))
+	salt := exported.Hash(common.BytesToHash(crypto.Keccak256Hash(bz).Bytes()))
 	return salt
 }
 
@@ -835,17 +836,17 @@ func (k chainKeeper) GetBatchByID(ctx sdk.Context, id []byte) types.CommandBatch
 	return types.NewCommandBatch(batch, setter)
 }
 
-func (k chainKeeper) GetBurnerAddress(ctx sdk.Context, token types.ERC20Token, salt types.Hash, gatewayAddr types.Address) (types.Address, error) {
-	var tokenBurnerCodeHash types.Hash
+func (k chainKeeper) GetBurnerAddress(ctx sdk.Context, token types.ERC20Token, salt exported.Hash, gatewayAddr types.Address) (types.Address, error) {
+	var tokenBurnerCodeHash exported.Hash
 	if token.IsExternal() {
 		// always use the latest burner byte code for external token
 		burnerCode := k.GetBurnerByteCode(ctx)
-		tokenBurnerCodeHash = types.Hash(crypto.Keccak256Hash(burnerCode))
+		tokenBurnerCodeHash = exported.Hash(crypto.Keccak256Hash(burnerCode))
 	} else {
 		tokenBurnerCodeHash = funcs.MustOk(token.GetBurnerCodeHash())
 	}
 
-	var initCodeHash types.Hash
+	var initCodeHash exported.Hash
 	switch tokenBurnerCodeHash.Hex() {
 	case types.BurnerCodeHashV1:
 		addressType, err := abi.NewType("address", "address", nil)
@@ -864,7 +865,7 @@ func (k chainKeeper) GetBurnerAddress(ctx sdk.Context, token types.ERC20Token, s
 			return types.Address{}, err
 		}
 
-		initCodeHash = types.Hash(crypto.Keccak256Hash(append(token.GetBurnerCode(), params...)))
+		initCodeHash = exported.Hash(crypto.Keccak256Hash(append(token.GetBurnerCode(), params...)))
 	case types.BurnerCodeHashV2, types.BurnerCodeHashV3, types.BurnerCodeHashV4, types.BurnerCodeHashV5, types.BurnerCodeHashV6:
 		initCodeHash = tokenBurnerCodeHash
 	default:

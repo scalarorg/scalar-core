@@ -74,7 +74,8 @@ message QueryDepositStateParams {
 
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   bytes burner_address = 2

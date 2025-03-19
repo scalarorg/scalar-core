@@ -27,6 +27,7 @@ import (
 	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenantexported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
@@ -493,7 +494,7 @@ func createDefaultSbtc(configPath string) []chainsTypes.ERC20TokenMetadata {
 				Capacity:  sdk.NewUint(0),
 			},
 			TokenAddress: chainsTypes.Address(common.HexToAddress(tokenInfo.TokenAddress)),
-			TxHash:       chainsTypes.ZeroHash,
+			TxHash:       exported.ZeroHash,
 			Status:       chainsTypes.Confirmed,
 			IsExternal:   true,
 			BurnerCode:   nil, //burner code for external tokens must be nil

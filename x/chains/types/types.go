@@ -26,6 +26,7 @@ import (
 	utils "github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"golang.org/x/exp/maps"
@@ -160,50 +161,6 @@ func (a Address) Size() int {
 	return common.AddressLength
 }
 
-type Hash common.Hash
-
-var ZeroHash = Hash{}
-
-func (h Hash) IsZero() bool {
-	return bytes.Equal(h.Bytes(), ZeroHash.Bytes())
-}
-
-func (h Hash) Bytes() []byte {
-	return common.Hash(h).Bytes()
-}
-
-func (h Hash) Marshal() ([]byte, error) {
-	return h[:], nil
-}
-
-// MarshalTo implements codec.ProtoMarshaler
-func (h Hash) MarshalTo(data []byte) (n int, err error) {
-	bytesCopied := copy(data, h[:])
-	if bytesCopied != common.HashLength {
-		return 0, fmt.Errorf("expected data size to be %d, actual %d", common.HashLength, len(data))
-	}
-
-	return common.HashLength, nil
-}
-
-func (h *Hash) Unmarshal(data []byte) error {
-	if len(data) != common.HashLength {
-		return fmt.Errorf("expected data size to be %d, actual %d", common.HashLength, len(data))
-	}
-
-	*h = Hash(common.BytesToHash(data))
-
-	return nil
-}
-
-func (h Hash) Hex() string {
-	return common.Hash(h).Hex()
-}
-
-func (h Hash) Size() int {
-	return common.HashLength
-}
-
 func StrictDecode(arguments abi.Arguments, bz []byte) ([]interface{}, error) {
 	params, err := arguments.Unpack(bz)
 	if err != nil {
@@ -215,13 +172,6 @@ func StrictDecode(arguments abi.Arguments, bz []byte) ([]interface{}, error) {
 	}
 
 	return params, nil
-}
-
-func HashFromHex(hex string) (Hash, error) {
-	if len(hex) != common.HashLength*2 {
-		return Hash{}, fmt.Errorf("invalid hash length")
-	}
-	return Hash(common.HexToHash(hex)), nil
 }
 
 // CommandBatch represents a batch of commands
@@ -274,7 +224,7 @@ func (b CommandBatch) GetKeyID() multisig.KeyID {
 }
 
 // GetSigHash returns the batch's key ID
-func (b CommandBatch) GetSigHash() Hash {
+func (b CommandBatch) GetSigHash() exported.Hash {
 	return b.metadata.SigHash
 
 }
@@ -351,7 +301,7 @@ func NewCommandBatchMetadata(blockHeight int64, chainID sdk.Int, keyID multisig.
 		ID:         crypto.Keccak256(bz, data),
 		CommandIDs: commandIDs,
 		Data:       data,
-		SigHash:    Hash(GetSignHash(data)),
+		SigHash:    exported.Hash(GetSignHash(data)),
 		Status:     BatchSigning,
 		KeyID:      keyID,
 		// new field
@@ -508,7 +458,7 @@ func (m *SourceTx) ValidateBasic() error {
 type EventID string
 
 // NewEventID returns a new event ID
-func NewEventID(txID Hash, index uint64) EventID {
+func NewEventID(txID exported.Hash, index uint64) EventID {
 	return EventID(fmt.Sprintf("%s-%d", txID.Hex(), index))
 }
 
@@ -654,8 +604,6 @@ func ParseMultisigKey(key multisig.Key) (map[string]sdk.Uint, sdk.Uint) {
 
 	return addressWeights, key.GetMinPassingWeight()
 }
-
-
 
 func (m *ERC20TokenMetadata) ValidateBasic() error {
 	if m.Status == NonExistent {

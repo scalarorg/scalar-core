@@ -6,6 +6,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	xcommon "github.com/scalarorg/scalar-core/vald/xchain/common"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
@@ -52,7 +53,7 @@ func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsS
 	}
 
 	// Note: TxID is the reversed-order hash of the txid aka RPC TxID, aka Mempool TxID
-	txID, err := types.HashFromHex(receipt.Raw.Txid)
+	txID, err := exported.HashFromHex(receipt.Raw.Txid)
 	if err != nil {
 		client.logger().Error(sdkerrors.Wrap(err, "invalid tx id").Error())
 		return nil
@@ -89,7 +90,7 @@ func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsS
 // 	}
 
 // 	// Note: TxID is the reversed-order hash of the txid aka RPC TxID, aka Mempool TxID
-// 	txID, err := types.HashFromHex(receipt.Raw.TxID)
+// 	txID, err := exported.HashFromHex(receipt.Raw.TxID)
 // 	if err != nil {
 // 		client.logger().Error(sdkerrors.Wrap(err, "invalid tx id").Error())
 // 		return nil

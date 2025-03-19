@@ -15,6 +15,7 @@ import (
 
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -128,7 +129,7 @@ func NewApproveContractCallCommand(
 	chainID sdk.Int,
 	keyID multisig.KeyID,
 	sourceChain nexus.ChainName,
-	sourceTxID Hash,
+	sourceTxID exported.Hash,
 	sourceEventIndex uint64,
 	event EventContractCall,
 ) Command {
@@ -177,7 +178,7 @@ func NewApproveContractCallWithMintCommand(
 	chainID sdk.Int,
 	keyID multisig.KeyID,
 	sourceChain nexus.ChainName,
-	sourceTxID Hash,
+	sourceTxID exported.Hash,
 	sourceEventIndex uint64,
 	event EventContractCallWithToken,
 	amount sdk.Uint,
@@ -199,7 +200,7 @@ func NewApproveContractCallWithMintCommandWithPayload(
 	chainID sdk.Int,
 	keyID multisig.KeyID,
 	sourceChain nexus.ChainName,
-	sourceTxID Hash,
+	sourceTxID exported.Hash,
 	sourceEventIndex uint64,
 	event EventContractCallWithToken,
 	amount sdk.Uint,
@@ -341,7 +342,7 @@ func createTransferMultisigParams(addresses []common.Address, weights []*big.Int
 
 func createApproveContractCallParams(
 	sourceChain nexus.ChainName,
-	sourceTxID Hash,
+	sourceTxID exported.Hash,
 	sourceEventIndex uint64,
 	event EventContractCall) []byte {
 	return funcs.Must(approveContractCallArguments.Pack(
@@ -370,7 +371,7 @@ func createApproveContractCallParamsGeneric(
 
 func createApproveContractCallWithMintParams(
 	sourceChain nexus.ChainName,
-	sourceTxID Hash,
+	sourceTxID exported.Hash,
 	sourceEventIndex uint64,
 	event EventContractCallWithToken,
 	amount sdk.Uint,

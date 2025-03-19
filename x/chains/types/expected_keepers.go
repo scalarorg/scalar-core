@@ -9,6 +9,7 @@ import (
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/ethereum/go-ethereum/common"
 	utils "github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -48,10 +49,10 @@ type ChainKeeper interface {
 	GetTokenByteCode(ctx sdk.Context) []byte
 	SetGateway(ctx sdk.Context, address Address)
 	GetGatewayAddress(ctx sdk.Context) (Address, bool)
-	GetDeposit(ctx sdk.Context, txID Hash, logIndex uint64) (ERC20Deposit, DepositStatus, bool)
+	GetDeposit(ctx sdk.Context, txID exported.Hash, logIndex uint64) (ERC20Deposit, DepositStatus, bool)
 	GetBurnerInfo(ctx sdk.Context, address Address) *BurnerInfo
-	GenerateSalt(ctx sdk.Context, recipient string) Hash
-	GetBurnerAddress(ctx sdk.Context, token ERC20Token, salt Hash, gatewayAddr Address) (Address, error)
+	GenerateSalt(ctx sdk.Context, recipient string) exported.Hash
+	GetBurnerAddress(ctx sdk.Context, token ERC20Token, salt exported.Hash, gatewayAddr Address) (Address, error)
 	SetBurnerInfo(ctx sdk.Context, burnerInfo BurnerInfo)
 	DeleteDeposit(ctx sdk.Context, deposit ERC20Deposit)
 	SetDeposit(ctx sdk.Context, deposit ERC20Deposit, state DepositStatus)
@@ -77,7 +78,7 @@ type ChainKeeper interface {
 
 	GetEvent(ctx sdk.Context, eventID EventID) (Event, bool)
 
-	GetDepositsByTxID(ctx sdk.Context, txID Hash, status DepositStatus) ([]ERC20Deposit, error)
+	GetDepositsByTxID(ctx sdk.Context, txID exported.Hash, status DepositStatus) ([]ERC20Deposit, error)
 
 	GetMetadata(ctx sdk.Context) map[string]string
 }

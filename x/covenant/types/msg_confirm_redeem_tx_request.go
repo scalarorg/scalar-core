@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
-	chainTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 )
 
 var _ sdk.Msg = &ConfirmRedeemTxRequest{}
@@ -13,7 +13,7 @@ func NewConfirmRedeemTxRequest(sender sdk.AccAddress, chain string, txID string)
 	return &ConfirmRedeemTxRequest{
 		Sender: sender,
 		Chain:  nexus.ChainName(chain),
-		TxID:   chainTypes.Hash(common.HexToHash(txID)),
+		TxID:   chains.Hash(common.HexToHash(txID)),
 	}
 }
 

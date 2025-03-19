@@ -27,7 +27,8 @@ message EventConfirmSourceTxsStarted {
 message ConfirmDepositStarted {
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   string chain = 2
@@ -46,7 +47,8 @@ message ConfirmDepositStarted {
 message ConfirmTokenStarted {
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   string chain = 2
@@ -69,7 +71,8 @@ message ConfirmKeyTransferStarted {
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   bytes tx_id = 2 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   bytes gateway_address = 3
@@ -93,8 +96,11 @@ message SourceTxConfirmationEvent {
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   uint64 amount = 3;
   string asset = 4;
-  bytes payload_hash = 5
-      [ (gogoproto.customtype) = "Hash", (gogoproto.nullable) = false ];
+  bytes payload_hash = 5 [
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.nullable) = false
+  ];
 
   bytes payload = 6;
 
@@ -118,8 +124,11 @@ message ContractCallApproved {
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string contract_address = 6;
-  bytes payload_hash = 7
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+  bytes payload_hash = 7 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
+  ];
 }
 
 message ContractCallFailed {
@@ -145,8 +154,11 @@ message EventContractCallWithMintApproved {
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string contract_address = 6;
-  bytes payload_hash = 7
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+  bytes payload_hash = 7 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
+  ];
   cosmos.base.v1beta1.Coin asset = 8 [ (gogoproto.nullable) = false ];
 }
 
@@ -177,8 +189,11 @@ message EventContractCall {
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string contract_address = 3;
-  bytes payload_hash = 4
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+  bytes payload_hash = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
+  ];
 }
 
 message EventContractCallWithToken {
@@ -188,8 +203,11 @@ message EventContractCallWithToken {
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string contract_address = 3;
-  bytes payload_hash = 4
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+  bytes payload_hash = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
+  ];
   string symbol = 5;
   bytes amount = 6 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
@@ -265,7 +283,8 @@ message Event {
   bytes tx_id = 2 [
     (gogoproto.customname) = "TxID",
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash"
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
   ];
   Status status = 3;
   uint64 index = 4;
@@ -287,7 +306,8 @@ message Event {
 message NoEventsConfirmed {
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   string chain = 2

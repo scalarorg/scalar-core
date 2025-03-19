@@ -6,6 +6,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	xcommon "github.com/scalarorg/scalar-core/vald/xchain/common"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
@@ -67,7 +68,7 @@ func (c *EthereumClient) processTxReceipt(event *types.EventConfirmSourceTxsStar
 
 			// events = append(events, types.Event{
 			// 	Chain: event.Chain,
-			// 	TxID:  types.Hash(receipt.TxHash),
+			// 	TxID:  exported.Hash(receipt.TxHash),
 			// 	Event: &types.Event_SourceTxConfirmationEvent{
 			// 		SourceTxConfirmationEvent: contractCallEvent,
 			// 	},
@@ -88,7 +89,7 @@ func (c *EthereumClient) processTxReceipt(event *types.EventConfirmSourceTxsStar
 
 			events = append(events, types.Event{
 				Chain: event.Chain,
-				TxID:  types.Hash(txlog.TxHash),
+				TxID:  exported.Hash(txlog.TxHash),
 				Index: uint64(txlog.Index),
 				Event: &types.Event_ContractCallWithToken{
 					ContractCallWithToken: &gatewayEvent,
@@ -107,7 +108,7 @@ func (c *EthereumClient) processTxReceipt(event *types.EventConfirmSourceTxsStar
 
 			events = append(events, types.Event{
 				Chain: event.Chain,
-				TxID:  types.Hash(txlog.TxHash),
+				TxID:  exported.Hash(txlog.TxHash),
 				Index: uint64(txlog.Index),
 				Event: &types.Event_TokenSent{
 					TokenSent: &gatewayEvent,

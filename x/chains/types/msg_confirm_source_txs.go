@@ -5,11 +5,12 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 // NewConfirmSourceTxsRequest creates a message of type ConfirmSourceTxsRequest
-func NewConfirmSourceTxsRequest(sender sdk.AccAddress, chain nexus.ChainName, txIDs []Hash) *ConfirmSourceTxsRequest {
+func NewConfirmSourceTxsRequest(sender sdk.AccAddress, chain nexus.ChainName, txIDs []exported.Hash) *ConfirmSourceTxsRequest {
 	return &ConfirmSourceTxsRequest{
 		Sender: sender,
 		Chain:  chain,

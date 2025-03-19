@@ -11,6 +11,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 
@@ -150,7 +151,7 @@ func excludeJailedOrTombstoned(ctx sdk.Context, slashing types.SlashingKeeper, s
 	)
 }
 
-func (s msgServer) initializePolls(ctx sdk.Context, chain nexus.Chain, snapshot snapshot.Snapshot, txIDs []types.Hash) ([]types.PollMapping, error) {
+func (s msgServer) initializePolls(ctx sdk.Context, chain nexus.Chain, snapshot snapshot.Snapshot, txIDs []exported.Hash) ([]types.PollMapping, error) {
 	keeper, err := s.ForChain(ctx, chain.Name)
 	if err != nil {
 		return nil, err
@@ -847,7 +848,7 @@ func (s msgServer) CreateSnapshot(ctx sdk.Context, chain nexus.Chain) (snapshot.
 	)
 }
 
-func (s msgServer) initializePoll(ctx sdk.Context, chain nexus.Chain, txID types.Hash) (vote.PollParticipants, error) {
+func (s msgServer) initializePoll(ctx sdk.Context, chain nexus.Chain, txID exported.Hash) (vote.PollParticipants, error) {
 	keeper, err := s.ForChain(ctx, chain.Name)
 	if err != nil {
 		return vote.PollParticipants{}, err

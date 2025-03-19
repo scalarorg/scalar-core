@@ -1,6 +1,7 @@
 package types
 
 import (
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
@@ -37,7 +38,7 @@ const (
 )
 
 // NewConfirmKeyTransferStarted is the constructor for event confirm key transfer
-func NewConfirmKeyTransferStarted(chain nexus.ChainName, txID Hash, gatewayAddress Address, confirmationHeight uint64, participants vote.PollParticipants) *ConfirmKeyTransferStarted {
+func NewConfirmKeyTransferStarted(chain nexus.ChainName, txID exported.Hash, gatewayAddress Address, confirmationHeight uint64, participants vote.PollParticipants) *ConfirmKeyTransferStarted {
 	return &ConfirmKeyTransferStarted{
 		Chain:              chain,
 		TxID:               txID,

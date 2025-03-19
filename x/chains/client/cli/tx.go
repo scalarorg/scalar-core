@@ -12,6 +12,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/spf13/cobra"
 
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 
 	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
@@ -65,9 +66,9 @@ func GetCmdCreateConfirmSourceTxs() *cobra.Command {
 
 			chainName := utils.NormalizeString(args[0])
 
-			var txIDs []types.Hash
+			var txIDs []exported.Hash
 			for _, arg := range args[1:] {
-				txHash, err := types.HashFromHex(arg)
+				txHash, err := exported.HashFromHex(arg)
 				if err != nil {
 					return fmt.Errorf("failed to parse txID %s: %v", arg, err)
 				}

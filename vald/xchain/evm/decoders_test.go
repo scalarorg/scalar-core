@@ -11,6 +11,7 @@ import (
 
 	"github.com/scalarorg/scalar-core/testutils/rand"
 	"github.com/scalarorg/scalar-core/vald/evm"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 )
 
@@ -50,7 +51,7 @@ func TestDecodeEventContractCall(t *testing.T) {
 		Sender:           types.Address(common.HexToAddress("0xD48E199950589A4336E4dc43bd2C72Ba0C0baA86")),
 		DestinationChain: "ethereum-2",
 		ContractAddress:  "0xb9845f9247a85Ee592273a79605f34E8607d7e75",
-		PayloadHash:      types.Hash(common.HexToHash("0x9fcef596d62dca8e51b6ba3414901947c0e6821d4483b2f3327ce87c2d4e662e")),
+		PayloadHash:      exported.Hash(common.HexToHash("0x9fcef596d62dca8e51b6ba3414901947c0e6821d4483b2f3327ce87c2d4e662e")),
 	}
 	actual, err := evm.DecodeEventContractCall(log)
 
@@ -72,7 +73,7 @@ func TestDecodeEventContractCallWithToken(t *testing.T) {
 		Sender:           types.Address(common.HexToAddress("0x68B93045fe7D8794a7cAF327e7f855CD6Cd03BB8")),
 		DestinationChain: "ethereum",
 		ContractAddress:  "0x76a06043391712bE39A343d1f43165854fCF6De3",
-		PayloadHash:      types.Hash(common.HexToHash("0x9fcef596d62dca8e51b6ba3414901947c0e6821d4483b2f3327ce87c2d4e662e")),
+		PayloadHash:      exported.Hash(common.HexToHash("0x9fcef596d62dca8e51b6ba3414901947c0e6821d4483b2f3327ce87c2d4e662e")),
 		Symbol:           "uaxl",
 		Amount:           sdk.NewUint(10000000),
 	}

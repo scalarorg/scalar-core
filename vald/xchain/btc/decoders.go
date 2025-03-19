@@ -14,6 +14,7 @@ import (
 	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	protocolTypes "github.com/scalarorg/scalar-core/x/protocol/types"
@@ -45,7 +46,7 @@ func (client *BtcClient) createEventTokenSent(event *chainsTypes.EventConfirmSou
 	}
 
 	// Note: TxID is the reversed-order hash of the txid aka RPC TxID, aka Mempool TxID
-	txID, err := chainsTypes.HashFromHex(tx.Raw.Txid)
+	txID, err := exported.HashFromHex(tx.Raw.Txid)
 	if err != nil {
 		client.logger().Error(sdkerrors.Wrap(err, "invalid tx id").Error())
 		return nil, fmt.Errorf("invalid tx id %s", tx.Raw.Txid)
@@ -148,7 +149,7 @@ func (client *BtcClient) createEventTokenSent(event *chainsTypes.EventConfirmSou
 // 		DestinationChain:            nexus.ChainName(destinationChain.ToBytes().String()),
 // 		Amount:                      uint64(stakingAmount),
 // 		Asset:                       "satoshi",
-// 		PayloadHash:                 chainsTypes.Hash(payloadHash),
+// 		PayloadHash:                 chainsexported.Hash(payloadHash),
 // 		Payload:                     payload,
 // 		DestinationContractAddress:  chainsTypes.Address(destinationContractAddress).Hex(),
 // 		DestinationRecipientAddress: chainsTypes.Address(destinationRecipientAddress).Hex(),

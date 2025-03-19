@@ -1,6 +1,6 @@
 package types
 
-import "github.com/scalarorg/scalar-core/x/chains/types"
+import chains "github.com/scalarorg/scalar-core/x/chains/exported"
 
 func DefaultRedeemSession() RedeemSession {
 	return RedeemSession{
@@ -13,7 +13,7 @@ func DefaultRedeemSession() RedeemSession {
 	}
 }
 
-func NewRedeemSession(symbol string, sequence uint64, currentPhase Phase, lastRedeemTx *types.Hash, utxos []*UTXO, requestedAmountInSats map[string]uint64) RedeemSession {
+func NewRedeemSession(symbol string, sequence uint64, currentPhase Phase, lastRedeemTx *chains.Hash, utxos []*UTXO, requestedAmountInSats map[string]uint64) RedeemSession {
 	return RedeemSession{
 		Symbol:                symbol,
 		Sequence:              sequence,

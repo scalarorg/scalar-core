@@ -38,7 +38,8 @@ enum SourceTxStatus {
 message SourceTx {
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   bytes amount = 2 [
@@ -62,8 +63,11 @@ message CommandBatchMetadata {
     (gogoproto.customtype) = "CommandID"
   ];
   bytes data = 3;
-  bytes sig_hash = 4
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+  bytes sig_hash = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
+  ];
   BatchedCommandsStatus status = 5;
   string key_id = 6 [
     (gogoproto.customname) = "KeyID",
@@ -110,7 +114,8 @@ message Command {
 message PollMapping {
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   uint64 poll_id = 2 [
@@ -128,14 +133,16 @@ message PollMetadata {
   bytes tx_id = 2 [
     (gogoproto.customname) = "TxID",
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash"
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
   ];
 }
 
 message PollFailed {
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   string chain = 2
@@ -152,7 +159,8 @@ message PollFailed {
 message PollExpired {
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   string chain = 2
@@ -169,7 +177,8 @@ message PollExpired {
 message PollCompleted {
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   string chain = 2
@@ -208,7 +217,8 @@ message TransferKey {
 
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   string next_key_id = 3 [
@@ -253,8 +263,11 @@ message BurnerInfo {
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string symbol = 4;
   string asset = 5;
-  bytes salt = 6
-      [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Hash" ];
+  bytes salt = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
+  ];
 }
 
 enum Status {

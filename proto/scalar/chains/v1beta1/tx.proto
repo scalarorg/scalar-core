@@ -19,7 +19,8 @@ message ConfirmSourceTxsRequest {
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   repeated bytes tx_ids = 3 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxIDs"
   ];
 }
@@ -49,7 +50,8 @@ message ConfirmDepositRequest {
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   bytes tx_id = 3 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   bytes amount = 4 [
@@ -73,7 +75,8 @@ message ConfirmTokenRequest {
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   bytes tx_id = 3 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   Asset asset = 4 [ (gogoproto.nullable) = false ];
@@ -92,7 +95,8 @@ message ConfirmTransferKeyRequest {
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   bytes tx_id = 3 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
 }
@@ -133,7 +137,8 @@ message CreateBurnTokensResponse {}
 // CreateDeployTokenRequest represents the message to create a deploy token
 // command for scalarGateway
 message CreateDeployTokenRequest {
-  option (permission.exported.v1beta1.permission_role) = ROLE_PROTOCOL_MANAGEMENT;
+  option (permission.exported.v1beta1.permission_role) =
+      ROLE_PROTOCOL_MANAGEMENT;
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2

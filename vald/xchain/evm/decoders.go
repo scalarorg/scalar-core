@@ -14,6 +14,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -148,7 +149,7 @@ func DecodeEventContractCallWithToken(log *geth.Log) (types.EventContractCallWit
 		Sender:           types.Address(common.BytesToAddress(log.Topics[1].Bytes())),
 		DestinationChain: nexus.ChainName(params[0].(string)),
 		ContractAddress:  params[1].(string),
-		PayloadHash:      types.Hash(common.BytesToHash(log.Topics[2].Bytes())),
+		PayloadHash:      exported.Hash(common.BytesToHash(log.Topics[2].Bytes())),
 		Symbol:           params[3].(string),
 		Amount:           sdk.NewUintFromBigInt(params[4].(*big.Int)),
 		Payload:          payload,
@@ -196,7 +197,7 @@ func DecodeEventContractCall(log *geth.Log) (types.EventContractCall, error) {
 		Sender:           types.Address(common.BytesToAddress(log.Topics[1].Bytes())),
 		DestinationChain: nexus.ChainName(params[0].(string)),
 		ContractAddress:  params[1].(string),
-		PayloadHash:      types.Hash(common.BytesToHash(log.Topics[2].Bytes())),
+		PayloadHash:      exported.Hash(common.BytesToHash(log.Topics[2].Bytes())),
 	}, nil
 }
 
@@ -230,7 +231,7 @@ func DecodeEventContractCall(log *geth.Log) (types.EventContractCall, error) {
 
 // 	destinationContractAddress := common.HexToAddress(params[1].(string)).Hex()
 
-// 	payloadHash := chainsTypes.Hash(common.BytesToHash(log.Topics[2].Bytes()))
+// 	payloadHash := chainsexported.Hash(common.BytesToHash(log.Topics[2].Bytes()))
 
 // 	queryClient := grpc_client.QueryManager.GetClient()
 

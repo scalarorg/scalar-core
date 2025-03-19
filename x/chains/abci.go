@@ -12,6 +12,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	mexported "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -810,7 +811,7 @@ func handleMessageWithToken(ctx sdk.Context, ck types.ChainKeeper, n types.Nexus
 		Sender:           msg.GetSourceAddress(),
 		DestinationChain: msg.GetDestinationChain(),
 		ContractAddress:  msg.GetDestinationAddress(),
-		PayloadHash:      types.Hash(common.BytesToHash(msg.PayloadHash)),
+		PayloadHash:      exported.Hash(common.BytesToHash(msg.PayloadHash)),
 		Asset:            *msg.Asset,
 	})
 
@@ -850,7 +851,7 @@ func handleMessage(ctx sdk.Context, ck types.ChainKeeper, chainID sdk.Int, keyID
 		Sender:           msg.GetSourceAddress(),
 		DestinationChain: msg.GetDestinationChain(),
 		ContractAddress:  msg.GetDestinationAddress(),
-		PayloadHash:      types.Hash(common.BytesToHash(msg.PayloadHash)),
+		PayloadHash:      exported.Hash(common.BytesToHash(msg.PayloadHash)),
 	}
 
 	clog.Redf("[abci/chains] DestCallApproved: %+v", destCallApproved)

@@ -23,6 +23,7 @@ import (
 	evmmock "github.com/scalarorg/scalar-core/vald/evm/mock"
 	evmrpc "github.com/scalarorg/scalar-core/vald/evm/rpc"
 	"github.com/scalarorg/scalar-core/vald/evm/rpc/mock"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
@@ -65,7 +66,7 @@ func TestMgr_ProccessTokenConfirmation(t *testing.T) {
 			Status: 1,
 		}
 		event = &types.ConfirmTokenStarted{
-			TxID:               types.Hash(receipt.TxHash),
+			TxID:               exported.Hash(receipt.TxHash),
 			Chain:              "Ethereum",
 			GatewayAddress:     types.Address(common.BytesToAddress(gatewayAddrBytes)),
 			TokenAddress:       types.Address(common.BytesToAddress(tokenAddrBytes)),
@@ -253,7 +254,7 @@ func TestMgr_ProcessTokenConfirmationNoTopicsNotPanics(t *testing.T) {
 	mgr := evm.NewMgr(map[string]evmrpc.Client{chain.String(): rpcClient}, broadcaster, valAddr, rand.AccAddr(), cache)
 
 	assert.NotPanics(t, func() {
-		mgr.ProcessTokenConfirmation(&types.ConfirmTokenStarted{TxID: types.Hash{1},
+		mgr.ProcessTokenConfirmation(&types.ConfirmTokenStarted{TxID: exported.Hash{1},
 			PollParticipants: vote.PollParticipants{PollID: 10, Participants: []sdk.ValAddress{valAddr}},
 			Chain:            chain,
 		})

@@ -6,6 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
@@ -14,7 +15,7 @@ func NewConfirmTransferKeyRequest(sender sdk.AccAddress, chain string, txID comm
 	return &ConfirmTransferKeyRequest{
 		Sender: sender,
 		Chain:  nexus.ChainName(utils.NormalizeString(chain)),
-		TxID:   Hash(txID),
+		TxID:   exported.Hash(txID),
 	}
 }
 
