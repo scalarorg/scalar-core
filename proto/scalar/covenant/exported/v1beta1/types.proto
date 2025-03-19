@@ -1,10 +1,9 @@
 syntax = "proto3";
 package scalar.covenant.exported.v1beta1;
 
-option go_package = "github.com/scalarorg/scalar-core/x/covenant/exported";
-
 import "gogoproto/gogo.proto";
 
+option go_package = "github.com/scalarorg/scalar-core/x/covenant/exported";
 option (gogoproto.goproto_getters_all) = false;
 
 enum PsbtState {

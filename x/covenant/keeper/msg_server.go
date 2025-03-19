@@ -9,7 +9,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/x/covenant/types"
-	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	nexusTypes "github.com/scalarorg/scalar-core/x/nexus/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 )
 
@@ -18,6 +18,7 @@ type msgServer struct {
 	snapshotter types.Snapshotter
 	staker      types.StakingKeeper
 	slashing    types.SlashingKeeper
+	multisig    types.MultisigKeeper
 	nexus       types.Nexus
 	protocol    types.ProtocolKeeper
 }
@@ -29,6 +30,7 @@ type MsgServerConstructArgs struct {
 	Snapshotter types.Snapshotter
 	Staker      types.StakingKeeper
 	Slashing    types.SlashingKeeper
+	Multisig    types.MultisigKeeper
 	Nexus       types.Nexus
 	Protocol    types.ProtocolKeeper
 }
@@ -41,6 +43,7 @@ func NewMsgServerImpl(arg *MsgServerConstructArgs) types.MsgServiceServer {
 		snapshotter: arg.Snapshotter,
 		staker:      arg.Staker,
 		slashing:    arg.Slashing,
+		multisig:    arg.Multisig,
 		nexus:       arg.Nexus,
 		protocol:    arg.Protocol,
 	}
@@ -106,7 +109,7 @@ func (s msgServer) RotateKey(c context.Context, req *types.RotateKeyRequest) (*t
 	return &types.RotateKeyResponse{}, nil
 }
 
-func (s msgServer) createSnapshot(ctx sdk.Context, chain nexus.Chain, threshold utils.Threshold) (snapshot.Snapshot, error) {
+func (s msgServer) createSnapshot(ctx sdk.Context, chain nexusTypes.Chain, threshold utils.Threshold) (snapshot.Snapshot, error) {
 	candidates := s.nexus.GetChainMaintainers(ctx, chain)
 
 	return s.snapshotter.CreateSnapshot(
@@ -140,4 +143,13 @@ func excludeJailedOrTombstoned(ctx sdk.Context, slashing types.SlashingKeeper, s
 		funcs.Not(isTombstoned),
 		isProxyActive,
 	)
+}
+
+func validateChainActivated(ctx sdk.Context, nexus types.Nexus, chain nexusTypes.Chain) error {
+	if !nexus.IsChainActivated(ctx, chain) {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest,
+			fmt.Sprintf("chain %s is not activated yet", chain.Name))
+	}
+
+	return nil
 }

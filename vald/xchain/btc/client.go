@@ -17,6 +17,7 @@ type BtcClient struct {
 	client                    *rpcclient.Client
 	cfg                       *rpcclient.ConnConfig
 	blockCache                *BlockCache
+	mempoolUrl                string
 	latestFinalizedBlockCache common.LatestFinalizedBlockCache
 }
 type BTCTxReceipt struct {
@@ -45,6 +46,7 @@ func NewClient(cfg *config.BTCConfig) (common.Client, error) {
 		client:                    rpcClient,
 		cfg:                       rpcConfig,
 		blockCache:                blockCache,
+		mempoolUrl:                cfg.MempoolUrl,
 		latestFinalizedBlockCache: latestFinalizedBlockCache,
 	}
 
