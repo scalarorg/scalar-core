@@ -10,6 +10,7 @@ import (
 	utiltypes "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/clog"
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 )
 
@@ -248,4 +249,93 @@ func NewTapScriptSigsMapFromRaw(raw utiltypes.TapScriptSigsMap) TapScriptSigsMap
 	clog.Greenf("\n===== len(mapOfTapScriptSigs): %+v =====\n", len(mapOfTapScriptSigs))
 
 	return TapScriptSigsMap{Inner: mapOfTapScriptSigs}
+}
+
+func (utxo *UTXO) AppendReserved(requestID string, amount uint64) {
+	utxo.Reserved[requestID] += amount
+}
+func (utxo *UTXO) GetReservedAmount() uint64 {
+	amount := uint64(0)
+	for _, reserved := range utxo.Reserved {
+		amount += reserved
+	}
+	return amount
+}
+
+func (utxo *UTXO) AvailableAmount() uint64 {
+	return utxo.AmountInSats - utxo.GetReservedAmount()
+}
+
+func (utxo *UTXO) Release(requestID string) uint64 {
+	amount, ok := utxo.Reserved[requestID]
+	if !ok {
+		return 0
+	}
+	delete(utxo.Reserved, requestID)
+	return amount
+}
+
+func (rs RedeemSession) ReleaseUtxos(requestID string) uint64 {
+	releasedAmount := uint64(0)
+	for _, utxo := range rs.Utxos {
+		releasedAmount += utxo.Release(requestID)
+	}
+	return releasedAmount
+}
+
+// Utxos list is sorted by amount in sats and txid for deterministic results
+// Each utxo is reserved if it is part of the optimal combination
+func (rs RedeemSession) ReserveUtxos(requestID string, amount uint64) ([]*UTXO, error) {
+	remainingAmount := amount
+	reserveUtxos := make([]*UTXO, 0)
+	for _, utxo := range rs.Utxos {
+		availableAmount := utxo.AvailableAmount()
+		if availableAmount > 0 {
+			//Reserve amount is min(availableAmount, remainingAmount)
+			reserveAmount := availableAmount
+			if reserveAmount > remainingAmount {
+				reserveAmount = remainingAmount
+			}
+			reserveUtxos = append(reserveUtxos, utxo)
+			utxo.AppendReserved(requestID, reserveAmount)
+			remainingAmount -= reserveAmount
+		}
+		if remainingAmount == 0 {
+			break
+		}
+	}
+
+	return reserveUtxos, nil
+}
+
+func DefaultRedeemSession() RedeemSession {
+	return RedeemSession{
+		Symbol:                "",
+		Sequence:              0,
+		CurrentPhase:          Unspecified,
+		LastRedeemTx:          nil,
+		Utxos:                 make([]*UTXO, 0),
+		RequestedAmountInSats: make(map[string]uint64),
+	}
+}
+
+func NewRedeemSession(symbol string, sequence uint64, currentPhase Phase, lastRedeemTx *chains.Hash,
+	utxos []*UTXO, requestedAmountInSats map[string]uint64) RedeemSession {
+	return RedeemSession{
+		Symbol:                symbol,
+		Sequence:              sequence,
+		CurrentPhase:          currentPhase,
+		LastRedeemTx:          lastRedeemTx,
+		Utxos:                 utxos,
+		RequestedAmountInSats: requestedAmountInSats,
+	}
+}
+
+var EmptyRedeemSession = DefaultRedeemSession()
+
+func (rs RedeemSession) IsEmpty() bool {
+	if rs.Symbol == "" || rs.Sequence == 0 {
+		return true
+	}
+	return false
 }

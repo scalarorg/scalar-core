@@ -22,6 +22,7 @@ var (
 	keyRotationCountPrefix = utils.KeyFromInt(7)
 	custodianPrefix        = utils.KeyFromInt(8)
 	custodianGroupPrefix   = utils.KeyFromInt(9)
+	redeemSessionPrefix    = utils.KeyFromInt(10)
 
 	signingSessionCountKey = utils.KeyFromInt(100)
 

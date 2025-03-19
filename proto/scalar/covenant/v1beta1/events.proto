@@ -54,7 +54,7 @@ message SwitchPhaseStarted {
   string symbol = 3;
   uint64 sequence = 4;
   //Current phase
-  Phase phase = 5;
+  scalar.covenant.exported.v1beta1.Phase phase = 5;
   //Next sequence and phase encoded in the payload
   string execute_data = 6 [(gogoproto.customname) = "ExecuteData"];
 }
@@ -62,5 +62,5 @@ message SwitchPhaseStarted {
 message SwitchPhaseCompleted {
   string module = 1;
   uint64 sequence = 2;
-  Phase phase = 3;
+  scalar.covenant.exported.v1beta1.Phase phase = 3;
 }

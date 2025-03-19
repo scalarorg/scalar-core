@@ -41,3 +41,13 @@ type Client interface {
 	LatestFinalizedBlockHeight(confHeight uint64) (uint64, error)
 	Close()
 }
+
+type BtcClient interface {
+	Client
+	ProcessRedeemTxConfirmation(event *btcTypes.ConfirmRedeemTxStarted, proxy sdk.AccAddress) ([]sdk.Msg, error)
+	GetUtxoLists(event *btcTypes.UpdateUtxoListsStarted, proxy sdk.AccAddress) ([]sdk.Msg, error)
+}
+
+type EvmClient interface {
+	Client
+}

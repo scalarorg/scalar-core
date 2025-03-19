@@ -1,52 +1,86 @@
 syntax = "proto3";
 package scalar.covenant.exported.v1beta1;
 
-option go_package = "github.com/scalarorg/scalar-core/x/covenant/exported";
-
 import "gogoproto/gogo.proto";
 
+option go_package = "github.com/scalarorg/scalar-core/x/covenant/exported";
 option (gogoproto.goproto_getters_all) = false;
 
 enum PsbtState {
   option (gogoproto.goproto_enum_prefix) = false;
   option (gogoproto.goproto_enum_stringer) = true;
 
-  PSBT_STATE_UNSPECIFIED = 0
-      [ (gogoproto.enumvalue_customname) = "NonExistent" ];
-  PSBT_STATE_PENDING = 1 [ (gogoproto.enumvalue_customname) = "Pending" ];
-  PSBT_STATE_CREATING = 2 [ (gogoproto.enumvalue_customname) = "Creating" ];
-  PSBT_STATE_SIGNING = 3 [ (gogoproto.enumvalue_customname) = "Signing" ];
-  PSBT_STATE_COMPLETED = 4 [ (gogoproto.enumvalue_customname) = "Completed" ];
+  PSBT_STATE_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "NonExistent"];
+  PSBT_STATE_PENDING = 1 [(gogoproto.enumvalue_customname) = "Pending"];
+  PSBT_STATE_CREATING = 2 [(gogoproto.enumvalue_customname) = "Creating"];
+  PSBT_STATE_SIGNING = 3 [(gogoproto.enumvalue_customname) = "Signing"];
+  PSBT_STATE_COMPLETED = 4 [(gogoproto.enumvalue_customname) = "Completed"];
 }
 
 message TapScriptSig {
-  bytes key_x_only = 1 [ (gogoproto.customtype) = "KeyXOnly" ];
-  bytes leaf_hash = 2 [ (gogoproto.customtype) = "LeafHash" ];
-  bytes signature = 3 [ (gogoproto.customtype) = "Signature" ];
+  bytes key_x_only = 1 [(gogoproto.customtype) = "KeyXOnly"];
+  bytes leaf_hash = 2 [(gogoproto.customtype) = "LeafHash"];
+  bytes signature = 3 [(gogoproto.customtype) = "Signature"];
 }
 
 message TapScriptSigsList {
-  repeated TapScriptSig list = 1 [ (gogoproto.nullable) = false ];
+  repeated TapScriptSig list = 1 [(gogoproto.nullable) = false];
 }
 
 message TapScriptSigsEntry {
   uint64 index = 1;
-  TapScriptSigsList sigs = 2 [ (gogoproto.nullable) = false ];
+  TapScriptSigsList sigs = 2 [(gogoproto.nullable) = false];
 }
 
 // The reason we use a list instead of a map is because the map is not ensured
 // the deterministic order of the entries
 message TapScriptSigsMap {
-  repeated TapScriptSigsEntry inner = 1 [ (gogoproto.nullable) = false ];
+  repeated TapScriptSigsEntry inner = 1 [(gogoproto.nullable) = false];
 }
 
-message ListOfTapScriptSigsMap { repeated TapScriptSigsMap inner = 1; }
+message ListOfTapScriptSigsMap {
+  repeated TapScriptSigsMap inner = 1;
+}
 
 enum KeyState {
   option (gogoproto.goproto_enum_prefix) = false;
   option (gogoproto.goproto_enum_stringer) = true;
 
-  KEY_STATE_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Inactive" ];
-  KEY_STATE_ASSIGNED = 1 [ (gogoproto.enumvalue_customname) = "Assigned" ];
-  KEY_STATE_ACTIVE = 2 [ (gogoproto.enumvalue_customname) = "Active" ];
+  KEY_STATE_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Inactive"];
+  KEY_STATE_ASSIGNED = 1 [(gogoproto.enumvalue_customname) = "Assigned"];
+  KEY_STATE_ACTIVE = 2 [(gogoproto.enumvalue_customname) = "Active"];
+}
+
+message UTXO {
+  bytes txid = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "TxID"
+  ];
+  uint32 vout = 2;
+  bytes script_pubkey = 3;
+  uint64 amount_in_sats = 4;
+  // Reserved amount for each request id
+  map<string, uint64> reserved = 5;
+}
+
+enum Phase {
+  option (gogoproto.goproto_enum_prefix) = false;
+  PHASE_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Unspecified"];
+  PHASE_PREPARING = 1 [(gogoproto.enumvalue_customname) = "Preparing"];
+  PHASE_SWITCHING = 2 [(gogoproto.enumvalue_customname) = "Switching"];
+  PHASE_EXECUTING = 3 [(gogoproto.enumvalue_customname) = "Executing"];
+}
+
+message RedeemSession {
+  string symbol = 1;
+  uint64 sequence = 2;
+  Phase current_phase = 3;
+  bytes last_redeem_tx = 4 [
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "LastRedeemTx"
+  ];
+  repeated UTXO utxos = 5;
+  // map of evm hex address and the number of sats requested
+  map<string, uint64> requested_amount_in_sats = 6;
 }

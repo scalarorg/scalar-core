@@ -1,0 +1,56 @@
+syntax = "proto3";
+package scalar.chains.v1beta1;
+
+import "cosmos/base/v1beta1/coin.proto";
+import "gogoproto/gogo.proto";
+import "scalar/chains/v1beta1/types.proto";
+import "scalar/covenant/exported/v1beta1/types.proto";
+import "scalar/nexus/exported/v1beta1/types.proto";
+import "scalar/vote/exported/v1beta1/types.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
+option (gogoproto.goproto_getters_all) = false;
+
+message UpdateUtxoListsStarted {
+  string chain = 1 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  string taproot_address = 2;
+  uint64 poll_id = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "PollID",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
+  ];
+  repeated bytes participants = 4 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
+}
+
+message UpdateUtxoListsCompleted {
+  string module = 1;
+  string taproot_address = 2;
+  string block_height = 3;
+}
+
+message ConfirmRedeemTxStarted {
+  repeated PollMapping poll_mappings = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "poll_mappings,omitempty"
+  ];
+  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  uint64 confirmation_height = 3;
+  repeated bytes participants = 4 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
+}
+
+message RedeemTxConfirmed {
+  string event_id = 1 [
+    (gogoproto.customname) = "EventID",
+    (gogoproto.casttype) = "EventID"
+  ];
+  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  string destination_address = 3 [(gogoproto.customname) = "DestinationAddress"];
+  int64 redeem_amount = 4 [(gogoproto.customname) = "RedeemAmount"];
+}
+message UtxoListConfirmed {
+  repeated scalar.covenant.exported.v1beta1.UTXO utxos = 1;
+}
+message SessionConfirmed {
+  uint64 session_sequence = 1 [(gogoproto.customname) = "SessionSequence"];
+  uint64 phase_sequence = 2 [(gogoproto.customname) = "PhaseSequence"];
+}

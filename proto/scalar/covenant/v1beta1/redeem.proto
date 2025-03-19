@@ -2,40 +2,28 @@ syntax = "proto3";
 package scalar.covenant.v1beta1;
 
 import "gogoproto/gogo.proto";
+import "scalar/covenant/exported/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 option (gogoproto.goproto_getters_all) = false;
 
-enum Phase {
-  option (gogoproto.goproto_enum_prefix) = false;
-  PHASE_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Unspecified" ];
-  PHASE_PREPARING = 1 [ (gogoproto.enumvalue_customname) = "Preparing" ];
-  PHASE_SWITCHING = 2 [ (gogoproto.enumvalue_customname) = "Switching" ];
-  PHASE_EXECUTING = 3 [ (gogoproto.enumvalue_customname) = "Executing" ];
-}
+// enum Phase {
+//   option (gogoproto.goproto_enum_prefix) = false;
+//   PHASE_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Unspecified"];
+//   PHASE_PREPARING = 1 [(gogoproto.enumvalue_customname) = "Preparing"];
+//   PHASE_SWITCHING = 2 [(gogoproto.enumvalue_customname) = "Switching"];
+//   PHASE_EXECUTING = 3 [(gogoproto.enumvalue_customname) = "Executing"];
+// }
 
-message UTXO {
-  bytes txid = 1 [
-    (gogoproto.nullable) = false,
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
-    (gogoproto.customname) = "TxID"
-  ];
-  uint32 vout = 2;
-  bytes script_pubkey = 3;
-  uint64 amount_in_sats = 4;
-}
-
-message RedeemSession {
-  string symbol = 1;
-  uint64 sequence = 2;
-  Phase current_phase = 3;
-  bytes last_redeem_tx = 4 [
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
-    (gogoproto.customname) = "LastRedeemTx"
-  ];
-  repeated UTXO utxos = 5;
-  // map of evm hex address and the number of sats requested
-  map<string, uint64> requested_amount_in_sats = 6;
-}
+// message RedeemSession {
+//   string symbol = 1;
+//   uint64 sequence = 2;
+//   Phase current_phase = 3;
+//   bytes last_redeem_tx = 4 [
+//     (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+//     (gogoproto.customname) = "LastRedeemTx"
+//   ];
+//   repeated scalar.covenant.exported.v1beta1.UTXO utxos = 5;
+//   // map of evm hex address and the number of sats requested
+//   map<string, uint64> requested_amount_in_sats = 6;
+// }

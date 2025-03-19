@@ -6,7 +6,6 @@ import "google/api/annotations.proto";
 import "scalar/chains/v1beta1/query.proto";
 import "scalar/chains/v1beta1/tx.proto";
 
-
 option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
 option (gogoproto.goproto_registration) = true;
 
@@ -15,6 +14,20 @@ service MsgService {
   rpc ConfirmSourceTxs(ConfirmSourceTxsRequest) returns (ConfirmSourceTxsResponse) {
     option (google.api.http) = {
       post: "/scalar/chains/v1beta1/confirm_source_txs"
+      body: "*"
+    };
+  }
+
+  rpc ConfirmRedeemTx(ConfirmRedeemTxRequest) returns (ConfirmRedeemTxResponse) {
+    option (google.api.http) = {
+      post: "/scalar/covenant/v1beta1/confirm_redeem_tx"
+      body: "*"
+    };
+  }
+
+  rpc UpdateUtxoLists(UpdateUtxoListsRequest) returns (UpdateUtxoListsResponse) {
+    option (google.api.http) = {
+      post: "/scalar/chains/v1beta1/update_utxo_lists"
       body: "*"
     };
   }

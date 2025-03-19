@@ -7,13 +7,13 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/scalarorg/scalar-core/utils"
+	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	mtypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
-	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 )
 
 // Keeper provides keeper functionality of this module
@@ -76,4 +76,15 @@ type Nexus interface {
 	GetChain(ctx sdk.Context, chain nexus.ChainName) (nexus.Chain, bool)
 	GetChains(ctx sdk.Context) []nexus.Chain
 	GetChainMaintainers(ctx sdk.Context, chain nexus.Chain) []sdk.ValAddress
+	IsChainActivated(ctx sdk.Context, chain nexus.Chain) bool
+}
+
+// MultisigKeeper provides functionality to the multisig module
+type MultisigKeeper interface {
+	GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
+	GetNextKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
+	GetKey(ctx sdk.Context, keyID multisig.KeyID) (multisig.Key, bool)
+	AssignKey(ctx sdk.Context, chainName nexus.ChainName, keyID multisig.KeyID) error
+	RotateKey(ctx sdk.Context, chainName nexus.ChainName) error
+	Sign(ctx sdk.Context, keyID multisig.KeyID, payloadHash multisig.Hash, module string, moduleMetadata ...codec.ProtoMarshaler) error
 }
