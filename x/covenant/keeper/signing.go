@@ -49,19 +49,19 @@ func getSigningSessionKey(id uint64) utils.Key {
 	return signingPrefix.Append(utils.KeyFromInt(id))
 }
 
-func (k Keeper) getSigningSessions(ctx sdk.Context) (signingSessions []types.SigningSession) {
-	iter := k.getStore(ctx).Iterator(signingPrefix)
-	defer utils.CloseLogError(iter, k.Logger(ctx))
+// func (k Keeper) getSigningSessions(ctx sdk.Context) (signingSessions []types.SigningSession) {
+// 	iter := k.getStore(ctx).Iterator(signingPrefix)
+// 	defer utils.CloseLogError(iter, k.Logger(ctx))
 
-	for ; iter.Valid(); iter.Next() {
-		var signingSession types.SigningSession
-		iter.UnmarshalValue(&signingSession)
+// 	for ; iter.Valid(); iter.Next() {
+// 		var signingSession types.SigningSession
+// 		iter.UnmarshalValue(&signingSession)
 
-		signingSessions = append(signingSessions, signingSession)
-	}
+// 		signingSessions = append(signingSessions, signingSession)
+// 	}
 
-	return signingSessions
-}
+// 	return signingSessions
+// }
 
 func (k Keeper) setSigningSessionCount(ctx sdk.Context, count uint64) {
 	k.getStore(ctx).Set(signingSessionCountKey, &gogoprototypes.UInt64Value{Value: count})
