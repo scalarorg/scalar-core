@@ -90,6 +90,7 @@ type AppModule struct {
 	snapshotter types.Snapshotter
 	rewarder    types.Rewarder
 	nexus       types.Nexus
+	protocol    types.ProtocolKeeper
 }
 
 // NewAppModule creates a new AppModule object
@@ -99,6 +100,7 @@ func NewAppModule(k *keeper.Keeper,
 	snapshotter types.Snapshotter,
 	rewarder types.Rewarder,
 	nexus types.Nexus,
+	protocol types.ProtocolKeeper,
 ) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
@@ -108,6 +110,7 @@ func NewAppModule(k *keeper.Keeper,
 		snapshotter:    snapshotter,
 		rewarder:       rewarder,
 		nexus:          nexus,
+		protocol:       protocol,
 	}
 }
 
@@ -155,6 +158,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 		Staker:      am.staking,
 		Slashing:    am.slashing,
 		Nexus:       am.nexus,
+		Protocol:    am.protocol,
 	})
 
 	types.RegisterMsgServiceServer(cfg.MsgServer(), msgServer)

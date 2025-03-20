@@ -84,7 +84,6 @@ func GetCmdCreateConfirmSourceTxs() *cobra.Command {
 	}
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
-
 }
 
 // GetCmdSetGateway sets the gateway address for the given evm chain

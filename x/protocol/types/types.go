@@ -57,6 +57,7 @@ func (p *Protocol) ToProtocolInfo() *exported.ProtocolInfo {
 		TokenDailyMintLimit: p.TokenDailyMintLimit,
 		TokenDetails:        p.TokenDetails,
 		ScalarAddress:       p.ScalarAddress,
+		Status:              p.Status,
 	}
 }
 

@@ -19,6 +19,7 @@ type msgServer struct {
 	staker      types.StakingKeeper
 	slashing    types.SlashingKeeper
 	nexus       types.Nexus
+	protocol    types.ProtocolKeeper
 }
 
 var _ types.MsgServiceServer = msgServer{}
@@ -29,6 +30,7 @@ type MsgServerConstructArgs struct {
 	Staker      types.StakingKeeper
 	Slashing    types.SlashingKeeper
 	Nexus       types.Nexus
+	Protocol    types.ProtocolKeeper
 }
 
 // NewMsgServerImpl returns an implementation of the evm MsgServiceServer interface
@@ -40,6 +42,7 @@ func NewMsgServerImpl(arg *MsgServerConstructArgs) types.MsgServiceServer {
 		staker:      arg.Staker,
 		slashing:    arg.Slashing,
 		nexus:       arg.Nexus,
+		protocol:    arg.Protocol,
 	}
 }
 

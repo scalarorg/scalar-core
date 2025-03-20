@@ -7,13 +7,14 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/scalarorg/scalar-core/utils"
+	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	mtypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
-	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
+	protocol "github.com/scalarorg/scalar-core/x/protocol/exported"
 )
 
 // Keeper provides keeper functionality of this module
@@ -76,4 +77,8 @@ type Nexus interface {
 	GetChain(ctx sdk.Context, chain nexus.ChainName) (nexus.Chain, bool)
 	GetChains(ctx sdk.Context) []nexus.Chain
 	GetChainMaintainers(ctx sdk.Context, chain nexus.Chain) []sdk.ValAddress
+}
+
+type ProtocolKeeper interface {
+	FindProtocolInfoByExternalSymbol(ctx sdk.Context, symbol string) (*protocol.ProtocolInfo, error)
 }

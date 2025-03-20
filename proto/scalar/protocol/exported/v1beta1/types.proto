@@ -71,4 +71,5 @@ message ProtocolInfo {
   ];
   nexus.exported.v1beta1.TokenDetails token_details = 8;
   bytes scalar_address = 9;
+  Status status = 6;
 }

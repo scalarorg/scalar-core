@@ -231,7 +231,6 @@
   
 - [scalar/covenant/v1beta1/redeem.proto](#scalar/covenant/v1beta1/redeem.proto)
     - [RedeemSession](#scalar.covenant.v1beta1.RedeemSession)
-    - [RedeemSession.RequestedAmountInSatsEntry](#scalar.covenant.v1beta1.RedeemSession.RequestedAmountInSatsEntry)
     - [UTXO](#scalar.covenant.v1beta1.UTXO)
   
     - [Phase](#scalar.covenant.v1beta1.Phase)
@@ -296,6 +295,8 @@
     - [KeyResponse](#scalar.covenant.v1beta1.KeyResponse)
     - [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest)
     - [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse)
+    - [RedeemSessionRequest](#scalar.covenant.v1beta1.RedeemSessionRequest)
+    - [RedeemSessionResponse](#scalar.covenant.v1beta1.RedeemSessionResponse)
   
 - [scalar/covenant/v1beta1/tx.proto](#scalar/covenant/v1beta1/tx.proto)
     - [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest)
@@ -319,6 +320,8 @@
     - [UpdateCustodianResponse](#scalar.covenant.v1beta1.UpdateCustodianResponse)
     - [UpdateNewBtcBlockRequest](#scalar.covenant.v1beta1.UpdateNewBtcBlockRequest)
     - [UpdateNewBtcBlockResponse](#scalar.covenant.v1beta1.UpdateNewBtcBlockResponse)
+    - [UpdateUtxoForRedeemSessionRequest](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionRequest)
+    - [UpdateUtxoForRedeemSessionResponse](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionResponse)
   
 - [scalar/covenant/v1beta1/service.proto](#scalar/covenant/v1beta1/service.proto)
     - [MsgService](#scalar.covenant.v1beta1.MsgService)
@@ -3939,23 +3942,7 @@ the deterministic order of the entries
 | `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
 | `last_redeem_tx` | [bytes](#bytes) |  |  |
 | `utxos` | [UTXO](#scalar.covenant.v1beta1.UTXO) | repeated |  |
-| `requested_amount_in_sats` | [RedeemSession.RequestedAmountInSatsEntry](#scalar.covenant.v1beta1.RedeemSession.RequestedAmountInSatsEntry) | repeated | map of evm hex address and the number of sats requested |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.RedeemSession.RequestedAmountInSatsEntry"></a>
-
-### RedeemSession.RequestedAmountInSatsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [string](#string) |  |  |
-| `value` | [uint64](#uint64) |  |  |
+| `lastest_btc_block_height` | [uint64](#uint64) |  |  |
 
 
 
@@ -4864,6 +4851,36 @@ ParamsRequest represents a message that queries the params
 
 
 
+
+<a name="scalar.covenant.v1beta1.RedeemSessionRequest"></a>
+
+### RedeemSessionRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `symbol` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.RedeemSessionResponse"></a>
+
+### RedeemSessionResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `session` | [RedeemSession](#scalar.covenant.v1beta1.RedeemSession) |  |  |
+
+
+
+
+
  <!-- end messages -->
 
  <!-- end enums -->
@@ -5205,6 +5222,39 @@ Pubkey used as key for lookup custodian to update other values
 
 
 
+
+<a name="scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionRequest"></a>
+
+### UpdateUtxoForRedeemSessionRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `list_of_utxos` | [UTXO](#scalar.covenant.v1beta1.UTXO) | repeated |  |
+| `block_height` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionResponse"></a>
+
+### UpdateUtxoForRedeemSessionResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `session` | [RedeemSession](#scalar.covenant.v1beta1.RedeemSession) |  |  |
+
+
+
+
+
  <!-- end messages -->
 
  <!-- end enums -->
@@ -5246,6 +5296,7 @@ Pubkey used as key for lookup custodian to update other values
 | `ConfirmRedeemTx` | [ConfirmRedeemTxRequest](#scalar.covenant.v1beta1.ConfirmRedeemTxRequest) | [ConfirmRedeemTxResponse](#scalar.covenant.v1beta1.ConfirmRedeemTxResponse) |  | POST|/scalar/covenant/v1beta1/confirm_redeem_tx|
 | `ConfirmSwitchedPhase` | [ConfirmSwitchedPhaseRequest](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest) | [ConfirmSwitchedPhaseResponse](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseResponse) |  | POST|/scalar/covenant/v1beta1/confirm_switched_phase|
 | `UpdateNewBtcBlock` | [UpdateNewBtcBlockRequest](#scalar.covenant.v1beta1.UpdateNewBtcBlockRequest) | [UpdateNewBtcBlockResponse](#scalar.covenant.v1beta1.UpdateNewBtcBlockResponse) |  | POST|/scalar/covenant/v1beta1/update_new_btc_block|
+| `UpdateUtxoForRedeemSession` | [UpdateUtxoForRedeemSessionRequest](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionRequest) | [UpdateUtxoForRedeemSessionResponse](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionResponse) |  | POST|/scalar/covenant/v1beta1/update_utxo_for_redeem_session|
 
 
 <a name="scalar.covenant.v1beta1.QueryService"></a>
@@ -5258,6 +5309,7 @@ Pubkey used as key for lookup custodian to update other values
 | `Custodians` | [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest) | [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse) | Get custodians | GET|/scalar/convenant/v1beta1/custodians|
 | `Groups` | [GroupsRequest](#scalar.covenant.v1beta1.GroupsRequest) | [GroupsResponse](#scalar.covenant.v1beta1.GroupsResponse) | Get custodian groups | GET|/scalar/covenant/v1beta1/custodian_groups|
 | `Params` | [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse) |  | GET|/scalar/covenant/v1beta1/params|
+| `RedeemSession` | [RedeemSessionRequest](#scalar.covenant.v1beta1.RedeemSessionRequest) | [RedeemSessionResponse](#scalar.covenant.v1beta1.RedeemSessionResponse) |  | GET|/scalar/covenant/v1beta1/redeem_session|
 
  <!-- end services -->
 
@@ -7166,6 +7218,7 @@ Query defines the gRPC querier service.
 | `token_daily_mint_limit` | [bytes](#bytes) |  |  |
 | `token_details` | [scalar.nexus.exported.v1beta1.TokenDetails](#scalar.nexus.exported.v1beta1.TokenDetails) |  |  |
 | `scalar_address` | [bytes](#bytes) |  |  |
+| `status` | [Status](#scalar.protocol.exported.v1beta1.Status) |  |  |
 
 
 

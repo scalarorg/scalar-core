@@ -552,7 +552,6 @@ func handleConfirmDeposit(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 }
 
 func handleTokenDeployed(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, p types.ProtocolKeeper) error {
-	fmt.Println("HandleTokenDeployed")
 	e := event.GetEvent().(*types.Event_TokenDeployed).TokenDeployed
 	if e == nil {
 		panic(fmt.Errorf("event is nil"))

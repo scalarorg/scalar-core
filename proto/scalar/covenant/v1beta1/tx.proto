@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "scalar/covenant/exported/v1beta1/custodian.proto";
 import "scalar/covenant/exported/v1beta1/types.proto";
 import "scalar/covenant/v1beta1/types.proto";
+import "scalar/covenant/v1beta1/redeem.proto";
 import "scalar/permission/exported/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
@@ -152,3 +153,13 @@ message ConfirmSwitchedPhaseRequest {
   ];
 }
 message ConfirmSwitchedPhaseResponse {}
+
+message UpdateUtxoForRedeemSessionRequest {
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string symbol = 2;
+  repeated UTXO list_of_utxos = 3;
+  uint64 block_height = 4;
+}
+
+message UpdateUtxoForRedeemSessionResponse { RedeemSession session = 1; }

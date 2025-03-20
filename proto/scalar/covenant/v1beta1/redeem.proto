@@ -36,6 +36,5 @@ message RedeemSession {
     (gogoproto.customname) = "LastRedeemTx"
   ];
   repeated UTXO utxos = 5;
-  // map of evm hex address and the number of sats requested
-  map<string, uint64> requested_amount_in_sats = 6;
+  uint64 lastest_btc_block_height = 6;
 }
