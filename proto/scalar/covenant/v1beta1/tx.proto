@@ -163,3 +163,15 @@ message UpdateUtxoForRedeemSessionRequest {
 }
 
 message UpdateUtxoForRedeemSessionResponse { RedeemSession session = 1; }
+
+message UpdateSequenceAndPhaseForRedeemSessionRequest {
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string symbol = 2;
+  uint64 sequence = 3;
+  Phase phase = 4;
+}
+
+message UpdateSequenceAndPhaseForRedeemSessionResponse {
+  RedeemSession session = 1;
+}

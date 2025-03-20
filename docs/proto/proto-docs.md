@@ -320,6 +320,8 @@
     - [UpdateCustodianResponse](#scalar.covenant.v1beta1.UpdateCustodianResponse)
     - [UpdateNewBtcBlockRequest](#scalar.covenant.v1beta1.UpdateNewBtcBlockRequest)
     - [UpdateNewBtcBlockResponse](#scalar.covenant.v1beta1.UpdateNewBtcBlockResponse)
+    - [UpdateSequenceAndPhaseForRedeemSessionRequest](#scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionRequest)
+    - [UpdateSequenceAndPhaseForRedeemSessionResponse](#scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionResponse)
     - [UpdateUtxoForRedeemSessionRequest](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionRequest)
     - [UpdateUtxoForRedeemSessionResponse](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionResponse)
   
@@ -5223,6 +5225,39 @@ Pubkey used as key for lookup custodian to update other values
 
 
 
+<a name="scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionRequest"></a>
+
+### UpdateSequenceAndPhaseForRedeemSessionRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `sequence` | [uint64](#uint64) |  |  |
+| `phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionResponse"></a>
+
+### UpdateSequenceAndPhaseForRedeemSessionResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `session` | [RedeemSession](#scalar.covenant.v1beta1.RedeemSession) |  |  |
+
+
+
+
+
+
 <a name="scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionRequest"></a>
 
 ### UpdateUtxoForRedeemSessionRequest
@@ -5297,6 +5332,7 @@ Pubkey used as key for lookup custodian to update other values
 | `ConfirmSwitchedPhase` | [ConfirmSwitchedPhaseRequest](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest) | [ConfirmSwitchedPhaseResponse](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseResponse) |  | POST|/scalar/covenant/v1beta1/confirm_switched_phase|
 | `UpdateNewBtcBlock` | [UpdateNewBtcBlockRequest](#scalar.covenant.v1beta1.UpdateNewBtcBlockRequest) | [UpdateNewBtcBlockResponse](#scalar.covenant.v1beta1.UpdateNewBtcBlockResponse) |  | POST|/scalar/covenant/v1beta1/update_new_btc_block|
 | `UpdateUtxoForRedeemSession` | [UpdateUtxoForRedeemSessionRequest](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionRequest) | [UpdateUtxoForRedeemSessionResponse](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionResponse) |  | POST|/scalar/covenant/v1beta1/update_utxo_for_redeem_session|
+| `UpdateSequenceAndPhaseForRedeemSession` | [UpdateSequenceAndPhaseForRedeemSessionRequest](#scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionRequest) | [UpdateSequenceAndPhaseForRedeemSessionResponse](#scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionResponse) |  | POST|/scalar/covenant/v1beta1/update_sequence_and_phase_for_redeem_session|
 
 
 <a name="scalar.covenant.v1beta1.QueryService"></a>
