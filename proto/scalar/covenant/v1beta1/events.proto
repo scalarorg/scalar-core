@@ -134,7 +134,7 @@ message Event {
 
 message RedeemTxConfirmed {
   string event_id = 1
-      [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "EventID" ];
+      [ (gogoproto.customname) = "EventID", (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/chains/types.EventID" ];
   string chain = 2
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];

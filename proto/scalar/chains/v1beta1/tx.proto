@@ -22,16 +22,6 @@ message ConfirmSourceTxsRequest {
 
 message ConfirmSourceTxsResponse {}
 
-
-
-message UpdateUtxoListsRequest {
-  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
-  uint64 height = 3;
-  bytes taproot_pubkey = 4;
-}
-message UpdateUtxoListsResponse {}
-
 message SetGatewayRequest {
   option (permission.exported.v1beta1.permission_role) = ROLE_ACCESS_CONTROL;
   bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];

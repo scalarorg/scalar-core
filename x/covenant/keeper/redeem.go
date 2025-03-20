@@ -9,7 +9,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/scalarorg/scalar-core/utils/funcs"
-	covExported "github.com/scalarorg/scalar-core/x/covenant/exported"
+	cov "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
 func (k Keeper) AddRedeemSession(ctx sdk.Context, tokenSymbol string, session *types.RedeemSession) {
@@ -46,12 +46,12 @@ func CreateRedeemSessionKey(symbol string) utils.Key {
 	return redeemSessionPrefix.Append(utils.KeyFromStr(symbol))
 }
 
-func (k Keeper) SetRedeemSession(ctx sdk.Context, redeemSession *covExported.RedeemSession) {
+func (k Keeper) SetRedeemSession(ctx sdk.Context, redeemSession *cov.RedeemSession) {
 	k.getStore(ctx).Set(CreateRedeemSessionKey(redeemSession.Symbol), redeemSession)
 }
 
-func (k Keeper) GetRedeemSessionBySymbol(ctx sdk.Context, symbol string) (*covExported.RedeemSession, bool) {
-	var results covExported.RedeemSession
+func (k Keeper) GetRedeemSessionBySymbol(ctx sdk.Context, symbol string) (*cov.RedeemSession, bool) {
+	var results cov.RedeemSession
 
 	ok := k.getStore(ctx).Get(CreateRedeemSessionKey(symbol), &results)
 	if !ok {
@@ -63,7 +63,7 @@ func (k Keeper) GetRedeemSessionBySymbol(ctx sdk.Context, symbol string) (*covEx
 }
 
 // findAvailableUtxos uses knapsack algorithm to find optimal UTXO combination
-func (k Keeper) reserveUtxos(ctx sdk.Context, symbol string, requestID string, amount uint64) ([]*covExported.UTXO, error) {
+func (k Keeper) reserveUtxos(ctx sdk.Context, symbol string, requestID string, amount uint64) ([]*cov.UTXO, error) {
 	redeemSession, ok := k.GetRedeemSessionBySymbol(ctx, symbol)
 	if !ok {
 		return nil, fmt.Errorf("redeem session not found")
@@ -92,7 +92,7 @@ func (k Keeper) reserveUtxos(ctx sdk.Context, symbol string, requestID string, a
 
 func (k Keeper) createRedeemPayload(ctx sdk.Context, destChain string, destAddress string, symbol string,
 	amount uint64,
-	reservedTx []*covExported.UTXO) ([]byte, error) {
+	reservedTx []*cov.UTXO) ([]byte, error) {
 	var payload []byte
 
 	return callContractWithTokenArguments.Pack(
@@ -103,27 +103,3 @@ func (k Keeper) createRedeemPayload(ctx sdk.Context, destChain string, destAddre
 		amount,
 	)
 }
-
-// func NewApproveContractCallWithMintCommandWithPayload(
-// 	chainID sdk.Int,
-// 	keyID multisig.KeyID,
-// 	sourceChain nexus.ChainName,
-// 	sourceTxID exported.Hash,
-// 	sourceEventIndex uint64,
-// 	event EventContractCallWithToken,
-// 	amount sdk.Uint,
-// 	symbol string,
-// 	payload []byte,
-// ) Command {
-// 	sourceEventIndexBz := make([]byte, 8)
-// 	binary.LittleEndian.PutUint64(sourceEventIndexBz, sourceEventIndex)
-
-// 	return Command{
-// 		ID:         NewCommandID(append(sourceTxID.Bytes(), sourceEventIndexBz...), chainID),
-// 		Type:       COMMAND_TYPE_APPROVE_CONTRACT_CALL_WITH_MINT,
-// 		Params:     createApproveContractCallWithMintParams(sourceChain, sourceTxID, sourceEventIndex, event, amount, symbol),
-// 		Payload:    payload,
-// 		KeyID:      keyID,
-// 		MaxGasCost: uint32(approveContractCallWithMintMaxGasCost),
-// 	}
-// }

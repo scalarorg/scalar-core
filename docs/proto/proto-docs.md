@@ -208,8 +208,6 @@
     - [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse)
     - [SignPsbtCommandRequest](#scalar.chains.v1beta1.SignPsbtCommandRequest)
     - [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse)
-    - [UpdateUtxoListsRequest](#scalar.chains.v1beta1.UpdateUtxoListsRequest)
-    - [UpdateUtxoListsResponse](#scalar.chains.v1beta1.UpdateUtxoListsResponse)
   
 - [scalar/chains/v1beta1/service.proto](#scalar/chains/v1beta1/service.proto)
     - [MsgService](#scalar.chains.v1beta1.MsgService)
@@ -234,6 +232,7 @@
 - [scalar/covenant/v1beta1/redeem.proto](#scalar/covenant/v1beta1/redeem.proto)
     - [RedeemSession](#scalar.covenant.v1beta1.RedeemSession)
     - [UTXO](#scalar.covenant.v1beta1.UTXO)
+    - [UTXO.ReservedEntry](#scalar.covenant.v1beta1.UTXO.ReservedEntry)
   
     - [Phase](#scalar.covenant.v1beta1.Phase)
   
@@ -335,6 +334,8 @@
     - [UpdateSequenceAndPhaseForRedeemSessionResponse](#scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionResponse)
     - [UpdateUtxoForRedeemSessionRequest](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionRequest)
     - [UpdateUtxoForRedeemSessionResponse](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionResponse)
+    - [UpdateUtxoListsRequest](#scalar.covenant.v1beta1.UpdateUtxoListsRequest)
+    - [UpdateUtxoListsResponse](#scalar.covenant.v1beta1.UpdateUtxoListsResponse)
   
 - [scalar/covenant/v1beta1/service.proto](#scalar/covenant/v1beta1/service.proto)
     - [MsgService](#scalar.covenant.v1beta1.MsgService)
@@ -3664,34 +3665,6 @@ address
 
 
 
-
-<a name="scalar.chains.v1beta1.UpdateUtxoListsRequest"></a>
-
-### UpdateUtxoListsRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `sender` | [bytes](#bytes) |  |  |
-| `chain` | [string](#string) |  |  |
-| `height` | [uint64](#uint64) |  |  |
-| `taproot_pubkey` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.UpdateUtxoListsResponse"></a>
-
-### UpdateUtxoListsResponse
-
-
-
-
-
-
  <!-- end messages -->
 
  <!-- end enums -->
@@ -3723,7 +3696,6 @@ Msg defines the btc Msg service.
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `ConfirmSourceTxs` | [ConfirmSourceTxsRequest](#scalar.chains.v1beta1.ConfirmSourceTxsRequest) | [ConfirmSourceTxsResponse](#scalar.chains.v1beta1.ConfirmSourceTxsResponse) |  | POST|/scalar/chains/v1beta1/confirm_source_txs|
-| `UpdateUtxoLists` | [UpdateUtxoListsRequest](#scalar.chains.v1beta1.UpdateUtxoListsRequest) | [UpdateUtxoListsResponse](#scalar.chains.v1beta1.UpdateUtxoListsResponse) |  | POST|/scalar/chains/v1beta1/update_utxo_lists|
 | `SetGateway` | [SetGatewayRequest](#scalar.chains.v1beta1.SetGatewayRequest) | [SetGatewayResponse](#scalar.chains.v1beta1.SetGatewayResponse) |  | POST|/scalar/chains/v1beta1/set_gateway|
 | `Link` | [LinkRequest](#scalar.chains.v1beta1.LinkRequest) | [LinkResponse](#scalar.chains.v1beta1.LinkResponse) |  | POST|/scalar/chains/v1beta1/link|
 | `ConfirmToken` | [ConfirmTokenRequest](#scalar.chains.v1beta1.ConfirmTokenRequest) | [ConfirmTokenResponse](#scalar.chains.v1beta1.ConfirmTokenResponse) |  | POST|/scalar/chains/v1beta1/confirm_token|
@@ -4003,6 +3975,23 @@ the deterministic order of the entries
 | `vout` | [uint32](#uint32) |  |  |
 | `script_pubkey` | [bytes](#bytes) |  |  |
 | `amount_in_sats` | [uint64](#uint64) |  |  |
+| `reserved` | [UTXO.ReservedEntry](#scalar.covenant.v1beta1.UTXO.ReservedEntry) | repeated | Reserved amount for each request id |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UTXO.ReservedEntry"></a>
+
+### UTXO.ReservedEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [uint64](#uint64) |  |  |
 
 
 
@@ -5470,6 +5459,34 @@ Pubkey used as key for lookup custodian to update other values
 
 
 
+
+<a name="scalar.covenant.v1beta1.UpdateUtxoListsRequest"></a>
+
+### UpdateUtxoListsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `height` | [uint64](#uint64) |  |  |
+| `taproot_pubkey` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UpdateUtxoListsResponse"></a>
+
+### UpdateUtxoListsResponse
+
+
+
+
+
+
  <!-- end messages -->
 
  <!-- end enums -->
@@ -5513,6 +5530,7 @@ Pubkey used as key for lookup custodian to update other values
 | `ConfirmSwitchedPhase` | [ConfirmSwitchedPhaseRequest](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest) | [ConfirmSwitchedPhaseResponse](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseResponse) |  | POST|/scalar/covenant/v1beta1/confirm_switched_phase|
 | `UpdateUtxoForRedeemSession` | [UpdateUtxoForRedeemSessionRequest](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionRequest) | [UpdateUtxoForRedeemSessionResponse](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionResponse) |  | POST|/scalar/covenant/v1beta1/update_utxo_for_redeem_session|
 | `UpdateSequenceAndPhaseForRedeemSession` | [UpdateSequenceAndPhaseForRedeemSessionRequest](#scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionRequest) | [UpdateSequenceAndPhaseForRedeemSessionResponse](#scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionResponse) |  | POST|/scalar/covenant/v1beta1/update_sequence_and_phase_for_redeem_session|
+| `UpdateUtxoLists` | [UpdateUtxoListsRequest](#scalar.covenant.v1beta1.UpdateUtxoListsRequest) | [UpdateUtxoListsResponse](#scalar.covenant.v1beta1.UpdateUtxoListsResponse) |  | POST|/scalar/chains/v1beta1/update_utxo_lists|
 
 
 <a name="scalar.covenant.v1beta1.QueryService"></a>

@@ -24,6 +24,8 @@ message UTXO {
   uint32 vout = 2;
   bytes script_pubkey = 3;
   uint64 amount_in_sats = 4;
+  // Reserved amount for each request id
+  map<string, uint64> reserved = 5;
 }
 
 message RedeemSession {

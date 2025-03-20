@@ -180,3 +180,14 @@ message ConfirmRedeemTxRequest {
 }
 
 message ConfirmRedeemTxResponse {}
+
+message UpdateUtxoListsRequest {
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  uint64 height = 3;
+  bytes taproot_pubkey = 4;
+}
+message UpdateUtxoListsResponse {}
