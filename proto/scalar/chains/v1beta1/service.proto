@@ -18,13 +18,6 @@ service MsgService {
     };
   }
 
-  rpc UpdateUtxoLists(UpdateUtxoListsRequest) returns (UpdateUtxoListsResponse) {
-    option (google.api.http) = {
-      post: "/scalar/chains/v1beta1/update_utxo_lists"
-      body: "*"
-    };
-  }
-
   rpc SetGateway(SetGatewayRequest) returns (SetGatewayResponse) {
     option (google.api.http) = {
       post: "/scalar/chains/v1beta1/set_gateway"

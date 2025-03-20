@@ -117,6 +117,14 @@ service MsgService {
       body : "*"
     };
   }
+
+  rpc UpdateUtxoLists(UpdateUtxoListsRequest)
+      returns (UpdateUtxoListsResponse) {
+    option (google.api.http) = {
+      post : "/scalar/chains/v1beta1/update_utxo_lists"
+      body : "*"
+    };
+  }
 }
 service QueryService {
   // Get custodians
