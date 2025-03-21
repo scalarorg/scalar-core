@@ -12393,7 +12393,7 @@ paths:
                   session:
                     type: object
                     properties:
-                      symbol:
+                      custodian_group_uid:
                         type: string
                       sequence:
                         type: string
@@ -12580,7 +12580,7 @@ paths:
                               "value": "1.212s"
                             }
       parameters:
-        - name: symbol
+        - name: custodian_group_uid
           in: query
           required: false
           schema:
@@ -56214,7 +56214,7 @@ components:
     scalar.covenant.v1beta1.RedeemSession:
       type: object
       properties:
-        symbol:
+        custodian_group_uid:
           type: string
         sequence:
           type: string
@@ -56236,7 +56236,7 @@ components:
         session:
           type: object
           properties:
-            symbol:
+            custodian_group_uid:
               type: string
             sequence:
               type: string

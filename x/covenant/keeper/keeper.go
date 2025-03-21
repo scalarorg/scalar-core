@@ -23,6 +23,7 @@ var (
 	custodianPrefix        = utils.KeyFromInt(8)
 	custodianGroupPrefix   = utils.KeyFromInt(9)
 	redeemSessionPrefix    = utils.KeyFromInt(10)
+	utxoSnapshotPrefix     = utils.KeyFromInt(11)
 
 	signingSessionCountKey = utils.KeyFromInt(100)
 

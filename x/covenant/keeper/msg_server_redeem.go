@@ -30,7 +30,12 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, err
 	}
 
-	reservedTx, err := s.reserveUtxos(ctx, req.Symbol, req.ReqId, req.Amount)
+	protocol, err := s.protocol.FindProtocolInfoByExternalSymbol(ctx, req.Symbol)
+	if err != nil {
+		return nil, err
+	}
+
+	reservedTx, err := s.reserveUtxos(ctx, protocol.CustodiansGroupUID, req.ReqId, req.Amount)
 	if err != nil {
 		return nil, err
 	}
@@ -45,6 +50,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 	if !ok {
 		return nil, fmt.Errorf("could not find key ID for '%s'", req.Chain)
 	}
+	//Todo: check signing process
 	if err := s.multisig.Sign(
 		ctx,
 		keyID,

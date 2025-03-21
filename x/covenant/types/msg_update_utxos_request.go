@@ -7,7 +7,7 @@ import (
 
 var _ sdk.Msg = &UpdateUtxoListsRequest{}
 
-func NewUpdateUtxoListsRequest(sender sdk.AccAddress, chain string, height uint64, taprootPubkey []byte) *UpdateUtxoListsRequest {
+func NewUpdateUtxoListsRequest(sender sdk.AccAddress, chain string, height uint64) *UpdateUtxoListsRequest {
 	return &UpdateUtxoListsRequest{
 		Sender:      sender,
 		Chain:       nexus.ChainName(chain),

@@ -3952,7 +3952,7 @@ the deterministic order of the entries
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `symbol` | [string](#string) |  |  |
+| `custodian_group_uid` | [string](#string) |  |  |
 | `sequence` | [uint64](#uint64) |  |  |
 | `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
 | `last_redeem_tx` | [bytes](#bytes) |  |  |
@@ -5042,7 +5042,7 @@ ParamsRequest represents a message that queries the params
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `symbol` | [string](#string) |  |  |
+| `custodian_group_uid` | [string](#string) |  |  |
 
 
 

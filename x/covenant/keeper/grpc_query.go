@@ -58,7 +58,7 @@ func (q Querier) Params(context.Context, *types.ParamsRequest) (*types.ParamsRes
 }
 
 func (q Querier) RedeemSession(ctx context.Context, req *types.RedeemSessionRequest) (*types.RedeemSessionResponse, error) {
-	session, ok := q.keeper.GetRedeemSession(sdk.UnwrapSDKContext(ctx), req.Symbol)
+	session, ok := q.keeper.GetRedeemSessionByCustodianGroupUid(sdk.UnwrapSDKContext(ctx), req.CustodianGroupUid)
 	if !ok {
 		return nil, status.Errorf(codes.NotFound, "redeem session not found")
 	}

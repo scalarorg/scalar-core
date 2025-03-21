@@ -9,26 +9,26 @@ import (
 
 func DefaultRedeemSession() *RedeemSession {
 	return &RedeemSession{
-		Symbol:       "",
-		Sequence:     0,
-		CurrentPhase: Unspecified,
-		LastRedeemTx: nil,
+		CustodianGroupUid: "",
+		Sequence:          0,
+		CurrentPhase:      Unspecified,
+		LastRedeemTx:      nil,
 	}
 }
 
-func NewRedeemSession(symbol string, sequence uint64, currentPhase Phase, lastRedeemTx *chains.Hash) *RedeemSession {
+func NewRedeemSession(custodianGroupUid string, sequence uint64, currentPhase Phase, lastRedeemTx *chains.Hash) *RedeemSession {
 	return &RedeemSession{
-		Symbol:       symbol,
-		Sequence:     sequence,
-		CurrentPhase: currentPhase,
-		LastRedeemTx: lastRedeemTx,
+		CustodianGroupUid: custodianGroupUid,
+		Sequence:          sequence,
+		CurrentPhase:      currentPhase,
+		LastRedeemTx:      lastRedeemTx,
 	}
 }
 
 var EmptyRedeemSession = DefaultRedeemSession()
 
 func (rs RedeemSession) IsEmpty() bool {
-	if rs.Symbol == "" || rs.Sequence == 0 {
+	if rs.CustodianGroupUid == "" || rs.Sequence == 0 {
 		return true
 	}
 	return false
@@ -73,38 +73,38 @@ func (utxo *UTXO) Release(requestID string) uint64 {
 	return amount
 }
 
-// func (rs RedeemSession) ReleaseUtxos(requestID string) uint64 {
-// 	releasedAmount := uint64(0)
-// 	for _, utxo := range rs.Utxos {
-// 		releasedAmount += utxo.Release(requestID)
-// 	}
-// 	return releasedAmount
-// }
+func (rs UTXOSnapshot) ReleaseUtxos(requestID string) uint64 {
+	releasedAmount := uint64(0)
+	for _, utxo := range rs.Utxos {
+		releasedAmount += utxo.Release(requestID)
+	}
+	return releasedAmount
+}
 
-// // Utxos list is sorted by amount in sats and txid for deterministic results
-// // Each utxo is reserved if it is part of the optimal combination
-// func (rs RedeemSession) ReserveUtxos(requestID string, amount uint64) ([]*UTXO, error) {
-// 	remainingAmount := amount
-// 	reserveUtxos := make([]*UTXO, 0)
-// 	for _, utxo := range rs.Utxos {
-// 		availableAmount := utxo.AvailableAmount()
-// 		if availableAmount > 0 {
-// 			//Reserve amount is min(availableAmount, remainingAmount)
-// 			reserveAmount := availableAmount
-// 			if reserveAmount > remainingAmount {
-// 				reserveAmount = remainingAmount
-// 			}
-// 			reserveUtxos = append(reserveUtxos, utxo)
-// 			utxo.AppendReserved(requestID, reserveAmount)
-// 			remainingAmount -= reserveAmount
-// 		}
-// 		if remainingAmount == 0 {
-// 			break
-// 		}
-// 	}
+// Utxos list is sorted by amount in sats and txid for deterministic results
+// Each utxo is reserved if it is part of the optimal combination
+func (rs UTXOSnapshot) ReserveUtxos(requestID string, amount uint64) ([]*UTXO, error) {
+	remainingAmount := amount
+	reserveUtxos := make([]*UTXO, 0)
+	for _, utxo := range rs.Utxos {
+		availableAmount := utxo.AvailableAmount()
+		if availableAmount > 0 {
+			//Reserve amount is min(availableAmount, remainingAmount)
+			reserveAmount := availableAmount
+			if reserveAmount > remainingAmount {
+				reserveAmount = remainingAmount
+			}
+			reserveUtxos = append(reserveUtxos, utxo)
+			utxo.AppendReserved(requestID, reserveAmount)
+			remainingAmount -= reserveAmount
+		}
+		if remainingAmount == 0 {
+			break
+		}
+	}
 
-// 	return reserveUtxos, nil
-// }
+	return reserveUtxos, nil
+}
 
 func (m RedeemTxConfirmed) ValidateBasic() error {
 	if !chainsTypes.IsBitcoinChain(m.Chain) {

@@ -8,17 +8,16 @@ option (gogoproto.goproto_getters_all) = false;
 
 enum Phase {
   option (gogoproto.goproto_enum_prefix) = false;
-  PHASE_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Unspecified" ];
-  PHASE_PREPARING = 1 [ (gogoproto.enumvalue_customname) = "Preparing" ];
-  PHASE_SWITCHING = 2 [ (gogoproto.enumvalue_customname) = "Switching" ];
-  PHASE_EXECUTING = 3 [ (gogoproto.enumvalue_customname) = "Executing" ];
+  PHASE_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Unspecified"];
+  PHASE_PREPARING = 1 [(gogoproto.enumvalue_customname) = "Preparing"];
+  PHASE_SWITCHING = 2 [(gogoproto.enumvalue_customname) = "Switching"];
+  PHASE_EXECUTING = 3 [(gogoproto.enumvalue_customname) = "Executing"];
 }
 
 message UTXO {
   bytes txid = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   uint32 vout = 2;
@@ -35,12 +34,11 @@ message UTXOSnapshot {
 }
 
 message RedeemSession {
-  string symbol = 1;
+  string custodian_group_uid = 1;
   uint64 sequence = 2;
   Phase current_phase = 3;
   bytes last_redeem_tx = 4 [
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "LastRedeemTx"
   ];
 }
