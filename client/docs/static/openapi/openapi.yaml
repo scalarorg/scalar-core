@@ -10782,12 +10782,9 @@ paths:
                   format: byte
                 chain:
                   type: string
-                height:
+                block_height:
                   type: string
                   format: uint64
-                taproot_pubkey:
-                  type: string
-                  format: byte
         required: true
       tags:
         - MsgService
@@ -57448,12 +57445,9 @@ components:
           format: byte
         chain:
           type: string
-        height:
+        block_height:
           type: string
           format: uint64
-        taproot_pubkey:
-          type: string
-          format: byte
     scalar.covenant.v1beta1.UpdateUtxoListsResponse:
       type: object
     scalar.multisig.exported.v1beta1.KeyState:

@@ -11783,12 +11783,9 @@ paths:
                 format: byte
               chain:
                 type: string
-              height:
+              block_height:
                 type: string
                 format: uint64
-              taproot_pubkey:
-                type: string
-                format: byte
       tags:
         - MsgService
   /scalar/convenant/v1beta1/custodians:
@@ -62171,12 +62168,9 @@ definitions:
         format: byte
       chain:
         type: string
-      height:
+      block_height:
         type: string
         format: uint64
-      taproot_pubkey:
-        type: string
-        format: byte
   scalar.covenant.v1beta1.UpdateUtxoListsResponse:
     type: object
   scalar.multisig.exported.v1beta1.KeyState:

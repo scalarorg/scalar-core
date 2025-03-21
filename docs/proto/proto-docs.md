@@ -5468,8 +5468,7 @@ Pubkey used as key for lookup custodian to update other values
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `height` | [uint64](#uint64) |  |  |
-| `taproot_pubkey` | [bytes](#bytes) |  |  |
+| `block_height` | [uint64](#uint64) |  |  |
 
 
 

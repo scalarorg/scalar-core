@@ -9,10 +9,9 @@ var _ sdk.Msg = &UpdateUtxoListsRequest{}
 
 func NewUpdateUtxoListsRequest(sender sdk.AccAddress, chain string, height uint64, taprootPubkey []byte) *UpdateUtxoListsRequest {
 	return &UpdateUtxoListsRequest{
-		Sender:        sender,
-		Chain:         nexus.ChainName(chain),
-		Height:        height,
-		TaprootPubkey: taprootPubkey,
+		Sender:      sender,
+		Chain:       nexus.ChainName(chain),
+		BlockHeight: height,
 	}
 }
 

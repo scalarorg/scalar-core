@@ -187,7 +187,6 @@ message UpdateUtxoListsRequest {
   string chain = 2
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  uint64 height = 3;
-  bytes taproot_pubkey = 4;
+  uint64 block_height = 3;
 }
 message UpdateUtxoListsResponse {}
