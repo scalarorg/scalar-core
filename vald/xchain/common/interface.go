@@ -45,8 +45,7 @@ type Client interface {
 
 type BtcClient interface {
 	Client
-	ProcessRedeemTxConfirmation(event *covTypes.ConfirmRedeemTxStarted, proxy sdk.AccAddress) ([]sdk.Msg, error)
-	GetUtxoLists(event *covTypes.UpdateUtxoListsStarted, proxy sdk.AccAddress) ([]sdk.Msg, error)
+	ProcessRedeemTxsConfirmation(event *covTypes.ConfirmRedeemTxStarted, proxy sdk.AccAddress) ([]sdk.Msg, error)
 }
 
 type EvmClient interface {

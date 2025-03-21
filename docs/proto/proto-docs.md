@@ -250,9 +250,6 @@
     - [SwitchPhaseCompleted](#scalar.covenant.v1beta1.SwitchPhaseCompleted)
     - [SwitchPhaseStarted](#scalar.covenant.v1beta1.SwitchPhaseStarted)
     - [TapScriptSigsSubmitted](#scalar.covenant.v1beta1.TapScriptSigsSubmitted)
-    - [UpdateUtxoListsCompleted](#scalar.covenant.v1beta1.UpdateUtxoListsCompleted)
-    - [UpdateUtxoListsStarted](#scalar.covenant.v1beta1.UpdateUtxoListsStarted)
-    - [UtxoListConfirmed](#scalar.covenant.v1beta1.UtxoListConfirmed)
   
     - [Event.Status](#scalar.covenant.v1beta1.Event.Status)
   
@@ -311,8 +308,8 @@
   
 - [scalar/covenant/v1beta1/tx.proto](#scalar/covenant/v1beta1/tx.proto)
     - [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest)
-    - [ConfirmRedeemTxRequest](#scalar.covenant.v1beta1.ConfirmRedeemTxRequest)
-    - [ConfirmRedeemTxResponse](#scalar.covenant.v1beta1.ConfirmRedeemTxResponse)
+    - [ConfirmRedeemTxsRequest](#scalar.covenant.v1beta1.ConfirmRedeemTxsRequest)
+    - [ConfirmRedeemTxsResponse](#scalar.covenant.v1beta1.ConfirmRedeemTxsResponse)
     - [ConfirmSwitchedPhaseRequest](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest)
     - [ConfirmSwitchedPhaseResponse](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseResponse)
     - [CreateCustodianGroupRequest](#scalar.covenant.v1beta1.CreateCustodianGroupRequest)
@@ -331,12 +328,6 @@
     - [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse)
     - [UpdateCustodianRequest](#scalar.covenant.v1beta1.UpdateCustodianRequest)
     - [UpdateCustodianResponse](#scalar.covenant.v1beta1.UpdateCustodianResponse)
-    - [UpdateSequenceAndPhaseForRedeemSessionRequest](#scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionRequest)
-    - [UpdateSequenceAndPhaseForRedeemSessionResponse](#scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionResponse)
-    - [UpdateUtxoForRedeemSessionRequest](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionRequest)
-    - [UpdateUtxoForRedeemSessionResponse](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionResponse)
-    - [UpdateUtxoListsRequest](#scalar.covenant.v1beta1.UpdateUtxoListsRequest)
-    - [UpdateUtxoListsResponse](#scalar.covenant.v1beta1.UpdateUtxoListsResponse)
   
 - [scalar/covenant/v1beta1/service.proto](#scalar/covenant/v1beta1/service.proto)
     - [MsgService](#scalar.covenant.v1beta1.MsgService)
@@ -4075,7 +4066,6 @@ the deterministic order of the entries
 | `status` | [Event.Status](#scalar.covenant.v1beta1.Event.Status) |  |  |
 | `index` | [uint64](#uint64) |  |  |
 | `redeem_tx_confirmed` | [RedeemTxConfirmed](#scalar.covenant.v1beta1.RedeemTxConfirmed) |  |  |
-| `utxo_list_confirmed` | [UtxoListConfirmed](#scalar.covenant.v1beta1.UtxoListConfirmed) |  |  |
 | `session_confirmed` | [SessionConfirmed](#scalar.covenant.v1beta1.SessionConfirmed) |  |  |
 
 
@@ -4250,56 +4240,6 @@ the deterministic order of the entries
 | `sig_id` | [uint64](#uint64) |  |  |
 | `participant` | [bytes](#bytes) |  |  |
 | `list_of_tap_script_sigs_map` | [scalar.covenant.exported.v1beta1.TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.UpdateUtxoListsCompleted"></a>
-
-### UpdateUtxoListsCompleted
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `module` | [string](#string) |  |  |
-| `taproot_address` | [string](#string) |  |  |
-| `block_height` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.UpdateUtxoListsStarted"></a>
-
-### UpdateUtxoListsStarted
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `taproot_address` | [string](#string) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
-| `participants` | [bytes](#bytes) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.UtxoListConfirmed"></a>
-
-### UtxoListConfirmed
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `utxos` | [UTXO](#scalar.covenant.v1beta1.UTXO) | repeated |  |
 
 
 
@@ -5098,9 +5038,9 @@ ParamsRequest represents a message that queries the params
 
 
 
-<a name="scalar.covenant.v1beta1.ConfirmRedeemTxRequest"></a>
+<a name="scalar.covenant.v1beta1.ConfirmRedeemTxsRequest"></a>
 
-### ConfirmRedeemTxRequest
+### ConfirmRedeemTxsRequest
 Confirm exectuted transaction on bitcoin
 
 
@@ -5108,16 +5048,16 @@ Confirm exectuted transaction on bitcoin
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `tx_id` | [bytes](#bytes) |  |  |
+| `tx_ids` | [bytes](#bytes) | repeated |  |
 
 
 
 
 
 
-<a name="scalar.covenant.v1beta1.ConfirmRedeemTxResponse"></a>
+<a name="scalar.covenant.v1beta1.ConfirmRedeemTxsResponse"></a>
 
-### ConfirmRedeemTxResponse
+### ConfirmRedeemTxsResponse
 
 
 
@@ -5407,99 +5347,6 @@ Pubkey used as key for lookup custodian to update other values
 
 
 
-
-<a name="scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionRequest"></a>
-
-### UpdateSequenceAndPhaseForRedeemSessionRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `sender` | [bytes](#bytes) |  |  |
-| `symbol` | [string](#string) |  |  |
-| `sequence` | [uint64](#uint64) |  |  |
-| `phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionResponse"></a>
-
-### UpdateSequenceAndPhaseForRedeemSessionResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `session` | [RedeemSession](#scalar.covenant.v1beta1.RedeemSession) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionRequest"></a>
-
-### UpdateUtxoForRedeemSessionRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `sender` | [bytes](#bytes) |  |  |
-| `symbol` | [string](#string) |  |  |
-| `list_of_utxos` | [UTXO](#scalar.covenant.v1beta1.UTXO) | repeated |  |
-| `block_height` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionResponse"></a>
-
-### UpdateUtxoForRedeemSessionResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `session` | [RedeemSession](#scalar.covenant.v1beta1.RedeemSession) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.UpdateUtxoListsRequest"></a>
-
-### UpdateUtxoListsRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `sender` | [bytes](#bytes) |  |  |
-| `chain` | [string](#string) |  |  |
-| `block_height` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.UpdateUtxoListsResponse"></a>
-
-### UpdateUtxoListsResponse
-
-
-
-
-
-
  <!-- end messages -->
 
  <!-- end enums -->
@@ -5538,7 +5385,7 @@ Pubkey used as key for lookup custodian to update other values
 | `RemoveCustodianFromGroup` | [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Remove Custodian from custodian group recalculate taproot address when deleting custodian from custodian group | POST|/scalar/covenant/v1beta1/remove_custodian_from_group|
 | `RotateKey` | [RotateKeyRequest](#scalar.covenant.v1beta1.RotateKeyRequest) | [RotateKeyResponse](#scalar.covenant.v1beta1.RotateKeyResponse) |  | POST|/scalar/covenant/v1beta1/rotate_key|
 | `SubmitTapScriptSigs` | [SubmitTapScriptSigsRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigsRequest) | [SubmitTapScriptSigsResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigsResponse) |  | POST|/scalar/covenant/v1beta1/submit_tap_script_sigs|
-| `ConfirmRedeemTx` | [ConfirmRedeemTxRequest](#scalar.covenant.v1beta1.ConfirmRedeemTxRequest) | [ConfirmRedeemTxResponse](#scalar.covenant.v1beta1.ConfirmRedeemTxResponse) |  | POST|/scalar/covenant/v1beta1/confirm_redeem_tx|
+| `ConfirmRedeemTxs` | [ConfirmRedeemTxsRequest](#scalar.covenant.v1beta1.ConfirmRedeemTxsRequest) | [ConfirmRedeemTxsResponse](#scalar.covenant.v1beta1.ConfirmRedeemTxsResponse) |  | POST|/scalar/covenant/v1beta1/confirm_redeem_txs|
 | `ReserveRedeemUtxo` | [ReserveRedeemUtxoRequest](#scalar.covenant.v1beta1.ReserveRedeemUtxoRequest) | [ReserveRedeemUtxoResponse](#scalar.covenant.v1beta1.ReserveRedeemUtxoResponse) |  | POST|/scalar/chains/v1beta1/reserve_redeem_utxo|
 | `ConfirmSwitchedPhase` | [ConfirmSwitchedPhaseRequest](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest) | [ConfirmSwitchedPhaseResponse](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseResponse) |  | POST|/scalar/covenant/v1beta1/confirm_switched_phase|
 

@@ -145,51 +145,18 @@ message ReserveRedeemUtxoRequest {
 message ReserveRedeemUtxoResponse {}
 
 // Confirm exectuted transaction on bitcoin
-message ConfirmRedeemTxRequest {
+message ConfirmRedeemTxsRequest {
   bytes sender = 1 [ (gogoproto.casttype) =
                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
   string chain = 2
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  bytes tx_id = 3 [
+  repeated bytes tx_ids = 3 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
-    (gogoproto.customname) = "TxID"
+    (gogoproto.customname) = "TxIDs"
   ];
 }
 
-message ConfirmRedeemTxResponse {}
-
-message UpdateUtxoListsRequest {
-  bytes sender = 1 [ (gogoproto.casttype) =
-                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
-  string chain = 2
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  uint64 block_height = 3;
-}
-
-message UpdateUtxoListsResponse {}
-
-message UpdateUtxoForRedeemSessionRequest {
-  bytes sender = 1 [ (gogoproto.casttype) =
-                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
-  string symbol = 2;
-  repeated UTXO list_of_utxos = 3;
-  uint64 block_height = 4;
-}
-
-message UpdateUtxoForRedeemSessionResponse { RedeemSession session = 1; }
-
-message UpdateSequenceAndPhaseForRedeemSessionRequest {
-  bytes sender = 1 [ (gogoproto.casttype) =
-                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
-  string symbol = 2;
-  uint64 sequence = 3;
-  Phase phase = 4;
-}
-
-message UpdateSequenceAndPhaseForRedeemSessionResponse {
-  RedeemSession session = 1;
-}
+message ConfirmRedeemTxsResponse {}

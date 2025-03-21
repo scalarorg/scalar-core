@@ -76,10 +76,10 @@ service MsgService {
     };
   }
 
-  rpc ConfirmRedeemTx(ConfirmRedeemTxRequest)
-      returns (ConfirmRedeemTxResponse) {
+  rpc ConfirmRedeemTxs(ConfirmRedeemTxsRequest)
+      returns (ConfirmRedeemTxsResponse) {
     option (google.api.http) = {
-      post : "/scalar/covenant/v1beta1/confirm_redeem_tx"
+      post : "/scalar/covenant/v1beta1/confirm_redeem_txs"
       body : "*"
     };
   }
@@ -99,32 +99,6 @@ service MsgService {
       body : "*"
     };
   }
-
-  // rpc UpdateUtxoForRedeemSession(UpdateUtxoForRedeemSessionRequest)
-  //     returns (UpdateUtxoForRedeemSessionResponse) {
-  //   option (google.api.http) = {
-  //     post : "/scalar/covenant/v1beta1/update_utxo_for_redeem_session"
-  //     body : "*"
-  //   };
-  // }
-
-  // rpc UpdateSequenceAndPhaseForRedeemSession(
-  //     UpdateSequenceAndPhaseForRedeemSessionRequest)
-  //     returns (UpdateSequenceAndPhaseForRedeemSessionResponse) {
-  //   option (google.api.http) = {
-  //     post : "/scalar/covenant/v1beta1/"
-  //            "update_sequence_and_phase_for_redeem_session"
-  //     body : "*"
-  //   };
-  // }
-
-  // rpc UpdateUtxoLists(UpdateUtxoListsRequest)
-  //     returns (UpdateUtxoListsResponse) {
-  //   option (google.api.http) = {
-  //     post : "/scalar/chains/v1beta1/update_utxo_lists"
-  //     body : "*"
-  //   };
-  // }
 }
 service QueryService {
   // Get custodians

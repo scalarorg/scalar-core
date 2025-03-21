@@ -311,7 +311,6 @@ func listenWithTimeout(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg co
 	// TODO: Version2: handle staking and unstaking events for multiple chains, currently it uses type of btc, we need to change it to more generic type
 	sourceEventConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.EventConfirmSourceTxsStarted]())
 	redeemEventConf := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.ConfirmRedeemTxStarted]())
-	updateUtxoLists := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.UpdateUtxoListsStarted]())
 	// creatingPsbt := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.CreatingPsbtStarted]())
 	covenantSigningPsbt := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.SigningPsbtStarted]())
 
@@ -376,7 +375,6 @@ func listenWithTimeout(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg co
 
 		createJobTyped(sourceEventConf, xMgr.ProcessSourceTxsConfirmation, cancelEventCtx),
 		createJobTyped(redeemEventConf, xMgr.ProcessRedeemTxConfirmation, cancelEventCtx),
-		createJobTyped(updateUtxoLists, xMgr.ProcessUpdateUtxoListsStarted, cancelEventCtx),
 		// createJobTyped(creatingPsbt, xMgr.ProcessCreatingPsbtStarted, cancelEventCtx),
 		createJobTyped(covenantSigningPsbt, psbtMgr.ProcessSigningPsbtStarted, cancelEventCtx),
 	}

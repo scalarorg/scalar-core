@@ -13,8 +13,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/chains/types"
-	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 	cov "github.com/scalarorg/scalar-core/x/covenant/types"
+	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
 // Manager manages all communication with Ethereum
@@ -93,41 +93,13 @@ func (mgr Manager) ProcessRedeemTxConfirmation(event *cov.ConfirmRedeemTxStarted
 		return fmt.Errorf("rpc client not found for chain %s", event.Chain.String())
 	}
 
-	votes, err := btcClient.ProcessRedeemTxConfirmation(event, mgr.proxy)
+	votes, err := btcClient.ProcessRedeemTxsConfirmation(event, mgr.proxy)
 	if err != nil {
 		return err
 	}
 	_, err = mgr.broadcaster.Broadcast(context.TODO(), votes...)
 	return err
 
-}
-
-func (mgr Manager) ProcessUpdateUtxoListsStarted(event *cov.UpdateUtxoListsStarted) error {
-	if !mgr.isParticipantOf(event.Participants) {
-		mgr.logger("poll_id", event.PollID).Debug("ignoring staking txs confirmation poll: not a participant")
-		return nil
-	}
-
-	mgr.logger("event", event).Debug("processing redeem tx confirmation poll")
-
-	chainInfoBytes := chain.ChainInfoBytes{}
-
-	err := chainInfoBytes.FromString(event.Chain.String())
-	if err != nil {
-		return err
-	}
-
-	btcClient, ok := mgr.rpcs[chainInfoBytes].(xcommon.BtcClient)
-	if !ok {
-		return fmt.Errorf("rpc client not found for chain %s", event.Chain.String())
-	}
-
-	votes, err := btcClient.GetUtxoLists(event, mgr.proxy)
-	if err != nil {
-		return err
-	}
-	_, err = mgr.broadcaster.Broadcast(context.TODO(), votes...)
-	return err
 }
 
 // isParticipantOf checks if the validator is in the poll participants list

@@ -12104,9 +12104,9 @@ paths:
                 type: string
       tags:
         - MsgService
-  /scalar/covenant/v1beta1/confirm_redeem_tx:
+  /scalar/covenant/v1beta1/confirm_redeem_txs:
     post:
-      operationId: ConfirmRedeemTx
+      operationId: ConfirmRedeemTxs
       responses:
         '200':
           description: A successful response.
@@ -12316,9 +12316,11 @@ paths:
                 format: byte
               chain:
                 type: string
-              tx_id:
-                type: string
-                format: byte
+              tx_ids:
+                type: array
+                items:
+                  type: string
+                  format: byte
             title: Confirm exectuted transaction on bitcoin
       tags:
         - MsgService
@@ -60494,7 +60496,7 @@ definitions:
         format: byte
       description:
         type: string
-  scalar.covenant.v1beta1.ConfirmRedeemTxRequest:
+  scalar.covenant.v1beta1.ConfirmRedeemTxsRequest:
     type: object
     properties:
       sender:
@@ -60502,11 +60504,13 @@ definitions:
         format: byte
       chain:
         type: string
-      tx_id:
-        type: string
-        format: byte
+      tx_ids:
+        type: array
+        items:
+          type: string
+          format: byte
     title: Confirm exectuted transaction on bitcoin
-  scalar.covenant.v1beta1.ConfirmRedeemTxResponse:
+  scalar.covenant.v1beta1.ConfirmRedeemTxsResponse:
     type: object
   scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest:
     type: object
