@@ -28,6 +28,12 @@ message UTXO {
   map<string, uint64> reserved = 5;
 }
 
+message UTXOSnapshot {
+  string custodian_group_uid = 1;
+  uint64 block_height = 2;
+  repeated UTXO utxos = 3;
+}
+
 message RedeemSession {
   string symbol = 1;
   uint64 sequence = 2;
@@ -37,6 +43,4 @@ message RedeemSession {
         "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "LastRedeemTx"
   ];
-  repeated UTXO utxos = 5;
-  uint64 lastest_btc_block_height = 6;
 }

@@ -233,6 +233,7 @@
     - [RedeemSession](#scalar.covenant.v1beta1.RedeemSession)
     - [UTXO](#scalar.covenant.v1beta1.UTXO)
     - [UTXO.ReservedEntry](#scalar.covenant.v1beta1.UTXO.ReservedEntry)
+    - [UTXOSnapshot](#scalar.covenant.v1beta1.UTXOSnapshot)
   
     - [Phase](#scalar.covenant.v1beta1.Phase)
   
@@ -3955,8 +3956,6 @@ the deterministic order of the entries
 | `sequence` | [uint64](#uint64) |  |  |
 | `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
 | `last_redeem_tx` | [bytes](#bytes) |  |  |
-| `utxos` | [UTXO](#scalar.covenant.v1beta1.UTXO) | repeated |  |
-| `lastest_btc_block_height` | [uint64](#uint64) |  |  |
 
 
 
@@ -3992,6 +3991,23 @@ the deterministic order of the entries
 | ----- | ---- | ----- | ----------- |
 | `key` | [string](#string) |  |  |
 | `value` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UTXOSnapshot"></a>
+
+### UTXOSnapshot
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `custodian_group_uid` | [string](#string) |  |  |
+| `block_height` | [uint64](#uint64) |  |  |
+| `utxos` | [UTXO](#scalar.covenant.v1beta1.UTXO) | repeated |  |
 
 
 
@@ -5525,9 +5541,6 @@ Pubkey used as key for lookup custodian to update other values
 | `ConfirmRedeemTx` | [ConfirmRedeemTxRequest](#scalar.covenant.v1beta1.ConfirmRedeemTxRequest) | [ConfirmRedeemTxResponse](#scalar.covenant.v1beta1.ConfirmRedeemTxResponse) |  | POST|/scalar/covenant/v1beta1/confirm_redeem_tx|
 | `ReserveRedeemUtxo` | [ReserveRedeemUtxoRequest](#scalar.covenant.v1beta1.ReserveRedeemUtxoRequest) | [ReserveRedeemUtxoResponse](#scalar.covenant.v1beta1.ReserveRedeemUtxoResponse) |  | POST|/scalar/chains/v1beta1/reserve_redeem_utxo|
 | `ConfirmSwitchedPhase` | [ConfirmSwitchedPhaseRequest](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest) | [ConfirmSwitchedPhaseResponse](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseResponse) |  | POST|/scalar/covenant/v1beta1/confirm_switched_phase|
-| `UpdateUtxoForRedeemSession` | [UpdateUtxoForRedeemSessionRequest](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionRequest) | [UpdateUtxoForRedeemSessionResponse](#scalar.covenant.v1beta1.UpdateUtxoForRedeemSessionResponse) |  | POST|/scalar/covenant/v1beta1/update_utxo_for_redeem_session|
-| `UpdateSequenceAndPhaseForRedeemSession` | [UpdateSequenceAndPhaseForRedeemSessionRequest](#scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionRequest) | [UpdateSequenceAndPhaseForRedeemSessionResponse](#scalar.covenant.v1beta1.UpdateSequenceAndPhaseForRedeemSessionResponse) |  | POST|/scalar/covenant/v1beta1/update_sequence_and_phase_for_redeem_session|
-| `UpdateUtxoLists` | [UpdateUtxoListsRequest](#scalar.covenant.v1beta1.UpdateUtxoListsRequest) | [UpdateUtxoListsResponse](#scalar.covenant.v1beta1.UpdateUtxoListsResponse) |  | POST|/scalar/chains/v1beta1/update_utxo_lists|
 
 
 <a name="scalar.covenant.v1beta1.QueryService"></a>

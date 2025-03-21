@@ -73,21 +73,22 @@ func (k Keeper) reserveUtxos(ctx sdk.Context, symbol string, requestID string, a
 		return nil, fmt.Errorf("redeem session not found")
 	}
 
-	if len(redeemSession.Utxos) == 0 {
-		return nil, fmt.Errorf("no utxos found")
-	}
+	// if len(redeemSession.Utxos) == 0 {
+	// 	return nil, fmt.Errorf("no utxos found")
+	// }
 
 	// Find optimal UTXO combination using knapsack algorithm
-	reserveUtxos, err := redeemSession.ReserveUtxos(requestID, amount)
-	if err != nil {
-		k.Logger(ctx).Error("failed to reserve utxos", "error", err)
-		return nil, err
-	}
+	// reserveUtxos, err := redeemSession.ReserveUtxos(requestID, amount)
+	// if err != nil {
+	// 	k.Logger(ctx).Error("failed to reserve utxos", "error", err)
+	// 	return nil, err
+	// }
 
 	// Update the redeem session in storage
-	k.SetRedeemSession(ctx, redeemSession)
+	// k.SetRedeemSession(ctx, redeemSession)
 
-	return reserveUtxos, nil
+	// return reserveUtxos, nil
+	return []*cov.UTXO{}, nil
 }
 
 func (k Keeper) createRedeemPayload(ctx sdk.Context, destChain string, destAddress string, symbol string,

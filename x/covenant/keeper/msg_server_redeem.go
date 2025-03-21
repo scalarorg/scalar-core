@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	chainsExported "github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
@@ -77,180 +76,172 @@ func (s msgServer) ConfirmSwitchedPhase(ctx context.Context, req *types.ConfirmS
 	return &types.ConfirmSwitchedPhaseResponse{}, nil
 }
 
-func (s msgServer) UpdateUtxoForRedeemSession(c context.Context, req *types.UpdateUtxoForRedeemSessionRequest) (*types.UpdateUtxoForRedeemSessionResponse, error) {
-	ctx := sdk.UnwrapSDKContext(c)
+// func (s msgServer) UpdateUtxoForRedeemSession(c context.Context, req *types.UpdateUtxoForRedeemSessionRequest) (*types.UpdateUtxoForRedeemSessionResponse, error) {
+// 	ctx := sdk.UnwrapSDKContext(c)
 
-	clog.Magentaf("UpdateUtxoForRedeemSession, req: %v\n", req)
-	clog.Greenf("UpdateUtxoForRedeemSession, req.ListOfUtxos: %v\n", req.ListOfUtxos)
+// 	clog.Magentaf("UpdateUtxoForRedeemSession, req: %v\n", req)
+// 	clog.Greenf("UpdateUtxoForRedeemSession, req.ListOfUtxos: %v\n", req.ListOfUtxos)
 
-	err := req.ValidateBasic()
-	if err != nil {
-		clog.Redf("UpdateUtxoForRedeemSession, ValidateBasic error: %v\n", err)
-		return nil, err
-	}
+// 	err := req.ValidateBasic()
+// 	if err != nil {
+// 		clog.Redf("UpdateUtxoForRedeemSession, ValidateBasic error: %v\n", err)
+// 		return nil, err
+// 	}
 
-	clog.Bluef("UpdateUtxoForRedeemSession, req.Symbol: %s\n", req.Symbol)
+// 	clog.Bluef("UpdateUtxoForRedeemSession, req.Symbol: %s\n", req.Symbol)
 
-	protocol, err := s.protocol.FindProtocolInfoByExternalSymbol(ctx, req.Symbol)
-	if err != nil {
-		clog.Redf("UpdateUtxoForRedeemSession, FindProtocolInfoByExternalSymbol error: %v\n", err)
-		return nil, err
-	}
+// 	protocol, err := s.protocol.FindProtocolInfoByExternalSymbol(ctx, req.Symbol)
+// 	if err != nil {
+// 		clog.Redf("UpdateUtxoForRedeemSession, FindProtocolInfoByExternalSymbol error: %v\n", err)
+// 		return nil, err
+// 	}
 
-	clog.Magentaf("UpdateUtxoForRedeemSession, protocol: %v\n", protocol)
+// 	clog.Magentaf("UpdateUtxoForRedeemSession, protocol: %v\n", protocol)
 
-	if !protocol.IsActivated() {
-		clog.Redf("UpdateUtxoForRedeemSession, protocol %s is not activated\n", req.Symbol)
-		return nil, fmt.Errorf("protocol %s is not activated", req.Symbol)
-	}
+// 	if !protocol.IsActivated() {
+// 		clog.Redf("UpdateUtxoForRedeemSession, protocol %s is not activated\n", req.Symbol)
+// 		return nil, fmt.Errorf("protocol %s is not activated", req.Symbol)
+// 	}
 
-	// TODO: Split to the confirmation event then handle in abci,
-	// This way is just a temporary solution
+// 	// TODO: Split to the confirmation event then handle in abci,
+// 	// This way is just a temporary solution
 
-	session, ok := s.GetRedeemSession(ctx, req.Symbol)
-	if !ok {
-		clog.Bluef("Check if session exist\n")
-		session = types.DefaultRedeemSession()
-		session.LastestBtcBlockHeight = req.BlockHeight
-		session.Utxos = req.ListOfUtxos
-		session.Symbol = req.Symbol
-		s.Keeper.AddRedeemSession(ctx, req.Symbol, session)
-		return &types.UpdateUtxoForRedeemSessionResponse{
-			Session: session,
-		}, nil
-	}
+// 	session, ok := s.GetRedeemSession(ctx, req.Symbol)
+// 	if !ok {
+// 		clog.Bluef("Check if session exist\n")
+// 		session = types.DefaultRedeemSession()
+// 		session.LastestBtcBlockHeight = req.BlockHeight
+// 		session.Utxos = req.ListOfUtxos
+// 		session.Symbol = req.Symbol
+// 		s.Keeper.AddRedeemSession(ctx, req.Symbol, session)
+// 		return &types.UpdateUtxoForRedeemSessionResponse{
+// 			Session: session,
+// 		}, nil
+// 	}
 
-	clog.Magentaf("UpdateUtxoForRedeemSession, session: %v\n", session)
+// 	clog.Magentaf("UpdateUtxoForRedeemSession, session: %v\n", session)
 
-	if session.LastestBtcBlockHeight >= req.BlockHeight {
-		return nil, fmt.Errorf("utxos already exist")
-	}
+// 	if session.LastestBtcBlockHeight >= req.BlockHeight {
+// 		return nil, fmt.Errorf("utxos already exist")
+// 	}
 
-	session.LastestBtcBlockHeight = req.BlockHeight
-	session.Utxos = req.ListOfUtxos
-	s.Keeper.AddRedeemSession(ctx, req.Symbol, session)
+// 	session.LastestBtcBlockHeight = req.BlockHeight
+// 	session.Utxos = req.ListOfUtxos
+// 	s.Keeper.AddRedeemSession(ctx, req.Symbol, session)
 
-	return &types.UpdateUtxoForRedeemSessionResponse{
-		Session: session,
-	}, nil
-}
+// 	return &types.UpdateUtxoForRedeemSessionResponse{
+// 		Session: session,
+// 	}, nil
+// }
 
-func (s msgServer) UpdateSequenceAndPhaseForRedeemSession(c context.Context, req *types.UpdateSequenceAndPhaseForRedeemSessionRequest) (*types.UpdateSequenceAndPhaseForRedeemSessionResponse, error) {
-	ctx := sdk.UnwrapSDKContext(c)
+// func (s msgServer) UpdateSequenceAndPhaseForRedeemSession(c context.Context, req *types.UpdateSequenceAndPhaseForRedeemSessionRequest) (*types.UpdateSequenceAndPhaseForRedeemSessionResponse, error) {
+// 	ctx := sdk.UnwrapSDKContext(c)
 
-	err := req.ValidateBasic()
-	if err != nil {
-		clog.Redf("UpdateUtxoForRedeemSession, ValidateBasic error: %v\n", err)
-		return nil, err
-	}
+// 	err := req.ValidateBasic()
+// 	if err != nil {
+// 		clog.Redf("UpdateUtxoForRedeemSession, ValidateBasic error: %v\n", err)
+// 		return nil, err
+// 	}
 
-	clog.Bluef("UpdateUtxoForRedeemSession, req.Symbol: %s\n", req.Symbol)
+// 	clog.Bluef("UpdateUtxoForRedeemSession, req.Symbol: %s\n", req.Symbol)
 
-	protocol, err := s.protocol.FindProtocolInfoByExternalSymbol(ctx, req.Symbol)
-	if err != nil {
-		clog.Redf("UpdateUtxoForRedeemSession, FindProtocolInfoByExternalSymbol error: %v\n", err)
-		return nil, err
-	}
+// 	protocol, err := s.protocol.FindProtocolInfoByExternalSymbol(ctx, req.Symbol)
+// 	if err != nil {
+// 		clog.Redf("UpdateUtxoForRedeemSession, FindProtocolInfoByExternalSymbol error: %v\n", err)
+// 		return nil, err
+// 	}
 
-	clog.Magentaf("UpdateUtxoForRedeemSession, protocol: %v\n", protocol)
+// 	clog.Magentaf("UpdateUtxoForRedeemSession, protocol: %v\n", protocol)
 
-	if !protocol.IsActivated() {
-		clog.Redf("UpdateUtxoForRedeemSession, protocol %s is not activated\n", req.Symbol)
-		return nil, fmt.Errorf("protocol %s is not activated", req.Symbol)
-	}
+// 	if !protocol.IsActivated() {
+// 		clog.Redf("UpdateUtxoForRedeemSession, protocol %s is not activated\n", req.Symbol)
+// 		return nil, fmt.Errorf("protocol %s is not activated", req.Symbol)
+// 	}
 
-	// Check if session exist
-	// TODO: Split to the confirmation event then handle in abci,
-	// This way is just a temporary solution
+// 	// Check if session exist
+// 	// TODO: Split to the confirmation event then handle in abci,
+// 	// This way is just a temporary solution
 
-	session, ok := s.GetRedeemSession(ctx, req.Symbol)
-	if !ok {
-		clog.Bluef("Check if session exist\n")
-		session = types.DefaultRedeemSession()
-		session.CurrentPhase = req.Phase
-		session.Sequence = req.Sequence
-		session.Symbol = req.Symbol
-		s.Keeper.AddRedeemSession(ctx, req.Symbol, session)
-		return &types.UpdateSequenceAndPhaseForRedeemSessionResponse{
-			Session: session,
-		}, nil
-	}
+// 	session, ok := s.GetRedeemSession(ctx, req.Symbol)
+// 	if !ok {
+// 		clog.Bluef("Check if session exist\n")
+// 		session = types.DefaultRedeemSession()
+// 		session.CurrentPhase = req.Phase
+// 		session.Sequence = req.Sequence
+// 		session.Symbol = req.Symbol
+// 		s.Keeper.AddRedeemSession(ctx, req.Symbol, session)
+// 		return &types.UpdateSequenceAndPhaseForRedeemSessionResponse{
+// 			Session: session,
+// 		}, nil
+// 	}
 
-	clog.Magentaf("UpdateUtxoForRedeemSession, session: %v\n", session)
+// 	clog.Magentaf("UpdateUtxoForRedeemSession, session: %v\n", session)
 
-	if session.Sequence > req.Sequence {
-		return nil, fmt.Errorf("sequence is invalid")
-	}
+// 	if session.Sequence > req.Sequence {
+// 		return nil, fmt.Errorf("sequence is invalid")
+// 	}
 
-	if session.Sequence == req.Sequence && session.CurrentPhase >= req.Phase {
-		return nil, fmt.Errorf("phase is invalid")
-	}
+// 	if session.Sequence == req.Sequence && session.CurrentPhase >= req.Phase {
+// 		return nil, fmt.Errorf("phase is invalid")
+// 	}
 
-	session.Sequence = req.Sequence
-	session.CurrentPhase = req.Phase
-	s.Keeper.AddRedeemSession(ctx, req.Symbol, session)
+// 	session.Sequence = req.Sequence
+// 	session.CurrentPhase = req.Phase
+// 	s.Keeper.AddRedeemSession(ctx, req.Symbol, session)
 
-	return &types.UpdateSequenceAndPhaseForRedeemSessionResponse{
-		Session: session,
-	}, nil
-}
+// 	return &types.UpdateSequenceAndPhaseForRedeemSessionResponse{
+// 		Session: session,
+// 	}, nil
+// }
 
-func (s msgServer) UpdateUtxoLists(c context.Context, req *types.UpdateUtxoListsRequest) (*types.UpdateUtxoListsResponse, error) {
-	//Todo: check if the RedeemSession phase is Preparing then update the utxos list
-	ctx := sdk.UnwrapSDKContext(c)
-	chain, ok := s.nexus.GetChain(ctx, req.Chain)
-	if !ok {
-		return nil, fmt.Errorf("%s is not a registered chain", req.Chain)
-	}
+// func (s msgServer) UpdateUtxoLists(c context.Context, req *types.UpdateUtxoListsRequest) (*types.UpdateUtxoListsResponse, error) {
+// 	//Todo: check if the RedeemSession phase is Preparing then update the utxos list
+// 	ctx := sdk.UnwrapSDKContext(c)
+// 	chain, ok := s.nexus.GetChain(ctx, req.Chain)
+// 	if !ok {
+// 		return nil, fmt.Errorf("%s is not a registered chain", req.Chain)
+// 	}
 
-	if !chainsTypes.IsBitcoinChain(chain.Name) {
-		return nil, fmt.Errorf("chain %s is not a bitcoin chain", chain.Name)
-	}
+// 	if !chainsTypes.IsBitcoinChain(chain.Name) {
+// 		return nil, fmt.Errorf("chain %s is not a bitcoin chain", chain.Name)
+// 	}
 
-	chainKeeper, err := s.chains.ForChain(ctx, chain.Name)
-	if err != nil {
-		return nil, err
-	}
+// 	chainKeeper, err := s.chains.ForChain(ctx, chain.Name)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	params := chainKeeper.GetParams(ctx)
+// 	params := chainKeeper.GetParams(ctx)
 
-	_ = params
+// 	_ = params
 
-	// poll, err := s.initializePoll(ctx, chain, chainsExported.ZeroHash, params)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// event := &types.UpdateUtxoListsStarted{
-	// 	Chain:        chain.Name,
-	// 	PollID:       poll.PollID,
-	// 	Participants: poll.Participants,
-	// }
+// 	// poll, err := s.initializePoll(ctx, chain, chainsExported.ZeroHash, params)
+// 	// if err != nil {
+// 	// 	return nil, err
+// 	// }
+// 	// event := &types.UpdateUtxoListsStarted{
+// 	// 	Chain:        chain.Name,
+// 	// 	PollID:       poll.PollID,
+// 	// 	Participants: poll.Participants,
+// 	// }
 
-	// s.Logger(ctx).Info("UpdateUtxoListsStarted", event)
+// 	// s.Logger(ctx).Info("UpdateUtxoListsStarted", event)
 
-	// events.Emit(ctx, event)
+// 	// events.Emit(ctx, event)
 
-	return &types.UpdateUtxoListsResponse{}, nil
-}
+// 	return &types.UpdateUtxoListsResponse{}, nil
+// }
 
 func (s msgServer) ConfirmRedeemTx(c context.Context, req *types.ConfirmRedeemTxRequest) (*types.ConfirmRedeemTxResponse, error) {
 	//Todo: request validator process confirm redeen tx is executed with >=12 confirmations on the bitcoin chain
 	ctx := sdk.UnwrapSDKContext(c)
 
-	chain, ok := s.nexus.GetChain(ctx, req.Chain)
-	if !ok {
-		return nil, fmt.Errorf("%s is not a registered chain", req.Chain)
-	}
-
-	if err := validateChainActivated(ctx, s.nexus, chain); err != nil {
+	chain, err := s.validateBtcChain(ctx, req.Chain)
+	if err != nil {
 		return nil, err
 	}
 
-	if !chainsTypes.IsBitcoinChain(chain.Name) {
-		return nil, fmt.Errorf("chain %s is not a bitcoin chain", chain.Name)
-	}
-
-	chainKeeper, err := s.chains.ForChain(ctx, chain.Name)
+	chainKeeper, err := s.chains.ForChain(ctx, req.Chain)
 	if err != nil {
 		return nil, err
 	}
@@ -258,12 +249,12 @@ func (s msgServer) ConfirmRedeemTx(c context.Context, req *types.ConfirmRedeemTx
 	chainParams := chainKeeper.GetParams(ctx)
 	threshold := chainParams.VotingThreshold
 
-	snapshot, err := s.createSnapshot(ctx, chain, threshold)
+	snapshot, err := s.createSnapshot(ctx, *chain, threshold)
 	if err != nil {
 		return nil, err
 	}
 
-	pollMappings, err := s.initializePolls(ctx, chain, snapshot, []chainsExported.Hash{req.TxID}, chainParams)
+	pollMappings, err := s.initializePolls(ctx, *chain, snapshot, []chainsExported.Hash{req.TxID}, chainParams)
 	if err != nil {
 		return nil, err
 	}
@@ -310,4 +301,21 @@ func (s msgServer) initializePolls(ctx sdk.Context, chain nexus.Chain, snapshot 
 	}
 
 	return pollMappings, nil
+}
+
+func (s msgServer) validateBtcChain(ctx sdk.Context, chain nexus.ChainName) (*nexus.Chain, error) {
+	c, ok := s.nexus.GetChain(ctx, chain)
+	if !ok {
+		return nil, fmt.Errorf("%s is not a registered chain", chain)
+	}
+
+	if err := validateChainActivated(ctx, s.nexus, c); err != nil {
+		return nil, err
+	}
+
+	if !chainsTypes.IsBitcoinChain(chain) {
+		return nil, fmt.Errorf("chain %s is not a bitcoin chain", chain)
+	}
+
+	return &c, nil
 }

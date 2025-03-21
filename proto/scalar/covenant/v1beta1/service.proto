@@ -100,31 +100,31 @@ service MsgService {
     };
   }
 
-  rpc UpdateUtxoForRedeemSession(UpdateUtxoForRedeemSessionRequest)
-      returns (UpdateUtxoForRedeemSessionResponse) {
-    option (google.api.http) = {
-      post : "/scalar/covenant/v1beta1/update_utxo_for_redeem_session"
-      body : "*"
-    };
-  }
+  // rpc UpdateUtxoForRedeemSession(UpdateUtxoForRedeemSessionRequest)
+  //     returns (UpdateUtxoForRedeemSessionResponse) {
+  //   option (google.api.http) = {
+  //     post : "/scalar/covenant/v1beta1/update_utxo_for_redeem_session"
+  //     body : "*"
+  //   };
+  // }
 
-  rpc UpdateSequenceAndPhaseForRedeemSession(
-      UpdateSequenceAndPhaseForRedeemSessionRequest)
-      returns (UpdateSequenceAndPhaseForRedeemSessionResponse) {
-    option (google.api.http) = {
-      post : "/scalar/covenant/v1beta1/"
-             "update_sequence_and_phase_for_redeem_session"
-      body : "*"
-    };
-  }
+  // rpc UpdateSequenceAndPhaseForRedeemSession(
+  //     UpdateSequenceAndPhaseForRedeemSessionRequest)
+  //     returns (UpdateSequenceAndPhaseForRedeemSessionResponse) {
+  //   option (google.api.http) = {
+  //     post : "/scalar/covenant/v1beta1/"
+  //            "update_sequence_and_phase_for_redeem_session"
+  //     body : "*"
+  //   };
+  // }
 
-  rpc UpdateUtxoLists(UpdateUtxoListsRequest)
-      returns (UpdateUtxoListsResponse) {
-    option (google.api.http) = {
-      post : "/scalar/chains/v1beta1/update_utxo_lists"
-      body : "*"
-    };
-  }
+  // rpc UpdateUtxoLists(UpdateUtxoListsRequest)
+  //     returns (UpdateUtxoListsResponse) {
+  //   option (google.api.http) = {
+  //     post : "/scalar/chains/v1beta1/update_utxo_lists"
+  //     body : "*"
+  //   };
+  // }
 }
 service QueryService {
   // Get custodians
