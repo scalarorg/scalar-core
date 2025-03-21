@@ -21,6 +21,8 @@ type msgServer struct {
 	multisig    types.MultisigKeeper
 	nexus       types.Nexus
 	protocol    types.ProtocolKeeper
+	chains      types.BaseKeeper
+	voter       types.Voter
 }
 
 var _ types.MsgServiceServer = msgServer{}
@@ -33,6 +35,8 @@ type MsgServerConstructArgs struct {
 	Multisig    types.MultisigKeeper
 	Nexus       types.Nexus
 	Protocol    types.ProtocolKeeper
+	Chains      types.BaseKeeper
+	Voter       types.Voter
 }
 
 // NewMsgServerImpl returns an implementation of the evm MsgServiceServer interface
@@ -46,6 +50,8 @@ func NewMsgServerImpl(arg *MsgServerConstructArgs) types.MsgServiceServer {
 		multisig:    arg.Multisig,
 		nexus:       arg.Nexus,
 		protocol:    arg.Protocol,
+		chains:      arg.Chains,
+		voter:       arg.Voter,
 	}
 }
 

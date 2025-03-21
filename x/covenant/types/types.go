@@ -1,7 +1,10 @@
 package types
 
 import (
+	fmt "fmt"
+
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 )
 
 func DefaultRedeemSession() *RedeemSession {
@@ -103,4 +106,11 @@ func (rs RedeemSession) ReserveUtxos(requestID string, amount uint64) ([]*UTXO, 
 	}
 
 	return reserveUtxos, nil
+}
+
+func (m RedeemTxConfirmed) ValidateBasic() error {
+	if !chainsTypes.IsBitcoinChain(m.Chain) {
+		return fmt.Errorf("invalid chain")
+	}
+	return nil
 }

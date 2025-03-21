@@ -997,9 +997,3 @@ func (m EventMultisigOperatorshipTransferred) ValidateBasic() error {
 	return nil
 }
 
-func (m RedeemTxConfirmed) ValidateBasic() error {
-	if !IsBitcoinChain(m.Chain) {
-		return fmt.Errorf("invalid chain")
-	}
-	return nil
-}

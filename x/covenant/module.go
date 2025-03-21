@@ -92,6 +92,8 @@ type AppModule struct {
 	multisig    types.MultisigKeeper
 	nexus       types.Nexus
 	protocol    types.ProtocolKeeper
+	chains      types.BaseKeeper
+	voter       types.Voter
 }
 
 // NewAppModule creates a new AppModule object
@@ -103,6 +105,8 @@ func NewAppModule(k *keeper.Keeper,
 	multisig types.MultisigKeeper,
 	nexus types.Nexus,
 	protocol types.ProtocolKeeper,
+	chains types.BaseKeeper,
+	voter types.Voter,
 ) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
@@ -114,6 +118,8 @@ func NewAppModule(k *keeper.Keeper,
 		multisig:       multisig,
 		nexus:          nexus,
 		protocol:       protocol,
+		chains:         chains,
+		voter:          voter,
 	}
 }
 
@@ -163,6 +169,8 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 		Multisig:    am.multisig,
 		Nexus:       am.nexus,
 		Protocol:    am.protocol,
+		Chains:      am.chains,
+		Voter:       am.voter,
 	})
 
 	types.RegisterMsgServiceServer(cfg.MsgServer(), msgServer)

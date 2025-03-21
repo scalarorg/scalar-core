@@ -7,6 +7,7 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/scalarorg/scalar-core/utils"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
@@ -15,6 +16,7 @@ import (
 	protocol "github.com/scalarorg/scalar-core/x/protocol/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
+	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
 // Keeper provides keeper functionality of this module
@@ -92,4 +94,12 @@ type MultisigKeeper interface {
 
 type ProtocolKeeper interface {
 	FindProtocolInfoByExternalSymbol(ctx sdk.Context, symbol string) (*protocol.ProtocolInfo, error)
+}
+
+type BaseKeeper interface {
+	ForChain(ctx sdk.Context, chain nexus.ChainName) (chainsTypes.ChainKeeper, error)
+}
+
+type Voter interface {
+	InitializePoll(ctx sdk.Context, pollBuilder vote.PollBuilder) (vote.PollID, error)
 }

@@ -6,9 +6,7 @@ import "scalar/covenant/v1beta1/redeem.proto";
 import "scalar/covenant/exported/v1beta1/types.proto";
 import "scalar/chains/v1beta1/types.proto";
 
-
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
-
 
 message SigningPsbtStarted {
   option (gogoproto.stable_marshaler) = true;
@@ -138,11 +136,8 @@ message RedeemTxConfirmed {
   string chain = 2
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  string destination_address = 3
-      [ (gogoproto.customname) = "DestinationAddress" ];
-  int64 redeem_amount = 4 [ (gogoproto.customname) = "RedeemAmount" ];
 }
-message UtxoListConfirmed { repeated UTXO utxos = 1; }
+message UtxoListConfirmed { repeated scalar.covenant.v1beta1.UTXO utxos = 1; }
 
 message SessionConfirmed {
   uint64 session_sequence = 1 [ (gogoproto.customname) = "SessionSequence" ];

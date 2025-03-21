@@ -4094,8 +4094,6 @@ the deterministic order of the entries
 | ----- | ---- | ----- | ----------- |
 | `event_id` | [string](#string) |  |  |
 | `chain` | [string](#string) |  |  |
-| `destination_address` | [string](#string) |  |  |
-| `redeem_amount` | [int64](#int64) |  |  |
 
 
 

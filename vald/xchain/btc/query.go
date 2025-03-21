@@ -8,7 +8,7 @@ import (
 	"sort"
 
 	chainsExported "github.com/scalarorg/scalar-core/x/chains/exported"
-	covExported "github.com/scalarorg/scalar-core/x/covenant/exported"
+	cov "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
 type MempoolUtxo struct {
@@ -23,7 +23,7 @@ type MempoolUtxo struct {
 	Value uint64 `json:"value"`
 }
 
-func (c *BtcClient) getUtxoList(taprootAddress string) ([]*covExported.UTXO, error) {
+func (c *BtcClient) getUtxoList(taprootAddress string) ([]*cov.UTXO, error) {
 	if c.mempoolUrl == "" {
 		return nil, fmt.Errorf("mempool URL is not set")
 	}
@@ -48,13 +48,13 @@ func (c *BtcClient) getUtxoList(taprootAddress string) ([]*covExported.UTXO, err
 	}
 	utxos = sortUTXOsByValue(utxos)
 
-	utxosList := []*covExported.UTXO{}
+	utxosList := []*cov.UTXO{}
 	for _, utxo := range utxos {
 		txID, err := chainsExported.HashFromHex(utxo.Txid)
 		if err != nil {
 			return nil, fmt.Errorf("failed to convert txid to hash: %w", err)
 		}
-		utxosList = append(utxosList, &covExported.UTXO{
+		utxosList = append(utxosList, &cov.UTXO{
 			TxID:         txID,
 			Vout:         utxo.Vout,
 			AmountInSats: utxo.Value,

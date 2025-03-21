@@ -7,9 +7,12 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
+	chainsExported "github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
+	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
 func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeemUtxoRequest) (*types.ReserveRedeemUtxoResponse, error) {
@@ -204,19 +207,28 @@ func (s msgServer) UpdateUtxoLists(c context.Context, req *types.UpdateUtxoLists
 		return nil, fmt.Errorf("chain %s is not a bitcoin chain", chain.Name)
 	}
 
-	poll, err := s.initializePoll(ctx, chain, chainsExported.ZeroHash)
+	chainKeeper, err := s.chains.ForChain(ctx, chain.Name)
 	if err != nil {
 		return nil, err
 	}
-	event := &types.UpdateUtxoListsStarted{
-		Chain:        chain.Name,
-		PollID:       poll.PollID,
-		Participants: poll.Participants,
-	}
 
-	s.Logger(ctx).Info("UpdateUtxoListsStarted", event)
+	params := chainKeeper.GetParams(ctx)
 
-	events.Emit(ctx, event)
+	_ = params
+
+	// poll, err := s.initializePoll(ctx, chain, chainsExported.ZeroHash, params)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// event := &types.UpdateUtxoListsStarted{
+	// 	Chain:        chain.Name,
+	// 	PollID:       poll.PollID,
+	// 	Participants: poll.Participants,
+	// }
+
+	// s.Logger(ctx).Info("UpdateUtxoListsStarted", event)
+
+	// events.Emit(ctx, event)
 
 	return &types.UpdateUtxoListsResponse{}, nil
 }
@@ -238,17 +250,20 @@ func (s msgServer) ConfirmRedeemTx(c context.Context, req *types.ConfirmRedeemTx
 		return nil, fmt.Errorf("chain %s is not a bitcoin chain", chain.Name)
 	}
 
-	keeper, err := s.ForChain(ctx, chain.Name)
+	chainKeeper, err := s.chains.ForChain(ctx, chain.Name)
 	if err != nil {
 		return nil, err
 	}
 
-	snapshot, err := s.createSnapshot(ctx, chain)
+	chainParams := chainKeeper.GetParams(ctx)
+	threshold := chainParams.VotingThreshold
+
+	snapshot, err := s.createSnapshot(ctx, chain, threshold)
 	if err != nil {
 		return nil, err
 	}
 
-	pollMappings, err := s.initializePolls(ctx, chain, snapshot, []chainsExported.Hash{req.TxID})
+	pollMappings, err := s.initializePolls(ctx, chain, snapshot, []chainsExported.Hash{req.TxID}, chainParams)
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +271,7 @@ func (s msgServer) ConfirmRedeemTx(c context.Context, req *types.ConfirmRedeemTx
 	event := &types.ConfirmRedeemTxStarted{
 		Chain:              chain.Name,
 		PollMappings:       pollMappings,
-		ConfirmationHeight: keeper.GetRequiredConfirmationHeight(ctx),
+		ConfirmationHeight: chainKeeper.GetRequiredConfirmationHeight(ctx),
 		Participants:       snapshot.GetParticipantAddresses(),
 	}
 
@@ -265,4 +280,34 @@ func (s msgServer) ConfirmRedeemTx(c context.Context, req *types.ConfirmRedeemTx
 	events.Emit(ctx, event)
 
 	return &types.ConfirmRedeemTxResponse{}, nil
+}
+
+func (s msgServer) initializePolls(ctx sdk.Context, chain nexus.Chain, snapshot snapshot.Snapshot, txIDs []chainsExported.Hash, params chainsTypes.Params) ([]chainsTypes.PollMapping, error) {
+
+	expiresAt := ctx.BlockHeight() + params.RevoteLockingPeriod
+
+	pollMappings := make([]chainsTypes.PollMapping, len(txIDs))
+	for i, txID := range txIDs {
+		pollID, err := s.voter.InitializePoll(
+			ctx,
+			vote.NewPollBuilder(types.ModuleName, params.VotingThreshold, snapshot, expiresAt).
+				MinVoterCount(params.MinVoterCount).
+				RewardPoolName(chain.Name.String()).
+				GracePeriod(params.VotingGracePeriod).
+				ModuleMetadata(&chainsTypes.PollMetadata{
+					Chain: chain.Name,
+					TxID:  txID,
+				}),
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		pollMappings[i] = chainsTypes.PollMapping{
+			TxID:   txID,
+			PollID: pollID,
+		}
+	}
+
+	return pollMappings, nil
 }

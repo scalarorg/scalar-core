@@ -14,6 +14,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
+	cov "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
 // Manager manages all communication with Ethereum
@@ -71,7 +72,7 @@ func (mgr Manager) ProcessSourceTxsConfirmation(event *types.EventConfirmSourceT
 	return err
 }
 
-func (mgr Manager) ProcessRedeemTxConfirmation(event *types.ConfirmRedeemTxStarted) error {
+func (mgr Manager) ProcessRedeemTxConfirmation(event *cov.ConfirmRedeemTxStarted) error {
 	if !mgr.isParticipantOf(event.Participants) {
 		pollIDs := slices.Map(event.PollMappings, func(m types.PollMapping) vote.PollID { return m.PollID })
 		mgr.logger("poll_ids", pollIDs).Debug("ignoring redeem tx confirmation poll: not a participant")
@@ -101,7 +102,7 @@ func (mgr Manager) ProcessRedeemTxConfirmation(event *types.ConfirmRedeemTxStart
 
 }
 
-func (mgr Manager) ProcessUpdateUtxoListsStarted(event *types.UpdateUtxoListsStarted) error {
+func (mgr Manager) ProcessUpdateUtxoListsStarted(event *cov.UpdateUtxoListsStarted) error {
 	if !mgr.isParticipantOf(event.Participants) {
 		mgr.logger("poll_id", event.PollID).Debug("ignoring staking txs confirmation poll: not a participant")
 		return nil

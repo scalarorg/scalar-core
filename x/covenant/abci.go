@@ -162,3 +162,33 @@ func processPsbt(p *types.PsbtMultiSig, tapScriptSigsMapByEachPsbt []map[string]
 
 	return nil
 }
+
+// // TODO: add other event types here
+// case *types.Event_RedeemTxConfirmed:
+// 	return handleRedeemTxConfirmed(ctx, event, bk)
+
+// func handleRedeemTxConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKeeper) error {
+// 	e := event.GetEvent().(*types.Event_RedeemTxConfirmed).RedeemTxConfirmed
+// 	if e == nil {
+// 		panic(fmt.Errorf("event is nil"))
+// 	}
+
+// 	ck := funcs.Must(bk.ForChain(ctx, event.Chain))
+
+// 	ck.Logger(ctx).Info(fmt.Sprintf("redeem tx confirmed on chain %s", event.Chain),
+// 		"eventID", event.GetID(),
+// 		"txID", event.TxID.Hex(),
+// 	)
+// 	ctx.EventManager().EmitEvent(
+// 		sdk.NewEvent(types.EventTypeRedeemConfirmation,
+// 			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
+// 			sdk.NewAttribute(types.AttributeKeyChain, event.Chain.String()),
+// 			sdk.NewAttribute(types.AttributeKeyDestinationAddress, e.DestinationAddress),
+// 			sdk.NewAttribute(types.AttributeKeyAmount, string(e.RedeemAmount)),
+// 			sdk.NewAttribute(types.AttributeKeyTxID, event.TxID.Hex()),
+// 			sdk.NewAttribute(types.AttributeKeyEventID, string(event.GetID())),
+// 			sdk.NewAttribute(sdk.AttributeKeyAction, types.AttributeValueConfirm),
+// 		))
+
+// 	return nil
+// }
