@@ -1,10 +1,12 @@
 package keeper
 
 import (
+	"bytes"
 	"encoding/hex"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils"
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	cov "github.com/scalarorg/scalar-core/x/covenant/exported"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
 )
@@ -57,20 +59,20 @@ func (k Keeper) findCustodians(ctx sdk.Context, req *types.CustodiansRequest) ([
 	return custodians, true
 }
 
-func (k Keeper) GetCustodianGroup(ctx sdk.Context, uid string) (custodianGroup *cov.CustodianGroup, ok bool) {
+func (k Keeper) GetCustodianGroup(ctx sdk.Context, uid chains.Hash) (custodianGroup *cov.CustodianGroup, ok bool) {
 	group := cov.CustodianGroup{}
-	ok = k.getStore(ctx).Get(custodianGroupPrefix.Append(utils.KeyFromBz([]byte(uid))), &group)
+	ok = k.getStore(ctx).Get(custodianGroupPrefix.Append(utils.KeyFromBz(uid.Bytes())), &group)
 	return &group, ok
 }
 
 func (k Keeper) SetCustodianGroup(ctx sdk.Context, custodianGroup *cov.CustodianGroup) {
-	k.getStore(ctx).Set(custodianGroupPrefix.Append(utils.KeyFromBz([]byte(custodianGroup.UID))), custodianGroup)
+	k.getStore(ctx).Set(custodianGroupPrefix.Append(utils.KeyFromBz(custodianGroup.UID.Bytes())), custodianGroup)
 }
 
 func (k Keeper) SetCustodianGroups(ctx sdk.Context, custodianGroups []*cov.CustodianGroup) {
 	store := k.getStore(ctx)
 	for _, group := range custodianGroups {
-		store.Set(custodianGroupPrefix.Append(utils.KeyFromBz([]byte(group.UID))), group)
+		store.Set(custodianGroupPrefix.Append(utils.KeyFromBz(group.UID.Bytes())), group)
 	}
 }
 
@@ -109,14 +111,14 @@ func isMatchCustodian(protocol *cov.Custodian, req *types.CustodiansRequest) boo
 
 // Todo: Implement Matching function
 func isMatchCustodianGroup(group *cov.CustodianGroup, req *types.GroupsRequest) bool {
-	if req.UID != "" && group.UID != req.UID {
+	if req.UID.Bytes() != nil && bytes.Equal(group.UID.Bytes(), req.UID.Bytes()) {
 		return false
 	}
 
 	return true
 }
 
-func (k Keeper) GetCustodianKeys(ctx sdk.Context, groupId string) ([]string, bool) {
+func (k Keeper) GetCustodianKeys(ctx sdk.Context, groupId chains.Hash) ([]string, bool) {
 	group, ok := k.GetCustodianGroup(ctx, groupId)
 	if !ok {
 		return nil, ok

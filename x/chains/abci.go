@@ -290,7 +290,7 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 		return fmt.Errorf("source chain %s is not supported by protocol %s", sourceChain, e.Symbol)
 	}
 
-	cusGr, ok := cov.GetCustodianGroup(ctx, protocolInfo.CustodiansGroupUID)
+	cusGr, ok := cov.GetCustodianGroup(ctx, protocolInfo.CustodianGroupUID)
 	if !ok {
 		return fmt.Errorf("covenant not found")
 	}

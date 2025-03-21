@@ -1,24 +1,22 @@
 package types
 
 import (
-	fmt "fmt"
-
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
-	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 func DefaultRedeemSession() *RedeemSession {
 	return &RedeemSession{
-		CustodianGroupUid: "",
+		CustodianGroupUID: chains.ZeroHash,
 		Sequence:          0,
 		CurrentPhase:      Unspecified,
 		LastRedeemTx:      nil,
 	}
 }
 
-func NewRedeemSession(custodianGroupUid string, sequence uint64, currentPhase Phase, lastRedeemTx *chains.Hash) *RedeemSession {
+func NewRedeemSession(CustodianGroupUID chains.Hash, sequence uint64, currentPhase Phase, lastRedeemTx *chains.Hash) *RedeemSession {
 	return &RedeemSession{
-		CustodianGroupUid: custodianGroupUid,
+		CustodianGroupUID: CustodianGroupUID,
 		Sequence:          sequence,
 		CurrentPhase:      currentPhase,
 		LastRedeemTx:      lastRedeemTx,
@@ -28,7 +26,7 @@ func NewRedeemSession(custodianGroupUid string, sequence uint64, currentPhase Ph
 var EmptyRedeemSession = DefaultRedeemSession()
 
 func (rs RedeemSession) IsEmpty() bool {
-	if rs.CustodianGroupUid == "" || rs.Sequence == 0 {
+	if rs.CustodianGroupUID.IsZero() || rs.Sequence == 0 {
 		return true
 	}
 	return false
@@ -106,9 +104,9 @@ func (rs UTXOSnapshot) ReserveUtxos(requestID string, amount uint64) ([]*UTXO, e
 	return reserveUtxos, nil
 }
 
-func (m RedeemTxConfirmed) ValidateBasic() error {
-	if !chainsTypes.IsBitcoinChain(m.Chain) {
-		return fmt.Errorf("invalid chain")
+func NewVoteEvents(chain nexus.ChainName, events ...Event) *VoteEvents {
+	return &VoteEvents{
+		Chain:  chain,
+		Events: events,
 	}
-	return nil
 }

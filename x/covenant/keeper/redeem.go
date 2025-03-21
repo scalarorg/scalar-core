@@ -28,22 +28,22 @@ var (
 	callContractWithTokenArguments        = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: bytesType}, {Type: stringType}, {Type: uint256Type}}
 )
 
-func CreateRedeemSessionKey(custodianGroupUid string) utils.Key {
-	return redeemSessionPrefix.Append(utils.KeyFromStr(custodianGroupUid))
+func CreateRedeemSessionKey(uid []byte) utils.Key {
+	return redeemSessionPrefix.Append(utils.KeyFromBz(uid))
 }
-func CreateUTXOSnapshotKey(custodianGroupUid string) utils.Key {
-	return utxoSnapshotPrefix.Append(utils.KeyFromStr(custodianGroupUid))
+func CreateUTXOSnapshotKey(uid []byte) utils.Key {
+	return utxoSnapshotPrefix.Append(utils.KeyFromBz(uid))
 }
 func (k Keeper) SetRedeemSession(ctx sdk.Context, redeemSession *cov.RedeemSession) {
-	k.getStore(ctx).Set(CreateRedeemSessionKey(redeemSession.CustodianGroupUid), redeemSession)
+	k.getStore(ctx).Set(CreateRedeemSessionKey(redeemSession.CustodianGroupUID[:]), redeemSession)
 }
 
-func (k Keeper) GetRedeemSessionByCustodianGroupUid(ctx sdk.Context, custodianGroupUid string) (*cov.RedeemSession, bool) {
+func (k Keeper) GetRedeemSessionByCustodianGroupUID(ctx sdk.Context, CustodianGroupUID []byte) (*cov.RedeemSession, bool) {
 	var results cov.RedeemSession
 
-	ok := k.getStore(ctx).Get(CreateRedeemSessionKey(custodianGroupUid), &results)
+	ok := k.getStore(ctx).Get(CreateRedeemSessionKey(CustodianGroupUID), &results)
 	if !ok {
-		k.Logger(ctx).Error("redeem session not found", "custodianGroupUid", custodianGroupUid)
+		k.Logger(ctx).Error("redeem session not found", "custodianGroupUid", CustodianGroupUID)
 		return nil, false
 	}
 
@@ -51,15 +51,15 @@ func (k Keeper) GetRedeemSessionByCustodianGroupUid(ctx sdk.Context, custodianGr
 }
 
 func (k Keeper) SetUtxoSnapshot(ctx sdk.Context, utxoSnapshot *cov.UTXOSnapshot) {
-	k.getStore(ctx).Set(CreateUTXOSnapshotKey(utxoSnapshot.CustodianGroupUid), utxoSnapshot)
+	k.getStore(ctx).Set(CreateUTXOSnapshotKey(utxoSnapshot.CustodianGroupUID.Bytes()), utxoSnapshot)
 }
 
-func (k Keeper) GetUtxoSnapshotByCustodianGroupUid(ctx sdk.Context, custodianGroupUid string) (*cov.UTXOSnapshot, bool) {
+func (k Keeper) GetUtxoSnapshotByCustodianGroupUid(ctx sdk.Context, custodianGroupUID []byte) (*cov.UTXOSnapshot, bool) {
 	var results cov.UTXOSnapshot
 
-	ok := k.getStore(ctx).Get(CreateUTXOSnapshotKey(custodianGroupUid), &results)
+	ok := k.getStore(ctx).Get(CreateUTXOSnapshotKey(custodianGroupUID), &results)
 	if !ok {
-		k.Logger(ctx).Error("utxo snapshot not found", "custodianGroupUid", custodianGroupUid)
+		k.Logger(ctx).Error("utxo snapshot not found", "custodianGroupUID", custodianGroupUID)
 		return nil, false
 	}
 
@@ -67,15 +67,15 @@ func (k Keeper) GetUtxoSnapshotByCustodianGroupUid(ctx sdk.Context, custodianGro
 }
 
 // findAvailableUtxos uses knapsack algorithm to find optimal UTXO combination
-func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUid string, requestID string, amount uint64) ([]*cov.UTXO, error) {
-	redeemSession, ok := k.GetRedeemSessionByCustodianGroupUid(ctx, custodianGroupUid)
+func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID []byte, requestID string, amount uint64) ([]*cov.UTXO, error) {
+	redeemSession, ok := k.GetRedeemSessionByCustodianGroupUID(ctx, custodianGroupUID)
 	if !ok {
 		return nil, fmt.Errorf("redeem session not found")
 	}
 	if redeemSession.CurrentPhase != cov.Preparing {
 		return nil, fmt.Errorf("redeem session is not in preparing phase")
 	}
-	utxoSnapshot, ok := k.GetUtxoSnapshotByCustodianGroupUid(ctx, custodianGroupUid)
+	utxoSnapshot, ok := k.GetUtxoSnapshotByCustodianGroupUid(ctx, custodianGroupUID)
 	if !ok {
 		return nil, fmt.Errorf("utxo snapshot not found")
 	}

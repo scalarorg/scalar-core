@@ -4,9 +4,9 @@ import (
 	"encoding/hex"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/google/uuid"
 	"github.com/scalarorg/scalar-core/utils"
 
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	multisigTypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
@@ -22,7 +22,7 @@ func DefaultCustodian() *Custodian {
 
 func DefaultCustodianGroup() *CustodianGroup {
 	return &CustodianGroup{
-		UID:  uuid.NewString(),
+		UID:  chains.ZeroHash,
 		Name: "scalar",
 	}
 }
@@ -44,7 +44,7 @@ func (g *CustodianGroup) CreateKey(ctx sdk.Context, snapshot snapshot.Snapshot, 
 
 func NewCustodianGroup(name string, bitcoinPubkey []byte, quorum uint32, description string, custodians []*Custodian) *CustodianGroup {
 	return &CustodianGroup{
-		UID:           uuid.NewString(),
+		UID:           chains.ZeroHash,
 		Name:          name,
 		BitcoinPubkey: bitcoinPubkey,
 		Quorum:        quorum,

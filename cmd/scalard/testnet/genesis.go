@@ -28,6 +28,7 @@ import (
 	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
+	chainsexported "github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenantexported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
@@ -44,7 +45,7 @@ import (
 
 // DefaultProtocol returns the default chains for a genesis state
 // Each protocol has a token info with the same index
-func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGroupUID string) []*protocoltypes.Protocol {
+func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGroupUID chainsexported.Hash) []*protocoltypes.Protocol {
 	log.Debug().Any("TokenInfos", tokenInfos).Any("ProtocolInfos", protocolInfos).Msg("Create defaultProtocols")
 	protocols := []*protocoltypes.Protocol{}
 	for i, protocol := range protocolInfos {
@@ -308,7 +309,7 @@ func GenerateGenesis(clientCtx client.Context,
 
 	return appGenState, nil
 }
-func generateProtocolGenesis(protocolInfos []Protocol, custodianGroupUID string, configPath string) (*protocoltypes.GenesisState, error) {
+func generateProtocolGenesis(protocolInfos []Protocol, custodianGroupUID chainsexported.Hash, configPath string) (*protocoltypes.GenesisState, error) {
 	// evmTokenPath := path.Join(tokensPath, "evm.json")
 	// log.Debug().Msgf("Read token config in the path %s", evmTokenPath)
 	// tokenInfos, err := ParseJsonArrayConfig[Token](evmTokenPath)

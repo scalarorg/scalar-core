@@ -1,18 +1,103 @@
 package keeper
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/events"
-	chainsExported "github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
-	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
+
+func (s msgServer) ConfirmRedeemTxs(c context.Context, req *types.ConfirmRedeemTxsRequest) (*types.ConfirmRedeemTxsResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	chain, err := s.validateBtcChain(ctx, req.Chain)
+	if err != nil {
+		return nil, err
+	}
+
+	cusGr, ok := s.Keeper.GetCustodianGroup(ctx, req.CustodianGroupUID)
+	if !ok {
+		return nil, fmt.Errorf("custodian group %s not found", req.CustodianGroupUID)
+	}
+
+	chainKeeper, err := s.chains.ForChain(ctx, req.Chain)
+	if err != nil {
+		return nil, err
+	}
+
+	chainParams := chainKeeper.GetParams(ctx)
+
+	threshold := chainParams.VotingThreshold
+
+	snapshot, err := s.createSnapshot(ctx, *chain, threshold)
+	if err != nil {
+		return nil, err
+	}
+
+	expiresAt := ctx.BlockHeight() + chainParams.RevoteLockingPeriod
+
+	var data bytes.Buffer
+	for _, txID := range req.TxIDs {
+		data.Write(txID.Bytes())
+	}
+
+	pollID, err := s.voter.InitializePoll(
+		ctx,
+		vote.NewPollBuilder(types.ModuleName, chainParams.VotingThreshold, snapshot, expiresAt).
+			MinVoterCount(chainParams.MinVoterCount).
+			RewardPoolName(chain.Name.String()).
+			GracePeriod(chainParams.VotingGracePeriod).
+			ModuleMetadata(&types.BasicPollMetadata{
+				Data: data.Bytes(),
+			}),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	event := &types.ConfirmRedeemTxStarted{
+		PollID:             pollID,
+		TxIDs:              req.TxIDs,
+		Chain:              chain.Name,
+		ConfirmationHeight: chainKeeper.GetRequiredConfirmationHeight(ctx),
+		Participants:       snapshot.GetParticipantAddresses(),
+		CustodianGroupUID:  req.CustodianGroupUID,
+		ScriptPubkey:       cusGr.BitcoinPubkey,
+	}
+
+	s.Logger(ctx).Info("ConfirmRedeemTxStarted", event)
+
+	events.Emit(ctx, event)
+
+	return &types.ConfirmRedeemTxsResponse{}, nil
+}
+
+func (s msgServer) ConfirmSwitchedPhase(ctx context.Context, req *types.ConfirmSwitchedPhaseRequest) (*types.ConfirmSwitchedPhaseResponse, error) {
+	return &types.ConfirmSwitchedPhaseResponse{}, nil
+}
+
+func (s msgServer) validateBtcChain(ctx sdk.Context, chain nexus.ChainName) (*nexus.Chain, error) {
+	c, ok := s.nexus.GetChain(ctx, chain)
+	if !ok {
+		return nil, fmt.Errorf("%s is not a registered chain", chain)
+	}
+
+	if err := validateChainActivated(ctx, s.nexus, c); err != nil {
+		return nil, err
+	}
+
+	if !chainsTypes.IsBitcoinChain(chain) {
+		return nil, fmt.Errorf("chain %s is not a bitcoin chain", chain)
+	}
+
+	return &c, nil
+}
 
 func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeemUtxoRequest) (*types.ReserveRedeemUtxoResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
@@ -35,7 +120,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, err
 	}
 
-	reservedTx, err := s.reserveUtxos(ctx, protocol.CustodiansGroupUID, req.ReqId, req.Amount)
+	reservedTx, err := s.reserveUtxos(ctx, protocol.CustodianGroupUID.Bytes(), req.ReqId, req.Amount)
 	if err != nil {
 		return nil, err
 	}
@@ -76,95 +161,4 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 	)
 
 	return &types.ReserveRedeemUtxoResponse{}, nil
-}
-
-func (s msgServer) ConfirmRedeemTxs(c context.Context, req *types.ConfirmRedeemTxsRequest) (*types.ConfirmRedeemTxsResponse, error) {
-	ctx := sdk.UnwrapSDKContext(c)
-
-	chain, err := s.validateBtcChain(ctx, req.Chain)
-	if err != nil {
-		return nil, err
-	}
-
-	chainKeeper, err := s.chains.ForChain(ctx, req.Chain)
-	if err != nil {
-		return nil, err
-	}
-
-	chainParams := chainKeeper.GetParams(ctx)
-	threshold := chainParams.VotingThreshold
-
-	snapshot, err := s.createSnapshot(ctx, *chain, threshold)
-	if err != nil {
-		return nil, err
-	}
-
-	pollMappings, err := s.initializePolls(ctx, *chain, snapshot, req.TxIDs, chainParams)
-	if err != nil {
-		return nil, err
-	}
-
-	event := &types.ConfirmRedeemTxStarted{
-		Chain:              chain.Name,
-		PollMappings:       pollMappings,
-		ConfirmationHeight: chainKeeper.GetRequiredConfirmationHeight(ctx),
-		Participants:       snapshot.GetParticipantAddresses(),
-	}
-
-	s.Logger(ctx).Info("ConfirmRedeemTxStarted", event)
-
-	events.Emit(ctx, event)
-
-	return &types.ConfirmRedeemTxsResponse{}, nil
-}
-
-func (s msgServer) ConfirmSwitchedPhase(ctx context.Context, req *types.ConfirmSwitchedPhaseRequest) (*types.ConfirmSwitchedPhaseResponse, error) {
-	return &types.ConfirmSwitchedPhaseResponse{}, nil
-}
-
-func (s msgServer) initializePolls(ctx sdk.Context, chain nexus.Chain, snapshot snapshot.Snapshot, txIDs []chainsExported.Hash, params chainsTypes.Params) ([]chainsTypes.PollMapping, error) {
-
-	expiresAt := ctx.BlockHeight() + params.RevoteLockingPeriod
-
-	pollMappings := make([]chainsTypes.PollMapping, len(txIDs))
-	for i, txID := range txIDs {
-		pollID, err := s.voter.InitializePoll(
-			ctx,
-			vote.NewPollBuilder(types.ModuleName, params.VotingThreshold, snapshot, expiresAt).
-				MinVoterCount(params.MinVoterCount).
-				RewardPoolName(chain.Name.String()).
-				GracePeriod(params.VotingGracePeriod).
-				ModuleMetadata(&chainsTypes.PollMetadata{
-					Chain: chain.Name,
-					TxID:  txID,
-				}),
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		pollMappings[i] = chainsTypes.PollMapping{
-			TxID:   txID,
-			PollID: pollID,
-		}
-	}
-
-	return pollMappings, nil
-}
-
-func (s msgServer) validateBtcChain(ctx sdk.Context, chain nexus.ChainName) (*nexus.Chain, error) {
-	c, ok := s.nexus.GetChain(ctx, chain)
-	if !ok {
-		return nil, fmt.Errorf("%s is not a registered chain", chain)
-	}
-
-	if err := validateChainActivated(ctx, s.nexus, c); err != nil {
-		return nil, err
-	}
-
-	if !chainsTypes.IsBitcoinChain(chain) {
-		return nil, fmt.Errorf("chain %s is not a bitcoin chain", chain)
-	}
-
-	return &c, nil
 }

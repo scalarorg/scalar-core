@@ -74,8 +74,7 @@ func (mgr Manager) ProcessSourceTxsConfirmation(event *types.EventConfirmSourceT
 
 func (mgr Manager) ProcessRedeemTxConfirmation(event *cov.ConfirmRedeemTxStarted) error {
 	if !mgr.isParticipantOf(event.Participants) {
-		pollIDs := slices.Map(event.PollMappings, func(m types.PollMapping) vote.PollID { return m.PollID })
-		mgr.logger("poll_ids", pollIDs).Debug("ignoring redeem tx confirmation poll: not a participant")
+		mgr.logger("poll_id", event.PollID).Debug("ignoring redeem tx confirmation poll: not a participant")
 		return nil
 	}
 

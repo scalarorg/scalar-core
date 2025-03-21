@@ -46,15 +46,12 @@ message SupportedChain {
 }
 
 message ProtocolInfo {
-  // string key_id = 1 [
-  //   (gogoproto.customname) = "KeyID",
-  //   (gogoproto.casttype) =
-  //       "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
-  // ];
-  // bytes custodians_pubkey = 2 [ (gogoproto.customname) = "CustodiansPubkey"
-  // ];
-  string custodians_group_uid = 1
-      [ (gogoproto.customname) = "CustodiansGroupUID" ];
+  bytes custodian_group_uid = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "CustodianGroupUID"
+  ];
   LiquidityModel liquidity_model = 2
       [ (gogoproto.customname) = "LiquidityModel" ];
   string symbol = 3;

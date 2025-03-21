@@ -7,6 +7,7 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/scalarorg/scalar-core/utils"
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
@@ -30,7 +31,7 @@ type Keeper interface {
 	GetCustodians(ctx sdk.Context) (custodians []*covenant.Custodian, ok bool)
 	CreateCustodianGroup(ctx sdk.Context, params Params) (err error)
 	GetAllCustodianGroups(ctx sdk.Context) (custodianGroups []*covenant.CustodianGroup, ok bool)
-	GetCustodianGroup(ctx sdk.Context, groupId string) (custodianGroup *covenant.CustodianGroup, ok bool)
+	GetCustodianGroup(ctx sdk.Context, groupId chains.Hash) (custodianGroup *covenant.CustodianGroup, ok bool)
 
 	//GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
 	GetKey(ctx sdk.Context, keyID multisig.KeyID) (mtypes.Key, bool)

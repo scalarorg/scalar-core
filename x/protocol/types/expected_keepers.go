@@ -11,6 +11,7 @@ import (
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/tendermint/tendermint/libs/log"
 )
 
@@ -71,7 +72,7 @@ type SlashingKeeper interface {
 }
 
 type CovenantKeeper interface {
-	GetCustodianGroup(ctx sdk.Context, uid string) (group *covenant.CustodianGroup, ok bool)
+	GetCustodianGroup(ctx sdk.Context, uid chains.Hash) (group *covenant.CustodianGroup, ok bool)
 }
 
 type PermissionKeeper interface {

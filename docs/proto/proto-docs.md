@@ -241,7 +241,7 @@
     - [ConfirmRedeemTxStarted](#scalar.covenant.v1beta1.ConfirmRedeemTxStarted)
     - [Event](#scalar.covenant.v1beta1.Event)
     - [KeyRotated](#scalar.covenant.v1beta1.KeyRotated)
-    - [RedeemTxConfirmed](#scalar.covenant.v1beta1.RedeemTxConfirmed)
+    - [RedeemTxsConfirmed](#scalar.covenant.v1beta1.RedeemTxsConfirmed)
     - [SessionConfirmed](#scalar.covenant.v1beta1.SessionConfirmed)
     - [SigningPsbtCompleted](#scalar.covenant.v1beta1.SigningPsbtCompleted)
     - [SigningPsbtExpired](#scalar.covenant.v1beta1.SigningPsbtExpired)
@@ -250,6 +250,7 @@
     - [SwitchPhaseCompleted](#scalar.covenant.v1beta1.SwitchPhaseCompleted)
     - [SwitchPhaseStarted](#scalar.covenant.v1beta1.SwitchPhaseStarted)
     - [TapScriptSigsSubmitted](#scalar.covenant.v1beta1.TapScriptSigsSubmitted)
+    - [VoteEvents](#scalar.covenant.v1beta1.VoteEvents)
   
     - [Event.Status](#scalar.covenant.v1beta1.Event.Status)
   
@@ -268,6 +269,7 @@
     - [SigningSession](#scalar.multisig.v1beta1.SigningSession)
   
 - [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
+    - [BasicPollMetadata](#scalar.covenant.v1beta1.BasicPollMetadata)
     - [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig)
     - [PsbtMultiSig.ParticipantListTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantListTapScriptSigsEntry)
     - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
@@ -3767,7 +3769,7 @@ custodians
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `uid` | [string](#string) |  | the UID is unique, to distinguish between custodian groups |
+| `uid` | [bytes](#bytes) |  | the UID is unique, to distinguish between custodian groups |
 | `name` | [string](#string) |  | e.g., "All" |
 | `bitcoin_pubkey` | [bytes](#bytes) |  | e.g., |
 | `quorum` | [uint32](#uint32) |  | "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
@@ -3943,7 +3945,7 @@ the deterministic order of the entries
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `custodian_group_uid` | [string](#string) |  |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `sequence` | [uint64](#uint64) |  |  |
 | `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
 | `last_redeem_tx` | [bytes](#bytes) |  |  |
@@ -3996,7 +3998,7 @@ the deterministic order of the entries
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `custodian_group_uid` | [string](#string) |  |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `block_height` | [uint64](#uint64) |  |  |
 | `utxos` | [UTXO](#scalar.covenant.v1beta1.UTXO) | repeated |  |
 
@@ -4043,10 +4045,13 @@ the deterministic order of the entries
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `poll_mappings` | [scalar.chains.v1beta1.PollMapping](#scalar.chains.v1beta1.PollMapping) | repeated |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+| `tx_ids` | [bytes](#bytes) | repeated |  |
 | `chain` | [string](#string) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
 | `participants` | [bytes](#bytes) | repeated |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
+| `script_pubkey` | [bytes](#bytes) |  |  |
 
 
 
@@ -4065,7 +4070,7 @@ the deterministic order of the entries
 | `hash` | [bytes](#bytes) |  |  |
 | `status` | [Event.Status](#scalar.covenant.v1beta1.Event.Status) |  |  |
 | `index` | [uint64](#uint64) |  |  |
-| `redeem_tx_confirmed` | [RedeemTxConfirmed](#scalar.covenant.v1beta1.RedeemTxConfirmed) |  |  |
+| `redeem_txs_confirmed` | [RedeemTxsConfirmed](#scalar.covenant.v1beta1.RedeemTxsConfirmed) |  |  |
 | `session_confirmed` | [SessionConfirmed](#scalar.covenant.v1beta1.SessionConfirmed) |  |  |
 
 
@@ -4090,16 +4095,16 @@ the deterministic order of the entries
 
 
 
-<a name="scalar.covenant.v1beta1.RedeemTxConfirmed"></a>
+<a name="scalar.covenant.v1beta1.RedeemTxsConfirmed"></a>
 
-### RedeemTxConfirmed
+### RedeemTxsConfirmed
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `event_id` | [string](#string) |  |  |
-| `chain` | [string](#string) |  |  |
+| `event_ids` | [string](#string) | repeated |  |
+| `utxo_snapshot` | [UTXOSnapshot](#scalar.covenant.v1beta1.UTXOSnapshot) |  |  |
 
 
 
@@ -4240,6 +4245,22 @@ the deterministic order of the entries
 | `sig_id` | [uint64](#uint64) |  |  |
 | `participant` | [bytes](#bytes) |  |  |
 | `list_of_tap_script_sigs_map` | [scalar.covenant.exported.v1beta1.TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.VoteEvents"></a>
+
+### VoteEvents
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `events` | [Event](#scalar.covenant.v1beta1.Event) | repeated |  |
 
 
 
@@ -4476,6 +4497,21 @@ the deterministic order of the entries
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/covenant/v1beta1/types.proto
+
+
+
+<a name="scalar.covenant.v1beta1.BasicPollMetadata"></a>
+
+### BasicPollMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `data` | [bytes](#bytes) |  |  |
+
+
+
 
 
 
@@ -4891,7 +4927,7 @@ ParamsRequest represents a message that queries the params
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `uid` | [string](#string) |  |  |
+| `uid` | [bytes](#bytes) |  |  |
 
 
 
@@ -4982,7 +5018,7 @@ ParamsRequest represents a message that queries the params
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `custodian_group_uid` | [string](#string) |  |  |
+| `uid` | [bytes](#bytes) |  |  |
 
 
 
@@ -5049,6 +5085,7 @@ Confirm exectuted transaction on bitcoin
 | `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
 | `tx_ids` | [bytes](#bytes) | repeated |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 
 
 
@@ -7301,7 +7338,7 @@ Query defines the gRPC querier service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `custodians_group_uid` | [string](#string) |  | string key_id = 1 [ (gogoproto.customname) = "KeyID", (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID" ]; bytes custodians_pubkey = 2 [ (gogoproto.customname) = "CustodiansPubkey" ]; |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `liquidity_model` | [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
 | `symbol` | [string](#string) |  |  |
 | `origin_chain` | [string](#string) |  |  |
@@ -7390,7 +7427,7 @@ Query defines the gRPC querier service.
 | `tag` | [bytes](#bytes) |  |  |
 | `attributes` | [scalar.protocol.exported.v1beta1.ProtocolAttributes](#scalar.protocol.exported.v1beta1.ProtocolAttributes) |  |  |
 | `status` | [scalar.protocol.exported.v1beta1.Status](#scalar.protocol.exported.v1beta1.Status) |  |  |
-| `custodian_group_uid` | [string](#string) |  | scalar.covenant.v1beta1.CustodianGroup custodian_group = 8; |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `chains` | [scalar.protocol.exported.v1beta1.SupportedChain](#scalar.protocol.exported.v1beta1.SupportedChain) | repeated | Other chains with internal asset |
 | `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
 | `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
@@ -7416,7 +7453,7 @@ Query defines the gRPC querier service.
 | `tag` | [bytes](#bytes) |  |  |
 | `attributes` | [scalar.protocol.exported.v1beta1.ProtocolAttributes](#scalar.protocol.exported.v1beta1.ProtocolAttributes) |  |  |
 | `status` | [scalar.protocol.exported.v1beta1.Status](#scalar.protocol.exported.v1beta1.Status) |  |  |
-| `custodian_group_uid` | [string](#string) |  |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `chains` | [scalar.protocol.exported.v1beta1.SupportedChain](#scalar.protocol.exported.v1beta1.SupportedChain) | repeated | Other chains with internal asset |
 | `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
 | `custodian_group` | [scalar.covenant.exported.v1beta1.CustodianGroup](#scalar.covenant.exported.v1beta1.CustodianGroup) |  |  |
@@ -7632,7 +7669,7 @@ address |
 | `name` | [string](#string) |  | e.g., "protocol-1" |
 | `tag` | [string](#string) |  | e.g., "pools" |
 | `attributes` | [scalar.protocol.exported.v1beta1.ProtocolAttributes](#scalar.protocol.exported.v1beta1.ProtocolAttributes) |  |  |
-| `custodian_group_uid` | [string](#string) |  |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
 | `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
 | `token_name` | [string](#string) |  |  |

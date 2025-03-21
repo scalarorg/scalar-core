@@ -35,7 +35,7 @@ func (m *CreateProtocolRequest) ValidateBasic() error {
 		return fmt.Errorf("tag must be less than 64 bytes")
 	}
 
-	if len(m.CustodianGroupUid) > 64 {
+	if len(m.CustodianGroupUID) > 64 {
 		return fmt.Errorf("custodian group uid must be less than 64 bytes")
 	}
 

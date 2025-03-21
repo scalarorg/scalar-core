@@ -39,3 +39,7 @@ message SigningSession {
       [ (cosmos_proto.accepts_interface) =
             "github.com/cosmos/codec/ProtoMarshaler" ];
 }
+
+message BasicPollMetadata {
+  bytes data = 1;
+}

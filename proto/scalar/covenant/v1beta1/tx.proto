@@ -157,6 +157,13 @@ message ConfirmRedeemTxsRequest {
         "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxIDs"
   ];
+
+  bytes custodian_group_uid = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+     (gogoproto.customname) = "CustodianGroupUID"
+  ];
 }
 
 message ConfirmRedeemTxsResponse {}

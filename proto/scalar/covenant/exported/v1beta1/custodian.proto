@@ -10,9 +10,12 @@ option (gogoproto.goproto_getters_all) = false;
 enum Status {
   option (gogoproto.goproto_enum_prefix) = false;
 
-  STATUS_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Custodian_Unspecified" ];
-  STATUS_ACTIVATED = 1 [ (gogoproto.enumvalue_customname) = "Custodian_Activated" ];
-  STATUS_DEACTIVATED = 2 [ (gogoproto.enumvalue_customname) = "Custodian_Deactivated" ];
+  STATUS_UNSPECIFIED = 0
+      [ (gogoproto.enumvalue_customname) = "Custodian_Unspecified" ];
+  STATUS_ACTIVATED = 1
+      [ (gogoproto.enumvalue_customname) = "Custodian_Activated" ];
+  STATUS_DEACTIVATED = 2
+      [ (gogoproto.enumvalue_customname) = "Custodian_Deactivated" ];
   STATUS_PENDING = 3 [ (gogoproto.enumvalue_customname) = "Custodian_Pending" ];
 }
 
@@ -31,7 +34,12 @@ message Custodian {
 // custodians
 message CustodianGroup {
   // the UID is unique, to distinguish between custodian groups
-  string uid = 1 [ (gogoproto.customname) = "UID" ];
+  bytes uid = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "UID"
+  ];
   string name = 2;          // e.g., "All"
   bytes bitcoin_pubkey = 3; // e.g.,
   // "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"

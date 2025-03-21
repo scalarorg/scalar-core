@@ -7,6 +7,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/covenant/types"
 	"github.com/spf13/cobra"
 )
@@ -114,6 +115,10 @@ func readGroupFlags(cmd *cobra.Command, request *types.GroupsRequest) {
 	if request == nil {
 		return
 	}
-	uid, _ := cmd.Flags().GetString(FlagUID)
+	uidStr, _ := cmd.Flags().GetString(FlagUID)
+	uid, err := chains.HashFromHex(uidStr)
+	if err != nil {
+		log.Fatal("Failed to decode uid", err)
+	}
 	request.UID = uid
 }

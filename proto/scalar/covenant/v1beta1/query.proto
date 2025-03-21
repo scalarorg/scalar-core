@@ -23,7 +23,12 @@ message CustodiansResponse {
 }
 
 message GroupsRequest {
-  string uid = 1 [(gogoproto.customname) = "UID"];
+  bytes uid = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "UID"
+  ];
 }
 
 message GroupsResponse {
@@ -66,7 +71,12 @@ message KeyResponse {
 }
 
 message RedeemSessionRequest {
-  string custodian_group_uid = 1;
+  bytes uid = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "UID"
+  ];
 }
 
 message RedeemSessionResponse {

@@ -9,6 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	chainTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/protocol/exported"
@@ -37,7 +38,7 @@ type CreateProtocolArgs struct {
 	Attributes        *exported.ProtocolAttributes `json:"attributes"`
 	Avatar            string                       `json:"avatar"`
 	BitcoinPubkey     string                       `json:"bitcoin_pubkey"`
-	CustodianGroupUid string                       `json:"custodian_group_uid"`
+	CustodianGroupUID chains.Hash                  `json:"custodian_group_uid"`
 	Name              string                       `json:"name"`
 	Tag               string                       `json:"tag"`
 	Asset             struct {
@@ -101,7 +102,7 @@ $ scalard tx protocol add '{"attribute":{"model":0},"avatar":"base64_encoded_ava
 				BitcoinPubkey:     bitcoinPubkey,
 				Tag:               createProtocolArgs.Tag,
 				Attributes:        createProtocolArgs.Attributes,
-				CustodianGroupUid: createProtocolArgs.CustodianGroupUid,
+				CustodianGroupUID: createProtocolArgs.CustodianGroupUID,
 				Avatar:            avatar,
 				Asset: &chainTypes.Asset{
 					Chain:  nexus.ChainName(createProtocolArgs.Asset.ChainName),
