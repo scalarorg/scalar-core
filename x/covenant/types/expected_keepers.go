@@ -45,6 +45,14 @@ type Keeper interface {
 	GetCovenantRouter() CovenantRouter
 
 	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, multiPsbt []exported.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
+
+	GetEventsQueue(ctx sdk.Context) utils.BlockHeightKVQueue
+	EnqueueEvent(ctx sdk.Context, event *Event) error
+
+	SetSwitchingForRedeemSession(ctx sdk.Context, custodianGroupUID []byte) error
+	UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID []byte) error
+	UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID []byte) error
+	SetUtxoSnapshot(ctx sdk.Context, utxoSnapshot *UTXOSnapshot) error
 }
 
 // Snapshotter provides snapshot keeper functionality
@@ -81,6 +89,8 @@ type Nexus interface {
 	GetChains(ctx sdk.Context) []nexus.Chain
 	GetChainMaintainers(ctx sdk.Context, chain nexus.Chain) []sdk.ValAddress
 	IsChainActivated(ctx sdk.Context, chain nexus.Chain) bool
+	GetChainMaintainerState(ctx sdk.Context, chain nexus.Chain, address sdk.ValAddress) (nexus.MaintainerState, bool)
+	SetChainMaintainerState(ctx sdk.Context, maintainerState nexus.MaintainerState) error
 }
 
 // MultisigKeeper provides functionality to the multisig module

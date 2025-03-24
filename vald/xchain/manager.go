@@ -98,7 +98,6 @@ func (mgr Manager) ProcessRedeemTxConfirmation(event *cov.ConfirmRedeemTxStarted
 	}
 	_, err = mgr.broadcaster.Broadcast(context.TODO(), votes...)
 	return err
-
 }
 
 // isParticipantOf checks if the validator is in the poll participants list

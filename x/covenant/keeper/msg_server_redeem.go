@@ -33,6 +33,11 @@ func (s msgServer) ConfirmRedeemTxs(c context.Context, req *types.ConfirmRedeemT
 
 	chainParams := chainKeeper.GetParams(ctx)
 
+	nwParams := chainParams.Metadata["params"]
+	if nwParams == "" {
+		return nil, fmt.Errorf("params is required")
+	}
+
 	threshold := chainParams.VotingThreshold
 
 	snapshot, err := s.createSnapshot(ctx, *chain, threshold)
@@ -54,7 +59,8 @@ func (s msgServer) ConfirmRedeemTxs(c context.Context, req *types.ConfirmRedeemT
 			RewardPoolName(chain.Name.String()).
 			GracePeriod(chainParams.VotingGracePeriod).
 			ModuleMetadata(&types.BasicPollMetadata{
-				Data: data.Bytes(),
+				Data:  data.Bytes(),
+				Chain: chain.Name,
 			}),
 	)
 	if err != nil {
@@ -69,6 +75,7 @@ func (s msgServer) ConfirmRedeemTxs(c context.Context, req *types.ConfirmRedeemT
 		Participants:       snapshot.GetParticipantAddresses(),
 		CustodianGroupUID:  req.CustodianGroupUID,
 		ScriptPubkey:       cusGr.BitcoinPubkey,
+		NetworkParams:      nwParams,
 	}
 
 	s.Logger(ctx).Info("ConfirmRedeemTxStarted", event)
@@ -162,3 +169,4 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 
 	return &types.ReserveRedeemUtxoResponse{}, nil
 }
+

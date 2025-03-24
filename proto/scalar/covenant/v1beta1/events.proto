@@ -109,6 +109,7 @@ message ConfirmRedeemTxStarted {
     (gogoproto.customname) = "CustodianGroupUID"
   ];
   bytes script_pubkey = 7;
+  string network_params = 8;
 }
 
 message Event {

@@ -269,7 +269,11 @@
     - [SigningSession](#scalar.multisig.v1beta1.SigningSession)
   
 - [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
+    - [BasicPollCompleted](#scalar.covenant.v1beta1.BasicPollCompleted)
+    - [BasicPollExpired](#scalar.covenant.v1beta1.BasicPollExpired)
+    - [BasicPollFailed](#scalar.covenant.v1beta1.BasicPollFailed)
     - [BasicPollMetadata](#scalar.covenant.v1beta1.BasicPollMetadata)
+    - [BasicPollNoEventsConfirmed](#scalar.covenant.v1beta1.BasicPollNoEventsConfirmed)
     - [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig)
     - [PsbtMultiSig.ParticipantListTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantListTapScriptSigsEntry)
     - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
@@ -3949,6 +3953,8 @@ the deterministic order of the entries
 | `sequence` | [uint64](#uint64) |  |  |
 | `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
 | `last_redeem_tx` | [bytes](#bytes) |  |  |
+| `is_switching` | [bool](#bool) |  |  |
+| `phase_expired_at` | [uint64](#uint64) |  |  |
 
 
 
@@ -4018,8 +4024,7 @@ the deterministic order of the entries
 | ---- | ------ | ----------- |
 | PHASE_UNSPECIFIED | 0 |  |
 | PHASE_PREPARING | 1 |  |
-| PHASE_SWITCHING | 2 |  |
-| PHASE_EXECUTING | 3 |  |
+| PHASE_EXECUTING | 2 |  |
 
 
  <!-- end enums -->
@@ -4052,6 +4057,7 @@ the deterministic order of the entries
 | `participants` | [bytes](#bytes) | repeated |  |
 | `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `script_pubkey` | [bytes](#bytes) |  |  |
+| `network_params` | [string](#string) |  |  |
 
 
 
@@ -4500,6 +4506,57 @@ the deterministic order of the entries
 
 
 
+<a name="scalar.covenant.v1beta1.BasicPollCompleted"></a>
+
+### BasicPollCompleted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `data` | [bytes](#bytes) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.BasicPollExpired"></a>
+
+### BasicPollExpired
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `data` | [bytes](#bytes) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.BasicPollFailed"></a>
+
+### BasicPollFailed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `data` | [bytes](#bytes) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
 <a name="scalar.covenant.v1beta1.BasicPollMetadata"></a>
 
 ### BasicPollMetadata
@@ -4508,7 +4565,25 @@ the deterministic order of the entries
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
 | `data` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.BasicPollNoEventsConfirmed"></a>
+
+### BasicPollNoEventsConfirmed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `data` | [bytes](#bytes) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
 
 
 

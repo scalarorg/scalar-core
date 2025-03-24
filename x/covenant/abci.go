@@ -1,6 +1,8 @@
 package covenant
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
@@ -19,9 +21,10 @@ import (
 func BeginBlocker(ctx sdk.Context, _ abci.RequestBeginBlock, bk types.Keeper) {}
 
 // EndBlocker called every block, process inflation, update validator set.
-func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, bk types.Keeper, rewarder types.Rewarder) ([]abci.ValidatorUpdate, error) {
+func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock, k types.Keeper, rewarder types.Rewarder) ([]abci.ValidatorUpdate, error) {
 	clog.Greenf("Covenant EndBlocker, ctx.BlockHeight: %+v", ctx.BlockHeight())
-	handleSignings(ctx, bk, rewarder)
+	handleSignings(ctx, k, rewarder)
+	handleEnqueuedEvents(ctx, k)
 	return nil, nil
 }
 
@@ -163,32 +166,75 @@ func processPsbt(p *types.PsbtMultiSig, tapScriptSigsMapByEachPsbt []map[string]
 	return nil
 }
 
-// // TODO: add other event types here
-// case *types.Event_RedeemTxConfirmed:
-// 	return handleRedeemTxConfirmed(ctx, event, bk)
+func handleEnqueuedEvents(ctx sdk.Context, k types.Keeper) {
+	queue := k.GetEventsQueue(ctx)
+	endBlockerLimit := 100 // TODO: move to the module.params
 
-// func handleRedeemTxConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKeeper) error {
-// 	e := event.GetEvent().(*types.Event_RedeemTxConfirmed).RedeemTxConfirmed
-// 	if e == nil {
-// 		panic(fmt.Errorf("event is nil"))
-// 	}
+	var events []types.Event
+	var event types.Event
+	// Note: this ensures the blockchain is not frozen by processing all events in the queue
+	for len(events) < endBlockerLimit && queue.Dequeue(&event) {
+		events = append(events, event)
+	}
 
-// 	ck := funcs.Must(bk.ForChain(ctx, event.Chain))
+	for _, event := range events {
+		success := utils.RunCached(ctx, k, func(ctx sdk.Context) (bool, error) {
+			if err := handleEnqueueEvent(ctx, &event, k); err != nil {
+				k.Logger(ctx).Debug(fmt.Sprintf("failed handling event: %s", err.Error()),
+					"chain", event.Chain.String(),
+				)
+				clog.Magentaf("[x/covenent] [ABCI]-handle event %++v of type %T failed with error: %+v", event, event.GetEvent(), err)
+				return false, err
+			}
 
-// 	ck.Logger(ctx).Info(fmt.Sprintf("redeem tx confirmed on chain %s", event.Chain),
-// 		"eventID", event.GetID(),
-// 		"txID", event.TxID.Hex(),
-// 	)
-// 	ctx.EventManager().EmitEvent(
-// 		sdk.NewEvent(types.EventTypeRedeemConfirmation,
-// 			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
-// 			sdk.NewAttribute(types.AttributeKeyChain, event.Chain.String()),
-// 			sdk.NewAttribute(types.AttributeKeyDestinationAddress, e.DestinationAddress),
-// 			sdk.NewAttribute(types.AttributeKeyAmount, string(e.RedeemAmount)),
-// 			sdk.NewAttribute(types.AttributeKeyTxID, event.TxID.Hex()),
-// 			sdk.NewAttribute(types.AttributeKeyEventID, string(event.GetID())),
-// 			sdk.NewAttribute(sdk.AttributeKeyAction, types.AttributeValueConfirm),
-// 		))
+			k.Logger(ctx).Debug("completed handling event",
+				"chain", event.Chain.String(),
+			)
 
-// 	return nil
-// }
+			return true, nil
+		})
+
+		_ = success
+
+		// if !success {
+		// 	funcs.MustNoErr(ck.SetEventFailed(ctx, event.GetID()))
+		// 	continue
+		// }
+
+		// funcs.MustNoErr(ck.SetEventCompleted(ctx, event.GetID()))
+	}
+
+}
+
+func handleEnqueueEvent(ctx sdk.Context, event *types.Event, k types.Keeper) error {
+	// if err := validateEvent(ctx, event, bk, n); err != nil {
+	// 	return err
+	// }
+	switch event.GetEvent().(type) {
+	case *types.Event_RedeemTxsConfirmed:
+		return handleRedeemTxsConfirmed(ctx, event, k)
+	default:
+		panic(fmt.Errorf("unsupported event type %T", event))
+	}
+}
+
+func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, k types.Keeper) error {
+	// event := event.GetRedeemTxsConfirmed()
+	// keyID := event.GetKeyID()
+	// chain
+	// txs := event.GetTxs()
+
+	confirmedEvent, ok := event.GetEvent().(*types.Event_RedeemTxsConfirmed)
+	if !ok {
+		return fmt.Errorf("invalid event type")
+	}
+
+	// TODO:
+
+	utxos := confirmedEvent.RedeemTxsConfirmed.GetUtxoSnapshot()
+
+	k.SetUtxoSnapshot(ctx, utxos)
+
+	k.SetSwitchingForRedeemSession(ctx, utxos.CustodianGroupUID[:] /*, keyID*/)
+	return nil
+}

@@ -12418,12 +12418,17 @@ paths:
                         enum:
                           - PHASE_UNSPECIFIED
                           - PHASE_PREPARING
-                          - PHASE_SWITCHING
                           - PHASE_EXECUTING
                         default: PHASE_UNSPECIFIED
                       last_redeem_tx:
                         type: string
                         format: byte
+                      is_switching:
+                        type: boolean
+                        format: boolean
+                      phase_expired_at:
+                        type: string
+                        format: uint64
         default:
           description: An unexpected error response
           content:
@@ -56242,7 +56247,6 @@ components:
       enum:
         - PHASE_UNSPECIFIED
         - PHASE_PREPARING
-        - PHASE_SWITCHING
         - PHASE_EXECUTING
       default: PHASE_UNSPECIFIED
     scalar.covenant.v1beta1.RedeemSession:
@@ -56259,12 +56263,17 @@ components:
           enum:
             - PHASE_UNSPECIFIED
             - PHASE_PREPARING
-            - PHASE_SWITCHING
             - PHASE_EXECUTING
           default: PHASE_UNSPECIFIED
         last_redeem_tx:
           type: string
           format: byte
+        is_switching:
+          type: boolean
+          format: boolean
+        phase_expired_at:
+          type: string
+          format: uint64
     scalar.covenant.v1beta1.RedeemSessionResponse:
       type: object
       properties:
@@ -56282,12 +56291,17 @@ components:
               enum:
                 - PHASE_UNSPECIFIED
                 - PHASE_PREPARING
-                - PHASE_SWITCHING
                 - PHASE_EXECUTING
               default: PHASE_UNSPECIFIED
             last_redeem_tx:
               type: string
               format: byte
+            is_switching:
+              type: boolean
+              format: boolean
+            phase_expired_at:
+              type: string
+              format: uint64
     scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest:
       type: object
       properties:

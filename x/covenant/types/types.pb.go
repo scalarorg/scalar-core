@@ -14,6 +14,8 @@ import (
 	github_com_scalarorg_scalar_core_x_covenant_exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	github_com_scalarorg_scalar_core_x_multisig_exported "github.com/scalarorg/scalar-core/x/multisig/exported"
 	types "github.com/scalarorg/scalar-core/x/multisig/types"
+	github_com_scalarorg_scalar_core_x_nexus_exported "github.com/scalarorg/scalar-core/x/nexus/exported"
+	github_com_scalarorg_scalar_core_x_vote_exported "github.com/scalarorg/scalar-core/x/vote/exported"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -199,7 +201,8 @@ func (m *SigningSession) GetModuleMetadata() *types1.Any {
 }
 
 type BasicPollMetadata struct {
-	Data []byte `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+	Chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName `protobuf:"bytes,1,opt,name=chain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"chain,omitempty"`
+	Data  []byte                                                      `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 }
 
 func (m *BasicPollMetadata) Reset()         { *m = BasicPollMetadata{} }
@@ -235,7 +238,226 @@ func (m *BasicPollMetadata) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_BasicPollMetadata proto.InternalMessageInfo
 
+func (m *BasicPollMetadata) GetChain() github_com_scalarorg_scalar_core_x_nexus_exported.ChainName {
+	if m != nil {
+		return m.Chain
+	}
+	return ""
+}
+
 func (m *BasicPollMetadata) GetData() []byte {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
+type BasicPollFailed struct {
+	Chain  github_com_scalarorg_scalar_core_x_nexus_exported.ChainName `protobuf:"bytes,1,opt,name=chain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"chain,omitempty"`
+	Data   []byte                                                      `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+	PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID     `protobuf:"varint,3,opt,name=poll_id,json=pollId,proto3,customtype=github.com/scalarorg/scalar-core/x/vote/exported.PollID" json:"poll_id"`
+}
+
+func (m *BasicPollFailed) Reset()         { *m = BasicPollFailed{} }
+func (m *BasicPollFailed) String() string { return proto.CompactTextString(m) }
+func (*BasicPollFailed) ProtoMessage()    {}
+func (*BasicPollFailed) Descriptor() ([]byte, []int) {
+	return fileDescriptor_404fd62bcdc2fd38, []int{3}
+}
+func (m *BasicPollFailed) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *BasicPollFailed) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_BasicPollFailed.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *BasicPollFailed) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BasicPollFailed.Merge(m, src)
+}
+func (m *BasicPollFailed) XXX_Size() int {
+	return m.Size()
+}
+func (m *BasicPollFailed) XXX_DiscardUnknown() {
+	xxx_messageInfo_BasicPollFailed.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_BasicPollFailed proto.InternalMessageInfo
+
+func (m *BasicPollFailed) GetChain() github_com_scalarorg_scalar_core_x_nexus_exported.ChainName {
+	if m != nil {
+		return m.Chain
+	}
+	return ""
+}
+
+func (m *BasicPollFailed) GetData() []byte {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
+type BasicPollExpired struct {
+	Chain  github_com_scalarorg_scalar_core_x_nexus_exported.ChainName `protobuf:"bytes,1,opt,name=chain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"chain,omitempty"`
+	Data   []byte                                                      `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+	PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID     `protobuf:"varint,3,opt,name=poll_id,json=pollId,proto3,customtype=github.com/scalarorg/scalar-core/x/vote/exported.PollID" json:"poll_id"`
+}
+
+func (m *BasicPollExpired) Reset()         { *m = BasicPollExpired{} }
+func (m *BasicPollExpired) String() string { return proto.CompactTextString(m) }
+func (*BasicPollExpired) ProtoMessage()    {}
+func (*BasicPollExpired) Descriptor() ([]byte, []int) {
+	return fileDescriptor_404fd62bcdc2fd38, []int{4}
+}
+func (m *BasicPollExpired) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *BasicPollExpired) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_BasicPollExpired.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *BasicPollExpired) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BasicPollExpired.Merge(m, src)
+}
+func (m *BasicPollExpired) XXX_Size() int {
+	return m.Size()
+}
+func (m *BasicPollExpired) XXX_DiscardUnknown() {
+	xxx_messageInfo_BasicPollExpired.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_BasicPollExpired proto.InternalMessageInfo
+
+func (m *BasicPollExpired) GetChain() github_com_scalarorg_scalar_core_x_nexus_exported.ChainName {
+	if m != nil {
+		return m.Chain
+	}
+	return ""
+}
+
+func (m *BasicPollExpired) GetData() []byte {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
+type BasicPollCompleted struct {
+	Chain  github_com_scalarorg_scalar_core_x_nexus_exported.ChainName `protobuf:"bytes,1,opt,name=chain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"chain,omitempty"`
+	Data   []byte                                                      `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+	PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID     `protobuf:"varint,3,opt,name=poll_id,json=pollId,proto3,customtype=github.com/scalarorg/scalar-core/x/vote/exported.PollID" json:"poll_id"`
+}
+
+func (m *BasicPollCompleted) Reset()         { *m = BasicPollCompleted{} }
+func (m *BasicPollCompleted) String() string { return proto.CompactTextString(m) }
+func (*BasicPollCompleted) ProtoMessage()    {}
+func (*BasicPollCompleted) Descriptor() ([]byte, []int) {
+	return fileDescriptor_404fd62bcdc2fd38, []int{5}
+}
+func (m *BasicPollCompleted) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *BasicPollCompleted) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_BasicPollCompleted.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *BasicPollCompleted) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BasicPollCompleted.Merge(m, src)
+}
+func (m *BasicPollCompleted) XXX_Size() int {
+	return m.Size()
+}
+func (m *BasicPollCompleted) XXX_DiscardUnknown() {
+	xxx_messageInfo_BasicPollCompleted.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_BasicPollCompleted proto.InternalMessageInfo
+
+func (m *BasicPollCompleted) GetChain() github_com_scalarorg_scalar_core_x_nexus_exported.ChainName {
+	if m != nil {
+		return m.Chain
+	}
+	return ""
+}
+
+func (m *BasicPollCompleted) GetData() []byte {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
+type BasicPollNoEventsConfirmed struct {
+	Chain  github_com_scalarorg_scalar_core_x_nexus_exported.ChainName `protobuf:"bytes,1,opt,name=chain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"chain,omitempty"`
+	Data   []byte                                                      `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+	PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID     `protobuf:"varint,3,opt,name=poll_id,json=pollId,proto3,customtype=github.com/scalarorg/scalar-core/x/vote/exported.PollID" json:"poll_id"`
+}
+
+func (m *BasicPollNoEventsConfirmed) Reset()         { *m = BasicPollNoEventsConfirmed{} }
+func (m *BasicPollNoEventsConfirmed) String() string { return proto.CompactTextString(m) }
+func (*BasicPollNoEventsConfirmed) ProtoMessage()    {}
+func (*BasicPollNoEventsConfirmed) Descriptor() ([]byte, []int) {
+	return fileDescriptor_404fd62bcdc2fd38, []int{6}
+}
+func (m *BasicPollNoEventsConfirmed) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *BasicPollNoEventsConfirmed) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_BasicPollNoEventsConfirmed.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *BasicPollNoEventsConfirmed) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BasicPollNoEventsConfirmed.Merge(m, src)
+}
+func (m *BasicPollNoEventsConfirmed) XXX_Size() int {
+	return m.Size()
+}
+func (m *BasicPollNoEventsConfirmed) XXX_DiscardUnknown() {
+	xxx_messageInfo_BasicPollNoEventsConfirmed.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_BasicPollNoEventsConfirmed proto.InternalMessageInfo
+
+func (m *BasicPollNoEventsConfirmed) GetChain() github_com_scalarorg_scalar_core_x_nexus_exported.ChainName {
+	if m != nil {
+		return m.Chain
+	}
+	return ""
+}
+
+func (m *BasicPollNoEventsConfirmed) GetData() []byte {
 	if m != nil {
 		return m.Data
 	}
@@ -247,6 +469,10 @@ func init() {
 	proto.RegisterMapType((map[string]*exported.ListOfTapScriptSigsMap)(nil), "scalar.covenant.v1beta1.PsbtMultiSig.ParticipantListTapScriptSigsEntry")
 	proto.RegisterType((*SigningSession)(nil), "scalar.covenant.v1beta1.SigningSession")
 	proto.RegisterType((*BasicPollMetadata)(nil), "scalar.covenant.v1beta1.BasicPollMetadata")
+	proto.RegisterType((*BasicPollFailed)(nil), "scalar.covenant.v1beta1.BasicPollFailed")
+	proto.RegisterType((*BasicPollExpired)(nil), "scalar.covenant.v1beta1.BasicPollExpired")
+	proto.RegisterType((*BasicPollCompleted)(nil), "scalar.covenant.v1beta1.BasicPollCompleted")
+	proto.RegisterType((*BasicPollNoEventsConfirmed)(nil), "scalar.covenant.v1beta1.BasicPollNoEventsConfirmed")
 }
 
 func init() {
@@ -254,53 +480,62 @@ func init() {
 }
 
 var fileDescriptor_404fd62bcdc2fd38 = []byte{
-	// 724 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x54, 0xcd, 0x6e, 0xd3, 0x4c,
-	0x14, 0x8d, 0xf3, 0xf7, 0x7d, 0x99, 0x86, 0x00, 0xa3, 0xaa, 0xb8, 0x51, 0x49, 0xd2, 0x56, 0x40,
-	0x04, 0xd4, 0x56, 0x0b, 0x8b, 0x52, 0x89, 0x45, 0xa3, 0xa2, 0xaa, 0x2a, 0x81, 0xe0, 0x74, 0x85,
-	0x10, 0xd6, 0xc4, 0x9e, 0xba, 0xa3, 0x3a, 0x9e, 0x91, 0x67, 0x52, 0xc5, 0xbc, 0x01, 0x2b, 0xd8,
-	0x20, 0xb1, 0xe5, 0x1d, 0x78, 0x88, 0x8a, 0x55, 0x97, 0xac, 0x22, 0x94, 0xbe, 0x45, 0x57, 0xc8,
-	0x33, 0x76, 0x5a, 0x68, 0xa1, 0x65, 0x77, 0xe7, 0xfa, 0xdc, 0x33, 0xe7, 0xde, 0x33, 0xbe, 0x60,
-	0x91, 0x3b, 0xc8, 0x47, 0xa1, 0xe9, 0xd0, 0x03, 0x1c, 0xa0, 0x40, 0x98, 0x07, 0xcb, 0x3d, 0x2c,
-	0xd0, 0xb2, 0x29, 0x22, 0x86, 0xb9, 0xc1, 0x42, 0x2a, 0x28, 0xbc, 0xa5, 0x40, 0x46, 0x0a, 0x32,
-	0x12, 0x50, 0x75, 0xd6, 0xa1, 0xbc, 0x4f, 0xb9, 0x2d, 0x61, 0xa6, 0x3a, 0xa8, 0x9a, 0xea, 0xb4,
-	0x47, 0x3d, 0xaa, 0xf2, 0x71, 0x94, 0x64, 0x67, 0x3d, 0x4a, 0x3d, 0x1f, 0x9b, 0xf2, 0xd4, 0x1b,
-	0xec, 0x9a, 0x28, 0x88, 0x92, 0x4f, 0x0f, 0x7f, 0x57, 0x82, 0x87, 0x8c, 0x86, 0x02, 0xbb, 0x17,
-	0x49, 0xaa, 0xa6, 0xba, 0xfb, 0x03, 0x5f, 0x10, 0x4e, 0xbc, 0x8b, 0x40, 0x0b, 0x9f, 0xf2, 0xa0,
-	0xdc, 0xe1, 0x3d, 0xd1, 0x8e, 0x41, 0x5d, 0xe2, 0xc1, 0xb7, 0xa0, 0xb8, 0x8f, 0x23, 0x9b, 0xb8,
-	0xba, 0xd6, 0xd0, 0x9a, 0xa5, 0xd6, 0xe6, 0x78, 0x54, 0x2f, 0x6c, 0xe3, 0x68, 0x6b, 0xe3, 0x64,
-	0x54, 0x5f, 0xf3, 0x88, 0xd8, 0x1b, 0xf4, 0x0c, 0x87, 0xf6, 0x4d, 0xc5, 0x4e, 0x43, 0x2f, 0x89,
-	0x96, 0x1c, 0x1a, 0x62, 0x73, 0x78, 0x7a, 0x5d, 0x2a, 0xce, 0x90, 0xd5, 0x56, 0x61, 0x1f, 0x47,
-	0x5b, 0x2e, 0x7c, 0x03, 0x80, 0x44, 0xd8, 0x8c, 0xf7, 0x84, 0x9e, 0x6d, 0xe4, 0x9a, 0xe5, 0xd6,
-	0xd3, 0x93, 0x51, 0xfd, 0xc9, 0x15, 0xa8, 0xcf, 0xf5, 0x6d, 0xc4, 0xd2, 0xad, 0x92, 0x24, 0x8c,
-	0x43, 0xf8, 0x41, 0x03, 0x0d, 0x86, 0x42, 0x41, 0x1c, 0xc2, 0x50, 0x20, 0x6c, 0x9f, 0x70, 0x61,
-	0x0b, 0xc4, 0x6c, 0xee, 0x84, 0x84, 0x09, 0x9b, 0x13, 0x8f, 0xeb, 0xb9, 0x46, 0xae, 0x39, 0xb5,
-	0xb2, 0x69, 0xfc, 0xc1, 0x32, 0xe3, 0xec, 0x3c, 0x8c, 0xce, 0x29, 0xdb, 0x73, 0xc2, 0xc5, 0x0e,
-	0x62, 0x5d, 0x49, 0xd5, 0x25, 0x1e, 0x7f, 0x16, 0x88, 0x30, 0xb2, 0xe6, 0xd8, 0x5f, 0x20, 0x70,
-	0x11, 0x5c, 0xdb, 0x25, 0x01, 0xf2, 0xc9, 0x3b, 0xec, 0xda, 0x62, 0xc8, 0xf5, 0x7c, 0xdc, 0xb2,
-	0x55, 0x9e, 0x24, 0x77, 0x86, 0xbc, 0xfa, 0x5e, 0x03, 0xf3, 0x97, 0x5e, 0x04, 0x6f, 0x80, 0xdc,
-	0x3e, 0x8e, 0x94, 0x2f, 0x56, 0x1c, 0xc2, 0x17, 0xa0, 0x70, 0x80, 0xfc, 0x01, 0xd6, 0xb3, 0x0d,
-	0xad, 0x39, 0xb5, 0xb2, 0x7a, 0xae, 0xa5, 0xc9, 0xa0, 0xd2, 0xde, 0x62, 0xea, 0x97, 0xbb, 0xbf,
-	0x90, 0xb7, 0x11, 0xb3, 0x14, 0xcd, 0x5a, 0x76, 0x55, 0x5b, 0xcb, 0x7f, 0xfe, 0x52, 0xd7, 0x16,
-	0xc6, 0x39, 0x50, 0xe9, 0x12, 0x2f, 0x20, 0x81, 0xd7, 0xc5, 0x9c, 0x13, 0x1a, 0xc0, 0x19, 0x90,
-	0x4d, 0x5e, 0x45, 0xbe, 0x55, 0x1c, 0x8f, 0xea, 0xd9, 0xad, 0x0d, 0x2b, 0x4b, 0x5c, 0xf8, 0x0a,
-	0x54, 0x62, 0x2f, 0x6d, 0x65, 0x2b, 0x27, 0x5e, 0xa2, 0xe6, 0xce, 0x95, 0x06, 0xdc, 0xca, 0x1f,
-	0x8e, 0xea, 0x19, 0xab, 0xcc, 0xce, 0x3e, 0xc2, 0x75, 0x50, 0xe0, 0x02, 0x09, 0xac, 0xe7, 0x1a,
-	0x5a, 0xb3, 0xb2, 0xf2, 0xe0, 0xf2, 0xbe, 0x62, 0xca, 0x6e, 0x5c, 0x62, 0xa9, 0x4a, 0xf8, 0x58,
-	0x0d, 0x2b, 0x2f, 0xa5, 0xcc, 0xa5, 0x04, 0xe9, 0xe3, 0x9c, 0xd4, 0x6d, 0xe3, 0x28, 0x51, 0x20,
-	0x07, 0x7a, 0x1b, 0x00, 0x3c, 0x64, 0x24, 0xc4, 0xdc, 0x46, 0x42, 0x2f, 0x34, 0xb4, 0x66, 0xce,
-	0x2a, 0x25, 0x99, 0x75, 0x01, 0xe7, 0x41, 0xd9, 0xa1, 0x7d, 0xe6, 0x63, 0x81, 0xdd, 0x18, 0x50,
-	0x94, 0x80, 0xa9, 0x49, 0x4e, 0x41, 0xbc, 0x10, 0x39, 0xd8, 0x66, 0x38, 0x24, 0xd4, 0xd5, 0xff,
-	0x53, 0x10, 0x99, 0xeb, 0xc8, 0x14, 0x9c, 0x01, 0xc5, 0x3e, 0x75, 0x07, 0x3e, 0xd6, 0xff, 0x97,
-	0x56, 0x26, 0x27, 0x48, 0xc0, 0x75, 0x15, 0xd9, 0x7d, 0x2c, 0x90, 0x8b, 0x04, 0xd2, 0x4b, 0x52,
-	0xfe, 0xb4, 0xa1, 0x76, 0x82, 0x91, 0xee, 0x04, 0x63, 0x3d, 0x88, 0x5a, 0xf7, 0xbf, 0x7d, 0x5d,
-	0xba, 0x7b, 0xe6, 0xaf, 0x51, 0xbb, 0xc5, 0x74, 0xa8, 0x8b, 0x1d, 0xb3, 0x13, 0x23, 0xdb, 0x28,
-	0xe4, 0x7b, 0xc8, 0xc7, 0xa1, 0x55, 0x51, 0xc4, 0xed, 0x84, 0x37, 0x31, 0xf9, 0x1e, 0xb8, 0xd9,
-	0x42, 0x9c, 0x38, 0x1d, 0xea, 0xfb, 0xe9, 0x27, 0x08, 0x41, 0x5e, 0x5e, 0x1d, 0x1b, 0x5d, 0xb6,
-	0x64, 0xdc, 0xda, 0x3e, 0x1c, 0xd7, 0xb4, 0xa3, 0x71, 0x4d, 0xfb, 0x31, 0xae, 0x69, 0x1f, 0x8f,
-	0x6b, 0x99, 0xa3, 0xe3, 0x5a, 0xe6, 0xfb, 0x71, 0x2d, 0xf3, 0x7a, 0xf9, 0x5f, 0x7e, 0x5b, 0xb9,
-	0x78, 0x7a, 0x45, 0xd9, 0xc5, 0xa3, 0x9f, 0x01, 0x00, 0x00, 0xff, 0xff, 0xf4, 0x51, 0x53, 0xba,
-	0x58, 0x05, 0x00, 0x00,
+	// 869 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x56, 0xcf, 0x6f, 0x1b, 0x45,
+	0x14, 0xce, 0xfa, 0x57, 0xc9, 0xc4, 0xa4, 0x65, 0x54, 0x95, 0xad, 0x55, 0xbc, 0x6e, 0x2a, 0x90,
+	0x05, 0x74, 0x57, 0x09, 0x48, 0x94, 0x20, 0x84, 0xe2, 0x24, 0x54, 0x56, 0x48, 0x30, 0xeb, 0x72,
+	0x41, 0x88, 0xd5, 0x78, 0x77, 0xb2, 0x19, 0x65, 0xbc, 0x33, 0xda, 0x19, 0x5b, 0x5e, 0x0e, 0xdc,
+	0x39, 0xc1, 0x05, 0x89, 0x2b, 0xff, 0x03, 0x7f, 0x44, 0xc5, 0xa9, 0x47, 0xc4, 0xc1, 0x2a, 0xce,
+	0x91, 0xff, 0x20, 0x27, 0x34, 0x33, 0xbb, 0x9b, 0x40, 0x0b, 0x35, 0x17, 0x0e, 0xb9, 0xbd, 0x79,
+	0xfb, 0xcd, 0x37, 0xdf, 0x37, 0xef, 0xcd, 0xb3, 0xc1, 0x3d, 0x11, 0x22, 0x8a, 0x52, 0x2f, 0x64,
+	0x53, 0x9c, 0xa0, 0x44, 0x7a, 0xd3, 0xcd, 0x11, 0x96, 0x68, 0xd3, 0x93, 0x19, 0xc7, 0xc2, 0xe5,
+	0x29, 0x93, 0x0c, 0xbe, 0x6a, 0x40, 0x6e, 0x01, 0x72, 0x73, 0x50, 0xeb, 0x76, 0xc8, 0xc4, 0x98,
+	0x89, 0x40, 0xc3, 0x3c, 0xb3, 0x30, 0x7b, 0x5a, 0x37, 0x63, 0x16, 0x33, 0x93, 0x57, 0x51, 0x9e,
+	0xbd, 0x1d, 0x33, 0x16, 0x53, 0xec, 0xe9, 0xd5, 0x68, 0x72, 0xec, 0xa1, 0x24, 0xcb, 0x3f, 0xbd,
+	0xfd, 0x77, 0x25, 0x78, 0xc6, 0x59, 0x2a, 0x71, 0xf4, 0x3c, 0x49, 0xad, 0x42, 0xf7, 0x78, 0x42,
+	0x25, 0x11, 0x24, 0x7e, 0x1e, 0x68, 0xe3, 0x87, 0x1a, 0x68, 0x0e, 0xc4, 0x48, 0x1e, 0x2a, 0xd0,
+	0x90, 0xc4, 0xf0, 0x2b, 0xd0, 0x38, 0xc5, 0x59, 0x40, 0x22, 0xdb, 0xea, 0x58, 0xdd, 0xd5, 0xde,
+	0xc3, 0xc5, 0xdc, 0xa9, 0x1f, 0xe0, 0xac, 0xbf, 0x77, 0x3e, 0x77, 0xb6, 0x63, 0x22, 0x4f, 0x26,
+	0x23, 0x37, 0x64, 0x63, 0xcf, 0xb0, 0xb3, 0x34, 0xce, 0xa3, 0xfb, 0x21, 0x4b, 0xb1, 0x37, 0xbb,
+	0x38, 0xae, 0x10, 0xe7, 0xea, 0xdd, 0x7e, 0xfd, 0x14, 0x67, 0xfd, 0x08, 0x7e, 0x09, 0x80, 0x46,
+	0x04, 0x5c, 0x8c, 0xa4, 0x5d, 0xe9, 0x54, 0xbb, 0xcd, 0xde, 0x87, 0xe7, 0x73, 0xe7, 0xfd, 0x25,
+	0xa8, 0x9f, 0xf1, 0xed, 0x2a, 0xe9, 0xfe, 0xaa, 0x26, 0x54, 0x21, 0xfc, 0xce, 0x02, 0x1d, 0x8e,
+	0x52, 0x49, 0x42, 0xc2, 0x51, 0x22, 0x03, 0x4a, 0x84, 0x0c, 0x24, 0xe2, 0x81, 0x08, 0x53, 0xc2,
+	0x65, 0x20, 0x48, 0x2c, 0xec, 0x6a, 0xa7, 0xda, 0x5d, 0xdb, 0x7a, 0xe8, 0xfe, 0x43, 0xc9, 0xdc,
+	0xcb, 0xf7, 0xe1, 0x0e, 0x2e, 0xd8, 0x3e, 0x21, 0x42, 0x3e, 0x42, 0x7c, 0xa8, 0xa9, 0x86, 0x24,
+	0x16, 0xfb, 0x89, 0x4c, 0x33, 0xff, 0x0e, 0xff, 0x17, 0x08, 0xbc, 0x07, 0x5e, 0x3e, 0x26, 0x09,
+	0xa2, 0xe4, 0x6b, 0x1c, 0x05, 0x72, 0x26, 0xec, 0x9a, 0xb2, 0xec, 0x37, 0xcb, 0xe4, 0xa3, 0x99,
+	0x68, 0x7d, 0x6b, 0x81, 0xbb, 0x2f, 0x3c, 0x08, 0xde, 0x00, 0xd5, 0x53, 0x9c, 0x99, 0xba, 0xf8,
+	0x2a, 0x84, 0x47, 0xa0, 0x3e, 0x45, 0x74, 0x82, 0xed, 0x4a, 0xc7, 0xea, 0xae, 0x6d, 0x3d, 0x78,
+	0xc6, 0x52, 0x79, 0x51, 0x85, 0x37, 0x45, 0xfd, 0xe9, 0xf1, 0x5f, 0xc8, 0x0f, 0x11, 0xf7, 0x0d,
+	0xcd, 0x76, 0xe5, 0x81, 0xb5, 0x5d, 0xfb, 0xf1, 0x27, 0xc7, 0xda, 0x58, 0x54, 0xc1, 0xfa, 0x90,
+	0xc4, 0x09, 0x49, 0xe2, 0x21, 0x16, 0x82, 0xb0, 0x04, 0xde, 0x02, 0x95, 0xbc, 0x2b, 0x6a, 0xbd,
+	0xc6, 0x62, 0xee, 0x54, 0xfa, 0x7b, 0x7e, 0x85, 0x44, 0xf0, 0x33, 0xb0, 0xae, 0x6a, 0x19, 0x98,
+	0xb2, 0x0a, 0x12, 0xe7, 0x6a, 0x5e, 0x5f, 0xea, 0x82, 0x7b, 0xb5, 0xc7, 0x73, 0x67, 0xc5, 0x6f,
+	0xf2, 0xcb, 0x4d, 0xb8, 0x03, 0xea, 0x42, 0x22, 0x89, 0xed, 0x6a, 0xc7, 0xea, 0xae, 0x6f, 0xbd,
+	0xf5, 0x62, 0x5f, 0x8a, 0x72, 0xa8, 0xb6, 0xf8, 0x66, 0x27, 0x7c, 0xd7, 0x5c, 0x56, 0x4d, 0x4b,
+	0xb9, 0x53, 0x10, 0x14, 0xcd, 0x59, 0xee, 0x3b, 0xc0, 0x59, 0xae, 0x40, 0x5f, 0xe8, 0x6b, 0x00,
+	0xe0, 0x19, 0x27, 0x29, 0x16, 0x01, 0x92, 0x76, 0xbd, 0x63, 0x75, 0xab, 0xfe, 0x6a, 0x9e, 0xd9,
+	0x91, 0xf0, 0x2e, 0x68, 0x86, 0x6c, 0xcc, 0x29, 0x96, 0x38, 0x52, 0x80, 0x86, 0x06, 0xac, 0x95,
+	0x39, 0x03, 0x89, 0x53, 0x14, 0xe2, 0x80, 0xe3, 0x94, 0xb0, 0xc8, 0xbe, 0x66, 0x20, 0x3a, 0x37,
+	0xd0, 0x29, 0x78, 0x0b, 0x34, 0xc6, 0x2c, 0x9a, 0x50, 0x6c, 0xbf, 0xa4, 0x4b, 0x99, 0xaf, 0x20,
+	0x01, 0xd7, 0x4d, 0x14, 0x8c, 0xb1, 0x44, 0x11, 0x92, 0xc8, 0x5e, 0xd5, 0xf2, 0x6f, 0xba, 0x66,
+	0x26, 0xb8, 0xc5, 0x4c, 0x70, 0x77, 0x92, 0xac, 0xf7, 0xe6, 0x2f, 0x3f, 0xdf, 0x7f, 0xe3, 0xd2,
+	0xab, 0x31, 0xb3, 0xc5, 0x0b, 0x59, 0x84, 0x43, 0x6f, 0xa0, 0x90, 0x87, 0x28, 0x15, 0x27, 0x88,
+	0xe2, 0xd4, 0x5f, 0x37, 0xc4, 0x87, 0x39, 0x6f, 0x5e, 0xe4, 0x6f, 0xc0, 0x2b, 0x3d, 0x24, 0x48,
+	0x38, 0x60, 0x94, 0x16, 0x9f, 0xe0, 0xe7, 0xa0, 0x1e, 0x9e, 0x20, 0x92, 0xe4, 0xef, 0xff, 0xa3,
+	0xf3, 0xb9, 0xf3, 0xc1, 0x12, 0x6f, 0x33, 0xc1, 0xb3, 0x89, 0xb8, 0x78, 0x98, 0xbb, 0x8a, 0xe2,
+	0x08, 0x8d, 0xb1, 0x6f, 0xd8, 0x20, 0x04, 0x35, 0xed, 0x48, 0xf5, 0x46, 0xd3, 0xd7, 0xf1, 0xc6,
+	0x53, 0x0b, 0x5c, 0x2f, 0x05, 0x7c, 0x8c, 0x08, 0xc5, 0xd1, 0xff, 0x78, 0x3c, 0x1c, 0x81, 0x6b,
+	0x9c, 0x51, 0xaa, 0x66, 0x5d, 0x55, 0x77, 0x75, 0x5f, 0x35, 0xc2, 0x6f, 0x73, 0xe7, 0xbd, 0x25,
+	0x0e, 0x9c, 0x32, 0x89, 0x2f, 0xcd, 0x21, 0x46, 0x69, 0x7f, 0x6f, 0x31, 0x77, 0x1a, 0x26, 0xf2,
+	0x1b, 0x8a, 0xb9, 0x1f, 0x6d, 0xfc, 0x6e, 0x81, 0x1b, 0xa5, 0xc5, 0x7d, 0xdd, 0x48, 0x57, 0xce,
+	0xe3, 0x99, 0x05, 0x60, 0xe9, 0x71, 0xb7, 0x78, 0x0b, 0x57, 0xcd, 0xe5, 0x1f, 0x16, 0x68, 0x95,
+	0x2e, 0x8f, 0xd8, 0xfe, 0x14, 0x27, 0x52, 0xec, 0xb2, 0xe4, 0x98, 0xa4, 0xe3, 0x2b, 0xe7, 0xb6,
+	0x77, 0xf0, 0x78, 0xd1, 0xb6, 0x9e, 0x2c, 0xda, 0xd6, 0xd3, 0x45, 0xdb, 0xfa, 0xfe, 0xac, 0xbd,
+	0xf2, 0xe4, 0xac, 0xbd, 0xf2, 0xeb, 0x59, 0x7b, 0xe5, 0x8b, 0xcd, 0xff, 0xf2, 0x43, 0xad, 0xff,
+	0x6a, 0x8c, 0x1a, 0x7a, 0x6e, 0xbd, 0xf3, 0x67, 0x00, 0x00, 0x00, 0xff, 0xff, 0xf8, 0x99, 0x10,
+	0x53, 0x4a, 0x09, 0x00, 0x00,
 }
 
 func (m *PsbtMultiSig) Marshal() (dAtA []byte, err error) {
@@ -494,6 +729,181 @@ func (m *BasicPollMetadata) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		copy(dAtA[i:], m.Data)
 		i = encodeVarintTypes(dAtA, i, uint64(len(m.Data)))
 		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Chain) > 0 {
+		i -= len(m.Chain)
+		copy(dAtA[i:], m.Chain)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Chain)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *BasicPollFailed) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *BasicPollFailed) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *BasicPollFailed) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.PollID != 0 {
+		i = encodeVarintTypes(dAtA, i, uint64(m.PollID))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.Data) > 0 {
+		i -= len(m.Data)
+		copy(dAtA[i:], m.Data)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Data)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Chain) > 0 {
+		i -= len(m.Chain)
+		copy(dAtA[i:], m.Chain)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Chain)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *BasicPollExpired) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *BasicPollExpired) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *BasicPollExpired) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.PollID != 0 {
+		i = encodeVarintTypes(dAtA, i, uint64(m.PollID))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.Data) > 0 {
+		i -= len(m.Data)
+		copy(dAtA[i:], m.Data)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Data)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Chain) > 0 {
+		i -= len(m.Chain)
+		copy(dAtA[i:], m.Chain)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Chain)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *BasicPollCompleted) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *BasicPollCompleted) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *BasicPollCompleted) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.PollID != 0 {
+		i = encodeVarintTypes(dAtA, i, uint64(m.PollID))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.Data) > 0 {
+		i -= len(m.Data)
+		copy(dAtA[i:], m.Data)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Data)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Chain) > 0 {
+		i -= len(m.Chain)
+		copy(dAtA[i:], m.Chain)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Chain)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *BasicPollNoEventsConfirmed) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *BasicPollNoEventsConfirmed) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *BasicPollNoEventsConfirmed) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.PollID != 0 {
+		i = encodeVarintTypes(dAtA, i, uint64(m.PollID))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.Data) > 0 {
+		i -= len(m.Data)
+		copy(dAtA[i:], m.Data)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Data)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Chain) > 0 {
+		i -= len(m.Chain)
+		copy(dAtA[i:], m.Chain)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Chain)))
+		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
@@ -590,9 +1000,93 @@ func (m *BasicPollMetadata) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = len(m.Chain)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
 	l = len(m.Data)
 	if l > 0 {
 		n += 1 + l + sovTypes(uint64(l))
+	}
+	return n
+}
+
+func (m *BasicPollFailed) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Chain)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	l = len(m.Data)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.PollID != 0 {
+		n += 1 + sovTypes(uint64(m.PollID))
+	}
+	return n
+}
+
+func (m *BasicPollExpired) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Chain)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	l = len(m.Data)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.PollID != 0 {
+		n += 1 + sovTypes(uint64(m.PollID))
+	}
+	return n
+}
+
+func (m *BasicPollCompleted) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Chain)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	l = len(m.Data)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.PollID != 0 {
+		n += 1 + sovTypes(uint64(m.PollID))
+	}
+	return n
+}
+
+func (m *BasicPollNoEventsConfirmed) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Chain)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	l = len(m.Data)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.PollID != 0 {
+		n += 1 + sovTypes(uint64(m.PollID))
 	}
 	return n
 }
@@ -1188,6 +1682,38 @@ func (m *BasicPollMetadata) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Chain", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Chain = github_com_scalarorg_scalar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
 			}
 			var byteLen int
@@ -1220,6 +1746,546 @@ func (m *BasicPollMetadata) Unmarshal(dAtA []byte) error {
 				m.Data = []byte{}
 			}
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *BasicPollFailed) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: BasicPollFailed: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: BasicPollFailed: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Chain", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Chain = github_com_scalarorg_scalar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Data = append(m.Data[:0], dAtA[iNdEx:postIndex]...)
+			if m.Data == nil {
+				m.Data = []byte{}
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PollID", wireType)
+			}
+			m.PollID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.PollID |= github_com_scalarorg_scalar_core_x_vote_exported.PollID(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *BasicPollExpired) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: BasicPollExpired: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: BasicPollExpired: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Chain", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Chain = github_com_scalarorg_scalar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Data = append(m.Data[:0], dAtA[iNdEx:postIndex]...)
+			if m.Data == nil {
+				m.Data = []byte{}
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PollID", wireType)
+			}
+			m.PollID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.PollID |= github_com_scalarorg_scalar_core_x_vote_exported.PollID(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *BasicPollCompleted) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: BasicPollCompleted: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: BasicPollCompleted: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Chain", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Chain = github_com_scalarorg_scalar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Data = append(m.Data[:0], dAtA[iNdEx:postIndex]...)
+			if m.Data == nil {
+				m.Data = []byte{}
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PollID", wireType)
+			}
+			m.PollID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.PollID |= github_com_scalarorg_scalar_core_x_vote_exported.PollID(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *BasicPollNoEventsConfirmed) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: BasicPollNoEventsConfirmed: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: BasicPollNoEventsConfirmed: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Chain", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Chain = github_com_scalarorg_scalar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Data = append(m.Data[:0], dAtA[iNdEx:postIndex]...)
+			if m.Data == nil {
+				m.Data = []byte{}
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PollID", wireType)
+			}
+			m.PollID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.PollID |= github_com_scalarorg_scalar_core_x_vote_exported.PollID(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTypes(dAtA[iNdEx:])

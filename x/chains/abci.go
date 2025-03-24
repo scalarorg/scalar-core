@@ -45,10 +45,11 @@ func handleConfirmedEvents(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, 
 func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper, cov types.CovenantKeeper) {
 	ck := funcs.Must(bk.ForChain(ctx, chain.Name))
 	queue := ck.GetConfirmedEventQueue(ctx)
-	endBlockerLimit := ck.GetParams(ctx).EndBlockerLimit
+	endBlockerLimit := ck.GetParams(ctx).EndBlockerLimit // Eg: 100
 
 	var events []types.Event
 	var event types.Event
+	// Note: this ensures the blockchain is not frozen by processing all events in the queue
 	for int64(len(events)) < endBlockerLimit && queue.Dequeue(&event) {
 		events = append(events, event)
 	}
@@ -382,6 +383,7 @@ func handleContractCallWithTokenToEVM(ctx sdk.Context, event types.Event, bk typ
 		e.Amount,
 		destinationToken.GetDetails().Symbol,
 	)
+	
 	funcs.MustNoErr(destinationCk.EnqueueCommand(ctx, cmd))
 	bk.Logger(ctx).Debug(fmt.Sprintf("created %s command for event", cmd.Type),
 		"chain", destinationChain,

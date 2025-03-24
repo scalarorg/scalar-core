@@ -259,6 +259,16 @@ func initVoteKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, keepe
 		),
 	)
 
+	voteRouter.AddHandler(
+		covenantTypes.ModuleName,
+		covenantKeeper.NewVoteHandler(
+			appCodec,
+			GetKeeper[covenantKeeper.Keeper](keepers),
+			GetKeeper[nexusKeeper.Keeper](keepers),
+			GetKeeper[rewardKeeper.Keeper](keepers),
+		),
+	)
+
 	voteK := voteKeeper.NewKeeper(
 		appCodec,
 		keys[voteTypes.StoreKey],
