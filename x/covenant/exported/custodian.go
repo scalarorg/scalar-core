@@ -1,6 +1,7 @@
 package exported
 
 import (
+	"crypto/sha256"
 	"encoding/hex"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -12,9 +13,13 @@ import (
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 )
 
+const (
+	DefaultCustodianName = "scalar"
+)
+
 func DefaultCustodian() *Custodian {
 	custodian := &Custodian{
-		Name:   "scalar",
+		Name:   DefaultCustodianName,
 		Status: Custodian_Activated,
 	}
 	return custodian
@@ -23,7 +28,7 @@ func DefaultCustodian() *Custodian {
 func DefaultCustodianGroup() *CustodianGroup {
 	return &CustodianGroup{
 		UID:  chains.ZeroHash,
-		Name: "scalar",
+		Name: DefaultCustodianName,
 	}
 }
 
@@ -43,8 +48,9 @@ func (g *CustodianGroup) CreateKey(ctx sdk.Context, snapshot snapshot.Snapshot, 
 }
 
 func NewCustodianGroup(name string, bitcoinPubkey []byte, quorum uint32, description string, custodians []*Custodian) *CustodianGroup {
+	uid := sha256.Sum256([]byte(name))
 	return &CustodianGroup{
-		UID:           chains.ZeroHash,
+		UID:           uid,
 		Name:          name,
 		BitcoinPubkey: bitcoinPubkey,
 		Quorum:        quorum,

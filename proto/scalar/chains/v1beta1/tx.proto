@@ -217,3 +217,15 @@ message RetryFailedEventRequest {
 }
 
 message RetryFailedEventResponse {}
+
+message RegisterCustodianGroupRequest {
+  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  bytes custodian_group_uid = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "CustodianGroupUID"
+  ];
+}
+
+message RegisterCustodianGroupResponse {}

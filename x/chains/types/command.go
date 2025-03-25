@@ -16,6 +16,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -28,6 +29,7 @@ const (
 	transferOperatorshipMaxGasCost        = 120000
 	approveContractCallWithMintMaxGasCost = 100000
 	approveContractCallMaxGasCost         = 100000
+	registerCustodianGroupMaxGasCost      = 100000
 )
 
 func (c CommandType) String() string {
@@ -57,6 +59,7 @@ var (
 	transferMultisigArguments            = abi.Arguments{{Type: addressesType}, {Type: uint256ArrayType}, {Type: uint256Type}}
 	approveContractCallArguments         = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: addressType}, {Type: bytes32Type}, {Type: bytes32Type}, {Type: uint256Type}}
 	approveContractCallWithMintArguments = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: addressType}, {Type: bytes32Type}, {Type: stringType}, {Type: uint256Type}, {Type: bytes32Type}, {Type: uint256Type}}
+	registerCustodianGroupArguments      = abi.Arguments{{Type: bytes32Type}}
 )
 
 // NewBurnTokenCommand creates a command to burn tokens with the given burner's information
@@ -243,6 +246,17 @@ func NewApproveContractCallWithMintGeneric(
 	}
 }
 
+func NewRegisterCustodianGroupCommand(chainID sdk.Int, keyID multisig.KeyID, custodianGroupUID chains.Hash) Command {
+	params := funcs.Must(registerCustodianGroupArguments.Pack(custodianGroupUID))
+	return Command{
+		ID:         NewCommandID(custodianGroupUID.Bytes(), chainID),
+		Type:       COMMAND_TYPE_REGISTER_CUSTODIAN_GROUP,
+		Params:     params,
+		KeyID:      keyID,
+		MaxGasCost: registerCustodianGroupMaxGasCost,
+	}
+}
+
 // DecodeParams returns the decoded parameters in the given command
 func (m Command) DecodeParams() (map[string]string, error) {
 	params := make(map[string]string)
@@ -294,6 +308,10 @@ func (m Command) DecodeParams() (map[string]string, error) {
 		params["newOperators"] = strings.Join(slices.Map(addresses, common.Address.Hex), ";")
 		params["newWeights"] = strings.Join(slices.Map(weights, func(w *big.Int) string { return w.String() }), ";")
 		params["newThreshold"] = threshold.String()
+	case COMMAND_TYPE_REGISTER_CUSTODIAN_GROUP:
+		custodianGroupUID := DecodeRegisterCustodianGroupParams(m.Params)
+
+		params["custodianGroupUID"] = custodianGroupUID.Hex()
 	default:
 		return nil, fmt.Errorf("unknown command type '%s'", m.Type)
 	}
@@ -467,4 +485,10 @@ func DecodeTransferMultisigParams(bz []byte) ([]common.Address, []*big.Int, *big
 	params := funcs.Must(StrictDecode(transferMultisigArguments, bz))
 
 	return params[0].([]common.Address), params[1].([]*big.Int), params[2].(*big.Int)
+}
+
+func DecodeRegisterCustodianGroupParams(bz []byte) chains.Hash {
+	params := funcs.Must(StrictDecode(registerCustodianGroupArguments, bz))
+
+	return params[0].([common.HashLength]byte)
 }
