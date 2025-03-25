@@ -12537,6 +12537,9 @@ paths:
                 format: byte
               chain:
                 type: string
+              custodian_group_uid:
+                type: string
+                format: byte
               tx_id:
                 type: string
                 format: byte
@@ -60544,6 +60547,9 @@ definitions:
         format: byte
       chain:
         type: string
+      custodian_group_uid:
+        type: string
+        format: byte
       tx_id:
         type: string
         format: byte

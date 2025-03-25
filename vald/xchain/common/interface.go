@@ -50,4 +50,5 @@ type BtcClient interface {
 
 type EvmClient interface {
 	Client
+	ProcessSwitchedPhaseConfirmation(event *covTypes.ConfirmSwitchedPhaseStarted, proxy sdk.AccAddress) ([]sdk.Msg, error)
 }

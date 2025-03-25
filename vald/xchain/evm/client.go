@@ -74,7 +74,7 @@ func NewClient(url, finalityOverride string) (common.Client, error) {
 	return client, nil
 }
 
-func (c *EthereumClient) Close() {
+func (c EthereumClient) Close() {
 	c.rpc.Close()
 	c.Client.Close()
 }

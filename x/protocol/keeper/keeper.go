@@ -202,6 +202,23 @@ func (k Keeper) FindProtocolInfoByExternalSymbol(ctx sdk.Context, symbol string)
 	clog.Redf("FindProtocolInfoByExternalSymbol, protocol: %+v\n", protocol)
 	return protocol.ToProtocolInfo(), nil
 }
+func (k Keeper) FindProtocolInfoByCustodianGroupUID(ctx sdk.Context, custodianGroupUIDs [][]byte) []*pexported.ProtocolInfo {
+	result := []*pexported.ProtocolInfo{}
+	protocols, ok := k.GetAllProtocols(ctx)
+	if !ok {
+		return nil
+	}
+	//Todo: optimize this, avoid nested loop
+	for _, protocol := range protocols {
+		for _, custodianGroupUID := range custodianGroupUIDs {
+			if bytes.Equal(protocol.CustodianGroupUID.Bytes(), custodianGroupUID) {
+				result = append(result, protocol.ToProtocolInfo())
+				break
+			}
+		}
+	}
+	return result
+}
 
 func (k Keeper) FindProtocolByInternalAddress(ctx sdk.Context, originChain nexus.ChainName, minorChain nexus.ChainName, internalAddress string) (*types.Protocol, error) {
 	protocols, ok := k.GetAllProtocols(ctx)

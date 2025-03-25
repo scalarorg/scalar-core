@@ -49,6 +49,8 @@ type Keeper interface {
 	GetEventsQueue(ctx sdk.Context) utils.BlockHeightKVQueue
 	EnqueueEvent(ctx sdk.Context, event *Event) error
 
+	GetRedeemSession(ctx sdk.Context, custodianGroupUID []byte) (*RedeemSession, bool)
+	// GetRedeemSessionByExpiry(ctx sdk.Context, expiry int64) []RedeemSession
 	SetSwitchingForRedeemSession(ctx sdk.Context, custodianGroupUID []byte) error
 	UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID []byte) error
 	UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID []byte) error
@@ -104,11 +106,15 @@ type MultisigKeeper interface {
 }
 
 type ProtocolKeeper interface {
+	FindProtocolInfoByCustodianGroupUID(ctx sdk.Context, custodianGroupUIDs [][]byte) []*protocol.ProtocolInfo
 	FindProtocolInfoByExternalSymbol(ctx sdk.Context, symbol string) (*protocol.ProtocolInfo, error)
 }
 
 type BaseKeeper interface {
 	ForChain(ctx sdk.Context, chain nexus.ChainName) (chainsTypes.ChainKeeper, error)
+}
+
+type ChainKeeper interface {
 }
 
 type Voter interface {

@@ -4,14 +4,13 @@ import (
 	"context"
 	"fmt"
 
+	sdkClient "github.com/cosmos/cosmos-sdk/client"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
 	"github.com/scalarorg/scalar-core/utils/log"
-	xcommon "github.com/scalarorg/scalar-core/vald/xchain/common"
-
-	sdkClient "github.com/cosmos/cosmos-sdk/client"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/slices"
+	xcommon "github.com/scalarorg/scalar-core/vald/xchain/common"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	cov "github.com/scalarorg/scalar-core/x/covenant/types"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
@@ -93,6 +92,34 @@ func (mgr Manager) ProcessRedeemTxConfirmation(event *cov.ConfirmRedeemTxStarted
 	}
 
 	votes, err := btcClient.ProcessRedeemTxsConfirmation(event, mgr.proxy)
+	if err != nil {
+		return err
+	}
+	_, err = mgr.broadcaster.Broadcast(context.TODO(), votes...)
+	return err
+}
+
+func (mgr Manager) ProcessSwitchedPhaseConfirmation(event *cov.ConfirmSwitchedPhaseStarted) error {
+	if !mgr.isParticipantOf(event.Participants) {
+		mgr.logger("poll_id", event.PollID).Debug("ignoring switched phase confirmation poll: not a participant")
+		return nil
+	}
+
+	mgr.logger("event", event).Debug("processing switched phase confirmation poll")
+
+	chainInfoBytes := chain.ChainInfoBytes{}
+
+	err := chainInfoBytes.FromString(event.Chain.String())
+	if err != nil {
+		return err
+	}
+
+	evmClient, ok := mgr.rpcs[chainInfoBytes].(xcommon.EvmClient)
+	if !ok {
+		return fmt.Errorf("rpc client not found for chain %s", event.Chain.String())
+	}
+
+	votes, err := evmClient.ProcessSwitchedPhaseConfirmation(event, mgr.proxy)
 	if err != nil {
 		return err
 	}
