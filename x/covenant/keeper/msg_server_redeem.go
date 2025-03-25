@@ -169,4 +169,3 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 
 	return &types.ReserveRedeemUtxoResponse{}, nil
 }
-

@@ -230,6 +230,7 @@
     - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
   
 - [scalar/covenant/v1beta1/redeem.proto](#scalar/covenant/v1beta1/redeem.proto)
+    - [ExpiredEvmSession](#scalar.covenant.v1beta1.ExpiredEvmSession)
     - [RedeemSession](#scalar.covenant.v1beta1.RedeemSession)
     - [UTXO](#scalar.covenant.v1beta1.UTXO)
     - [UTXO.ReservedEntry](#scalar.covenant.v1beta1.UTXO.ReservedEntry)
@@ -3938,6 +3939,25 @@ the deterministic order of the entries
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/covenant/v1beta1/redeem.proto
+
+
+
+<a name="scalar.covenant.v1beta1.ExpiredEvmSession"></a>
+
+### ExpiredEvmSession
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `sequence` | [uint64](#uint64) |  |  |
+| `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
+| `tokens` | [string](#string) | repeated |  |
+
+
+
 
 
 

@@ -5,6 +5,10 @@ import (
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
+const (
+	EventTypeSwitchPhaseSign = "switchPhaseSign"
+)
+
 func DefaultRedeemSession() *RedeemSession {
 	return &RedeemSession{
 		CustodianGroupUID: chains.ZeroHash,
