@@ -85,7 +85,68 @@ func (s msgServer) ConfirmRedeemTxs(c context.Context, req *types.ConfirmRedeemT
 	return &types.ConfirmRedeemTxsResponse{}, nil
 }
 
-func (s msgServer) ConfirmSwitchedPhase(ctx context.Context, req *types.ConfirmSwitchedPhaseRequest) (*types.ConfirmSwitchedPhaseResponse, error) {
+func (s msgServer) ConfirmSwitchedPhase(c context.Context, req *types.ConfirmSwitchedPhaseRequest) (*types.ConfirmSwitchedPhaseResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	chain, err := s.validateEvmChain(ctx, req.Chain)
+	if err != nil {
+		return nil, err
+	}
+
+	cusGr, ok := s.Keeper.GetCustodianGroup(ctx, req.CustodianGroupUID)
+	if !ok {
+		return nil, fmt.Errorf("custodian group %s not found", req.CustodianGroupUID)
+	}
+
+	chainKeeper, err := s.chains.ForChain(ctx, req.Chain)
+	if err != nil {
+		return nil, err
+	}
+
+	chainParams := chainKeeper.GetParams(ctx)
+
+	nwParams := chainParams.Metadata["params"]
+	if nwParams == "" {
+		return nil, fmt.Errorf("params is required")
+	}
+
+	threshold := chainParams.VotingThreshold
+
+	snapshot, err := s.createSnapshot(ctx, *chain, threshold)
+	if err != nil {
+		return nil, err
+	}
+
+	expiresAt := ctx.BlockHeight() + chainParams.RevoteLockingPeriod
+
+	pollID, err := s.voter.InitializePoll(
+		ctx,
+		vote.NewPollBuilder(types.ModuleName, chainParams.VotingThreshold, snapshot, expiresAt).
+			MinVoterCount(chainParams.MinVoterCount).
+			RewardPoolName(chain.Name.String()).
+			GracePeriod(chainParams.VotingGracePeriod).
+			ModuleMetadata(&types.BasicPollMetadata{
+				Data:  req.TxID.Bytes(),
+				Chain: chain.Name,
+			}),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	event := &types.ConfirmSwitchedPhaseStarted{
+		PollID:             pollID,
+		TxID:               req.TxID,
+		Chain:              chain.Name,
+		ConfirmationHeight: chainKeeper.GetRequiredConfirmationHeight(ctx),
+		Participants:       snapshot.GetParticipantAddresses(),
+		CustodianGroupUID:  req.CustodianGroupUID,
+		ScriptPubkey:       cusGr.BitcoinPubkey,
+		NetworkParams:      nwParams,
+	}
+
+	s.Logger(ctx).Info("ConfirmSwitchedPhaseStarted", event)
+
+	events.Emit(ctx, event)
 	return &types.ConfirmSwitchedPhaseResponse{}, nil
 }
 
@@ -101,6 +162,20 @@ func (s msgServer) validateBtcChain(ctx sdk.Context, chain nexus.ChainName) (*ne
 
 	if !chainsTypes.IsBitcoinChain(chain) {
 		return nil, fmt.Errorf("chain %s is not a bitcoin chain", chain)
+	}
+
+	return &c, nil
+}
+func (s msgServer) validateEvmChain(ctx sdk.Context, chain nexus.ChainName) (*nexus.Chain, error) {
+	c, ok := s.nexus.GetChain(ctx, chain)
+	if !ok {
+		return nil, fmt.Errorf("%s is not a registered chain", chain)
+	}
+	if err := validateChainActivated(ctx, s.nexus, c); err != nil {
+		return nil, err
+	}
+	if !chainsTypes.IsEvmChain(chain) {
+		return nil, fmt.Errorf("chain %s is not a EVM chain", chain)
 	}
 
 	return &c, nil

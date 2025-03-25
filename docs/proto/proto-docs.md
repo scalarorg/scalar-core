@@ -240,16 +240,17 @@
   
 - [scalar/covenant/v1beta1/events.proto](#scalar/covenant/v1beta1/events.proto)
     - [ConfirmRedeemTxStarted](#scalar.covenant.v1beta1.ConfirmRedeemTxStarted)
+    - [ConfirmSwitchedPhaseStarted](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseStarted)
     - [Event](#scalar.covenant.v1beta1.Event)
     - [KeyRotated](#scalar.covenant.v1beta1.KeyRotated)
     - [RedeemTxsConfirmed](#scalar.covenant.v1beta1.RedeemTxsConfirmed)
-    - [SessionConfirmed](#scalar.covenant.v1beta1.SessionConfirmed)
     - [SigningPsbtCompleted](#scalar.covenant.v1beta1.SigningPsbtCompleted)
     - [SigningPsbtExpired](#scalar.covenant.v1beta1.SigningPsbtExpired)
     - [SigningPsbtStarted](#scalar.covenant.v1beta1.SigningPsbtStarted)
     - [SigningPsbtStarted.PubKeysEntry](#scalar.covenant.v1beta1.SigningPsbtStarted.PubKeysEntry)
     - [SwitchPhaseCompleted](#scalar.covenant.v1beta1.SwitchPhaseCompleted)
     - [SwitchPhaseStarted](#scalar.covenant.v1beta1.SwitchPhaseStarted)
+    - [SwitchedPhaseConfirmed](#scalar.covenant.v1beta1.SwitchedPhaseConfirmed)
     - [TapScriptSigsSubmitted](#scalar.covenant.v1beta1.TapScriptSigsSubmitted)
     - [VoteEvents](#scalar.covenant.v1beta1.VoteEvents)
   
@@ -4084,6 +4085,28 @@ the deterministic order of the entries
 
 
 
+<a name="scalar.covenant.v1beta1.ConfirmSwitchedPhaseStarted"></a>
+
+### ConfirmSwitchedPhaseStarted
+For Validation process
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `poll_id` | [uint64](#uint64) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `participants` | [bytes](#bytes) | repeated |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
+| `script_pubkey` | [bytes](#bytes) |  |  |
+| `network_params` | [string](#string) |  |  |
+
+
+
+
+
+
 <a name="scalar.covenant.v1beta1.Event"></a>
 
 ### Event
@@ -4097,7 +4120,7 @@ the deterministic order of the entries
 | `status` | [Event.Status](#scalar.covenant.v1beta1.Event.Status) |  |  |
 | `index` | [uint64](#uint64) |  |  |
 | `redeem_txs_confirmed` | [RedeemTxsConfirmed](#scalar.covenant.v1beta1.RedeemTxsConfirmed) |  |  |
-| `session_confirmed` | [SessionConfirmed](#scalar.covenant.v1beta1.SessionConfirmed) |  |  |
+| `switched_phase_confirmed` | [SwitchedPhaseConfirmed](#scalar.covenant.v1beta1.SwitchedPhaseConfirmed) |  |  |
 
 
 
@@ -4131,22 +4154,6 @@ the deterministic order of the entries
 | ----- | ---- | ----- | ----------- |
 | `event_ids` | [string](#string) | repeated |  |
 | `utxo_snapshot` | [UTXOSnapshot](#scalar.covenant.v1beta1.UTXOSnapshot) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.SessionConfirmed"></a>
-
-### SessionConfirmed
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `session_sequence` | [uint64](#uint64) |  |  |
-| `phase_sequence` | [uint64](#uint64) |  |  |
 
 
 
@@ -4253,6 +4260,23 @@ the deterministic order of the entries
 | `sequence` | [uint64](#uint64) |  |  |
 | `phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  | Current phase |
 | `execute_data` | [string](#string) |  | Next sequence and phase encoded in the payload |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SwitchedPhaseConfirmed"></a>
+
+### SwitchedPhaseConfirmed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `event_id` | [string](#string) |  |  |
+| `session_sequence` | [uint64](#uint64) |  |  |
+| `phase_sequence` | [uint64](#uint64) |  |  |
 
 
 
@@ -5207,6 +5231,7 @@ Confirm exectuted transaction on bitcoin
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `tx_id` | [bytes](#bytes) |  |  |
 
 

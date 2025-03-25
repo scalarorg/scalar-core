@@ -3049,7 +3049,20 @@ paths:
                               "value": "1.212s"
                             }
       requestBody:
-        $ref: "#/components/requestBodies/ConfirmTransferKeyBody"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sender:
+                  type: string
+                  format: byte
+                chain:
+                  type: string
+                tx_id:
+                  type: string
+                  format: byte
+        required: true
       tags:
         - MsgService
   /scalar/chains/v1beta1/add_chain:
@@ -11456,7 +11469,23 @@ paths:
                               "value": "1.212s"
                             }
       requestBody:
-        $ref: "#/components/requestBodies/ConfirmTransferKeyBody"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sender:
+                  type: string
+                  format: byte
+                chain:
+                  type: string
+                custodian_group_uid:
+                  type: string
+                  format: byte
+                tx_id:
+                  type: string
+                  format: byte
+        required: true
       tags:
         - MsgService
   /scalar/covenant/v1beta1/create_custodian:
@@ -52794,21 +52823,6 @@ components:
                 items:
                   type: string
       required: true
-    ConfirmTransferKeyBody:
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              sender:
-                type: string
-                format: byte
-              chain:
-                type: string
-              tx_id:
-                type: string
-                format: byte
-      required: true
     CreateTransferOperatorshipBody:
       content:
         application/json:
@@ -55897,6 +55911,9 @@ components:
           format: byte
         chain:
           type: string
+        custodian_group_uid:
+          type: string
+          format: byte
         tx_id:
           type: string
           format: byte
