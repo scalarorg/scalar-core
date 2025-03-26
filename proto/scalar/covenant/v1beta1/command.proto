@@ -7,45 +7,54 @@ import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
-enum CommandStatus {
+enum StandaloneCommandStatus {
   option (gogoproto.goproto_enum_prefix) = false;
-  COMMAND_STATUS_UNSPECIFIED = 0
-      [ (gogoproto.enumvalue_customname) = "CommandStatusNonExistent" ];
-  COMMAND_STATUS_SIGNING = 1
-      [ (gogoproto.enumvalue_customname) = "CommandStatusSigning" ];
-  COMMAND_STATUS_ABORTED = 2
-      [ (gogoproto.enumvalue_customname) = "CommandStatusAborted" ];
-  COMMAND_STATUS_SIGNED = 3
-      [ (gogoproto.enumvalue_customname) = "CommandStatusSigned" ];
+  STANDALONE_COMMAND_STATUS_UNSPECIFIED = 0
+      [ (gogoproto.enumvalue_customname) =
+            "StandaloneCommandStatusNonExistent" ];
+  STANDALONE_COMMAND_STATUS_SIGNING = 1
+      [ (gogoproto.enumvalue_customname) = "StandaloneCommandStatusSigning" ];
+  STANDALONE_COMMAND_STATUS_ABORTED = 2
+      [ (gogoproto.enumvalue_customname) = "StandaloneCommandStatusAborted" ];
+  STANDALONE_COMMAND_STATUS_SIGNED = 3
+      [ (gogoproto.enumvalue_customname) = "StandaloneCommandStatusSigned" ];
 }
 
-message CommandMetadata {
+message StandaloneCommandMetadata {
   bytes id = 1 [ (gogoproto.customname) = "ID" ];
-  bytes data = 2;
-  bytes sig_hash = 3 [
+  bytes command_id = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "CommandID",
+    (gogoproto.customtype) = "CommandID"
+  ];
+  string chain = 3
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  bytes data = 4;
+  bytes sig_hash = 5 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
   ];
-  CommandStatus status = 4;
-  string key_id = 5 [
+  StandaloneCommandStatus status = 6;
+  string key_id = 7 [
     (gogoproto.customname) = "KeyID",
     (gogoproto.casttype) =
         "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
-  google.protobuf.Any signature = 6
+  google.protobuf.Any signature = 8
       [ (cosmos_proto.accepts_interface) =
             "github.com/cosmos/codec/ProtoMarshaler" ];
 }
 
-message CommandSigned {
+message StandaloneCommandSigned {
   string chain = 2
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   bytes command_id = 3 [ (gogoproto.customname) = "CommandID" ];
 }
 
-message CommandAborted {
+message StandaloneCommandAborted {
   string chain = 2
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];

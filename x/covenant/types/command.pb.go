@@ -28,34 +28,34 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type CommandStatus int32
+type StandaloneCommandStatus int32
 
 const (
-	CommandStatusNonExistent CommandStatus = 0
-	CommandStatusSigning     CommandStatus = 1
-	CommandStatusAborted     CommandStatus = 2
-	CommandStatusSigned      CommandStatus = 3
+	StandaloneCommandStatusNonExistent StandaloneCommandStatus = 0
+	StandaloneCommandStatusSigning     StandaloneCommandStatus = 1
+	StandaloneCommandStatusAborted     StandaloneCommandStatus = 2
+	StandaloneCommandStatusSigned      StandaloneCommandStatus = 3
 )
 
-var CommandStatus_name = map[int32]string{
-	0: "COMMAND_STATUS_UNSPECIFIED",
-	1: "COMMAND_STATUS_SIGNING",
-	2: "COMMAND_STATUS_ABORTED",
-	3: "COMMAND_STATUS_SIGNED",
+var StandaloneCommandStatus_name = map[int32]string{
+	0: "STANDALONE_COMMAND_STATUS_UNSPECIFIED",
+	1: "STANDALONE_COMMAND_STATUS_SIGNING",
+	2: "STANDALONE_COMMAND_STATUS_ABORTED",
+	3: "STANDALONE_COMMAND_STATUS_SIGNED",
 }
 
-var CommandStatus_value = map[string]int32{
-	"COMMAND_STATUS_UNSPECIFIED": 0,
-	"COMMAND_STATUS_SIGNING":     1,
-	"COMMAND_STATUS_ABORTED":     2,
-	"COMMAND_STATUS_SIGNED":      3,
+var StandaloneCommandStatus_value = map[string]int32{
+	"STANDALONE_COMMAND_STATUS_UNSPECIFIED": 0,
+	"STANDALONE_COMMAND_STATUS_SIGNING":     1,
+	"STANDALONE_COMMAND_STATUS_ABORTED":     2,
+	"STANDALONE_COMMAND_STATUS_SIGNED":      3,
 }
 
-func (x CommandStatus) String() string {
-	return proto.EnumName(CommandStatus_name, int32(x))
+func (x StandaloneCommandStatus) String() string {
+	return proto.EnumName(StandaloneCommandStatus_name, int32(x))
 }
 
-func (CommandStatus) EnumDescriptor() ([]byte, []int) {
+func (StandaloneCommandStatus) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_93c39df493b7beed, []int{0}
 }
 
@@ -84,27 +84,29 @@ func (SigType) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_93c39df493b7beed, []int{1}
 }
 
-type CommandMetadata struct {
-	ID        []byte                                                     `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Data      []byte                                                     `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
-	SigHash   github_com_scalarorg_scalar_core_x_chains_exported.Hash    `protobuf:"bytes,3,opt,name=sig_hash,json=sigHash,proto3,customtype=github.com/scalarorg/scalar-core/x/chains/exported.Hash" json:"sig_hash"`
-	Status    CommandStatus                                              `protobuf:"varint,4,opt,name=status,proto3,enum=scalar.covenant.v1beta1.CommandStatus" json:"status,omitempty"`
-	KeyID     github_com_scalarorg_scalar_core_x_multisig_exported.KeyID `protobuf:"bytes,5,opt,name=key_id,json=keyId,proto3,casttype=github.com/scalarorg/scalar-core/x/multisig/exported.KeyID" json:"key_id,omitempty"`
-	Signature *types.Any                                                 `protobuf:"bytes,6,opt,name=signature,proto3" json:"signature,omitempty"`
+type StandaloneCommandMetadata struct {
+	ID        []byte                                                      `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	CommandID CommandID                                                   `protobuf:"bytes,2,opt,name=command_id,json=commandId,proto3,customtype=CommandID" json:"command_id"`
+	Chain     github_com_scalarorg_scalar_core_x_nexus_exported.ChainName `protobuf:"bytes,3,opt,name=chain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"chain,omitempty"`
+	Data      []byte                                                      `protobuf:"bytes,4,opt,name=data,proto3" json:"data,omitempty"`
+	SigHash   github_com_scalarorg_scalar_core_x_chains_exported.Hash     `protobuf:"bytes,5,opt,name=sig_hash,json=sigHash,proto3,customtype=github.com/scalarorg/scalar-core/x/chains/exported.Hash" json:"sig_hash"`
+	Status    StandaloneCommandStatus                                     `protobuf:"varint,6,opt,name=status,proto3,enum=scalar.covenant.v1beta1.StandaloneCommandStatus" json:"status,omitempty"`
+	KeyID     github_com_scalarorg_scalar_core_x_multisig_exported.KeyID  `protobuf:"bytes,7,opt,name=key_id,json=keyId,proto3,casttype=github.com/scalarorg/scalar-core/x/multisig/exported.KeyID" json:"key_id,omitempty"`
+	Signature *types.Any                                                  `protobuf:"bytes,8,opt,name=signature,proto3" json:"signature,omitempty"`
 }
 
-func (m *CommandMetadata) Reset()         { *m = CommandMetadata{} }
-func (m *CommandMetadata) String() string { return proto.CompactTextString(m) }
-func (*CommandMetadata) ProtoMessage()    {}
-func (*CommandMetadata) Descriptor() ([]byte, []int) {
+func (m *StandaloneCommandMetadata) Reset()         { *m = StandaloneCommandMetadata{} }
+func (m *StandaloneCommandMetadata) String() string { return proto.CompactTextString(m) }
+func (*StandaloneCommandMetadata) ProtoMessage()    {}
+func (*StandaloneCommandMetadata) Descriptor() ([]byte, []int) {
 	return fileDescriptor_93c39df493b7beed, []int{0}
 }
-func (m *CommandMetadata) XXX_Unmarshal(b []byte) error {
+func (m *StandaloneCommandMetadata) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *CommandMetadata) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *StandaloneCommandMetadata) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_CommandMetadata.Marshal(b, m, deterministic)
+		return xxx_messageInfo_StandaloneCommandMetadata.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -114,70 +116,77 @@ func (m *CommandMetadata) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 		return b[:n], nil
 	}
 }
-func (m *CommandMetadata) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CommandMetadata.Merge(m, src)
+func (m *StandaloneCommandMetadata) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StandaloneCommandMetadata.Merge(m, src)
 }
-func (m *CommandMetadata) XXX_Size() int {
+func (m *StandaloneCommandMetadata) XXX_Size() int {
 	return m.Size()
 }
-func (m *CommandMetadata) XXX_DiscardUnknown() {
-	xxx_messageInfo_CommandMetadata.DiscardUnknown(m)
+func (m *StandaloneCommandMetadata) XXX_DiscardUnknown() {
+	xxx_messageInfo_StandaloneCommandMetadata.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_CommandMetadata proto.InternalMessageInfo
+var xxx_messageInfo_StandaloneCommandMetadata proto.InternalMessageInfo
 
-func (m *CommandMetadata) GetID() []byte {
+func (m *StandaloneCommandMetadata) GetID() []byte {
 	if m != nil {
 		return m.ID
 	}
 	return nil
 }
 
-func (m *CommandMetadata) GetData() []byte {
+func (m *StandaloneCommandMetadata) GetChain() github_com_scalarorg_scalar_core_x_nexus_exported.ChainName {
+	if m != nil {
+		return m.Chain
+	}
+	return ""
+}
+
+func (m *StandaloneCommandMetadata) GetData() []byte {
 	if m != nil {
 		return m.Data
 	}
 	return nil
 }
 
-func (m *CommandMetadata) GetStatus() CommandStatus {
+func (m *StandaloneCommandMetadata) GetStatus() StandaloneCommandStatus {
 	if m != nil {
 		return m.Status
 	}
-	return CommandStatusNonExistent
+	return StandaloneCommandStatusNonExistent
 }
 
-func (m *CommandMetadata) GetKeyID() github_com_scalarorg_scalar_core_x_multisig_exported.KeyID {
+func (m *StandaloneCommandMetadata) GetKeyID() github_com_scalarorg_scalar_core_x_multisig_exported.KeyID {
 	if m != nil {
 		return m.KeyID
 	}
 	return ""
 }
 
-func (m *CommandMetadata) GetSignature() *types.Any {
+func (m *StandaloneCommandMetadata) GetSignature() *types.Any {
 	if m != nil {
 		return m.Signature
 	}
 	return nil
 }
 
-type CommandSigned struct {
+type StandaloneCommandSigned struct {
 	Chain     github_com_scalarorg_scalar_core_x_nexus_exported.ChainName `protobuf:"bytes,2,opt,name=chain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"chain,omitempty"`
 	CommandID []byte                                                      `protobuf:"bytes,3,opt,name=command_id,json=commandId,proto3" json:"command_id,omitempty"`
 }
 
-func (m *CommandSigned) Reset()         { *m = CommandSigned{} }
-func (m *CommandSigned) String() string { return proto.CompactTextString(m) }
-func (*CommandSigned) ProtoMessage()    {}
-func (*CommandSigned) Descriptor() ([]byte, []int) {
+func (m *StandaloneCommandSigned) Reset()         { *m = StandaloneCommandSigned{} }
+func (m *StandaloneCommandSigned) String() string { return proto.CompactTextString(m) }
+func (*StandaloneCommandSigned) ProtoMessage()    {}
+func (*StandaloneCommandSigned) Descriptor() ([]byte, []int) {
 	return fileDescriptor_93c39df493b7beed, []int{1}
 }
-func (m *CommandSigned) XXX_Unmarshal(b []byte) error {
+func (m *StandaloneCommandSigned) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *CommandSigned) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *StandaloneCommandSigned) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_CommandSigned.Marshal(b, m, deterministic)
+		return xxx_messageInfo_StandaloneCommandSigned.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -187,49 +196,49 @@ func (m *CommandSigned) XXX_Marshal(b []byte, deterministic bool) ([]byte, error
 		return b[:n], nil
 	}
 }
-func (m *CommandSigned) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CommandSigned.Merge(m, src)
+func (m *StandaloneCommandSigned) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StandaloneCommandSigned.Merge(m, src)
 }
-func (m *CommandSigned) XXX_Size() int {
+func (m *StandaloneCommandSigned) XXX_Size() int {
 	return m.Size()
 }
-func (m *CommandSigned) XXX_DiscardUnknown() {
-	xxx_messageInfo_CommandSigned.DiscardUnknown(m)
+func (m *StandaloneCommandSigned) XXX_DiscardUnknown() {
+	xxx_messageInfo_StandaloneCommandSigned.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_CommandSigned proto.InternalMessageInfo
+var xxx_messageInfo_StandaloneCommandSigned proto.InternalMessageInfo
 
-func (m *CommandSigned) GetChain() github_com_scalarorg_scalar_core_x_nexus_exported.ChainName {
+func (m *StandaloneCommandSigned) GetChain() github_com_scalarorg_scalar_core_x_nexus_exported.ChainName {
 	if m != nil {
 		return m.Chain
 	}
 	return ""
 }
 
-func (m *CommandSigned) GetCommandID() []byte {
+func (m *StandaloneCommandSigned) GetCommandID() []byte {
 	if m != nil {
 		return m.CommandID
 	}
 	return nil
 }
 
-type CommandAborted struct {
+type StandaloneCommandAborted struct {
 	Chain     github_com_scalarorg_scalar_core_x_nexus_exported.ChainName `protobuf:"bytes,2,opt,name=chain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"chain,omitempty"`
 	CommandID []byte                                                      `protobuf:"bytes,3,opt,name=command_id,json=commandId,proto3" json:"command_id,omitempty"`
 }
 
-func (m *CommandAborted) Reset()         { *m = CommandAborted{} }
-func (m *CommandAborted) String() string { return proto.CompactTextString(m) }
-func (*CommandAborted) ProtoMessage()    {}
-func (*CommandAborted) Descriptor() ([]byte, []int) {
+func (m *StandaloneCommandAborted) Reset()         { *m = StandaloneCommandAborted{} }
+func (m *StandaloneCommandAborted) String() string { return proto.CompactTextString(m) }
+func (*StandaloneCommandAborted) ProtoMessage()    {}
+func (*StandaloneCommandAborted) Descriptor() ([]byte, []int) {
 	return fileDescriptor_93c39df493b7beed, []int{2}
 }
-func (m *CommandAborted) XXX_Unmarshal(b []byte) error {
+func (m *StandaloneCommandAborted) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *CommandAborted) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *StandaloneCommandAborted) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_CommandAborted.Marshal(b, m, deterministic)
+		return xxx_messageInfo_StandaloneCommandAborted.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -239,26 +248,26 @@ func (m *CommandAborted) XXX_Marshal(b []byte, deterministic bool) ([]byte, erro
 		return b[:n], nil
 	}
 }
-func (m *CommandAborted) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CommandAborted.Merge(m, src)
+func (m *StandaloneCommandAborted) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StandaloneCommandAborted.Merge(m, src)
 }
-func (m *CommandAborted) XXX_Size() int {
+func (m *StandaloneCommandAborted) XXX_Size() int {
 	return m.Size()
 }
-func (m *CommandAborted) XXX_DiscardUnknown() {
-	xxx_messageInfo_CommandAborted.DiscardUnknown(m)
+func (m *StandaloneCommandAborted) XXX_DiscardUnknown() {
+	xxx_messageInfo_StandaloneCommandAborted.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_CommandAborted proto.InternalMessageInfo
+var xxx_messageInfo_StandaloneCommandAborted proto.InternalMessageInfo
 
-func (m *CommandAborted) GetChain() github_com_scalarorg_scalar_core_x_nexus_exported.ChainName {
+func (m *StandaloneCommandAborted) GetChain() github_com_scalarorg_scalar_core_x_nexus_exported.ChainName {
 	if m != nil {
 		return m.Chain
 	}
 	return ""
 }
 
-func (m *CommandAborted) GetCommandID() []byte {
+func (m *StandaloneCommandAborted) GetCommandID() []byte {
 	if m != nil {
 		return m.CommandID
 	}
@@ -326,11 +335,11 @@ func (m *SigMetadata) GetCommandID() []byte {
 }
 
 func init() {
-	proto.RegisterEnum("scalar.covenant.v1beta1.CommandStatus", CommandStatus_name, CommandStatus_value)
+	proto.RegisterEnum("scalar.covenant.v1beta1.StandaloneCommandStatus", StandaloneCommandStatus_name, StandaloneCommandStatus_value)
 	proto.RegisterEnum("scalar.covenant.v1beta1.SigType", SigType_name, SigType_value)
-	proto.RegisterType((*CommandMetadata)(nil), "scalar.covenant.v1beta1.CommandMetadata")
-	proto.RegisterType((*CommandSigned)(nil), "scalar.covenant.v1beta1.CommandSigned")
-	proto.RegisterType((*CommandAborted)(nil), "scalar.covenant.v1beta1.CommandAborted")
+	proto.RegisterType((*StandaloneCommandMetadata)(nil), "scalar.covenant.v1beta1.StandaloneCommandMetadata")
+	proto.RegisterType((*StandaloneCommandSigned)(nil), "scalar.covenant.v1beta1.StandaloneCommandSigned")
+	proto.RegisterType((*StandaloneCommandAborted)(nil), "scalar.covenant.v1beta1.StandaloneCommandAborted")
 	proto.RegisterType((*SigMetadata)(nil), "scalar.covenant.v1beta1.SigMetadata")
 }
 
@@ -339,56 +348,58 @@ func init() {
 }
 
 var fileDescriptor_93c39df493b7beed = []byte{
-	// 722 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x54, 0xcb, 0x6e, 0xd3, 0x40,
-	0x14, 0x8d, 0xd3, 0x24, 0x6d, 0xa6, 0x34, 0x44, 0x26, 0xb4, 0xc6, 0x42, 0x8e, 0x15, 0x41, 0x15,
-	0x55, 0xd4, 0x56, 0x43, 0x25, 0x24, 0x40, 0x54, 0x79, 0x11, 0xac, 0x2a, 0x69, 0x65, 0xa7, 0x0b,
-	0x2a, 0xd1, 0x68, 0x62, 0x0f, 0xce, 0xa8, 0x89, 0x27, 0xf2, 0x38, 0x55, 0xf2, 0x07, 0x28, 0x2b,
-	0x16, 0xb0, 0x60, 0x91, 0x15, 0x2c, 0xf8, 0x00, 0x3e, 0xa2, 0x62, 0xd5, 0x25, 0x62, 0x11, 0xa1,
-	0xf4, 0x13, 0xd8, 0x75, 0x85, 0xfc, 0x48, 0x5f, 0xb4, 0x52, 0x97, 0xdd, 0x8d, 0x75, 0xcf, 0xb9,
-	0x67, 0xee, 0x3d, 0xc7, 0x03, 0x1e, 0x53, 0x1d, 0xb6, 0xa1, 0x2d, 0xeb, 0xe4, 0x00, 0x59, 0xd0,
-	0x72, 0xe4, 0x83, 0xb5, 0x26, 0x72, 0xe0, 0x9a, 0xac, 0x93, 0x4e, 0x07, 0x5a, 0x86, 0xd4, 0xb5,
-	0x89, 0x43, 0xd8, 0x25, 0x1f, 0x26, 0x4d, 0x61, 0x52, 0x00, 0xe3, 0x53, 0x26, 0x31, 0x89, 0x87,
-	0x91, 0xdd, 0x93, 0x0f, 0xe7, 0x1f, 0x98, 0x84, 0x98, 0x6d, 0x24, 0x7b, 0x5f, 0xcd, 0xde, 0x7b,
-	0x19, 0x5a, 0x83, 0x69, 0x49, 0x27, 0xb4, 0x43, 0x68, 0xc3, 0xe7, 0xf8, 0x1f, 0x7e, 0x29, 0xf3,
-	0x65, 0x06, 0xdc, 0x2d, 0xfa, 0xb2, 0x55, 0xe4, 0x40, 0x03, 0x3a, 0x90, 0x5d, 0x04, 0x61, 0x6c,
-	0x70, 0x8c, 0xc8, 0x64, 0xef, 0x14, 0x62, 0x93, 0x71, 0x3a, 0xac, 0x94, 0xd4, 0x30, 0x36, 0x58,
-	0x16, 0x44, 0xdc, 0x3a, 0x17, 0x76, 0x2b, 0xaa, 0x77, 0x66, 0x77, 0xc1, 0x1c, 0xc5, 0x66, 0xa3,
-	0x05, 0x69, 0x8b, 0x9b, 0xf1, 0x18, 0x1b, 0x87, 0xe3, 0x74, 0xe8, 0xf7, 0x38, 0xfd, 0xcc, 0xc4,
-	0x4e, 0xab, 0xd7, 0x94, 0x74, 0xd2, 0x91, 0xfd, 0x49, 0x88, 0x6d, 0x06, 0xa7, 0x55, 0x9d, 0xd8,
-	0x48, 0xee, 0xcb, 0x7a, 0x0b, 0x62, 0x8b, 0xca, 0xa8, 0xdf, 0x25, 0xb6, 0x83, 0x0c, 0xe9, 0x0d,
-	0xa4, 0x2d, 0x75, 0x96, 0x62, 0xd3, 0x3d, 0xb0, 0xaf, 0x40, 0x8c, 0x3a, 0xd0, 0xe9, 0x51, 0x2e,
-	0x22, 0x32, 0xd9, 0x44, 0x6e, 0x59, 0xba, 0x66, 0x23, 0x52, 0x30, 0x81, 0xe6, 0xa1, 0xd5, 0x80,
-	0xc5, 0xee, 0x81, 0xd8, 0x3e, 0x1a, 0x34, 0xb0, 0xc1, 0x45, 0x45, 0x26, 0x1b, 0x2f, 0x54, 0x26,
-	0xe3, 0x74, 0x74, 0x13, 0x0d, 0x94, 0xd2, 0xc9, 0x38, 0xfd, 0xfc, 0x06, 0xd7, 0xeb, 0xf4, 0xda,
-	0x0e, 0xa6, 0xd8, 0x3c, 0xbb, 0xa0, 0xc7, 0x56, 0xa3, 0xfb, 0x68, 0xa0, 0x18, 0xec, 0x1e, 0x88,
-	0x53, 0x6c, 0x5a, 0xd0, 0xe9, 0xd9, 0x88, 0x8b, 0x89, 0x4c, 0x76, 0x3e, 0x97, 0x92, 0x7c, 0x17,
-	0xa4, 0xa9, 0x0b, 0x52, 0xde, 0x1a, 0x14, 0x56, 0x7e, 0xfe, 0x58, 0x5d, 0x3e, 0xa7, 0xe7, 0x3b,
-	0x20, 0xeb, 0xc4, 0x40, 0xba, 0xbc, 0xed, 0x22, 0xab, 0xd0, 0xa6, 0x2d, 0xd8, 0x46, 0xb6, 0x7a,
-	0xd6, 0x32, 0xf3, 0x89, 0x01, 0x0b, 0xd3, 0xc9, 0xb0, 0x69, 0x21, 0x83, 0xdd, 0x01, 0x51, 0x6f,
-	0x65, 0x9e, 0x05, 0xf1, 0xc2, 0xc6, 0xc9, 0x38, 0xfd, 0xe2, 0x06, 0x73, 0x58, 0xa8, 0xdf, 0x3b,
-	0xb7, 0xe5, 0xa2, 0xdb, 0xa2, 0x06, 0x3b, 0x48, 0xf5, 0xbb, 0xb1, 0x4f, 0x00, 0x08, 0xa2, 0xe7,
-	0x2e, 0xcb, 0xb7, 0x71, 0x61, 0x32, 0x4e, 0xc7, 0x03, 0x75, 0xa5, 0xa4, 0xc6, 0x03, 0x80, 0x62,
-	0x64, 0x3e, 0x33, 0x20, 0x11, 0x14, 0xf2, 0x4d, 0xaf, 0xe3, 0xed, 0xb8, 0xd7, 0x21, 0x03, 0xe6,
-	0x35, 0x6c, 0x9e, 0xc6, 0x78, 0x1d, 0x44, 0x9c, 0x41, 0x17, 0x79, 0x41, 0x4e, 0xe4, 0xc4, 0x6b,
-	0xc3, 0xa3, 0x61, 0xb3, 0x3e, 0xe8, 0x22, 0xd5, 0x43, 0xdf, 0x8a, 0x51, 0x56, 0xfe, 0x9e, 0x73,
-	0xde, 0xcf, 0xf2, 0x4b, 0xc0, 0x17, 0xb7, 0xaa, 0xd5, 0x7c, 0xad, 0xd4, 0xd0, 0xea, 0xf9, 0xfa,
-	0x8e, 0xd6, 0xd8, 0xa9, 0x69, 0xdb, 0xe5, 0xa2, 0xf2, 0x5a, 0x29, 0x97, 0x92, 0x21, 0xfe, 0xe1,
-	0x70, 0x24, 0x72, 0x17, 0x28, 0x35, 0x62, 0x95, 0xfb, 0x98, 0x3a, 0xc8, 0x72, 0xd8, 0x75, 0xb0,
-	0x78, 0x89, 0xad, 0x29, 0x95, 0x9a, 0x52, 0xab, 0x24, 0x19, 0x9e, 0x1b, 0x8e, 0xc4, 0xd4, 0x05,
-	0xa6, 0x1b, 0x36, 0x6c, 0x99, 0x57, 0xb0, 0xf2, 0x85, 0x2d, 0xb5, 0x5e, 0x2e, 0x25, 0xc3, 0x57,
-	0xb0, 0xa6, 0x59, 0xc8, 0x81, 0xfb, 0x57, 0x68, 0x95, 0x4b, 0xc9, 0x19, 0x7e, 0x69, 0x38, 0x12,
-	0xef, 0xfd, 0x27, 0x85, 0x0c, 0x3e, 0xf2, 0xe1, 0xab, 0x10, 0x5a, 0x79, 0x07, 0x66, 0x03, 0x2f,
-	0xd8, 0x0c, 0x48, 0x69, 0x4a, 0xa5, 0x51, 0x7f, 0xbb, 0x5d, 0xbe, 0x34, 0xe8, 0xdc, 0x70, 0x24,
-	0x46, 0x6a, 0xc4, 0x42, 0xec, 0x23, 0x90, 0x3c, 0xc5, 0x04, 0x8a, 0x49, 0x86, 0x4f, 0x0c, 0x47,
-	0x22, 0xd0, 0xb0, 0x19, 0xc8, 0xf0, 0x73, 0x6e, 0xeb, 0xef, 0xdf, 0x04, 0xa6, 0xb0, 0x79, 0x38,
-	0x11, 0x98, 0xa3, 0x89, 0xc0, 0xfc, 0x99, 0x08, 0xcc, 0xc7, 0x63, 0x21, 0x74, 0x74, 0x2c, 0x84,
-	0x7e, 0x1d, 0x0b, 0xa1, 0xdd, 0xb5, 0x9b, 0x3c, 0x55, 0xd3, 0xc7, 0xda, 0x4d, 0x09, 0x6d, 0xc6,
-	0xbc, 0x1f, 0xfc, 0xe9, 0xbf, 0x00, 0x00, 0x00, 0xff, 0xff, 0xbe, 0x8f, 0x1d, 0xf5, 0xcc, 0x05,
-	0x00, 0x00,
+	// 765 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x55, 0xcd, 0x6e, 0xda, 0x58,
+	0x14, 0xc6, 0x04, 0x08, 0xdc, 0xcc, 0x44, 0xc8, 0x8a, 0x26, 0x8e, 0xa5, 0x31, 0x0e, 0x9a, 0x44,
+	0x28, 0x9a, 0xd8, 0x93, 0x4c, 0xa5, 0x4a, 0xad, 0xaa, 0x08, 0x30, 0x25, 0x56, 0x8a, 0x93, 0xda,
+	0x64, 0xd1, 0x48, 0x0d, 0xba, 0xd8, 0xb7, 0xe6, 0x2a, 0xe0, 0x8b, 0x6c, 0x13, 0xc1, 0x1b, 0x54,
+	0xac, 0xfa, 0x02, 0xb4, 0x8b, 0x76, 0xd1, 0x07, 0xe8, 0x1b, 0x74, 0x13, 0x75, 0x95, 0xee, 0xaa,
+	0x2e, 0x50, 0x45, 0xde, 0x22, 0xab, 0xca, 0x3f, 0x24, 0xb4, 0x29, 0x28, 0x8b, 0x2e, 0xb2, 0x3b,
+	0x57, 0xf7, 0x3b, 0xdf, 0xf9, 0xce, 0x39, 0x9f, 0xaf, 0xc1, 0x9a, 0xa3, 0xc3, 0x26, 0xb4, 0x45,
+	0x9d, 0x9c, 0x22, 0x0b, 0x5a, 0xae, 0x78, 0xba, 0x55, 0x47, 0x2e, 0xdc, 0x12, 0x75, 0xd2, 0x6a,
+	0x41, 0xcb, 0x10, 0xda, 0x36, 0x71, 0x09, 0xbd, 0x1c, 0xc0, 0x84, 0x31, 0x4c, 0x08, 0x61, 0xec,
+	0x92, 0x49, 0x4c, 0xe2, 0x63, 0x44, 0x2f, 0x0a, 0xe0, 0xec, 0x8a, 0x49, 0x88, 0xd9, 0x44, 0xa2,
+	0x7f, 0xaa, 0x77, 0x5e, 0x88, 0xd0, 0xea, 0x8d, 0xaf, 0x74, 0xe2, 0xb4, 0x88, 0x53, 0x0b, 0x72,
+	0x82, 0x43, 0x70, 0x95, 0xfd, 0x18, 0x03, 0x2b, 0x9a, 0x0b, 0x2d, 0x03, 0x36, 0x89, 0x85, 0x8a,
+	0x81, 0x80, 0x0a, 0x72, 0xa1, 0x01, 0x5d, 0x48, 0xff, 0x05, 0xa2, 0xd8, 0x60, 0x28, 0x9e, 0xca,
+	0xfd, 0x51, 0x48, 0x8c, 0x86, 0x99, 0xa8, 0x2c, 0xa9, 0x51, 0x6c, 0xd0, 0x8f, 0x00, 0x08, 0xb5,
+	0xd6, 0xb0, 0xc1, 0x44, 0xfd, 0x7b, 0xee, 0x6c, 0x98, 0x89, 0x7c, 0x1d, 0x66, 0x52, 0x21, 0x89,
+	0x2c, 0x8d, 0x26, 0x0f, 0x6a, 0x2a, 0xcc, 0x90, 0x0d, 0xfa, 0x10, 0xc4, 0xf5, 0x06, 0xc4, 0x16,
+	0x33, 0xc7, 0x53, 0xb9, 0x54, 0x61, 0xe7, 0x72, 0x98, 0x79, 0x68, 0x62, 0xb7, 0xd1, 0xa9, 0x0b,
+	0x3a, 0x69, 0x89, 0x41, 0xdf, 0xc4, 0x36, 0xc3, 0x68, 0x53, 0x27, 0x36, 0x12, 0xbb, 0xa2, 0x85,
+	0xba, 0x1d, 0x47, 0x44, 0xdd, 0x36, 0xb1, 0x5d, 0x64, 0x08, 0x45, 0x8f, 0x42, 0x81, 0x2d, 0xa4,
+	0x06, 0x6c, 0x34, 0x0d, 0x62, 0x9e, 0x6a, 0x26, 0xe6, 0xe9, 0x51, 0xfd, 0x98, 0x3e, 0x02, 0x49,
+	0x07, 0x9b, 0xb5, 0x06, 0x74, 0x1a, 0x4c, 0xdc, 0xd7, 0xb9, 0x13, 0xea, 0xbc, 0x7f, 0x8b, 0x8a,
+	0x3e, 0xef, 0x44, 0xc9, 0x5d, 0xe8, 0x34, 0xd4, 0x79, 0x07, 0x9b, 0x5e, 0x40, 0xef, 0x82, 0x84,
+	0xe3, 0x42, 0xb7, 0xe3, 0x30, 0x09, 0x9e, 0xca, 0x2d, 0x6e, 0xff, 0x27, 0x4c, 0xd9, 0x98, 0x70,
+	0x63, 0xc2, 0x9a, 0x9f, 0xa7, 0x86, 0xf9, 0xf4, 0x31, 0x48, 0x9c, 0xa0, 0x9e, 0x37, 0xcb, 0x79,
+	0x7f, 0x22, 0xe5, 0xd1, 0x30, 0x13, 0xdf, 0x43, 0x3d, 0x59, 0xba, 0x1c, 0x66, 0x1e, 0xdc, 0x42,
+	0x68, 0xab, 0xd3, 0x74, 0xb1, 0x83, 0xcd, 0x6b, 0xa9, 0x7e, 0xb6, 0x1a, 0x3f, 0x41, 0x3d, 0xd9,
+	0xa0, 0x8f, 0x41, 0xca, 0xc1, 0xa6, 0x05, 0xdd, 0x8e, 0x8d, 0x98, 0x24, 0x4f, 0xe5, 0x16, 0xb6,
+	0x97, 0x84, 0xc0, 0x2f, 0xc2, 0xd8, 0x2f, 0x42, 0xde, 0xea, 0x15, 0x36, 0x3e, 0x7d, 0xd8, 0x5c,
+	0x9f, 0xa8, 0x17, 0x78, 0x45, 0xd4, 0x89, 0x81, 0x74, 0xf1, 0xc0, 0x43, 0x56, 0xa0, 0xed, 0x34,
+	0x60, 0x13, 0xd9, 0xea, 0x35, 0x65, 0xf6, 0x35, 0x05, 0x96, 0x6f, 0xf6, 0x88, 0x4d, 0x0b, 0x4d,
+	0x2c, 0x3b, 0xfa, 0x5b, 0x97, 0xfd, 0xef, 0x0f, 0x16, 0x9c, 0xf3, 0x57, 0xfb, 0xe7, 0x34, 0xc7,
+	0x65, 0xdf, 0x50, 0x80, 0xb9, 0x21, 0x30, 0x5f, 0xf7, 0xb9, 0xef, 0x86, 0xc2, 0x33, 0x0a, 0x2c,
+	0x68, 0xd8, 0xbc, 0xfa, 0xf4, 0xee, 0x81, 0x98, 0xdb, 0x6b, 0x23, 0xff, 0xe3, 0x5b, 0xdc, 0xe6,
+	0xa7, 0x5b, 0x0b, 0x9b, 0xd5, 0x5e, 0x1b, 0xa9, 0x3e, 0xfa, 0x4e, 0xb4, 0xb2, 0xf1, 0x39, 0xfa,
+	0x2b, 0x37, 0x04, 0x4e, 0x7f, 0x0a, 0xd6, 0xb4, 0x6a, 0x5e, 0x91, 0xf2, 0x4f, 0xf6, 0x95, 0x52,
+	0xad, 0xb8, 0x5f, 0xa9, 0xe4, 0x15, 0xa9, 0xa6, 0x55, 0xf3, 0xd5, 0x43, 0xad, 0x76, 0xa8, 0x68,
+	0x07, 0xa5, 0xa2, 0xfc, 0x58, 0x2e, 0x49, 0xe9, 0x08, 0xbb, 0xde, 0x1f, 0xf0, 0xd9, 0x29, 0x3c,
+	0x0a, 0xb1, 0x4a, 0x5d, 0xec, 0xb8, 0xc8, 0x72, 0x69, 0x19, 0xac, 0x4e, 0xa7, 0xd4, 0xe4, 0xb2,
+	0x22, 0x2b, 0xe5, 0x34, 0xc5, 0x66, 0xfb, 0x03, 0x9e, 0x9b, 0x42, 0xe7, 0x59, 0x15, 0x5b, 0xe6,
+	0x6c, 0xaa, 0x7c, 0x61, 0x5f, 0xad, 0x96, 0xa4, 0x74, 0x74, 0x26, 0xd5, 0xd8, 0x54, 0x65, 0xc0,
+	0xcf, 0x56, 0x55, 0x92, 0xd2, 0x73, 0xec, 0x6a, 0x7f, 0xc0, 0xff, 0x3d, 0x43, 0x14, 0x32, 0xd8,
+	0xd8, 0xcb, 0xb7, 0x5c, 0x64, 0xe3, 0x39, 0x98, 0x0f, 0x37, 0x4d, 0x67, 0xc1, 0x92, 0x26, 0x97,
+	0x6b, 0xd5, 0x67, 0x07, 0xa5, 0x9f, 0x26, 0x96, 0xec, 0x0f, 0xf8, 0x98, 0x42, 0x2c, 0x44, 0xff,
+	0x03, 0xd2, 0x57, 0x98, 0xb0, 0x76, 0x9a, 0x62, 0x17, 0xfb, 0x03, 0x1e, 0x68, 0xd8, 0x0c, 0xcb,
+	0xb0, 0x49, 0x8f, 0xfa, 0xfd, 0x3b, 0x8e, 0x2a, 0xec, 0x9d, 0x8d, 0x38, 0xea, 0x7c, 0xc4, 0x51,
+	0xdf, 0x46, 0x1c, 0xf5, 0xea, 0x82, 0x8b, 0x9c, 0x5f, 0x70, 0x91, 0x2f, 0x17, 0x5c, 0xe4, 0x68,
+	0xeb, 0x36, 0xcf, 0xe4, 0xf8, 0x47, 0xe6, 0x79, 0xd0, 0xa9, 0x27, 0xfc, 0x27, 0xe5, 0xff, 0xef,
+	0x01, 0x00, 0x00, 0xff, 0xff, 0x8f, 0xbd, 0x82, 0xfc, 0xe8, 0x06, 0x00, 0x00,
 }
 
-func (m *CommandMetadata) Marshal() (dAtA []byte, err error) {
+func (m *StandaloneCommandMetadata) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -398,12 +409,12 @@ func (m *CommandMetadata) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *CommandMetadata) MarshalTo(dAtA []byte) (int, error) {
+func (m *StandaloneCommandMetadata) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *CommandMetadata) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *StandaloneCommandMetadata) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -418,19 +429,19 @@ func (m *CommandMetadata) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			i = encodeVarintCommand(dAtA, i, uint64(size))
 		}
 		i--
-		dAtA[i] = 0x32
+		dAtA[i] = 0x42
 	}
 	if len(m.KeyID) > 0 {
 		i -= len(m.KeyID)
 		copy(dAtA[i:], m.KeyID)
 		i = encodeVarintCommand(dAtA, i, uint64(len(m.KeyID)))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x3a
 	}
 	if m.Status != 0 {
 		i = encodeVarintCommand(dAtA, i, uint64(m.Status))
 		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x30
 	}
 	{
 		size := m.SigHash.Size()
@@ -441,14 +452,31 @@ func (m *CommandMetadata) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintCommand(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x1a
+	dAtA[i] = 0x2a
 	if len(m.Data) > 0 {
 		i -= len(m.Data)
 		copy(dAtA[i:], m.Data)
 		i = encodeVarintCommand(dAtA, i, uint64(len(m.Data)))
 		i--
-		dAtA[i] = 0x12
+		dAtA[i] = 0x22
 	}
+	if len(m.Chain) > 0 {
+		i -= len(m.Chain)
+		copy(dAtA[i:], m.Chain)
+		i = encodeVarintCommand(dAtA, i, uint64(len(m.Chain)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	{
+		size := m.CommandID.Size()
+		i -= size
+		if _, err := m.CommandID.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintCommand(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
 	if len(m.ID) > 0 {
 		i -= len(m.ID)
 		copy(dAtA[i:], m.ID)
@@ -459,7 +487,7 @@ func (m *CommandMetadata) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *CommandSigned) Marshal() (dAtA []byte, err error) {
+func (m *StandaloneCommandSigned) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -469,12 +497,12 @@ func (m *CommandSigned) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *CommandSigned) MarshalTo(dAtA []byte) (int, error) {
+func (m *StandaloneCommandSigned) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *CommandSigned) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *StandaloneCommandSigned) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -496,7 +524,7 @@ func (m *CommandSigned) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *CommandAborted) Marshal() (dAtA []byte, err error) {
+func (m *StandaloneCommandAborted) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -506,12 +534,12 @@ func (m *CommandAborted) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *CommandAborted) MarshalTo(dAtA []byte) (int, error) {
+func (m *StandaloneCommandAborted) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *CommandAborted) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *StandaloneCommandAborted) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -586,13 +614,19 @@ func encodeVarintCommand(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *CommandMetadata) Size() (n int) {
+func (m *StandaloneCommandMetadata) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
 	l = len(m.ID)
+	if l > 0 {
+		n += 1 + l + sovCommand(uint64(l))
+	}
+	l = m.CommandID.Size()
+	n += 1 + l + sovCommand(uint64(l))
+	l = len(m.Chain)
 	if l > 0 {
 		n += 1 + l + sovCommand(uint64(l))
 	}
@@ -616,7 +650,7 @@ func (m *CommandMetadata) Size() (n int) {
 	return n
 }
 
-func (m *CommandSigned) Size() (n int) {
+func (m *StandaloneCommandSigned) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -633,7 +667,7 @@ func (m *CommandSigned) Size() (n int) {
 	return n
 }
 
-func (m *CommandAborted) Size() (n int) {
+func (m *StandaloneCommandAborted) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -676,7 +710,7 @@ func sovCommand(x uint64) (n int) {
 func sozCommand(x uint64) (n int) {
 	return sovCommand(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *CommandMetadata) Unmarshal(dAtA []byte) error {
+func (m *StandaloneCommandMetadata) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -699,10 +733,10 @@ func (m *CommandMetadata) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: CommandMetadata: wiretype end group for non-group")
+			return fmt.Errorf("proto: StandaloneCommandMetadata: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: CommandMetadata: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: StandaloneCommandMetadata: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -741,6 +775,71 @@ func (m *CommandMetadata) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CommandID", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCommand
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthCommand
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCommand
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.CommandID.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Chain", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCommand
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCommand
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCommand
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Chain = github_com_scalarorg_scalar_core_x_nexus_exported.ChainName(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
 			}
 			var byteLen int
@@ -773,7 +872,7 @@ func (m *CommandMetadata) Unmarshal(dAtA []byte) error {
 				m.Data = []byte{}
 			}
 			iNdEx = postIndex
-		case 3:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SigHash", wireType)
 			}
@@ -806,7 +905,7 @@ func (m *CommandMetadata) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 4:
+		case 6:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
@@ -820,12 +919,12 @@ func (m *CommandMetadata) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Status |= CommandStatus(b&0x7F) << shift
+				m.Status |= StandaloneCommandStatus(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-		case 5:
+		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field KeyID", wireType)
 			}
@@ -857,7 +956,7 @@ func (m *CommandMetadata) Unmarshal(dAtA []byte) error {
 			}
 			m.KeyID = github_com_scalarorg_scalar_core_x_multisig_exported.KeyID(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 6:
+		case 8:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Signature", wireType)
 			}
@@ -914,7 +1013,7 @@ func (m *CommandMetadata) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *CommandSigned) Unmarshal(dAtA []byte) error {
+func (m *StandaloneCommandSigned) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -937,10 +1036,10 @@ func (m *CommandSigned) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: CommandSigned: wiretype end group for non-group")
+			return fmt.Errorf("proto: StandaloneCommandSigned: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: CommandSigned: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: StandaloneCommandSigned: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 2:
@@ -1030,7 +1129,7 @@ func (m *CommandSigned) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *CommandAborted) Unmarshal(dAtA []byte) error {
+func (m *StandaloneCommandAborted) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1053,10 +1152,10 @@ func (m *CommandAborted) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: CommandAborted: wiretype end group for non-group")
+			return fmt.Errorf("proto: StandaloneCommandAborted: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: CommandAborted: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: StandaloneCommandAborted: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 2:

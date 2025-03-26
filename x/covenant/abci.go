@@ -1,9 +1,7 @@
 package covenant
 
 import (
-	"encoding/hex"
 	"fmt"
-	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -215,25 +213,6 @@ func swichPhaseForEvmChain(ctx sdk.Context,
 		"phase", evmSession.CurrentPhase,
 		"tokens", evmSession.Tokens,
 	)
-	events.Emit(ctx, &types.SwitchPhaseStarted{
-		Module:      types.ModuleName,
-		Chain:       evmSession.Chain,
-		Symbol:      evmSession.Tokens[0],
-		Sequence:    evmSession.Sequence,
-		Phase:       evmSession.CurrentPhase,
-		ExecuteData: hex.EncodeToString(payload),
-	})
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			types.EventTypeSwitchPhaseSign,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
-			sdk.NewAttribute("chain", evmSession.Chain.String()),
-			sdk.NewAttribute("custodian_group_uid", hex.EncodeToString(evmSession.CustodianGroupUID[:])),
-			sdk.NewAttribute("phase", evmSession.CurrentPhase.String()),
-			sdk.NewAttribute("tokens", strings.Join(evmSession.Tokens, ",")),
-		),
-	)
-
 	return nil
 }
 

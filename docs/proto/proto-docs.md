@@ -232,13 +232,13 @@
     - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
   
 - [scalar/covenant/v1beta1/command.proto](#scalar/covenant/v1beta1/command.proto)
-    - [CommandAborted](#scalar.covenant.v1beta1.CommandAborted)
-    - [CommandMetadata](#scalar.covenant.v1beta1.CommandMetadata)
-    - [CommandSigned](#scalar.covenant.v1beta1.CommandSigned)
     - [SigMetadata](#scalar.covenant.v1beta1.SigMetadata)
+    - [StandaloneCommandAborted](#scalar.covenant.v1beta1.StandaloneCommandAborted)
+    - [StandaloneCommandMetadata](#scalar.covenant.v1beta1.StandaloneCommandMetadata)
+    - [StandaloneCommandSigned](#scalar.covenant.v1beta1.StandaloneCommandSigned)
   
-    - [CommandStatus](#scalar.covenant.v1beta1.CommandStatus)
     - [SigType](#scalar.covenant.v1beta1.SigType)
+    - [StandaloneCommandStatus](#scalar.covenant.v1beta1.StandaloneCommandStatus)
   
 - [scalar/covenant/v1beta1/redeem.proto](#scalar/covenant/v1beta1/redeem.proto)
     - [ExpiredEvmSession](#scalar.covenant.v1beta1.ExpiredEvmSession)
@@ -290,6 +290,8 @@
     - [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig)
     - [PsbtMultiSig.ParticipantListTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantListTapScriptSigsEntry)
     - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
+  
+    - [CommandType](#scalar.covenant.v1beta1.CommandType)
   
 - [scalar/covenant/v1beta1/params.proto](#scalar/covenant/v1beta1/params.proto)
     - [Params](#scalar.covenant.v1beta1.Params)
@@ -3984,58 +3986,6 @@ the deterministic order of the entries
 
 
 
-<a name="scalar.covenant.v1beta1.CommandAborted"></a>
-
-### CommandAborted
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `command_id` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.CommandMetadata"></a>
-
-### CommandMetadata
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `id` | [bytes](#bytes) |  |  |
-| `data` | [bytes](#bytes) |  |  |
-| `sig_hash` | [bytes](#bytes) |  |  |
-| `status` | [CommandStatus](#scalar.covenant.v1beta1.CommandStatus) |  |  |
-| `key_id` | [string](#string) |  |  |
-| `signature` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.CommandSigned"></a>
-
-### CommandSigned
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `chain` | [string](#string) |  |  |
-| `command_id` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
 <a name="scalar.covenant.v1beta1.SigMetadata"></a>
 
 ### SigMetadata
@@ -4052,21 +4002,61 @@ the deterministic order of the entries
 
 
 
+
+<a name="scalar.covenant.v1beta1.StandaloneCommandAborted"></a>
+
+### StandaloneCommandAborted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `command_id` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.StandaloneCommandMetadata"></a>
+
+### StandaloneCommandMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [bytes](#bytes) |  |  |
+| `command_id` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `data` | [bytes](#bytes) |  |  |
+| `sig_hash` | [bytes](#bytes) |  |  |
+| `status` | [StandaloneCommandStatus](#scalar.covenant.v1beta1.StandaloneCommandStatus) |  |  |
+| `key_id` | [string](#string) |  |  |
+| `signature` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.StandaloneCommandSigned"></a>
+
+### StandaloneCommandSigned
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `command_id` | [bytes](#bytes) |  |  |
+
+
+
+
+
  <!-- end messages -->
-
-
-<a name="scalar.covenant.v1beta1.CommandStatus"></a>
-
-### CommandStatus
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| COMMAND_STATUS_UNSPECIFIED | 0 |  |
-| COMMAND_STATUS_SIGNING | 1 |  |
-| COMMAND_STATUS_ABORTED | 2 |  |
-| COMMAND_STATUS_SIGNED | 3 |  |
-
 
 
 <a name="scalar.covenant.v1beta1.SigType"></a>
@@ -4078,6 +4068,20 @@ the deterministic order of the entries
 | ---- | ------ | ----------- |
 | SIG_TYPE_UNSPECIFIED | 0 |  |
 | SIG_TYPE_COMMAND | 1 |  |
+
+
+
+<a name="scalar.covenant.v1beta1.StandaloneCommandStatus"></a>
+
+### StandaloneCommandStatus
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STANDALONE_COMMAND_STATUS_UNSPECIFIED | 0 |  |
+| STANDALONE_COMMAND_STATUS_SIGNING | 1 |  |
+| STANDALONE_COMMAND_STATUS_ABORTED | 2 |  |
+| STANDALONE_COMMAND_STATUS_SIGNED | 3 |  |
 
 
  <!-- end enums -->
@@ -4843,6 +4847,20 @@ For Validation process
 
 
  <!-- end messages -->
+
+
+<a name="scalar.covenant.v1beta1.CommandType"></a>
+
+### CommandType
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| COMMAND_TYPE_UNSPECIFIED | 0 |  |
+| COMMAND_TYPE_SWITCH_PHASE | 1 |  |
+| COMMAND_TYPE_REGISTER_CUSTODIAN_GROUP | 2 |  |
+| COMMAND_TYPE_REDEEM_TOKEN | 3 |  |
+
 
  <!-- end enums -->
 

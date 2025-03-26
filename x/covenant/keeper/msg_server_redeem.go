@@ -201,7 +201,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, fmt.Errorf("chain %s is not a EVM chain", sourceChain.Name)
 	}
 
-	if!chainsTypes.IsBitcoinChain(destChain.Name) {
+	if !chainsTypes.IsBitcoinChain(destChain.Name) {
 		return nil, fmt.Errorf("chain %s is not a bitcoin chain", destChain.Name)
 	}
 
@@ -209,7 +209,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, err
 	}
 
-	if err := validateChainActivated(ctx, s.nexus, destChain); err!= nil {
+	if err := validateChainActivated(ctx, s.nexus, destChain); err != nil {
 		return nil, err
 	}
 
@@ -224,12 +224,17 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, fmt.Errorf("could not find key ID for '%s'", req.SourceChain)
 	}
 	// Create redeem payload for evm tx
-	payload, reqId, err := s.createRedeemPayload(ctx, req, protocol.CustodianGroupUID.Bytes())
+	payload, commandID, err := s.createRedeemPayload(ctx, req, protocol.CustodianGroupUID.Bytes())
 	if err != nil {
 		return nil, err
 	}
 
-	command, err := s.createReserveRedeemUtxoCommand(ctx, keyID, payload)
+	chainID, err := req.SourceChain.GetChainID()
+	if err != nil {
+		return nil, err
+	}
+
+	command, err := s.createReserveRedeemUtxoStandaloneCommand(ctx, keyID, *chainID, *commandID, payload)
 	if err != nil {
 		return nil, fmt.Errorf("could not create reserve utxo command")
 	}
@@ -256,7 +261,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 			sdk.NewAttribute(sdk.AttributeKeyAmount, strconv.Itoa(int(req.Amount))),
 			sdk.NewAttribute(types.AttributeKeyChain, sourceChain.Name.String()),
 			sdk.NewAttribute(sdk.AttributeKeySender, req.Sender.String()),
-			sdk.NewAttribute(types.AttributeKeyReqId, hex.EncodeToString(reqId)),
+			sdk.NewAttribute(types.AttributeKeyReqId, hex.EncodeToString((*commandID)[:])),
 			sdk.NewAttribute(types.AttributeCommandId, hex.EncodeToString(command.GetID())),
 		),
 	)
@@ -264,23 +269,34 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 	return &types.ReserveRedeemUtxoResponse{}, nil
 }
 
-func (s msgServer) createReserveRedeemUtxoCommand(
+func (s msgServer) createReserveRedeemUtxoStandaloneCommand(
 	ctx sdk.Context,
 	keyID multisig.KeyID,
-	data []byte) (*types.Command, error) {
-	md, err := types.NewCommandMetadata(ctx.BlockHeight(), keyID, data)
+	chainID sdk.Int,
+	commandID types.CommandID,
+	commandParam []byte,
+) (*types.StandaloneCommand, error) {
+	md, err := types.NewStandaloneCommandMetadata(
+		ctx.BlockHeight(),
+		keyID,
+		chainID,
+		commandID,
+		types.COMMAND_TYPE_REDEEM_TOKEN,
+		commandParam,
+	)
+
 	if err != nil {
 		return nil, err
 	}
 
-	s.setReserveUTXOCommandByID(ctx, md)
-	s.setUnsignedCommandID(ctx, md.ID)
+	s.setStandaloneCommandMetadata(ctx, md, reserveUtxoCommandPrefix)
+	s.setUnsignedStandaloneCommandID(ctx, md.ID)
 
-	setter := func(m types.CommandMetadata) {
-		s.setReserveUTXOCommandByID(ctx, m)
+	setter := func(m types.StandaloneCommandMetadata) {
+		s.setStandaloneCommandMetadata(ctx, m, reserveUtxoCommandPrefix)
 	}
 
-	cmd := types.NewCommand(md, setter)
+	cmd := types.NewStandaloneCommand(md, setter)
 
 	return &cmd, nil
 }

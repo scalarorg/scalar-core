@@ -172,6 +172,16 @@ func (m Chain) GetFamily() ChainFamily {
 	return m.Name.GetFamily()
 }
 
+func (m ChainName) GetChainID() (*sdk.Int, error) {
+	parts := strings.Split(m.String(), "|")
+	chainID, err := strconv.ParseUint(parts[1], 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("invalid chain id: %s", parts[1])
+	}
+	id := sdk.NewIntFromUint64(chainID)
+	return &id, nil
+}
+
 // IsFrom returns true if the chain registered under the module
 func (m Chain) IsFrom(module string) bool {
 	return m.Module == module

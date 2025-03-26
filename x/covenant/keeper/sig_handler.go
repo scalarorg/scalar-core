@@ -36,7 +36,7 @@ func (s sigHandler) HandleCompleted(ctx sdk.Context, sig utils.ValidatedProtoMar
 
 	funcs.MustNoErr(commandBatch.SetSigned(sig))
 
-	events.Emit(ctx, types.NewCommandSigned(sigMetadata.Chain, sigMetadata.CommandID))
+	events.Emit(ctx, types.NewStandaloneCommandSigned(sigMetadata.Chain, sigMetadata.CommandID))
 
 	return nil
 }
@@ -48,20 +48,20 @@ func (s sigHandler) HandleFailed(ctx sdk.Context, moduleMetadata codec.ProtoMars
 		return err
 	}
 
-	ok := cmd.SetStatus(types.CommandStatusAborted)
+	ok := cmd.SetStatus(types.StandaloneCommandStatusAborted)
 	if !ok {
 		panic(fmt.Errorf("failed to abort command batch %s", hex.EncodeToString(cmd.GetID())))
 	}
 
-	events.Emit(ctx, types.NewCommandAborted(sigMetadata.Chain, sigMetadata.CommandID))
+	events.Emit(ctx, types.NewStandaloneCommandAborted(sigMetadata.Chain, sigMetadata.CommandID))
 
 	return nil
 }
 
-func (s sigHandler) getCommand(ctx sdk.Context, sigMetadata *types.SigMetadata) (types.Command, error) {
+func (s sigHandler) getCommand(ctx sdk.Context, sigMetadata *types.SigMetadata) (types.StandaloneCommand, error) {
 	command := s.keeper.GetReserveUTXOCommandByID(ctx, sigMetadata.CommandID)
-	if !command.Is(types.CommandStatusSigning) {
-		return types.Command{}, fmt.Errorf("the command  %s of chain %s is not being signed", hex.EncodeToString(sigMetadata.CommandID), sigMetadata.Chain)
+	if !command.Is(types.StandaloneCommandStatusSigning) {
+		return types.StandaloneCommand{}, fmt.Errorf("the command  %s of chain %s is not being signed", hex.EncodeToString(sigMetadata.CommandID), sigMetadata.Chain)
 	}
 
 	return command, nil

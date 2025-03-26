@@ -26,7 +26,7 @@ var (
 	signingSessionCountKey = utils.KeyFromInt(100)
 
 	reserveUtxoCommandPrefix = key.FromStr("reserve_utxo_command")
-	unsignedIDKey            = key.FromStr("unsigned_command_id")
+	unsignedStandaloneIDKey  = key.FromStr("unsigned_standalone_command_id")
 )
 
 var _ types.Keeper = &Keeper{}
