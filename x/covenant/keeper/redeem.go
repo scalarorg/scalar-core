@@ -1,13 +1,16 @@
 package keeper
 
 import (
+	"encoding/binary"
 	"fmt"
 
 	"github.com/scalarorg/scalar-core/utils"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/x/covenant/types"
 	cov "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
@@ -175,19 +178,61 @@ func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID []byte, requestI
 	return reserveUtxos, nil
 }
 
-func (k Keeper) createRedeemPayload(ctx sdk.Context, destChain string, destAddress string, symbol string,
-	amount uint64,
-	reservedTx []*cov.UTXO) ([]byte, error) {
+func (k Keeper) createRedeemPayload(ctx sdk.Context, req *types.ReserveRedeemUtxoRequest, custodianGrUID []byte) ([]byte, error) {
+
+	bz := make([]byte, 8)
+	binary.BigEndian.PutUint64(bz, uint64(ctx.BlockHeight()))
+
+
+	// TODO: 
+
+
+	// func createDomainSeparator() []byte {
+	// 	// Domain Separator: Keccak256(EIP712Domain(name, version, chainId, verifyingContract))
+	// 	domainHash := crypto.Keccak256Hash(
+	// 		[]byte("SunID"),             // Name
+	// 		[]byte("1"),                 // Version
+	// 		[]byte("0x94a9059e"),        // ChainId
+	// 		[]byte(TronContractAddress), // VerifyingContract
+	// 	)
+	
+	// 	return domainHash.Bytes()
+	// }
+	
+	// // Hash the message according to EIP-712 Typed Data rules
+	// func hashMessage() []byte {
+	// 	dataHash := crypto.Keccak256Hash(
+	// 		common.Hex2Bytes(mockCredential.UID[2:]),
+	// 		common.Hex2Bytes(mockCredential.Recipient[2:]),
+	// 		common.BigToHash(big.NewInt(int64(mockCredential.ExpirationTime))).Bytes(),
+	// 		[]byte{0}, // For revocable == false, we use 0 byte
+	// 		common.Hex2Bytes(mockCredential.RefUID[2:]),
+	// 		common.Hex2Bytes(mockCredential.Data[2:]),
+	// 	)
+	// 	return dataHash.Bytes()
+	// }
+	
+
+	reqId := crypto.Keccak256(bz, data)
+
+	// TODO: cache the reqId to check if it's already used
+	reservedUtxos, err := k.reserveUtxos(ctx, custodianGrUID, req.ReqId, req.Amount)
+	if err != nil {
+		return nil, err
+	}
+
 	txIds := make([]string, len(reservedTx))
 	vouts := make([]uint32, len(reservedTx))
 	for i, utxo := range reservedTx {
 		txIds[i] = utxo.TxID.Hex()
 		vouts[i] = utxo.Vout
 	}
+
 	payload, err := callContractWithTokenPayloadArguments.Pack(amount, txIds, vouts)
 	if err != nil {
 		return nil, err
 	}
+
 	return callContractWithTokenArguments.Pack(
 		destChain,
 		destAddress,

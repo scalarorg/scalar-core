@@ -231,6 +231,11 @@
     - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
     - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
   
+- [scalar/covenant/v1beta1/command.proto](#scalar/covenant/v1beta1/command.proto)
+    - [CommandMetadata](#scalar.covenant.v1beta1.CommandMetadata)
+  
+    - [CommandStatus](#scalar.covenant.v1beta1.CommandStatus)
+  
 - [scalar/covenant/v1beta1/redeem.proto](#scalar/covenant/v1beta1/redeem.proto)
     - [ExpiredEvmSession](#scalar.covenant.v1beta1.ExpiredEvmSession)
     - [RedeemSession](#scalar.covenant.v1beta1.RedeemSession)
@@ -3967,6 +3972,56 @@ the deterministic order of the entries
 
 
 
+<a name="scalar/covenant/v1beta1/command.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/covenant/v1beta1/command.proto
+
+
+
+<a name="scalar.covenant.v1beta1.CommandMetadata"></a>
+
+### CommandMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [bytes](#bytes) |  |  |
+| `data` | [bytes](#bytes) |  |  |
+| `sig_hash` | [bytes](#bytes) |  |  |
+| `status` | [CommandStatus](#scalar.covenant.v1beta1.CommandStatus) |  |  |
+| `key_id` | [string](#string) |  |  |
+| `signature` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.covenant.v1beta1.CommandStatus"></a>
+
+### CommandStatus
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| COMMAND_STATUS_UNSPECIFIED | 0 |  |
+| COMMAND_STATUS_SIGNING | 1 |  |
+| COMMAND_STATUS_ABORTED | 2 |  |
+| COMMAND_STATUS_SIGNED | 3 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/covenant/v1beta1/redeem.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -5392,7 +5447,6 @@ Confirm exectuted transaction on bitcoin
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
-| `req_id` | [string](#string) |  | Request id for get response in async mode |
 | `address` | [string](#string) |  | User evm address |
 | `chain` | [string](#string) |  | Evm chain |
 | `symbol` | [string](#string) |  | Token symbol |

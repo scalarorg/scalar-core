@@ -1,0 +1,39 @@
+syntax = "proto3";
+package scalar.covenant.v1beta1;
+
+import "gogoproto/gogo.proto"; 
+import "google/protobuf/any.proto";
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
+
+enum CommandStatus {
+  option (gogoproto.goproto_enum_prefix) = false;
+  COMMAND_STATUS_UNSPECIFIED = 0
+      [ (gogoproto.enumvalue_customname) = "CommandNonExistent" ];
+  COMMAND_STATUS_SIGNING = 1
+      [ (gogoproto.enumvalue_customname) = "CommandSigning" ];
+  COMMAND_STATUS_ABORTED = 2
+      [ (gogoproto.enumvalue_customname) = "CommandAborted" ];
+  COMMAND_STATUS_SIGNED = 3
+      [ (gogoproto.enumvalue_customname) = "CommandSigned" ];
+}
+
+message CommandMetadata {
+    bytes id = 1 [ (gogoproto.customname) = "ID" ];
+    bytes data = 2;
+    bytes sig_hash = 3 [
+      (gogoproto.nullable) = false,
+      (gogoproto.customtype) =
+          "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
+    ];
+    CommandStatus status = 4;
+    string key_id = 5 [
+      (gogoproto.customname) = "KeyID",
+      (gogoproto.casttype) =
+          "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+    ];
+    google.protobuf.Any signature = 6
+        [ (cosmos_proto.accepts_interface) =
+              "github.com/cosmos/codec/ProtoMarshaler" ];
+  }
