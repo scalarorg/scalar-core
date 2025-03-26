@@ -6,7 +6,8 @@ import (
 )
 
 const (
-	EventTypeSwitchPhaseSign = "switchPhaseSign"
+	EventTypeSwitchPhaseSign   = "switchPhaseSign"
+	EventTypeReserveRedeemUtxo = "ReserveRedeemUtxo"
 )
 
 func DefaultRedeemSession() *RedeemSession {
@@ -112,5 +113,13 @@ func NewVoteEvents(chain nexus.ChainName, events ...Event) *VoteEvents {
 	return &VoteEvents{
 		Chain:  chain,
 		Events: events,
+	}
+}
+
+func NewSigMetadata(sigType SigType, chain nexus.ChainName, commandID []byte) *SigMetadata {
+	return &SigMetadata{
+		Type:      sigType,
+		Chain:     chain,
+		CommandID: commandID,
 	}
 }

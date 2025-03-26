@@ -9,6 +9,17 @@ import (
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
+const (
+	AttributeKeyChain  = "chain"
+	AttributeKeyReqId  = "reqId"
+	AttributeCommandId = "commandId"
+)
+
+const (
+	AttributeValueStart   = "start"
+	AttributeValueConfirm = "confirm"
+)
+
 // NewSigningPsbtStarted is the constructor for event signing started
 func NewSigningPsbtStarted(sigID uint64, key multisigTypes.Key, multiPsbt []exported.Psbt, requestingModule string, chainName nexus.ChainName) *SigningPsbtStarted {
 	return &SigningPsbtStarted{

@@ -232,9 +232,13 @@
     - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
   
 - [scalar/covenant/v1beta1/command.proto](#scalar/covenant/v1beta1/command.proto)
+    - [CommandAborted](#scalar.covenant.v1beta1.CommandAborted)
     - [CommandMetadata](#scalar.covenant.v1beta1.CommandMetadata)
+    - [CommandSigned](#scalar.covenant.v1beta1.CommandSigned)
+    - [SigMetadata](#scalar.covenant.v1beta1.SigMetadata)
   
     - [CommandStatus](#scalar.covenant.v1beta1.CommandStatus)
+    - [SigType](#scalar.covenant.v1beta1.SigType)
   
 - [scalar/covenant/v1beta1/redeem.proto](#scalar/covenant/v1beta1/redeem.proto)
     - [ExpiredEvmSession](#scalar.covenant.v1beta1.ExpiredEvmSession)
@@ -3979,6 +3983,22 @@ the deterministic order of the entries
 
 
 
+<a name="scalar.covenant.v1beta1.CommandAborted"></a>
+
+### CommandAborted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `command_id` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
 <a name="scalar.covenant.v1beta1.CommandMetadata"></a>
 
 ### CommandMetadata
@@ -3998,6 +4018,39 @@ the deterministic order of the entries
 
 
 
+
+<a name="scalar.covenant.v1beta1.CommandSigned"></a>
+
+### CommandSigned
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `command_id` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.SigMetadata"></a>
+
+### SigMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `type` | [SigType](#scalar.covenant.v1beta1.SigType) |  |  |
+| `chain` | [string](#string) |  |  |
+| `command_id` | [bytes](#bytes) |  |  |
+
+
+
+
+
  <!-- end messages -->
 
 
@@ -4012,6 +4065,18 @@ the deterministic order of the entries
 | COMMAND_STATUS_SIGNING | 1 |  |
 | COMMAND_STATUS_ABORTED | 2 |  |
 | COMMAND_STATUS_SIGNED | 3 |  |
+
+
+
+<a name="scalar.covenant.v1beta1.SigType"></a>
+
+### SigType
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| SIG_TYPE_UNSPECIFIED | 0 |  |
+| SIG_TYPE_COMMAND | 1 |  |
 
 
  <!-- end enums -->

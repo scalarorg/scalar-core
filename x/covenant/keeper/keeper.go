@@ -32,6 +32,9 @@ var (
 	keygenOptOutPrefix = key.RegisterStaticKey(types.ModuleName, 8)
 
 	pendingRedeemCommandPrefix = utils.KeyFromStr("pending_redeem_command")
+
+	commandPrefix      = key.FromStr("command")
+	unsignedIDKey = key.FromStr("unsigned_command_id")
 )
 
 var _ types.Keeper = &Keeper{}
