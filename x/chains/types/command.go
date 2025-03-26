@@ -53,7 +53,7 @@ var (
 	uint256Type      = funcs.Must(abi.NewType("uint256", "uint256", nil))
 	uint256ArrayType = funcs.Must(abi.NewType("uint256[]", "uint256[]", nil))
 
-	deployTokenArguments                 = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: uint8Type}, {Type: uint256Type}, {Type: addressType}, {Type: uint256Type}}
+	deployTokenArguments                 = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: uint8Type}, {Type: uint256Type}, {Type: addressType}, {Type: uint256Type}, {Type: bytes32Type}}
 	mintTokenArguments                   = abi.Arguments{{Type: stringType}, {Type: addressType}, {Type: uint256Type}}
 	burnTokenArguments                   = abi.Arguments{{Type: stringType}, {Type: bytes32Type}}
 	transferMultisigArguments            = abi.Arguments{{Type: addressesType}, {Type: uint256ArrayType}, {Type: uint256Type}}
@@ -82,11 +82,11 @@ func NewBurnTokenCommand(chainID sdk.Int, keyID multisig.KeyID, height int64, bu
 }
 
 // NewDeployTokenCommand creates a command to deploy a token
-func NewDeployTokenCommand(chainID sdk.Int, keyID multisig.KeyID, asset string, tokenDetails nexus.TokenDetails, address Address, dailyMintLimit sdk.Uint) Command {
+func NewDeployTokenCommand(chainID sdk.Int, keyID multisig.KeyID, asset string, tokenDetails nexus.TokenDetails, address Address, dailyMintLimit sdk.Uint, custodianGroupUID chains.Hash) Command {
 	return Command{
 		ID:         NewCommandID([]byte(fmt.Sprintf("%s_%s", asset, tokenDetails.Symbol)), chainID),
 		Type:       COMMAND_TYPE_DEPLOY_TOKEN,
-		Params:     createDeployTokenParams(tokenDetails.TokenName, tokenDetails.Symbol, tokenDetails.Decimals, tokenDetails.Capacity, address, dailyMintLimit),
+		Params:     createDeployTokenParams(tokenDetails.TokenName, tokenDetails.Symbol, tokenDetails.Decimals, tokenDetails.Capacity, address, dailyMintLimit, custodianGroupUID),
 		KeyID:      keyID,
 		MaxGasCost: deployTokenMaxGasCost,
 	}
@@ -339,7 +339,9 @@ func createBurnTokenParams(symbol string, salt common.Hash) []byte {
 	return funcs.Must(burnTokenArguments.Pack(symbol, salt))
 }
 
-func createDeployTokenParams(tokenName string, symbol string, decimals uint8, capacity sdk.Uint, address Address, dailyMintLimit sdk.Uint) []byte {
+func createDeployTokenParams(tokenName string, symbol string, decimals uint8, capacity sdk.Uint, address Address, dailyMintLimit sdk.Uint, custodianGroupUID chains.Hash) []byte {
+	groupUID := [32]byte{}
+	copy(groupUID[:], custodianGroupUID.Bytes())
 	return funcs.Must(deployTokenArguments.Pack(
 		tokenName,
 		symbol,
@@ -347,6 +349,7 @@ func createDeployTokenParams(tokenName string, symbol string, decimals uint8, ca
 		capacity.BigInt(),
 		address,
 		dailyMintLimit.BigInt(),
+		groupUID,
 	))
 }
 
