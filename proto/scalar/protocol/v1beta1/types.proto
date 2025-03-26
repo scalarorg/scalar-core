@@ -19,9 +19,12 @@ message Protocol {
   bytes tag = 4;
   scalar.protocol.exported.v1beta1.ProtocolAttributes attributes = 5;
   scalar.protocol.exported.v1beta1.Status status = 6;
-  // scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
-  string custodian_group_uid = 7
-      [ (gogoproto.customname) = "CustodianGroupUID" ];
+  bytes custodian_group_uid = 7 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "CustodianGroupUID"
+  ];
   repeated scalar.protocol.exported.v1beta1.SupportedChain chains =
       8;            // Other chains with internal asset
   bytes avatar = 9; // Avatar of the protocol, base64 encoded
@@ -40,8 +43,12 @@ message ProtocolDetails {
   bytes tag = 4;
   scalar.protocol.exported.v1beta1.ProtocolAttributes attributes = 5;
   scalar.protocol.exported.v1beta1.Status status = 6;
-  string custodian_group_uid = 7
-      [ (gogoproto.customname) = "CustodianGroupUID" ];
+  bytes custodian_group_uid = 7 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "CustodianGroupUID"
+  ];
   repeated scalar.protocol.exported.v1beta1.SupportedChain chains =
       8;            // Other chains with internal asset
   bytes avatar = 9; // Avatar of the protocol, base64 encoded

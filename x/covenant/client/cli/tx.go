@@ -10,7 +10,7 @@ import (
 
 // GetTxCmd returns the transaction commands for this module
 func GetTxCmd() *cobra.Command {
-	protocolTxCmd := &cobra.Command{
+	cmd := &cobra.Command{
 		Use:                        types.ModuleName,
 		Short:                      fmt.Sprintf("%s transactions subcommands", types.ModuleName),
 		DisableFlagParsing:         true,
@@ -18,9 +18,9 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	// protocolTxCmd.AddCommand(
-	// 	GetCmdAddProtocol(),
+	// cmd.AddCommand(
+	// 	GetCmdUpdateUtxoForRedeemSession(),
 	// )
 
-	return protocolTxCmd
+	return cmd
 }

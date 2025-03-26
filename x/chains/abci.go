@@ -45,10 +45,11 @@ func handleConfirmedEvents(ctx sdk.Context, bk types.BaseKeeper, n types.Nexus, 
 func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper, cov types.CovenantKeeper) {
 	ck := funcs.Must(bk.ForChain(ctx, chain.Name))
 	queue := ck.GetConfirmedEventQueue(ctx)
-	endBlockerLimit := ck.GetParams(ctx).EndBlockerLimit
+	endBlockerLimit := ck.GetParams(ctx).EndBlockerLimit // Eg: 100
 
 	var events []types.Event
 	var event types.Event
+	// Note: this ensures the blockchain is not frozen by processing all events in the queue
 	for int64(len(events)) < endBlockerLimit && queue.Dequeue(&event) {
 		events = append(events, event)
 	}
@@ -100,8 +101,6 @@ func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 		return handleTokenDeployed(ctx, event, bk, n, p)
 	case *types.Event_MultisigOperatorshipTransferred:
 		return handleMultisigTransferKey(ctx, event, bk, n, m)
-	// TODO: add other event types here
-
 	default:
 		panic(fmt.Errorf("unsupported event type %T", event))
 	}
@@ -292,7 +291,7 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 		return fmt.Errorf("source chain %s is not supported by protocol %s", sourceChain, e.Symbol)
 	}
 
-	cusGr, ok := cov.GetCustodianGroup(ctx, protocolInfo.CustodiansGroupUID)
+	cusGr, ok := cov.GetCustodianGroup(ctx, protocolInfo.CustodianGroupUID)
 	if !ok {
 		return fmt.Errorf("covenant not found")
 	}
@@ -384,6 +383,7 @@ func handleContractCallWithTokenToEVM(ctx sdk.Context, event types.Event, bk typ
 		e.Amount,
 		destinationToken.GetDetails().Symbol,
 	)
+	
 	funcs.MustNoErr(destinationCk.EnqueueCommand(ctx, cmd))
 	bk.Logger(ctx).Debug(fmt.Sprintf("created %s command for event", cmd.Type),
 		"chain", destinationChain,
@@ -552,7 +552,6 @@ func handleConfirmDeposit(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 }
 
 func handleTokenDeployed(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, p types.ProtocolKeeper) error {
-	fmt.Println("HandleTokenDeployed")
 	e := event.GetEvent().(*types.Event_TokenDeployed).TokenDeployed
 	if e == nil {
 		panic(fmt.Errorf("event is nil"))

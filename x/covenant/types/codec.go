@@ -23,6 +23,8 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&CreateCustodianRequest{},
 		&CreateCustodianGroupRequest{},
 		&SubmitTapScriptSigsRequest{},
+		&ConfirmRedeemTxsRequest{},
+		&ConfirmSwitchedPhaseRequest{},
 	)
 	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
 		&gogoprototypes.BoolValue{},

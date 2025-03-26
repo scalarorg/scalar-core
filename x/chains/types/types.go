@@ -37,6 +37,7 @@ const (
 	EventTypeGateway                 = "gateway"
 	EventTypeDepositConfirmation     = "depositConfirmation"
 	EventTypeTokenConfirmation       = "tokenConfirmation"
+	EventTypeRedeemConfirmation      = "redeemConfirmation"
 	EventTypeTransferKeyConfirmation = "transferKeyConfirmation"
 	EventTypeLink                    = "link"
 	EventTypeSign                    = "sign"
@@ -995,3 +996,4 @@ func (m EventMultisigOperatorshipTransferred) ValidateBasic() error {
 
 	return nil
 }
+

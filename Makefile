@@ -302,6 +302,10 @@ params:
 add-protocol:
 	$(SCALAR_BIN_PATH) tx protocol add '{"attribute":{"model":0},"avatar":"nVJ5","bitcoin_pubkey":"03620a0b56223990b75c28dded4f30c854e0918e52179d5a7dfbf79df89fce7bcd","custodian_group_uid":"2689d0b8-6a61-45fa-a39f-53b8f9057aad","name":"lalaa","tag":"pepeS","asset":{"chain_name":"bitcoin|4","asset_name":"Zkkk"}}' --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 1000535
 
+.PHONY: update-utxos
+update-utxos:
+	$(SCALAR_BIN_PATH) tx covenant update-utxo-for-redeem-session sBtc '[{"txid":"9f40b9c83b7d2185b83b7cf43ed676411b95520c4d76eb71b6aa5e9fa7451991","vout":1,"script_pubkey":"6a3f5343414c4152020140706f6f6c73030100000000aa36a7abbeecbbfe4732b9da50ce6b298edf47e351fc05982321eb5693cdbaadffe97056bece07d09ba49f","value":2000}]' 72876 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID)
+
 .PHONY: open-docs
 open-docs:
 	open client/docs/static/openapi/index.html

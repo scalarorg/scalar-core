@@ -72,15 +72,46 @@ func (k Keeper) SetProtocols(ctx sdk.Context, protocols []*types.Protocol) {
 }
 
 func (k Keeper) GetAllProtocols(ctx sdk.Context) ([]*types.Protocol, bool) {
+	clog.Yellowf("GetAllProtocols\n")
 	store := k.getStore(ctx)
+	clog.Yellowf("store: %+v\n", store)
 	protocols := []*types.Protocol{}
+	clog.Yellowf("protocolPrefix: %+v\n", protocolPrefix)
 	iter := store.Iterator(protocolPrefix)
+	clog.Yellowf("iter: %+v\n", iter)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
-	for ; iter.Valid(); iter.Next() {
+	if iter.Valid() {
 		protocol := types.Protocol{}
+		clog.Greenf("1.Before UnmarshalValue\n")
+		v := iter.Value()
+		clog.Yellowf("v: %+v\n", v)
 		iter.UnmarshalValue(&protocol)
+		clog.Yellowf("protocol: %+v\n", protocol)
 		protocols = append(protocols, &protocol)
 	}
+
+	clog.Yellowf("iter.Valid(): %+v\n", iter.Valid())
+	clog.Greenf("iter.Next()\n")
+	iter.Next()
+	if iter.Valid() {
+		protocol := types.Protocol{}
+		clog.Greenf("2.Before UnmarshalValue\n")
+		v := iter.Value()
+		clog.Yellowf("v: %+v\n", v)
+		iter.UnmarshalValue(&protocol)
+		clog.Yellowf("protocol: %+v\n", protocol)
+		protocols = append(protocols, &protocol)
+	} else {
+		clog.Redf("iter is not valid\n")
+	}
+
+	// for ; iter.Valid(); iter.Next() {
+	// 	protocol := types.Protocol{}
+	// 	iter.UnmarshalValue(&protocol)
+	// 	protocols = append(protocols, &protocol)
+	// 	clog.Yellowf("protocol: %+v\n", protocol)
+	// }
+	clog.Yellowf("protocols: %+v\n", protocols)
 	return protocols, true
 }
 
@@ -128,13 +159,21 @@ func (k Keeper) GetProtocolBySender(ctx sdk.Context, sender sdk.AccAddress) (*ty
 func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, symbol string) (*types.Protocol, error) {
 	//ctx := sdk.UnwrapSDKContext(c)
 
+	clog.Yellowf("FindProtocolByExternalSymbol, symbol: %s\n", symbol)
+
 	protocols, ok := k.GetAllProtocols(ctx)
 	if !ok {
+		clog.Yellowf("FindProtocolByExternalSymbol, all protocols not found\n")
 		return nil, status.Errorf(codes.NotFound, "all protocols not found")
 	}
+
+	clog.Yellowf("FindProtocolByExternalSymbol, protocols: %+v\n", protocols)
+
 	for _, protocol := range protocols {
 		// if originChain == protocol.Asset.Chain && symbol == protocol.Asset.Name {
+		clog.Yellowf("FindProtocolByExternalSymbol, protocol: %+v\n", protocol)
 		if !k.IsMatchAsset(protocol, symbol) {
+			clog.Yellowf("FindProtocolByExternalSymbol, asset not matched\n")
 			continue
 		}
 		//Check if the minor chain is supported by the protocol
@@ -144,18 +183,41 @@ func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, symbol string) (*t
 		// 	}
 		// 	return protocol, nil
 		// }
+		clog.Yellowf("FindProtocolByExternalSymbol, asset matched, protocol: %+v \n", protocol)
 		return protocol, nil
 	}
+
+	clog.Yellowf("FindProtocolByExternalSymbol, symbol: %s, not found\n", symbol)
 
 	return nil, status.Errorf(codes.NotFound, "protocol not found")
 }
 
 func (k Keeper) FindProtocolInfoByExternalSymbol(ctx sdk.Context, symbol string) (*pexported.ProtocolInfo, error) {
+	clog.Redf("FindProtocolInfoByExternalSymbol, symbol: %s\n", symbol)
 	protocol, err := k.FindProtocolByExternalSymbol(ctx, symbol)
 	if err != nil {
+		clog.Redf("FindProtocolInfoByExternalSymbol, FindProtocolByExternalSymbol error: %v\n", err)
 		return nil, err
 	}
+	clog.Redf("FindProtocolInfoByExternalSymbol, protocol: %+v\n", protocol)
 	return protocol.ToProtocolInfo(), nil
+}
+func (k Keeper) FindProtocolInfoByCustodianGroupUID(ctx sdk.Context, custodianGroupUIDs [][]byte) []*pexported.ProtocolInfo {
+	result := []*pexported.ProtocolInfo{}
+	protocols, ok := k.GetAllProtocols(ctx)
+	if !ok {
+		return nil
+	}
+	//Todo: optimize this, avoid nested loop
+	for _, protocol := range protocols {
+		for _, custodianGroupUID := range custodianGroupUIDs {
+			if bytes.Equal(protocol.CustodianGroupUID.Bytes(), custodianGroupUID) {
+				result = append(result, protocol.ToProtocolInfo())
+				break
+			}
+		}
+	}
+	return result
 }
 
 func (k Keeper) FindProtocolByInternalAddress(ctx sdk.Context, originChain nexus.ChainName, minorChain nexus.ChainName, internalAddress string) (*types.Protocol, error) {
@@ -225,7 +287,6 @@ func (k Keeper) ValidateAsset(ctx sdk.Context, asset *chains.Asset, sender sdk.A
 	}
 
 	for _, protocol := range protocols {
-		clog.Redf("Protocol: %+v, Asset: %+v", protocol, protocol.Asset)
 		if k.IsMatchAsset(protocol, asset.Symbol) {
 			return status.Errorf(codes.InvalidArgument, "asset %s on chain %s already exists", asset.Symbol, asset.Chain)
 		}

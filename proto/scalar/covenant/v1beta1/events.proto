@@ -2,6 +2,7 @@ syntax = "proto3";
 package scalar.covenant.v1beta1;
 
 import "gogoproto/gogo.proto";
+import "scalar/chains/v1beta1/types.proto";
 import "scalar/covenant/exported/v1beta1/types.proto";
 import "scalar/covenant/v1beta1/redeem.proto";
 
@@ -53,14 +54,110 @@ message SwitchPhaseStarted {
   string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
   string symbol = 3;
   uint64 sequence = 4;
-  //Current phase
-  Phase phase = 5;
-  //Next sequence and phase encoded in the payload
+  // Current phase
+  scalar.covenant.v1beta1.Phase phase = 5;
+  // Next sequence and phase encoded in the payload
   string execute_data = 6 [(gogoproto.customname) = "ExecuteData"];
 }
 
 message SwitchPhaseCompleted {
   string module = 1;
   uint64 sequence = 2;
-  Phase phase = 3;
+  scalar.covenant.v1beta1.Phase phase = 3;
+}
+
+//For Validation process
+message ConfirmSwitchedPhaseStarted {
+  uint64 poll_id = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "PollID",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
+  ];
+  bytes tx_id = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "TxID"
+  ];
+
+  string chain = 3 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  uint64 confirmation_height = 4;
+  repeated bytes participants = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
+  bytes custodian_group_uid = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "CustodianGroupUID"
+  ];
+  bytes script_pubkey = 7;
+  string network_params = 8;
+}
+
+message ConfirmRedeemTxStarted {
+  uint64 poll_id = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "PollID",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
+  ];
+
+  repeated bytes tx_ids = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "TxIDs"
+  ];
+
+  string chain = 3 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  uint64 confirmation_height = 4;
+  repeated bytes participants = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
+  bytes custodian_group_uid = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "CustodianGroupUID"
+  ];
+  bytes script_pubkey = 7;
+  string network_params = 8;
+}
+
+message Event {
+  enum Status {
+    option (gogoproto.goproto_enum_prefix) = false;
+    option (gogoproto.goproto_enum_stringer) = true;
+
+    STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "EventNonExistent"];
+    STATUS_CONFIRMED = 1 [(gogoproto.enumvalue_customname) = "EventConfirmed"];
+    STATUS_COMPLETED = 2 [(gogoproto.enumvalue_customname) = "EventCompleted"];
+    STATUS_FAILED = 3 [(gogoproto.enumvalue_customname) = "EventFailed"];
+  }
+
+  string chain = 1 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  bytes hash = 2 [
+    (gogoproto.customname) = "Hash",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
+  ];
+  Status status = 3;
+  uint64 index = 4;
+  oneof event {
+    RedeemTxsConfirmed redeem_txs_confirmed = 5;
+    SwitchedPhaseConfirmed switched_phase_confirmed = 6;
+  }
+}
+
+message VoteEvents {
+  string chain = 1 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  repeated Event events = 2 [(gogoproto.nullable) = false];
+}
+
+message RedeemTxsConfirmed {
+  repeated string event_ids = 1 [
+    (gogoproto.customname) = "EventIDs",
+    (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/chains/types.EventID"
+  ];
+  UTXOSnapshot utxo_snapshot = 2;
+}
+
+message SwitchedPhaseConfirmed {
+  string event_id = 1 [
+    (gogoproto.customname) = "EventID",
+    (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/chains/types.EventID"
+  ];
+  uint64 session_sequence = 2 [(gogoproto.customname) = "SessionSequence"];
+  uint64 phase_sequence = 3 [(gogoproto.customname) = "PhaseSequence"];
 }

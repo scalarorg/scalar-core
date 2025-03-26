@@ -26,7 +26,7 @@ func NewMsgServerImpl(keeper Keeper, covenant types.CovenantKeeper, permission t
 func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRequest) (*types.CreateProtocolResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	custodianGr, ok := s.covenant.GetCustodianGroup(ctx, req.CustodianGroupUid)
+	custodianGr, ok := s.covenant.GetCustodianGroup(ctx, req.CustodianGroupUID)
 	if !ok {
 		return nil, fmt.Errorf("custodian group not found")
 	}
@@ -85,7 +85,7 @@ func (s msgServer) CreateProtocol(c context.Context, req *types.CreateProtocolRe
 		return nil, fmt.Errorf("chain '%s' not found", req.Asset.Chain)
 	}
 
-	// TODO: validate bitcoin chain	
+	// TODO: validate bitcoin chain
 
 	if err = s.nexus.RegisterAsset(ctx, chain, nexus.NewAsset(req.Asset.Symbol, false), mintLimit, chainTypes.DefaultRateLimitWindow); err != nil {
 		return nil, err

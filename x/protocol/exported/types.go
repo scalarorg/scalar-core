@@ -23,6 +23,10 @@ func (p *ProtocolInfo) IsSupportedChain(chain nexus.ChainName) bool {
 	return false
 }
 
+func (p *ProtocolInfo) IsActivated() bool {
+	return p.Status == Activated
+}
+
 func FormatContractCallWithTokenToBTCKeyID(bitcoinPubKey []byte, model LiquidityModel) (multisig.KeyID, error) {
 	if _, ok := LiquidityModel_name[int32(model)]; !ok {
 		return "", fmt.Errorf("FormatContractCallWithTokenToBTCKeyID > invalid model")

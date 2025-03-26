@@ -57,49 +57,12 @@ func (q Querier) Params(context.Context, *types.ParamsRequest) (*types.ParamsRes
 	return nil, nil
 }
 
-// // KeyID returns the key ID assigned to a given chain
-// func (q Querier) KeyID(c context.Context, req *types.KeyIDRequest) (*types.KeyIDResponse, error) {
-// 	ctx := sdk.UnwrapSDKContext(c)
-
-// 	keyID, ok := q.keeper.GetCurrentKeyID(ctx, nexus.ChainName(req.Chain))
-// 	if !ok {
-// 		return nil, status.Error(codes.NotFound, sdkerrors.Wrap(types.ErrMultisig, fmt.Sprintf("key id not found for chain [%s]", req.Chain)).Error())
-// 	}
-
-// 	return &types.KeyIDResponse{KeyID: keyID}, nil
-// }
-
-// // Key returns the key corresponding to a given key ID
-// func (q Querier) Key(c context.Context, req *types.KeyRequest) (*types.KeyResponse, error) {
-// 	ctx := sdk.UnwrapSDKContext(c)
-
-// 	if _, ok := q.keeper.GetKeygenSession(ctx, req.KeyID); ok {
-// 		return nil, status.Error(codes.NotFound, sdkerrors.Wrap(types.ErrMultisig, fmt.Sprintf("keygen in progress for key id [%s]", req.KeyID)).Error())
-// 	}
-
-// 	key, ok := q.keeper.GetKey(ctx, req.KeyID)
-// 	if !ok {
-// 		return nil, status.Error(codes.NotFound, sdkerrors.Wrap(types.ErrMultisig, fmt.Sprintf("key not found for key id [%s]", req.KeyID)).Error())
-// 	}
-
-// 	participants := slices.Map(key.GetParticipants(), func(p sdk.ValAddress) types.KeygenParticipant {
-// 		return types.KeygenParticipant{
-// 			Address: p.String(),
-// 			Weight:  key.GetWeight(p),
-// 			PubKey:  funcs.MustOk(key.GetPubKey(p)).String(),
-// 		}
-// 	})
-// 	sort.SliceStable(participants, func(i, j int) bool {
-// 		return participants[i].Weight.GT(participants[j].Weight)
-// 	})
-
-// 	return &types.KeyResponse{
-// 		KeyID:              req.KeyID,
-// 		State:              key.GetState(),
-// 		StartedAt:          key.GetHeight(),
-// 		StartedAtTimestamp: key.GetTimestamp(),
-// 		ThresholdWeight:    key.GetMinPassingWeight(),
-// 		BondedWeight:       key.GetBondedWeight(),
-// 		Participants:       participants,
-// 	}, nil
-// }
+func (q Querier) RedeemSession(ctx context.Context, req *types.RedeemSessionRequest) (*types.RedeemSessionResponse, error) {
+	session, ok := q.keeper.GetRedeemSession(sdk.UnwrapSDKContext(ctx), req.UID.Bytes())
+	if !ok {
+		return nil, status.Errorf(codes.NotFound, "redeem session not found")
+	}
+	return &types.RedeemSessionResponse{
+		Session: session,
+	}, nil
+}

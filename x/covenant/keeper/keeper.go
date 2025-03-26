@@ -12,6 +12,8 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 )
 
+const eventsQueue = "events_queue"
+
 var (
 	keygenPrefix           = utils.KeyFromInt(1)
 	signingPrefix          = utils.KeyFromInt(2)
@@ -22,10 +24,14 @@ var (
 	keyRotationCountPrefix = utils.KeyFromInt(7)
 	custodianPrefix        = utils.KeyFromInt(8)
 	custodianGroupPrefix   = utils.KeyFromInt(9)
+	redeemSessionPrefix    = utils.KeyFromInt(10)
+	utxoSnapshotPrefix     = utils.KeyFromInt(11)
 
 	signingSessionCountKey = utils.KeyFromInt(100)
 
 	keygenOptOutPrefix = key.RegisterStaticKey(types.ModuleName, 8)
+
+	pendingRedeemCommandPrefix = utils.KeyFromStr("pending_redeem_command")
 )
 
 var _ types.Keeper = &Keeper{}
@@ -69,4 +75,24 @@ func (k Keeper) getStore(ctx sdk.Context) utils.KVStore {
 func (k Keeper) getStoreIterator(ctx sdk.Context, prefix utils.StringKey) utils.Iterator {
 	store := k.getStore(ctx)
 	return store.Iterator(prefix)
+}
+
+func (k Keeper) GetEventsQueue(ctx sdk.Context) utils.BlockHeightKVQueue {
+	return utils.NewBlockHeightKVQueue(
+		eventsQueue,
+		k.getStore(ctx),
+		ctx.BlockHeight(),
+		k.Logger(ctx),
+	)
+}
+
+func (k Keeper) EnqueueEvent(ctx sdk.Context, event *types.Event) error {
+	// TODO: Critical - fix the key of thevent
+
+	if k.getStore(ctx).HasNew(key.FromStr(event.Chain.String()).Append(key.FromStr(event.Hash.Hex()))) {
+		return fmt.Errorf("event %s already exists", *event.Hash)
+	}
+
+	k.GetEventsQueue(ctx).Enqueue(utils.LowerCaseKey(event.Chain.String()).AppendStr(event.Hash.Hex()), event)
+	return nil
 }

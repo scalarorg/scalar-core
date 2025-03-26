@@ -9,7 +9,6 @@ import "scalar/multisig/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 
-
 message PsbtMultiSig {
   option (gogoproto.stable_marshaler) = true;
 
@@ -18,7 +17,9 @@ message PsbtMultiSig {
     (gogoproto.casttype) =
         "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
-  repeated bytes multi_psbt = 2 [ (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/covenant/exported.Psbt" ];
+  repeated bytes multi_psbt = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/covenant/exported.Psbt" ];
   map<string, scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap>
       participant_list_tap_script_sigs = 3;
   repeated bytes finalized_txs = 4;
@@ -38,4 +39,63 @@ message SigningSession {
   google.protobuf.Any module_metadata = 9
       [ (cosmos_proto.accepts_interface) =
             "github.com/cosmos/codec/ProtoMarshaler" ];
+}
+
+message BasicPollMetadata {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  bytes data = 2;
+}
+
+message BasicPollFailed {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  bytes data = 2;
+  uint64 poll_id = 3 [
+    (gogoproto.customname) = "PollID",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message BasicPollExpired {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  bytes data = 2;
+  uint64 poll_id = 3 [
+    (gogoproto.customname) = "PollID",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message BasicPollCompleted {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  bytes data = 2;
+  uint64 poll_id = 3 [
+    (gogoproto.customname) = "PollID",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message BasicPollNoEventsConfirmed {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  bytes data = 2;
+  uint64 poll_id = 3 [
+    (gogoproto.customname) = "PollID",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
+    (gogoproto.nullable) = false
+  ];
 }

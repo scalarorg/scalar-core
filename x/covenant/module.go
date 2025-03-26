@@ -89,7 +89,11 @@ type AppModule struct {
 	slashing    types.SlashingKeeper
 	snapshotter types.Snapshotter
 	rewarder    types.Rewarder
+	multisig    types.MultisigKeeper
 	nexus       types.Nexus
+	protocol    types.ProtocolKeeper
+	chains      types.BaseKeeper
+	voter       types.Voter
 }
 
 // NewAppModule creates a new AppModule object
@@ -98,7 +102,11 @@ func NewAppModule(k *keeper.Keeper,
 	slashing types.SlashingKeeper,
 	snapshotter types.Snapshotter,
 	rewarder types.Rewarder,
+	multisig types.MultisigKeeper,
 	nexus types.Nexus,
+	protocol types.ProtocolKeeper,
+	chains types.BaseKeeper,
+	voter types.Voter,
 ) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
@@ -107,7 +115,11 @@ func NewAppModule(k *keeper.Keeper,
 		slashing:       slashing,
 		snapshotter:    snapshotter,
 		rewarder:       rewarder,
+		multisig:       multisig,
 		nexus:          nexus,
+		protocol:       protocol,
+		chains:         chains,
+		voter:          voter,
 	}
 }
 
@@ -154,7 +166,11 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 		Snapshotter: am.snapshotter,
 		Staker:      am.staking,
 		Slashing:    am.slashing,
+		Multisig:    am.multisig,
 		Nexus:       am.nexus,
+		Protocol:    am.protocol,
+		Chains:      am.chains,
+		Voter:       am.voter,
 	})
 
 	types.RegisterMsgServiceServer(cfg.MsgServer(), msgServer)
@@ -176,7 +192,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, req abci.RequestBeginBlock) {
 // EndBlock executes all state transitions this module requires at the end of each new block
 func (am AppModule) EndBlock(ctx sdk.Context, req abci.RequestEndBlock) []abci.ValidatorUpdate {
 	return utils.RunCached(ctx, am.keeper, func(ctx sdk.Context) ([]abci.ValidatorUpdate, error) {
-		return EndBlocker(ctx, req, am.keeper, am.rewarder)
+		return EndBlocker(ctx, req, am.keeper, am.protocol, am.multisig, am.rewarder)
 	})
 }
 

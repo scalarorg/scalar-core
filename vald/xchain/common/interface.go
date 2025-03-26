@@ -9,6 +9,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/scalarorg/scalar-core/utils/monads/results"
 	btcTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	covTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
 type TxReceipt interface{}
@@ -40,4 +41,14 @@ type Client interface {
 	GetTransaction(txID Hash) (TxResult, error)
 	LatestFinalizedBlockHeight(confHeight uint64) (uint64, error)
 	Close()
+}
+
+type BtcClient interface {
+	Client
+	ProcessRedeemTxsConfirmation(event *covTypes.ConfirmRedeemTxStarted, proxy sdk.AccAddress) ([]sdk.Msg, error)
+}
+
+type EvmClient interface {
+	Client
+	ProcessSwitchedPhaseConfirmation(event *covTypes.ConfirmSwitchedPhaseStarted, proxy sdk.AccAddress) ([]sdk.Msg, error)
 }

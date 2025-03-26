@@ -9403,6 +9403,223 @@ paths:
           type: string
       tags:
         - QueryService
+  /scalar/covenant/v1beta1/register_custodian_group:
+    post:
+      operationId: RegisterCustodianGroup
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+        default:
+          description: An unexpected error response
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                      description: >-
+                        A URL/resource name that uniquely identifies the type of
+                        the serialized
+
+                        protocol buffer message. This string must contain at
+                        least
+
+                        one "/" character. The last segment of the URL's path
+                        must represent
+
+                        the fully qualified name of the type (as in
+
+                        `path/google.protobuf.Duration`). The name should be in
+                        a canonical form
+
+                        (e.g., leading "." is not accepted).
+
+
+                        In practice, teams usually precompile into the binary
+                        all types that they
+
+                        expect it to use in the context of Any. However, for
+                        URLs which use the
+
+                        scheme `http`, `https`, or no scheme, one can optionally
+                        set up a type
+
+                        server that maps type URLs to message definitions as
+                        follows:
+
+
+                        * If no scheme is provided, `https` is assumed.
+
+                        * An HTTP GET on the URL must yield a
+                        [google.protobuf.Type][]
+                          value in binary format, or produce an error.
+                        * Applications are allowed to cache lookup results based
+                        on the
+                          URL, or have them precompiled into a binary to avoid any
+                          lookup. Therefore, binary compatibility needs to be preserved
+                          on changes to types. (Use versioned type names to manage
+                          breaking changes.)
+
+                        Note: this functionality is not currently available in
+                        the official
+
+                        protobuf release, and it is not used for type URLs
+                        beginning with
+
+                        type.googleapis.com.
+
+
+                        Schemes other than `http`, `https` (or the empty scheme)
+                        might be
+
+                        used with implementation specific semantics.
+                    value:
+                      type: string
+                      format: byte
+                      description: >-
+                        Must be a valid serialized protocol buffer of the above
+                        specified type.
+                  description: >-
+                    `Any` contains an arbitrary serialized protocol buffer
+                    message along with a
+
+                    URL that describes the type of the serialized message.
+
+
+                    Protobuf library provides support to pack/unpack Any values
+                    in the form
+
+                    of utility functions or additional generated methods of the
+                    Any type.
+
+
+                    Example 1: Pack and unpack a message in C++.
+
+                        Foo foo = ...;
+                        Any any;
+                        any.PackFrom(foo);
+                        ...
+                        if (any.UnpackTo(&foo)) {
+                          ...
+                        }
+
+                    Example 2: Pack and unpack a message in Java.
+
+                        Foo foo = ...;
+                        Any any = Any.pack(foo);
+                        ...
+                        if (any.is(Foo.class)) {
+                          foo = any.unpack(Foo.class);
+                        }
+
+                     Example 3: Pack and unpack a message in Python.
+
+                        foo = Foo(...)
+                        any = Any()
+                        any.Pack(foo)
+                        ...
+                        if any.Is(Foo.DESCRIPTOR):
+                          any.Unpack(foo)
+                          ...
+
+                     Example 4: Pack and unpack a message in Go
+
+                         foo := &pb.Foo{...}
+                         any, err := anypb.New(foo)
+                         if err != nil {
+                           ...
+                         }
+                         ...
+                         foo := &pb.Foo{}
+                         if err := any.UnmarshalTo(foo); err != nil {
+                           ...
+                         }
+
+                    The pack methods provided by protobuf library will by
+                    default use
+
+                    'type.googleapis.com/full.type.name' as the type URL and the
+                    unpack
+
+                    methods only use the fully qualified type name after the
+                    last '/'
+
+                    in the type URL, for example "foo.bar.com/x/y.z" will yield
+                    type
+
+                    name "y.z".
+
+
+
+                    JSON
+
+                    ====
+
+                    The JSON representation of an `Any` value uses the regular
+
+                    representation of the deserialized, embedded message, with
+                    an
+
+                    additional field `@type` which contains the type URL.
+                    Example:
+
+                        package google.profile;
+                        message Person {
+                          string first_name = 1;
+                          string last_name = 2;
+                        }
+
+                        {
+                          "@type": "type.googleapis.com/google.profile.Person",
+                          "firstName": <string>,
+                          "lastName": <string>
+                        }
+
+                    If the embedded message type is well-known and has a custom
+                    JSON
+
+                    representation, that representation will be embedded adding
+                    a field
+
+                    `value` which holds the custom JSON in addition to the
+                    `@type`
+
+                    field. Example (for message [google.protobuf.Duration][]):
+
+                        {
+                          "@type": "type.googleapis.com/google.protobuf.Duration",
+                          "value": "1.212s"
+                        }
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              sender:
+                type: string
+                format: byte
+              chain:
+                type: string
+              custodian_group_uid:
+                type: string
+                format: byte
+      tags:
+        - MsgService
   /scalar/protocol/v1beta1:
     get:
       summary: GetProtocols returns all Protocol
@@ -9449,6 +9666,7 @@ paths:
                       default: STATUS_UNSPECIFIED
                     custodian_group_uid:
                       type: string
+                      format: byte
                     chains:
                       type: array
                       items:
@@ -9468,6 +9686,7 @@ paths:
                       properties:
                         uid:
                           type: string
+                          format: byte
                           title: >-
                             the UID is unique, to distinguish between custodian
                             groups
@@ -9813,9 +10032,7 @@ paths:
                     default: STATUS_UNSPECIFIED
                   custodian_group_uid:
                     type: string
-                    title: >-
-                      scalar.covenant.v1beta1.CustodianGroup custodian_group =
-                      8;
+                    format: byte
                   chains:
                     type: array
                     items:
@@ -10110,9 +10327,7 @@ paths:
                     default: STATUS_UNSPECIFIED
                   custodian_group_uid:
                     type: string
-                    title: >-
-                      scalar.covenant.v1beta1.CustodianGroup custodian_group =
-                      8;
+                    format: byte
                   chains:
                     type: array
                     items:
@@ -10375,6 +10590,7 @@ paths:
                     default: LIQUIDITY_MODEL_UNSPECIFIED
               custodian_group_uid:
                 type: string
+                format: byte
               avatar:
                 type: string
                 format: byte
@@ -10439,6 +10655,7 @@ paths:
                     default: STATUS_UNSPECIFIED
                   custodian_group_uid:
                     type: string
+                    format: byte
                   chains:
                     type: array
                     items:
@@ -10458,6 +10675,7 @@ paths:
                     properties:
                       uid:
                         type: string
+                        format: byte
                         title: >-
                           the UID is unique, to distinguish between custodian
                           groups
@@ -10798,9 +11016,7 @@ paths:
                     default: STATUS_UNSPECIFIED
                   custodian_group_uid:
                     type: string
-                    title: >-
-                      scalar.covenant.v1beta1.CustodianGroup custodian_group =
-                      8;
+                    format: byte
                   chains:
                     type: array
                     items:
@@ -11091,9 +11307,7 @@ paths:
                     default: STATUS_UNSPECIFIED
                   custodian_group_uid:
                     type: string
-                    title: >-
-                      scalar.covenant.v1beta1.CustodianGroup custodian_group =
-                      8;
+                    format: byte
                   chains:
                     type: array
                     items:
@@ -11348,6 +11562,229 @@ paths:
                 default: STATUS_UNSPECIFIED
       tags:
         - Msg
+  /scalar/chains/v1beta1/reserve_redeem_utxo:
+    post:
+      operationId: ReserveRedeemUtxo
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+        default:
+          description: An unexpected error response
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                      description: >-
+                        A URL/resource name that uniquely identifies the type of
+                        the serialized
+
+                        protocol buffer message. This string must contain at
+                        least
+
+                        one "/" character. The last segment of the URL's path
+                        must represent
+
+                        the fully qualified name of the type (as in
+
+                        `path/google.protobuf.Duration`). The name should be in
+                        a canonical form
+
+                        (e.g., leading "." is not accepted).
+
+
+                        In practice, teams usually precompile into the binary
+                        all types that they
+
+                        expect it to use in the context of Any. However, for
+                        URLs which use the
+
+                        scheme `http`, `https`, or no scheme, one can optionally
+                        set up a type
+
+                        server that maps type URLs to message definitions as
+                        follows:
+
+
+                        * If no scheme is provided, `https` is assumed.
+
+                        * An HTTP GET on the URL must yield a
+                        [google.protobuf.Type][]
+                          value in binary format, or produce an error.
+                        * Applications are allowed to cache lookup results based
+                        on the
+                          URL, or have them precompiled into a binary to avoid any
+                          lookup. Therefore, binary compatibility needs to be preserved
+                          on changes to types. (Use versioned type names to manage
+                          breaking changes.)
+
+                        Note: this functionality is not currently available in
+                        the official
+
+                        protobuf release, and it is not used for type URLs
+                        beginning with
+
+                        type.googleapis.com.
+
+
+                        Schemes other than `http`, `https` (or the empty scheme)
+                        might be
+
+                        used with implementation specific semantics.
+                    value:
+                      type: string
+                      format: byte
+                      description: >-
+                        Must be a valid serialized protocol buffer of the above
+                        specified type.
+                  description: >-
+                    `Any` contains an arbitrary serialized protocol buffer
+                    message along with a
+
+                    URL that describes the type of the serialized message.
+
+
+                    Protobuf library provides support to pack/unpack Any values
+                    in the form
+
+                    of utility functions or additional generated methods of the
+                    Any type.
+
+
+                    Example 1: Pack and unpack a message in C++.
+
+                        Foo foo = ...;
+                        Any any;
+                        any.PackFrom(foo);
+                        ...
+                        if (any.UnpackTo(&foo)) {
+                          ...
+                        }
+
+                    Example 2: Pack and unpack a message in Java.
+
+                        Foo foo = ...;
+                        Any any = Any.pack(foo);
+                        ...
+                        if (any.is(Foo.class)) {
+                          foo = any.unpack(Foo.class);
+                        }
+
+                     Example 3: Pack and unpack a message in Python.
+
+                        foo = Foo(...)
+                        any = Any()
+                        any.Pack(foo)
+                        ...
+                        if any.Is(Foo.DESCRIPTOR):
+                          any.Unpack(foo)
+                          ...
+
+                     Example 4: Pack and unpack a message in Go
+
+                         foo := &pb.Foo{...}
+                         any, err := anypb.New(foo)
+                         if err != nil {
+                           ...
+                         }
+                         ...
+                         foo := &pb.Foo{}
+                         if err := any.UnmarshalTo(foo); err != nil {
+                           ...
+                         }
+
+                    The pack methods provided by protobuf library will by
+                    default use
+
+                    'type.googleapis.com/full.type.name' as the type URL and the
+                    unpack
+
+                    methods only use the fully qualified type name after the
+                    last '/'
+
+                    in the type URL, for example "foo.bar.com/x/y.z" will yield
+                    type
+
+                    name "y.z".
+
+
+
+                    JSON
+
+                    ====
+
+                    The JSON representation of an `Any` value uses the regular
+
+                    representation of the deserialized, embedded message, with
+                    an
+
+                    additional field `@type` which contains the type URL.
+                    Example:
+
+                        package google.profile;
+                        message Person {
+                          string first_name = 1;
+                          string last_name = 2;
+                        }
+
+                        {
+                          "@type": "type.googleapis.com/google.profile.Person",
+                          "firstName": <string>,
+                          "lastName": <string>
+                        }
+
+                    If the embedded message type is well-known and has a custom
+                    JSON
+
+                    representation, that representation will be embedded adding
+                    a field
+
+                    `value` which holds the custom JSON in addition to the
+                    `@type`
+
+                    field. Example (for message [google.protobuf.Duration][]):
+
+                        {
+                          "@type": "type.googleapis.com/google.protobuf.Duration",
+                          "value": "1.212s"
+                        }
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              sender:
+                type: string
+                format: byte
+              req_id:
+                type: string
+              address:
+                type: string
+              chain:
+                type: string
+              symbol:
+                type: string
+              amount:
+                type: string
+                format: uint64
+      tags:
+        - MsgService
   /scalar/convenant/v1beta1/custodians:
     get:
       summary: Get custodians
@@ -11614,6 +12051,7 @@ paths:
                 properties:
                   uid:
                     type: string
+                    format: byte
                     title: the UID is unique, to distinguish between custodian groups
                   name:
                     type: string
@@ -11881,9 +12319,9 @@ paths:
                 type: string
       tags:
         - MsgService
-  /scalar/covenant/v1beta1/confirm_redeem_tx:
+  /scalar/covenant/v1beta1/confirm_redeem_txs:
     post:
-      operationId: ConfirmRedeemTx
+      operationId: ConfirmRedeemTxs
       responses:
         '200':
           description: A successful response.
@@ -12093,7 +12531,12 @@ paths:
                 format: byte
               chain:
                 type: string
-              tx_id:
+              tx_ids:
+                type: array
+                items:
+                  type: string
+                  format: byte
+              custodian_group_uid:
                 type: string
                 format: byte
             title: Confirm exectuted transaction on bitcoin
@@ -12311,6 +12754,9 @@ paths:
                 format: byte
               chain:
                 type: string
+              custodian_group_uid:
+                type: string
+                format: byte
               tx_id:
                 type: string
                 format: byte
@@ -12583,6 +13029,7 @@ paths:
                 properties:
                   uid:
                     type: string
+                    format: byte
                     title: the UID is unique, to distinguish between custodian groups
                   name:
                     type: string
@@ -12882,6 +13329,7 @@ paths:
                   properties:
                     uid:
                       type: string
+                      format: byte
                       title: >-
                         the UID is unique, to distinguish between custodian
                         groups
@@ -13137,6 +13585,7 @@ paths:
           in: query
           required: false
           type: string
+          format: byte
       tags:
         - QueryService
   /scalar/covenant/v1beta1/params:
@@ -13369,6 +13818,240 @@ paths:
                         }
       tags:
         - QueryService
+  /scalar/covenant/v1beta1/redeem_session:
+    get:
+      operationId: RedeemSession
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              session:
+                type: object
+                properties:
+                  custodian_group_uid:
+                    type: string
+                    format: byte
+                  sequence:
+                    type: string
+                    format: uint64
+                  current_phase:
+                    type: string
+                    enum:
+                      - PHASE_UNSPECIFIED
+                      - PHASE_PREPARING
+                      - PHASE_EXECUTING
+                    default: PHASE_UNSPECIFIED
+                  last_redeem_tx:
+                    type: string
+                    format: byte
+                  is_switching:
+                    type: boolean
+                    format: boolean
+                  phase_expired_at:
+                    type: string
+                    format: uint64
+        default:
+          description: An unexpected error response
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                      description: >-
+                        A URL/resource name that uniquely identifies the type of
+                        the serialized
+
+                        protocol buffer message. This string must contain at
+                        least
+
+                        one "/" character. The last segment of the URL's path
+                        must represent
+
+                        the fully qualified name of the type (as in
+
+                        `path/google.protobuf.Duration`). The name should be in
+                        a canonical form
+
+                        (e.g., leading "." is not accepted).
+
+
+                        In practice, teams usually precompile into the binary
+                        all types that they
+
+                        expect it to use in the context of Any. However, for
+                        URLs which use the
+
+                        scheme `http`, `https`, or no scheme, one can optionally
+                        set up a type
+
+                        server that maps type URLs to message definitions as
+                        follows:
+
+
+                        * If no scheme is provided, `https` is assumed.
+
+                        * An HTTP GET on the URL must yield a
+                        [google.protobuf.Type][]
+                          value in binary format, or produce an error.
+                        * Applications are allowed to cache lookup results based
+                        on the
+                          URL, or have them precompiled into a binary to avoid any
+                          lookup. Therefore, binary compatibility needs to be preserved
+                          on changes to types. (Use versioned type names to manage
+                          breaking changes.)
+
+                        Note: this functionality is not currently available in
+                        the official
+
+                        protobuf release, and it is not used for type URLs
+                        beginning with
+
+                        type.googleapis.com.
+
+
+                        Schemes other than `http`, `https` (or the empty scheme)
+                        might be
+
+                        used with implementation specific semantics.
+                    value:
+                      type: string
+                      format: byte
+                      description: >-
+                        Must be a valid serialized protocol buffer of the above
+                        specified type.
+                  description: >-
+                    `Any` contains an arbitrary serialized protocol buffer
+                    message along with a
+
+                    URL that describes the type of the serialized message.
+
+
+                    Protobuf library provides support to pack/unpack Any values
+                    in the form
+
+                    of utility functions or additional generated methods of the
+                    Any type.
+
+
+                    Example 1: Pack and unpack a message in C++.
+
+                        Foo foo = ...;
+                        Any any;
+                        any.PackFrom(foo);
+                        ...
+                        if (any.UnpackTo(&foo)) {
+                          ...
+                        }
+
+                    Example 2: Pack and unpack a message in Java.
+
+                        Foo foo = ...;
+                        Any any = Any.pack(foo);
+                        ...
+                        if (any.is(Foo.class)) {
+                          foo = any.unpack(Foo.class);
+                        }
+
+                     Example 3: Pack and unpack a message in Python.
+
+                        foo = Foo(...)
+                        any = Any()
+                        any.Pack(foo)
+                        ...
+                        if any.Is(Foo.DESCRIPTOR):
+                          any.Unpack(foo)
+                          ...
+
+                     Example 4: Pack and unpack a message in Go
+
+                         foo := &pb.Foo{...}
+                         any, err := anypb.New(foo)
+                         if err != nil {
+                           ...
+                         }
+                         ...
+                         foo := &pb.Foo{}
+                         if err := any.UnmarshalTo(foo); err != nil {
+                           ...
+                         }
+
+                    The pack methods provided by protobuf library will by
+                    default use
+
+                    'type.googleapis.com/full.type.name' as the type URL and the
+                    unpack
+
+                    methods only use the fully qualified type name after the
+                    last '/'
+
+                    in the type URL, for example "foo.bar.com/x/y.z" will yield
+                    type
+
+                    name "y.z".
+
+
+
+                    JSON
+
+                    ====
+
+                    The JSON representation of an `Any` value uses the regular
+
+                    representation of the deserialized, embedded message, with
+                    an
+
+                    additional field `@type` which contains the type URL.
+                    Example:
+
+                        package google.profile;
+                        message Person {
+                          string first_name = 1;
+                          string last_name = 2;
+                        }
+
+                        {
+                          "@type": "type.googleapis.com/google.profile.Person",
+                          "firstName": <string>,
+                          "lastName": <string>
+                        }
+
+                    If the embedded message type is well-known and has a custom
+                    JSON
+
+                    representation, that representation will be embedded adding
+                    a field
+
+                    `value` which holds the custom JSON in addition to the
+                    `@type`
+
+                    field. Example (for message [google.protobuf.Duration][]):
+
+                        {
+                          "@type": "type.googleapis.com/google.protobuf.Duration",
+                          "value": "1.212s"
+                        }
+      parameters:
+        - name: uid
+          in: query
+          required: false
+          type: string
+          format: byte
+      tags:
+        - QueryService
   /scalar/covenant/v1beta1/remove_custodian_from_group:
     post:
       summary: |-
@@ -13386,6 +14069,7 @@ paths:
                 properties:
                   uid:
                     type: string
+                    format: byte
                     title: the UID is unique, to distinguish between custodian groups
                   name:
                     type: string
@@ -14386,6 +15070,7 @@ paths:
                 properties:
                   uid:
                     type: string
+                    format: byte
                     title: the UID is unique, to distinguish between custodian groups
                   name:
                     type: string
@@ -14666,223 +15351,6 @@ paths:
                 items:
                   type: string
                   format: byte
-      tags:
-        - MsgService
-  /scalar/covenant/v1beta1/update_new_btc_block:
-    post:
-      operationId: UpdateNewBtcBlock
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-        default:
-          description: An unexpected error response
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    type_url:
-                      type: string
-                      description: >-
-                        A URL/resource name that uniquely identifies the type of
-                        the serialized
-
-                        protocol buffer message. This string must contain at
-                        least
-
-                        one "/" character. The last segment of the URL's path
-                        must represent
-
-                        the fully qualified name of the type (as in
-
-                        `path/google.protobuf.Duration`). The name should be in
-                        a canonical form
-
-                        (e.g., leading "." is not accepted).
-
-
-                        In practice, teams usually precompile into the binary
-                        all types that they
-
-                        expect it to use in the context of Any. However, for
-                        URLs which use the
-
-                        scheme `http`, `https`, or no scheme, one can optionally
-                        set up a type
-
-                        server that maps type URLs to message definitions as
-                        follows:
-
-
-                        * If no scheme is provided, `https` is assumed.
-
-                        * An HTTP GET on the URL must yield a
-                        [google.protobuf.Type][]
-                          value in binary format, or produce an error.
-                        * Applications are allowed to cache lookup results based
-                        on the
-                          URL, or have them precompiled into a binary to avoid any
-                          lookup. Therefore, binary compatibility needs to be preserved
-                          on changes to types. (Use versioned type names to manage
-                          breaking changes.)
-
-                        Note: this functionality is not currently available in
-                        the official
-
-                        protobuf release, and it is not used for type URLs
-                        beginning with
-
-                        type.googleapis.com.
-
-
-                        Schemes other than `http`, `https` (or the empty scheme)
-                        might be
-
-                        used with implementation specific semantics.
-                    value:
-                      type: string
-                      format: byte
-                      description: >-
-                        Must be a valid serialized protocol buffer of the above
-                        specified type.
-                  description: >-
-                    `Any` contains an arbitrary serialized protocol buffer
-                    message along with a
-
-                    URL that describes the type of the serialized message.
-
-
-                    Protobuf library provides support to pack/unpack Any values
-                    in the form
-
-                    of utility functions or additional generated methods of the
-                    Any type.
-
-
-                    Example 1: Pack and unpack a message in C++.
-
-                        Foo foo = ...;
-                        Any any;
-                        any.PackFrom(foo);
-                        ...
-                        if (any.UnpackTo(&foo)) {
-                          ...
-                        }
-
-                    Example 2: Pack and unpack a message in Java.
-
-                        Foo foo = ...;
-                        Any any = Any.pack(foo);
-                        ...
-                        if (any.is(Foo.class)) {
-                          foo = any.unpack(Foo.class);
-                        }
-
-                     Example 3: Pack and unpack a message in Python.
-
-                        foo = Foo(...)
-                        any = Any()
-                        any.Pack(foo)
-                        ...
-                        if any.Is(Foo.DESCRIPTOR):
-                          any.Unpack(foo)
-                          ...
-
-                     Example 4: Pack and unpack a message in Go
-
-                         foo := &pb.Foo{...}
-                         any, err := anypb.New(foo)
-                         if err != nil {
-                           ...
-                         }
-                         ...
-                         foo := &pb.Foo{}
-                         if err := any.UnmarshalTo(foo); err != nil {
-                           ...
-                         }
-
-                    The pack methods provided by protobuf library will by
-                    default use
-
-                    'type.googleapis.com/full.type.name' as the type URL and the
-                    unpack
-
-                    methods only use the fully qualified type name after the
-                    last '/'
-
-                    in the type URL, for example "foo.bar.com/x/y.z" will yield
-                    type
-
-                    name "y.z".
-
-
-
-                    JSON
-
-                    ====
-
-                    The JSON representation of an `Any` value uses the regular
-
-                    representation of the deserialized, embedded message, with
-                    an
-
-                    additional field `@type` which contains the type URL.
-                    Example:
-
-                        package google.profile;
-                        message Person {
-                          string first_name = 1;
-                          string last_name = 2;
-                        }
-
-                        {
-                          "@type": "type.googleapis.com/google.profile.Person",
-                          "firstName": <string>,
-                          "lastName": <string>
-                        }
-
-                    If the embedded message type is well-known and has a custom
-                    JSON
-
-                    representation, that representation will be embedded adding
-                    a field
-
-                    `value` which holds the custom JSON in addition to the
-                    `@type`
-
-                    field. Example (for message [google.protobuf.Duration][]):
-
-                        {
-                          "@type": "type.googleapis.com/google.protobuf.Duration",
-                          "value": "1.212s"
-                        }
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            type: object
-            properties:
-              sender:
-                type: string
-                format: byte
-              chain:
-                type: string
-              height:
-                type: string
-                format: uint64
       tags:
         - MsgService
   /scalar/multisig/rotate_key:
@@ -59029,6 +59497,19 @@ definitions:
       payload:
         type: string
         format: byte
+  scalar.chains.v1beta1.RegisterCustodianGroupRequest:
+    type: object
+    properties:
+      sender:
+        type: string
+        format: byte
+      chain:
+        type: string
+      custodian_group_uid:
+        type: string
+        format: byte
+  scalar.chains.v1beta1.RegisterCustodianGroupResponse:
+    type: object
   scalar.chains.v1beta1.RetryFailedEventRequest:
     type: object
     properties:
@@ -59208,6 +59689,7 @@ definitions:
     properties:
       uid:
         type: string
+        format: byte
         title: the UID is unique, to distinguish between custodian groups
       name:
         type: string
@@ -59351,7 +59833,7 @@ definitions:
             default: STATUS_UNSPECIFIED
           custodian_group_uid:
             type: string
-            title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
+            format: byte
           chains:
             type: array
             items:
@@ -59418,6 +59900,7 @@ definitions:
             default: LIQUIDITY_MODEL_UNSPECIFIED
       custodian_group_uid:
         type: string
+        format: byte
       avatar:
         type: string
         format: byte
@@ -59474,7 +59957,7 @@ definitions:
             default: STATUS_UNSPECIFIED
           custodian_group_uid:
             type: string
-            title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
+            format: byte
           chains:
             type: array
             items:
@@ -59546,7 +60029,7 @@ definitions:
         default: STATUS_UNSPECIFIED
       custodian_group_uid:
         type: string
-        title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
+        format: byte
       chains:
         type: array
         items:
@@ -59618,6 +60101,7 @@ definitions:
         default: STATUS_UNSPECIFIED
       custodian_group_uid:
         type: string
+        format: byte
       chains:
         type: array
         items:
@@ -59637,6 +60121,7 @@ definitions:
         properties:
           uid:
             type: string
+            format: byte
             title: the UID is unique, to distinguish between custodian groups
           name:
             type: string
@@ -59749,6 +60234,7 @@ definitions:
             default: STATUS_UNSPECIFIED
           custodian_group_uid:
             type: string
+            format: byte
           chains:
             type: array
             items:
@@ -59768,6 +60254,7 @@ definitions:
             properties:
               uid:
                 type: string
+                format: byte
                 title: the UID is unique, to distinguish between custodian groups
               name:
                 type: string
@@ -59884,6 +60371,7 @@ definitions:
               default: STATUS_UNSPECIFIED
             custodian_group_uid:
               type: string
+              format: byte
             chains:
               type: array
               items:
@@ -59903,6 +60391,7 @@ definitions:
               properties:
                 uid:
                   type: string
+                  format: byte
                   title: the UID is unique, to distinguish between custodian groups
                 name:
                   type: string
@@ -60031,7 +60520,7 @@ definitions:
             default: STATUS_UNSPECIFIED
           custodian_group_uid:
             type: string
-            title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
+            format: byte
           chains:
             type: array
             items:
@@ -60125,7 +60614,7 @@ definitions:
             default: STATUS_UNSPECIFIED
           custodian_group_uid:
             type: string
-            title: scalar.covenant.v1beta1.CustodianGroup custodian_group = 8;
+            format: byte
           chains:
             type: array
             items:
@@ -60261,7 +60750,7 @@ definitions:
         format: byte
       description:
         type: string
-  scalar.covenant.v1beta1.ConfirmRedeemTxRequest:
+  scalar.covenant.v1beta1.ConfirmRedeemTxsRequest:
     type: object
     properties:
       sender:
@@ -60269,11 +60758,16 @@ definitions:
         format: byte
       chain:
         type: string
-      tx_id:
+      tx_ids:
+        type: array
+        items:
+          type: string
+          format: byte
+      custodian_group_uid:
         type: string
         format: byte
     title: Confirm exectuted transaction on bitcoin
-  scalar.covenant.v1beta1.ConfirmRedeemTxResponse:
+  scalar.covenant.v1beta1.ConfirmRedeemTxsResponse:
     type: object
   scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest:
     type: object
@@ -60283,6 +60777,9 @@ definitions:
         format: byte
       chain:
         type: string
+      custodian_group_uid:
+        type: string
+        format: byte
       tx_id:
         type: string
         format: byte
@@ -60324,6 +60821,7 @@ definitions:
         properties:
           uid:
             type: string
+            format: byte
             title: the UID is unique, to distinguish between custodian groups
           name:
             type: string
@@ -60431,6 +60929,7 @@ definitions:
         properties:
           uid:
             type: string
+            format: byte
             title: the UID is unique, to distinguish between custodian groups
           name:
             type: string
@@ -60521,6 +61020,7 @@ definitions:
           properties:
             uid:
               type: string
+              format: byte
               title: the UID is unique, to distinguish between custodian groups
             name:
               type: string
@@ -60631,6 +61131,66 @@ definitions:
             type: string
             format: uint64
         title: Params represent the genesis parameters for the module
+  scalar.covenant.v1beta1.Phase:
+    type: string
+    enum:
+      - PHASE_UNSPECIFIED
+      - PHASE_PREPARING
+      - PHASE_EXECUTING
+    default: PHASE_UNSPECIFIED
+  scalar.covenant.v1beta1.RedeemSession:
+    type: object
+    properties:
+      custodian_group_uid:
+        type: string
+        format: byte
+      sequence:
+        type: string
+        format: uint64
+      current_phase:
+        type: string
+        enum:
+          - PHASE_UNSPECIFIED
+          - PHASE_PREPARING
+          - PHASE_EXECUTING
+        default: PHASE_UNSPECIFIED
+      last_redeem_tx:
+        type: string
+        format: byte
+      is_switching:
+        type: boolean
+        format: boolean
+      phase_expired_at:
+        type: string
+        format: uint64
+  scalar.covenant.v1beta1.RedeemSessionResponse:
+    type: object
+    properties:
+      session:
+        type: object
+        properties:
+          custodian_group_uid:
+            type: string
+            format: byte
+          sequence:
+            type: string
+            format: uint64
+          current_phase:
+            type: string
+            enum:
+              - PHASE_UNSPECIFIED
+              - PHASE_PREPARING
+              - PHASE_EXECUTING
+            default: PHASE_UNSPECIFIED
+          last_redeem_tx:
+            type: string
+            format: byte
+          is_switching:
+            type: boolean
+            format: boolean
+          phase_expired_at:
+            type: string
+            format: uint64
   scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest:
     type: object
     properties:
@@ -60644,6 +61204,25 @@ definitions:
         format: byte
       description:
         type: string
+  scalar.covenant.v1beta1.ReserveRedeemUtxoRequest:
+    type: object
+    properties:
+      sender:
+        type: string
+        format: byte
+      req_id:
+        type: string
+      address:
+        type: string
+      chain:
+        type: string
+      symbol:
+        type: string
+      amount:
+        type: string
+        format: uint64
+  scalar.covenant.v1beta1.ReserveRedeemUtxoResponse:
+    type: object
   scalar.covenant.v1beta1.RotateKeyRequest:
     type: object
     properties:
@@ -60737,6 +61316,7 @@ definitions:
         properties:
           uid:
             type: string
+            format: byte
             title: the UID is unique, to distinguish between custodian groups
           name:
             type: string
@@ -60837,19 +61417,6 @@ definitions:
           description:
             type: string
         title: Custodian represents an individual custodian configuration
-  scalar.covenant.v1beta1.UpdateNewBtcBlockRequest:
-    type: object
-    properties:
-      sender:
-        type: string
-        format: byte
-      chain:
-        type: string
-      height:
-        type: string
-        format: uint64
-  scalar.covenant.v1beta1.UpdateNewBtcBlockResponse:
-    type: object
   scalar.multisig.exported.v1beta1.KeyState:
     type: string
     enum:

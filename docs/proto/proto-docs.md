@@ -60,18 +60,6 @@
     - [KeyShareDistributionPolicy](#scalar.tss.exported.v1beta1.KeyShareDistributionPolicy)
     - [KeyType](#scalar.tss.exported.v1beta1.KeyType)
   
-- [scalar/snapshot/exported/v1beta1/types.proto](#scalar/snapshot/exported/v1beta1/types.proto)
-    - [Participant](#scalar.snapshot.exported.v1beta1.Participant)
-    - [Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot)
-    - [Snapshot.ParticipantsEntry](#scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry)
-  
-- [scalar/vote/exported/v1beta1/types.proto](#scalar/vote/exported/v1beta1/types.proto)
-    - [PollKey](#scalar.vote.exported.v1beta1.PollKey)
-    - [PollMetadata](#scalar.vote.exported.v1beta1.PollMetadata)
-    - [PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants)
-  
-    - [PollState](#scalar.vote.exported.v1beta1.PollState)
-  
 - [scalar/nexus/exported/v1beta1/types.proto](#scalar/nexus/exported/v1beta1/types.proto)
     - [Asset](#scalar.nexus.exported.v1beta1.Asset)
     - [Chain](#scalar.nexus.exported.v1beta1.Chain)
@@ -86,6 +74,18 @@
     - [GeneralMessage.Status](#scalar.nexus.exported.v1beta1.GeneralMessage.Status)
     - [TransferDirection](#scalar.nexus.exported.v1beta1.TransferDirection)
     - [TransferState](#scalar.nexus.exported.v1beta1.TransferState)
+  
+- [scalar/snapshot/exported/v1beta1/types.proto](#scalar/snapshot/exported/v1beta1/types.proto)
+    - [Participant](#scalar.snapshot.exported.v1beta1.Participant)
+    - [Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot)
+    - [Snapshot.ParticipantsEntry](#scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry)
+  
+- [scalar/vote/exported/v1beta1/types.proto](#scalar/vote/exported/v1beta1/types.proto)
+    - [PollKey](#scalar.vote.exported.v1beta1.PollKey)
+    - [PollMetadata](#scalar.vote.exported.v1beta1.PollMetadata)
+    - [PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants)
+  
+    - [PollState](#scalar.vote.exported.v1beta1.PollState)
   
 - [scalar/chains/v1beta1/events.proto](#scalar/chains/v1beta1/events.proto)
     - [BurnCommand](#scalar.chains.v1beta1.BurnCommand)
@@ -199,6 +199,8 @@
     - [CreateTransferOwnershipResponse](#scalar.chains.v1beta1.CreateTransferOwnershipResponse)
     - [LinkRequest](#scalar.chains.v1beta1.LinkRequest)
     - [LinkResponse](#scalar.chains.v1beta1.LinkResponse)
+    - [RegisterCustodianGroupRequest](#scalar.chains.v1beta1.RegisterCustodianGroupRequest)
+    - [RegisterCustodianGroupResponse](#scalar.chains.v1beta1.RegisterCustodianGroupResponse)
     - [RetryFailedEventRequest](#scalar.chains.v1beta1.RetryFailedEventRequest)
     - [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse)
     - [SetGatewayRequest](#scalar.chains.v1beta1.SetGatewayRequest)
@@ -230,21 +232,31 @@
     - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
   
 - [scalar/covenant/v1beta1/redeem.proto](#scalar/covenant/v1beta1/redeem.proto)
+    - [ExpiredEvmSession](#scalar.covenant.v1beta1.ExpiredEvmSession)
     - [RedeemSession](#scalar.covenant.v1beta1.RedeemSession)
-    - [RedeemSession.RequestedAmountInSatsEntry](#scalar.covenant.v1beta1.RedeemSession.RequestedAmountInSatsEntry)
     - [UTXO](#scalar.covenant.v1beta1.UTXO)
+    - [UTXO.ReservedEntry](#scalar.covenant.v1beta1.UTXO.ReservedEntry)
+    - [UTXOSnapshot](#scalar.covenant.v1beta1.UTXOSnapshot)
   
     - [Phase](#scalar.covenant.v1beta1.Phase)
   
 - [scalar/covenant/v1beta1/events.proto](#scalar/covenant/v1beta1/events.proto)
+    - [ConfirmRedeemTxStarted](#scalar.covenant.v1beta1.ConfirmRedeemTxStarted)
+    - [ConfirmSwitchedPhaseStarted](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseStarted)
+    - [Event](#scalar.covenant.v1beta1.Event)
     - [KeyRotated](#scalar.covenant.v1beta1.KeyRotated)
+    - [RedeemTxsConfirmed](#scalar.covenant.v1beta1.RedeemTxsConfirmed)
     - [SigningPsbtCompleted](#scalar.covenant.v1beta1.SigningPsbtCompleted)
     - [SigningPsbtExpired](#scalar.covenant.v1beta1.SigningPsbtExpired)
     - [SigningPsbtStarted](#scalar.covenant.v1beta1.SigningPsbtStarted)
     - [SigningPsbtStarted.PubKeysEntry](#scalar.covenant.v1beta1.SigningPsbtStarted.PubKeysEntry)
     - [SwitchPhaseCompleted](#scalar.covenant.v1beta1.SwitchPhaseCompleted)
     - [SwitchPhaseStarted](#scalar.covenant.v1beta1.SwitchPhaseStarted)
+    - [SwitchedPhaseConfirmed](#scalar.covenant.v1beta1.SwitchedPhaseConfirmed)
     - [TapScriptSigsSubmitted](#scalar.covenant.v1beta1.TapScriptSigsSubmitted)
+    - [VoteEvents](#scalar.covenant.v1beta1.VoteEvents)
+  
+    - [Event.Status](#scalar.covenant.v1beta1.Event.Status)
   
 - [scalar/multisig/exported/v1beta1/types.proto](#scalar/multisig/exported/v1beta1/types.proto)
     - [KeyState](#scalar.multisig.exported.v1beta1.KeyState)
@@ -261,6 +273,11 @@
     - [SigningSession](#scalar.multisig.v1beta1.SigningSession)
   
 - [scalar/covenant/v1beta1/types.proto](#scalar/covenant/v1beta1/types.proto)
+    - [BasicPollCompleted](#scalar.covenant.v1beta1.BasicPollCompleted)
+    - [BasicPollExpired](#scalar.covenant.v1beta1.BasicPollExpired)
+    - [BasicPollFailed](#scalar.covenant.v1beta1.BasicPollFailed)
+    - [BasicPollMetadata](#scalar.covenant.v1beta1.BasicPollMetadata)
+    - [BasicPollNoEventsConfirmed](#scalar.covenant.v1beta1.BasicPollNoEventsConfirmed)
     - [PsbtMultiSig](#scalar.covenant.v1beta1.PsbtMultiSig)
     - [PsbtMultiSig.ParticipantListTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantListTapScriptSigsEntry)
     - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
@@ -296,11 +313,13 @@
     - [KeyResponse](#scalar.covenant.v1beta1.KeyResponse)
     - [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest)
     - [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse)
+    - [RedeemSessionRequest](#scalar.covenant.v1beta1.RedeemSessionRequest)
+    - [RedeemSessionResponse](#scalar.covenant.v1beta1.RedeemSessionResponse)
   
 - [scalar/covenant/v1beta1/tx.proto](#scalar/covenant/v1beta1/tx.proto)
     - [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest)
-    - [ConfirmRedeemTxRequest](#scalar.covenant.v1beta1.ConfirmRedeemTxRequest)
-    - [ConfirmRedeemTxResponse](#scalar.covenant.v1beta1.ConfirmRedeemTxResponse)
+    - [ConfirmRedeemTxsRequest](#scalar.covenant.v1beta1.ConfirmRedeemTxsRequest)
+    - [ConfirmRedeemTxsResponse](#scalar.covenant.v1beta1.ConfirmRedeemTxsResponse)
     - [ConfirmSwitchedPhaseRequest](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest)
     - [ConfirmSwitchedPhaseResponse](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseResponse)
     - [CreateCustodianGroupRequest](#scalar.covenant.v1beta1.CreateCustodianGroupRequest)
@@ -309,6 +328,8 @@
     - [CreateCustodianResponse](#scalar.covenant.v1beta1.CreateCustodianResponse)
     - [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse)
     - [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest)
+    - [ReserveRedeemUtxoRequest](#scalar.covenant.v1beta1.ReserveRedeemUtxoRequest)
+    - [ReserveRedeemUtxoResponse](#scalar.covenant.v1beta1.ReserveRedeemUtxoResponse)
     - [RotateKeyRequest](#scalar.covenant.v1beta1.RotateKeyRequest)
     - [RotateKeyResponse](#scalar.covenant.v1beta1.RotateKeyResponse)
     - [SubmitTapScriptSigsRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigsRequest)
@@ -317,8 +338,6 @@
     - [UpdateCustodianGroupResponse](#scalar.covenant.v1beta1.UpdateCustodianGroupResponse)
     - [UpdateCustodianRequest](#scalar.covenant.v1beta1.UpdateCustodianRequest)
     - [UpdateCustodianResponse](#scalar.covenant.v1beta1.UpdateCustodianResponse)
-    - [UpdateNewBtcBlockRequest](#scalar.covenant.v1beta1.UpdateNewBtcBlockRequest)
-    - [UpdateNewBtcBlockResponse](#scalar.covenant.v1beta1.UpdateNewBtcBlockResponse)
   
 - [scalar/covenant/v1beta1/service.proto](#scalar/covenant/v1beta1/service.proto)
     - [MsgService](#scalar.covenant.v1beta1.MsgService)
@@ -1230,6 +1249,7 @@ TransferKey contains information for a transfer operatorship
 | COMMAND_TYPE_TRANSFER_OPERATORSHIP | 4 |  |
 | COMMAND_TYPE_APPROVE_CONTRACT_CALL_WITH_MINT | 5 |  |
 | COMMAND_TYPE_APPROVE_CONTRACT_CALL | 6 |  |
+| COMMAND_TYPE_REGISTER_CUSTODIAN_GROUP | 7 |  |
 
 
 
@@ -1415,161 +1435,6 @@ PubKeyInfo holds a pubkey and a signature
 | KEY_TYPE_NONE | 1 |  |
 | KEY_TYPE_THRESHOLD | 2 |  |
 | KEY_TYPE_MULTISIG | 3 |  |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/snapshot/exported/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/snapshot/exported/v1beta1/types.proto
-
-
-
-<a name="scalar.snapshot.exported.v1beta1.Participant"></a>
-
-### Participant
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `address` | [bytes](#bytes) |  |  |
-| `weight` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.snapshot.exported.v1beta1.Snapshot"></a>
-
-### Snapshot
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
-| `height` | [int64](#int64) |  |  |
-| `participants` | [Snapshot.ParticipantsEntry](#scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry) | repeated |  |
-| `bonded_weight` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry"></a>
-
-### Snapshot.ParticipantsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [string](#string) |  |  |
-| `value` | [Participant](#scalar.snapshot.exported.v1beta1.Participant) |  |  |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/vote/exported/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/vote/exported/v1beta1/types.proto
-
-
-
-<a name="scalar.vote.exported.v1beta1.PollKey"></a>
-
-### PollKey
-PollKey represents the key data for a poll
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `module` | [string](#string) |  |  |
-| `id` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="scalar.vote.exported.v1beta1.PollMetadata"></a>
-
-### PollMetadata
-PollMetadata represents a poll with write-in voting, i.e. the result of the
-vote can have any data type
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `expires_at` | [int64](#int64) |  |  |
-| `result` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
-| `voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
-| `state` | [PollState](#scalar.vote.exported.v1beta1.PollState) |  |  |
-| `min_voter_count` | [int64](#int64) |  |  |
-| `reward_pool_name` | [string](#string) |  |  |
-| `grace_period` | [int64](#int64) |  |  |
-| `completed_at` | [int64](#int64) |  |  |
-| `id` | [uint64](#uint64) |  |  |
-| `snapshot` | [scalar.snapshot.exported.v1beta1.Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot) |  |  |
-| `module` | [string](#string) |  |  |
-| `module_metadata` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
-
-
-
-
-
-
-<a name="scalar.vote.exported.v1beta1.PollParticipants"></a>
-
-### PollParticipants
-PollParticipants should be embedded in poll events in other modules
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `poll_id` | [uint64](#uint64) |  |  |
-| `participants` | [bytes](#bytes) | repeated |  |
-
-
-
-
-
- <!-- end messages -->
-
-
-<a name="scalar.vote.exported.v1beta1.PollState"></a>
-
-### PollState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| POLL_STATE_UNSPECIFIED | 0 |  |
-| POLL_STATE_PENDING | 1 |  |
-| POLL_STATE_COMPLETED | 2 |  |
-| POLL_STATE_FAILED | 3 |  |
 
 
  <!-- end enums -->
@@ -1797,6 +1662,161 @@ TransferFee represents accumulated fees generated by the network
 | TRANSFER_STATE_ARCHIVED | 2 |  |
 | TRANSFER_STATE_INSUFFICIENT_AMOUNT | 3 |  |
 | TRANSFER_STATE_FAILED | 4 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/snapshot/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/snapshot/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.snapshot.exported.v1beta1.Participant"></a>
+
+### Participant
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [bytes](#bytes) |  |  |
+| `weight` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.snapshot.exported.v1beta1.Snapshot"></a>
+
+### Snapshot
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `timestamp` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+| `height` | [int64](#int64) |  |  |
+| `participants` | [Snapshot.ParticipantsEntry](#scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry) | repeated |  |
+| `bonded_weight` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.snapshot.exported.v1beta1.Snapshot.ParticipantsEntry"></a>
+
+### Snapshot.ParticipantsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [Participant](#scalar.snapshot.exported.v1beta1.Participant) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/vote/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/vote/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.vote.exported.v1beta1.PollKey"></a>
+
+### PollKey
+PollKey represents the key data for a poll
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `module` | [string](#string) |  |  |
+| `id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.vote.exported.v1beta1.PollMetadata"></a>
+
+### PollMetadata
+PollMetadata represents a poll with write-in voting, i.e. the result of the
+vote can have any data type
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `expires_at` | [int64](#int64) |  |  |
+| `result` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+| `voting_threshold` | [scalar.utils.v1beta1.Threshold](#scalar.utils.v1beta1.Threshold) |  |  |
+| `state` | [PollState](#scalar.vote.exported.v1beta1.PollState) |  |  |
+| `min_voter_count` | [int64](#int64) |  |  |
+| `reward_pool_name` | [string](#string) |  |  |
+| `grace_period` | [int64](#int64) |  |  |
+| `completed_at` | [int64](#int64) |  |  |
+| `id` | [uint64](#uint64) |  |  |
+| `snapshot` | [scalar.snapshot.exported.v1beta1.Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot) |  |  |
+| `module` | [string](#string) |  |  |
+| `module_metadata` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+
+
+
+
+
+
+<a name="scalar.vote.exported.v1beta1.PollParticipants"></a>
+
+### PollParticipants
+PollParticipants should be embedded in poll events in other modules
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `poll_id` | [uint64](#uint64) |  |  |
+| `participants` | [bytes](#bytes) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.vote.exported.v1beta1.PollState"></a>
+
+### PollState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| POLL_STATE_UNSPECIFIED | 0 |  |
+| POLL_STATE_PENDING | 1 |  |
+| POLL_STATE_COMPLETED | 2 |  |
+| POLL_STATE_FAILED | 3 |  |
 
 
  <!-- end enums -->
@@ -3514,6 +3534,33 @@ address
 
 
 
+<a name="scalar.chains.v1beta1.RegisterCustodianGroupRequest"></a>
+
+### RegisterCustodianGroupRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.RegisterCustodianGroupResponse"></a>
+
+### RegisterCustodianGroupResponse
+
+
+
+
+
+
+
 <a name="scalar.chains.v1beta1.RetryFailedEventRequest"></a>
 
 ### RetryFailedEventRequest
@@ -3693,6 +3740,7 @@ Msg defines the btc Msg service.
 | `SignPsbtCommand` | [SignPsbtCommandRequest](#scalar.chains.v1beta1.SignPsbtCommandRequest) | [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
 | `AddChain` | [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest) | [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse) |  | POST|/scalar/chains/v1beta1/add_chain|
 | `RetryFailedEvent` | [RetryFailedEventRequest](#scalar.chains.v1beta1.RetryFailedEventRequest) | [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse) |  | POST|/scalar/chains/v1beta1/retry-failed-event|
+| `RegisterCustodianGroup` | [RegisterCustodianGroupRequest](#scalar.chains.v1beta1.RegisterCustodianGroupRequest) | [RegisterCustodianGroupResponse](#scalar.chains.v1beta1.RegisterCustodianGroupResponse) |  | POST|/scalar/covenant/v1beta1/register_custodian_group|
 
 
 <a name="scalar.chains.v1beta1.QueryService"></a>
@@ -3758,7 +3806,7 @@ custodians
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `uid` | [string](#string) |  | the UID is unique, to distinguish between custodian groups |
+| `uid` | [bytes](#bytes) |  | the UID is unique, to distinguish between custodian groups |
 | `name` | [string](#string) |  | e.g., "All" |
 | `bitcoin_pubkey` | [bytes](#bytes) |  | e.g., |
 | `quorum` | [uint32](#uint32) |  | "tb1p07q440mdl4uyywns325dk8pvjphwety3psp4zvkngtjf3z3hhr2sfar3hv"
@@ -3926,6 +3974,25 @@ the deterministic order of the entries
 
 
 
+<a name="scalar.covenant.v1beta1.ExpiredEvmSession"></a>
+
+### ExpiredEvmSession
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `sequence` | [uint64](#uint64) |  |  |
+| `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
+| `tokens` | [string](#string) | repeated |  |
+
+
+
+
+
+
 <a name="scalar.covenant.v1beta1.RedeemSession"></a>
 
 ### RedeemSession
@@ -3934,28 +4001,12 @@ the deterministic order of the entries
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `symbol` | [string](#string) |  |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `sequence` | [uint64](#uint64) |  |  |
 | `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
 | `last_redeem_tx` | [bytes](#bytes) |  |  |
-| `utxos` | [UTXO](#scalar.covenant.v1beta1.UTXO) | repeated |  |
-| `requested_amount_in_sats` | [RedeemSession.RequestedAmountInSatsEntry](#scalar.covenant.v1beta1.RedeemSession.RequestedAmountInSatsEntry) | repeated | map of evm hex address and the number of sats requested |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.RedeemSession.RequestedAmountInSatsEntry"></a>
-
-### RedeemSession.RequestedAmountInSatsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [string](#string) |  |  |
-| `value` | [uint64](#uint64) |  |  |
+| `is_switching` | [bool](#bool) |  |  |
+| `phase_expired_at` | [uint64](#uint64) |  |  |
 
 
 
@@ -3974,6 +4025,40 @@ the deterministic order of the entries
 | `vout` | [uint32](#uint32) |  |  |
 | `script_pubkey` | [bytes](#bytes) |  |  |
 | `amount_in_sats` | [uint64](#uint64) |  |  |
+| `reserved` | [UTXO.ReservedEntry](#scalar.covenant.v1beta1.UTXO.ReservedEntry) | repeated | Reserved amount for each request id |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UTXO.ReservedEntry"></a>
+
+### UTXO.ReservedEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [string](#string) |  |  |
+| `value` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UTXOSnapshot"></a>
+
+### UTXOSnapshot
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
+| `block_height` | [uint64](#uint64) |  |  |
+| `utxos` | [UTXO](#scalar.covenant.v1beta1.UTXO) | repeated |  |
 
 
 
@@ -3991,8 +4076,7 @@ the deterministic order of the entries
 | ---- | ------ | ----------- |
 | PHASE_UNSPECIFIED | 0 |  |
 | PHASE_PREPARING | 1 |  |
-| PHASE_SWITCHING | 2 |  |
-| PHASE_EXECUTING | 3 |  |
+| PHASE_EXECUTING | 2 |  |
 
 
  <!-- end enums -->
@@ -4010,6 +4094,70 @@ the deterministic order of the entries
 
 
 
+<a name="scalar.covenant.v1beta1.ConfirmRedeemTxStarted"></a>
+
+### ConfirmRedeemTxStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `poll_id` | [uint64](#uint64) |  |  |
+| `tx_ids` | [bytes](#bytes) | repeated |  |
+| `chain` | [string](#string) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `participants` | [bytes](#bytes) | repeated |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
+| `script_pubkey` | [bytes](#bytes) |  |  |
+| `network_params` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.ConfirmSwitchedPhaseStarted"></a>
+
+### ConfirmSwitchedPhaseStarted
+For Validation process
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `poll_id` | [uint64](#uint64) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `participants` | [bytes](#bytes) | repeated |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
+| `script_pubkey` | [bytes](#bytes) |  |  |
+| `network_params` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.Event"></a>
+
+### Event
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `hash` | [bytes](#bytes) |  |  |
+| `status` | [Event.Status](#scalar.covenant.v1beta1.Event.Status) |  |  |
+| `index` | [uint64](#uint64) |  |  |
+| `redeem_txs_confirmed` | [RedeemTxsConfirmed](#scalar.covenant.v1beta1.RedeemTxsConfirmed) |  |  |
+| `switched_phase_confirmed` | [SwitchedPhaseConfirmed](#scalar.covenant.v1beta1.SwitchedPhaseConfirmed) |  |  |
+
+
+
+
+
+
 <a name="scalar.covenant.v1beta1.KeyRotated"></a>
 
 ### KeyRotated
@@ -4021,6 +4169,22 @@ the deterministic order of the entries
 | `module` | [string](#string) |  |  |
 | `chain` | [string](#string) |  |  |
 | `key_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.RedeemTxsConfirmed"></a>
+
+### RedeemTxsConfirmed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `event_ids` | [string](#string) | repeated |  |
+| `utxo_snapshot` | [UTXOSnapshot](#scalar.covenant.v1beta1.UTXOSnapshot) |  |  |
 
 
 
@@ -4133,6 +4297,23 @@ the deterministic order of the entries
 
 
 
+<a name="scalar.covenant.v1beta1.SwitchedPhaseConfirmed"></a>
+
+### SwitchedPhaseConfirmed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `event_id` | [string](#string) |  |  |
+| `session_sequence` | [uint64](#uint64) |  |  |
+| `phase_sequence` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
 <a name="scalar.covenant.v1beta1.TapScriptSigsSubmitted"></a>
 
 ### TapScriptSigsSubmitted
@@ -4150,7 +4331,37 @@ the deterministic order of the entries
 
 
 
+
+<a name="scalar.covenant.v1beta1.VoteEvents"></a>
+
+### VoteEvents
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `events` | [Event](#scalar.covenant.v1beta1.Event) | repeated |  |
+
+
+
+
+
  <!-- end messages -->
+
+
+<a name="scalar.covenant.v1beta1.Event.Status"></a>
+
+### Event.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNSPECIFIED | 0 |  |
+| STATUS_CONFIRMED | 1 |  |
+| STATUS_COMPLETED | 2 |  |
+| STATUS_FAILED | 3 |  |
+
 
  <!-- end enums -->
 
@@ -4367,6 +4578,90 @@ the deterministic order of the entries
 <p align="right"><a href="#top">Top</a></p>
 
 ## scalar/covenant/v1beta1/types.proto
+
+
+
+<a name="scalar.covenant.v1beta1.BasicPollCompleted"></a>
+
+### BasicPollCompleted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `data` | [bytes](#bytes) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.BasicPollExpired"></a>
+
+### BasicPollExpired
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `data` | [bytes](#bytes) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.BasicPollFailed"></a>
+
+### BasicPollFailed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `data` | [bytes](#bytes) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.BasicPollMetadata"></a>
+
+### BasicPollMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `data` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.BasicPollNoEventsConfirmed"></a>
+
+### BasicPollNoEventsConfirmed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `data` | [bytes](#bytes) |  |  |
+| `poll_id` | [uint64](#uint64) |  |  |
+
+
+
 
 
 
@@ -4782,7 +5077,7 @@ ParamsRequest represents a message that queries the params
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `uid` | [string](#string) |  |  |
+| `uid` | [bytes](#bytes) |  |  |
 
 
 
@@ -4864,6 +5159,36 @@ ParamsRequest represents a message that queries the params
 
 
 
+
+<a name="scalar.covenant.v1beta1.RedeemSessionRequest"></a>
+
+### RedeemSessionRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `uid` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.RedeemSessionResponse"></a>
+
+### RedeemSessionResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `session` | [RedeemSession](#scalar.covenant.v1beta1.RedeemSession) |  |  |
+
+
+
+
+
  <!-- end messages -->
 
  <!-- end enums -->
@@ -4899,9 +5224,9 @@ ParamsRequest represents a message that queries the params
 
 
 
-<a name="scalar.covenant.v1beta1.ConfirmRedeemTxRequest"></a>
+<a name="scalar.covenant.v1beta1.ConfirmRedeemTxsRequest"></a>
 
-### ConfirmRedeemTxRequest
+### ConfirmRedeemTxsRequest
 Confirm exectuted transaction on bitcoin
 
 
@@ -4909,16 +5234,17 @@ Confirm exectuted transaction on bitcoin
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `tx_id` | [bytes](#bytes) |  |  |
+| `tx_ids` | [bytes](#bytes) | repeated |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 
 
 
 
 
 
-<a name="scalar.covenant.v1beta1.ConfirmRedeemTxResponse"></a>
+<a name="scalar.covenant.v1beta1.ConfirmRedeemTxsResponse"></a>
 
-### ConfirmRedeemTxResponse
+### ConfirmRedeemTxsResponse
 
 
 
@@ -4936,6 +5262,7 @@ Confirm exectuted transaction on bitcoin
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `tx_id` | [bytes](#bytes) |  |  |
 
 
@@ -5050,6 +5377,36 @@ Confirm exectuted transaction on bitcoin
 | `guid` | [string](#string) |  | CustodianGroup uid |
 | `custodian_pubkey` | [bytes](#bytes) |  |  |
 | `description` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.ReserveRedeemUtxoRequest"></a>
+
+### ReserveRedeemUtxoRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `req_id` | [string](#string) |  | Request id for get response in async mode |
+| `address` | [string](#string) |  | User evm address |
+| `chain` | [string](#string) |  | Evm chain |
+| `symbol` | [string](#string) |  | Token symbol |
+| `amount` | [uint64](#uint64) |  | Redeem amount |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.ReserveRedeemUtxoResponse"></a>
+
+### ReserveRedeemUtxoResponse
+
 
 
 
@@ -5178,33 +5535,6 @@ Pubkey used as key for lookup custodian to update other values
 
 
 
-
-<a name="scalar.covenant.v1beta1.UpdateNewBtcBlockRequest"></a>
-
-### UpdateNewBtcBlockRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `sender` | [bytes](#bytes) |  |  |
-| `chain` | [string](#string) |  |  |
-| `height` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.UpdateNewBtcBlockResponse"></a>
-
-### UpdateNewBtcBlockResponse
-
-
-
-
-
-
  <!-- end messages -->
 
  <!-- end enums -->
@@ -5243,9 +5573,9 @@ Pubkey used as key for lookup custodian to update other values
 | `RemoveCustodianFromGroup` | [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest) | [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse) | Remove Custodian from custodian group recalculate taproot address when deleting custodian from custodian group | POST|/scalar/covenant/v1beta1/remove_custodian_from_group|
 | `RotateKey` | [RotateKeyRequest](#scalar.covenant.v1beta1.RotateKeyRequest) | [RotateKeyResponse](#scalar.covenant.v1beta1.RotateKeyResponse) |  | POST|/scalar/covenant/v1beta1/rotate_key|
 | `SubmitTapScriptSigs` | [SubmitTapScriptSigsRequest](#scalar.covenant.v1beta1.SubmitTapScriptSigsRequest) | [SubmitTapScriptSigsResponse](#scalar.covenant.v1beta1.SubmitTapScriptSigsResponse) |  | POST|/scalar/covenant/v1beta1/submit_tap_script_sigs|
-| `ConfirmRedeemTx` | [ConfirmRedeemTxRequest](#scalar.covenant.v1beta1.ConfirmRedeemTxRequest) | [ConfirmRedeemTxResponse](#scalar.covenant.v1beta1.ConfirmRedeemTxResponse) |  | POST|/scalar/covenant/v1beta1/confirm_redeem_tx|
+| `ConfirmRedeemTxs` | [ConfirmRedeemTxsRequest](#scalar.covenant.v1beta1.ConfirmRedeemTxsRequest) | [ConfirmRedeemTxsResponse](#scalar.covenant.v1beta1.ConfirmRedeemTxsResponse) |  | POST|/scalar/covenant/v1beta1/confirm_redeem_txs|
+| `ReserveRedeemUtxo` | [ReserveRedeemUtxoRequest](#scalar.covenant.v1beta1.ReserveRedeemUtxoRequest) | [ReserveRedeemUtxoResponse](#scalar.covenant.v1beta1.ReserveRedeemUtxoResponse) |  | POST|/scalar/chains/v1beta1/reserve_redeem_utxo|
 | `ConfirmSwitchedPhase` | [ConfirmSwitchedPhaseRequest](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest) | [ConfirmSwitchedPhaseResponse](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseResponse) |  | POST|/scalar/covenant/v1beta1/confirm_switched_phase|
-| `UpdateNewBtcBlock` | [UpdateNewBtcBlockRequest](#scalar.covenant.v1beta1.UpdateNewBtcBlockRequest) | [UpdateNewBtcBlockResponse](#scalar.covenant.v1beta1.UpdateNewBtcBlockResponse) |  | POST|/scalar/covenant/v1beta1/update_new_btc_block|
 
 
 <a name="scalar.covenant.v1beta1.QueryService"></a>
@@ -5258,6 +5588,7 @@ Pubkey used as key for lookup custodian to update other values
 | `Custodians` | [CustodiansRequest](#scalar.covenant.v1beta1.CustodiansRequest) | [CustodiansResponse](#scalar.covenant.v1beta1.CustodiansResponse) | Get custodians | GET|/scalar/convenant/v1beta1/custodians|
 | `Groups` | [GroupsRequest](#scalar.covenant.v1beta1.GroupsRequest) | [GroupsResponse](#scalar.covenant.v1beta1.GroupsResponse) | Get custodian groups | GET|/scalar/covenant/v1beta1/custodian_groups|
 | `Params` | [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse) |  | GET|/scalar/covenant/v1beta1/params|
+| `RedeemSession` | [RedeemSessionRequest](#scalar.covenant.v1beta1.RedeemSessionRequest) | [RedeemSessionResponse](#scalar.covenant.v1beta1.RedeemSessionResponse) |  | GET|/scalar/covenant/v1beta1/redeem_session|
 
  <!-- end services -->
 
@@ -7158,7 +7489,7 @@ Query defines the gRPC querier service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `custodians_group_uid` | [string](#string) |  | string key_id = 1 [ (gogoproto.customname) = "KeyID", (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID" ]; bytes custodians_pubkey = 2 [ (gogoproto.customname) = "CustodiansPubkey" ]; |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `liquidity_model` | [LiquidityModel](#scalar.protocol.exported.v1beta1.LiquidityModel) |  |  |
 | `symbol` | [string](#string) |  |  |
 | `origin_chain` | [string](#string) |  |  |
@@ -7166,6 +7497,7 @@ Query defines the gRPC querier service.
 | `token_daily_mint_limit` | [bytes](#bytes) |  |  |
 | `token_details` | [scalar.nexus.exported.v1beta1.TokenDetails](#scalar.nexus.exported.v1beta1.TokenDetails) |  |  |
 | `scalar_address` | [bytes](#bytes) |  |  |
+| `status` | [Status](#scalar.protocol.exported.v1beta1.Status) |  |  |
 
 
 
@@ -7246,7 +7578,7 @@ Query defines the gRPC querier service.
 | `tag` | [bytes](#bytes) |  |  |
 | `attributes` | [scalar.protocol.exported.v1beta1.ProtocolAttributes](#scalar.protocol.exported.v1beta1.ProtocolAttributes) |  |  |
 | `status` | [scalar.protocol.exported.v1beta1.Status](#scalar.protocol.exported.v1beta1.Status) |  |  |
-| `custodian_group_uid` | [string](#string) |  | scalar.covenant.v1beta1.CustodianGroup custodian_group = 8; |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `chains` | [scalar.protocol.exported.v1beta1.SupportedChain](#scalar.protocol.exported.v1beta1.SupportedChain) | repeated | Other chains with internal asset |
 | `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
 | `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
@@ -7272,7 +7604,7 @@ Query defines the gRPC querier service.
 | `tag` | [bytes](#bytes) |  |  |
 | `attributes` | [scalar.protocol.exported.v1beta1.ProtocolAttributes](#scalar.protocol.exported.v1beta1.ProtocolAttributes) |  |  |
 | `status` | [scalar.protocol.exported.v1beta1.Status](#scalar.protocol.exported.v1beta1.Status) |  |  |
-| `custodian_group_uid` | [string](#string) |  |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `chains` | [scalar.protocol.exported.v1beta1.SupportedChain](#scalar.protocol.exported.v1beta1.SupportedChain) | repeated | Other chains with internal asset |
 | `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
 | `custodian_group` | [scalar.covenant.exported.v1beta1.CustodianGroup](#scalar.covenant.exported.v1beta1.CustodianGroup) |  |  |
@@ -7488,7 +7820,7 @@ address |
 | `name` | [string](#string) |  | e.g., "protocol-1" |
 | `tag` | [string](#string) |  | e.g., "pools" |
 | `attributes` | [scalar.protocol.exported.v1beta1.ProtocolAttributes](#scalar.protocol.exported.v1beta1.ProtocolAttributes) |  |  |
-| `custodian_group_uid` | [string](#string) |  |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `avatar` | [bytes](#bytes) |  | Avatar of the protocol, base64 encoded |
 | `asset` | [scalar.chains.v1beta1.Asset](#scalar.chains.v1beta1.Asset) |  | External asset |
 | `token_name` | [string](#string) |  |  |

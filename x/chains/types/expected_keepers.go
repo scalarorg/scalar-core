@@ -168,7 +168,7 @@ type MultisigKeeper interface {
 type CovenantKeeper interface {
 	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, multiPsbt []covenantTypes.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
 
-	GetCustodianGroup(ctx sdk.Context, uid string) (group *covenantTypes.CustodianGroup, ok bool)
+	GetCustodianGroup(ctx sdk.Context, uid exported.Hash) (group *covenantTypes.CustodianGroup, ok bool)
 
 	// GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
 }

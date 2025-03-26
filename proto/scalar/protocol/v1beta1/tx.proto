@@ -20,7 +20,12 @@ message CreateProtocolRequest {
   string name = 3;          // e.g., "protocol-1"
   string tag = 4;           // e.g., "pools"
   scalar.protocol.exported.v1beta1.ProtocolAttributes attributes = 5;
-  string custodian_group_uid = 6;
+  bytes custodian_group_uid = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "CustodianGroupUID"
+  ];
   bytes avatar = 7; // Avatar of the protocol, base64 encoded
   scalar.chains.v1beta1.Asset asset = 8; // External asset
   string token_name = 9;

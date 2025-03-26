@@ -69,9 +69,16 @@ service MsgService {
     };
   }
 
-  rpc ConfirmRedeemTx(ConfirmRedeemTxRequest) returns (ConfirmRedeemTxResponse) {
+  rpc ConfirmRedeemTxs(ConfirmRedeemTxsRequest) returns (ConfirmRedeemTxsResponse) {
     option (google.api.http) = {
-      post: "/scalar/covenant/v1beta1/confirm_redeem_tx"
+      post: "/scalar/covenant/v1beta1/confirm_redeem_txs"
+      body: "*"
+    };
+  }
+
+  rpc ReserveRedeemUtxo(ReserveRedeemUtxoRequest) returns (ReserveRedeemUtxoResponse) {
+    option (google.api.http) = {
+      post: "/scalar/chains/v1beta1/reserve_redeem_utxo"
       body: "*"
     };
   }
@@ -79,13 +86,6 @@ service MsgService {
   rpc ConfirmSwitchedPhase(ConfirmSwitchedPhaseRequest) returns (ConfirmSwitchedPhaseResponse) {
     option (google.api.http) = {
       post: "/scalar/covenant/v1beta1/confirm_switched_phase"
-      body: "*"
-    };
-  }
-
-  rpc UpdateNewBtcBlock(UpdateNewBtcBlockRequest) returns (UpdateNewBtcBlockResponse) {
-    option (google.api.http) = {
-      post: "/scalar/covenant/v1beta1/update_new_btc_block"
       body: "*"
     };
   }
@@ -103,5 +103,9 @@ service QueryService {
 
   rpc Params(ParamsRequest) returns (ParamsResponse) {
     option (google.api.http) = {get: "/scalar/covenant/v1beta1/params"};
+  }
+
+  rpc RedeemSession(RedeemSessionRequest) returns (RedeemSessionResponse) {
+    option (google.api.http) = {get: "/scalar/covenant/v1beta1/redeem_session"};
   }
 }

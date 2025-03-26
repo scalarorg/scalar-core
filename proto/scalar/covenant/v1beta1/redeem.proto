@@ -8,34 +8,58 @@ option (gogoproto.goproto_getters_all) = false;
 
 enum Phase {
   option (gogoproto.goproto_enum_prefix) = false;
-  PHASE_UNSPECIFIED = 0 [ (gogoproto.enumvalue_customname) = "Unspecified" ];
-  PHASE_PREPARING = 1 [ (gogoproto.enumvalue_customname) = "Preparing" ];
-  PHASE_SWITCHING = 2 [ (gogoproto.enumvalue_customname) = "Switching" ];
-  PHASE_EXECUTING = 3 [ (gogoproto.enumvalue_customname) = "Executing" ];
+  PHASE_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Unspecified"];
+  PHASE_PREPARING = 1 [(gogoproto.enumvalue_customname) = "Preparing"];
+  PHASE_EXECUTING = 2 [(gogoproto.enumvalue_customname) = "Executing"];
 }
 
 message UTXO {
   bytes txid = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   uint32 vout = 2;
   bytes script_pubkey = 3;
   uint64 amount_in_sats = 4;
+  // Reserved amount for each request id
+  map<string, uint64> reserved = 5;
+}
+
+message UTXOSnapshot {
+  bytes custodian_group_uid = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "CustodianGroupUID"
+  ];
+  uint64 block_height = 2;
+  repeated UTXO utxos = 3;
 }
 
 message RedeemSession {
-  string symbol = 1;
+  bytes custodian_group_uid = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "CustodianGroupUID"
+  ];
   uint64 sequence = 2;
   Phase current_phase = 3;
   bytes last_redeem_tx = 4 [
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "LastRedeemTx"
   ];
-  repeated UTXO utxos = 5;
-  // map of evm hex address and the number of sats requested
-  map<string, uint64> requested_amount_in_sats = 6;
+  bool is_switching = 5;
+  uint64 phase_expired_at = 6;
+}
+
+message ExpiredEvmSession {
+  bytes custodian_group_uid = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "CustodianGroupUID"
+  ];
+  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  uint64 sequence = 3;
+  Phase current_phase = 4;
+  repeated string tokens = 5;
 }

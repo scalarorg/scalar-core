@@ -623,7 +623,11 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 			GetKeeper[slashingkeeper.Keeper](keepers),
 			GetKeeper[snapKeeper.Keeper](keepers),
 			GetKeeper[rewardKeeper.Keeper](keepers),
+			GetKeeper[multisigKeeper.Keeper](keepers),
 			GetKeeper[nexusKeeper.Keeper](keepers),
+			GetKeeper[protocolKeeper.Keeper](keepers),
+			GetKeeper[chainsKeeper.BaseKeeper](keepers),
+			GetKeeper[voteKeeper.Keeper](keepers),
 		),
 		protocol.NewAppModule(
 			*GetKeeper[protocolKeeper.Keeper](keepers),

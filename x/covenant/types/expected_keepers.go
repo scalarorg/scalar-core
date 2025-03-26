@@ -7,13 +7,17 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/scalarorg/scalar-core/utils"
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	mtypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	protocol "github.com/scalarorg/scalar-core/x/protocol/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
-	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
+	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
 // Keeper provides keeper functionality of this module
@@ -27,7 +31,7 @@ type Keeper interface {
 	GetCustodians(ctx sdk.Context) (custodians []*covenant.Custodian, ok bool)
 	CreateCustodianGroup(ctx sdk.Context, params Params) (err error)
 	GetAllCustodianGroups(ctx sdk.Context) (custodianGroups []*covenant.CustodianGroup, ok bool)
-	GetCustodianGroup(ctx sdk.Context, groupId string) (custodianGroup *covenant.CustodianGroup, ok bool)
+	GetCustodianGroup(ctx sdk.Context, groupId chains.Hash) (custodianGroup *covenant.CustodianGroup, ok bool)
 
 	//GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
 	GetKey(ctx sdk.Context, keyID multisig.KeyID) (mtypes.Key, bool)
@@ -41,6 +45,16 @@ type Keeper interface {
 	GetCovenantRouter() CovenantRouter
 
 	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, multiPsbt []exported.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
+
+	GetEventsQueue(ctx sdk.Context) utils.BlockHeightKVQueue
+	EnqueueEvent(ctx sdk.Context, event *Event) error
+
+	GetRedeemSession(ctx sdk.Context, custodianGroupUID []byte) (*RedeemSession, bool)
+	// GetRedeemSessionByExpiry(ctx sdk.Context, expiry int64) []RedeemSession
+	SetSwitchingForRedeemSession(ctx sdk.Context, custodianGroupUID []byte) error
+	UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID []byte) error
+	UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID []byte) error
+	SetUtxoSnapshot(ctx sdk.Context, utxoSnapshot *UTXOSnapshot) error
 }
 
 // Snapshotter provides snapshot keeper functionality
@@ -76,4 +90,33 @@ type Nexus interface {
 	GetChain(ctx sdk.Context, chain nexus.ChainName) (nexus.Chain, bool)
 	GetChains(ctx sdk.Context) []nexus.Chain
 	GetChainMaintainers(ctx sdk.Context, chain nexus.Chain) []sdk.ValAddress
+	IsChainActivated(ctx sdk.Context, chain nexus.Chain) bool
+	GetChainMaintainerState(ctx sdk.Context, chain nexus.Chain, address sdk.ValAddress) (nexus.MaintainerState, bool)
+	SetChainMaintainerState(ctx sdk.Context, maintainerState nexus.MaintainerState) error
+}
+
+// MultisigKeeper provides functionality to the multisig module
+type MultisigKeeper interface {
+	GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
+	GetNextKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
+	GetKey(ctx sdk.Context, keyID multisig.KeyID) (multisig.Key, bool)
+	AssignKey(ctx sdk.Context, chainName nexus.ChainName, keyID multisig.KeyID) error
+	RotateKey(ctx sdk.Context, chainName nexus.ChainName) error
+	Sign(ctx sdk.Context, keyID multisig.KeyID, payloadHash multisig.Hash, module string, moduleMetadata ...codec.ProtoMarshaler) error
+}
+
+type ProtocolKeeper interface {
+	FindProtocolInfoByCustodianGroupUID(ctx sdk.Context, custodianGroupUIDs [][]byte) []*protocol.ProtocolInfo
+	FindProtocolInfoByExternalSymbol(ctx sdk.Context, symbol string) (*protocol.ProtocolInfo, error)
+}
+
+type BaseKeeper interface {
+	ForChain(ctx sdk.Context, chain nexus.ChainName) (chainsTypes.ChainKeeper, error)
+}
+
+type ChainKeeper interface {
+}
+
+type Voter interface {
+	InitializePoll(ctx sdk.Context, pollBuilder vote.PollBuilder) (vote.PollID, error)
 }
