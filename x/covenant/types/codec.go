@@ -25,6 +25,12 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&SubmitTapScriptSigsRequest{},
 		&ConfirmRedeemTxsRequest{},
 		&ConfirmSwitchedPhaseRequest{},
+		&RotateKeyRequest{},
+		&AddCustodianToGroupRequest{},
+		&RemoveCustodianFromGroupRequest{},
+		&UpdateCustodianGroupRequest{},
+		&UpdateCustodianRequest{},
+		&ReserveRedeemUtxoRequest{},
 	)
 	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
 		&gogoprototypes.BoolValue{},

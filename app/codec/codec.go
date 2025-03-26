@@ -8,6 +8,7 @@ import (
 	"github.com/gogo/protobuf/proto"
 
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/types"
 	permissiontypes "github.com/scalarorg/scalar-core/x/permission/types"
 	rewardtypes "github.com/scalarorg/scalar-core/x/reward/types"
@@ -51,6 +52,7 @@ func RegisterLegacyMsgInterfaces(registry cdctypes.InterfaceRegistry) {
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.SetGatewayRequest", &chainsTypes.SetGatewayRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.ConfirmSourceTxsRequest", &chainsTypes.ConfirmSourceTxsRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.RetryFailedEventRequest", &chainsTypes.RetryFailedEventRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/chains.v1beta1.RegisterCustodianGroupRequest", &chainsTypes.RegisterCustodianGroupRequest{})
 
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/nexus.v1beta1.RegisterChainMaintainerRequest", &nexustypes.RegisterChainMaintainerRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/nexus.v1beta1.DeregisterChainMaintainerRequest", &nexustypes.DeregisterChainMaintainerRequest{})
@@ -87,6 +89,18 @@ func RegisterLegacyMsgInterfaces(registry cdctypes.InterfaceRegistry) {
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".tss.v1beta1.RegisterExternalKeysRequest", &tsstypes.RegisterExternalKeysRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".tss.v1beta1.SubmitMultisigPubKeysRequest", &tsstypes.SubmitMultisigPubKeysRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".tss.v1beta1.SubmitMultisigSignaturesRequest", &tsstypes.SubmitMultisigSignaturesRequest{})
+
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.ReserveRedeemUtxoRequest", &covenanttypes.ReserveRedeemUtxoRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.ConfirmRedeemTxsRequest", &covenanttypes.ConfirmRedeemTxsRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.ConfirmSwitchedPhaseRequest", &covenanttypes.ConfirmSwitchedPhaseRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.CreateCustodianRequest", &covenanttypes.CreateCustodianRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.UpdateCustodianRequest", &covenanttypes.UpdateCustodianRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.CreateCustodianGroupRequest", &covenanttypes.CreateCustodianGroupRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.UpdateCustodianGroupRequest", &covenanttypes.UpdateCustodianGroupRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.AddCustodianToGroupRequest", &covenanttypes.AddCustodianToGroupRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.RemoveCustodianFromGroupRequest", &covenanttypes.RemoveCustodianFromGroupRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.RotateKeyRequest", &covenanttypes.RotateKeyRequest{})
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.SubmitTapScriptSigsRequest", &covenanttypes.SubmitTapScriptSigsRequest{})
 
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/vote.v1beta1.VoteRequest", &votetypes.VoteRequest{})
 }
