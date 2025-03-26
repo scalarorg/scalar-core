@@ -10792,8 +10792,6 @@ paths:
                 sender:
                   type: string
                   format: byte
-                req_id:
-                  type: string
                 address:
                   type: string
                 chain:
@@ -56548,8 +56546,6 @@ components:
         sender:
           type: string
           format: byte
-        req_id:
-          type: string
         address:
           type: string
         chain:

@@ -119,11 +119,10 @@ message ConfirmSwitchedPhaseResponse {}
 
 message ReserveRedeemUtxoRequest {
   bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-  string req_id = 2; // Request id for get response in async mode
-  string address = 3; // User evm address
-  string chain = 4 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"]; // Evm chain
-  string symbol = 5; // Token symbol
-  uint64 amount = 6; // Redeem amount
+  string address = 2; // User evm address
+  string chain = 3 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"]; // Evm chain
+  string symbol = 4; // Token symbol
+  uint64 amount = 5; // Redeem amount
 }
 
 message ReserveRedeemUtxoResponse {}

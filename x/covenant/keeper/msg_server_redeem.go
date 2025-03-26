@@ -3,12 +3,14 @@ package keeper
 import (
 	"bytes"
 	"context"
+	"encoding/hex"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/events"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
+	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
@@ -202,13 +204,8 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, err
 	}
 
-	reservedTx, err := s.reserveUtxos(ctx, protocol.CustodianGroupUID.Bytes(), req.ReqId, req.Amount)
-	if err != nil {
-		return nil, err
-	}
-
 	// Create redeem payload for evm tx
-	payload, err := s.createRedeemPayload(ctx, req.Chain.String(), req.Address, req.Symbol, req.Amount, reservedTx)
+	payload, err := s.createRedeemPayload(ctx, req, protocol.CustodianGroupUID.Bytes())
 	if err != nil {
 		return nil, err
 	}
@@ -217,6 +214,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 	if !ok {
 		return nil, fmt.Errorf("could not find key ID for '%s'", req.Chain)
 	}
+
 	//Todo: check signing process
 	if err := s.multisig.Sign(
 		ctx,
@@ -243,4 +241,34 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 	)
 
 	return &types.ReserveRedeemUtxoResponse{}, nil
+}
+
+
+
+func (s msgServer) createReserveRedeemUtxoCommand(
+	ctx sdk.Context,
+	chainID nexus.ChainName,
+	keyID multisig.KeyID,
+	data []byte,
+
+) {
+
+	commandBatch, err := types.NewCommandMetadata(ctx.BlockHeight(), chainID, keyID, commands)
+	if err != nil {
+		return types.CommandBatch{}, err
+	}
+
+	latest := k.GetLatestCommandBatch(ctx)
+	if !latest.Is(types.BatchSigned) && !latest.Is(types.BatchNonExistent) {
+		return types.CommandBatch{}, fmt.Errorf("latest command batch %s is still being processed", hex.EncodeToString(latest.GetID()))
+	}
+
+	commandBatch.PrevBatchedCommandsID = latest.GetID()
+	k.setCommandBatchMetadata(ctx, commandBatch)
+	k.setUnsignedCommandBatchID(ctx, commandBatch.ID)
+
+	setter := func(m types.CommandBatchMetadata) {
+		k.setCommandBatchMetadata(ctx, m)
+	}
+	return types.NewCommandBatch(commandBatch, setter), nil
 }
