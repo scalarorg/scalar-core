@@ -507,7 +507,7 @@ func (s msgServer) CreateDeployToken(c context.Context, req *types.CreateDeployT
 		return nil, sdkerrors.Wrapf(err, "failed to initialize token %s(%s) for chain %s", protocol.TokenDetails.TokenName, protocol.TokenDetails.Symbol, chain.Name)
 	}
 
-	cmd, err := token.CreateDeployCommand(keyID, protocol.TokenDailyMintLimit)
+	cmd, err := token.CreateDeployCommand(keyID, protocol.TokenDailyMintLimit, protocol.CustodianGroupUID)
 	if err != nil {
 		return nil, err
 	}

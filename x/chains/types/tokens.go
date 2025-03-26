@@ -7,6 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -71,7 +72,7 @@ func (t ERC20Token) GetBurnerCodeHash() (exported.Hash, bool) {
 }
 
 // CreateDeployCommand returns a token deployment command for the token
-func (t *ERC20Token) CreateDeployCommand(keyID multisig.KeyID, dailyMintLimit sdk.Uint) (Command, error) {
+func (t *ERC20Token) CreateDeployCommand(keyID multisig.KeyID, dailyMintLimit sdk.Uint, custodianGroupUID chains.Hash) (Command, error) {
 	switch {
 	case t.Is(NonExistent):
 		return Command{}, fmt.Errorf("token %s non-existent", t.GetAsset())
@@ -90,6 +91,7 @@ func (t *ERC20Token) CreateDeployCommand(keyID multisig.KeyID, dailyMintLimit sd
 			t.metadata.Details,
 			t.GetAddress(),
 			dailyMintLimit,
+			custodianGroupUID,
 		), nil
 	}
 
@@ -100,6 +102,7 @@ func (t *ERC20Token) CreateDeployCommand(keyID multisig.KeyID, dailyMintLimit sd
 		t.metadata.Details,
 		ZeroAddress,
 		dailyMintLimit,
+		custodianGroupUID,
 	), nil
 }
 
