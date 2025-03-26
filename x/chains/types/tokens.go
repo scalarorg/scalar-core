@@ -84,7 +84,7 @@ func (t *ERC20Token) CreateDeployCommand(keyID multisig.KeyID, dailyMintLimit sd
 	}
 
 	if t.IsExternal() {
-		return NewDeployTokenCommand(
+		return NewDeployToken2Command(
 			t.metadata.ChainID,
 			keyID,
 			t.GetAsset(),
@@ -95,7 +95,7 @@ func (t *ERC20Token) CreateDeployCommand(keyID multisig.KeyID, dailyMintLimit sd
 		), nil
 	}
 
-	return NewDeployTokenCommand(
+	return NewDeployToken2Command(
 		t.metadata.ChainID,
 		keyID,
 		t.GetAsset(),
