@@ -199,6 +199,8 @@
     - [CreateTransferOwnershipResponse](#scalar.chains.v1beta1.CreateTransferOwnershipResponse)
     - [LinkRequest](#scalar.chains.v1beta1.LinkRequest)
     - [LinkResponse](#scalar.chains.v1beta1.LinkResponse)
+    - [RegisterCustodianGroupRequest](#scalar.chains.v1beta1.RegisterCustodianGroupRequest)
+    - [RegisterCustodianGroupResponse](#scalar.chains.v1beta1.RegisterCustodianGroupResponse)
     - [RetryFailedEventRequest](#scalar.chains.v1beta1.RetryFailedEventRequest)
     - [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse)
     - [SetGatewayRequest](#scalar.chains.v1beta1.SetGatewayRequest)
@@ -1247,6 +1249,7 @@ TransferKey contains information for a transfer operatorship
 | COMMAND_TYPE_TRANSFER_OPERATORSHIP | 4 |  |
 | COMMAND_TYPE_APPROVE_CONTRACT_CALL_WITH_MINT | 5 |  |
 | COMMAND_TYPE_APPROVE_CONTRACT_CALL | 6 |  |
+| COMMAND_TYPE_REGISTER_CUSTODIAN_GROUP | 7 |  |
 
 
 
@@ -3531,6 +3534,33 @@ address
 
 
 
+<a name="scalar.chains.v1beta1.RegisterCustodianGroupRequest"></a>
+
+### RegisterCustodianGroupRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.RegisterCustodianGroupResponse"></a>
+
+### RegisterCustodianGroupResponse
+
+
+
+
+
+
+
 <a name="scalar.chains.v1beta1.RetryFailedEventRequest"></a>
 
 ### RetryFailedEventRequest
@@ -3710,6 +3740,7 @@ Msg defines the btc Msg service.
 | `SignPsbtCommand` | [SignPsbtCommandRequest](#scalar.chains.v1beta1.SignPsbtCommandRequest) | [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
 | `AddChain` | [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest) | [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse) |  | POST|/scalar/chains/v1beta1/add_chain|
 | `RetryFailedEvent` | [RetryFailedEventRequest](#scalar.chains.v1beta1.RetryFailedEventRequest) | [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse) |  | POST|/scalar/chains/v1beta1/retry-failed-event|
+| `RegisterCustodianGroup` | [RegisterCustodianGroupRequest](#scalar.chains.v1beta1.RegisterCustodianGroupRequest) | [RegisterCustodianGroupResponse](#scalar.chains.v1beta1.RegisterCustodianGroupResponse) |  | POST|/scalar/covenant/v1beta1/register_custodian_group|
 
 
 <a name="scalar.chains.v1beta1.QueryService"></a>

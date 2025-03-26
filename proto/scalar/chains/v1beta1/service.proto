@@ -115,6 +115,13 @@ service MsgService {
       body: "*"
     };
   }
+
+  rpc RegisterCustodianGroup(RegisterCustodianGroupRequest) returns (RegisterCustodianGroupResponse) {
+    option (google.api.http) = {
+      post: "/scalar/covenant/v1beta1/register_custodian_group"
+      body: "*"
+    };
+  }
 }
 
 // QueryService defines the gRPC querier service.
