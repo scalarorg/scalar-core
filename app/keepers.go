@@ -302,6 +302,8 @@ func initMultisigKeeper(appCodec codec.Codec, keys map[string]*sdk.KVStoreKey, k
 	multisigRouter := multisigTypes.NewSigRouter()
 	multisigRouter.AddHandler(chainsTypes.ModuleName, chainsKeeper.NewSigHandler(appCodec, GetKeeper[chainsKeeper.BaseKeeper](keepers)))
 
+	multisigRouter.AddHandler(covenantTypes.ModuleName, covenantKeeper.NewSigHandler(appCodec, GetKeeper[covenantKeeper.Keeper](keepers)))
+
 	multisigK := multisigKeeper.NewKeeper(appCodec, keys[multisigTypes.StoreKey], keepers.getSubspace(multisigTypes.ModuleName))
 	multisigK.SetSigRouter(multisigRouter)
 	return &multisigK
