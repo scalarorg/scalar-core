@@ -12,9 +12,9 @@ import (
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
-	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 type Command struct {
@@ -77,7 +77,7 @@ func (b Command) Is(status CommandStatus) bool {
 
 // SetStatus sets the status for the batch, returning true if the status was updated
 func (b *Command) SetStatus(status CommandStatus) bool {
-	if b.metadata.Status != CommandNonExistent && b.metadata.Status != CommandSigned {
+	if b.metadata.Status != CommandStatusNonExistent && b.metadata.Status != CommandStatusSigned {
 		b.metadata.Status = status
 		b.setter(b.metadata)
 		return true
@@ -88,11 +88,11 @@ func (b *Command) SetStatus(status CommandStatus) bool {
 
 // SetSigned sets the signature and signed status for the batch
 func (b *Command) SetSigned(signature utils.ValidatedProtoMarshaler) error {
-	if b.metadata.Status != CommandSigning {
+	if b.metadata.Status != CommandStatusSigning {
 		return fmt.Errorf("command %s is not being signed", hex.EncodeToString(b.GetID()))
 	}
 
-	b.metadata.Status = CommandSigned
+	b.metadata.Status = CommandStatusSigned
 	sig := funcs.Must(codectypes.NewAnyWithValue(signature))
 	b.metadata.Signature = sig
 
@@ -102,7 +102,7 @@ func (b *Command) SetSigned(signature utils.ValidatedProtoMarshaler) error {
 }
 
 // NewCommandMetadata assembles a CommandMetadata struct from the provided arguments
-func NewCommandMetadata(blockHeight int64, chainID sdk.Int, keyID multisig.KeyID, data []byte) (CommandMetadata, error) {
+func NewCommandMetadata(blockHeight int64, keyID multisig.KeyID, data []byte) (CommandMetadata, error) {
 	bz := make([]byte, 8)
 	binary.BigEndian.PutUint64(bz, uint64(blockHeight))
 
@@ -110,7 +110,7 @@ func NewCommandMetadata(blockHeight int64, chainID sdk.Int, keyID multisig.KeyID
 		ID:      crypto.Keccak256(bz, data),
 		Data:    data,
 		SigHash: exported.Hash(chainsTypes.GetSignHash(data)),
-		Status:  CommandSigning,
+		Status:  CommandStatusSigning,
 		KeyID:   keyID,
 	}, nil
 }
@@ -118,13 +118,13 @@ func NewCommandMetadata(blockHeight int64, chainID sdk.Int, keyID multisig.KeyID
 // ValidateBasic returns an error if the CommandMetadata is not valid
 func (m CommandMetadata) ValidateBasic() error {
 	switch m.Status {
-	case CommandNonExistent:
+	case CommandStatusNonExistent:
 		return errors.New("command does not exist")
-	case CommandSigning, CommandAborted:
+	case CommandStatusSigning, CommandStatusAborted:
 		if m.Signature != nil {
 			return errors.New("unsigned command must not have a signature")
 		}
-	case CommandSigned:
+	case CommandStatusSigned:
 		if m.Signature == nil {
 			return errors.New("signed command must have a valid signature")
 		}
@@ -158,4 +158,14 @@ func (m CommandMetadata) UnpackInterfaces(unpacker codectypes.AnyUnpacker) error
 	var data codec.ProtoMarshaler
 
 	return unpacker.UnpackAny(m.Signature, &data)
+}
+
+// NewCommandSigned returns a new CommandSigned instance
+func NewCommandSigned(chain nexus.ChainName, ID []byte) *CommandSigned {
+	return &CommandSigned{Chain: chain, CommandID: ID}
+}
+
+// NewCommandAborted returns a new CommandAborted instance
+func NewCommandAborted(chain nexus.ChainName, ID []byte) *CommandAborted {
+	return &CommandAborted{Chain: chain, CommandID: ID}
 }

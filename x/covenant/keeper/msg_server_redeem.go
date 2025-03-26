@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/hex"
 	"fmt"
+	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/events"
@@ -204,71 +205,69 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, err
 	}
 
-	// Create redeem payload for evm tx
-	payload, err := s.createRedeemPayload(ctx, req, protocol.CustodianGroupUID.Bytes())
-	if err != nil {
-		return nil, err
-	}
 	// Start signing session for reserve redeem utxos
 	keyID, ok := s.multisig.GetCurrentKeyID(ctx, nexus.ChainName(req.Chain))
 	if !ok {
 		return nil, fmt.Errorf("could not find key ID for '%s'", req.Chain)
 	}
+	// Create redeem payload for evm tx
+	payload, reqId, err := s.createRedeemPayload(ctx, req, protocol.CustodianGroupUID.Bytes())
+	if err != nil {
+		return nil, err
+	}
+
+	command, err := s.createReserveRedeemUtxoCommand(ctx, keyID, payload)
+	if err != nil {
+		return nil, fmt.Errorf("could not create reserve utxo command")
+	}
 
 	//Todo: check signing process
 	if err := s.multisig.Sign(
 		ctx,
-		keyID,
-		payload,
+		command.GetKeyID(),
+		command.GetSigHash().Bytes(),
 		types.ModuleName,
-		chainsTypes.NewSigMetadata(chainsTypes.SigTx, chain.Name, []byte(req.ReqId)),
+		types.NewSigMetadata(types.SigCommand, chain.Name, command.GetID()),
 	); err != nil {
 		return nil, err
 	}
 
 	logger := s.Logger(ctx)
-	logger.Info("ReserveRedeemUtxoStarted", "reqId", req.ReqId, "amount", req.Amount, "chain", chain.Name, "sender", req.Sender)
+	logger.Info("ReserveRedeemUtxoStarted", "amount", req.Amount, "chain", chain.Name, "sender", req.Sender)
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
-			chainsTypes.EventTypeSign,
-			sdk.NewAttribute(sdk.AttributeKeyAction, chainsTypes.AttributeValueStart),
+			types.EventTypeReserveRedeemUtxo,
+			sdk.NewAttribute(sdk.AttributeKeyAction, types.AttributeValueStart),
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
-			sdk.NewAttribute(sdk.AttributeKeyAmount, string(req.Amount)),
-			sdk.NewAttribute("chain", chain.Name.String()),
+			sdk.NewAttribute(sdk.AttributeKeyAmount, strconv.Itoa(int(req.Amount))),
+			sdk.NewAttribute(types.AttributeKeyChain, chain.Name.String()),
 			sdk.NewAttribute(sdk.AttributeKeySender, req.Sender.String()),
+			sdk.NewAttribute(types.AttributeKeyReqId, hex.EncodeToString(reqId)),
+			sdk.NewAttribute(types.AttributeCommandId, hex.EncodeToString(command.GetID())),
 		),
 	)
 
 	return &types.ReserveRedeemUtxoResponse{}, nil
 }
 
-
-
 func (s msgServer) createReserveRedeemUtxoCommand(
 	ctx sdk.Context,
-	chainID nexus.ChainName,
 	keyID multisig.KeyID,
-	data []byte,
-
-) {
-
-	commandBatch, err := types.NewCommandMetadata(ctx.BlockHeight(), chainID, keyID, commands)
+	data []byte) (*types.Command, error) {
+	md, err := types.NewCommandMetadata(ctx.BlockHeight(), keyID, data)
 	if err != nil {
-		return types.CommandBatch{}, err
+		return nil, err
 	}
 
-	latest := k.GetLatestCommandBatch(ctx)
-	if !latest.Is(types.BatchSigned) && !latest.Is(types.BatchNonExistent) {
-		return types.CommandBatch{}, fmt.Errorf("latest command batch %s is still being processed", hex.EncodeToString(latest.GetID()))
+	s.setCommandMetadata(ctx, md)
+	s.setUnsignedCommandID(ctx, md.ID)
+
+	setter := func(m types.CommandMetadata) {
+		s.setCommandMetadata(ctx, m)
 	}
 
-	commandBatch.PrevBatchedCommandsID = latest.GetID()
-	k.setCommandBatchMetadata(ctx, commandBatch)
-	k.setUnsignedCommandBatchID(ctx, commandBatch.ID)
+	cmd := types.NewCommand(md, setter)
 
-	setter := func(m types.CommandBatchMetadata) {
-		k.setCommandBatchMetadata(ctx, m)
-	}
-	return types.NewCommandBatch(commandBatch, setter), nil
+	return &cmd, nil
 }
