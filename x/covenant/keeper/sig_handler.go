@@ -59,7 +59,7 @@ func (s sigHandler) HandleFailed(ctx sdk.Context, moduleMetadata codec.ProtoMars
 }
 
 func (s sigHandler) getCommand(ctx sdk.Context, sigMetadata *types.SigMetadata) (types.Command, error) {
-	command := s.keeper.GetCommandByID(ctx, sigMetadata.CommandID)
+	command := s.keeper.GetReserveUTXOCommandByID(ctx, sigMetadata.CommandID)
 	if !command.Is(types.CommandStatusSigning) {
 		return types.Command{}, fmt.Errorf("the command  %s of chain %s is not being signed", hex.EncodeToString(sigMetadata.CommandID), sigMetadata.Chain)
 	}

@@ -224,25 +224,33 @@ func (k Keeper) createRedeemPayload(ctx sdk.Context, req *types.ReserveRedeemUtx
 	return data, reqId, err
 }
 
-func (k Keeper) GetCommandByID(ctx sdk.Context, id []byte) types.Command {
-	md := k.getCommandMetadata(ctx, id)
+func (k Keeper) GetReserveUTXOCommandByID(ctx sdk.Context, id []byte) types.Command {
+	md := k.getReserveUTXOCommandByID(ctx, id)
 
 	setter := func(m types.CommandMetadata) {
-		k.setCommandMetadata(ctx, m)
+		k.setReserveUTXOCommandByID(ctx, m)
 	}
 
 	return types.NewCommand(md, setter)
 }
 
-func (k Keeper) getCommandMetadata(ctx sdk.Context, id []byte) types.CommandMetadata {
+func (k Keeper) setReserveUTXOCommandByID(ctx sdk.Context, m types.CommandMetadata) {
+	k.setCommandMetadata(ctx, m, reserveUtxoCommandPrefix)
+}
+
+func (k Keeper) getReserveUTXOCommandByID(ctx sdk.Context, id []byte) types.CommandMetadata {
+	return k.getCommandMetadata(ctx, id, reserveUtxoCommandPrefix)
+}
+
+func (k Keeper) getCommandMetadata(ctx sdk.Context, id []byte, prefix key.Key) types.CommandMetadata {
 	var md types.CommandMetadata
-	k.getStore(ctx).GetNew(commandPrefix.Append(key.FromBz(id)), &md)
+	k.getStore(ctx).GetNew(prefix.Append(key.FromBz(id)), &md)
 	return md
 }
 
-func (k Keeper) setCommandMetadata(ctx sdk.Context, meta types.CommandMetadata) {
+func (k Keeper) setCommandMetadata(ctx sdk.Context, meta types.CommandMetadata, prefix key.Key) {
 	funcs.MustNoErr(
-		k.getStore(ctx).SetNewValidated(commandPrefix.Append(key.FromBz(meta.ID)), &meta))
+		k.getStore(ctx).SetNewValidated(prefix.Append(key.FromBz(meta.ID)), &meta))
 }
 
 func (k Keeper) setUnsignedCommandID(ctx sdk.Context, id []byte) {

@@ -15,26 +15,18 @@ import (
 const eventsQueue = "events_queue"
 
 var (
-	keygenPrefix           = utils.KeyFromInt(1)
-	signingPrefix          = utils.KeyFromInt(2)
-	keyPrefix              = utils.KeyFromInt(3)
-	expiryKeygenPrefix     = utils.KeyFromInt(4)
-	expirySigningPrefix    = utils.KeyFromInt(5)
-	keyEpochPrefix         = utils.KeyFromInt(6)
-	keyRotationCountPrefix = utils.KeyFromInt(7)
-	custodianPrefix        = utils.KeyFromInt(8)
-	custodianGroupPrefix   = utils.KeyFromInt(9)
-	redeemSessionPrefix    = utils.KeyFromInt(10)
-	utxoSnapshotPrefix     = utils.KeyFromInt(11)
+	signingPrefix        = utils.KeyFromInt(1)
+	keyPrefix            = utils.KeyFromInt(2)
+	expirySigningPrefix  = utils.KeyFromInt(3)
+	custodianPrefix      = utils.KeyFromInt(4)
+	custodianGroupPrefix = utils.KeyFromInt(5)
+	redeemSessionPrefix  = utils.KeyFromInt(6)
+	utxoSnapshotPrefix   = utils.KeyFromInt(7)
 
 	signingSessionCountKey = utils.KeyFromInt(100)
 
-	keygenOptOutPrefix = key.RegisterStaticKey(types.ModuleName, 8)
-
-	pendingRedeemCommandPrefix = utils.KeyFromStr("pending_redeem_command")
-
-	commandPrefix      = key.FromStr("command")
-	unsignedIDKey = key.FromStr("unsigned_command_id")
+	reserveUtxoCommandPrefix = key.FromStr("reserve_utxo_command")
+	unsignedIDKey            = key.FromStr("unsigned_command_id")
 )
 
 var _ types.Keeper = &Keeper{}

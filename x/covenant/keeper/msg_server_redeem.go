@@ -273,11 +273,11 @@ func (s msgServer) createReserveRedeemUtxoCommand(
 		return nil, err
 	}
 
-	s.setCommandMetadata(ctx, md)
+	s.setReserveUTXOCommandByID(ctx, md)
 	s.setUnsignedCommandID(ctx, md.ID)
 
 	setter := func(m types.CommandMetadata) {
-		s.setCommandMetadata(ctx, m)
+		s.setReserveUTXOCommandByID(ctx, m)
 	}
 
 	cmd := types.NewCommand(md, setter)

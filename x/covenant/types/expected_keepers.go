@@ -56,7 +56,7 @@ type Keeper interface {
 	UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID []byte) error
 	SetUtxoSnapshot(ctx sdk.Context, utxoSnapshot *UTXOSnapshot) error
 
-	GetCommandByID(ctx sdk.Context, id []byte) Command
+	GetReserveUTXOCommandByID(ctx sdk.Context, id []byte) Command
 }
 
 // Snapshotter provides snapshot keeper functionality
