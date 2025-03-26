@@ -10794,7 +10794,9 @@ paths:
                   format: byte
                 address:
                   type: string
-                chain:
+                source_chain:
+                  type: string
+                dest_chain:
                   type: string
                 symbol:
                   type: string
@@ -56548,7 +56550,9 @@ components:
           format: byte
         address:
           type: string
-        chain:
+        source_chain:
+          type: string
+        dest_chain:
           type: string
         symbol:
           type: string

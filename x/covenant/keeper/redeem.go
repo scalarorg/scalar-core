@@ -191,8 +191,7 @@ func (k Keeper) createRedeemPayload(ctx sdk.Context, req *types.ReserveRedeemUtx
 	amountz := make([]byte, 8)
 	binary.BigEndian.PutUint64(amountz, req.Amount)
 
-	reqId := crypto.Keccak256(bz, req.Sender.Bytes(), []byte(req.Address), []byte(req.Chain), []byte(req.Symbol), amountz)
-
+	reqId := crypto.Keccak256(bz, req.Sender.Bytes(), []byte(req.Address), []byte(req.SourceChain), []byte(req.DestChain), []byte(req.Symbol), amountz)
 	reservedUtxos, err := k.reserveUtxos(ctx, custodianGrUID, hex.EncodeToString(reqId), req.Amount)
 	if err != nil {
 		return nil, nil, err
@@ -211,7 +210,7 @@ func (k Keeper) createRedeemPayload(ctx sdk.Context, req *types.ReserveRedeemUtx
 	}
 
 	data, err := callContractWithTokenArguments.Pack(
-		req.Chain,
+		req.DestChain,
 		req.Address,
 		payload,
 		req.Symbol,

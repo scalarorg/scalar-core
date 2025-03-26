@@ -187,16 +187,29 @@ func (s msgServer) validateEvmChain(ctx sdk.Context, chain nexus.ChainName) (*ne
 func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeemUtxoRequest) (*types.ReserveRedeemUtxoResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	//Validate request
-	chain, ok := s.nexus.GetChain(ctx, nexus.ChainName(req.Chain))
+	sourceChain, ok := s.nexus.GetChain(ctx, nexus.ChainName(req.SourceChain))
 	if !ok {
-		return nil, fmt.Errorf("%s is not a registered chain", req.Chain)
+		return nil, fmt.Errorf("%s is not a registered chain", req.SourceChain)
 	}
 
-	if !chainsTypes.IsEvmChain(chain.Name) {
-		return nil, fmt.Errorf("chain %s is not a EVM chain", chain.Name)
+	destChain, ok := s.nexus.GetChain(ctx, nexus.ChainName(req.SourceChain))
+	if !ok {
+		return nil, fmt.Errorf("%s is not a registered chain", req.DestChain)
 	}
 
-	if err := validateChainActivated(ctx, s.nexus, chain); err != nil {
+	if !chainsTypes.IsEvmChain(sourceChain.Name) {
+		return nil, fmt.Errorf("chain %s is not a EVM chain", sourceChain.Name)
+	}
+
+	if!chainsTypes.IsBitcoinChain(destChain.Name) {
+		return nil, fmt.Errorf("chain %s is not a bitcoin chain", destChain.Name)
+	}
+
+	if err := validateChainActivated(ctx, s.nexus, sourceChain); err != nil {
+		return nil, err
+	}
+
+	if err := validateChainActivated(ctx, s.nexus, destChain); err!= nil {
 		return nil, err
 	}
 
@@ -206,9 +219,9 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 	}
 
 	// Start signing session for reserve redeem utxos
-	keyID, ok := s.multisig.GetCurrentKeyID(ctx, nexus.ChainName(req.Chain))
+	keyID, ok := s.multisig.GetCurrentKeyID(ctx, nexus.ChainName(req.SourceChain))
 	if !ok {
-		return nil, fmt.Errorf("could not find key ID for '%s'", req.Chain)
+		return nil, fmt.Errorf("could not find key ID for '%s'", req.SourceChain)
 	}
 	// Create redeem payload for evm tx
 	payload, reqId, err := s.createRedeemPayload(ctx, req, protocol.CustodianGroupUID.Bytes())
@@ -227,13 +240,13 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		command.GetKeyID(),
 		command.GetSigHash().Bytes(),
 		types.ModuleName,
-		types.NewSigMetadata(types.SigCommand, chain.Name, command.GetID()),
+		types.NewSigMetadata(types.SigCommand, sourceChain.Name, command.GetID()),
 	); err != nil {
 		return nil, err
 	}
 
 	logger := s.Logger(ctx)
-	logger.Info("ReserveRedeemUtxoStarted", "amount", req.Amount, "chain", chain.Name, "sender", req.Sender)
+	logger.Info("ReserveRedeemUtxoStarted", "amount", req.Amount, "chain", sourceChain.Name, "sender", req.Sender)
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
@@ -241,7 +254,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 			sdk.NewAttribute(sdk.AttributeKeyAction, types.AttributeValueStart),
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
 			sdk.NewAttribute(sdk.AttributeKeyAmount, strconv.Itoa(int(req.Amount))),
-			sdk.NewAttribute(types.AttributeKeyChain, chain.Name.String()),
+			sdk.NewAttribute(types.AttributeKeyChain, sourceChain.Name.String()),
 			sdk.NewAttribute(sdk.AttributeKeySender, req.Sender.String()),
 			sdk.NewAttribute(types.AttributeKeyReqId, hex.EncodeToString(reqId)),
 			sdk.NewAttribute(types.AttributeCommandId, hex.EncodeToString(command.GetID())),

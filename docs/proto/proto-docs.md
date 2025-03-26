@@ -5514,7 +5514,8 @@ Confirm exectuted transaction on bitcoin
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `address` | [string](#string) |  | User evm address |
-| `chain` | [string](#string) |  | Evm chain |
+| `source_chain` | [string](#string) |  | Evm chain |
+| `dest_chain` | [string](#string) |  | BTC chain |
 | `symbol` | [string](#string) |  | Token symbol |
 | `amount` | [uint64](#uint64) |  | Redeem amount |
 
