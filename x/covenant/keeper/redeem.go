@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"bytes"
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
@@ -12,6 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/key"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/covenant/types"
 	cov "github.com/scalarorg/scalar-core/x/covenant/types"
 )
@@ -147,6 +149,31 @@ func (k Keeper) GetUtxoSnapshot(ctx sdk.Context, custodianGroupUID []byte) (*cov
 	}
 
 	return &results, true
+}
+
+func (k Keeper) AppendUtxo(ctx sdk.Context, txID exported.Hash, vout uint32, scriptPubkey []byte, amountInSats uint64) error {
+	custodianGroups, ok := k.GetAllCustodianGroups(ctx)
+	if !ok {
+		return fmt.Errorf("custodian groups not found")
+	}
+
+	for _, custodianGroup := range custodianGroups {
+		if bytes.Equal(custodianGroup.BitcoinPubkey, scriptPubkey) {
+			utxoSnapshot, ok := k.GetUtxoSnapshot(ctx, custodianGroup.UID.Bytes())
+			if !ok {
+				return fmt.Errorf("utxo snapshot not found")
+			}
+			utxoSnapshot.Utxos = append(utxoSnapshot.Utxos, &cov.UTXO{
+				TxID:         txID,
+				Vout:         vout,
+				ScriptPubkey: scriptPubkey,
+				AmountInSats: amountInSats,
+			})
+			k.SetUtxoSnapshot(ctx, utxoSnapshot)
+			break
+		}
+	}
+	return nil
 }
 
 // findAvailableUtxos uses knapsack algorithm to find optimal UTXO combination

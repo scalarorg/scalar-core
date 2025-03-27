@@ -21,6 +21,10 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 )
 
+var (
+	StakingOutputIndex = 1
+)
+
 // BeginBlocker check for infraction evidence or downtime of validators
 // on every begin block
 func BeginBlocker(sdk.Context, abci.RequestBeginBlock, types.BaseKeeper) {}
@@ -94,7 +98,7 @@ func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 	case *types.Event_ContractCallWithToken:
 		return handleContractCallWithToken(ctx, event, bk, n, m, p, cov)
 	case *types.Event_TokenSent:
-		return handleTokenSent(ctx, event, bk, n)
+		return handleTokenSent(ctx, event, bk, n, cov)
 	case *types.Event_Transfer:
 		return handleConfirmDeposit(ctx, event, bk, n)
 	case *types.Event_TokenDeployed:
@@ -169,7 +173,7 @@ func handleSourceConfirmationEvent(ctx sdk.Context, event types.Event, n types.N
 	return setMessageToNexus(ctx, n, event, nil)
 }
 
-func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus) error {
+func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, cov types.CovenantKeeper) error {
 	e := event.GetEvent().(*types.Event_TokenSent).TokenSent
 	if e == nil {
 		panic(fmt.Errorf("event is nil"))
@@ -206,6 +210,12 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 		"transferID", transferID.String(),
 	)
 	clog.Magentaf("[x/chains] [ABCI]-Emited EventTokenSent")
+	//Append utxo to Utxo snapshot
+	err = cov.AppendUtxo(ctx, event.TxID, uint32(StakingOutputIndex), e.ScriptPubkey, e.Asset.Amount.Uint64())
+	if err != nil {
+		ctx.Logger().Error("failed appending utxo to utxo snapshot", "error", err)
+		return err
+	}
 	events.Emit(ctx, &types.EventTokenSent{
 		Chain:              event.Chain,
 		EventID:            event.GetID(),

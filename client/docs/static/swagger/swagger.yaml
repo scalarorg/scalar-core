@@ -6790,6 +6790,13 @@ paths:
                           custom method
 
                           signatures required by gogoproto.
+                      script_pubkey:
+                        type: string
+                        format: byte
+                        title: Extra fields for form new utxo
+                      vout:
+                        type: integer
+                        format: int64
                   contract_call:
                     type: object
                     properties:
@@ -58831,6 +58838,13 @@ definitions:
               method
 
               signatures required by gogoproto.
+          script_pubkey:
+            type: string
+            format: byte
+            title: Extra fields for form new utxo
+          vout:
+            type: integer
+            format: int64
       contract_call:
         type: object
         properties:
@@ -59099,6 +59113,13 @@ definitions:
                   method
 
                   signatures required by gogoproto.
+              script_pubkey:
+                type: string
+                format: byte
+                title: Extra fields for form new utxo
+              vout:
+                type: integer
+                format: int64
           contract_call:
             type: object
             properties:
@@ -59261,6 +59282,13 @@ definitions:
 
           NOTE: The amount field is an Int which implements the custom method
           signatures required by gogoproto.
+      script_pubkey:
+        type: string
+        format: byte
+        title: Extra fields for form new utxo
+      vout:
+        type: integer
+        format: int64
   scalar.chains.v1beta1.EventTransfer:
     type: object
     properties:

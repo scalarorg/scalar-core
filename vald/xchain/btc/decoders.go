@@ -69,7 +69,7 @@ func (client *BtcClient) createEventTokenSent(event *chainsTypes.EventConfirmSou
 	}
 
 	var stakingAmount int64 = tx.MsgTx.TxOut[StakingOutputIndex].Value
-
+	var scriptPubkey []byte = tx.MsgTx.TxOut[StakingOutputIndex].PkScript
 	destinationChain := chain.NewChainInfoFromBytes(output.DestinationChain)
 	if destinationChain == nil {
 		return nil, ErrInvalidDestinationChain
@@ -102,6 +102,8 @@ func (client *BtcClient) createEventTokenSent(event *chainsTypes.EventConfirmSou
 		DestinationChain:   nexus.ChainName(destinationChain.ToBytes().String()),
 		DestinationAddress: chainsTypes.Address(destinationRecipientAddress).Hex(),
 		Asset:              sdk.NewCoin(response.Protocol.Asset.Symbol, sdk.NewInt(stakingAmount)),
+		ScriptPubkey:       scriptPubkey,
+		Vout:               uint32(StakingOutputIndex),
 	}, nil
 }
 

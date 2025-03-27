@@ -166,6 +166,9 @@ message EventTokenSent {
   string destination_chain = 6 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
   string destination_address = 7;
   cosmos.base.v1beta1.Coin asset = 8 [(gogoproto.nullable) = false];
+  //Extra fields for form new utxo
+  bytes script_pubkey = 9;
+  uint32 vout = 10;
 }
 
 message EventContractCall {
