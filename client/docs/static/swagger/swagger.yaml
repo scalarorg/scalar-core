@@ -13839,10 +13839,10 @@ paths:
                   current_phase:
                     type: string
                     enum:
-                      - PHASE_UNSPECIFIED
                       - PHASE_PREPARING
                       - PHASE_EXECUTING
-                    default: PHASE_UNSPECIFIED
+                      - PHASE_UNSPECIFIED
+                    default: PHASE_PREPARING
                   last_redeem_tx:
                     type: string
                     format: byte
@@ -61134,10 +61134,10 @@ definitions:
   scalar.covenant.v1beta1.Phase:
     type: string
     enum:
-      - PHASE_UNSPECIFIED
       - PHASE_PREPARING
       - PHASE_EXECUTING
-    default: PHASE_UNSPECIFIED
+      - PHASE_UNSPECIFIED
+    default: PHASE_PREPARING
   scalar.covenant.v1beta1.RedeemSession:
     type: object
     properties:
@@ -61150,10 +61150,10 @@ definitions:
       current_phase:
         type: string
         enum:
-          - PHASE_UNSPECIFIED
           - PHASE_PREPARING
           - PHASE_EXECUTING
-        default: PHASE_UNSPECIFIED
+          - PHASE_UNSPECIFIED
+        default: PHASE_PREPARING
       last_redeem_tx:
         type: string
         format: byte
@@ -61178,10 +61178,10 @@ definitions:
           current_phase:
             type: string
             enum:
-              - PHASE_UNSPECIFIED
               - PHASE_PREPARING
               - PHASE_EXECUTING
-            default: PHASE_UNSPECIFIED
+              - PHASE_UNSPECIFIED
+            default: PHASE_PREPARING
           last_redeem_tx:
             type: string
             format: byte

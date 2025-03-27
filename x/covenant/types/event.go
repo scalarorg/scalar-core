@@ -67,3 +67,8 @@ func NewKeyRotated(chain nexus.ChainName, keyID multisigExported.KeyID) *KeyRota
 		KeyID:  keyID,
 	}
 }
+
+func (e *SwitchedPhaseConfirmed) ValidateBasic() error {
+	// TODO: validate
+	return nil
+}

@@ -95,11 +95,6 @@ func (s msgServer) ConfirmSwitchedPhase(c context.Context, req *types.ConfirmSwi
 		return nil, err
 	}
 
-	cusGr, ok := s.Keeper.GetCustodianGroup(ctx, req.CustodianGroupUID)
-	if !ok {
-		return nil, fmt.Errorf("custodian group %s not found", req.CustodianGroupUID)
-	}
-
 	chainKeeper, err := s.chains.ForChain(ctx, req.Chain)
 	if err != nil {
 		return nil, err
@@ -143,8 +138,6 @@ func (s msgServer) ConfirmSwitchedPhase(c context.Context, req *types.ConfirmSwi
 		ConfirmationHeight: chainKeeper.GetRequiredConfirmationHeight(ctx),
 		Participants:       snapshot.GetParticipantAddresses(),
 		CustodianGroupUID:  req.CustodianGroupUID,
-		ScriptPubkey:       cusGr.BitcoinPubkey,
-		NetworkParams:      nwParams,
 	}
 
 	s.Logger(ctx).Info("ConfirmSwitchedPhaseStarted", event)

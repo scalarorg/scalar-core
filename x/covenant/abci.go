@@ -179,7 +179,7 @@ func handleSwitchPhase(ctx sdk.Context, k types.Keeper, b types.BaseKeeper, pk t
 
 	for _, evmSession := range expiredEvmSessions {
 		success := utils.RunCached(ctx, k, func(ctx sdk.Context) (bool, error) {
-			swichPhaseForEvmChain(ctx, k, b, multisig, evmSession, types.Executing)
+			switchPhaseForEvmChain(ctx, k, b, multisig, evmSession, types.Executing)
 			return true, nil
 		})
 		_ = success
@@ -245,6 +245,8 @@ func handleEnqueueEvent(
 	switch event.GetEvent().(type) {
 	case *types.Event_RedeemTxsConfirmed:
 		return handleRedeemTxsConfirmed(ctx, event, k, b, m, pk)
+	case *types.Event_SwitchedPhaseConfirmed:
+		return handleSwitchedPhaseConfirmed(ctx, event, k, b, m, pk)
 	default:
 		panic(fmt.Errorf("unsupported event type %T", event))
 	}
@@ -302,7 +304,7 @@ func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, k types.Keepe
 
 	for _, s := range evmSessions {
 		success := utils.RunCached(ctx, k, func(ctx sdk.Context) (bool, error) {
-			swichPhaseForEvmChain(ctx, k, b, m, s, types.Preparing)
+			switchPhaseForEvmChain(ctx, k, b, m, s, types.Preparing)
 			return true, nil
 		})
 		_ = success
@@ -313,7 +315,24 @@ func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, k types.Keepe
 	return nil
 }
 
-func swichPhaseForEvmChain(ctx sdk.Context,
+func handleSwitchedPhaseConfirmed(ctx sdk.Context, event *types.Event, k types.Keeper, b types.BaseKeeper, m types.MultisigKeeper, pk types.ProtocolKeeper) error {
+	confirmedEvent, ok := event.GetEvent().(*types.Event_SwitchedPhaseConfirmed)
+	if !ok {
+		return fmt.Errorf("invalid event type")
+	}
+
+	switchPhaseEvent := confirmedEvent.SwitchedPhaseConfirmed
+
+	if switchPhaseEvent.ToPhase == types.Executing {
+		return k.UpdatePreparingToExecuting(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
+	} else if switchPhaseEvent.ToPhase == types.Preparing {
+		return k.UpdateExecutingToPreparing(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
+	}
+
+	return fmt.Errorf("invalid phase")
+}
+
+func switchPhaseForEvmChain(ctx sdk.Context,
 	_ types.Keeper,
 	b types.BaseKeeper,
 	multisig types.MultisigKeeper,

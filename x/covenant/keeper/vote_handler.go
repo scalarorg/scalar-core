@@ -201,6 +201,11 @@ func (v voteHandler) handleEvent(ctx sdk.Context, event types.Event, k types.Kee
 			k.Logger(ctx).Error("failed to set pending redeem command", "error", err)
 			return err
 		}
+	case *types.Event_SwitchedPhaseConfirmed:
+		if err := k.EnqueueEvent(ctx, &event); err!= nil {
+			k.Logger(ctx).Error("failed to set pending switched phase command", "error", err)
+			return err
+		}
 
 	default:
 		return fmt.Errorf("unrecognized event type %T", eventType)

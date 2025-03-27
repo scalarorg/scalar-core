@@ -181,6 +181,8 @@
     - [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse)
     - [ConfirmDepositRequest](#scalar.chains.v1beta1.ConfirmDepositRequest)
     - [ConfirmDepositResponse](#scalar.chains.v1beta1.ConfirmDepositResponse)
+    - [ConfirmRegisterCustodianGroupRequest](#scalar.chains.v1beta1.ConfirmRegisterCustodianGroupRequest)
+    - [ConfirmRegisterCustodianGroupResponse](#scalar.chains.v1beta1.ConfirmRegisterCustodianGroupResponse)
     - [ConfirmSourceTxsRequest](#scalar.chains.v1beta1.ConfirmSourceTxsRequest)
     - [ConfirmSourceTxsResponse](#scalar.chains.v1beta1.ConfirmSourceTxsResponse)
     - [ConfirmTokenRequest](#scalar.chains.v1beta1.ConfirmTokenRequest)
@@ -3291,6 +3293,33 @@ MsgConfirmDeposit represents an erc20 deposit confirmation message
 
 
 
+<a name="scalar.chains.v1beta1.ConfirmRegisterCustodianGroupRequest"></a>
+
+### ConfirmRegisterCustodianGroupRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `tx_id` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmRegisterCustodianGroupResponse"></a>
+
+### ConfirmRegisterCustodianGroupResponse
+
+
+
+
+
+
+
 <a name="scalar.chains.v1beta1.ConfirmSourceTxsRequest"></a>
 
 ### ConfirmSourceTxsRequest
@@ -4199,9 +4228,9 @@ the deterministic order of the entries
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| PHASE_UNSPECIFIED | 0 |  |
-| PHASE_PREPARING | 1 |  |
-| PHASE_EXECUTING | 2 |  |
+| PHASE_PREPARING | 0 |  |
+| PHASE_EXECUTING | 1 |  |
+| PHASE_UNSPECIFIED | 2 |  |
 
 
  <!-- end enums -->
@@ -4255,8 +4284,6 @@ For Validation process
 | `confirmation_height` | [uint64](#uint64) |  |  |
 | `participants` | [bytes](#bytes) | repeated |  |
 | `custodian_group_uid` | [bytes](#bytes) |  |  |
-| `script_pubkey` | [bytes](#bytes) |  |  |
-| `network_params` | [string](#string) |  |  |
 
 
 
@@ -4431,8 +4458,10 @@ For Validation process
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `event_id` | [string](#string) |  |  |
-| `session_sequence` | [uint64](#uint64) |  |  |
-| `phase_sequence` | [uint64](#uint64) |  |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
+| `sequence` | [uint64](#uint64) |  |  |
+| `from_phase` | [uint64](#uint64) |  |  |
+| `to_phase` | [uint64](#uint64) |  |  |
 
 
 

@@ -16,6 +16,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
+	covTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
@@ -37,6 +38,7 @@ var (
 		{Type: stringType},
 		{Type: bytesType},
 	}
+	SwitchPhaseSig = crypto.Keccak256Hash([]byte("SwitchPhase(bytes32,uint64,Phase,Phase)"))
 )
 
 func DecodeERC20TransferEvent(log *geth.Log) (types.EventTransfer, error) {
@@ -201,88 +203,41 @@ func DecodeEventContractCall(log *geth.Log) (types.EventContractCall, error) {
 	}, nil
 }
 
-// func (client *EthereumClient) decodeSourceTxConfirmationEvent(log *geth.Log) (*chainsTypes.SourceTxConfirmationEvent, error) {
-// 	params, err := chainsTypes.StrictDecode(ContractCallDataArgs, log.Data)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+func DecodeEventSwitchPhase(log *geth.Log) (*covTypes.SwitchedPhaseConfirmed, error) {
+	if len(log.Topics) != 1 || log.Topics[0] != SwitchPhaseSig {
+		return nil, fmt.Errorf("event is not SwitchPhase")
+	}
 
-// 	payload, ok := params[2].([]byte)
-// 	if !ok {
-// 		return nil, fmt.Errorf("invalid payload")
-// 	}
+	// event SwitchPhase(bytes32 indexed custodianGroupId, uint64 indexed sequence, Phase from, Phase to);
 
-// 	sender, _, symbol, metadata, err := encode.DecodeTransferRemotePayload(payload)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("error decoding transfer remote payload: %w", err)
-// 	}
+	custodianGroupId := common.BytesToHash(log.Topics[1].Bytes())
+	sequence := sdk.NewUintFromBigInt(new(big.Int).SetBytes(log.Topics[2].Bytes()))
+	enumType := funcs.Must(abi.NewType("enum Phase", "enum Phase", []abi.ArgumentMarshaling{
+		{Name: "Preparing", Type: "uint8"},
+		{Name: "Executing", Type: "uint8"},
+	}))
+	arguments := abi.Arguments{
+		{Type: enumType},
+		{Type: enumType},
+	}
 
-// 	amount, recipientChainIdentifier, _, err := encode.DecodeTransferRemoteMetadataPayload(metadata)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("error decoding transfer remote metadata payload: %w", err)
-// 	}
+	params, err := types.StrictDecode(arguments, log.Data)
+	if err != nil {
+		return nil, err
+	}
 
-// 	chainID := params[0].(string)
-// 	if !utils.ValidateChainID(chainID) {
-// 		return nil, fmt.Errorf("invalid chain id")
-// 	}
+	from := params[0].(uint8)
+	to := params[1].(uint8)
 
-// 	destinationChain := nexus.ChainName(chainID)
+	if from != uint8(covTypes.Preparing) || to != uint8(covTypes.Executing) {
+		return nil, fmt.Errorf("invalid phase transition")
+	}
 
-// 	destinationContractAddress := common.HexToAddress(params[1].(string)).Hex()
+	return &covTypes.SwitchedPhaseConfirmed{
+		CustodianGroupUID: exported.Hash(custodianGroupId),
+		Sequence:          sequence.Uint64(),
+		FromPhase:         covTypes.Phase(from),
+		ToPhase:           covTypes.Phase(to),
+	}, nil
 
-// 	payloadHash := chainsexported.Hash(common.BytesToHash(log.Topics[2].Bytes()))
-
-// 	queryClient := grpc_client.QueryManager.GetClient()
-
-// 	chainParams, err := queryClient.Params(context.Background(), &chainsTypes.ParamsRequest{
-// 		Chain: chainID,
-// 	})
-// 	if err != nil {
-// 		return nil, fmt.Errorf("error getting chain metadata: %w", err)
-// 	}
-
-// 	chainMetadata := chainParams.Params.Metadata
-
-// 	destinationRecipientAddress, err := decodeAddress(destinationChain, recipientChainIdentifier, chainMetadata)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("error decoding destination recipient address: %w", err)
-// 	}
-
-// 	cfEvent := &chainsTypes.SourceTxConfirmationEvent{
-// 		Sender:                      sender.Hex(),
-// 		DestinationChain:            destinationChain,
-// 		Amount:                      amount,
-// 		Asset:                       symbol,
-// 		PayloadHash:                 payloadHash,
-// 		Payload:                     payload,
-// 		DestinationContractAddress:  destinationContractAddress,
-// 		DestinationRecipientAddress: destinationRecipientAddress,
-// 	}
-
-// 	clog.Greenf("decoded event: %+v", cfEvent)
-
-// 	return cfEvent, nil
-// }
-
-// func decodeAddress(chain nexus.ChainName, identifier []byte, metadata map[string]string) (string, error) {
-// 	if chainsTypes.IsBitcoinChain(chain) {
-// 		params := metadata["params"]
-// 		if params == "" {
-// 			return "", fmt.Errorf("params is required")
-// 		}
-
-// 		addr, err := btcUtils.ScriptPubKeyToAddress(identifier, params)
-// 		if err != nil {
-// 			return "", fmt.Errorf("error decoding address: %w", err)
-// 		}
-// 		return addr.String(), nil
-// 	}
-
-// 	if chainsTypes.IsEvmChain(chain) {
-// 		address := common.BytesToAddress(identifier)
-// 		return address.String(), nil
-// 	}
-
-// 	return "", fmt.Errorf("chain not supported")
-// }
+}

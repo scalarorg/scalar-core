@@ -12,52 +12,66 @@ message SigningPsbtStarted {
   option (gogoproto.stable_marshaler) = true;
 
   string module = 1;
-  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
-  uint64 sig_id = 3 [(gogoproto.customname) = "SigID"];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  uint64 sig_id = 3 [ (gogoproto.customname) = "SigID" ];
   string key_id = 4 [
     (gogoproto.customname) = "KeyID",
-    (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
-  map<string, bytes> pub_keys = 5 [(gogoproto.castvalue) = "github.com/scalarorg/scalar-core/x/multisig/exported.PublicKey"];
+  map<string, bytes> pub_keys = 5
+      [ (gogoproto.castvalue) =
+            "github.com/scalarorg/scalar-core/x/multisig/exported.PublicKey" ];
   string requesting_module = 6;
-  repeated bytes multi_psbt = 7 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/covenant/exported.Psbt"];
+  repeated bytes multi_psbt = 7
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/covenant/exported.Psbt" ];
 }
 
 message SigningPsbtCompleted {
   string module = 1;
-  uint64 sig_id = 2 [(gogoproto.customname) = "SigID"];
+  uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
 }
 
 message SigningPsbtExpired {
   string module = 1;
-  uint64 sig_id = 2 [(gogoproto.customname) = "SigID"];
+  uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
 }
 
 message TapScriptSigsSubmitted {
   string module = 1;
-  uint64 sig_id = 2 [(gogoproto.customname) = "SigID"];
-  bytes participant = 3 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
-  repeated scalar.covenant.exported.v1beta1.TapScriptSigsMap list_of_tap_script_sigs_map = 4;
+  uint64 sig_id = 2 [ (gogoproto.customname) = "SigID" ];
+  bytes participant = 3 [ (gogoproto.casttype) =
+                              "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
+  repeated scalar.covenant.exported.v1beta1.TapScriptSigsMap
+      list_of_tap_script_sigs_map = 4;
 }
 
 message KeyRotated {
   string module = 1;
-  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string key_id = 3 [
     (gogoproto.customname) = "KeyID",
-    (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/multisig/exported.KeyID"
   ];
 }
 
 message SwitchPhaseStarted {
   string module = 1;
-  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   string symbol = 3;
   uint64 sequence = 4;
   // Current phase
   scalar.covenant.v1beta1.Phase phase = 5;
   // Next sequence and phase encoded in the payload
-  string execute_data = 6 [(gogoproto.customname) = "ExecuteData"];
+  string execute_data = 6 [ (gogoproto.customname) = "ExecuteData" ];
 }
 
 message SwitchPhaseCompleted {
@@ -66,50 +80,62 @@ message SwitchPhaseCompleted {
   scalar.covenant.v1beta1.Phase phase = 3;
 }
 
-//For Validation process
+// For Validation process
 message ConfirmSwitchedPhaseStarted {
   uint64 poll_id = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.customname) = "PollID",
-    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
   ];
   bytes tx_id = 2 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
 
-  string chain = 3 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  string chain = 3
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   uint64 confirmation_height = 4;
-  repeated bytes participants = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
+  repeated bytes participants = 5
+      [ (gogoproto.casttype) =
+            "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
   bytes custodian_group_uid = 6 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "CustodianGroupUID"
   ];
-  bytes script_pubkey = 7;
-  string network_params = 8;
 }
 
 message ConfirmRedeemTxStarted {
   uint64 poll_id = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.customname) = "PollID",
-    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
   ];
 
   repeated bytes tx_ids = 2 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxIDs"
   ];
 
-  string chain = 3 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  string chain = 3
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   uint64 confirmation_height = 4;
-  repeated bytes participants = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
+  repeated bytes participants = 5
+      [ (gogoproto.casttype) =
+            "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
   bytes custodian_group_uid = 6 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "CustodianGroupUID"
   ];
   bytes script_pubkey = 7;
@@ -121,16 +147,22 @@ message Event {
     option (gogoproto.goproto_enum_prefix) = false;
     option (gogoproto.goproto_enum_stringer) = true;
 
-    STATUS_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "EventNonExistent"];
-    STATUS_CONFIRMED = 1 [(gogoproto.enumvalue_customname) = "EventConfirmed"];
-    STATUS_COMPLETED = 2 [(gogoproto.enumvalue_customname) = "EventCompleted"];
-    STATUS_FAILED = 3 [(gogoproto.enumvalue_customname) = "EventFailed"];
+    STATUS_UNSPECIFIED = 0
+        [ (gogoproto.enumvalue_customname) = "EventNonExistent" ];
+    STATUS_CONFIRMED = 1
+        [ (gogoproto.enumvalue_customname) = "EventConfirmed" ];
+    STATUS_COMPLETED = 2
+        [ (gogoproto.enumvalue_customname) = "EventCompleted" ];
+    STATUS_FAILED = 3 [ (gogoproto.enumvalue_customname) = "EventFailed" ];
   }
 
-  string chain = 1 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   bytes hash = 2 [
     (gogoproto.customname) = "Hash",
-    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
   ];
   Status status = 3;
   uint64 index = 4;
@@ -141,14 +173,17 @@ message Event {
 }
 
 message VoteEvents {
-  string chain = 1 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
-  repeated Event events = 2 [(gogoproto.nullable) = false];
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  repeated Event events = 2 [ (gogoproto.nullable) = false ];
 }
 
 message RedeemTxsConfirmed {
   repeated string event_ids = 1 [
     (gogoproto.customname) = "EventIDs",
-    (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/chains/types.EventID"
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/chains/types.EventID"
   ];
   UTXOSnapshot utxo_snapshot = 2;
 }
@@ -156,8 +191,18 @@ message RedeemTxsConfirmed {
 message SwitchedPhaseConfirmed {
   string event_id = 1 [
     (gogoproto.customname) = "EventID",
-    (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/chains/types.EventID"
+    (gogoproto.casttype) =
+        "github.com/scalarorg/scalar-core/x/chains/types.EventID"
   ];
-  uint64 session_sequence = 2 [(gogoproto.customname) = "SessionSequence"];
-  uint64 phase_sequence = 3 [(gogoproto.customname) = "PhaseSequence"];
+  bytes custodian_group_uid = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "CustodianGroupUID"
+  ];
+  uint64 sequence = 3;
+  uint64 from_phase = 4
+      [ (gogoproto.customtype) = "Phase", (gogoproto.nullable) = false ];
+  uint64 to_phase = 5
+      [ (gogoproto.customtype) = "Phase", (gogoproto.nullable) = false ];
 }

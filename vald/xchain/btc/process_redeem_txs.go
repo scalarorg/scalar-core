@@ -1,7 +1,6 @@
 package btc
 
 import (
-	"context"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -9,7 +8,6 @@ import (
 	"github.com/scalarorg/bitcoin-vault/go-utils/btc"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/slices"
-	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
 	xcommon "github.com/scalarorg/scalar-core/vald/xchain/common"
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
@@ -35,24 +33,7 @@ func (client *BtcClient) ProcessRedeemTxsConfirmation(event *covTypes.ConfirmRed
 		}
 	}
 
-	queryClient := grpc_client.QueryManager().GetChainsClient()
-	chainID := event.Chain
-
-	chainParams, err := queryClient.Params(context.Background(), &chainsTypes.ParamsRequest{
-		Chain: string(chainID),
-	})
-	if err != nil {
-		return nil, fmt.Errorf("error getting chain metadata: %w", err)
-	}
-
-	chainMetadata := chainParams.Params.Metadata
-
-	params := chainMetadata["params"]
-	if params == "" {
-		return nil, fmt.Errorf("params is required")
-	}
-
-	taprootAddress, err := btc.ScriptPubKeyToAddress(event.ScriptPubkey, params)
+	taprootAddress, err := btc.ScriptPubKeyToAddress(event.ScriptPubkey, event.NetworkParams)
 	if err != nil {
 		return nil, err
 	}
