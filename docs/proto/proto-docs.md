@@ -291,8 +291,6 @@
     - [PsbtMultiSig.ParticipantListTapScriptSigsEntry](#scalar.covenant.v1beta1.PsbtMultiSig.ParticipantListTapScriptSigsEntry)
     - [SigningSession](#scalar.covenant.v1beta1.SigningSession)
   
-    - [CommandType](#scalar.covenant.v1beta1.CommandType)
-  
 - [scalar/covenant/v1beta1/params.proto](#scalar/covenant/v1beta1/params.proto)
     - [Params](#scalar.covenant.v1beta1.Params)
   
@@ -1262,6 +1260,8 @@ TransferKey contains information for a transfer operatorship
 | COMMAND_TYPE_APPROVE_CONTRACT_CALL_WITH_MINT | 6 |  |
 | COMMAND_TYPE_APPROVE_CONTRACT_CALL | 7 |  |
 | COMMAND_TYPE_REGISTER_CUSTODIAN_GROUP | 8 |  |
+| COMMAND_TYPE_SWITCH_PHASE | 9 |  |
+| COMMAND_TYPE_REDEEM_TOKEN | 10 |  |
 
 
 
@@ -4847,20 +4847,6 @@ For Validation process
 
 
  <!-- end messages -->
-
-
-<a name="scalar.covenant.v1beta1.CommandType"></a>
-
-### CommandType
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| COMMAND_TYPE_UNSPECIFIED | 0 |  |
-| COMMAND_TYPE_SWITCH_PHASE | 1 |  |
-| COMMAND_TYPE_REGISTER_CUSTODIAN_GROUP | 2 |  |
-| COMMAND_TYPE_REDEEM_TOKEN | 3 |  |
-
 
  <!-- end enums -->
 

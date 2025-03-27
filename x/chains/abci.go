@@ -90,7 +90,7 @@ func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 	}
 	switch event.GetEvent().(type) {
 	case *types.Event_SourceTxConfirmationEvent:
-		return handleSourceConfirmationEvent(ctx, event, bk, n, m)
+		return handleSourceConfirmationEvent(ctx, event, n)
 	case *types.Event_ContractCallWithToken:
 		return handleContractCallWithToken(ctx, event, bk, n, m, p, cov)
 	case *types.Event_TokenSent:
@@ -160,7 +160,7 @@ func validateEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n ty
 	return nil
 }
 
-func handleSourceConfirmationEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper) error {
+func handleSourceConfirmationEvent(ctx sdk.Context, event types.Event, n types.Nexus) error {
 	e := event.GetSourceTxConfirmationEvent()
 	if e == nil {
 		panic(fmt.Errorf("event is nil"))
@@ -383,7 +383,7 @@ func handleContractCallWithTokenToEVM(ctx sdk.Context, event types.Event, bk typ
 		e.Amount,
 		destinationToken.GetDetails().Symbol,
 	)
-	
+
 	funcs.MustNoErr(destinationCk.EnqueueCommand(ctx, cmd))
 	bk.Logger(ctx).Debug(fmt.Sprintf("created %s command for event", cmd.Type),
 		"chain", destinationChain,

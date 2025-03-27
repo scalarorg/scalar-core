@@ -5,21 +5,18 @@ import (
 	"encoding/hex"
 	"errors"
 	fmt "fmt"
-	"strings"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/crypto"
-	proto "github.com/gogo/protobuf/proto"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
-	"github.com/stoewer/go-strcase"
 )
 
 var (
@@ -33,6 +30,12 @@ var (
 	bytes32ArrayType = funcs.Must(abi.NewType("bytes32[]", "bytes32[]", nil))
 	stringArrayType  = funcs.Must(abi.NewType("string[]", "string[]", nil))
 	bytesArrayType   = funcs.Must(abi.NewType("bytes[]", "bytes[]", nil))
+
+	switchPhaseArguments = abi.Arguments{{Type: uint8Type}, {Type: bytes32Type}}
+)
+
+const (
+	switchPhaseMaxGasCost = 100000
 )
 
 type StandaloneCommand struct {
@@ -49,18 +52,6 @@ func NewStandaloneCommand(metadata StandaloneCommandMetadata, setter func(batch 
 		metadata: metadata,
 		setter:   setter,
 	}
-}
-
-func (c CommandType) String() string {
-	return strcase.LowerCamelCase(strings.TrimPrefix(proto.EnumName(CommandType_name, int32(c)), "COMMAND_TYPE_"))
-}
-
-// ValidateBasic returns an error if the given command type is invalid
-func (c CommandType) ValidateBasic() error {
-	if _, ok := CommandType_name[int32(c)]; !ok || c == COMMAND_TYPE_UNSPECIFIED {
-		return fmt.Errorf("%s is not a valid command type", c.String())
-	}
-	return nil
 }
 
 // GetStatus returns the batch's status
@@ -137,7 +128,7 @@ func NewStandaloneCommandMetadata(
 	keyID multisig.KeyID,
 	chainID sdk.Int,
 	commandID CommandID,
-	commandType CommandType,
+	commandType chainsTypes.CommandType,
 	commandParam []byte,
 ) (StandaloneCommandMetadata, error) {
 	data, err := packArguments(chainID, commandID, commandType, commandParam)
@@ -264,8 +255,7 @@ func (c CommandID) ValidateBasic() error {
 	return nil
 }
 
-func packArguments(chainID sdk.Int, id CommandID, typ CommandType, param []byte) ([]byte, error) {
-
+func packArguments(chainID sdk.Int, id CommandID, typ chainsTypes.CommandType, param []byte) ([]byte, error) {
 	arguments := abi.Arguments{{Type: uint256Type}, {Type: bytes32ArrayType}, {Type: stringArrayType}, {Type: bytesArrayType}}
 	result, err := arguments.Pack(
 		chainID.BigInt(),
@@ -278,4 +268,34 @@ func packArguments(chainID sdk.Int, id CommandID, typ CommandType, param []byte)
 	}
 
 	return result, nil
+}
+
+func NewSwitchPhaseCommandWithExpiredSessioin(
+	session *ExpiredEvmSession,
+	chainID sdk.Int,
+	keyID multisig.KeyID,
+	newPhase Phase,
+) chainsTypes.Command {
+	chainbz := make([]byte, 8)
+	binary.BigEndian.PutUint64(chainbz, uint64(chainID.Uint64()))
+
+	id := append(session.CustodianGroupUID.Bytes(), chainbz...)
+	id = append(id, byte(session.Sequence))
+	id = append(id, byte(session.CurrentPhase))
+
+	cmd := chainsTypes.Command{
+		ID:         chainsTypes.NewCommandID(id, chainID),
+		Type:       chainsTypes.COMMAND_TYPE_REDEEM_TOKEN,
+		Params:     createSwitchPhasePayload(session, newPhase),
+		Payload:    []byte{},
+		KeyID:      keyID,
+		MaxGasCost: uint32(switchPhaseMaxGasCost),
+	}
+
+	return cmd
+}
+
+func createSwitchPhasePayload(evmSession *ExpiredEvmSession, newPhase Phase) []byte {
+	payload := funcs.Must(switchPhaseArguments.Pack(newPhase, evmSession.CustodianGroupUID.Bytes()))
+	return payload
 }

@@ -281,7 +281,7 @@ func (s msgServer) createReserveRedeemUtxoStandaloneCommand(
 		keyID,
 		chainID,
 		commandID,
-		types.COMMAND_TYPE_REDEEM_TOKEN,
+		chainsTypes.COMMAND_TYPE_REDEEM_TOKEN,
 		commandParam,
 	)
 

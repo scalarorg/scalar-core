@@ -100,12 +100,3 @@ message BasicPollNoEventsConfirmed {
   ];
 }
 
-enum CommandType {
-  option (gogoproto.goproto_enum_prefix) = false;
-  option (gogoproto.goproto_enum_stringer) = false;
-
-  COMMAND_TYPE_UNSPECIFIED = 0;
-  COMMAND_TYPE_SWITCH_PHASE = 1;
-  COMMAND_TYPE_REGISTER_CUSTODIAN_GROUP = 2;
-  COMMAND_TYPE_REDEEM_TOKEN = 3;
-}

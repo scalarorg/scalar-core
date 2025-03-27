@@ -11,6 +11,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/covenant/exported"
 	"github.com/scalarorg/scalar-core/x/covenant/types"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -23,13 +24,14 @@ func BeginBlocker(ctx sdk.Context, _ abci.RequestBeginBlock, bk types.Keeper) {}
 // EndBlocker called every block, process inflation, update validator set.
 func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock,
 	k types.Keeper,
+	b types.BaseKeeper,
 	pk types.ProtocolKeeper,
 	multisig types.MultisigKeeper,
 	rewarder types.Rewarder) ([]abci.ValidatorUpdate, error) {
 	clog.Greenf("Covenant EndBlocker, ctx.BlockHeight: %+v", ctx.BlockHeight())
 	handleSignings(ctx, k, rewarder)
-	handleEnqueuedEvents(ctx, k)
-	handleSwitchPhase(ctx, k, pk, multisig)
+	handleEnqueuedEvents(ctx, k, b, multisig, pk)
+	handleSwitchPhase(ctx, k, b, pk, multisig)
 	return nil, nil
 }
 
@@ -172,58 +174,177 @@ func processPsbt(p *types.PsbtMultiSig, tapScriptSigsMapByEachPsbt []map[string]
 }
 
 // Hande switch phase from Prepaing to Executing
-func handleSwitchPhase(ctx sdk.Context, k types.Keeper, pk types.ProtocolKeeper, multisig types.MultisigKeeper) {
+func handleSwitchPhase(ctx sdk.Context, k types.Keeper, b types.BaseKeeper, pk types.ProtocolKeeper, multisig types.MultisigKeeper) {
 	expiredEvmSessions, expiredRedeemSessions := findExpiredEvmSessions(ctx, k, pk)
 
 	for _, evmSession := range expiredEvmSessions {
-		swichPhaseForEvmChain(ctx, k, multisig, evmSession)
+		success := utils.RunCached(ctx, k, func(ctx sdk.Context) (bool, error) {
+			swichPhaseForEvmChain(ctx, k, b, multisig, evmSession, types.Executing)
+			return true, nil
+		})
+		_ = success
 	}
 	for _, redeemSession := range expiredRedeemSessions {
 		k.SetSwitchingForRedeemSession(ctx, redeemSession.CustodianGroupUID[:])
 	}
 }
 
-func swichPhaseForEvmChain(ctx sdk.Context,
+func handleEnqueuedEvents(
+	ctx sdk.Context,
 	k types.Keeper,
+	b types.BaseKeeper,
+	m types.MultisigKeeper,
+	pk types.ProtocolKeeper,
+) {
+	queue := k.GetEventsQueue(ctx)
+	endBlockerLimit := 100 // TODO: move to the module.params
+
+	var events []types.Event
+	var event types.Event
+	// Note: this ensures the blockchain is not frozen by processing all events in the queue
+	for len(events) < endBlockerLimit && queue.Dequeue(&event) {
+		events = append(events, event)
+	}
+
+	for _, event := range events {
+		success := utils.RunCached(ctx, k, func(ctx sdk.Context) (bool, error) {
+			if err := handleEnqueueEvent(ctx, &event, k, b, m, pk); err != nil {
+				k.Logger(ctx).Debug(fmt.Sprintf("failed handling event: %s", err.Error()),
+					"chain", event.Chain.String(),
+				)
+				clog.Magentaf("[x/covenent] [ABCI]-handle event %++v of type %T failed with error: %+v", event, event.GetEvent(), err)
+				return false, err
+			}
+
+			k.Logger(ctx).Debug("completed handling event",
+				"chain", event.Chain.String(),
+			)
+
+			return true, nil
+		})
+
+		_ = success
+
+		// if !success {
+		// 	funcs.MustNoErr(ck.SetEventFailed(ctx, event.GetID()))
+		// 	continue
+		// }
+
+		// funcs.MustNoErr(ck.SetEventCompleted(ctx, event.GetID()))
+	}
+
+}
+
+func handleEnqueueEvent(
+	ctx sdk.Context, event *types.Event,
+	k types.Keeper, b types.BaseKeeper, m types.MultisigKeeper, pk types.ProtocolKeeper,
+) error {
+	// if err := validateEvent(ctx, event, bk, n); err != nil {
+	// 	return err
+	// }
+	switch event.GetEvent().(type) {
+	case *types.Event_RedeemTxsConfirmed:
+		return handleRedeemTxsConfirmed(ctx, event, k, b, m, pk)
+	default:
+		panic(fmt.Errorf("unsupported event type %T", event))
+	}
+}
+
+func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, k types.Keeper, b types.BaseKeeper, m types.MultisigKeeper, pk types.ProtocolKeeper) error {
+	// event := event.GetRedeemTxsConfirmed()
+	// keyID := event.GetKeyID()
+	// chain
+	// txs := event.GetTxs()
+	confirmedEvent, ok := event.GetEvent().(*types.Event_RedeemTxsConfirmed)
+	if !ok {
+		return fmt.Errorf("invalid event type")
+	}
+
+	utxos := confirmedEvent.RedeemTxsConfirmed.GetUtxoSnapshot()
+
+	group, ok := k.GetCustodianGroup(ctx, chains.Hash(utxos.CustodianGroupUID.Bytes()))
+	if !ok {
+		return fmt.Errorf("not found custodian group")
+	}
+
+	redeemSession, ok := k.GetRedeemSession(ctx, group.UID.Bytes())
+	if !ok {
+		return fmt.Errorf("not found redeem session")
+	}
+
+	if redeemSession.CurrentPhase != types.Preparing {
+		return fmt.Errorf("redeem session is not in preparing phase")
+	}
+
+	protocols := pk.FindProtocolInfoByCustodianGroupUID(ctx, [][]byte{group.UID.Bytes()})
+	if len(protocols) != 1 {
+		return fmt.Errorf("not found protocol")
+	}
+
+	protocol := protocols[0]
+
+	evmSessions := make(map[string]*types.ExpiredEvmSession)
+
+	for _, chain := range protocol.MinorAddresses {
+		s, ok := evmSessions[chain.ChainName.String()]
+		if !ok {
+			s = &types.ExpiredEvmSession{
+				CustodianGroupUID: protocol.CustodianGroupUID,
+				Chain:             chain.ChainName,
+				Sequence:          redeemSession.Sequence,
+				CurrentPhase:      types.Preparing,
+				Tokens:            []string{},
+			}
+		}
+		s.Tokens = append(s.Tokens, protocol.Symbol)
+		evmSessions[chain.ChainName.String()] = s
+	}
+
+	for _, s := range evmSessions {
+		success := utils.RunCached(ctx, k, func(ctx sdk.Context) (bool, error) {
+			swichPhaseForEvmChain(ctx, k, b, m, s, types.Preparing)
+			return true, nil
+		})
+		_ = success
+	}
+
+	k.SetUtxoSnapshot(ctx, utxos)
+	k.SetSwitchingForRedeemSession(ctx, utxos.CustodianGroupUID[:] /*, keyID*/)
+	return nil
+}
+
+func swichPhaseForEvmChain(ctx sdk.Context,
+	_ types.Keeper,
+	b types.BaseKeeper,
 	multisig types.MultisigKeeper,
-	evmSession *types.ExpiredEvmSession) error {
-
-	// Create switch phase payload for evm tx
-	payload := createSwitchPhasePayload(evmSession)
-
+	evmSession *types.ExpiredEvmSession,
+	newPhase types.Phase,
+) error {
 	// Start signing session for reserve redeem utxos
 	keyID, ok := multisig.GetCurrentKeyID(ctx, evmSession.Chain)
 	if !ok {
 		return fmt.Errorf("could not find key ID for '%s'", evmSession.Chain)
 	}
-	//Todo: check signing process
-	if err := multisig.Sign(
-		ctx,
+
+	chainID := funcs.Must(evmSession.Chain.GetChainID())
+
+	cmd := types.NewSwitchPhaseCommandWithExpiredSessioin(
+		evmSession,
+		*chainID,
 		keyID,
-		payload,
-		types.ModuleName,
-	); err != nil {
+		newPhase,
+	)
+
+	ck, err := b.ForChain(ctx, evmSession.Chain)
+	if err != nil {
 		return err
 	}
 
-	logger := k.Logger(ctx)
-	logger.Info("swichPhaseForEvmChain",
-		"custodian_group_uid", evmSession.CustodianGroupUID,
-		"chain", evmSession.Chain,
-		"phase", evmSession.CurrentPhase,
-		"tokens", evmSession.Tokens,
-	)
+	ck.EnqueueCommand(ctx, cmd)
 	return nil
 }
 
 // Todo: review this method
-func createSwitchPhasePayload(evmSession *types.ExpiredEvmSession) []byte {
-	payload := []byte{}
-	payload = append(payload, evmSession.CustodianGroupUID[:]...)
-	payload = append(payload, evmSession.Chain.String()...)
-	payload = append(payload, evmSession.CurrentPhase.String()...)
-	return payload
-}
 
 // return map[chainName]ExpiredEvmSession
 func findExpiredEvmSessions(ctx sdk.Context, k types.Keeper, pk types.ProtocolKeeper) (map[string]*types.ExpiredEvmSession, map[string]*types.RedeemSession) {
@@ -268,77 +389,4 @@ func findExpiredEvmSessions(ctx sdk.Context, k types.Keeper, pk types.ProtocolKe
 		}
 	}
 	return result, expiredSessions
-}
-
-func handleEnqueuedEvents(ctx sdk.Context, k types.Keeper) {
-	queue := k.GetEventsQueue(ctx)
-	endBlockerLimit := 100 // TODO: move to the module.params
-
-	var events []types.Event
-	var event types.Event
-	// Note: this ensures the blockchain is not frozen by processing all events in the queue
-	for len(events) < endBlockerLimit && queue.Dequeue(&event) {
-		events = append(events, event)
-	}
-
-	for _, event := range events {
-		success := utils.RunCached(ctx, k, func(ctx sdk.Context) (bool, error) {
-			if err := handleEnqueueEvent(ctx, &event, k); err != nil {
-				k.Logger(ctx).Debug(fmt.Sprintf("failed handling event: %s", err.Error()),
-					"chain", event.Chain.String(),
-				)
-				clog.Magentaf("[x/covenent] [ABCI]-handle event %++v of type %T failed with error: %+v", event, event.GetEvent(), err)
-				return false, err
-			}
-
-			k.Logger(ctx).Debug("completed handling event",
-				"chain", event.Chain.String(),
-			)
-
-			return true, nil
-		})
-
-		_ = success
-
-		// if !success {
-		// 	funcs.MustNoErr(ck.SetEventFailed(ctx, event.GetID()))
-		// 	continue
-		// }
-
-		// funcs.MustNoErr(ck.SetEventCompleted(ctx, event.GetID()))
-	}
-
-}
-
-func handleEnqueueEvent(ctx sdk.Context, event *types.Event, k types.Keeper) error {
-	// if err := validateEvent(ctx, event, bk, n); err != nil {
-	// 	return err
-	// }
-	switch event.GetEvent().(type) {
-	case *types.Event_RedeemTxsConfirmed:
-		return handleRedeemTxsConfirmed(ctx, event, k)
-	default:
-		panic(fmt.Errorf("unsupported event type %T", event))
-	}
-}
-
-func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, k types.Keeper) error {
-	// event := event.GetRedeemTxsConfirmed()
-	// keyID := event.GetKeyID()
-	// chain
-	// txs := event.GetTxs()
-
-	confirmedEvent, ok := event.GetEvent().(*types.Event_RedeemTxsConfirmed)
-	if !ok {
-		return fmt.Errorf("invalid event type")
-	}
-
-	// TODO:
-
-	utxos := confirmedEvent.RedeemTxsConfirmed.GetUtxoSnapshot()
-
-	k.SetUtxoSnapshot(ctx, utxos)
-
-	k.SetSwitchingForRedeemSession(ctx, utxos.CustodianGroupUID[:] /*, keyID*/)
-	return nil
 }
