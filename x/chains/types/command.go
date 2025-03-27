@@ -304,6 +304,16 @@ func (m Command) DecodeParams() (map[string]string, error) {
 		params["cap"] = cap.String()
 		params["tokenAddress"] = tokenAddress.Hex()
 		params["dailyMintLimit"] = dailyMintLimit.String()
+	case COMMAND_TYPE_DEPLOY_TOKEN2:
+		name, symbol, decs, cap, tokenAddress, dailyMintLimit, custodianGroupUID := DecodeDeployToken2Params(m.Params)
+
+		params["name"] = name
+		params["symbol"] = symbol
+		params["decimals"] = strconv.FormatUint(uint64(decs), 10)
+		params["cap"] = cap.String()
+		params["tokenAddress"] = tokenAddress.Hex()
+		params["dailyMintLimit"] = dailyMintLimit.String()
+		params["custodianGroupUID"] = custodianGroupUID.Hex()
 	case COMMAND_TYPE_MINT_TOKEN:
 		symbol, addr, amount := DecodeMintTokenParams(m.Params)
 
@@ -498,6 +508,13 @@ func DecodeDeployTokenParams(bz []byte) (string, string, uint8, *big.Int, common
 	params := funcs.Must(StrictDecode(deployTokenArguments, bz))
 
 	return params[0].(string), params[1].(string), params[2].(uint8), params[3].(*big.Int), params[4].(common.Address), sdk.NewUintFromBigInt(params[5].(*big.Int))
+}
+
+// DecodeDeployToken2Params decodes the call arguments from the given contract call
+func DecodeDeployToken2Params(bz []byte) (string, string, uint8, *big.Int, common.Address, sdk.Uint, chains.Hash) {
+	params := funcs.Must(StrictDecode(deployToken2Arguments, bz))
+
+	return params[0].(string), params[1].(string), params[2].(uint8), params[3].(*big.Int), params[4].(common.Address), sdk.NewUintFromBigInt(params[5].(*big.Int)), chains.Hash(params[6].([32]byte))
 }
 
 // DecodeBurnTokenParams decodes the call arguments from the given contract call
