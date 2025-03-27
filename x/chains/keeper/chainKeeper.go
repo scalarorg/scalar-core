@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
+	"strings"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
@@ -22,6 +23,7 @@ import (
 	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	protocol "github.com/scalarorg/scalar-core/x/protocol/exported"
 )
 
 var (
@@ -671,6 +673,89 @@ func (k chainKeeper) GetERC20TokenBySymbol(ctx sdk.Context, symbol string) types
 
 // CreateNewBatchToSign creates a new batch of commands to be signed
 func (k chainKeeper) CreateNewBatchToSign(ctx sdk.Context) (types.CommandBatch, error) {
+	chain := k.GetName()
+	if types.IsBitcoinChain(chain) {
+		return k.createNewBtcBatchToSign(ctx, protocol.LIQUIDITY_MODEL_UPC)
+	}
+	return k.createNewBatchToSign(ctx)
+}
+
+func (k chainKeeper) CreateNewPoolingBatchToSign(ctx sdk.Context, chain nexus.ChainName) (types.CommandBatch, error) {
+	if !types.IsBitcoinChain(chain) {
+		return types.CommandBatch{}, fmt.Errorf("pooling is only supported for bitcoin chains")
+	}
+
+	return k.createNewBtcBatchToSign(ctx, protocol.LIQUIDITY_MODEL_POOL)
+}
+
+func (k chainKeeper) createNewBtcBatchToSign(ctx sdk.Context, m protocol.LiquidityModel) (types.CommandBatch, error) {
+	// filter first upc command
+
+	prefix := protocol.GetBTCKeyIDPrefix(m)
+	firstCmdFilter := func(value codec.ProtoMarshaler) bool {
+		cmd, ok := value.(*types.Command)
+		return ok && strings.HasPrefix(cmd.KeyID.String(), prefix)
+	}
+
+	var firstCmd *types.Command
+
+	ok := k.getCommandQueue(ctx).DequeueUntil(firstCmd, firstCmdFilter)
+	if !ok {
+		return types.CommandBatch{}, nil
+	}
+
+	if firstCmd == nil {
+		return types.CommandBatch{}, nil
+	}
+
+	chainID := sdk.NewIntFromBigInt(k.getSigner(ctx).ChainID())
+	gasLimit := k.getCommandsGasLimit(ctx)
+	gasCost := firstCmd.MaxGasCost
+	keyID := firstCmd.KeyID
+
+	filter := func(value codec.ProtoMarshaler) bool {
+		cmd, ok := value.(*types.Command)
+		gasCost += cmd.MaxGasCost
+		// Note: This is used to limit the number of commands in the batch
+		return ok && cmd.KeyID == keyID && gasCost <= gasLimit
+	}
+
+	commands := []types.Command{firstCmd.Clone()}
+	for {
+		var cmd types.Command
+		ok := k.getCommandQueue(ctx).DequeueIf(&cmd, filter)
+		if !ok {
+			break
+		}
+
+		clog.Magentaf("[keeper] [CreateNewBatchToSign] command: %+x", cmd)
+
+		// Note: Becareful with cmd.Clone() if you want to add more fields to the command, please update this function
+		clonedCmd := cmd.Clone()
+		commands = append(commands, clonedCmd)
+	}
+
+	commandBatch, err := types.NewCommandBatchMetadata(ctx.BlockHeight(), chainID, keyID, commands)
+	if err != nil {
+		return types.CommandBatch{}, err
+	}
+
+	latest := k.GetLatestCommandBatch(ctx)
+	if !latest.Is(types.BatchSigned) && !latest.Is(types.BatchNonExistent) {
+		return types.CommandBatch{}, fmt.Errorf("latest command batch %s is still being processed", hex.EncodeToString(latest.GetID()))
+	}
+
+	commandBatch.PrevBatchedCommandsID = latest.GetID()
+	k.setCommandBatchMetadata(ctx, commandBatch)
+	k.setUnsignedCommandBatchID(ctx, commandBatch.ID)
+
+	setter := func(m types.CommandBatchMetadata) {
+		k.setCommandBatchMetadata(ctx, m)
+	}
+	return types.NewCommandBatch(commandBatch, setter), nil
+}
+
+func (k chainKeeper) createNewBatchToSign(ctx sdk.Context) (types.CommandBatch, error) {
 	var firstCmd types.Command
 	ok := k.getCommandQueue(ctx).Dequeue(&firstCmd)
 	if !ok {

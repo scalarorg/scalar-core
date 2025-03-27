@@ -217,7 +217,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, fmt.Errorf("could not find key ID for '%s'", req.SourceChain)
 	}
 	// Create redeem payload for evm tx
-	payload, commandID, err := s.createRedeemPayload(ctx, req, protocol.CustodianGroupUID.Bytes())
+	params, commandID, err := s.createRedeemParams(ctx, req, protocol.CustodianGroupUID.Bytes())
 	if err != nil {
 		return nil, err
 	}
@@ -227,7 +227,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, err
 	}
 
-	command, err := s.createReserveRedeemUtxoStandaloneCommand(ctx, keyID, *chainID, *commandID, payload)
+	command, err := s.createReserveRedeemUtxoStandaloneCommand(ctx, keyID, *chainID, *commandID, params)
 	if err != nil {
 		return nil, fmt.Errorf("could not create reserve utxo command")
 	}

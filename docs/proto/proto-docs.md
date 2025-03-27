@@ -210,8 +210,6 @@
     - [SignBtcCommandsRequest](#scalar.chains.v1beta1.SignBtcCommandsRequest)
     - [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest)
     - [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse)
-    - [SignPsbtCommandRequest](#scalar.chains.v1beta1.SignPsbtCommandRequest)
-    - [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse)
   
 - [scalar/chains/v1beta1/service.proto](#scalar/chains/v1beta1/service.proto)
     - [MsgService](#scalar.chains.v1beta1.MsgService)
@@ -3705,39 +3703,6 @@ address
 
 
 
-
-<a name="scalar.chains.v1beta1.SignPsbtCommandRequest"></a>
-
-### SignPsbtCommandRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `sender` | [bytes](#bytes) |  |  |
-| `chain` | [string](#string) |  |  |
-| `psbt` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.SignPsbtCommandResponse"></a>
-
-### SignPsbtCommandResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `batched_commands_id` | [bytes](#bytes) |  |  |
-| `command_count` | [uint32](#uint32) |  |  |
-
-
-
-
-
  <!-- end messages -->
 
  <!-- end enums -->
@@ -3780,7 +3745,6 @@ Msg defines the btc Msg service.
 | `CreateTransferOperatorship` | [CreateTransferOperatorshipRequest](#scalar.chains.v1beta1.CreateTransferOperatorshipRequest) | [CreateTransferOperatorshipResponse](#scalar.chains.v1beta1.CreateTransferOperatorshipResponse) |  | POST|/scalar/chains/v1beta1/create_transfer_operatorship|
 | `SignCommands` | [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest) | [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_commands|
 | `SignBtcCommand` | [SignBtcCommandsRequest](#scalar.chains.v1beta1.SignBtcCommandsRequest) | [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
-| `SignPsbtCommand` | [SignPsbtCommandRequest](#scalar.chains.v1beta1.SignPsbtCommandRequest) | [SignPsbtCommandResponse](#scalar.chains.v1beta1.SignPsbtCommandResponse) |  | POST|/scalar/chains/v1beta1/sign_btc_commands|
 | `AddChain` | [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest) | [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse) |  | POST|/scalar/chains/v1beta1/add_chain|
 | `RetryFailedEvent` | [RetryFailedEventRequest](#scalar.chains.v1beta1.RetryFailedEventRequest) | [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse) |  | POST|/scalar/chains/v1beta1/retry-failed-event|
 | `RegisterCustodianGroup` | [RegisterCustodianGroupRequest](#scalar.chains.v1beta1.RegisterCustodianGroupRequest) | [RegisterCustodianGroupResponse](#scalar.chains.v1beta1.RegisterCustodianGroupResponse) |  | POST|/scalar/covenant/v1beta1/register_custodian_group|
@@ -5553,6 +5517,7 @@ Confirm exectuted transaction on bitcoin
 | `dest_chain` | [string](#string) |  | BTC chain |
 | `symbol` | [string](#string) |  | Token symbol |
 | `amount` | [uint64](#uint64) |  | Redeem amount |
+| `locking_script` | [bytes](#bytes) |  |  |
 
 
 

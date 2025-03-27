@@ -7963,7 +7963,7 @@ paths:
         - MsgService
   /scalar/chains/v1beta1/sign_btc_commands:
     post:
-      operationId: SignPsbtCommand
+      operationId: SignBtcCommand
       responses:
         "200":
           description: A successful response.
@@ -8149,20 +8149,7 @@ paths:
                               "value": "1.212s"
                             }
       requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                sender:
-                  type: string
-                  format: byte
-                chain:
-                  type: string
-                psbt:
-                  type: string
-                  format: byte
-        required: true
+        $ref: "#/components/requestBodies/SignBtcCommandBody"
       tags:
         - MsgService
   /scalar/chains/v1beta1/sign_commands:
@@ -8353,17 +8340,7 @@ paths:
                               "value": "1.212s"
                             }
       requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                sender:
-                  type: string
-                  format: byte
-                chain:
-                  type: string
-        required: true
+        $ref: "#/components/requestBodies/SignBtcCommandBody"
       tags:
         - MsgService
   "/scalar/chains/v1beta1/token_info/{chain}":
@@ -10810,6 +10787,9 @@ paths:
                 amount:
                   type: string
                   format: uint64
+                locking_script:
+                  type: string
+                  format: byte
         required: true
       tags:
         - MsgService
@@ -53058,6 +53038,18 @@ components:
               description:
                 type: string
       required: true
+    SignBtcCommandBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              sender:
+                type: string
+                format: byte
+              chain:
+                type: string
+      required: true
     CreateCustodianGroupBody:
       content:
         application/json:
@@ -54938,26 +54930,6 @@ components:
         command_count:
           type: integer
           format: int64
-    scalar.chains.v1beta1.SignPsbtCommandRequest:
-      type: object
-      properties:
-        sender:
-          type: string
-          format: byte
-        chain:
-          type: string
-        psbt:
-          type: string
-          format: byte
-    scalar.chains.v1beta1.SignPsbtCommandResponse:
-      type: object
-      properties:
-        batched_commands_id:
-          type: string
-          format: byte
-        command_count:
-          type: integer
-          format: int64
     scalar.chains.v1beta1.SourceTxConfirmationEvent:
       type: object
       properties:
@@ -56587,6 +56559,9 @@ components:
         amount:
           type: string
           format: uint64
+        locking_script:
+          type: string
+          format: byte
     scalar.covenant.v1beta1.ReserveRedeemUtxoResponse:
       type: object
     scalar.covenant.v1beta1.RotateKeyRequest:

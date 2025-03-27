@@ -1,19 +1,25 @@
 package covenant
 
 import (
+	"encoding/hex"
 	"fmt"
+	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
+	goutils "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	"github.com/scalarorg/scalar-core/x/covenant/exported"
 	"github.com/scalarorg/scalar-core/x/covenant/types"
+	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	abci "github.com/tendermint/tendermint/abci/types"
 )
 
@@ -246,7 +252,7 @@ func handleEnqueueEvent(
 	case *types.Event_RedeemTxsConfirmed:
 		return handleRedeemTxsConfirmed(ctx, event, k, b, m, pk)
 	case *types.Event_SwitchedPhaseConfirmed:
-		return handleSwitchedPhaseConfirmed(ctx, event, k, b, m, pk)
+		return handleSwitchedPhaseConfirmed(ctx, event, k, b)
 	default:
 		panic(fmt.Errorf("unsupported event type %T", event))
 	}
@@ -315,7 +321,7 @@ func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, k types.Keepe
 	return nil
 }
 
-func handleSwitchedPhaseConfirmed(ctx sdk.Context, event *types.Event, k types.Keeper, b types.BaseKeeper, m types.MultisigKeeper, pk types.ProtocolKeeper) error {
+func handleSwitchedPhaseConfirmed(ctx sdk.Context, event *types.Event, k types.Keeper, b types.BaseKeeper) error {
 	confirmedEvent, ok := event.GetEvent().(*types.Event_SwitchedPhaseConfirmed)
 	if !ok {
 		return fmt.Errorf("invalid event type")
@@ -323,13 +329,156 @@ func handleSwitchedPhaseConfirmed(ctx sdk.Context, event *types.Event, k types.K
 
 	switchPhaseEvent := confirmedEvent.SwitchedPhaseConfirmed
 
-	if switchPhaseEvent.ToPhase == types.Executing {
-		return k.UpdatePreparingToExecuting(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
-	} else if switchPhaseEvent.ToPhase == types.Preparing {
+	if switchPhaseEvent.ToPhase == types.Preparing {
 		return k.UpdateExecutingToPreparing(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
+	} else if switchPhaseEvent.ToPhase == types.Executing {
+		err := k.UpdatePreparingToExecuting(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
+		if err != nil {
+			return err
+		}
+
+		err = handleSignCommands(ctx, k, b)
+
 	}
 
 	return fmt.Errorf("invalid phase")
+}
+
+func handleSignCommands(
+	ctx sdk.Context,
+	k types.Keeper,
+	b types.BaseKeeper,
+) error {
+	// TODO: Fix the chain
+	mockChain := nexus.ChainName("bitcoin|4")
+	commandBatch, err := getCommandBatchToSign(ctx, b, mockChain)
+	if err != nil {
+		return err
+	}
+
+	if len(commandBatch.GetCommandIDs()) == 0 {
+		return nil
+	}
+
+	psbt, err := aggregatePsbtFromCommandBatch(ctx, k, commandBatch)
+	if err != nil {
+		return err
+	}
+
+	if err := k.SignPsbt(
+		ctx,
+		commandBatch.GetKeyID(),
+		[]exported.Psbt{psbt},
+		types.ModuleName,
+		mockChain,
+		types.NewSigMetadata(types.SigCommand, mockChain, commandBatch.GetID()),
+	); err != nil {
+		return err
+	}
+
+	if !commandBatch.SetStatus(chainsTypes.BatchSigning) {
+		return fmt.Errorf("failed setting status of command batch %s to be signing", hex.EncodeToString(commandBatch.GetID()))
+	}
+
+	clog.Yellowf("[keeper] [msg_server_sign_btc_commands] commandBatch: %+v", commandBatch)
+
+	batchedCommandsIDHex := hex.EncodeToString(commandBatch.GetID())
+	commandList := chainsTypes.CommandIDsToStrings(commandBatch.GetCommandIDs())
+	for _, commandID := range commandList {
+		k.Logger(ctx).Info(
+			fmt.Sprintf("signing command %s in batch %s for chain %s using key %s", commandID, batchedCommandsIDHex, mockChain, string(commandBatch.GetKeyID())),
+			chainsTypes.AttributeKeyChain, mockChain,
+			chainsTypes.AttributeKeyKeyID, string(commandBatch.GetKeyID()),
+			"commandBatchID", batchedCommandsIDHex,
+			"commandID", commandID,
+		)
+	}
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			chainsTypes.EventTypeSign,
+			sdk.NewAttribute(sdk.AttributeKeyAction, chainsTypes.AttributeValueStart),
+			sdk.NewAttribute(sdk.AttributeKeyModule, chainsTypes.ModuleName),
+			sdk.NewAttribute(chainsTypes.AttributeKeyChain, mockChain.String()),
+			sdk.NewAttribute(chainsTypes.AttributeKeyBatchedCommandsID, batchedCommandsIDHex),
+			sdk.NewAttribute(chainsTypes.AttributeKeyCommandsIDs, strings.Join(commandList, ",")),
+		),
+	)
+
+	return nil
+}
+
+func aggregatePsbtFromCommandBatch(ctx sdk.Context, k types.Keeper, commandBatch chainsTypes.CommandBatch) (exported.Psbt, error) {
+	multiPayload := commandBatch.GetExtraData()
+
+	bytesType := funcs.Must(abi.NewType("bytes", "bytes", nil))
+	uint256Type := funcs.Must(abi.NewType("uint256", "uint256", nil))
+	uint256ArrayType := funcs.Must(abi.NewType("uint256[]", "uint256[]", nil))
+	stringArrayType := funcs.Must(abi.NewType("string[]", "string[]", nil))
+
+	arg := abi.Arguments{{Type: uint256Type}, {Type: bytesType}, {Type: stringArrayType}, {Type: uint256ArrayType}}
+
+	// inputs := make(map[string]goutils.PreviousStakingUTXO{}, 0)
+	inputsMap := map[string]goutils.PreviousStakingUTXO{}
+
+	for _, payload := range multiPayload {
+
+		// 	payload, err := redeemTokenPayloadArguments.Pack(req.Amount, req.LockingScript, txIds, vouts)
+		// if err != nil {
+		// 	return nil, nil, err
+		// }
+
+		params, err := chainsTypes.StrictDecode(arg, payload)
+		if err!= nil {
+			return nil, err
+		}
+
+		// TODO: Fix the types
+		amount := params[0].(*uint64)
+		lockingScript := params[1].([]byte)
+		txIds := params[2].([]string)
+		vouts := params[3].([]*uint64)
+
+	}
+
+	// TODO: Fix payload
+	tag := []byte{}
+	serviceTag := []byte{}
+	version := uint8(0)
+	network := goutils.NetworkKindTestnet
+	inputs := []goutils.PreviousStakingUTXO{}
+	outputs := []goutils.UnstakingOutput{}
+	custodianPubKeys := []types.PublicKey{}
+	custodianQuorum := uint8(0)
+	rbf := false
+	feeRate := uint64(0)
+
+	psbt, err := vault.BuildCustodianOnlyUnstakingTx(
+		tag,
+		serviceTag,
+		version,
+		network,
+		inputs,
+		outputs,
+		custodianPubKeys,
+		custodianQuorum,
+		rbf,
+		feeRate,
+	)
+	return psbt, err
+}
+
+func getCommandBatchToSign(ctx sdk.Context, bk types.BaseKeeper, chain nexus.ChainName) (chainsTypes.CommandBatch, error) {
+	latest := bk.GetLatestCommandBatch(ctx)
+
+	switch latest.GetStatus() {
+	case chainsTypes.BatchSigning:
+		return chainsTypes.CommandBatch{}, sdkerrors.Wrapf(chainsTypes.ErrSignCommandsInProgress, "command batch '%s'", hex.EncodeToString(latest.GetID()))
+	case chainsTypes.BatchAborted:
+		return latest, nil
+	default:
+		return bk.CreateNewPoolingBatchToSign(ctx, chain)
+	}
 }
 
 func switchPhaseForEvmChain(ctx sdk.Context,
@@ -363,7 +512,7 @@ func switchPhaseForEvmChain(ctx sdk.Context,
 	return nil
 }
 
-// Todo: review this method
+// TODO: review this method
 
 // return map[chainName]ExpiredEvmSession
 func findExpiredEvmSessions(ctx sdk.Context, k types.Keeper, pk types.ProtocolKeeper) (map[string]*types.ExpiredEvmSession, map[string]*types.RedeemSession) {

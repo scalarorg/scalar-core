@@ -14,7 +14,6 @@ import (
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/key"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
-	"github.com/scalarorg/scalar-core/x/covenant/types"
 	cov "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
@@ -25,8 +24,8 @@ var (
 	uint256ArrayType = funcs.Must(abi.NewType("uint256[]", "uint256[]", nil))
 	stringArrayType  = funcs.Must(abi.NewType("string[]", "string[]", nil))
 
-	callContractWithTokenPayloadArguments = abi.Arguments{{Type: uint256Type}, {Type: stringArrayType}, {Type: uint256ArrayType}}
-	callContractWithTokenArguments        = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: bytesType}, {Type: stringType}, {Type: uint256Type}}
+	redeemTokenPayloadArguments    = abi.Arguments{{Type: uint256Type}, {Type: bytesType}, {Type: stringArrayType}, {Type: uint256ArrayType}}
+	callContractWithTokenArguments = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: bytesType}, {Type: stringType}, {Type: uint256Type}}
 )
 
 func CreateRedeemSessionKey(uid []byte) utils.Key {
@@ -207,7 +206,7 @@ func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID []byte, requestI
 	return reserveUtxos, nil
 }
 
-func (k Keeper) createRedeemPayload(ctx sdk.Context, req *types.ReserveRedeemUtxoRequest, custodianGrUID []byte) ([]byte, *types.CommandID, error) {
+func (k Keeper) createRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRequest, custodianGrUID []byte) ([]byte, *cov.CommandID, error) {
 
 	bz := make([]byte, 8)
 	binary.BigEndian.PutUint64(bz, uint64(ctx.BlockHeight()))
@@ -231,12 +230,12 @@ func (k Keeper) createRedeemPayload(ctx sdk.Context, req *types.ReserveRedeemUtx
 		vouts[i] = utxo.Vout
 	}
 
-	payload, err := callContractWithTokenPayloadArguments.Pack(req.Amount, txIds, vouts)
+	payload, err := redeemTokenPayloadArguments.Pack(req.Amount, req.LockingScript, txIds, vouts)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	data, err := callContractWithTokenArguments.Pack(
+	params, err := callContractWithTokenArguments.Pack(
 		req.DestChain,
 		req.Address,
 		payload,
@@ -248,28 +247,28 @@ func (k Keeper) createRedeemPayload(ctx sdk.Context, req *types.ReserveRedeemUtx
 		return nil, nil, err
 	}
 
-	cmdId := types.NewCommandID(reqId)
+	cmdId := cov.NewCommandID(reqId)
 
-	return data, &cmdId, err
+	return params, &cmdId, err
 }
 
-func (k Keeper) GetReserveUTXOCommandByID(ctx sdk.Context, id []byte) types.StandaloneCommand {
+func (k Keeper) GetReserveUTXOCommandByID(ctx sdk.Context, id []byte) cov.StandaloneCommand {
 	md := k.getStandaloneCommandMetadata(ctx, id, reserveUtxoCommandPrefix)
 
-	setter := func(m types.StandaloneCommandMetadata) {
+	setter := func(m cov.StandaloneCommandMetadata) {
 		k.setStandaloneCommandMetadata(ctx, m, reserveUtxoCommandPrefix)
 	}
 
-	return types.NewStandaloneCommand(md, setter)
+	return cov.NewStandaloneCommand(md, setter)
 }
 
-func (k Keeper) getStandaloneCommandMetadata(ctx sdk.Context, id []byte, prefix key.Key) types.StandaloneCommandMetadata {
-	var md types.StandaloneCommandMetadata
+func (k Keeper) getStandaloneCommandMetadata(ctx sdk.Context, id []byte, prefix key.Key) cov.StandaloneCommandMetadata {
+	var md cov.StandaloneCommandMetadata
 	k.getStore(ctx).GetNew(prefix.Append(key.FromBz(id)), &md)
 	return md
 }
 
-func (k Keeper) setStandaloneCommandMetadata(ctx sdk.Context, meta types.StandaloneCommandMetadata, prefix key.Key) {
+func (k Keeper) setStandaloneCommandMetadata(ctx sdk.Context, meta cov.StandaloneCommandMetadata, prefix key.Key) {
 	funcs.MustNoErr(
 		k.getStore(ctx).SetNewValidated(prefix.Append(key.FromBz(meta.ID)), &meta))
 }

@@ -15,7 +15,6 @@ import (
 	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 
-	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
@@ -47,7 +46,6 @@ func GetTxCmd() *cobra.Command {
 		GetCmdCreateTransferOperatorship(),
 		GetCmdSignCommands(),
 		GetCmdSignBtcCommands(),
-		GetCmdSignPsbtCommand(),
 		GetCmdAddChain(),
 	)
 	return chainsTxCmd
@@ -373,31 +371,6 @@ func GetCmdSignBtcCommands() *cobra.Command {
 			}
 
 			msg := types.NewSignBtcCommandsRequest(cliCtx.GetFromAddress(), args[0])
-
-			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
-		},
-	}
-	flags.AddTxFlagsToCmd(cmd)
-	return cmd
-}
-
-// GetCmdSignPsbtCommand returns the cli command to sign psbt commands for a BTC transaction
-func GetCmdSignPsbtCommand() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "sign-psbt [chain] [psbt]",
-		Short: "Sign psbt commands for a BTC transaction",
-		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			cliCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-			psbt, err := covenant.PsbtFromHex(args[1])
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewSignPsbtCommandRequest(cliCtx.GetFromAddress(), args[0], psbt)
 
 			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
 		},
