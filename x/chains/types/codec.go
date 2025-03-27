@@ -21,7 +21,6 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&CreateTransferOperatorshipRequest{},
 		&SignCommandsRequest{},
 		&SignBtcCommandsRequest{},
-		&SignPsbtCommandRequest{},
 		&AddChainRequest{},
 		&SetGatewayRequest{},
 		&RetryFailedEventRequest{},

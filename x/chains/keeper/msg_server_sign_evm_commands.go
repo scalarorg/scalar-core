@@ -38,6 +38,7 @@ func (s msgServer) SignCommands(c context.Context, req *types.SignCommandsReques
 	if err != nil {
 		return nil, err
 	}
+	
 	if len(commandBatch.GetCommandIDs()) == 0 {
 		return &types.SignCommandsResponse{CommandCount: 0, BatchedCommandsID: nil}, nil
 	}

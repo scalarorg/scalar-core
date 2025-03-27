@@ -38,6 +38,15 @@ func FormatContractCallWithTokenToBTCKeyID(bitcoinPubKey []byte, model Liquidity
 	return multisig.KeyID(hex.EncodeToString(bytes) + "|" + hex.EncodeToString(bitcoinPubKey)), nil
 }
 
+func GetBTCKeyIDPrefix(model LiquidityModel) string {
+	if _, ok := LiquidityModel_name[int32(model)]; !ok {
+		return ""
+	}
+	bytes := make([]byte, 4)
+	binary.BigEndian.PutUint32(bytes, uint32(model))
+	return hex.EncodeToString(bytes) + "|"
+}
+
 func ParseContractCallWithTokenToBTCKeyID(keyID multisig.KeyID) (bitcoinPubKey []byte, model LiquidityModel, err error) {
 	parts := strings.Split(string(keyID), "|")
 	if len(parts) != 2 {

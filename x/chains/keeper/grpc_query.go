@@ -23,6 +23,7 @@ import (
 	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexustypes "github.com/scalarorg/scalar-core/x/nexus/exported"
+	protocol "github.com/scalarorg/scalar-core/x/protocol/exported"
 )
 
 var _ types.QueryServiceServer = Querier{}
@@ -379,7 +380,7 @@ func (q Querier) PendingCommands(c context.Context, req *types.PendingCommandsRe
 	}
 
 	if types.IsBitcoinChain(nexustypes.ChainName(req.Chain)) {
-		return getBitcoinPendingCommands(pendingCommands)
+		return getBitcoinUPCPendingCommands(pendingCommands)
 	}
 
 	return getAllPendingCommands(pendingCommands)
@@ -399,19 +400,36 @@ func getAllPendingCommands(commands []types.Command) (*types.PendingCommandsResp
 	return &types.PendingCommandsResponse{Commands: responses}, nil
 }
 
-func getBitcoinPendingCommands(commands []types.Command) (*types.PendingCommandsResponse, error) {
+func getBitcoinUPCPendingCommands(commands []types.Command) (*types.PendingCommandsResponse, error) {
 	if len(commands) == 0 {
 		return &types.PendingCommandsResponse{Commands: nil}, nil
 	}
 
-	firstKeyID := commands[0].KeyID
-	responses := make([]types.QueryCommandResponse, 0, len(commands))
+	// get the first UPC command
+	var firstUPC *types.Command
+	var index int
 
-	for _, cmd := range commands {
+	prefix := protocol.GetBTCKeyIDPrefix(protocol.LIQUIDITY_MODEL_UPC)
+	for i, cmd := range commands {
+		if strings.HasPrefix(cmd.KeyID.String(), prefix) {
+			firstUPC = &cmd
+			index = i
+			break
+		}
+	}
+
+	if firstUPC == nil {
+		return nil, sdkerrors.Wrapf(types.ErrEVM, "no UPC command found")
+	}
+
+	// get the first UPC command's keyID
+	firstKeyID := firstUPC.KeyID
+	// get all UPC commands with the same keyID
+	responses := make([]types.QueryCommandResponse, 0)
+	for _, cmd := range commands[index:] {
 		if cmd.KeyID != firstKeyID {
 			continue
 		}
-
 		cmdResp, err := GetCommandResponse(cmd)
 		if err != nil {
 			return nil, status.Error(codes.NotFound, err.Error())

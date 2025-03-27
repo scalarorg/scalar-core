@@ -114,6 +114,8 @@ type ProtocolKeeper interface {
 
 type BaseKeeper interface {
 	ForChain(ctx sdk.Context, chain nexus.ChainName) (chainsTypes.ChainKeeper, error)
+	GetLatestCommandBatch(ctx sdk.Context) chainsTypes.CommandBatch
+	CreateNewPoolingBatchToSign(ctx sdk.Context, chainName nexus.ChainName) (chainsTypes.CommandBatch, error)
 }
 
 type ChainKeeper interface {

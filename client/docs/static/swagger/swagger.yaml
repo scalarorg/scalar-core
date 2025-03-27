@@ -8721,7 +8721,7 @@ paths:
         - MsgService
   /scalar/chains/v1beta1/sign_btc_commands:
     post:
-      operationId: SignPsbtCommand
+      operationId: SignBtcCommand
       responses:
         '200':
           description: A successful response.
@@ -8938,9 +8938,6 @@ paths:
                 format: byte
               chain:
                 type: string
-              psbt:
-                type: string
-                format: byte
       tags:
         - MsgService
   /scalar/chains/v1beta1/sign_commands:
@@ -11790,6 +11787,9 @@ paths:
               amount:
                 type: string
                 format: uint64
+              locking_script:
+                type: string
+                format: byte
       tags:
         - MsgService
   /scalar/convenant/v1beta1/custodians:
@@ -59588,26 +59588,6 @@ definitions:
       command_count:
         type: integer
         format: int64
-  scalar.chains.v1beta1.SignPsbtCommandRequest:
-    type: object
-    properties:
-      sender:
-        type: string
-        format: byte
-      chain:
-        type: string
-      psbt:
-        type: string
-        format: byte
-  scalar.chains.v1beta1.SignPsbtCommandResponse:
-    type: object
-    properties:
-      batched_commands_id:
-        type: string
-        format: byte
-      command_count:
-        type: integer
-        format: int64
   scalar.chains.v1beta1.SourceTxConfirmationEvent:
     type: object
     properties:
@@ -61249,6 +61229,9 @@ definitions:
       amount:
         type: string
         format: uint64
+      locking_script:
+        type: string
+        format: byte
   scalar.covenant.v1beta1.ReserveRedeemUtxoResponse:
     type: object
   scalar.covenant.v1beta1.RotateKeyRequest:
