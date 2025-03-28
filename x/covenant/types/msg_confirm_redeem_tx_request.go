@@ -30,8 +30,6 @@ func (msg *ConfirmRedeemTxsRequest) ValidateBasic() error {
 		return fmt.Errorf("txIDs are required")
 	}
 	return nil
-
-	return nil
 }
 
 func (msg *ConfirmRedeemTxsRequest) GetSigners() []sdk.AccAddress {

@@ -72,7 +72,7 @@ func (k Keeper) SetProtocols(ctx sdk.Context, protocols []*types.Protocol) {
 }
 
 func (k Keeper) GetAllProtocols(ctx sdk.Context) ([]*types.Protocol, bool) {
-	clog.Yellowf("GetAllProtocols\n")
+	clog.Yellowf("GetAllProtocols")
 	store := k.getStore(ctx)
 	protocols := []*types.Protocol{}
 	iter := store.Iterator(protocolPrefix)
@@ -107,7 +107,7 @@ func (k Keeper) GetAllProtocols(ctx sdk.Context) ([]*types.Protocol, bool) {
 		iter.UnmarshalValue(&protocol)
 		protocols = append(protocols, &protocol)
 	}
-	clog.Yellowf("number of protocols: %d\n", len(protocols))
+	clog.Yellowf("number of protocols: %d", len(protocols))
 	return protocols, true
 }
 
@@ -163,11 +163,11 @@ func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, symbol string) (*t
 		return nil, status.Errorf(codes.NotFound, "all protocols not found")
 	}
 
-	clog.Yellowf("FindProtocolByExternalSymbol, protocols: %+v\n", protocols)
+	// clog.Yellowf("FindProtocolByExternalSymbol, protocols: %+v\n", protocols)
 
 	for _, protocol := range protocols {
 		// if originChain == protocol.Asset.Chain && symbol == protocol.Asset.Name {
-		clog.Yellowf("FindProtocolByExternalSymbol, protocol: %+v\n", protocol)
+		//clog.Yellowf("FindProtocolByExternalSymbol, protocol: %+v\n", protocol)
 		if !k.IsMatchAsset(protocol, symbol) {
 			clog.Yellowf("FindProtocolByExternalSymbol, asset not matched\n")
 			continue
@@ -179,7 +179,7 @@ func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, symbol string) (*t
 		// 	}
 		// 	return protocol, nil
 		// }
-		clog.Yellowf("FindProtocolByExternalSymbol, asset matched, protocol: %+v \n", protocol)
+		// clog.Yellowf("FindProtocolByExternalSymbol, asset matched, protocol: %+v \n", protocol)
 		return protocol, nil
 	}
 

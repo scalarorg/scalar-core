@@ -28,16 +28,16 @@ func (msg *ReserveRedeemUtxoRequest) ValidateBasic() error {
 	if msg.SourceChain == "" {
 		return fmt.Errorf("source chain is required")
 	}
-
-	if nexus.ChainFamily(msg.SourceChain) != nexus.EVM {
+	sourceChainName := nexus.ChainName(msg.SourceChain)
+	if sourceChainName.GetFamily() != nexus.EVM {
 		return fmt.Errorf("source chain %s is not a EVM chain", msg.SourceChain)
 	}
 
 	if msg.DestChain == "" {
 		return fmt.Errorf("dest chain is required")
 	}
-
-	if nexus.ChainFamily(msg.SourceChain) != nexus.BITCOIN {
+	destChainName := nexus.ChainName(msg.DestChain)
+	if destChainName.GetFamily() != nexus.BITCOIN {
 		return fmt.Errorf("dest chain %s is not a BTC chain", msg.DestChain)
 	}
 

@@ -36,9 +36,11 @@ func (s msgServer) ConfirmRedeemTxs(c context.Context, req *types.ConfirmRedeemT
 
 	chainParams := chainKeeper.GetParams(ctx)
 
+	s.Logger(ctx).Info("ConfirmRedeemTxs", "chainParams", chainParams)
+
 	nwParams := chainParams.Metadata["params"]
 	if nwParams == "" {
-		return nil, fmt.Errorf("params is required")
+		return nil, fmt.Errorf("[ConfirmRedeemTxs] params is required")
 	}
 
 	threshold := chainParams.VotingThreshold
@@ -101,11 +103,6 @@ func (s msgServer) ConfirmSwitchedPhase(c context.Context, req *types.ConfirmSwi
 	}
 
 	chainParams := chainKeeper.GetParams(ctx)
-
-	nwParams := chainParams.Metadata["params"]
-	if nwParams == "" {
-		return nil, fmt.Errorf("params is required")
-	}
 
 	threshold := chainParams.VotingThreshold
 
@@ -180,12 +177,14 @@ func (s msgServer) validateEvmChain(ctx sdk.Context, chain nexus.ChainName) (*ne
 func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeemUtxoRequest) (*types.ReserveRedeemUtxoResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	//Validate request
-	sourceChain, ok := s.nexus.GetChain(ctx, nexus.ChainName(req.SourceChain))
+	sourceChainName := nexus.ChainName(req.SourceChain)
+	sourceChain, ok := s.nexus.GetChain(ctx, sourceChainName)
 	if !ok {
 		return nil, fmt.Errorf("%s is not a registered chain", req.SourceChain)
 	}
 
-	destChain, ok := s.nexus.GetChain(ctx, nexus.ChainName(req.SourceChain))
+	destChainName := nexus.ChainName(req.DestChain)
+	destChain, ok := s.nexus.GetChain(ctx, destChainName)
 	if !ok {
 		return nil, fmt.Errorf("%s is not a registered chain", req.DestChain)
 	}

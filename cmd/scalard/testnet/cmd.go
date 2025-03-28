@@ -565,7 +565,7 @@ func createKeyring(inBuf *bufio.Reader, args initArgs, nodeDir string) (keyring.
 }
 func genFaucet(kb keyring.Keyring, mnemonic string, algo keyring.SignatureAlgo, tokenAmount sdk.Int) (*banktypes.Balance, error) {
 	if mnemonic != "" {
-		bip44Path := fmt.Sprintf("%s/0", BIP44_BASE_PATH)
+		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", PurposeFaucetAccount, 0)
 		_, address, err := createKeyringAccountFromMnemonic(kb,
 			BroadcasterKeyName,
 			mnemonic,
@@ -637,7 +637,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		ValidatorKeyName,
 		envKeys.ValidatorMnemonic,
 		algo,
-		fmt.Sprintf("%s/%d", BIP44_BASE_PATH, uint32(index)))
+		fmt.Sprintf("m/%d'/%d'/0'/0/0", PurposeValidator, uint32(index)))
 	if err != nil {
 		log.Error().Err(err).Msg("[initValidatorConfig] Create validator account from Mnemonic")
 		key, err := kb.Key(ValidatorKeyName)
@@ -656,7 +656,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	}
 	if envKeys.BroadcasterMnemonic != "" {
 		//broadcasterPubKey, err := createPubkeyFromMnemonic(nodeConfig, envKeys.BroadcasterMnemonic, kb, algo, BroadcasterKeyName)
-		bip44Path := fmt.Sprintf("%s/%d", BIP44_BASE_PATH, uint32(index))
+		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", PurposeBroadcaster, uint32(index))
 		pubkey, address, err := generateAccount(kb, algo, BroadcasterKeyName, envKeys.BroadcasterMnemonic, bip44Path)
 		if err != nil {
 			log.Debug().Err(err).Msg("Generate account error")
@@ -669,7 +669,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	}
 	if envKeys.GovernanceMnemonic != "" {
 		//validatorInfo.GovPubKey, err = createPubkeyFromMnemonic(nodeConfig, envKeys.GovernanceMnemonic, kb, algo, GovKeyName)
-		bip44Path := fmt.Sprintf("%s/%d", BIP44_BASE_PATH, uint32(index))
+		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", PurposeGovernance, uint32(index))
 		pubkey, address, err := generateAccount(kb, algo, GovKeyName, envKeys.GovernanceMnemonic, bip44Path)
 		if err != nil {
 			log.Debug().Err(err).Msg("Generate account error")

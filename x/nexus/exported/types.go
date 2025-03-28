@@ -274,7 +274,7 @@ func (c ChainName) Validate() error {
 
 	var chainInfoBytes chain.ChainInfoBytes
 	if err := chainInfoBytes.FromString(c.String()); err != nil {
-		return sdkerrors.Wrap(err, "invalid chain name")
+		return sdkerrors.Wrap(err, fmt.Sprintf("invalid chain name: %s", c.String()))
 	}
 
 	return nil
