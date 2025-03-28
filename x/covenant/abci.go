@@ -391,7 +391,7 @@ func handleSignCommands(
 		ctx,
 		commandBatch.GetKeyID(),
 		[]exported.Psbt{psbt},
-		types.ModuleName,
+		chainsTypes.ModuleName,
 		mockChain,
 		types.NewSigMetadata(types.SigCommand, mockChain, commandBatch.GetID()),
 	); err != nil {
