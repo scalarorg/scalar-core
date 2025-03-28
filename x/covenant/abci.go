@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -33,10 +34,12 @@ func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock,
 	b types.BaseKeeper,
 	pk types.ProtocolKeeper,
 	multisig types.MultisigKeeper,
-	rewarder types.Rewarder) ([]abci.ValidatorUpdate, error) {
+	rewarder types.Rewarder,
+	s types.ScalarnetKeeper,
+) ([]abci.ValidatorUpdate, error) {
 	clog.Greenf("Covenant EndBlocker, ctx.BlockHeight: %+v", ctx.BlockHeight())
 	handleSignings(ctx, k, rewarder)
-	handleEnqueuedEvents(ctx, k, b, multisig, pk)
+	handleEnqueuedEvents(ctx, k, b, multisig, pk, s)
 	handleSwitchPhase(ctx, k, b, pk, multisig)
 	return nil, nil
 }
@@ -201,6 +204,7 @@ func handleEnqueuedEvents(
 	b types.BaseKeeper,
 	m types.MultisigKeeper,
 	pk types.ProtocolKeeper,
+	s types.ScalarnetKeeper,
 ) {
 	queue := k.GetEventsQueue(ctx)
 	endBlockerLimit := 100 // TODO: move to the module.params
@@ -214,7 +218,7 @@ func handleEnqueuedEvents(
 
 	for _, event := range events {
 		success := utils.RunCached(ctx, k, func(ctx sdk.Context) (bool, error) {
-			if err := handleEnqueueEvent(ctx, &event, k, b, m, pk); err != nil {
+			if err := handleEnqueueEvent(ctx, &event, k, b, m, pk, s); err != nil {
 				k.Logger(ctx).Debug(fmt.Sprintf("failed handling event: %s", err.Error()),
 					"chain", event.Chain.String(),
 				)
@@ -242,8 +246,13 @@ func handleEnqueuedEvents(
 }
 
 func handleEnqueueEvent(
-	ctx sdk.Context, event *types.Event,
-	k types.Keeper, b types.BaseKeeper, m types.MultisigKeeper, pk types.ProtocolKeeper,
+	ctx sdk.Context,
+	event *types.Event,
+	k types.Keeper,
+	b types.BaseKeeper,
+	m types.MultisigKeeper,
+	pk types.ProtocolKeeper,
+	s types.ScalarnetKeeper,
 ) error {
 	// if err := validateEvent(ctx, event, bk, n); err != nil {
 	// 	return err
@@ -252,7 +261,7 @@ func handleEnqueueEvent(
 	case *types.Event_RedeemTxsConfirmed:
 		return handleRedeemTxsConfirmed(ctx, event, k, b, m, pk)
 	case *types.Event_SwitchedPhaseConfirmed:
-		return handleSwitchedPhaseConfirmed(ctx, event, k, b)
+		return handleSwitchedPhaseConfirmed(ctx, event, k, b, s)
 	default:
 		panic(fmt.Errorf("unsupported event type %T", event))
 	}
@@ -321,7 +330,13 @@ func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, k types.Keepe
 	return nil
 }
 
-func handleSwitchedPhaseConfirmed(ctx sdk.Context, event *types.Event, k types.Keeper, b types.BaseKeeper) error {
+func handleSwitchedPhaseConfirmed(
+	ctx sdk.Context,
+	event *types.Event,
+	k types.Keeper,
+	b types.BaseKeeper,
+	s types.ScalarnetKeeper,
+) error {
 	confirmedEvent, ok := event.GetEvent().(*types.Event_SwitchedPhaseConfirmed)
 	if !ok {
 		return fmt.Errorf("invalid event type")
@@ -337,8 +352,7 @@ func handleSwitchedPhaseConfirmed(ctx sdk.Context, event *types.Event, k types.K
 			return err
 		}
 
-		err = handleSignCommands(ctx, k, b)
-
+		err = handleSignCommands(ctx, k, b, s, switchPhaseEvent.CustodianGroupUID.Bytes())
 	}
 
 	return fmt.Errorf("invalid phase")
@@ -348,10 +362,18 @@ func handleSignCommands(
 	ctx sdk.Context,
 	k types.Keeper,
 	b types.BaseKeeper,
+	s types.ScalarnetKeeper,
+	custodianGroupUID []byte,
 ) error {
 	// TODO: Fix the chain
 	mockChain := nexus.ChainName("bitcoin|4")
-	commandBatch, err := getCommandBatchToSign(ctx, b, mockChain)
+
+	group, ok := k.GetCustodianGroup(ctx, chains.Hash(custodianGroupUID))
+	if !ok {
+		return fmt.Errorf("not found custodian group")
+	}
+
+	commandBatch, err := getCommandBatchToSign(ctx, b, mockChain, group.BitcoinPubkey)
 	if err != nil {
 		return err
 	}
@@ -360,7 +382,7 @@ func handleSignCommands(
 		return nil
 	}
 
-	psbt, err := aggregatePsbtFromCommandBatch(ctx, k, commandBatch)
+	psbt, err := aggregatePsbtFromCommandBatch(ctx, s, b, mockChain, commandBatch, group)
 	if err != nil {
 		return err
 	}
@@ -408,7 +430,13 @@ func handleSignCommands(
 	return nil
 }
 
-func aggregatePsbtFromCommandBatch(ctx sdk.Context, k types.Keeper, commandBatch chainsTypes.CommandBatch) (exported.Psbt, error) {
+func aggregatePsbtFromCommandBatch(
+	ctx sdk.Context,
+	s types.ScalarnetKeeper,
+	b types.BaseKeeper,
+	chainName nexus.ChainName,
+	commandBatch chainsTypes.CommandBatch,
+	group *exported.CustodianGroup) (exported.Psbt, error) {
 	multiPayload := commandBatch.GetExtraData()
 
 	bytesType := funcs.Must(abi.NewType("bytes", "bytes", nil))
@@ -416,60 +444,94 @@ func aggregatePsbtFromCommandBatch(ctx sdk.Context, k types.Keeper, commandBatch
 	uint256ArrayType := funcs.Must(abi.NewType("uint256[]", "uint256[]", nil))
 	stringArrayType := funcs.Must(abi.NewType("string[]", "string[]", nil))
 
-	arg := abi.Arguments{{Type: uint256Type}, {Type: bytesType}, {Type: stringArrayType}, {Type: uint256ArrayType}}
+	arg := abi.Arguments{
+		{Type: uint256Type},
+		{Type: bytesType},
+		{Type: stringArrayType},
+		{Type: uint256ArrayType},
+		{Type: uint256ArrayType},
+	}
 
-	// inputs := make(map[string]goutils.PreviousStakingUTXO{}, 0)
-	inputsMap := map[string]goutils.PreviousStakingUTXO{}
+	visited := map[string]bool{}
+	inputs := []goutils.PreviousStakingUTXO{}
+	outputs := []goutils.UnstakingOutput{}
 
 	for _, payload := range multiPayload {
-
-		// 	payload, err := redeemTokenPayloadArguments.Pack(req.Amount, req.LockingScript, txIds, vouts)
-		// if err != nil {
-		// 	return nil, nil, err
-		// }
-
 		params, err := chainsTypes.StrictDecode(arg, payload)
-		if err!= nil {
+		if err != nil {
 			return nil, err
 		}
 
-		// TODO: Fix the types
-		amount := params[0].(*uint64)
+		reqAmount := params[0].(*uint64)
 		lockingScript := params[1].([]byte)
+
+		outputs = append(outputs, goutils.UnstakingOutput{
+			Amount:        *reqAmount,
+			LockingScript: lockingScript,
+		})
+
 		txIds := params[2].([]string)
 		vouts := params[3].([]*uint64)
+		amountInSats := params[4].([]*uint64)
 
+		for i, txId := range txIds {
+			if visited[txId] {
+				continue
+			}
+			visited[txId] = true
+			txHash, err := chainhash.NewHashFromStr(txId)
+			if err != nil {
+				return nil, err
+			}
+			inputs = append(inputs, goutils.PreviousStakingUTXO{
+				OutPoint: goutils.OutPoint{
+					Txid: [32]byte(txHash.CloneBytes()),
+					Vout: uint32(*vouts[i]),
+				},
+				Amount: *amountInSats[i],
+				Script: group.BitcoinPubkey,
+			})
+		}
 	}
 
-	// TODO: Fix payload
-	tag := []byte{}
-	serviceTag := []byte{}
-	version := uint8(0)
-	network := goutils.NetworkKindTestnet
-	inputs := []goutils.PreviousStakingUTXO{}
-	outputs := []goutils.UnstakingOutput{}
-	custodianPubKeys := []types.PublicKey{}
-	custodianQuorum := uint8(0)
+	ck, err := b.ForChain(ctx, chainName)
+	if err != nil {
+		return nil, err
+	}
+
+	scalarnetParams := s.GetParams(ctx)
+
+	tag := scalarnetParams.Tag
+	version := scalarnetParams.Version
+	// TODO: fix me
+	serviceTag := []byte("no-tag")
+	network := ck.GetParams(ctx).NetworkKind
+	custodianPubKeys := slices.Map(group.Custodians, func(c *exported.Custodian) goutils.PublicKey {
+		pk := make([]byte, 33)
+		copy(pk, c.BitcoinPubkey)
+		return goutils.PublicKey(pk)
+	})
+	custodianQuorum := group.Quorum
 	rbf := false
-	feeRate := uint64(0)
+	feeRate := uint64(1)
 
 	psbt, err := vault.BuildCustodianOnlyUnstakingTx(
 		tag,
 		serviceTag,
-		version,
+		uint8(version),
 		network,
 		inputs,
 		outputs,
 		custodianPubKeys,
-		custodianQuorum,
+		uint8(custodianQuorum),
 		rbf,
 		feeRate,
 	)
 	return psbt, err
 }
 
-func getCommandBatchToSign(ctx sdk.Context, bk types.BaseKeeper, chain nexus.ChainName) (chainsTypes.CommandBatch, error) {
-	latest := bk.GetLatestCommandBatch(ctx)
+func getCommandBatchToSign(ctx sdk.Context, bk types.BaseKeeper, chain nexus.ChainName, scriptPubkey []byte) (chainsTypes.CommandBatch, error) {
+	latest := bk.GetLatestCommandBatchForChain(ctx, chain)
 
 	switch latest.GetStatus() {
 	case chainsTypes.BatchSigning:
@@ -477,7 +539,7 @@ func getCommandBatchToSign(ctx sdk.Context, bk types.BaseKeeper, chain nexus.Cha
 	case chainsTypes.BatchAborted:
 		return latest, nil
 	default:
-		return bk.CreateNewPoolingBatchToSign(ctx, chain)
+		return bk.CreateNewBtcPoolingBatchToSign(ctx, chain, scriptPubkey)
 	}
 }
 

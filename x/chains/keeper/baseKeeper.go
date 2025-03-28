@@ -125,3 +125,21 @@ func (k internalKeeper) Logger(ctx sdk.Context) log.Logger {
 func (k internalKeeper) getBaseStore(ctx sdk.Context) utils.KVStore {
 	return utils.NewNormalizedStore(ctx.KVStore(k.storeKey), k.cdc)
 }
+
+func (k BaseKeeper) CreateNewBtcPoolingBatchToSign(ctx sdk.Context, chain nexus.ChainName, pk []byte) (types.CommandBatch, error) {
+	ck, err := k.ForChain(ctx, chain)
+	if err != nil {
+		return types.CommandBatch{}, err
+	}
+
+	return ck.CreateNewBtcPoolingBatchToSign(ctx, chain, pk)
+}
+
+func (k BaseKeeper) GetLatestCommandBatchForChain(ctx sdk.Context, chain nexus.ChainName) types.CommandBatch {
+	ck, err := k.ForChain(ctx, chain)
+	if err != nil {
+		return types.NonExistentCommand
+	}
+
+	return ck.GetLatestCommandBatch(ctx)
+}

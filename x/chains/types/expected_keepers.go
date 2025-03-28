@@ -81,6 +81,8 @@ type ChainKeeper interface {
 	GetDepositsByTxID(ctx sdk.Context, txID exported.Hash, status DepositStatus) ([]ERC20Deposit, error)
 
 	GetMetadata(ctx sdk.Context) map[string]string
+
+	CreateNewBtcPoolingBatchToSign(ctx sdk.Context, chain nexus.ChainName, pk []byte) (CommandBatch, error)
 }
 
 // ParamsKeeper represents a global paramstore

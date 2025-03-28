@@ -675,23 +675,39 @@ func (k chainKeeper) GetERC20TokenBySymbol(ctx sdk.Context, symbol string) types
 func (k chainKeeper) CreateNewBatchToSign(ctx sdk.Context) (types.CommandBatch, error) {
 	chain := k.GetName()
 	if types.IsBitcoinChain(chain) {
-		return k.createNewBtcBatchToSign(ctx, protocol.LIQUIDITY_MODEL_UPC)
+		return k.createNewBtcUpcBatchToSign(ctx)
 	}
 	return k.createNewBatchToSign(ctx)
 }
 
-func (k chainKeeper) CreateNewPoolingBatchToSign(ctx sdk.Context, chain nexus.ChainName) (types.CommandBatch, error) {
+func (k chainKeeper) CreateNewBtcPoolingBatchToSign(ctx sdk.Context, chain nexus.ChainName, pk []byte) (types.CommandBatch, error) {
 	if !types.IsBitcoinChain(chain) {
 		return types.CommandBatch{}, fmt.Errorf("pooling is only supported for bitcoin chains")
 	}
 
-	return k.createNewBtcBatchToSign(ctx, protocol.LIQUIDITY_MODEL_POOL)
+	prefix := protocol.GetBTCKeyIDPrefix(protocol.LIQUIDITY_MODEL_POOL)
+	key := prefix + hex.EncodeToString(pk)
+	firstCmdFilter := func(value codec.ProtoMarshaler) bool {
+		cmd, ok := value.(*types.Command)
+		return ok && cmd.KeyID.String() == key
+	}
+
+	var firstCmd *types.Command
+
+	ok := k.getCommandQueue(ctx).DequeueUntil(firstCmd, firstCmdFilter)
+	if !ok {
+		return types.CommandBatch{}, nil
+	}
+
+	if firstCmd == nil {
+		return types.CommandBatch{}, nil
+	}
+
+	return k.createNewBtcBatchFollowCmd(ctx, firstCmd)
 }
 
-func (k chainKeeper) createNewBtcBatchToSign(ctx sdk.Context, m protocol.LiquidityModel) (types.CommandBatch, error) {
-	// filter first upc command
-
-	prefix := protocol.GetBTCKeyIDPrefix(m)
+func (k chainKeeper) createNewBtcUpcBatchToSign(ctx sdk.Context) (types.CommandBatch, error) {
+	prefix := protocol.GetBTCKeyIDPrefix(protocol.LIQUIDITY_MODEL_POOL)
 	firstCmdFilter := func(value codec.ProtoMarshaler) bool {
 		cmd, ok := value.(*types.Command)
 		return ok && strings.HasPrefix(cmd.KeyID.String(), prefix)
@@ -708,10 +724,14 @@ func (k chainKeeper) createNewBtcBatchToSign(ctx sdk.Context, m protocol.Liquidi
 		return types.CommandBatch{}, nil
 	}
 
+	return k.createNewBtcBatchFollowCmd(ctx, firstCmd)
+}
+
+func (k chainKeeper) createNewBtcBatchFollowCmd(ctx sdk.Context, cmd *types.Command) (types.CommandBatch, error) {
 	chainID := sdk.NewIntFromBigInt(k.getSigner(ctx).ChainID())
 	gasLimit := k.getCommandsGasLimit(ctx)
-	gasCost := firstCmd.MaxGasCost
-	keyID := firstCmd.KeyID
+	gasCost := cmd.MaxGasCost
+	keyID := cmd.KeyID
 
 	filter := func(value codec.ProtoMarshaler) bool {
 		cmd, ok := value.(*types.Command)
@@ -720,7 +740,7 @@ func (k chainKeeper) createNewBtcBatchToSign(ctx sdk.Context, m protocol.Liquidi
 		return ok && cmd.KeyID == keyID && gasCost <= gasLimit
 	}
 
-	commands := []types.Command{firstCmd.Clone()}
+	commands := []types.Command{cmd.Clone()}
 	for {
 		var cmd types.Command
 		ok := k.getCommandQueue(ctx).DequeueIf(&cmd, filter)

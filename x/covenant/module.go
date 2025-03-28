@@ -94,6 +94,7 @@ type AppModule struct {
 	protocol    types.ProtocolKeeper
 	chains      types.BaseKeeper
 	voter       types.Voter
+	scalarnet   types.ScalarnetKeeper
 }
 
 // NewAppModule creates a new AppModule object
@@ -107,6 +108,7 @@ func NewAppModule(k *keeper.Keeper,
 	protocol types.ProtocolKeeper,
 	chains types.BaseKeeper,
 	voter types.Voter,
+	scalarnet types.ScalarnetKeeper,
 ) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
@@ -120,6 +122,7 @@ func NewAppModule(k *keeper.Keeper,
 		protocol:       protocol,
 		chains:         chains,
 		voter:          voter,
+		scalarnet:      scalarnet,
 	}
 }
 
@@ -192,7 +195,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, req abci.RequestBeginBlock) {
 // EndBlock executes all state transitions this module requires at the end of each new block
 func (am AppModule) EndBlock(ctx sdk.Context, req abci.RequestEndBlock) []abci.ValidatorUpdate {
 	return utils.RunCached(ctx, am.keeper, func(ctx sdk.Context) ([]abci.ValidatorUpdate, error) {
-		return EndBlocker(ctx, req, am.keeper, am.chains, am.protocol, am.multisig, am.rewarder)
+		return EndBlocker(ctx, req, am.keeper, am.chains, am.protocol, am.multisig, am.rewarder, am.scalarnet)
 	})
 }
 

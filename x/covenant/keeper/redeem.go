@@ -24,7 +24,7 @@ var (
 	uint256ArrayType = funcs.Must(abi.NewType("uint256[]", "uint256[]", nil))
 	stringArrayType  = funcs.Must(abi.NewType("string[]", "string[]", nil))
 
-	redeemTokenPayloadArguments    = abi.Arguments{{Type: uint256Type}, {Type: bytesType}, {Type: stringArrayType}, {Type: uint256ArrayType}}
+	redeemTokenPayloadArguments    = abi.Arguments{{Type: uint256Type}, {Type: bytesType}, {Type: stringArrayType}, {Type: uint256ArrayType}, {Type: uint256ArrayType}}
 	callContractWithTokenArguments = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: bytesType}, {Type: stringType}, {Type: uint256Type}}
 )
 
@@ -222,15 +222,17 @@ func (k Keeper) createRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 	if err != nil {
 		return nil, nil, err
 	}
-
+	// TODO: optimize the datatype
 	txIds := make([]string, len(reservedUtxos))
 	vouts := make([]uint32, len(reservedUtxos))
+	amounts := make([]uint64, len(reservedUtxos))
 	for i, utxo := range reservedUtxos {
 		txIds[i] = utxo.TxID.Hex()
 		vouts[i] = utxo.Vout
+		amounts[i] = utxo.AmountInSats
 	}
 
-	payload, err := redeemTokenPayloadArguments.Pack(req.Amount, req.LockingScript, txIds, vouts)
+	payload, err := redeemTokenPayloadArguments.Pack(req.Amount, req.LockingScript, txIds, vouts, amounts)
 	if err != nil {
 		return nil, nil, err
 	}
