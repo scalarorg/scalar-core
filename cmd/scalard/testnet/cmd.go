@@ -46,6 +46,7 @@ import (
 )
 
 const (
+	BIP44_BASE_PATH       = "m/44'/118'/0'/0"
 	DefaultGRPCAddress    = "0.0.0.0:9090"
 	DefaultJSONRPCAddress = "0.0.0.0:8545"
 )
@@ -408,7 +409,7 @@ func initProtocols(args initArgs) []Protocol {
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to create keyring")
 	}
-	bip44Path := "m/44'/118'/0'/0/0"
+	bip44Path := fmt.Sprintf("%s/0", BIP44_BASE_PATH)
 	protocols := make([]Protocol, len(protocolConfigs))
 	for i, config := range protocolConfigs {
 		protocols[i] = Protocol{
@@ -499,7 +500,7 @@ func createKeyringAccountFromMnemonic(keybase keyring.Keyring,
 	bip44Path string,
 ) (cryptotypes.PubKey, sdk.AccAddress, error) {
 	if bip44Path == "" {
-		bip44Path = "m/44'/118'/0'/0/0"
+		bip44Path = fmt.Sprintf("%s/0", BIP44_BASE_PATH)
 	}
 	info, err := keybase.NewAccount(
 		keyName,
@@ -564,7 +565,7 @@ func createKeyring(inBuf *bufio.Reader, args initArgs, nodeDir string) (keyring.
 }
 func genFaucet(kb keyring.Keyring, mnemonic string, algo keyring.SignatureAlgo, tokenAmount sdk.Int) (*banktypes.Balance, error) {
 	if mnemonic != "" {
-		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", PurposeFaucetAccount, 0)
+		bip44Path := fmt.Sprintf("%s/0", BIP44_BASE_PATH)
 		_, address, err := createKeyringAccountFromMnemonic(kb,
 			BroadcasterKeyName,
 			mnemonic,
@@ -636,8 +637,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		ValidatorKeyName,
 		envKeys.ValidatorMnemonic,
 		algo,
-		fmt.Sprintf("m/%d'/%d'/0'/0/0",
-			PurposeValidator, uint32(index)))
+		fmt.Sprintf("%s/%d", BIP44_BASE_PATH, uint32(index)))
 	if err != nil {
 		log.Error().Err(err).Msg("[initValidatorConfig] Create validator account from Mnemonic")
 		key, err := kb.Key(ValidatorKeyName)
@@ -656,7 +656,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	}
 	if envKeys.BroadcasterMnemonic != "" {
 		//broadcasterPubKey, err := createPubkeyFromMnemonic(nodeConfig, envKeys.BroadcasterMnemonic, kb, algo, BroadcasterKeyName)
-		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", PurposeBroadcaster, uint32(index))
+		bip44Path := fmt.Sprintf("%s/%d", BIP44_BASE_PATH, uint32(index))
 		pubkey, address, err := generateAccount(kb, algo, BroadcasterKeyName, envKeys.BroadcasterMnemonic, bip44Path)
 		if err != nil {
 			log.Debug().Err(err).Msg("Generate account error")
@@ -669,7 +669,7 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 	}
 	if envKeys.GovernanceMnemonic != "" {
 		//validatorInfo.GovPubKey, err = createPubkeyFromMnemonic(nodeConfig, envKeys.GovernanceMnemonic, kb, algo, GovKeyName)
-		bip44Path := fmt.Sprintf("m/%d'/%d'/0'/0/0", PurposeGovernance, uint32(index))
+		bip44Path := fmt.Sprintf("%s/%d", BIP44_BASE_PATH, uint32(index))
 		pubkey, address, err := generateAccount(kb, algo, GovKeyName, envKeys.GovernanceMnemonic, bip44Path)
 		if err != nil {
 			log.Debug().Err(err).Msg("Generate account error")
@@ -684,10 +684,17 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 		pubKey, address, err := generateAccount(kb, algo,
 			FaucetKeyName,
 			envKeys.FaucetMnemonic,
-			fmt.Sprintf("m/%d'/%d'/0'/0/0", PurposeFaucetAccount, uint32(index)),
+			fmt.Sprintf("%s/%d", BIP44_BASE_PATH, uint32(index)),
 		)
 		if err != nil {
 			log.Debug().Err(err).Msg("Generate account error")
+		} else {
+			log.Debug().
+				Str("FaucetKeyName", FaucetKeyName).
+				Str("faucetMnemonic", envKeys.FaucetMnemonic).
+				Int("index", index).
+				Str("address", address.String()).
+				Msg("Generate faucet account success")
 		}
 		validatorInfo.FaucetPubKey = pubKey
 		validatorInfo.FaucetBalance = banktypes.Balance{
@@ -781,9 +788,8 @@ func initValidatorConfig(clientCtx client.Context, cmd *cobra.Command,
 func createScalarAccount(mnemonic string) (*sdksecp256k1.PrivKey, sdk.AccAddress, error) {
 	// Derive the seed from mnemonic
 	seed := bip39.NewSeed(mnemonic, "")
-	path := "m/44'/118'/0'/0/0"
+	path := fmt.Sprintf("%s/0", BIP44_BASE_PATH)
 	// Create master key and derive the private key
-	// Using "m/44'/118'/0'/0/0" for Cosmos
 	master, ch := hd.ComputeMastersFromSeed(seed)
 	privKeyBytes, err := hd.DerivePrivateKeyForPath(master, ch, path)
 	if err != nil {

@@ -74,44 +74,40 @@ func (k Keeper) SetProtocols(ctx sdk.Context, protocols []*types.Protocol) {
 func (k Keeper) GetAllProtocols(ctx sdk.Context) ([]*types.Protocol, bool) {
 	clog.Yellowf("GetAllProtocols\n")
 	store := k.getStore(ctx)
-	clog.Yellowf("store: %+v\n", store)
 	protocols := []*types.Protocol{}
-	clog.Yellowf("protocolPrefix: %+v\n", protocolPrefix)
 	iter := store.Iterator(protocolPrefix)
-	clog.Yellowf("iter: %+v\n", iter)
 	defer utils.CloseLogError(iter, k.Logger(ctx))
-	if iter.Valid() {
-		protocol := types.Protocol{}
-		clog.Greenf("1.Before UnmarshalValue\n")
-		v := iter.Value()
-		clog.Yellowf("v: %+v\n", v)
-		iter.UnmarshalValue(&protocol)
-		clog.Yellowf("protocol: %+v\n", protocol)
-		protocols = append(protocols, &protocol)
-	}
-
-	clog.Yellowf("iter.Valid(): %+v\n", iter.Valid())
-	clog.Greenf("iter.Next()\n")
-	iter.Next()
-	if iter.Valid() {
-		protocol := types.Protocol{}
-		clog.Greenf("2.Before UnmarshalValue\n")
-		v := iter.Value()
-		clog.Yellowf("v: %+v\n", v)
-		iter.UnmarshalValue(&protocol)
-		clog.Yellowf("protocol: %+v\n", protocol)
-		protocols = append(protocols, &protocol)
-	} else {
-		clog.Redf("iter is not valid\n")
-	}
-
-	// for ; iter.Valid(); iter.Next() {
+	// if iter.Valid() {
 	// 	protocol := types.Protocol{}
+	// 	clog.Greenf("1.Before UnmarshalValue\n")
+	// 	v := iter.Value()
+	// 	clog.Yellowf("v: %+v\n", v)
 	// 	iter.UnmarshalValue(&protocol)
-	// 	protocols = append(protocols, &protocol)
 	// 	clog.Yellowf("protocol: %+v\n", protocol)
+	// 	protocols = append(protocols, &protocol)
 	// }
-	clog.Yellowf("protocols: %+v\n", protocols)
+
+	// clog.Yellowf("iter.Valid(): %+v\n", iter.Valid())
+	// clog.Greenf("iter.Next()\n")
+	// iter.Next()
+	// if iter.Valid() {
+	// 	protocol := types.Protocol{}
+	// 	clog.Greenf("2.Before UnmarshalValue\n")
+	// 	v := iter.Value()
+	// 	clog.Yellowf("v: %+v\n", v)
+	// 	iter.UnmarshalValue(&protocol)
+	// 	clog.Yellowf("protocol: %+v\n", protocol)
+	// 	protocols = append(protocols, &protocol)
+	// } else {
+	// 	clog.Redf("iter is not valid\n")
+	// }
+
+	for ; iter.Valid(); iter.Next() {
+		protocol := types.Protocol{}
+		iter.UnmarshalValue(&protocol)
+		protocols = append(protocols, &protocol)
+	}
+	clog.Yellowf("number of protocols: %d\n", len(protocols))
 	return protocols, true
 }
 
