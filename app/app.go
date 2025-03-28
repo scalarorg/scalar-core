@@ -628,6 +628,7 @@ func initAppModules(keepers *KeeperCache, bApp *bam.BaseApp, encodingConfig appP
 			GetKeeper[protocolKeeper.Keeper](keepers),
 			GetKeeper[chainsKeeper.BaseKeeper](keepers),
 			GetKeeper[voteKeeper.Keeper](keepers),
+			GetKeeper[scalarnetKeeper.Keeper](keepers),
 		),
 		protocol.NewAppModule(
 			*GetKeeper[protocolKeeper.Keeper](keepers),

@@ -16,6 +16,7 @@ import (
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	protocol "github.com/scalarorg/scalar-core/x/protocol/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
+	scalarnetTypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
@@ -114,8 +115,8 @@ type ProtocolKeeper interface {
 
 type BaseKeeper interface {
 	ForChain(ctx sdk.Context, chain nexus.ChainName) (chainsTypes.ChainKeeper, error)
-	GetLatestCommandBatch(ctx sdk.Context) chainsTypes.CommandBatch
-	CreateNewPoolingBatchToSign(ctx sdk.Context, chainName nexus.ChainName) (chainsTypes.CommandBatch, error)
+	GetLatestCommandBatchForChain(ctx sdk.Context, chainName nexus.ChainName) chainsTypes.CommandBatch
+	CreateNewBtcPoolingBatchToSign(ctx sdk.Context, chainName nexus.ChainName, pk []byte) (chainsTypes.CommandBatch, error)
 }
 
 type ChainKeeper interface {
@@ -123,4 +124,8 @@ type ChainKeeper interface {
 
 type Voter interface {
 	InitializePoll(ctx sdk.Context, pollBuilder vote.PollBuilder) (vote.PollID, error)
+}
+
+type ScalarnetKeeper interface {
+	GetParams(ctx sdk.Context) (params scalarnetTypes.Params)
 }
