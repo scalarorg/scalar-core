@@ -338,7 +338,7 @@ func initTestnetFiles(
 	)
 	relayer := initRelayer(args)
 
-	protocols := initProtocols(args)
+	protocols, tokens := initProtocols(args)
 
 	// generate private keys, node IDs, and initial transactions
 	for i := 0; i < args.numValidators; i++ {
@@ -359,7 +359,7 @@ func initTestnetFiles(
 		validatorInfos = append(validatorInfos, *validatorInfo)
 	}
 
-	if err := generateFiles(clientCtx, mbm, nodeConfig, relayer, validatorInfos, protocols, args, genBalIterator); err != nil {
+	if err := generateFiles(clientCtx, mbm, nodeConfig, relayer, validatorInfos, protocols, tokens, args, genBalIterator); err != nil {
 		cmd.PrintErrf("failed to initGenFiles: %s", err.Error())
 		return err
 	}
@@ -397,7 +397,7 @@ func initRelayer(args initArgs) ScalarRelayer {
 		},
 	}
 }
-func initProtocols(args initArgs) []Protocol {
+func initProtocols(args initArgs) ([]Protocol, []Token) {
 	protocolConfigs, err := ParseJsonArrayConfig[ProtocolConfig](fmt.Sprintf("%s/protocols.json", args.configPath))
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to parse chains config")
@@ -411,11 +411,13 @@ func initProtocols(args initArgs) []Protocol {
 	}
 	bip44Path := fmt.Sprintf("%s/0", BIP44_BASE_PATH)
 	protocols := make([]Protocol, len(protocolConfigs))
+	tokens := make([]Token, len(protocolConfigs))
 	for i, config := range protocolConfigs {
 		protocols[i] = Protocol{
 			Tag:            config.Tag,
 			LiquidityModel: config.LiquidityModel,
 		}
+		tokens[i] = config.TokenConfig
 		if config.ScalarMnemonic != "" {
 			// Create privKey and address of protocol by keyring algorithm
 			//Default bip44 path is m/44'/118'/0'/0/0 if bip44Path is not set
@@ -445,7 +447,7 @@ func initProtocols(args initArgs) []Protocol {
 			protocols[i].BitcoinPubKey = privKey.PubKey().SerializeCompressed()
 		}
 	}
-	return protocols
+	return protocols, tokens
 }
 
 func createPubkeyFromSecret(config *tmconfig.Config, secret []byte, pvKeyName string) (cryptotypes.PubKey, error) {
@@ -830,7 +832,7 @@ func generateAccount(kr keyring.Keyring, algo keyring.SignatureAlgo, keyName str
 	return pubkey, address, nil
 }
 func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig *tmconfig.Config,
-	relayer ScalarRelayer, validatorInfos []ValidatorInfo, protocols []Protocol, args initArgs, genBalIterator banktypes.GenesisBalancesIterator,
+	relayer ScalarRelayer, validatorInfos []ValidatorInfo, protocols []Protocol, tokens []Token, args initArgs, genBalIterator banktypes.GenesisBalancesIterator,
 ) error {
 	var appRawState json.RawMessage
 	var err error
@@ -838,7 +840,7 @@ func generateFiles(clientCtx client.Context, mbm module.BasicManager, nodeConfig
 	for i, validatorInfo := range validatorInfos {
 		validators[i] = validatorInfo.GenesisValidator
 	}
-	appGenState, err := GenerateGenesis(clientCtx, mbm, GenesisAsset, relayer, validatorInfos, protocols, args)
+	appGenState, err := GenerateGenesis(clientCtx, mbm, GenesisAsset, relayer, validatorInfos, protocols, tokens, args)
 	if err != nil {
 		fmt.Printf("GenerateGenesis err: %s\n", err.Error())
 		return err
@@ -1073,9 +1075,10 @@ func initGenFiles(
 	relayer ScalarRelayer,
 	validatorInfos []ValidatorInfo,
 	protocols []Protocol,
+	tokens []Token,
 	args initArgs,
 ) error {
-	appGenState, err := GenerateGenesis(clientCtx, mbm, coinDenom, relayer, validatorInfos, protocols, args)
+	appGenState, err := GenerateGenesis(clientCtx, mbm, coinDenom, relayer, validatorInfos, protocols, tokens, args)
 	if err != nil {
 		fmt.Printf("GenerateGenesis err: %s\n", err.Error())
 		return err

@@ -52,12 +52,12 @@ func (c *EthereumClient) processConfirmSwitched(event *covTypes.ConfirmSwitchedP
 		case SwitchPhaseSig:
 			switchPhaseEvent, err := DecodeEventSwitchPhase(txlog)
 			if err != nil {
-				c.logger().Infof(sdkerrors.Wrap(err, "decode event ContractCallWithToken failed").Error())
+				c.logger().Infof(sdkerrors.Wrap(err, "decode event SwitchPhase failed").Error())
 				continue
 			}
 
 			if err := switchPhaseEvent.ValidateBasic(); err != nil {
-				c.logger().Debug(sdkerrors.Wrap(err, "invalid event ContractCallWithToken").Error())
+				c.logger().Debug(sdkerrors.Wrap(err, "invalid event SwitchPhase").Error())
 				continue
 			}
 

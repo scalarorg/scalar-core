@@ -23,6 +23,7 @@ import (
 var (
 	stringType = funcs.Must(abi.NewType("string", "string", nil))
 	bytesType  = funcs.Must(abi.NewType("bytes", "bytes", nil))
+	uint8Type  = funcs.Must(abi.NewType("uint8", "uint8", nil))
 )
 
 // Smart contract event signatures
@@ -38,7 +39,7 @@ var (
 		{Type: stringType},
 		{Type: bytesType},
 	}
-	SwitchPhaseSig = crypto.Keccak256Hash([]byte("SwitchPhase(bytes32,uint64,Phase,Phase)"))
+	SwitchPhaseSig = crypto.Keccak256Hash([]byte("SwitchPhase(bytes32,uint64,uint8,uint8)"))
 )
 
 func DecodeERC20TransferEvent(log *geth.Log) (types.EventTransfer, error) {
@@ -204,7 +205,7 @@ func DecodeEventContractCall(log *geth.Log) (types.EventContractCall, error) {
 }
 
 func DecodeEventSwitchPhase(log *geth.Log) (*covTypes.SwitchedPhaseConfirmed, error) {
-	if len(log.Topics) != 1 || log.Topics[0] != SwitchPhaseSig {
+	if len(log.Topics) < 3 || log.Topics[0] != SwitchPhaseSig {
 		return nil, fmt.Errorf("event is not SwitchPhase")
 	}
 
@@ -212,15 +213,18 @@ func DecodeEventSwitchPhase(log *geth.Log) (*covTypes.SwitchedPhaseConfirmed, er
 
 	custodianGroupId := common.BytesToHash(log.Topics[1].Bytes())
 	sequence := sdk.NewUintFromBigInt(new(big.Int).SetBytes(log.Topics[2].Bytes()))
-	enumType := funcs.Must(abi.NewType("enum Phase", "enum Phase", []abi.ArgumentMarshaling{
-		{Name: "Preparing", Type: "uint8"},
-		{Name: "Executing", Type: "uint8"},
-	}))
+	// enumType := funcs.Must(abi.NewType("enum Phase", "enum Phase", []abi.ArgumentMarshaling{
+	// 	{Name: "Preparing", Type: "uint8"},
+	// 	{Name: "Executing", Type: "uint8"},
+	// }))
+	// arguments := abi.Arguments{
+	// 	{Type: enumType},
+	// 	{Type: enumType},
+	// }
 	arguments := abi.Arguments{
-		{Type: enumType},
-		{Type: enumType},
+		{Type: uint8Type},
+		{Type: uint8Type},
 	}
-
 	params, err := types.StrictDecode(arguments, log.Data)
 	if err != nil {
 		return nil, err
@@ -229,9 +233,10 @@ func DecodeEventSwitchPhase(log *geth.Log) (*covTypes.SwitchedPhaseConfirmed, er
 	from := params[0].(uint8)
 	to := params[1].(uint8)
 
-	if from != uint8(covTypes.Preparing) || to != uint8(covTypes.Executing) {
-		return nil, fmt.Errorf("invalid phase transition")
-	}
+	// We can switch from Preparing to Executing and vice versa, so condition is from != to
+	// if from == to {
+	// 	return nil, fmt.Errorf("invalid phase transition")
+	// }
 
 	return &covTypes.SwitchedPhaseConfirmed{
 		CustodianGroupUID: exported.Hash(custodianGroupId),

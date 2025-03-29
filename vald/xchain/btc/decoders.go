@@ -9,6 +9,7 @@ import (
 	"github.com/btcsuite/btcd/txscript"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/rs/zerolog/log"
 	vault "github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
@@ -89,10 +90,12 @@ func (client *BtcClient) createEventTokenSent(event *chainsTypes.EventConfirmSou
 		Address:     hex.EncodeToString(output.DestinationTokenAddress),
 	})
 	if err != nil {
+		log.Error().Err(err).Str("OriginChain", event.Chain.String()).
+			Str("Address", hex.EncodeToString(output.DestinationTokenAddress)).Msg("EventTokenSent/Asset Response error")
 		return nil, err
 	}
 
-	clog.Greenf("EventTokenSent/Asset Response: %+v", response.Protocol)
+	clog.Greenf("EventTokenSent/Asset Response protocol name: %s", response.Protocol.Name)
 
 	return &chainsTypes.EventTokenSent{
 		EventID:            eventId,

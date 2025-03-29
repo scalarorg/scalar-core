@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"path"
 	"strconv"
 	"strings"
 	"time"
@@ -110,6 +109,7 @@ func GenerateGenesis(clientCtx client.Context,
 	relayer ScalarRelayer,
 	validatorInfos []ValidatorInfo,
 	protocols []Protocol,
+	tokens []Token,
 	args initArgs,
 ) (GenesisState, error) {
 	appGenState := mbm.DefaultGenesis(clientCtx.Codec)
@@ -204,7 +204,7 @@ func GenerateGenesis(clientCtx client.Context,
 	for _, proxyValidator := range proxyValidators {
 		validatorAddrs = append(validatorAddrs, proxyValidator.Validator)
 	}
-	nexusGenState := generateNexusGenesis(args.configPath, validatorAddrs, coinDenom)
+	nexusGenState := generateNexusGenesis(args.configPath, validatorAddrs, tokens, coinDenom)
 	appGenState[nexustypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(nexusGenState)
 	//scalarnet
 	scalarnetGenState := scalarnettypes.DefaultGenesisState()
@@ -254,7 +254,7 @@ func GenerateGenesis(clientCtx client.Context,
 	stakingGenState := generateStakingGenesis(coinDenom, validatorInfos)
 	appGenState[stakingtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(stakingGenState)
 	// scalar chains' module
-	if err := GenerateSupportedChains(clientCtx, args.configPath, appGenState); err != nil {
+	if err := GenerateSupportedChains(clientCtx, args.configPath, tokens, appGenState); err != nil {
 		log.Error().Err(err).Msg("Failed to generate supported chains")
 	}
 	//Covenant
@@ -295,7 +295,7 @@ func GenerateGenesis(clientCtx client.Context,
 	covnantGenState := covenanttypes.NewGenesisState(&defaultCovenantState.Params, defaultCovenantState.SigningSessions, custodians, []*covenantexported.CustodianGroup{custodiansGr})
 	appGenState[covenanttypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&covnantGenState)
 	//Protocol
-	protocolGenState, err := generateProtocolGenesis(protocols, custodiansGr.UID, args.configPath)
+	protocolGenState, err := generateProtocolGenesis(protocols, tokens, custodiansGr.UID, args.configPath)
 	if err == nil {
 		appGenState[protocoltypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(protocolGenState)
 	}
@@ -309,23 +309,17 @@ func GenerateGenesis(clientCtx client.Context,
 
 	return appGenState, nil
 }
-func generateProtocolGenesis(protocolInfos []Protocol, custodianGroupUID chainsexported.Hash, configPath string) (*protocoltypes.GenesisState, error) {
-	// evmTokenPath := path.Join(tokensPath, "evm.json")
-	// log.Debug().Msgf("Read token config in the path %s", evmTokenPath)
-	// tokenInfos, err := ParseJsonArrayConfig[Token](evmTokenPath)
+func generateProtocolGenesis(protocolInfos []Protocol, tokenInfos []Token, custodianGroupUID chainsexported.Hash, configPath string) (*protocoltypes.GenesisState, error) {
+	// btcTokenPath := path.Join(configPath, "tokens/btc.json")
+	// log.Debug().Msgf("Read token config in the path %s", btcTokenPath)
+	// tokenInfos, err := ParseJsonArrayConfig[Token](btcTokenPath)
 	// if err != nil {
 	// 	return nil, err
 	// }
-	btcTokenPath := path.Join(configPath, "tokens/btc.json")
-	log.Debug().Msgf("Read token config in the path %s", btcTokenPath)
-	tokenInfos, err := ParseJsonArrayConfig[Token](btcTokenPath)
-	if err != nil {
-		return nil, err
-	}
-	if len(tokenInfos) == 0 {
-		log.Error().Msgf("Missing token infos in path %s", btcTokenPath)
-	}
-	log.Debug().Any("TokenInfo", tokenInfos).Msgf("Successfull parsed token config")
+	// if len(tokenInfos) == 0 {
+	// 	log.Error().Msgf("Missing token infos in path %s", btcTokenPath)
+	// }
+	// log.Debug().Any("TokenInfo", tokenInfos).Msgf("Successfull parsed token config")
 	protocols := DefaultProtocols(protocolInfos, tokenInfos, custodianGroupUID)
 	protocolGenState := protocoltypes.NewGenesisState(protocols)
 	return protocolGenState, nil
@@ -371,7 +365,7 @@ func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *s
 	// }
 	return stakingGenState
 }
-func generateNexusGenesis(configPath string, validatorAddrs []sdk.ValAddress, coinDenom string) *nexustypes.GenesisState {
+func generateNexusGenesis(configPath string, validatorAddrs []sdk.ValAddress, tokenInfos []Token, coinDenom string) *nexustypes.GenesisState {
 	nexusGenState := nexustypes.DefaultGenesisState()
 	if configPath != "" {
 		chainConfigs, err := ParseJsonArrayConfig[chainsTypes.ChainConfig](fmt.Sprintf("%s/chains/chains.json", configPath))
@@ -379,14 +373,14 @@ func generateNexusGenesis(configPath string, validatorAddrs []sdk.ValAddress, co
 			log.Error().Err(err).Msg("Failed to parse chains config")
 			panic(err)
 		}
-		//Parse btc token config
-		btcTokenPath := path.Join(configPath, "tokens/btc.json")
-		log.Debug().Msgf("Read token config in the path %s", btcTokenPath)
-		tokenInfos, err := ParseJsonArrayConfig[Token](btcTokenPath)
-		if err != nil {
-			log.Error().Err(err).Msg("Failed to parse btc token config")
-			panic(err)
-		}
+		//P arse btc token config
+		// btcTokenPath := path.Join(configPath, "tokens/btc.json")
+		// log.Debug().Msgf("Read token config in the path %s", btcTokenPath)
+		// tokenInfos, err := ParseJsonArrayConfig[Token](btcTokenPath)
+		// if err != nil {
+		// 	log.Error().Err(err).Msg("Failed to parse btc token config")
+		// 	panic(err)
+		// }
 		assets := make([]nexus.Asset, len(tokenInfos))
 		for i, tokenInfo := range tokenInfos {
 			assets[i] = nexus.NewAsset(tokenInfo.Asset, false)
@@ -425,7 +419,7 @@ func generateNexusGenesis(configPath string, validatorAddrs []sdk.ValAddress, co
 	}
 	return nexusGenState
 }
-func GenerateSupportedChains(clientCtx client.Context, configPath string, genesisState map[string]json.RawMessage) error {
+func GenerateSupportedChains(clientCtx client.Context, configPath string, tokenInfos []Token, genesisState map[string]json.RawMessage) error {
 	if configPath != "" {
 		chainConfigs, err := ParseJsonArrayConfig[chainsTypes.ChainConfig](fmt.Sprintf("%s/chains/chains.json", configPath))
 		if err != nil {
@@ -466,7 +460,7 @@ func GenerateSupportedChains(clientCtx client.Context, configPath string, genesi
 				}
 				if chainsTypes.IsBitcoinChain(chainName) {
 					// Add default sBtc
-					sBtc := createDefaultSbtc(configPath)
+					sBtc := createDefaultBtcTokens(tokenInfos)
 					chain.Tokens = append(chain.Tokens, sBtc...)
 				}
 				chainsState.Chains = append(chainsState.Chains, chain)
@@ -476,13 +470,7 @@ func GenerateSupportedChains(clientCtx client.Context, configPath string, genesi
 	}
 	return nil
 }
-func createDefaultSbtc(configPath string) []chainsTypes.ERC20TokenMetadata {
-	btcTokenPath := path.Join(configPath, "tokens/btc.json")
-	log.Debug().Msgf("Read token config in the path %s", btcTokenPath)
-	tokenInfos, err := ParseJsonArrayConfig[Token](btcTokenPath)
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to parse btc token config")
-	}
+func createDefaultBtcTokens(tokenInfos []Token) []chainsTypes.ERC20TokenMetadata {
 	tokens := make([]chainsTypes.ERC20TokenMetadata, len(tokenInfos))
 	for i, tokenInfo := range tokenInfos {
 		tokens[i] = chainsTypes.ERC20TokenMetadata{

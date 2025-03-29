@@ -155,11 +155,11 @@ func (k Keeper) GetProtocolBySender(ctx sdk.Context, sender sdk.AccAddress) (*ty
 func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, symbol string) (*types.Protocol, error) {
 	//ctx := sdk.UnwrapSDKContext(c)
 
-	clog.Yellowf("FindProtocolByExternalSymbol, symbol: %s\n", symbol)
+	clog.Yellowf("FindProtocolByExternalSymbol, symbol: %s", symbol)
 
 	protocols, ok := k.GetAllProtocols(ctx)
 	if !ok {
-		clog.Yellowf("FindProtocolByExternalSymbol, all protocols not found\n")
+		clog.Yellowf("FindProtocolByExternalSymbol, all protocols not found")
 		return nil, status.Errorf(codes.NotFound, "all protocols not found")
 	}
 
@@ -169,7 +169,7 @@ func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, symbol string) (*t
 		// if originChain == protocol.Asset.Chain && symbol == protocol.Asset.Name {
 		//clog.Yellowf("FindProtocolByExternalSymbol, protocol: %+v\n", protocol)
 		if !k.IsMatchAsset(protocol, symbol) {
-			clog.Yellowf("FindProtocolByExternalSymbol, asset not matched\n")
+			// clog.Yellowf("FindProtocolByExternalSymbol, asset not matched\n")
 			continue
 		}
 		//Check if the minor chain is supported by the protocol
@@ -179,24 +179,25 @@ func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, symbol string) (*t
 		// 	}
 		// 	return protocol, nil
 		// }
-		// clog.Yellowf("FindProtocolByExternalSymbol, asset matched, protocol: %+v \n", protocol)
+		clog.Yellowf("[FindProtocolByExternalSymbol], asset matched, found protocol: %s", protocol.Name)
 		return protocol, nil
 	}
 
-	clog.Yellowf("FindProtocolByExternalSymbol, symbol: %s, not found\n", symbol)
+	clog.Yellowf("FindProtocolByExternalSymbol, symbol: %s, not found", symbol)
 
 	return nil, status.Errorf(codes.NotFound, "protocol not found")
 }
 
 func (k Keeper) FindProtocolInfoByExternalSymbol(ctx sdk.Context, symbol string) (*pexported.ProtocolInfo, error) {
-	clog.Redf("FindProtocolInfoByExternalSymbol, symbol: %s\n", symbol)
+	clog.Redf("[FindProtocolInfoByExternalSymbol], symbol: %s", symbol)
 	protocol, err := k.FindProtocolByExternalSymbol(ctx, symbol)
 	if err != nil {
-		clog.Redf("FindProtocolInfoByExternalSymbol, FindProtocolByExternalSymbol error: %v\n", err)
+		clog.Redf("FindProtocolInfoByExternalSymbol, FindProtocolByExternalSymbol error: %v", err)
 		return nil, err
 	}
-	clog.Redf("FindProtocolInfoByExternalSymbol, protocol: %+v\n", protocol)
-	return protocol.ToProtocolInfo(), nil
+	protocolInfo := protocol.ToProtocolInfo()
+	clog.Redf("[FindProtocolInfoByExternalSymbol], found protocolInfo: %+v", protocolInfo)
+	return protocolInfo, nil
 }
 func (k Keeper) FindProtocolInfoByCustodianGroupUID(ctx sdk.Context, custodianGroupUIDs [][]byte) []*pexported.ProtocolInfo {
 	result := []*pexported.ProtocolInfo{}

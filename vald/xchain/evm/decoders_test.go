@@ -7,13 +7,40 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
 	geth "github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/scalarorg/scalar-core/testutils/rand"
-	"github.com/scalarorg/scalar-core/vald/evm"
+	"github.com/scalarorg/scalar-core/vald/xchain/evm"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
+	covTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 )
+
+func TestSwitchPhaseSig(t *testing.T) {
+	SwitchPhaseSig := crypto.Keccak256Hash([]byte("SwitchPhase(bytes32,uint64,uint8,uint8)"))
+	assert.Equal(t, SwitchPhaseSig, common.HexToHash("0x688700c66a6bfdcb89a49d388166fec61901058bc742019b144019a784fd4278"))
+}
+func TestDecodeEventSwitchPhase(t *testing.T) {
+	logData := common.Hex2Bytes("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001")
+	log := geth.Log{
+		Topics: []common.Hash{
+			common.HexToHash("0x688700c66a6bfdcb89a49d388166fec61901058bc742019b144019a784fd4278"),
+			common.HexToHash("0xda3a456ba70b340ad4038f5748ed4b17f832208abfec2d454ea1f9f4b6985ceb"),
+			common.HexToHash("0x0000000000000000000000000000000000000000000000000000000000000001"),
+		},
+		Data: logData,
+	}
+	t.Log(log)
+	actual, err := evm.DecodeEventSwitchPhase(&log)
+	assert.NoError(t, err)
+	assert.Equal(t, &covTypes.SwitchedPhaseConfirmed{
+		CustodianGroupUID: exported.Hash(common.HexToHash("0xda3a456ba70b340ad4038f5748ed4b17f832208abfec2d454ea1f9f4b6985ceb")),
+		Sequence:          1,
+		FromPhase:         0,
+		ToPhase:           1,
+	}, actual)
+}
 
 func TestDecodeEventTokenSent(t *testing.T) {
 	log := &geth.Log{

@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
@@ -58,21 +59,21 @@ func (q *Querier) Protocol(c context.Context, req *types.ProtocolRequest) (*type
 	if req.Symbol != "" {
 		protocol, err = q.keeper.FindProtocolByExternalSymbol(ctx, req.Symbol)
 		if err != nil {
-			return nil, status.Errorf(codes.NotFound, "protocol not found")
+			return nil, status.Errorf(codes.NotFound, fmt.Sprintf("protocol not found, symbol: %s", req.Symbol))
 		}
 	}
 
 	if req.Address != "" {
 		protocol, err = q.keeper.FindProtocolByInternalAddress(ctx, req.OriginChain, req.MinorChain, req.Address)
 		if err != nil {
-			return nil, status.Errorf(codes.NotFound, "protocol not found")
+			return nil, status.Errorf(codes.NotFound, fmt.Sprintf("protocol not found, origin chain: %s, minor chain: %s, address: %s", req.OriginChain, req.MinorChain, req.Address))
 		}
 	}
 
 	if len(req.Sender) != 0 {
 		protocol, err = q.keeper.GetProtocolBySender(ctx, req.Sender)
 		if err != nil {
-			return nil, status.Errorf(codes.NotFound, "protocol not found")
+			return nil, status.Errorf(codes.NotFound, fmt.Sprintf("protocol not found, sender: %s", req.Sender))
 		}
 	}
 

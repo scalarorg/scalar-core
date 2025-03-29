@@ -34,18 +34,13 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	)
 	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
 		&gogoprototypes.BoolValue{},
+		&BasicPollMetadata{},
+		&PsbtMultiSig{},
+		&exported.TapScriptSigsList{},
 	)
 
 	registry.RegisterImplementations((*reward.Refundable)(nil),
 		&SubmitTapScriptSigsRequest{},
-	)
-
-	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
-		&PsbtMultiSig{},
-	)
-
-	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
-		&exported.TapScriptSigsList{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_MsgService_serviceDesc)

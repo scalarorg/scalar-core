@@ -30,13 +30,6 @@ type Protocol struct {
 	Tag            string
 	LiquidityModel string
 }
-type ProtocolConfig struct {
-	Name           string
-	ScalarMnemonic string `json:"scalar_mnemonic" mapstructure:"scalar_mnemonic"`
-	BitcoinPrivKey string `json:"bitcoin_privkey" mapstructure:"bitcoin_privkey"`
-	Tag            string `json:"tag" mapstructure:"tag"`
-	LiquidityModel string `json:"liquidity_model" mapstructure:"liquidity_model"`
-}
 type DeployInfo struct {
 	ID           string `json:"id" mapstructure:"id"`
 	ChainId      uint64 `json:"chain_id" mapstructure:"chain_id"`
@@ -58,6 +51,15 @@ type Token struct {
 	TokenAddress   string       `json:"token_address" mapstructure:"token_address"`
 	Deployments    []DeployInfo `json:"deployments" mapstructure:"deployments"`
 	Avatar         string       `json:"avatar" mapstructure:"avatar"`
+}
+
+type ProtocolConfig struct {
+	Name           string
+	ScalarMnemonic string `json:"scalar_mnemonic" mapstructure:"scalar_mnemonic"`
+	BitcoinPrivKey string `json:"bitcoin_privkey" mapstructure:"bitcoin_privkey"`
+	Tag            string `json:"tag" mapstructure:"tag"`
+	LiquidityModel string `json:"liquidity_model" mapstructure:"liquidity_model"`
+	TokenConfig    Token  `json:"token_config" mapstructure:"token_config"`
 }
 type InternalToken struct {
 	ChainID int64  `json:"chain_id" mapstructure:"chain_id"`
