@@ -176,6 +176,20 @@
     - [ChainStatus](#scalar.chains.v1beta1.ChainStatus)
     - [TokenType](#scalar.chains.v1beta1.TokenType)
   
+- [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
+    - [ListOfTapScriptSigsMap](#scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap)
+    - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
+    - [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry)
+    - [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList)
+    - [TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap)
+  
+    - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
+    - [Phase](#scalar.covenant.exported.v1beta1.Phase)
+    - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
+  
+- [scalar/chains/v1beta1/redeem.proto](#scalar/chains/v1beta1/redeem.proto)
+    - [RedeemSession](#scalar.chains.v1beta1.RedeemSession)
+  
 - [scalar/chains/v1beta1/tx.proto](#scalar/chains/v1beta1/tx.proto)
     - [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest)
     - [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse)
@@ -221,16 +235,6 @@
   
     - [Status](#scalar.covenant.exported.v1beta1.Status)
   
-- [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
-    - [ListOfTapScriptSigsMap](#scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap)
-    - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
-    - [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry)
-    - [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList)
-    - [TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap)
-  
-    - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
-    - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
-  
 - [scalar/covenant/v1beta1/command.proto](#scalar/covenant/v1beta1/command.proto)
     - [SigMetadata](#scalar.covenant.v1beta1.SigMetadata)
     - [StandaloneCommandAborted](#scalar.covenant.v1beta1.StandaloneCommandAborted)
@@ -246,8 +250,6 @@
     - [UTXO](#scalar.covenant.v1beta1.UTXO)
     - [UTXO.ReservedEntry](#scalar.covenant.v1beta1.UTXO.ReservedEntry)
     - [UTXOSnapshot](#scalar.covenant.v1beta1.UTXOSnapshot)
-  
-    - [Phase](#scalar.covenant.v1beta1.Phase)
   
 - [scalar/covenant/v1beta1/events.proto](#scalar/covenant/v1beta1/events.proto)
     - [ConfirmRedeemTxStarted](#scalar.covenant.v1beta1.ConfirmRedeemTxStarted)
@@ -3230,6 +3232,175 @@ ParamsRequest represents a message that queries the params
 
 
 
+<a name="scalar/covenant/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/covenant/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap"></a>
+
+### ListOfTapScriptSigsMap
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `inner` | [TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSig"></a>
+
+### TapScriptSig
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_x_only` | [bytes](#bytes) |  |  |
+| `leaf_hash` | [bytes](#bytes) |  |  |
+| `signature` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSigsEntry"></a>
+
+### TapScriptSigsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `index` | [uint64](#uint64) |  |  |
+| `sigs` | [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSigsList"></a>
+
+### TapScriptSigsList
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `list` | [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSigsMap"></a>
+
+### TapScriptSigsMap
+The reason we use a list instead of a map is because the map is not ensured
+the deterministic order of the entries
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `inner` | [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.covenant.exported.v1beta1.KeyState"></a>
+
+### KeyState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| KEY_STATE_UNSPECIFIED | 0 |  |
+| KEY_STATE_ASSIGNED | 1 |  |
+| KEY_STATE_ACTIVE | 2 |  |
+
+
+
+<a name="scalar.covenant.exported.v1beta1.Phase"></a>
+
+### Phase
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| PHASE_PREPARING | 0 |  |
+| PHASE_EXECUTING | 1 |  |
+| PHASE_UNSPECIFIED | 2 |  |
+
+
+
+<a name="scalar.covenant.exported.v1beta1.PsbtState"></a>
+
+### PsbtState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| PSBT_STATE_UNSPECIFIED | 0 |  |
+| PSBT_STATE_PENDING | 1 |  |
+| PSBT_STATE_CREATING | 2 |  |
+| PSBT_STATE_SIGNING | 3 |  |
+| PSBT_STATE_COMPLETED | 4 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/chains/v1beta1/redeem.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/chains/v1beta1/redeem.proto
+
+
+
+<a name="scalar.chains.v1beta1.RedeemSession"></a>
+
+### RedeemSession
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
+| `sequence` | [uint64](#uint64) |  |  |
+| `current_phase` | [scalar.covenant.exported.v1beta1.Phase](#scalar.covenant.exported.v1beta1.Phase) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/chains/v1beta1/tx.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -3851,129 +4022,6 @@ quorum threshold e.g.,3 |
 
 
 
-<a name="scalar/covenant/exported/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/covenant/exported/v1beta1/types.proto
-
-
-
-<a name="scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap"></a>
-
-### ListOfTapScriptSigsMap
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `inner` | [TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.covenant.exported.v1beta1.TapScriptSig"></a>
-
-### TapScriptSig
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_x_only` | [bytes](#bytes) |  |  |
-| `leaf_hash` | [bytes](#bytes) |  |  |
-| `signature` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.exported.v1beta1.TapScriptSigsEntry"></a>
-
-### TapScriptSigsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `index` | [uint64](#uint64) |  |  |
-| `sigs` | [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.exported.v1beta1.TapScriptSigsList"></a>
-
-### TapScriptSigsList
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `list` | [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.covenant.exported.v1beta1.TapScriptSigsMap"></a>
-
-### TapScriptSigsMap
-The reason we use a list instead of a map is because the map is not ensured
-the deterministic order of the entries
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `inner` | [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry) | repeated |  |
-
-
-
-
-
- <!-- end messages -->
-
-
-<a name="scalar.covenant.exported.v1beta1.KeyState"></a>
-
-### KeyState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| KEY_STATE_UNSPECIFIED | 0 |  |
-| KEY_STATE_ASSIGNED | 1 |  |
-| KEY_STATE_ACTIVE | 2 |  |
-
-
-
-<a name="scalar.covenant.exported.v1beta1.PsbtState"></a>
-
-### PsbtState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| PSBT_STATE_UNSPECIFIED | 0 |  |
-| PSBT_STATE_PENDING | 1 |  |
-| PSBT_STATE_CREATING | 2 |  |
-| PSBT_STATE_SIGNING | 3 |  |
-| PSBT_STATE_COMPLETED | 4 |  |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
 <a name="scalar/covenant/v1beta1/command.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -4105,7 +4153,7 @@ the deterministic order of the entries
 | `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
 | `sequence` | [uint64](#uint64) |  |  |
-| `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
+| `current_phase` | [scalar.covenant.exported.v1beta1.Phase](#scalar.covenant.exported.v1beta1.Phase) |  |  |
 | `tokens` | [string](#string) | repeated |  |
 
 
@@ -4123,7 +4171,7 @@ the deterministic order of the entries
 | ----- | ---- | ----- | ----------- |
 | `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `sequence` | [uint64](#uint64) |  |  |
-| `current_phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
+| `current_phase` | [scalar.covenant.exported.v1beta1.Phase](#scalar.covenant.exported.v1beta1.Phase) |  |  |
 | `last_redeem_tx` | [bytes](#bytes) |  |  |
 | `is_switching` | [bool](#bool) |  |  |
 | `phase_expired_at` | [uint64](#uint64) |  |  |
@@ -4185,19 +4233,6 @@ the deterministic order of the entries
 
 
  <!-- end messages -->
-
-
-<a name="scalar.covenant.v1beta1.Phase"></a>
-
-### Phase
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| PHASE_PREPARING | 0 |  |
-| PHASE_EXECUTING | 1 |  |
-| PHASE_UNSPECIFIED | 2 |  |
-
 
  <!-- end enums -->
 
@@ -4388,7 +4423,7 @@ For Validation process
 | ----- | ---- | ----- | ----------- |
 | `module` | [string](#string) |  |  |
 | `sequence` | [uint64](#uint64) |  |  |
-| `phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  |  |
+| `phase` | [scalar.covenant.exported.v1beta1.Phase](#scalar.covenant.exported.v1beta1.Phase) |  |  |
 
 
 
@@ -4407,7 +4442,7 @@ For Validation process
 | `chain` | [string](#string) |  |  |
 | `symbol` | [string](#string) |  |  |
 | `sequence` | [uint64](#uint64) |  |  |
-| `phase` | [Phase](#scalar.covenant.v1beta1.Phase) |  | Current phase |
+| `phase` | [scalar.covenant.exported.v1beta1.Phase](#scalar.covenant.exported.v1beta1.Phase) |  | Current phase |
 | `execute_data` | [string](#string) |  | Next sequence and phase encoded in the payload |
 
 

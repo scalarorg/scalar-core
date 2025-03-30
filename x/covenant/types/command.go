@@ -15,6 +15,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	covExported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -274,7 +275,7 @@ func NewSwitchPhaseCommandWithExpiredSessioin(
 	session *ExpiredEvmSession,
 	chainID sdk.Int,
 	keyID multisig.KeyID,
-	newPhase Phase,
+	newPhase covExported.Phase,
 ) chainsTypes.Command {
 	chainbz := make([]byte, 8)
 	binary.BigEndian.PutUint64(chainbz, uint64(chainID.Uint64()))
@@ -295,7 +296,7 @@ func NewSwitchPhaseCommandWithExpiredSessioin(
 	return cmd
 }
 
-func createSwitchPhasePayload(evmSession *ExpiredEvmSession, newPhase Phase) []byte {
+func createSwitchPhasePayload(evmSession *ExpiredEvmSession, newPhase covExported.Phase) []byte {
 	payload := funcs.Must(switchPhaseArguments.Pack(newPhase, evmSession.CustodianGroupUID.Bytes()))
 	return payload
 }

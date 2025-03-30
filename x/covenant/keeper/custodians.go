@@ -73,6 +73,9 @@ func (k Keeper) SetCustodianGroups(ctx sdk.Context, custodianGroups []*cov.Custo
 	store := k.getStore(ctx)
 	for _, group := range custodianGroups {
 		store.Set(custodianGroupPrefix.Append(utils.KeyFromBz(group.UID.Bytes())), group)
+		//Set default redeem sessions
+		redeemSession := types.NewRedeemSession(group.UID, 0, cov.Unspecified, nil)
+		k.setRedeemSession(ctx, redeemSession)
 	}
 }
 

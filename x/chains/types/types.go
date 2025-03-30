@@ -997,3 +997,10 @@ func (m EventMultisigOperatorshipTransferred) ValidateBasic() error {
 	return nil
 }
 
+func (m *RedeemSession) ValidateBasic() error {
+	if m.CustodianGroupUID.IsZero() {
+		return fmt.Errorf("invalid custodian group UID")
+	}
+
+	return nil
+}

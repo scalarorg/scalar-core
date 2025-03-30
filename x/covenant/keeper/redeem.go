@@ -14,6 +14,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/key"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
+	covExported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	cov "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
@@ -69,7 +70,7 @@ func (k Keeper) UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID []
 		return fmt.Errorf("redeem session not found")
 	}
 
-	if redeemSession.CurrentPhase != cov.Preparing {
+	if redeemSession.CurrentPhase != covExported.Preparing {
 		return fmt.Errorf("redeem session is not in preparing phase")
 	}
 
@@ -77,7 +78,7 @@ func (k Keeper) UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID []
 		return fmt.Errorf("redeem session is not switching")
 	}
 
-	redeemSession.CurrentPhase = cov.Executing
+	redeemSession.CurrentPhase = covExported.Executing
 	redeemSession.IsSwitching = false
 	// Update the redeem session in storage
 	k.setRedeemSession(ctx, redeemSession)
@@ -90,7 +91,7 @@ func (k Keeper) UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID []
 		return fmt.Errorf("redeem session not found")
 	}
 
-	if redeemSession.CurrentPhase != cov.Executing {
+	if redeemSession.CurrentPhase != covExported.Executing {
 		return fmt.Errorf("redeem session is not in executing phase")
 	}
 
@@ -98,7 +99,7 @@ func (k Keeper) UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID []
 		return fmt.Errorf("redeem session is switching")
 	}
 
-	redeemSession.CurrentPhase = cov.Preparing
+	redeemSession.CurrentPhase = covExported.Preparing
 	redeemSession.IsSwitching = false
 	// Update the redeem session in storage
 	k.setRedeemSession(ctx, redeemSession)
@@ -181,7 +182,7 @@ func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID []byte, requestI
 	if !ok {
 		return nil, fmt.Errorf("redeem session not found")
 	}
-	if redeemSession.CurrentPhase != cov.Preparing {
+	if redeemSession.CurrentPhase != covExported.Preparing {
 		return nil, fmt.Errorf("redeem session is not in preparing phase")
 	}
 	utxoSnapshot, ok := k.GetUtxoSnapshot(ctx, custodianGroupUID)
