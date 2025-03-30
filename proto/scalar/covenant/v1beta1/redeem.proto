@@ -2,22 +2,15 @@ syntax = "proto3";
 package scalar.covenant.v1beta1;
 
 import "gogoproto/gogo.proto";
+import "scalar/covenant/exported/v1beta1/types.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 option (gogoproto.goproto_getters_all) = false;
 
-enum Phase {
-  option (gogoproto.goproto_enum_prefix) = false;
-  PHASE_PREPARING = 0 [ (gogoproto.enumvalue_customname) = "Preparing" ];
-  PHASE_EXECUTING = 1 [ (gogoproto.enumvalue_customname) = "Executing" ];
-  PHASE_UNSPECIFIED = 2 [ (gogoproto.enumvalue_customname) = "Unspecified" ];
-}
-
 message UTXO {
   bytes txid = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
   uint32 vout = 2;
@@ -30,8 +23,7 @@ message UTXO {
 message UTXOSnapshot {
   bytes custodian_group_uid = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "CustodianGroupUID"
   ];
   uint64 block_height = 2;
@@ -41,15 +33,13 @@ message UTXOSnapshot {
 message RedeemSession {
   bytes custodian_group_uid = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "CustodianGroupUID"
   ];
   uint64 sequence = 2;
-  Phase current_phase = 3;
+  scalar.covenant.exported.v1beta1.Phase current_phase = 3;
   bytes last_redeem_tx = 4 [
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "LastRedeemTx"
   ];
   bool is_switching = 5;
@@ -59,14 +49,11 @@ message RedeemSession {
 message ExpiredEvmSession {
   bytes custodian_group_uid = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "CustodianGroupUID"
   ];
-  string chain = 2
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
   uint64 sequence = 3;
-  Phase current_phase = 4;
+  scalar.covenant.exported.v1beta1.Phase current_phase = 4;
   repeated string tokens = 5;
 }

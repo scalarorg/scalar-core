@@ -83,6 +83,8 @@ type ChainKeeper interface {
 	GetMetadata(ctx sdk.Context) map[string]string
 
 	CreateNewBtcPoolingBatchToSign(ctx sdk.Context, chain nexus.ChainName, pk []byte) (CommandBatch, error)
+	GetRedeemSession(ctx sdk.Context, custodianGroupUID []byte) (RedeemSession, bool)
+	SetRedeemSession(ctx sdk.Context, session *RedeemSession) error
 }
 
 // ParamsKeeper represents a global paramstore

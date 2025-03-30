@@ -16,6 +16,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
+	covExported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	covTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -241,8 +242,8 @@ func DecodeEventSwitchPhase(log *geth.Log) (*covTypes.SwitchedPhaseConfirmed, er
 	return &covTypes.SwitchedPhaseConfirmed{
 		CustodianGroupUID: exported.Hash(custodianGroupId),
 		Sequence:          sequence.Uint64(),
-		FromPhase:         covTypes.Phase(from),
-		ToPhase:           covTypes.Phase(to),
+		FromPhase:         covExported.Phase(from),
+		ToPhase:           covExported.Phase(to),
 	}, nil
 
 }

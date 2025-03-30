@@ -2,6 +2,7 @@ package types
 
 import (
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
+	"github.com/scalarorg/scalar-core/x/covenant/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
@@ -14,12 +15,12 @@ func DefaultRedeemSession() *RedeemSession {
 	return &RedeemSession{
 		CustodianGroupUID: chains.ZeroHash,
 		Sequence:          0,
-		CurrentPhase:      Unspecified,
+		CurrentPhase:      exported.Unspecified,
 		LastRedeemTx:      nil,
 	}
 }
 
-func NewRedeemSession(CustodianGroupUID chains.Hash, sequence uint64, currentPhase Phase, lastRedeemTx *chains.Hash) *RedeemSession {
+func NewRedeemSession(CustodianGroupUID chains.Hash, sequence uint64, currentPhase exported.Phase, lastRedeemTx *chains.Hash) *RedeemSession {
 	return &RedeemSession{
 		CustodianGroupUID: CustodianGroupUID,
 		Sequence:          sequence,

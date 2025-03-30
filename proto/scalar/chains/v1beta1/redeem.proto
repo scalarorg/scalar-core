@@ -1,0 +1,18 @@
+syntax = "proto3";
+package scalar.chains.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "scalar/covenant/exported/v1beta1/types.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
+option (gogoproto.goproto_getters_all) = false;
+
+message RedeemSession {
+  bytes custodian_group_uid = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "CustodianGroupUID"
+  ];
+  uint64 sequence = 2;
+  scalar.covenant.exported.v1beta1.Phase current_phase = 3;
+}

@@ -33,13 +33,14 @@ func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock,
 	k types.Keeper,
 	b types.BaseKeeper,
 	pk types.ProtocolKeeper,
+	nexus types.Nexus,
 	multisig types.MultisigKeeper,
 	rewarder types.Rewarder,
 	s types.ScalarnetKeeper,
 ) ([]abci.ValidatorUpdate, error) {
 	clog.Greenf("Covenant EndBlocker, ctx.BlockHeight: %+v", ctx.BlockHeight())
 	handleSignings(ctx, k, rewarder)
-	handleEnqueuedEvents(ctx, k, b, multisig, pk, s)
+	handleEnqueuedEvents(ctx, k, b, pk, nexus, multisig, s)
 	handleSwitchPhase(ctx, k, b, pk, multisig)
 	return nil, nil
 }
@@ -188,7 +189,7 @@ func handleSwitchPhase(ctx sdk.Context, k types.Keeper, b types.BaseKeeper, pk t
 
 	for _, evmSession := range expiredEvmSessions {
 		success := utils.RunCached(ctx, k, func(ctx sdk.Context) (bool, error) {
-			switchPhaseForEvmChain(ctx, k, b, multisig, evmSession, types.Executing)
+			switchPhaseForEvmChain(ctx, k, b, multisig, evmSession, exported.Executing)
 			return true, nil
 		})
 		_ = success
@@ -202,8 +203,9 @@ func handleEnqueuedEvents(
 	ctx sdk.Context,
 	k types.Keeper,
 	b types.BaseKeeper,
-	m types.MultisigKeeper,
 	pk types.ProtocolKeeper,
+	nexus types.Nexus,
+	m types.MultisigKeeper,
 	s types.ScalarnetKeeper,
 ) {
 	queue := k.GetEventsQueue(ctx)
@@ -218,7 +220,7 @@ func handleEnqueuedEvents(
 
 	for _, event := range events {
 		success := utils.RunCached(ctx, k, func(ctx sdk.Context) (bool, error) {
-			if err := handleEnqueueEvent(ctx, &event, k, b, m, pk, s); err != nil {
+			if err := handleEnqueueEvent(ctx, &event, k, b, pk, nexus, m, s); err != nil {
 				k.Logger(ctx).Debug(fmt.Sprintf("failed handling event: %s", err.Error()),
 					"chain", event.Chain.String(),
 				)
@@ -250,8 +252,9 @@ func handleEnqueueEvent(
 	event *types.Event,
 	k types.Keeper,
 	b types.BaseKeeper,
-	m types.MultisigKeeper,
 	pk types.ProtocolKeeper,
+	nexus types.Nexus,
+	m types.MultisigKeeper,
 	s types.ScalarnetKeeper,
 ) error {
 	// if err := validateEvent(ctx, event, bk, n); err != nil {
@@ -261,7 +264,7 @@ func handleEnqueueEvent(
 	case *types.Event_RedeemTxsConfirmed:
 		return handleRedeemTxsConfirmed(ctx, event, k, b, m, pk)
 	case *types.Event_SwitchedPhaseConfirmed:
-		return handleSwitchedPhaseConfirmed(ctx, event, k, b, s)
+		return handleSwitchedPhaseConfirmed(ctx, event, k, b, nexus, s)
 	default:
 		panic(fmt.Errorf("unsupported event type %T", event))
 	}
@@ -289,7 +292,7 @@ func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, k types.Keepe
 		return fmt.Errorf("not found redeem session")
 	}
 
-	if redeemSession.CurrentPhase != types.Preparing {
+	if redeemSession.CurrentPhase != exported.Preparing {
 		return fmt.Errorf("redeem session is not in preparing phase")
 	}
 
@@ -309,7 +312,7 @@ func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, k types.Keepe
 				CustodianGroupUID: protocol.CustodianGroupUID,
 				Chain:             chain.ChainName,
 				Sequence:          redeemSession.Sequence,
-				CurrentPhase:      types.Preparing,
+				CurrentPhase:      exported.Preparing,
 				Tokens:            []string{},
 			}
 		}
@@ -319,7 +322,7 @@ func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, k types.Keepe
 
 	for _, s := range evmSessions {
 		success := utils.RunCached(ctx, k, func(ctx sdk.Context) (bool, error) {
-			switchPhaseForEvmChain(ctx, k, b, m, s, types.Preparing)
+			switchPhaseForEvmChain(ctx, k, b, m, s, exported.Preparing)
 			return true, nil
 		})
 		_ = success
@@ -335,6 +338,7 @@ func handleSwitchedPhaseConfirmed(
 	event *types.Event,
 	k types.Keeper,
 	b types.BaseKeeper,
+	n types.Nexus,
 	s types.ScalarnetKeeper,
 ) error {
 	confirmedEvent, ok := event.GetEvent().(*types.Event_SwitchedPhaseConfirmed)
@@ -343,16 +347,56 @@ func handleSwitchedPhaseConfirmed(
 	}
 
 	switchPhaseEvent := confirmedEvent.SwitchedPhaseConfirmed
-
-	if switchPhaseEvent.ToPhase == types.Preparing {
-		return k.UpdateExecutingToPreparing(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
-	} else if switchPhaseEvent.ToPhase == types.Executing {
-		err := k.UpdatePreparingToExecuting(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
-		if err != nil {
-			return err
+	chainRedeemSession := chainsTypes.RedeemSession{
+		CustodianGroupUID: switchPhaseEvent.CustodianGroupUID,
+		Sequence:          switchPhaseEvent.Sequence,
+		CurrentPhase:      switchPhaseEvent.ToPhase,
+	}
+	ck, err := b.ForChain(ctx, event.Chain)
+	if err != nil {
+		return err
+	}
+	ck.SetRedeemSession(ctx, &chainRedeemSession)
+	allChains := n.GetChains(ctx)
+	//Store the slower chains which have old session or phase
+	//If this array is empty, all evm chains have the same session and phase, we can switch the phase
+	slowerChains := []nexus.Chain{}
+	//Check if all evm chains have the same session and phase
+	for _, c := range allChains {
+		if c.Name != event.Chain && chainsTypes.IsEvmChain(c.Name) {
+			ck, err := b.ForChain(ctx, c.Name)
+			if err != nil {
+				return err
+			}
+			redeemSession, ok := ck.GetRedeemSession(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
+			if !ok {
+				ctx.Logger().Debug("not found redeem session for chain %s", c.Name)
+				slowerChains = append(slowerChains, c)
+			} else if redeemSession.Sequence < switchPhaseEvent.Sequence ||
+				(redeemSession.Sequence == switchPhaseEvent.Sequence && redeemSession.CurrentPhase < switchPhaseEvent.ToPhase) {
+				ctx.Logger().Debug("[handleSwitchedPhaseConfirmed] slower chain %s with session %++v", c.Name, redeemSession)
+				slowerChains = append(slowerChains, c)
+			}
 		}
+	}
+	if len(slowerChains) == 0 {
+		ctx.Logger().Debug("[handleSwitchedPhaseConfirmed] all evm chains have the same session and phase, we can switch the phase")
+		if switchPhaseEvent.ToPhase == exported.Preparing {
+			return k.UpdateExecutingToPreparing(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
+		} else if switchPhaseEvent.ToPhase == exported.Executing {
+			err := k.UpdatePreparingToExecuting(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
+			if err != nil {
+				return err
+			}
 
-		err = handleSignCommands(ctx, k, b, s, switchPhaseEvent.CustodianGroupUID.Bytes())
+			err = handleSignCommands(ctx, k, b, s, switchPhaseEvent.CustodianGroupUID.Bytes())
+			if err != nil {
+				return err
+			}
+		}
+	} else {
+		ctx.Logger().Debug("[handleSwitchedPhaseConfirmed] there are %s slower chains, we need to handle them", len(slowerChains))
+		//TODO: handle the slower chains
 	}
 
 	return fmt.Errorf("invalid phase")
@@ -548,7 +592,7 @@ func switchPhaseForEvmChain(ctx sdk.Context,
 	b types.BaseKeeper,
 	multisig types.MultisigKeeper,
 	evmSession *types.ExpiredEvmSession,
-	newPhase types.Phase,
+	newPhase exported.Phase,
 ) error {
 	// Start signing session for reserve redeem utxos
 	keyID, ok := multisig.GetCurrentKeyID(ctx, evmSession.Chain)
@@ -591,7 +635,7 @@ func findExpiredEvmSessions(ctx sdk.Context, k types.Keeper, pk types.ProtocolKe
 		if !ok {
 			continue
 		}
-		if redeemSession.CurrentPhase == types.Preparing && redeemSession.PhaseExpiredAt < uint64(currentHeight) {
+		if redeemSession.CurrentPhase == exported.Preparing && redeemSession.PhaseExpiredAt < uint64(currentHeight) {
 			expiredGroups = append(expiredGroups, group.UID.Bytes())
 			expiredSessions[group.UID.Hex()] = redeemSession
 		}
@@ -610,7 +654,7 @@ func findExpiredEvmSessions(ctx sdk.Context, k types.Keeper, pk types.ProtocolKe
 					CustodianGroupUID: protocol.CustodianGroupUID,
 					Chain:             chain.ChainName,
 					Sequence:          redeemSession.Sequence,
-					CurrentPhase:      types.Preparing,
+					CurrentPhase:      exported.Preparing,
 					Tokens:            []string{},
 				}
 			}

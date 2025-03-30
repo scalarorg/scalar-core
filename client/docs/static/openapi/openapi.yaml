@@ -55996,6 +55996,13 @@ components:
             token_daily_mint_limit:
               type: string
               format: byte
+    scalar.covenant.exported.v1beta1.Phase:
+      type: string
+      enum:
+        - PHASE_PREPARING
+        - PHASE_EXECUTING
+        - PHASE_UNSPECIFIED
+      default: PHASE_PREPARING
     scalar.covenant.exported.v1beta1.TapScriptSig:
       type: object
       properties:
@@ -56469,13 +56476,6 @@ components:
               type: string
               format: uint64
           title: Params represent the genesis parameters for the module
-    scalar.covenant.v1beta1.Phase:
-      type: string
-      enum:
-        - PHASE_PREPARING
-        - PHASE_EXECUTING
-        - PHASE_UNSPECIFIED
-      default: PHASE_PREPARING
     scalar.covenant.v1beta1.RedeemSession:
       type: object
       properties:

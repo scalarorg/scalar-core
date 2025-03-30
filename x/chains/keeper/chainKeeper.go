@@ -46,6 +46,7 @@ var (
 
 	confirmedSourceTxPrefix = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 4)
 	completedSourceTxPrefix = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 5)
+	redeemSessionPrefix     = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 6)
 )
 
 var _ types.ChainKeeper = chainKeeper{}
