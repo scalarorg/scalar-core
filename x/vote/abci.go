@@ -39,25 +39,25 @@ func handlePollsAtExpiry(ctx sdk.Context, k types.Voter) error {
 
 		voteHandler := k.GetVoteRouter().GetHandler(poll.GetModule())
 		pollState := poll.GetState()
-		clog.Red("pollState: ", pollState)
+		clog.Redf(fmt.Sprintf("poll %s state: %++v", pollID.String(), pollState))
 		switch pollState {
 		case exported.Pending:
-			logger.Debug("poll expired")
+			logger.Debug(fmt.Sprintf("poll %s expired", pollID.String()))
 			if err := voteHandler.HandleExpiredPoll(ctx, poll); err != nil {
 				return err
 			}
 
 		case exported.Failed:
-			logger.Debug("poll failed")
+			logger.Debug(fmt.Sprintf("poll %s failed", pollID.String()))
 			if err := voteHandler.HandleFailedPoll(ctx, poll); err != nil {
 				return err
 			}
 
 		case exported.Completed:
 			if voteHandler.IsFalsyResult(poll.GetResult()) {
-				logger.Debug("poll completed with falsy result")
+				logger.Debug(fmt.Sprintf("poll %s completed with falsy result: %++v", pollID.String(), poll))
 			} else {
-				logger.Debug("poll completed with final result")
+				logger.Debug(fmt.Sprintf("poll %s completed with final result: %++v", pollID.String(), poll))
 			}
 			if err := voteHandler.HandleCompletedPoll(ctx, poll); err != nil {
 				return err

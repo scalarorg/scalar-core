@@ -345,7 +345,7 @@ func handleSwitchedPhaseConfirmed(
 	if !ok {
 		return fmt.Errorf("invalid event type")
 	}
-
+	ctx.Logger().Debug("[handleSwitchedPhaseConfirmed] start handling switch phase confirmed event")
 	switchPhaseEvent := confirmedEvent.SwitchedPhaseConfirmed
 	chainRedeemSession := chainsTypes.RedeemSession{
 		CustodianGroupUID: switchPhaseEvent.CustodianGroupUID,
@@ -354,9 +354,14 @@ func handleSwitchedPhaseConfirmed(
 	}
 	ck, err := b.ForChain(ctx, event.Chain)
 	if err != nil {
+		ctx.Logger().Error("[handleSwitchedPhaseConfirmed] failed to get chain keeper for chain %s", event.Chain, err)
 		return err
 	}
-	ck.SetRedeemSession(ctx, &chainRedeemSession)
+	err = ck.SetRedeemSession(ctx, &chainRedeemSession)
+	if err != nil {
+		ctx.Logger().Error("[handleSwitchedPhaseConfirmed] failed to set redeem session for chain %s", event.Chain, err)
+		return err
+	}
 	allChains := n.GetChains(ctx)
 	//Store the slower chains which have old session or phase
 	//If this array is empty, all evm chains have the same session and phase, we can switch the phase
@@ -366,11 +371,12 @@ func handleSwitchedPhaseConfirmed(
 		if c.Name != event.Chain && chainsTypes.IsEvmChain(c.Name) {
 			ck, err := b.ForChain(ctx, c.Name)
 			if err != nil {
+				ctx.Logger().Error("[handleSwitchedPhaseConfirmed] failed to get chain keeper for chain %s", c.Name, err)
 				return err
 			}
 			redeemSession, ok := ck.GetRedeemSession(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
 			if !ok {
-				ctx.Logger().Debug("not found redeem session for chain %s", c.Name)
+				ctx.Logger().Debug("[handleSwitchedPhaseConfirmed] not found redeem session for chain %s", c.Name)
 				slowerChains = append(slowerChains, c)
 			} else if redeemSession.Sequence < switchPhaseEvent.Sequence ||
 				(redeemSession.Sequence == switchPhaseEvent.Sequence && redeemSession.CurrentPhase < switchPhaseEvent.ToPhase) {

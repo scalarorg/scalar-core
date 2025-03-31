@@ -7,7 +7,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 	"github.com/scalarorg/scalar-core/x/vote/types"
@@ -37,7 +36,7 @@ func (s msgServer) Vote(c context.Context, req *types.VoteRequest) (*types.VoteR
 	if !ok {
 		return nil, fmt.Errorf("poll %s not found", req.PollID)
 	}
-
+	s.Logger(ctx).Info(fmt.Sprintf("[Vote] poll %s found", req.PollID.String()))
 	voteResult, err := poll.Vote(voter, ctx.BlockHeight(), req.Vote.GetCachedValue().(codec.ProtoMarshaler))
 	if err != nil {
 		return nil, err
@@ -56,7 +55,7 @@ func (s msgServer) Vote(c context.Context, req *types.VoteRequest) (*types.VoteR
 
 	pollState := poll.GetState()
 
-	clog.Red("pollState in vote/keeper/msg_server.go: ", pollState)
+	s.Logger(ctx).Info(fmt.Sprintf("poll %s with state: %++v", req.PollID.String(), pollState))
 
 	switch pollState {
 	case vote.Pending:

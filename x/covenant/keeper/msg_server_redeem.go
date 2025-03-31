@@ -83,7 +83,7 @@ func (s msgServer) ConfirmRedeemTxs(c context.Context, req *types.ConfirmRedeemT
 		NetworkParams:      nwParams,
 	}
 
-	s.Logger(ctx).Info("ConfirmRedeemTxStarted", event)
+	s.Logger(ctx).Info(fmt.Sprintf("ConfirmRedeemTxStarted: %++v", event))
 
 	events.Emit(ctx, event)
 
@@ -137,7 +137,7 @@ func (s msgServer) ConfirmSwitchedPhase(c context.Context, req *types.ConfirmSwi
 		CustodianGroupUID:  req.CustodianGroupUID,
 	}
 
-	s.Logger(ctx).Info("ConfirmSwitchedPhaseStarted", event)
+	s.Logger(ctx).Info(fmt.Sprintf("ConfirmSwitchedPhaseStarted: %++v", event))
 
 	events.Emit(ctx, event)
 	return &types.ConfirmSwitchedPhaseResponse{}, nil

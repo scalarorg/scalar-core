@@ -21,11 +21,11 @@ func (client *EthereumClient) ProcessSwitchedPhaseConfirmation(event *covTypes.C
 		pollID := event.PollID
 		if txReceipt.Err() != nil {
 			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, types.NewVoteEvents(event.Chain)))
-			clog.Redf("broadcasting empty vote for poll %s: %s", pollID.String(), txReceipt.Err().Error())
+			clog.Redf("[ProcessSwitchedPhaseConfirmation] broadcasting empty vote for poll %s: %s", pollID.String(), txReceipt.Err().Error())
 		} else {
 			events := client.processConfirmSwitched(event, txReceipt.Ok().(ETHTxReceipt))
 			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, covTypes.NewVoteEvents(event.Chain, events...)))
-			clog.Redf("broadcasting vote %v for poll %s", events, pollID.String())
+			clog.Bluef("[ProcessSwitchedPhaseConfirmation] broadcasting vote for poll %s, %++v", pollID.String(), events)
 		}
 	}
 	return votes, nil
@@ -46,7 +46,7 @@ func (c *EthereumClient) processConfirmSwitched(event *covTypes.ConfirmSwitchedP
 			continue
 		}
 
-		clog.Red("processTxReceipt", "txlog", txlog)
+		clog.Red("processConfirmSwitched", "txlog", txlog)
 
 		switch txlog.Topics[0] {
 		case SwitchPhaseSig:
@@ -72,7 +72,7 @@ func (c *EthereumClient) processConfirmSwitched(event *covTypes.ConfirmSwitchedP
 				},
 			})
 		default:
-			c.logger().Errorf("unknown event type: %s", txlog.Topics[0])
+			c.logger().Debugf("unknown event type: %s", txlog.Topics[0])
 		}
 	}
 

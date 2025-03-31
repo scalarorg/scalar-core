@@ -80,6 +80,7 @@ func Broadcast(ctx sdkClient.Context, txBytes []byte, options ...BroadcasterOpti
 	res, err := ctx.BroadcastTx(txBytes)
 	switch {
 	case err != nil:
+		log.Errorf("[Broadcast] failed to broadcast tx: %s", err)
 		return nil, err
 	case res.Code != abci.CodeTypeOK:
 		return nil, sdkerrors.ABCIError(res.Codespace, res.Code, res.RawLog)

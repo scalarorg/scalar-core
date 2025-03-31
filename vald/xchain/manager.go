@@ -124,7 +124,11 @@ func (mgr Manager) ProcessSwitchedPhaseConfirmation(event *cov.ConfirmSwitchedPh
 		return err
 	}
 	_, err = mgr.broadcaster.Broadcast(context.TODO(), votes...)
-	return err
+	if err != nil {
+		log.Errorf("[Manager] poll %s failed to broadcast vote: %++v", event.PollID.String(), err)
+		return err
+	}
+	return nil
 }
 
 // isParticipantOf checks if the validator is in the poll participants list
