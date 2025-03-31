@@ -7,6 +7,7 @@ import (
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcd/rpcclient"
 	"github.com/btcsuite/btcd/wire"
+	"github.com/rs/zerolog/log"
 	btcChain "github.com/scalarorg/bitcoin-vault/go-utils/btc"
 	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/vald/config"
@@ -34,6 +35,7 @@ var _ common.Client = &BtcClient{}
 
 func NewClient(cfg *config.BTCConfig) (common.Client, error) {
 	rpcConfig := MapBTCConfigToRPCConfig(cfg)
+	log.Info().Any("rpcConfig", rpcConfig).Msg("Create new btc client")
 	rpcClient, error := rpcclient.New(rpcConfig, nil)
 	if error != nil {
 		return nil, error

@@ -15,7 +15,7 @@ func (c *BtcClient) logger(keyvals ...any) log.Logger {
 }
 
 func (client *BtcClient) isFinalized(txReceipt *btcjson.TxRawResult, confHeight uint64) (bool, error) {
-	block := client.blockCache.Get(txReceipt.BlockHash)
+	block, _ := client.blockCache.GetBlock(txReceipt.BlockHash)
 	if block == nil {
 		return false, fmt.Errorf("block not found")
 	}
@@ -47,6 +47,10 @@ func (client *BtcClient) isFinalized(txReceipt *btcjson.TxRawResult, confHeight 
 
 // The reason for this function is the GetBlockChainInfo() or btcd parsing error
 func (c *BtcClient) getBlockChainInfo() (*btcjson.GetBlockChainInfoResult, error) {
+	cachedChainInfo := c.blockCache.GetChainInfo()
+	if cachedChainInfo != nil {
+		return cachedChainInfo, nil
+	}
 	rawResponse, err := c.client.RawRequest("getblockchaininfo", nil)
 	if err != nil {
 		return nil, err
@@ -56,6 +60,6 @@ func (c *BtcClient) getBlockChainInfo() (*btcjson.GetBlockChainInfoResult, error
 	if err := json.Unmarshal(rawResponse, &chainInfo); err != nil {
 		return nil, err
 	}
-
+	c.blockCache.SetChainInfo(&chainInfo)
 	return &chainInfo, nil
 }
