@@ -39,7 +39,7 @@ func (client *BtcClient) ProcessRedeemTxsConfirmation(event *covTypes.ConfirmRed
 	}
 
 	// TODO: Ensure the utxos are confirmed with the correct number of confirmations
-	utxos, err := client.getUtxoList(taprootAddress.String())
+	utxos, _, err := client.getUtxoList(taprootAddress.String())
 	if err != nil {
 		return nil, err
 	}
