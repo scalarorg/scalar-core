@@ -5803,7 +5803,6 @@ Pubkey used as key for lookup custodian to update other values
 | `ConfirmRedeemTxs` | [ConfirmRedeemTxsRequest](#scalar.covenant.v1beta1.ConfirmRedeemTxsRequest) | [ConfirmRedeemTxsResponse](#scalar.covenant.v1beta1.ConfirmRedeemTxsResponse) |  | POST|/scalar/covenant/v1beta1/confirm_redeem_txs|
 | `ReserveRedeemUtxo` | [ReserveRedeemUtxoRequest](#scalar.covenant.v1beta1.ReserveRedeemUtxoRequest) | [ReserveRedeemUtxoResponse](#scalar.covenant.v1beta1.ReserveRedeemUtxoResponse) |  | POST|/scalar/chains/v1beta1/reserve_redeem_utxo|
 | `ConfirmSwitchedPhase` | [ConfirmSwitchedPhaseRequest](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest) | [ConfirmSwitchedPhaseResponse](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseResponse) |  | POST|/scalar/covenant/v1beta1/confirm_switched_phase|
-| `InitializeUtxo` | [InitializeUtxoRequest](#scalar.covenant.v1beta1.InitializeUtxoRequest) | [InitializeUtxoResponse](#scalar.covenant.v1beta1.InitializeUtxoResponse) |  | POST|/scalar/covenant/v1beta1/initialize_utxo|
 
 
 <a name="scalar.covenant.v1beta1.QueryService"></a>
