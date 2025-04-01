@@ -137,7 +137,7 @@ func (mgr Manager) ProcessInitializeUtxo(event *cov.IntializeUtxoSnapshotStarted
 		return nil
 	}
 
-	mgr.logger("event", event).Debug("processing redeem tx confirmation poll")
+	mgr.logger("event", event).Info("processing redeem tx confirmation poll")
 
 	chainInfoBytes := chain.ChainInfoBytes{}
 

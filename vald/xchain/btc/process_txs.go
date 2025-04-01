@@ -21,14 +21,14 @@ func (client *BtcClient) ProcessSourceTxsConfirmation(event *types.EventConfirmS
 		pollID := event.PollMappings[i].PollID
 		if txReceipt.Err() != nil {
 			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, types.NewVoteEvents(event.Chain)))
-			clog.Redf("broadcasting empty vote for poll %s: %s", pollID.String(), txReceipt.Err().Error())
+			clog.Bluef("broadcasting empty vote for poll %s: %s", pollID.String(), txReceipt.Err().Error())
 		} else {
 			events := client.processSrcTxReceipt(event, txReceipt.Ok().(BTCTxReceipt))
 			if len(events) == 0 {
 				continue
 			}
 			votes = append(votes, voteTypes.NewVoteRequest(proxy, pollID, types.NewVoteEvents(event.Chain, events...)))
-			clog.Redf("broadcasting vote %v for poll %s", events, pollID.String())
+			clog.Bluef("broadcasting vote %v for poll %s", events, pollID.String())
 		}
 	}
 
@@ -36,9 +36,7 @@ func (client *BtcClient) ProcessSourceTxsConfirmation(event *types.EventConfirmS
 }
 func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsStarted, receipt BTCTxReceipt) []types.Event {
 	// TODO: 🛑 validate the btc protocol address from the event
-	clog.Redf("[BTC] txReceipt.Raw.Txid: %+v", receipt.Raw)
-	clog.Redf("[BTC] txReceipt.TransactionIndex: %+v", receipt.TransactionIndex)
-	clog.Redf("[BTC] txReceipt.Raw.Hash: %+v", receipt.Raw.Hash)
+	clog.Bluef("[BTC] txReceipt.Raw.Hash: %+v, TxIndex: %+v", receipt.Raw.Hash, receipt.TransactionIndex)
 	var events []types.Event
 	tokenSent, err := client.createEventTokenSent(event, &receipt)
 	if err != nil {

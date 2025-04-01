@@ -10,7 +10,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/bitcoin-vault/go-utils/btc"
 	"github.com/scalarorg/scalar-core/utils/events"
-	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
@@ -297,15 +296,16 @@ func (s msgServer) createReserveRedeemUtxoStandaloneCommand(
 
 func (s msgServer) InitializeUtxo(c context.Context, req *types.InitializeUtxoRequest) (*types.InitializeUtxoResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
+	s.Logger(ctx).Info(fmt.Sprintf("[InitializeUtxo] start handling initializingUtxoRequest for chain %s", req.Chain.String()))
 	chain, err := s.validateBtcChain(ctx, req.Chain)
 	if err != nil {
 		return nil, err
 	}
 
-	cusGr, ok := s.Keeper.GetCustodianGroup(ctx, chains.Hash(req.CustodianGroupUID))
-	if !ok {
-		return nil, fmt.Errorf("custodian group %s not found", req.CustodianGroupUID)
-	}
+	// cusGr, ok := s.Keeper.GetCustodianGroup(ctx, chains.Hash(req.CustodianGroupUID))
+	// if !ok {
+	// 	return nil, fmt.Errorf("custodian group %s not found", req.CustodianGroupUID)
+	// }
 
 	chainKeeper, err := s.chains.ForChain(ctx, req.Chain)
 	if err != nil {
@@ -317,46 +317,48 @@ func (s msgServer) InitializeUtxo(c context.Context, req *types.InitializeUtxoRe
 	if nwParams == "" {
 		return nil, fmt.Errorf("[InitializeUtxo] params is required")
 	}
+	cusGrs, _ := s.Keeper.GetAllCustodianGroups(ctx)
+	for _, cusGr := range cusGrs {
+		s.Logger(ctx).Info(fmt.Sprintf("[InitializeUtxos] custodian group %s", cusGr.UID))
+		taprootAddress, err := btc.ScriptPubKeyToAddress(cusGr.UID[:], nwParams)
+		if err != nil {
+			return nil, err
+		}
 
-	taprootAddress, err := btc.ScriptPubKeyToAddress(cusGr.UID[:], nwParams)
-	if err != nil {
-		return nil, err
+		threshold := chainParams.VotingThreshold
+
+		snapshot, err := s.createSnapshot(ctx, *chain, threshold)
+		if err != nil {
+			return nil, err
+		}
+
+		expiresAt := ctx.BlockHeight() + chainParams.RevoteLockingPeriod
+
+		pollID, err := s.voter.InitializePoll(
+			ctx,
+			vote.NewPollBuilder(types.ModuleName, chainParams.VotingThreshold, snapshot, expiresAt).
+				MinVoterCount(chainParams.MinVoterCount).
+				RewardPoolName(req.Chain.String()).
+				GracePeriod(chainParams.VotingGracePeriod).
+				ModuleMetadata(&types.BasicPollMetadata{
+					Chain: req.Chain,
+				}),
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		event := &types.IntializeUtxoSnapshotStarted{
+			PollID:             pollID,
+			Chain:              req.Chain,
+			ConfirmationHeight: chainKeeper.GetRequiredConfirmationHeight(ctx),
+			Participants:       snapshot.GetParticipantAddresses(),
+			CustodianGroupUID:  cusGr.UID,
+			Address:            taprootAddress.String(),
+			BlockCheckpoint:    req.BlockCheckpoint,
+		}
+
+		events.Emit(ctx, event)
 	}
-
-	threshold := chainParams.VotingThreshold
-
-	snapshot, err := s.createSnapshot(ctx, *chain, threshold)
-	if err != nil {
-		return nil, err
-	}
-
-	expiresAt := ctx.BlockHeight() + chainParams.RevoteLockingPeriod
-
-	pollID, err := s.voter.InitializePoll(
-		ctx,
-		vote.NewPollBuilder(types.ModuleName, chainParams.VotingThreshold, snapshot, expiresAt).
-			MinVoterCount(chainParams.MinVoterCount).
-			RewardPoolName(req.Chain.String()).
-			GracePeriod(chainParams.VotingGracePeriod).
-			ModuleMetadata(&types.BasicPollMetadata{
-				Chain: req.Chain,
-			}),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	event := &types.IntializeUtxoSnapshotStarted{
-		PollID:             pollID,
-		Chain:              req.Chain,
-		ConfirmationHeight: chainKeeper.GetRequiredConfirmationHeight(ctx),
-		Participants:       snapshot.GetParticipantAddresses(),
-		CustodianGroupUID:  chains.Hash(req.CustodianGroupUID),
-		Address:            taprootAddress.String(),
-		BlockCheckpoint:    req.BlockCheckpoint,
-	}
-
-	events.Emit(ctx, event)
-
 	return nil, nil
 }

@@ -31,6 +31,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&UpdateCustodianGroupRequest{},
 		&UpdateCustodianRequest{},
 		&ReserveRedeemUtxoRequest{},
+		&InitializeUtxoRequest{},
 	)
 	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
 		&gogoprototypes.BoolValue{},

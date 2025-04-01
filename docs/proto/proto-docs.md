@@ -5573,8 +5573,7 @@ Confirm exectuted transaction on bitcoin
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `custodian_group_uid` | [bytes](#bytes) |  |  |
-| `block_checkpoint` | [uint64](#uint64) |  |  |
+| `block_checkpoint` | [uint64](#uint64) |  | bytes custodian_group_uid = 3 [ (gogoproto.nullable) = false, (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash", (gogoproto.customname) = "CustodianGroupUID" ]; |
 
 
 

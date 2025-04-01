@@ -90,6 +90,7 @@ func RegisterLegacyMsgInterfaces(registry cdctypes.InterfaceRegistry) {
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".tss.v1beta1.SubmitMultisigPubKeysRequest", &tsstypes.SubmitMultisigPubKeysRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), ".tss.v1beta1.SubmitMultisigSignaturesRequest", &tsstypes.SubmitMultisigSignaturesRequest{})
 
+	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.InitializeUtxoRequest", &covenanttypes.InitializeUtxoRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.ReserveRedeemUtxoRequest", &covenanttypes.ReserveRedeemUtxoRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.ConfirmRedeemTxsRequest", &covenanttypes.ConfirmRedeemTxsRequest{})
 	r.RegisterCustomTypeURL((*sdk.Msg)(nil), "/covenant.v1beta1.ConfirmSwitchedPhaseRequest", &covenanttypes.ConfirmSwitchedPhaseRequest{})

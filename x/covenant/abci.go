@@ -232,7 +232,7 @@ func handleEnqueuedEvents(
 				k.Logger(ctx).Debug(fmt.Sprintf("failed handling event: %s", err.Error()),
 					"chain", event.Chain.String(),
 				)
-				clog.Magentaf("[x/covenent] [ABCI]-handle event %++v of type %T failed with error: %+v", event, event.GetEvent(), err)
+				clog.Redf("[x/covenent] [ABCI]-handle event %++v of type %T failed with error: %+v", event, event.GetEvent(), err)
 				return false, err
 			}
 
@@ -284,6 +284,7 @@ func handleEnqueueEvent(
 }
 
 func handleInitializeUtxoSnapshotCompleted(ctx sdk.Context, event *types.Event, k types.Keeper) error {
+	ctx.Logger().Info("[x/covenant] [ABCI] start handling initialize utxo snapshot completed event")
 	confirmedEvent, ok := event.GetEvent().(*types.Event_IntializeUtxoSnapshotCompleted)
 	if !ok {
 		return fmt.Errorf("invalid event type")
@@ -406,17 +407,19 @@ func handleSwitchedPhaseConfirmed(
 			}
 			redeemSession, ok := ck.GetRedeemSession(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
 			if !ok {
-				ctx.Logger().Debug("[handleSwitchedPhaseConfirmed] not found redeem session for chain %s", c.Name)
+				ctx.Logger().Info("[handleSwitchedPhaseConfirmed] not found redeem session for chain %s", c.Name)
 				slowerChains = append(slowerChains, c)
 			} else if redeemSession.Sequence < switchPhaseEvent.Sequence ||
 				(redeemSession.Sequence == switchPhaseEvent.Sequence && redeemSession.CurrentPhase < switchPhaseEvent.ToPhase) {
-				ctx.Logger().Debug("[handleSwitchedPhaseConfirmed] slower chain %s with session %++v", c.Name, redeemSession)
+				ctx.Logger().Info("[handleSwitchedPhaseConfirmed] slower chain %s with session %++v", c.Name, redeemSession)
 				slowerChains = append(slowerChains, c)
+			} else {
+				ctx.Logger().Info("[handleSwitchedPhaseConfirmed] chain %s is already switch to phase %++v", chainRedeemSession)
 			}
 		}
 	}
 	if len(slowerChains) == 0 {
-		ctx.Logger().Debug("[handleSwitchedPhaseConfirmed] all evm chains have the same session and phase, we can switch the phase")
+		ctx.Logger().Info("[handleSwitchedPhaseConfirmed] all evm chains have the same session and phase, we can switch the phase")
 		if switchPhaseEvent.ToPhase == exported.Preparing {
 			err := k.UpdateExecutingToPreparing(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
 			if err != nil {
@@ -441,11 +444,11 @@ func handleSwitchedPhaseConfirmed(
 			}
 		}
 	} else {
-		ctx.Logger().Debug("[handleSwitchedPhaseConfirmed] there are %s slower chains, we need to handle them", len(slowerChains))
+		ctx.Logger().Info("[handleSwitchedPhaseConfirmed] there are %s slower chains, we need to handle them", len(slowerChains))
 		//TODO: handle the slower chains
 	}
 
-	return fmt.Errorf("invalid phase")
+	return nil
 }
 
 // func startInitializeUtxoEvent(
