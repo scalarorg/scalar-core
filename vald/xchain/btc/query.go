@@ -63,7 +63,6 @@ func (c *BtcClient) getUtxoList(taprootAddress string) ([]*cov.UTXO, error) {
 	}
 
 	return utxosList, nil
-
 }
 
 func sortUTXOsByValue(utxos []MempoolUtxo) []MempoolUtxo {

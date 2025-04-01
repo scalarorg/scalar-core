@@ -75,10 +75,24 @@ const (
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
+		},
+		{
+			"inputs": [
+			{
+				"internalType": "bytes",
+          		"name": "input",
+          		"type": "bytes"
+        	}
+			],
+			"name": "execute2",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
 		}
 	]`
 
-	ScalarGatewayFuncExecute = "execute"
+	ScalarGatewayFuncExecute  = "execute"
+	ScalarGatewayFuncExecute2 = "execute2"
 )
 
 const (
@@ -716,7 +730,7 @@ func CreateExecuteDataMultisig(data []byte, addresses []common.Address, weights 
 		return nil, err
 	}
 
-	return abiEncoder.Pack(ScalarGatewayFuncExecute, executeData)
+	return abiEncoder.Pack(ScalarGatewayFuncExecute2, executeData)
 }
 
 func getWeightedSignaturesProof(addresses []common.Address, weights []sdk.Uint, threshold sdk.Uint, signatures [][]byte) ([]byte, error) {
