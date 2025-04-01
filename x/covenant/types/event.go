@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisigExported "github.com/scalarorg/scalar-core/x/multisig/exported"
@@ -68,6 +69,33 @@ func NewKeyRotated(chain nexus.ChainName, keyID multisigExported.KeyID) *KeyRota
 		Chain:  chain,
 		KeyID:  keyID,
 	}
+}
+
+func (m Event) ValidateBasic() error {
+	if err := m.Chain.Validate(); err != nil {
+		return sdkerrors.Wrap(err, "invalid source chain")
+	}
+	// TODO: validate event type
+
+	return nil
+}
+
+func (m VoteEvents) ValidateBasic() error {
+	if err := m.Chain.Validate(); err != nil {
+		return err
+	}
+
+	for _, event := range m.Events {
+		if err := event.ValidateBasic(); err != nil {
+			return err
+		}
+
+		if event.Chain != m.Chain {
+			return fmt.Errorf("events are not from the same source chain")
+		}
+	}
+
+	return nil
 }
 
 // NewRedeemTxsConfirmed is the constructor for event redeem txs confirmed
