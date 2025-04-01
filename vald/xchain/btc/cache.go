@@ -70,6 +70,7 @@ func (c *BlockCache) GetBlock(blockHash string) (*btcjson.GetBlockVerboseTxResul
 func (c *BlockCache) SetBlock(blockHash string, block *btcjson.GetBlockVerboseTxResult) {
 	c.blockLock.Lock()
 	defer c.blockLock.Unlock()
+	log.Info().Str("blockHash", blockHash).Msg("SetBlock to cache")
 	_, ok := c.blocks[blockHash]
 	if !ok {
 		c.blocks[blockHash] = block

@@ -183,9 +183,7 @@ func (c *BtcClient) GetTransaction(txID common.Hash) (BTCTxResult, error) {
 		tx.TransactionIndex = txWithIndex.Index
 	} else {
 		//Get from rpc
-		start := time.Now()
 		txResult, err := c.client.GetRawTransactionVerbose(&chainHash)
-		elapsed := time.Since(start)
 		if err != nil {
 			clog.Cyanf("Failed to get BTC transaction %s: %+v", txID, err)
 			return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
@@ -203,9 +201,9 @@ func (c *BtcClient) GetTransaction(txID common.Hash) (BTCTxResult, error) {
 					clog.Cyanf("Failed to get BTC block hash %s: %+v", txResult.BlockHash, err)
 					return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
 				}
-				start = time.Now()
+				start := time.Now()
 				block, err = c.client.GetBlockVerboseTx(blockHash)
-				elapsed = time.Since(start)
+				elapsed := time.Since(start)
 				log.Info().Str("elapsed", elapsed.String()).Msg("GetBlockVerboseTx from rpc")
 				if err != nil {
 					c.logger("failed to get block", "blockHash", txResult.BlockHash, "error", err)
@@ -213,9 +211,19 @@ func (c *BtcClient) GetTransaction(txID common.Hash) (BTCTxResult, error) {
 				}
 				c.blockCache.SetBlock(txResult.BlockHash, block)
 			case BlockCacheStatusFetching:
-				// log.Info().Str("blockHash", txResult.BlockHash).Msg("Block is fetching in other go routine")
+				//wait for the block to be fetched
+				log.Info().Str("blockHash", txResult.BlockHash).Msg("Block is fetching in other go routine")
+				for c.blockCache.GetBlockStatus(txResult.BlockHash) == BlockCacheStatusFetching {
+					time.Sleep(100 * time.Millisecond)
+				}
+				block, status = c.blockCache.GetBlock(txResult.BlockHash)
+				if block != nil && status == BlockCacheStatusStored {
+					log.Info().Str("blockHash", txResult.BlockHash).Msg("Block found in cache")
+				} else {
+					log.Error().Str("blockHash", txResult.BlockHash).Msg("Block not found in cache")
+				}
 			case BlockCacheStatusStored:
-				// log.Info().Str("blockHash", txResult.BlockHash).Msg("Block is already in cache")
+				//log.Info().Str("blockHash", txResult.BlockHash).Msg("Block is already in cache")
 			}
 		}
 	}
