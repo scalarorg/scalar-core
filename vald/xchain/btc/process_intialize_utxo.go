@@ -22,17 +22,21 @@ func (client *BtcClient) ProcessInitializeUtxo(event *covTypes.IntializeUtxoSnap
 	}
 
 	// TODO: Ensure the utxos are confirmed with the correct number of confirmations
-	utxos, err := client.getUtxoList(event.Address)
+	utxos, blockHeights, err := client.getUtxoList(event.Address)
 	if err != nil {
 		return nil, err
 	}
 
-	// if len(utxos) == 0 {
-	// 	return nil,
-	// }
+	if len(utxos) == 0 {
+		return nil, fmt.Errorf("no utxos found for address %s", event.Address)
+	}
 
-	// _ = event.BlockCheckpoint
-	// TODO: filter
+	filteredUtxos := []*covTypes.UTXO{}
+	for i, utxo := range utxos {
+		if blockHeights[i] <= event.BlockCheckpoint {
+			filteredUtxos = append(filteredUtxos, utxo)
+		}
+	}
 
 	voteEvent := covTypes.NewVoteEvents(event.Chain, covTypes.Event{
 		Chain: event.Chain,
@@ -42,7 +46,7 @@ func (client *BtcClient) ProcessInitializeUtxo(event *covTypes.IntializeUtxoSnap
 				UtxoSnapshot: &covTypes.UTXOSnapshot{
 					CustodianGroupUID: event.CustodianGroupUID,
 					BlockHeight:       1, // TODO: fill me
-					Utxos:             utxos,
+					Utxos:             filteredUtxos,
 				},
 			},
 		},
