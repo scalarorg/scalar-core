@@ -8,10 +8,11 @@ import (
 )
 
 var (
-	KeySigningThreshold   = []byte("SigningThreshold")
-	KeySigningTimeout     = []byte("SigningTimeout")
-	KeySigningGracePeriod = []byte("SigningGracePeriod")
-	KeyActiveEpochCount   = []byte("ActiveEpochCount")
+	KeySigningThreshold     = []byte("SigningThreshold")
+	KeySigningTimeout       = []byte("SigningTimeout")
+	KeySigningGracePeriod   = []byte("SigningGracePeriod")
+	KeyActiveEpochCount     = []byte("ActiveEpochCount")
+	KeyBlockLimitPerSession = []byte("BlockLimitPerSession")
 )
 
 // KeyTable retrieves a subspace table for the module
@@ -22,10 +23,11 @@ func KeyTable() params.KeyTable {
 // DefaultParams creates the default genesis parameters
 func DefaultParams() *Params {
 	return &Params{
-		SigningThreshold:   utils.NewThreshold(3, 4),
-		SigningTimeout:     10,
-		SigningGracePeriod: 1,
-		ActiveEpochCount:   5,
+		SigningThreshold:     utils.NewThreshold(3, 4),
+		SigningTimeout:       10,
+		SigningGracePeriod:   1,
+		ActiveEpochCount:     5,
+		BlockLimitPerSession: 360,
 	}
 }
 
@@ -44,6 +46,7 @@ func (m *Params) ParamSetPairs() params.ParamSetPairs {
 		params.NewParamSetPair(KeySigningTimeout, &m.SigningTimeout, validateSigningTimeout),
 		params.NewParamSetPair(KeySigningGracePeriod, &m.SigningGracePeriod, validateSigningGracePeriod),
 		params.NewParamSetPair(KeyActiveEpochCount, &m.ActiveEpochCount, validateActiveEpochCount),
+		params.NewParamSetPair(KeyBlockLimitPerSession, &m.BlockLimitPerSession, validateBlockLimitPerSession),
 	}
 }
 
@@ -61,6 +64,22 @@ func (m Params) Validate() error {
 		return err
 	}
 
+	// validate the block limit per session
+	if err := validateBlockLimitPerSession(m.BlockLimitPerSession); err!= nil {
+		return err
+	}
+
+	return nil
+}
+
+func validateBlockLimitPerSession(i interface{}) error {
+	blockLimitPerSession, ok := i.(uint64)
+	if!ok {
+		return fmt.Errorf("invalid parameter type for block limit per session: %T", i)
+	}
+	if blockLimitPerSession <= 100 {
+		return fmt.Errorf("block limit per session must be >100")
+	}
 	return nil
 }
 

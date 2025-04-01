@@ -95,6 +95,7 @@ type Nexus interface {
 	GetChainMaintainers(ctx sdk.Context, chain nexus.Chain) []sdk.ValAddress
 	IsChainActivated(ctx sdk.Context, chain nexus.Chain) bool
 	GetChainMaintainerState(ctx sdk.Context, chain nexus.Chain, address sdk.ValAddress) (nexus.MaintainerState, bool)
+	GetChainMaintainersByChainName(ctx sdk.Context, chainName nexus.ChainName) []sdk.ValAddress
 	SetChainMaintainerState(ctx sdk.Context, maintainerState nexus.MaintainerState) error
 }
 

@@ -312,6 +312,7 @@ func listenWithTimeout(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg co
 	sourceEventConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.EventConfirmSourceTxsStarted]())
 	redeemEventConf := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.ConfirmRedeemTxStarted]())
 	switchedPhaseEventConf := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.ConfirmSwitchedPhaseStarted]())
+	initializeUtxoEvent := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.IntializeUtxoSnapshotStarted]())
 	// creatingPsbt := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.CreatingPsbtStarted]())
 	covenantSigningPsbt := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.SigningPsbtStarted]())
 
@@ -377,6 +378,7 @@ func listenWithTimeout(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg co
 		createJobTyped(sourceEventConf, xMgr.ProcessSourceTxsConfirmation, cancelEventCtx),
 		createJobTyped(redeemEventConf, xMgr.ProcessRedeemTxConfirmation, cancelEventCtx),
 		createJobTyped(switchedPhaseEventConf, xMgr.ProcessSwitchedPhaseConfirmation, cancelEventCtx),
+		createJobTyped(initializeUtxoEvent, xMgr.ProcessInitializeUtxo, cancelEventCtx),
 		// createJobTyped(creatingPsbt, xMgr.ProcessCreatingPsbtStarted, cancelEventCtx),
 		createJobTyped(covenantSigningPsbt, psbtMgr.ProcessSigningPsbtStarted, cancelEventCtx),
 	}

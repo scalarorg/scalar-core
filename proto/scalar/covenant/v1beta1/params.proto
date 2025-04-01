@@ -15,4 +15,5 @@ message Params {
   int64 signing_timeout = 2;
   int64 signing_grace_period = 3;
   uint64 active_epoch_count = 4;
+  uint64 block_limit_per_session = 5;
 }

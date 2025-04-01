@@ -255,6 +255,8 @@
     - [ConfirmRedeemTxStarted](#scalar.covenant.v1beta1.ConfirmRedeemTxStarted)
     - [ConfirmSwitchedPhaseStarted](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseStarted)
     - [Event](#scalar.covenant.v1beta1.Event)
+    - [IntializeUtxoSnapshotCompleted](#scalar.covenant.v1beta1.IntializeUtxoSnapshotCompleted)
+    - [IntializeUtxoSnapshotStarted](#scalar.covenant.v1beta1.IntializeUtxoSnapshotStarted)
     - [KeyRotated](#scalar.covenant.v1beta1.KeyRotated)
     - [RedeemTxsConfirmed](#scalar.covenant.v1beta1.RedeemTxsConfirmed)
     - [SigningPsbtCompleted](#scalar.covenant.v1beta1.SigningPsbtCompleted)
@@ -4305,6 +4307,43 @@ For Validation process
 | `index` | [uint64](#uint64) |  |  |
 | `redeem_txs_confirmed` | [RedeemTxsConfirmed](#scalar.covenant.v1beta1.RedeemTxsConfirmed) |  |  |
 | `switched_phase_confirmed` | [SwitchedPhaseConfirmed](#scalar.covenant.v1beta1.SwitchedPhaseConfirmed) |  |  |
+| `intialize_utxo_snapshot_completed` | [IntializeUtxoSnapshotCompleted](#scalar.covenant.v1beta1.IntializeUtxoSnapshotCompleted) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.IntializeUtxoSnapshotCompleted"></a>
+
+### IntializeUtxoSnapshotCompleted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `event_ids` | [string](#string) | repeated |  |
+| `utxo_snapshot` | [UTXOSnapshot](#scalar.covenant.v1beta1.UTXOSnapshot) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.IntializeUtxoSnapshotStarted"></a>
+
+### IntializeUtxoSnapshotStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `poll_id` | [uint64](#uint64) |  |  |
+| `chain` | [string](#string) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `participants` | [bytes](#bytes) | repeated |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
+| `address` | [string](#string) |  |  |
 
 
 
@@ -4905,6 +4944,7 @@ Params represent the genesis parameters for the module
 | `signing_timeout` | [int64](#int64) |  |  |
 | `signing_grace_period` | [int64](#int64) |  |  |
 | `active_epoch_count` | [uint64](#uint64) |  |  |
+| `block_limit_per_session` | [uint64](#uint64) |  |  |
 
 
 

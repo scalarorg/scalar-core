@@ -80,6 +80,7 @@ func (k Keeper) UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID []
 
 	redeemSession.CurrentPhase = covExported.Executing
 	redeemSession.IsSwitching = false
+	redeemSession.PhaseExpiredAt = 0 // reset the phase expired at
 	// Update the redeem session in storage
 	k.setRedeemSession(ctx, redeemSession)
 	return nil
@@ -101,6 +102,7 @@ func (k Keeper) UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID []
 
 	redeemSession.CurrentPhase = covExported.Preparing
 	redeemSession.IsSwitching = false
+	redeemSession.PhaseExpiredAt = uint64(ctx.BlockHeight()) + k.GetParams(ctx).BlockLimitPerSession
 	// Update the redeem session in storage
 	k.setRedeemSession(ctx, redeemSession)
 	return nil

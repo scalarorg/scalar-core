@@ -114,6 +114,24 @@ message ConfirmRedeemTxStarted {
   string network_params = 8;
 }
 
+message IntializeUtxoSnapshotStarted {
+  uint64 poll_id = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customname) = "PollID",
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
+  ];
+
+  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  uint64 confirmation_height = 3;
+  repeated bytes participants = 4 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
+  bytes custodian_group_uid = 5 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "CustodianGroupUID"
+  ];
+  string address = 6;
+}
+
 message Event {
   enum Status {
     option (gogoproto.goproto_enum_prefix) = false;
@@ -135,6 +153,7 @@ message Event {
   oneof event {
     RedeemTxsConfirmed redeem_txs_confirmed = 5;
     SwitchedPhaseConfirmed switched_phase_confirmed = 6;
+    IntializeUtxoSnapshotCompleted intialize_utxo_snapshot_completed = 7;
   }
 }
 
@@ -170,4 +189,12 @@ message SwitchedPhaseConfirmed {
     (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/covenant/exported.Phase",
     (gogoproto.nullable) = false
   ];
+}
+
+message IntializeUtxoSnapshotCompleted {
+  repeated string event_ids = 1 [
+    (gogoproto.customname) = "EventIDs",
+    (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/chains/types.EventID"
+  ];
+  UTXOSnapshot utxo_snapshot = 2;
 }

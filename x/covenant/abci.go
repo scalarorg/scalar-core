@@ -10,6 +10,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
+	"github.com/scalarorg/bitcoin-vault/go-utils/btc"
 	goutils "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/clog"
@@ -21,6 +22,8 @@ import (
 	"github.com/scalarorg/scalar-core/x/covenant/exported"
 	"github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
+	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 	abci "github.com/tendermint/tendermint/abci/types"
 )
 
@@ -37,10 +40,13 @@ func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock,
 	multisig types.MultisigKeeper,
 	rewarder types.Rewarder,
 	s types.ScalarnetKeeper,
+	vote types.Voter,
+	snapshotter types.Snapshotter,
+	slashing types.SlashingKeeper,
 ) ([]abci.ValidatorUpdate, error) {
 	clog.Greenf("Covenant EndBlocker, ctx.BlockHeight: %+v", ctx.BlockHeight())
 	handleSignings(ctx, k, rewarder)
-	handleEnqueuedEvents(ctx, k, b, pk, nexus, multisig, s)
+	handleEnqueuedEvents(ctx, k, b, pk, nexus, multisig, s, vote, snapshotter, slashing)
 	handleSwitchPhase(ctx, k, b, pk, multisig)
 	return nil, nil
 }
@@ -207,6 +213,9 @@ func handleEnqueuedEvents(
 	nexus types.Nexus,
 	m types.MultisigKeeper,
 	s types.ScalarnetKeeper,
+	vote types.Voter,
+	snapshotter types.Snapshotter,
+	slashing types.SlashingKeeper,
 ) {
 	queue := k.GetEventsQueue(ctx)
 	endBlockerLimit := 100 // TODO: move to the module.params
@@ -220,7 +229,8 @@ func handleEnqueuedEvents(
 
 	for _, event := range events {
 		success := utils.RunCached(ctx, k, func(ctx sdk.Context) (bool, error) {
-			if err := handleEnqueueEvent(ctx, &event, k, b, pk, nexus, m, s); err != nil {
+			err := handleEnqueueEvent(ctx, &event, k, b, pk, nexus, m, s, vote, snapshotter, slashing)
+			if err != nil {
 				k.Logger(ctx).Debug(fmt.Sprintf("failed handling event: %s", err.Error()),
 					"chain", event.Chain.String(),
 				)
@@ -256,6 +266,9 @@ func handleEnqueueEvent(
 	nexus types.Nexus,
 	m types.MultisigKeeper,
 	s types.ScalarnetKeeper,
+	vote types.Voter,
+	snapshotter types.Snapshotter,
+	slashing types.SlashingKeeper,
 ) error {
 	// if err := validateEvent(ctx, event, bk, n); err != nil {
 	// 	return err
@@ -264,10 +277,26 @@ func handleEnqueueEvent(
 	case *types.Event_RedeemTxsConfirmed:
 		return handleRedeemTxsConfirmed(ctx, event, k, b, m, pk)
 	case *types.Event_SwitchedPhaseConfirmed:
-		return handleSwitchedPhaseConfirmed(ctx, event, k, b, nexus, s)
+		return handleSwitchedPhaseConfirmed(ctx, event, k, b, nexus, s, vote, snapshotter, slashing)
+	case *types.Event_IntializeUtxoSnapshotCompleted:
+		return handleInitializeUtxoSnapshotCompleted(ctx, event, k)
 	default:
 		panic(fmt.Errorf("unsupported event type %T", event))
 	}
+}
+
+func handleInitializeUtxoSnapshotCompleted(ctx sdk.Context, event *types.Event, k types.Keeper) error {
+	confirmedEvent, ok := event.GetEvent().(*types.Event_IntializeUtxoSnapshotCompleted)
+	if !ok {
+		return fmt.Errorf("invalid event type")
+	}
+
+	utxos := confirmedEvent.IntializeUtxoSnapshotCompleted.GetUtxoSnapshot()
+
+	k.SetUtxoSnapshot(ctx, utxos)
+
+	return nil
+
 }
 
 func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, k types.Keeper, b types.BaseKeeper, m types.MultisigKeeper, pk types.ProtocolKeeper) error {
@@ -340,6 +369,9 @@ func handleSwitchedPhaseConfirmed(
 	b types.BaseKeeper,
 	n types.Nexus,
 	s types.ScalarnetKeeper,
+	v types.Voter,
+	snapshotter types.Snapshotter,
+	slashing types.SlashingKeeper,
 ) error {
 	confirmedEvent, ok := event.GetEvent().(*types.Event_SwitchedPhaseConfirmed)
 	if !ok {
@@ -388,7 +420,17 @@ func handleSwitchedPhaseConfirmed(
 	if len(slowerChains) == 0 {
 		ctx.Logger().Debug("[handleSwitchedPhaseConfirmed] all evm chains have the same session and phase, we can switch the phase")
 		if switchPhaseEvent.ToPhase == exported.Preparing {
-			return k.UpdateExecutingToPreparing(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
+			err := k.UpdateExecutingToPreparing(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
+			if err != nil {
+				return err
+			}
+
+			err = startInitializeUtxoEvent(ctx, k, b, n, v, snapshotter, slashing, switchPhaseEvent.CustodianGroupUID.Bytes())
+			if err != nil {
+				return err
+			}
+
+			// TODO:
 		} else if switchPhaseEvent.ToPhase == exported.Executing {
 			err := k.UpdatePreparingToExecuting(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
 			if err != nil {
@@ -406,6 +448,111 @@ func handleSwitchedPhaseConfirmed(
 	}
 
 	return fmt.Errorf("invalid phase")
+}
+
+func startInitializeUtxoEvent(
+	ctx sdk.Context,
+	k types.Keeper,
+	b types.BaseKeeper,
+	n types.Nexus,
+	v types.Voter,
+	snappshotter types.Snapshotter,
+	slashing types.SlashingKeeper,
+	custodianGroupUID []byte,
+) error {
+	mockChain := nexus.ChainName("bitcoin|4")
+	cusGr, ok := k.GetCustodianGroup(ctx, chains.Hash(custodianGroupUID))
+	if !ok {
+		return fmt.Errorf("custodian group %s not found", custodianGroupUID)
+	}
+
+	chainKeeper, err := b.ForChain(ctx, mockChain)
+	if err != nil {
+		return err
+	}
+
+	chainParams := chainKeeper.GetParams(ctx)
+	nwParams := chainParams.Metadata["params"]
+	if nwParams == "" {
+		return fmt.Errorf("[ConfirmRedeemTxs] params is required")
+	}
+
+	taprootAddress, err := btc.ScriptPubKeyToAddress(cusGr.UID[:], nwParams)
+	if err != nil {
+		return err
+	}
+
+	threshold := chainParams.VotingThreshold
+
+	snapshot, err := createSnapshot(ctx, n, snappshotter, slashing, mockChain, threshold)
+	if err != nil {
+		return err
+	}
+
+	expiresAt := ctx.BlockHeight() + chainParams.RevoteLockingPeriod
+
+	pollID, err := v.InitializePoll(
+		ctx,
+		vote.NewPollBuilder(types.ModuleName, chainParams.VotingThreshold, snapshot, expiresAt).
+			MinVoterCount(chainParams.MinVoterCount).
+			RewardPoolName(mockChain.String()).
+			GracePeriod(chainParams.VotingGracePeriod).
+			ModuleMetadata(&types.BasicPollMetadata{
+				Chain: mockChain,
+			}),
+	)
+	if err != nil {
+		return err
+	}
+
+	event := &types.IntializeUtxoSnapshotStarted{
+		PollID:             pollID,
+		Chain:              mockChain,
+		ConfirmationHeight: chainKeeper.GetRequiredConfirmationHeight(ctx),
+		Participants:       snapshot.GetParticipantAddresses(),
+		CustodianGroupUID:  chains.Hash(custodianGroupUID),
+		Address:            taprootAddress.String(),
+	}
+
+	events.Emit(ctx, event)
+
+	return nil
+}
+
+func createSnapshot(ctx sdk.Context, n types.Nexus, snapshotter types.Snapshotter, slashing types.SlashingKeeper, chain nexus.ChainName, threshold utils.Threshold) (snapshot.Snapshot, error) {
+	candidates := n.GetChainMaintainersByChainName(ctx, chain)
+
+	return snapshotter.CreateSnapshot(
+		ctx,
+		candidates,
+		excludeJailedOrTombstoned(ctx, slashing, snapshotter),
+		snapshot.QuadraticWeightFunc,
+		threshold,
+	)
+}
+
+func excludeJailedOrTombstoned(ctx sdk.Context, slashing types.SlashingKeeper, snapshotter types.Snapshotter) func(v snapshot.ValidatorI) bool {
+	isTombstoned := func(v snapshot.ValidatorI) bool {
+		consAdd, err := v.GetConsAddr()
+		if err != nil {
+			return true
+		}
+
+		return slashing.IsTombstoned(ctx, consAdd)
+	}
+
+	isProxyActive := func(v snapshot.ValidatorI) bool {
+		_, isActive := snapshotter.GetProxy(ctx, v.GetOperator())
+
+		return isActive
+	}
+
+	return funcs.And(
+		snapshot.ValidatorI.IsBonded,
+		funcs.Not(snapshot.ValidatorI.IsJailed),
+		funcs.Not(isTombstoned),
+		isProxyActive,
+	)
 }
 
 func handleSignCommands(

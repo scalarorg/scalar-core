@@ -13630,6 +13630,9 @@ paths:
                   active_epoch_count:
                     type: string
                     format: uint64
+                  block_limit_per_session:
+                    type: string
+                    format: uint64
                 title: Params represent the genesis parameters for the module
         default:
           description: An unexpected error response
@@ -61115,6 +61118,9 @@ definitions:
       active_epoch_count:
         type: string
         format: uint64
+      block_limit_per_session:
+        type: string
+        format: uint64
     title: Params represent the genesis parameters for the module
   scalar.covenant.v1beta1.ParamsResponse:
     type: object
@@ -61143,6 +61149,9 @@ definitions:
             type: string
             format: int64
           active_epoch_count:
+            type: string
+            format: uint64
+          block_limit_per_session:
             type: string
             format: uint64
         title: Params represent the genesis parameters for the module

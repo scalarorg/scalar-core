@@ -195,7 +195,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, req abci.RequestBeginBlock) {
 // EndBlock executes all state transitions this module requires at the end of each new block
 func (am AppModule) EndBlock(ctx sdk.Context, req abci.RequestEndBlock) []abci.ValidatorUpdate {
 	return utils.RunCached(ctx, am.keeper, func(ctx sdk.Context) ([]abci.ValidatorUpdate, error) {
-		return EndBlocker(ctx, req, am.keeper, am.chains, am.protocol, am.nexus, am.multisig, am.rewarder, am.scalarnet)
+		return EndBlocker(ctx, req, am.keeper, am.chains, am.protocol, am.nexus, am.multisig, am.rewarder, am.scalarnet, am.voter, am.snapshotter, am.slashing)
 	})
 }
 
