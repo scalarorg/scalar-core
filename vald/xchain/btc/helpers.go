@@ -17,7 +17,7 @@ func (c *BtcClient) logger(keyvals ...any) log.Logger {
 func (client *BtcClient) isFinalized(txReceipt *btcjson.TxRawResult, confHeight uint64) (bool, error) {
 	block, _ := client.blockCache.GetBlock(txReceipt.BlockHash)
 	if block == nil {
-		return false, fmt.Errorf("block not found")
+		return false, fmt.Errorf("block %s not found", txReceipt.BlockHash)
 	}
 
 	blockHeight := block.Height
