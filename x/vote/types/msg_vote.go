@@ -55,7 +55,7 @@ func (m VoteRequest) ValidateBasic() error {
 
 	v, ok := vote.(utils.ValidatedProtoMarshaler)
 	if !ok {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "vote request contains invalid vote")
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "vote is not implement ValidatedProtoMarshaler %T", vote)
 	}
 
 	if err := v.ValidateBasic(); err != nil {

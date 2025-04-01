@@ -1,6 +1,8 @@
 package types
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
@@ -68,7 +70,23 @@ func NewKeyRotated(chain nexus.ChainName, keyID multisigExported.KeyID) *KeyRota
 	}
 }
 
+// NewRedeemTxsConfirmed is the constructor for event redeem txs confirmed
+func (e *RedeemTxsConfirmed) ValidateBasic() error {
+	// TODO: validate
+	return nil
+}
 func (e *SwitchedPhaseConfirmed) ValidateBasic() error {
+	// TODO: validate
+	if e.FromPhase == e.ToPhase {
+		return fmt.Errorf("from phase and to phase are the same")
+	}
+	if e.CustodianGroupUID.IsZero() {
+		return fmt.Errorf("custodian group uid is zero")
+	}
+	return nil
+}
+
+func (e *IntializeUtxoSnapshotCompleted) ValidateBasic() error {
 	// TODO: validate
 	return nil
 }

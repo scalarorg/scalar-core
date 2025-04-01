@@ -340,6 +340,8 @@
     - [CreateCustodianRequest](#scalar.covenant.v1beta1.CreateCustodianRequest)
     - [CreateCustodianResponse](#scalar.covenant.v1beta1.CreateCustodianResponse)
     - [CustodianToGroupResponse](#scalar.covenant.v1beta1.CustodianToGroupResponse)
+    - [InitializeUtxoRequest](#scalar.covenant.v1beta1.InitializeUtxoRequest)
+    - [InitializeUtxoResponse](#scalar.covenant.v1beta1.InitializeUtxoResponse)
     - [RemoveCustodianFromGroupRequest](#scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest)
     - [ReserveRedeemUtxoRequest](#scalar.covenant.v1beta1.ReserveRedeemUtxoRequest)
     - [ReserveRedeemUtxoResponse](#scalar.covenant.v1beta1.ReserveRedeemUtxoResponse)
@@ -4344,6 +4346,7 @@ For Validation process
 | `participants` | [bytes](#bytes) | repeated |  |
 | `custodian_group_uid` | [bytes](#bytes) |  |  |
 | `address` | [string](#string) |  |  |
+| `block_checkpoint` | [uint64](#uint64) |  |  |
 
 
 
@@ -5560,6 +5563,34 @@ Confirm exectuted transaction on bitcoin
 
 
 
+<a name="scalar.covenant.v1beta1.InitializeUtxoRequest"></a>
+
+### InitializeUtxoRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
+| `block_checkpoint` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.InitializeUtxoResponse"></a>
+
+### InitializeUtxoResponse
+
+
+
+
+
+
+
 <a name="scalar.covenant.v1beta1.RemoveCustodianFromGroupRequest"></a>
 
 ### RemoveCustodianFromGroupRequest
@@ -5772,6 +5803,7 @@ Pubkey used as key for lookup custodian to update other values
 | `ConfirmRedeemTxs` | [ConfirmRedeemTxsRequest](#scalar.covenant.v1beta1.ConfirmRedeemTxsRequest) | [ConfirmRedeemTxsResponse](#scalar.covenant.v1beta1.ConfirmRedeemTxsResponse) |  | POST|/scalar/covenant/v1beta1/confirm_redeem_txs|
 | `ReserveRedeemUtxo` | [ReserveRedeemUtxoRequest](#scalar.covenant.v1beta1.ReserveRedeemUtxoRequest) | [ReserveRedeemUtxoResponse](#scalar.covenant.v1beta1.ReserveRedeemUtxoResponse) |  | POST|/scalar/chains/v1beta1/reserve_redeem_utxo|
 | `ConfirmSwitchedPhase` | [ConfirmSwitchedPhaseRequest](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseRequest) | [ConfirmSwitchedPhaseResponse](#scalar.covenant.v1beta1.ConfirmSwitchedPhaseResponse) |  | POST|/scalar/covenant/v1beta1/confirm_switched_phase|
+| `InitializeUtxo` | [InitializeUtxoRequest](#scalar.covenant.v1beta1.InitializeUtxoRequest) | [InitializeUtxoResponse](#scalar.covenant.v1beta1.InitializeUtxoResponse) |  | POST|/scalar/covenant/v1beta1/initialize_utxo|
 
 
 <a name="scalar.covenant.v1beta1.QueryService"></a>

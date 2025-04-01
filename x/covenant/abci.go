@@ -10,7 +10,6 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
-	"github.com/scalarorg/bitcoin-vault/go-utils/btc"
 	goutils "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/clog"
@@ -23,7 +22,6 @@ import (
 	"github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
-	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 	abci "github.com/tendermint/tendermint/abci/types"
 )
 
@@ -425,10 +423,10 @@ func handleSwitchedPhaseConfirmed(
 				return err
 			}
 
-			err = startInitializeUtxoEvent(ctx, k, b, n, v, snapshotter, slashing, switchPhaseEvent.CustodianGroupUID.Bytes())
-			if err != nil {
-				return err
-			}
+			// err = startInitializeUtxoEvent(ctx, k, b, n, v, snapshotter, slashing, switchPhaseEvent.CustodianGroupUID.Bytes())
+			// if err != nil {
+			// 	return err
+			// }
 
 			// TODO:
 		} else if switchPhaseEvent.ToPhase == exported.Executing {
@@ -450,74 +448,74 @@ func handleSwitchedPhaseConfirmed(
 	return fmt.Errorf("invalid phase")
 }
 
-func startInitializeUtxoEvent(
-	ctx sdk.Context,
-	k types.Keeper,
-	b types.BaseKeeper,
-	n types.Nexus,
-	v types.Voter,
-	snappshotter types.Snapshotter,
-	slashing types.SlashingKeeper,
-	custodianGroupUID []byte,
-) error {
-	mockChain := nexus.ChainName("bitcoin|4")
-	cusGr, ok := k.GetCustodianGroup(ctx, chains.Hash(custodianGroupUID))
-	if !ok {
-		return fmt.Errorf("custodian group %s not found", custodianGroupUID)
-	}
+// func startInitializeUtxoEvent(
+// 	ctx sdk.Context,
+// 	k types.Keeper,
+// 	b types.BaseKeeper,
+// 	n types.Nexus,
+// 	v types.Voter,
+// 	snappshotter types.Snapshotter,
+// 	slashing types.SlashingKeeper,
+// 	custodianGroupUID []byte,
+// ) error {
+// 	mockChain := nexus.ChainName("bitcoin|4")
+// 	cusGr, ok := k.GetCustodianGroup(ctx, chains.Hash(custodianGroupUID))
+// 	if !ok {
+// 		return fmt.Errorf("custodian group %s not found", custodianGroupUID)
+// 	}
 
-	chainKeeper, err := b.ForChain(ctx, mockChain)
-	if err != nil {
-		return err
-	}
+// 	chainKeeper, err := b.ForChain(ctx, mockChain)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	chainParams := chainKeeper.GetParams(ctx)
-	nwParams := chainParams.Metadata["params"]
-	if nwParams == "" {
-		return fmt.Errorf("[ConfirmRedeemTxs] params is required")
-	}
+// 	chainParams := chainKeeper.GetParams(ctx)
+// 	nwParams := chainParams.Metadata["params"]
+// 	if nwParams == "" {
+// 		return fmt.Errorf("[ConfirmRedeemTxs] params is required")
+// 	}
 
-	taprootAddress, err := btc.ScriptPubKeyToAddress(cusGr.UID[:], nwParams)
-	if err != nil {
-		return err
-	}
+// 	taprootAddress, err := btc.ScriptPubKeyToAddress(cusGr.UID[:], nwParams)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	threshold := chainParams.VotingThreshold
+// 	threshold := chainParams.VotingThreshold
 
-	snapshot, err := createSnapshot(ctx, n, snappshotter, slashing, mockChain, threshold)
-	if err != nil {
-		return err
-	}
+// 	snapshot, err := createSnapshot(ctx, n, snappshotter, slashing, mockChain, threshold)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	expiresAt := ctx.BlockHeight() + chainParams.RevoteLockingPeriod
+// 	expiresAt := ctx.BlockHeight() + chainParams.RevoteLockingPeriod
 
-	pollID, err := v.InitializePoll(
-		ctx,
-		vote.NewPollBuilder(types.ModuleName, chainParams.VotingThreshold, snapshot, expiresAt).
-			MinVoterCount(chainParams.MinVoterCount).
-			RewardPoolName(mockChain.String()).
-			GracePeriod(chainParams.VotingGracePeriod).
-			ModuleMetadata(&types.BasicPollMetadata{
-				Chain: mockChain,
-			}),
-	)
-	if err != nil {
-		return err
-	}
+// 	pollID, err := v.InitializePoll(
+// 		ctx,
+// 		vote.NewPollBuilder(types.ModuleName, chainParams.VotingThreshold, snapshot, expiresAt).
+// 			MinVoterCount(chainParams.MinVoterCount).
+// 			RewardPoolName(mockChain.String()).
+// 			GracePeriod(chainParams.VotingGracePeriod).
+// 			ModuleMetadata(&types.BasicPollMetadata{
+// 				Chain: mockChain,
+// 			}),
+// 	)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	event := &types.IntializeUtxoSnapshotStarted{
-		PollID:             pollID,
-		Chain:              mockChain,
-		ConfirmationHeight: chainKeeper.GetRequiredConfirmationHeight(ctx),
-		Participants:       snapshot.GetParticipantAddresses(),
-		CustodianGroupUID:  chains.Hash(custodianGroupUID),
-		Address:            taprootAddress.String(),
-	}
+// 	event := &types.IntializeUtxoSnapshotStarted{
+// 		PollID:             pollID,
+// 		Chain:              mockChain,
+// 		ConfirmationHeight: chainKeeper.GetRequiredConfirmationHeight(ctx),
+// 		Participants:       snapshot.GetParticipantAddresses(),
+// 		CustodianGroupUID:  chains.Hash(custodianGroupUID),
+// 		Address:            taprootAddress.String(),
+// 	}
 
-	events.Emit(ctx, event)
+// 	events.Emit(ctx, event)
 
-	return nil
-}
+// 	return nil
+// }
 
 func createSnapshot(ctx sdk.Context, n types.Nexus, snapshotter types.Snapshotter, slashing types.SlashingKeeper, chain nexus.ChainName, threshold utils.Threshold) (snapshot.Snapshot, error) {
 	candidates := n.GetChainMaintainersByChainName(ctx, chain)

@@ -130,6 +130,7 @@ message IntializeUtxoSnapshotStarted {
     (gogoproto.customname) = "CustodianGroupUID"
   ];
   string address = 6;
+  uint64 block_checkpoint = 7;
 }
 
 message Event {

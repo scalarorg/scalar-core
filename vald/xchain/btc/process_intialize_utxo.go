@@ -1,6 +1,8 @@
 package btc
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	covTypes "github.com/scalarorg/scalar-core/x/covenant/types"
@@ -8,11 +10,29 @@ import (
 )
 
 func (client *BtcClient) ProcessInitializeUtxo(event *covTypes.IntializeUtxoSnapshotStarted, proxy sdk.AccAddress) ([]sdk.Msg, error) {
+
+	info := client.blockCache.GetChainInfo()
+	if info == nil {
+		return nil, nil
+	}
+
+	diff := uint64(info.Blocks) - event.BlockCheckpoint
+	if diff != event.ConfirmationHeight || diff != event.ConfirmationHeight+1 {
+		return nil, fmt.Errorf("invalid block checkpoint")
+	}
+
 	// TODO: Ensure the utxos are confirmed with the correct number of confirmations
 	utxos, err := client.getUtxoList(event.Address)
 	if err != nil {
 		return nil, err
 	}
+
+	// if len(utxos) == 0 {
+	// 	return nil,
+	// }
+
+	// _ = event.BlockCheckpoint
+	// TODO: filter
 
 	voteEvent := covTypes.NewVoteEvents(event.Chain, covTypes.Event{
 		Chain: event.Chain,
