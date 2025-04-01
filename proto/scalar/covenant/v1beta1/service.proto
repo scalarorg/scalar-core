@@ -89,6 +89,13 @@ service MsgService {
       body: "*"
     };
   }
+
+  // rpc InitializeUtxo(InitializeUtxoRequest) returns (InitializeUtxoResponse) {
+  //   option (google.api.http) = {
+  //     post: "/scalar/covenant/v1beta1/initialize_utxo"
+  //     body: "*"
+  //   };
+  // }
 }
 service QueryService {
   // Get custodians

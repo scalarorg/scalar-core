@@ -7,7 +7,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 	gogoprototypes "github.com/gogo/protobuf/types"
-	"github.com/scalarorg/scalar-core/x/chains/types"
 	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 )
@@ -38,7 +37,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&BasicPollMetadata{},
 		&PsbtMultiSig{},
 		&exported.TapScriptSigsList{},
-		&types.VoteEvents{},
+		&VoteEvents{},
 	)
 
 	registry.RegisterImplementations((*reward.Refundable)(nil),
