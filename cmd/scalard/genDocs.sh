@@ -8,4 +8,4 @@ fi
 # generate docs
 go run ./ -docs "$1"
 # ensure docs are canonically formatted
-mdformat "$1"/*
+# mdformat "$1"/*

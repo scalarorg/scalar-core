@@ -211,6 +211,8 @@ generate: prereqs docs generate-mocks
 generate-mocks:
 	go generate -x ./...
 
+MDFORMAT_IMAGE := scalar/mdformat
+
 .PHONY: docs
 docs:
 	@echo "Removing old clidocs"
@@ -220,20 +222,16 @@ docs:
 	fi
 
 	@echo "Generating new cli docs"
-	@go run  $(BUILD_FLAGS) cmd/scalard/main.go --docs docs/cli
-	@# ensure docs are canonically formatted
-	@mdformat docs/cli/*
-
+	go run  $(BUILD_FLAGS) cmd/scalard/main.go --docs docs/cli
+	@$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(MDFORMAT_IMAGE) sh ./scripts/format.sh
 
 # Install all generate prerequisites
 .Phony: prereqs
 prereqs:
-	@which mdformat &>/dev/null || ( \
-		echo "Installing mdformat in a virtual environment..." && \
-		python3 -m venv .venv && \
-		. .venv/bin/activate && \
-		pip3 install mdformat && \
-		sudo ln -sf $(PWD)/.venv/bin/mdformat /usr/local/bin/mdformat )
+	@if ! docker images $(MDFORMAT_IMAGE) | grep -q $(MDFORMAT_IMAGE); then \
+		echo "Building mdformat image"; \
+		DOCKER_BUILDKIT=1 docker build -t $(MDFORMAT_IMAGE) -f ./Dockerfile.mdformat .; \
+	fi
 	@which protoc &>/dev/null || echo "Please install protoc for grpc (https://grpc.io/docs/languages/go/quickstart/)"
 	go install github.com/bufbuild/buf/cmd/buf@latest
 	go install golang.org/x/tools/cmd/goimports@latest
@@ -274,7 +272,6 @@ cfd2:
 .PHONY: cfd2b
 cfd2b:
 	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" 71b4e2cae2e93b45586469febcc56cabc554b964e96ff788b2887d9070c8b7a7 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 507368
-
 	
 cfd3:
 	$(SCALAR_BIN_PATH) tx chains confirm-source-txs "evm|11155111" 691b0cc5eb8abcec4b56e3aea8044ddda8a4152ab00e87dfaecf3123bd7290a0 --from broadcaster --keyring-backend $(SCALAR_KEYRING_BACKEND) --home .scalar/scalar/node1/scalard --chain-id $(SCALAR_CHAIN_ID) --gas 600000
