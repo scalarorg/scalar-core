@@ -15,7 +15,7 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 )
 
-//go:generate moq -out ./mock/expected_keepers.go -pkg mock . Voter Nexus Snapshotter BaseKeeper ChainKeeper Rewarder StakingKeeper SlashingKeeper MultisigKeeper
+//go:generate moq -out ./mock/expected_keepers.go -pkg mock . Voter Snapshotter BaseKeeper ChainKeeper Rewarder StakingKeeper SlashingKeeper 
 
 // BaseKeeper is implemented by this module's base keeper
 type BaseKeeper interface {

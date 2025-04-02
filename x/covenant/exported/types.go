@@ -13,7 +13,7 @@ import (
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 )
 
-//go:generate moq -out ./mock/types.go -pkg mock . CovenantHandler Key MultiSig
+//go:generate moq -out ./mock/types.go -pkg mock . CovenantHandler PsbtMultiSig 
 
 // PsbtMultiSig provides an interface to work with the multi sig
 type PsbtMultiSig interface {
