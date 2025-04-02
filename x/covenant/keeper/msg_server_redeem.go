@@ -319,12 +319,11 @@ func (s msgServer) InitializeUtxo(c context.Context, req *types.InitializeUtxoRe
 	}
 	cusGrs, _ := s.Keeper.GetAllCustodianGroups(ctx)
 	for _, cusGr := range cusGrs {
-		s.Logger(ctx).Info(fmt.Sprintf("[InitializeUtxos] custodian group %s", cusGr.UID))
-		taprootAddress, err := btc.ScriptPubKeyToAddress(cusGr.UID[:], nwParams)
+		taprootAddress, err := btc.ScriptPubKeyToAddress(cusGr.BitcoinPubkey, nwParams)
 		if err != nil {
 			return nil, err
 		}
-
+		s.Logger(ctx).Info(fmt.Sprintf("[InitializeUtxos] custodian group %s with taproot address %s", cusGr.UID.Hex(), taprootAddress.String()))
 		threshold := chainParams.VotingThreshold
 
 		snapshot, err := s.createSnapshot(ctx, *chain, threshold)
