@@ -4,47 +4,27 @@ package keeper_test
 // 	"errors"
 // 	"fmt"
 // 	"math/big"
-// 	mathRand "math/rand"
 // 	"strings"
 // 	"testing"
 // 	"time"
 
+// 	"cosmossdk.io/api/tendermint/abci"
+// 	"github.com/cometbft/cometbft/libs/log"
 // 	"github.com/cosmos/cosmos-sdk/codec"
-// 	sdk "github.com/cosmos/cosmos-sdk/types"
-// 	"github.com/cosmos/cosmos-sdk/types/query"
-// 	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 // 	"github.com/ethereum/go-ethereum/common"
-// 	evmTypes "github.com/ethereum/go-ethereum/core/types"
 // 	"github.com/ethereum/go-ethereum/crypto"
-// 	evmCrypto "github.com/ethereum/go-ethereum/crypto"
-// 	evmParams "github.com/ethereum/go-ethereum/params"
-// 	"github.com/gogo/protobuf/proto"
-// 	"github.com/scalarorg/scalar-core/utils/funcs"
-// 	"github.com/stretchr/testify/assert"
-// 	abci "github.com/tendermint/tendermint/abci/types"
-// 	"github.com/tendermint/tendermint/libs/log"
-// 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-
 // 	"github.com/scalarorg/scalar-core/app"
 // 	"github.com/scalarorg/scalar-core/testutils"
 // 	"github.com/scalarorg/scalar-core/testutils/fake"
 // 	"github.com/scalarorg/scalar-core/testutils/rand"
-// 	rand2 "github.com/scalarorg/scalar-core/testutils/rand"
 // 	"github.com/scalarorg/scalar-core/utils"
-// 	utilsMock "github.com/scalarorg/scalar-core/utils/mock"
+// 	"github.com/scalarorg/scalar-core/utils/funcs"
 // 	"github.com/scalarorg/scalar-core/utils/slices"
-// 	. "github.com/scalarorg/scalar-core/utils/test"
-// 	"github.com/scalarorg/scalar-core/x/evm/exported"
-// 	"github.com/scalarorg/scalar-core/x/evm/keeper"
-// 	"github.com/scalarorg/scalar-core/x/evm/types"
-// 	"github.com/scalarorg/scalar-core/x/evm/types/mock"
-// 	evmTestUtils "github.com/scalarorg/scalar-core/x/evm/types/testutils"
-// 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
-// 	multisigTestUtils "github.com/scalarorg/scalar-core/x/multisig/exported/testutils"
-// 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
-// 	scalarnet "github.com/scalarorg/scalar-core/x/scalarnet/exported"
-// 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
-// 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
+// 	"github.com/scalarorg/scalar-core/x/chains/exported"
+// 	"github.com/scalarorg/scalar-core/x/chains/types/mock"
+// 	"github.com/scalarorg/scalar-core/x/covenant/keeper"
+// 	"github.com/stretchr/testify/assert"
+// 	"google.golang.org/protobuf/proto"
 // )
 
 // var (
@@ -58,6 +38,9 @@ package keeper_test
 
 // func setup() (sdk.Context, types.MsgServiceServer, *mock.BaseKeeperMock, *mock.NexusMock, *mock.VoterMock, *mock.SnapshotterMock, *mock.MultisigKeeperMock) {
 // 	ctx := sdk.NewContext(fake.NewMultiStore(), tmproto.Header{Height: rand.PosI64()}, false, log.TestingLogger())
+
+
+// 	// Keeper Snapshotter Rewarder Nexus
 
 // 	evmBaseKeeper := &mock.BaseKeeperMock{}
 // 	nexusKeeper := &mock.NexusMock{}
