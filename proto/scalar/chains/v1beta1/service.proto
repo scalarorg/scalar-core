@@ -185,4 +185,8 @@ service QueryService {
   rpc Params(ParamsRequest) returns (ParamsResponse) {
     option (google.api.http).get = "/scalar/chains/v1beta1/params/{chain}";
   }
+
+  rpc RedeemSession(RedeemSessionRequest) returns (RedeemSessionResponse) {
+    option (google.api.http).get = "/scalar/chains/v1beta1/redeem_session/{chain}";
+  }
 }

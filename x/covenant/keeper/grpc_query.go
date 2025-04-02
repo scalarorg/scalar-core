@@ -66,3 +66,13 @@ func (q Querier) RedeemSession(ctx context.Context, req *types.RedeemSessionRequ
 		Session: session,
 	}, nil
 }
+
+func (q Querier) UTXOSnapshot(ctx context.Context, req *types.UTXOSnapshotRequest) (*types.UTXOSnapshotResponse, error) {
+	snapshot, ok := q.keeper.GetUtxoSnapshot(sdk.UnwrapSDKContext(ctx), req.UID.Bytes())
+	if !ok {
+		return nil, status.Errorf(codes.NotFound, "redeem session not found")
+	}
+	return &types.UTXOSnapshotResponse{
+		UtxoSnapshot: snapshot,
+	}, nil
+}

@@ -84,6 +84,7 @@ type ChainKeeper interface {
 
 	CreateNewBtcPoolingBatchToSign(ctx sdk.Context, chain nexus.ChainName, pk []byte) (CommandBatch, error)
 	GetRedeemSession(ctx sdk.Context, custodianGroupUID []byte) (RedeemSession, bool)
+	GetRedeemSessions(ctx sdk.Context) ([]RedeemSession)
 	SetRedeemSession(ctx sdk.Context, session *RedeemSession) error
 }
 

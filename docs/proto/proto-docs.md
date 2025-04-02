@@ -135,6 +135,20 @@
     - [GenesisState](#scalar.chains.v1beta1.GenesisState)
     - [GenesisState.Chain](#scalar.chains.v1beta1.GenesisState.Chain)
   
+- [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
+    - [ListOfTapScriptSigsMap](#scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap)
+    - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
+    - [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry)
+    - [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList)
+    - [TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap)
+  
+    - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
+    - [Phase](#scalar.covenant.exported.v1beta1.Phase)
+    - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
+  
+- [scalar/chains/v1beta1/redeem.proto](#scalar/chains/v1beta1/redeem.proto)
+    - [RedeemSession](#scalar.chains.v1beta1.RedeemSession)
+  
 - [scalar/chains/v1beta1/query.proto](#scalar/chains/v1beta1/query.proto)
     - [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest)
     - [BatchedCommandsResponse](#scalar.chains.v1beta1.BatchedCommandsResponse)
@@ -170,25 +184,13 @@
     - [QueryCommandResponse.ParamsEntry](#scalar.chains.v1beta1.QueryCommandResponse.ParamsEntry)
     - [QueryDepositStateParams](#scalar.chains.v1beta1.QueryDepositStateParams)
     - [QueryTokenAddressResponse](#scalar.chains.v1beta1.QueryTokenAddressResponse)
+    - [RedeemSessionRequest](#scalar.chains.v1beta1.RedeemSessionRequest)
+    - [RedeemSessionResponse](#scalar.chains.v1beta1.RedeemSessionResponse)
     - [TokenInfoRequest](#scalar.chains.v1beta1.TokenInfoRequest)
     - [TokenInfoResponse](#scalar.chains.v1beta1.TokenInfoResponse)
   
     - [ChainStatus](#scalar.chains.v1beta1.ChainStatus)
     - [TokenType](#scalar.chains.v1beta1.TokenType)
-  
-- [scalar/covenant/exported/v1beta1/types.proto](#scalar/covenant/exported/v1beta1/types.proto)
-    - [ListOfTapScriptSigsMap](#scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap)
-    - [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig)
-    - [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry)
-    - [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList)
-    - [TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap)
-  
-    - [KeyState](#scalar.covenant.exported.v1beta1.KeyState)
-    - [Phase](#scalar.covenant.exported.v1beta1.Phase)
-    - [PsbtState](#scalar.covenant.exported.v1beta1.PsbtState)
-  
-- [scalar/chains/v1beta1/redeem.proto](#scalar/chains/v1beta1/redeem.proto)
-    - [RedeemSession](#scalar.chains.v1beta1.RedeemSession)
   
 - [scalar/chains/v1beta1/tx.proto](#scalar/chains/v1beta1/tx.proto)
     - [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest)
@@ -328,6 +330,8 @@
     - [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse)
     - [RedeemSessionRequest](#scalar.covenant.v1beta1.RedeemSessionRequest)
     - [RedeemSessionResponse](#scalar.covenant.v1beta1.RedeemSessionResponse)
+    - [UTXOSnapshotRequest](#scalar.covenant.v1beta1.UTXOSnapshotRequest)
+    - [UTXOSnapshotResponse](#scalar.covenant.v1beta1.UTXOSnapshotResponse)
   
 - [scalar/covenant/v1beta1/tx.proto](#scalar/covenant/v1beta1/tx.proto)
     - [AddCustodianToGroupRequest](#scalar.covenant.v1beta1.AddCustodianToGroupRequest)
@@ -2612,6 +2616,175 @@ ERC20Deposit contains information for an ERC20 deposit
 
 
 
+<a name="scalar/covenant/exported/v1beta1/types.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/covenant/exported/v1beta1/types.proto
+
+
+
+<a name="scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap"></a>
+
+### ListOfTapScriptSigsMap
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `inner` | [TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSig"></a>
+
+### TapScriptSig
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key_x_only` | [bytes](#bytes) |  |  |
+| `leaf_hash` | [bytes](#bytes) |  |  |
+| `signature` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSigsEntry"></a>
+
+### TapScriptSigsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `index` | [uint64](#uint64) |  |  |
+| `sigs` | [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSigsList"></a>
+
+### TapScriptSigsList
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `list` | [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig) | repeated |  |
+
+
+
+
+
+
+<a name="scalar.covenant.exported.v1beta1.TapScriptSigsMap"></a>
+
+### TapScriptSigsMap
+The reason we use a list instead of a map is because the map is not ensured
+the deterministic order of the entries
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `inner` | [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="scalar.covenant.exported.v1beta1.KeyState"></a>
+
+### KeyState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| KEY_STATE_UNSPECIFIED | 0 |  |
+| KEY_STATE_ASSIGNED | 1 |  |
+| KEY_STATE_ACTIVE | 2 |  |
+
+
+
+<a name="scalar.covenant.exported.v1beta1.Phase"></a>
+
+### Phase
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| PHASE_PREPARING | 0 |  |
+| PHASE_EXECUTING | 1 |  |
+| PHASE_UNSPECIFIED | 2 |  |
+
+
+
+<a name="scalar.covenant.exported.v1beta1.PsbtState"></a>
+
+### PsbtState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| PSBT_STATE_UNSPECIFIED | 0 |  |
+| PSBT_STATE_PENDING | 1 |  |
+| PSBT_STATE_CREATING | 2 |  |
+| PSBT_STATE_SIGNING | 3 |  |
+| PSBT_STATE_COMPLETED | 4 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="scalar/chains/v1beta1/redeem.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/chains/v1beta1/redeem.proto
+
+
+
+<a name="scalar.chains.v1beta1.RedeemSession"></a>
+
+### RedeemSession
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `custodian_group_uid` | [bytes](#bytes) |  |  |
+| `sequence` | [uint64](#uint64) |  |  |
+| `current_phase` | [scalar.covenant.exported.v1beta1.Phase](#scalar.covenant.exported.v1beta1.Phase) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/chains/v1beta1/query.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -3163,6 +3336,36 @@ ParamsRequest represents a message that queries the params
 
 
 
+<a name="scalar.chains.v1beta1.RedeemSessionRequest"></a>
+
+### RedeemSessionRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.RedeemSessionResponse"></a>
+
+### RedeemSessionResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `redeem_session` | [RedeemSession](#scalar.chains.v1beta1.RedeemSession) | repeated |  |
+
+
+
+
+
+
 <a name="scalar.chains.v1beta1.TokenInfoRequest"></a>
 
 ### TokenInfoRequest
@@ -3227,175 +3430,6 @@ ParamsRequest represents a message that queries the params
 | TOKEN_TYPE_INTERNAL | 1 |  |
 | TOKEN_TYPE_EXTERNAL | 2 |  |
 
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/covenant/exported/v1beta1/types.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/covenant/exported/v1beta1/types.proto
-
-
-
-<a name="scalar.covenant.exported.v1beta1.ListOfTapScriptSigsMap"></a>
-
-### ListOfTapScriptSigsMap
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `inner` | [TapScriptSigsMap](#scalar.covenant.exported.v1beta1.TapScriptSigsMap) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.covenant.exported.v1beta1.TapScriptSig"></a>
-
-### TapScriptSig
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key_x_only` | [bytes](#bytes) |  |  |
-| `leaf_hash` | [bytes](#bytes) |  |  |
-| `signature` | [bytes](#bytes) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.exported.v1beta1.TapScriptSigsEntry"></a>
-
-### TapScriptSigsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `index` | [uint64](#uint64) |  |  |
-| `sigs` | [TapScriptSigsList](#scalar.covenant.exported.v1beta1.TapScriptSigsList) |  |  |
-
-
-
-
-
-
-<a name="scalar.covenant.exported.v1beta1.TapScriptSigsList"></a>
-
-### TapScriptSigsList
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `list` | [TapScriptSig](#scalar.covenant.exported.v1beta1.TapScriptSig) | repeated |  |
-
-
-
-
-
-
-<a name="scalar.covenant.exported.v1beta1.TapScriptSigsMap"></a>
-
-### TapScriptSigsMap
-The reason we use a list instead of a map is because the map is not ensured
-the deterministic order of the entries
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `inner` | [TapScriptSigsEntry](#scalar.covenant.exported.v1beta1.TapScriptSigsEntry) | repeated |  |
-
-
-
-
-
- <!-- end messages -->
-
-
-<a name="scalar.covenant.exported.v1beta1.KeyState"></a>
-
-### KeyState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| KEY_STATE_UNSPECIFIED | 0 |  |
-| KEY_STATE_ASSIGNED | 1 |  |
-| KEY_STATE_ACTIVE | 2 |  |
-
-
-
-<a name="scalar.covenant.exported.v1beta1.Phase"></a>
-
-### Phase
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| PHASE_PREPARING | 0 |  |
-| PHASE_EXECUTING | 1 |  |
-| PHASE_UNSPECIFIED | 2 |  |
-
-
-
-<a name="scalar.covenant.exported.v1beta1.PsbtState"></a>
-
-### PsbtState
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| PSBT_STATE_UNSPECIFIED | 0 |  |
-| PSBT_STATE_PENDING | 1 |  |
-| PSBT_STATE_CREATING | 2 |  |
-| PSBT_STATE_SIGNING | 3 |  |
-| PSBT_STATE_COMPLETED | 4 |  |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="scalar/chains/v1beta1/redeem.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## scalar/chains/v1beta1/redeem.proto
-
-
-
-<a name="scalar.chains.v1beta1.RedeemSession"></a>
-
-### RedeemSession
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `custodian_group_uid` | [bytes](#bytes) |  |  |
-| `sequence` | [uint64](#uint64) |  |  |
-| `current_phase` | [scalar.covenant.exported.v1beta1.Phase](#scalar.covenant.exported.v1beta1.Phase) |  |  |
-
-
-
-
-
- <!-- end messages -->
 
  <!-- end enums -->
 
@@ -3945,6 +3979,7 @@ QueryService defines the gRPC querier service.
 | `ERC20Tokens` | [ERC20TokensRequest](#scalar.chains.v1beta1.ERC20TokensRequest) | [ERC20TokensResponse](#scalar.chains.v1beta1.ERC20TokensResponse) | ERC20Tokens queries the ERC20 tokens registered for a chain | GET|/scalar/chains/v1beta1/erc20_tokens/{chain}|
 | `TokenInfo` | [TokenInfoRequest](#scalar.chains.v1beta1.TokenInfoRequest) | [TokenInfoResponse](#scalar.chains.v1beta1.TokenInfoResponse) | TokenInfo queries the token info for a registered ERC20 Token | GET|/scalar/chains/v1beta1/token_info/{chain}|
 | `Params` | [ParamsRequest](#scalar.chains.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.chains.v1beta1.ParamsResponse) |  | GET|/scalar/chains/v1beta1/params/{chain}|
+| `RedeemSession` | [RedeemSessionRequest](#scalar.chains.v1beta1.RedeemSessionRequest) | [RedeemSessionResponse](#scalar.chains.v1beta1.RedeemSessionResponse) |  | GET|/scalar/chains/v1beta1/redeem_session/{chain}|
 
  <!-- end services -->
 
@@ -5387,6 +5422,36 @@ ParamsRequest represents a message that queries the params
 
 
 
+
+<a name="scalar.covenant.v1beta1.UTXOSnapshotRequest"></a>
+
+### UTXOSnapshotRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `uid` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.UTXOSnapshotResponse"></a>
+
+### UTXOSnapshotResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `utxo_snapshot` | [UTXOSnapshot](#scalar.covenant.v1beta1.UTXOSnapshot) |  |  |
+
+
+
+
+
  <!-- end messages -->
 
  <!-- end enums -->
@@ -5815,6 +5880,7 @@ Pubkey used as key for lookup custodian to update other values
 | `Groups` | [GroupsRequest](#scalar.covenant.v1beta1.GroupsRequest) | [GroupsResponse](#scalar.covenant.v1beta1.GroupsResponse) | Get custodian groups | GET|/scalar/covenant/v1beta1/custodian_groups|
 | `Params` | [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse) |  | GET|/scalar/covenant/v1beta1/params|
 | `RedeemSession` | [RedeemSessionRequest](#scalar.covenant.v1beta1.RedeemSessionRequest) | [RedeemSessionResponse](#scalar.covenant.v1beta1.RedeemSessionResponse) |  | GET|/scalar/covenant/v1beta1/redeem_session|
+| `UTXOSnapshot` | [UTXOSnapshotRequest](#scalar.covenant.v1beta1.UTXOSnapshotRequest) | [UTXOSnapshotResponse](#scalar.covenant.v1beta1.UTXOSnapshotResponse) |  | GET|/scalar/covenant/v1beta1/utxo_snapshot|
 
  <!-- end services -->
 

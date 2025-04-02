@@ -115,4 +115,8 @@ service QueryService {
   rpc RedeemSession(RedeemSessionRequest) returns (RedeemSessionResponse) {
     option (google.api.http) = {get: "/scalar/covenant/v1beta1/redeem_session"};
   }
+
+  rpc UTXOSnapshot(UTXOSnapshotRequest) returns (UTXOSnapshotResponse) {
+    option (google.api.http) = {get: "/scalar/covenant/v1beta1/utxo_snapshot"};
+  }
 }

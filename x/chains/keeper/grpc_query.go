@@ -605,3 +605,18 @@ func (q Querier) TokenInfo(c context.Context, req *types.TokenInfoRequest) (*typ
 		BurnerCodeHash: burnerCodeHashHex,
 	}, nil
 }
+
+func (q Querier) RedeemSession(c context.Context, req *types.RedeemSessionRequest) (*types.RedeemSessionResponse, error) {
+
+	ctx := sdk.UnwrapSDKContext(c)
+
+	ck, err := q.keeper.ForChain(ctx, nexustypes.ChainName(req.Chain))
+	if err != nil {
+		return nil, fmt.Errorf("chain %s not found", req.Chain)
+	}
+
+	session := ck.GetRedeemSessions(ctx)
+	return &types.RedeemSessionResponse{
+		RedeemSession: session,
+	}, nil
+}

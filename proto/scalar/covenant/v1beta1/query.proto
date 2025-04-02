@@ -82,3 +82,17 @@ message RedeemSessionRequest {
 message RedeemSessionResponse {
   RedeemSession session = 1;
 }
+
+
+message UTXOSnapshotRequest {
+  bytes uid = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "UID"
+  ];
+}
+
+message UTXOSnapshotResponse {
+  UTXOSnapshot utxo_snapshot = 1;
+}

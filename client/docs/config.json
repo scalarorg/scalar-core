@@ -33,7 +33,6 @@
         }
       }
     },
-
     {
       "url": "../../tmp-swagger-gen/scalar/protocol/v1beta1/query.swagger.json"
     },
@@ -53,7 +52,8 @@
       "operationIds": {
         "rename": {
           "RotateKey": "CovenantRotateKey",
-          "Params": "CovenantParams"
+          "Params": "CovenantParams",
+          "RedeemSession": "CovenantRedeemSession"
         }
       }
     },
