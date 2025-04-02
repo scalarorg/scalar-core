@@ -184,6 +184,9 @@ func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID []byte, requestI
 	if !ok {
 		return nil, fmt.Errorf("redeem session not found")
 	}
+	if redeemSession.IsSwitching {
+		return nil, fmt.Errorf("redeem phase is switching")
+	}
 	if redeemSession.CurrentPhase != covExported.Preparing {
 		return nil, fmt.Errorf("redeem session is not in preparing phase")
 	}

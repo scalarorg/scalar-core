@@ -8,6 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
 	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/log"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	xcommon "github.com/scalarorg/scalar-core/vald/xchain/common"
@@ -137,7 +138,7 @@ func (mgr Manager) ProcessInitializeUtxo(event *cov.IntializeUtxoSnapshotStarted
 		return nil
 	}
 
-	mgr.logger("event", event).Info("processing redeem tx confirmation poll")
+	mgr.logger("event", event).Info("[ProcessInitializeUtxo]")
 
 	chainInfoBytes := chain.ChainInfoBytes{}
 
@@ -156,6 +157,7 @@ func (mgr Manager) ProcessInitializeUtxo(event *cov.IntializeUtxoSnapshotStarted
 		return err
 	}
 	_, err = mgr.broadcaster.Broadcast(context.TODO(), votes...)
+	clog.Redf("[ProcessInitializeUtxo] broadcasting votes for poll %s", event.PollID.String())
 	return err
 }
 

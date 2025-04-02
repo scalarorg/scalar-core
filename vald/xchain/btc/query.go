@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"sort"
 
+	"github.com/rs/zerolog/log"
 	chainsExported "github.com/scalarorg/scalar-core/x/chains/exported"
 	cov "github.com/scalarorg/scalar-core/x/covenant/types"
 )
@@ -46,8 +47,10 @@ func (c *BtcClient) getUtxoList(taprootAddress string) ([]*cov.UTXO, []uint64, e
 	if err := json.Unmarshal(body, &utxos); err != nil {
 		return nil, nil, fmt.Errorf("failed to decode UTXOs: %w", err)
 	}
-	utxos = sortUTXOsByValue(utxos)
-
+	utxos = SortUTXOsByBlockHeight(utxos)
+	for _, utxo := range utxos {
+		log.Info().Msgf("[GetUtxoList] utxo: %s, vout: %d, amount: %d", utxo.Txid, utxo.Vout, utxo.Value)
+	}
 	utxosList := []*cov.UTXO{}
 	blockHeights := make([]uint64, len(utxos))
 	for _, utxo := range utxos {
@@ -67,9 +70,9 @@ func (c *BtcClient) getUtxoList(taprootAddress string) ([]*cov.UTXO, []uint64, e
 	return utxosList, blockHeights, nil
 }
 
-func sortUTXOsByValue(utxos []MempoolUtxo) []MempoolUtxo {
+func SortUTXOsByBlockHeight(utxos []MempoolUtxo) []MempoolUtxo {
 	sort.Slice(utxos, func(i, j int) bool {
-		return utxos[i].Value > utxos[j].Value
+		return utxos[i].Status.BlockHeight < utxos[j].Status.BlockHeight || utxos[i].Txid < utxos[j].Txid
 	})
 	return utxos
 }

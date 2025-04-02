@@ -37,6 +37,7 @@ import (
 	permissiontypes "github.com/scalarorg/scalar-core/x/permission/types"
 	pexported "github.com/scalarorg/scalar-core/x/protocol/exported"
 	protocoltypes "github.com/scalarorg/scalar-core/x/protocol/types"
+	scalarnetexported "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	scalarnettypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
 	snapshottypes "github.com/scalarorg/scalar-core/x/snapshot/types"
 	tss "github.com/scalarorg/scalar-core/x/tss/exported"
@@ -367,6 +368,7 @@ func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *s
 }
 func generateNexusGenesis(configPath string, validatorAddrs []sdk.ValAddress, tokenInfos []Token, coinDenom string) *nexustypes.GenesisState {
 	nexusGenState := nexustypes.DefaultGenesisState()
+	nexusGenState.Chains = []nexus.Chain{scalarnetexported.Scalarnet, chainsexported.Bitcoin}
 	if configPath != "" {
 		chainConfigs, err := ParseJsonArrayConfig[chainsTypes.ChainConfig](fmt.Sprintf("%s/chains/chains.json", configPath))
 		if err != nil {

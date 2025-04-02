@@ -36,7 +36,7 @@ func (s msgServer) Vote(c context.Context, req *types.VoteRequest) (*types.VoteR
 	if !ok {
 		return nil, fmt.Errorf("poll %s not found", req.PollID)
 	}
-	s.Logger(ctx).Debug(fmt.Sprintf("[Vote] poll %s found with state: %++v", req.PollID.String(), poll.GetState()))
+	s.Logger(ctx).Debug(fmt.Sprintf("[Vote] poll %s found with state: %+v", req.PollID.String(), poll.GetState()))
 	voteResult, err := poll.Vote(voter, ctx.BlockHeight(), req.Vote.GetCachedValue().(codec.ProtoMarshaler))
 	if err != nil {
 		return nil, err

@@ -4359,7 +4359,7 @@ For Validation process
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `event_ids` | [string](#string) | repeated |  |
+| `event_id` | [string](#string) |  |  |
 | `utxo_snapshot` | [UTXOSnapshot](#scalar.covenant.v1beta1.UTXOSnapshot) |  |  |
 
 
@@ -5638,7 +5638,7 @@ Confirm exectuted transaction on bitcoin
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `block_checkpoint` | [uint64](#uint64) |  | bytes custodian_group_uid = 3 [ (gogoproto.nullable) = false, (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash", (gogoproto.customname) = "CustodianGroupUID" ]; |
+| `block_checkpoint` | [uint64](#uint64) |  | Current block height sent from the relayer |
 
 
 

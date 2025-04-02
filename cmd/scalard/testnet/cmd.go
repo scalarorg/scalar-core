@@ -1018,7 +1018,8 @@ disable_tls = true
 disable_connect_on_new = true
 disable_auto_reconnect = false
 http_post_mode = true
-					`, btcConfig.ID, btcConfig.Chain, btcConfig.Tag, btcConfig.Version, btcConfig.RPCHost, btcConfig.RPCPort, btcConfig.RPCUser, btcConfig.RPCPass))
+mempool_url = "%s"
+					`, btcConfig.ID, btcConfig.Chain, btcConfig.Tag, btcConfig.Version, btcConfig.RPCHost, btcConfig.RPCPort, btcConfig.RPCUser, btcConfig.RPCPass, btcConfig.MempoolUrl))
 		}
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to write btc bridge config")

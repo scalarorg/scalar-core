@@ -323,7 +323,7 @@ func (s msgServer) InitializeUtxo(c context.Context, req *types.InitializeUtxoRe
 		if err != nil {
 			return nil, err
 		}
-		s.Logger(ctx).Info(fmt.Sprintf("[InitializeUtxos] custodian group %s with taproot address %s", cusGr.UID.Hex(), taprootAddress.String()))
+		s.Logger(ctx).Info(fmt.Sprintf("[InitializeUtxo] custodian group %s with taproot address %s", cusGr.UID.Hex(), taprootAddress.String()))
 		threshold := chainParams.VotingThreshold
 
 		snapshot, err := s.createSnapshot(ctx, *chain, threshold)

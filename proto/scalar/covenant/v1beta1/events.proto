@@ -193,8 +193,8 @@ message SwitchedPhaseConfirmed {
 }
 
 message IntializeUtxoSnapshotCompleted {
-  repeated string event_ids = 1 [
-    (gogoproto.customname) = "EventIDs",
+  string event_id = 1 [
+    (gogoproto.customname) = "EventID",
     (gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/chains/types.EventID"
   ];
   UTXOSnapshot utxo_snapshot = 2;

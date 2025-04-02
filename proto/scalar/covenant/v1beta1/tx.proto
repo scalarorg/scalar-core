@@ -151,7 +151,7 @@ message ConfirmRedeemTxsResponse {}
 message InitializeUtxoRequest {
   bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
   string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
-  uint64 block_checkpoint = 3;
+  uint64 block_checkpoint = 3; // Current block height sent from the relayer
   // bytes custodian_group_uid = 3 [
   //   (gogoproto.nullable) = false,
   //   (gogoproto.customtype) =

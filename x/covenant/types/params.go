@@ -27,7 +27,7 @@ func DefaultParams() *Params {
 		SigningTimeout:       10,
 		SigningGracePeriod:   1,
 		ActiveEpochCount:     5,
-		BlockLimitPerSession: 360,
+		BlockLimitPerSession: 120, //The time of the preparing
 	}
 }
 
@@ -65,7 +65,7 @@ func (m Params) Validate() error {
 	}
 
 	// validate the block limit per session
-	if err := validateBlockLimitPerSession(m.BlockLimitPerSession); err!= nil {
+	if err := validateBlockLimitPerSession(m.BlockLimitPerSession); err != nil {
 		return err
 	}
 
@@ -74,7 +74,7 @@ func (m Params) Validate() error {
 
 func validateBlockLimitPerSession(i interface{}) error {
 	blockLimitPerSession, ok := i.(uint64)
-	if!ok {
+	if !ok {
 		return fmt.Errorf("invalid parameter type for block limit per session: %T", i)
 	}
 	if blockLimitPerSession <= 100 {

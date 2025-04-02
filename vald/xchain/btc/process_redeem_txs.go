@@ -43,28 +43,28 @@ func (client *BtcClient) ProcessRedeemTxsConfirmation(event *covTypes.ConfirmRed
 	if err != nil {
 		return nil, err
 	}
-
+	utxoSnapshot := covTypes.UTXOSnapshot{
+		CustodianGroupUID: event.CustodianGroupUID,
+		BlockHeight:       1, // TODO: fill me
+		Utxos:             utxos,
+	}
+	hash := utxoSnapshot.GetHash()
 	voteEvent := covTypes.NewVoteEvents(event.Chain, covTypes.Event{
 		Chain: event.Chain,
-		Hash:  nil,
+		Hash:  &hash,
 		Event: &covTypes.Event_RedeemTxsConfirmed{
 			RedeemTxsConfirmed: &covTypes.RedeemTxsConfirmed{
-				EventIDs: eventIds,
-				UtxoSnapshot: &covTypes.UTXOSnapshot{
-					CustodianGroupUID: event.CustodianGroupUID,
-					BlockHeight:       1, // TODO: fill me
-					Utxos:             utxos,
-				},
+				EventIDs:     eventIds,
+				UtxoSnapshot: &utxoSnapshot,
 			},
 		},
 		Index: 0,
 	})
 
-	events := covTypes.Event{}
 	votes := []sdk.Msg{
 		voteTypes.NewVoteRequest(proxy, event.PollID, voteEvent),
 	}
-	clog.Redf("broadcasting vote %v for poll %s", events, event.PollID.String())
+	clog.Redf("broadcasting vote %v for poll %s", votes, event.PollID.String())
 
 	return votes, nil
 }

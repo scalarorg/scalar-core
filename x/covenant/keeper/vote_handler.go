@@ -202,8 +202,13 @@ func (v voteHandler) handleEvent(ctx sdk.Context, event types.Event, k types.Kee
 			return err
 		}
 	case *types.Event_SwitchedPhaseConfirmed:
-		if err := k.EnqueueEvent(ctx, &event); err!= nil {
+		if err := k.EnqueueEvent(ctx, &event); err != nil {
 			k.Logger(ctx).Error("failed to set pending switched phase command", "error", err)
+			return err
+		}
+	case *types.Event_IntializeUtxoSnapshotCompleted:
+		if err := k.EnqueueEvent(ctx, &event); err != nil {
+			k.Logger(ctx).Error("failed to set pending initialize utxo snapshot command", "error", err)
 			return err
 		}
 
