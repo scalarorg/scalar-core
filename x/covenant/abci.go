@@ -392,6 +392,8 @@ func handleSwitchedPhaseConfirmed(
 	if err != nil {
 		ctx.Logger().Error("[handleSwitchedPhaseConfirmed] failed to set redeem session for chain %s", event.Chain, err)
 		return err
+	} else {
+		ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] set redeem session %+v for chain %s", chainRedeemSession, event.Chain.String()))
 	}
 	allChains := n.GetChains(ctx)
 	//Store the slower chains which have old session or phase
@@ -399,22 +401,22 @@ func handleSwitchedPhaseConfirmed(
 	slowerChains := []nexus.Chain{}
 	//Check if all evm chains have the same session and phase
 	for _, c := range allChains {
-		if c.Name != event.Chain && chainsTypes.IsEvmChain(c.Name) {
+		if c.Name.String() != event.Chain.String() && chainsTypes.IsEvmChain(c.Name) {
 			ck, err := b.ForChain(ctx, c.Name)
 			if err != nil {
-				ctx.Logger().Error("[handleSwitchedPhaseConfirmed] failed to get chain keeper for chain %s", c.Name, err)
+				ctx.Logger().Error(fmt.Sprintf("[handleSwitchedPhaseConfirmed] failed to get chain keeper for chain %s", c.Name.String()), err)
 				return err
 			}
 			redeemSession, ok := ck.GetRedeemSession(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
 			if !ok {
-				ctx.Logger().Info("[handleSwitchedPhaseConfirmed] not found redeem session for chain %s", c.Name)
+				ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] not found redeem session with custodian group uid %s for chain %s", hex.EncodeToString(switchPhaseEvent.CustodianGroupUID.Bytes()), c.Name.String()))
 				slowerChains = append(slowerChains, c)
 			} else if redeemSession.Sequence < switchPhaseEvent.Sequence ||
 				(redeemSession.Sequence == switchPhaseEvent.Sequence && redeemSession.CurrentPhase < switchPhaseEvent.ToPhase) {
-				ctx.Logger().Info("[handleSwitchedPhaseConfirmed] slower chain %s with session %++v", c.Name, redeemSession)
+				ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] slower chain %s with session %++v", c.Name.String(), redeemSession))
 				slowerChains = append(slowerChains, c)
 			} else {
-				ctx.Logger().Info("[handleSwitchedPhaseConfirmed] chain %s is already switch to phase %++v", chainRedeemSession)
+				ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] chain %s is already switch to phase %+v", c.Name.String(), chainRedeemSession))
 			}
 		}
 	}
@@ -444,7 +446,7 @@ func handleSwitchedPhaseConfirmed(
 			}
 		}
 	} else {
-		ctx.Logger().Info("[handleSwitchedPhaseConfirmed] there are %s slower chains, we need to handle them", len(slowerChains))
+		ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] there are %d slower chains, we need to handle them", len(slowerChains)))
 		//TODO: handle the slower chains
 	}
 
