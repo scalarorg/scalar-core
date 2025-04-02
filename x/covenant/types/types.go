@@ -117,6 +117,7 @@ func (rs UTXOSnapshot) ReserveUtxos(requestID string, amount uint64) ([]*UTXO, e
 }
 
 func (rs *UTXOSnapshot) GetHash() chains.Hash {
+<<<<<<< HEAD
 	buffer := bytes.NewBuffer(nil)
 	buffer.Write(rs.CustodianGroupUID.Bytes())
 	binary.Write(buffer, binary.BigEndian, rs.BlockHeight)
@@ -132,6 +133,13 @@ func (rs *UTXOSnapshot) GetHash() chains.Hash {
 	// 	return chains.ZeroHash
 	// }
 	hash := sha3.Sum256(buffer.Bytes())
+=======
+	bytes, err := rs.Marshal()
+	if err != nil {
+		return chains.ZeroHash
+	}
+	hash := sha3.Sum256(bytes)
+>>>>>>> ad40bfd8 (Debug InitializeUtxo)
 	return chains.Hash(hash[:])
 }
 
