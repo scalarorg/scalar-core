@@ -1,10 +1,21 @@
 package keeper
 
 import (
+	"bytes"
 	"context"
+	"encoding/hex"
+	"fmt"
+	"sort"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/slices"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	"github.com/scalarorg/scalar-core/x/covenant/types"
+	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -13,13 +24,15 @@ var _ types.QueryServiceServer = Querier{}
 
 // Querier implements the grpc querier
 type Querier struct {
-	keeper *Keeper
+	keeper    *Keeper
+	multisigK types.MultisigKeeper
 }
 
 // NewGRPCQuerier returns a new Querier
-func NewGRPCQuerier(k *Keeper) Querier {
+func NewGRPCQuerier(k *Keeper, m types.MultisigKeeper) Querier {
 	return Querier{
-		keeper: k,
+		keeper:    k,
+		multisigK: m,
 	}
 }
 
@@ -77,4 +90,114 @@ func (q Querier) UTXOSnapshot(ctx context.Context, req *types.UTXOSnapshotReques
 	return &types.UTXOSnapshotResponse{
 		UtxoSnapshot: snapshot,
 	}, nil
+}
+
+// optimizeSignatureSet returns optimized signature set, sorted in ascending order by corresponding evm address
+func optimizeSignatureSet(operators []chainsTypes.Operator, minPassingWeight sdk.Uint) [][]byte {
+	sort.SliceStable(operators, func(i, j int) bool {
+		return operators[i].Weight.GT(operators[j].Weight)
+	})
+
+	cumWeight := sdk.ZeroUint()
+	operators = slices.Filter(operators, func(operator chainsTypes.Operator) bool {
+		if cumWeight.GTE(minPassingWeight) {
+			return false
+		}
+
+		cumWeight = cumWeight.Add(operator.Weight)
+		return true
+	})
+
+	sort.SliceStable(operators, func(i, j int) bool {
+		return bytes.Compare(operators[i].Address.Bytes(), operators[j].Address.Bytes()) < 0
+	})
+
+	return slices.Map(operators, func(operator chainsTypes.Operator) []byte { return operator.Signature })
+}
+
+func getProof(key multisig.Key, signature multisig.MultiSig) ([]common.Address, []sdk.Uint, sdk.Uint, [][]byte) {
+	participantsWithSigs := slices.Filter(key.GetParticipants(), func(v sdk.ValAddress) bool {
+		_, ok := signature.GetSignature(v)
+		return ok
+	})
+
+	operators := slices.Map(participantsWithSigs, func(val sdk.ValAddress) chainsTypes.Operator {
+		pubKey := funcs.MustOk(key.GetPubKey(val)).ToECDSAPubKey()
+		signature := funcs.Must(chainsTypes.ToSignature(funcs.MustOk(signature.GetSignature(val)), common.BytesToHash(signature.GetPayloadHash()), pubKey))
+
+		return chainsTypes.Operator{
+			Address:   crypto.PubkeyToAddress(pubKey),
+			Signature: signature.ToHomesteadSig(),
+			Weight:    key.GetWeight(val),
+		}
+	})
+
+	addresses, weights, threshold := chainsTypes.GetMultisigAddressesAndWeights(key)
+	signatures := optimizeSignatureSet(operators, key.GetMinPassingWeight())
+
+	return addresses, weights, threshold, signatures
+}
+
+func getExecuteDataAndSigs(ctx sdk.Context, multisigK types.MultisigKeeper, cmd types.StandaloneCommand, signature multisig.MultiSig) ([]byte, chainsTypes.Proof, error) {
+	key := funcs.MustOk(multisigK.GetKey(ctx, signature.GetKeyID()))
+
+	addresses, weights, threshold, signatures := getProof(key, signature)
+
+	executeData, err := chainsTypes.CreateExecuteDataMultisig(cmd.GetData(), addresses, weights, threshold, signatures)
+	if err != nil {
+		return nil, chainsTypes.Proof{}, fmt.Errorf("could not create transaction data: %s", err)
+	}
+
+	proof := chainsTypes.Proof{
+		Addresses:  slices.Map(addresses, common.Address.Hex),
+		Weights:    slices.Map(weights, sdk.Uint.String),
+		Threshold:  threshold.String(),
+		Signatures: slices.Map(signatures, hex.EncodeToString),
+	}
+
+	return executeData, proof, nil
+}
+
+func commandToResp(ctx sdk.Context, cmd types.StandaloneCommand, multisigK types.MultisigKeeper) (types.StandaloneCommandResponse, error) {
+	if cmd.Is(types.StandaloneCommandStatusSigned) && cmd.GetSignature() != nil { // check signature for unmigrated batches
+		signature, ok := cmd.GetSignature().(multisig.MultiSig)
+		if ok {
+			executeData, _, err := getExecuteDataAndSigs(ctx, multisigK, cmd, signature)
+			if err != nil {
+				return types.StandaloneCommandResponse{}, sdkerrors.Wrap(err, "could not create transaction data")
+			}
+
+			return types.StandaloneCommandResponse{
+				ID:          cmd.GetID(),
+				Data:        hex.EncodeToString(cmd.GetData()),
+				Status:      cmd.GetStatus(),
+				KeyID:       cmd.GetKeyID(),
+				ExecuteData: hex.EncodeToString(executeData),
+			}, nil
+		}
+
+	}
+
+	return types.StandaloneCommandResponse{}, fmt.Errorf("signature is not multisig")
+}
+
+func (q Querier) StandaloneCommand(c context.Context, req *types.StandaloneCommandRequest) (*types.StandaloneCommandResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	if len(req.ID) == 0 {
+		return nil, status.Error(codes.InvalidArgument, "command ID cannot be empty")
+	}
+
+	command := q.keeper.GetReserveUTXOCommandByID(ctx, req.ID)
+	if command.Is(types.StandaloneCommandStatusNonExistent) {
+		err := fmt.Errorf("command with ID %x not found", req.ID)
+		return nil, status.Error(codes.NotFound, sdkerrors.Wrap(err, "command not found").Error())
+	}
+
+	resp, err := commandToResp(ctx, command, q.multisigK)
+	if err != nil {
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	return &resp, nil
 }

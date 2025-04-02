@@ -29,12 +29,12 @@ func NewSigHandler(cdc codec.Codec, keeper types.Keeper) multisig.SigHandler {
 
 func (s sigHandler) HandleCompleted(ctx sdk.Context, sig utils.ValidatedProtoMarshaler, moduleMetadata codec.ProtoMarshaler) error {
 	sigMetadata := moduleMetadata.(*types.SigMetadata)
-	commandBatch, err := s.getCommand(ctx, sigMetadata)
+	cmd, err := s.getCommand(ctx, sigMetadata)
 	if err != nil {
 		return err
 	}
 
-	funcs.MustNoErr(commandBatch.SetSigned(sig))
+	funcs.MustNoErr(cmd.SetSigned(sig))
 
 	events.Emit(ctx, types.NewStandaloneCommandSigned(sigMetadata.Chain, sigMetadata.CommandID))
 

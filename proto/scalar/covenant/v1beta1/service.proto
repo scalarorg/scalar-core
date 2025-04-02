@@ -119,4 +119,8 @@ service QueryService {
   rpc UTXOSnapshot(UTXOSnapshotRequest) returns (UTXOSnapshotResponse) {
     option (google.api.http) = {get: "/scalar/covenant/v1beta1/utxo_snapshot"};
   }
+
+  rpc StandaloneCommand(StandaloneCommandRequest) returns (StandaloneCommandResponse) {
+    option (google.api.http) = {get: "/scalar/covenant/v1beta1/standalone_command"};
+  }
 }

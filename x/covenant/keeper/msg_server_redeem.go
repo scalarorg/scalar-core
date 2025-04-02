@@ -232,7 +232,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, fmt.Errorf("could not create reserve utxo command")
 	}
 
-	//Todo: check signing process
+	//TODO: check signing process
 	if err := s.multisig.Sign(
 		ctx,
 		command.GetKeyID(),

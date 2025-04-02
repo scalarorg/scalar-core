@@ -330,6 +330,8 @@
     - [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse)
     - [RedeemSessionRequest](#scalar.covenant.v1beta1.RedeemSessionRequest)
     - [RedeemSessionResponse](#scalar.covenant.v1beta1.RedeemSessionResponse)
+    - [StandaloneCommandRequest](#scalar.covenant.v1beta1.StandaloneCommandRequest)
+    - [StandaloneCommandResponse](#scalar.covenant.v1beta1.StandaloneCommandResponse)
     - [UTXOSnapshotRequest](#scalar.covenant.v1beta1.UTXOSnapshotRequest)
     - [UTXOSnapshotResponse](#scalar.covenant.v1beta1.UTXOSnapshotResponse)
   
@@ -5423,6 +5425,40 @@ ParamsRequest represents a message that queries the params
 
 
 
+<a name="scalar.covenant.v1beta1.StandaloneCommandRequest"></a>
+
+### StandaloneCommandRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.covenant.v1beta1.StandaloneCommandResponse"></a>
+
+### StandaloneCommandResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [bytes](#bytes) |  |  |
+| `data` | [string](#string) |  |  |
+| `status` | [StandaloneCommandStatus](#scalar.covenant.v1beta1.StandaloneCommandStatus) |  |  |
+| `key_id` | [string](#string) |  |  |
+| `execute_data` | [string](#string) |  |  |
+
+
+
+
+
+
 <a name="scalar.covenant.v1beta1.UTXOSnapshotRequest"></a>
 
 ### UTXOSnapshotRequest
@@ -5882,6 +5918,7 @@ Pubkey used as key for lookup custodian to update other values
 | `Params` | [ParamsRequest](#scalar.covenant.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.covenant.v1beta1.ParamsResponse) |  | GET|/scalar/covenant/v1beta1/params|
 | `RedeemSession` | [RedeemSessionRequest](#scalar.covenant.v1beta1.RedeemSessionRequest) | [RedeemSessionResponse](#scalar.covenant.v1beta1.RedeemSessionResponse) |  | GET|/scalar/covenant/v1beta1/redeem_session|
 | `UTXOSnapshot` | [UTXOSnapshotRequest](#scalar.covenant.v1beta1.UTXOSnapshotRequest) | [UTXOSnapshotResponse](#scalar.covenant.v1beta1.UTXOSnapshotResponse) |  | GET|/scalar/covenant/v1beta1/utxo_snapshot|
+| `StandaloneCommand` | [StandaloneCommandRequest](#scalar.covenant.v1beta1.StandaloneCommandRequest) | [StandaloneCommandResponse](#scalar.covenant.v1beta1.StandaloneCommandResponse) |  | GET|/scalar/covenant/v1beta1/standalone_command|
 
  <!-- end services -->
 

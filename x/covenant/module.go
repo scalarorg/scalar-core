@@ -178,7 +178,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 
 	types.RegisterMsgServiceServer(cfg.MsgServer(), msgServer)
 
-	queryServer := keeper.NewGRPCQuerier(am.keeper)
+	queryServer := keeper.NewGRPCQuerier(am.keeper, am.multisig)
 	types.RegisterQueryServiceServer(cfg.QueryServer(), queryServer)
 
 	// err := cfg.RegisterMigration(types.ModuleName, 8, keeper.AlwaysMigrateBytecode(am.keeper, am.nexus, keeper.Migrate8to9(am.keeper, am.nexus)))

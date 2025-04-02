@@ -123,6 +123,10 @@ func (b *StandaloneCommand) SetSigned(signature utils.ValidatedProtoMarshaler) e
 	return nil
 }
 
+func (b *StandaloneCommand) GetCommandID() CommandID {
+	return b.metadata.CommandID
+}
+
 // NewStandaloneCommandMetadata assembles a StandaloneCommandMetadata struct from the provided arguments
 func NewStandaloneCommandMetadata(
 	blockHeight int64,
