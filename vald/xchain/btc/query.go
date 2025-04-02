@@ -49,7 +49,7 @@ func (c *BtcClient) getUtxoList(taprootAddress string) ([]*cov.UTXO, []uint64, e
 	}
 	utxos = SortUTXOsByBlockHeight(utxos)
 	for _, utxo := range utxos {
-		log.Info().Msgf("[GetUtxoList] utxo: %s, vout: %d, amount: %d", utxo.Txid, utxo.Vout, utxo.Value)
+		log.Info().Msgf("[GetUtxoList] block height: %d, txid: %s, vout: %d, amount: %d", utxo.Status.BlockHeight, utxo.Txid, utxo.Vout, utxo.Value)
 	}
 	utxosList := []*cov.UTXO{}
 	blockHeights := make([]uint64, len(utxos))
@@ -72,7 +72,8 @@ func (c *BtcClient) getUtxoList(taprootAddress string) ([]*cov.UTXO, []uint64, e
 
 func SortUTXOsByBlockHeight(utxos []MempoolUtxo) []MempoolUtxo {
 	sort.Slice(utxos, func(i, j int) bool {
-		return utxos[i].Status.BlockHeight < utxos[j].Status.BlockHeight || utxos[i].Txid < utxos[j].Txid
+		return (utxos[i].Status.BlockHeight < utxos[j].Status.BlockHeight) ||
+			(utxos[i].Status.BlockHeight == utxos[j].Status.BlockHeight && utxos[i].Txid < utxos[j].Txid)
 	})
 	return utxos
 }
