@@ -17,7 +17,7 @@ import (
 type BtcClient struct {
 	client                    *rpcclient.Client
 	cfg                       *rpcclient.ConnConfig
-	blockCache                *BlockCache
+	blockCache                BlockCache // this made replaceable for testing and another cache implementation
 	mempoolUrl                string
 	latestFinalizedBlockCache common.LatestFinalizedBlockCache
 }

@@ -33,8 +33,19 @@ type ChainInfoWithTimestamp struct {
 	Timestamp time.Time //Request time
 }
 
-// Todo: Add rocksdb cache
-type BlockCache struct {
+type BlockCache interface {
+	GetBlock(blockHash string) (*btcjson.GetBlockVerboseTxResult, BlockCacheStatus)
+	SetBlock(blockHash string, block *btcjson.GetBlockVerboseTxResult)
+	GetTx(txHash string) *TxResultWithIndex
+	SetTx(txHash string, tx *TxResultWithIndex)
+	GetChainInfo() *btcjson.GetBlockChainInfoResult
+	SetChainInfo(chainInfo *btcjson.GetBlockChainInfoResult)
+	GetBlockStatus(blockHash string) BlockCacheStatus
+	SetBlockStatus(blockHash string, status BlockCacheStatus)
+}
+
+// TODO: Add rocksdb cache
+type blockCache struct {
 	// the key is the block hash in reverse order bytes aka rpc
 	blocks        map[string]*btcjson.GetBlockVerboseTxResult
 	blockLock     sync.RWMutex
@@ -45,8 +56,8 @@ type BlockCache struct {
 	blockStatus   sync.Map
 }
 
-func NewBlockCache() *BlockCache {
-	return &BlockCache{
+func NewBlockCache() *blockCache {
+	return &blockCache{
 		blocks:    make(map[string]*btcjson.GetBlockVerboseTxResult),
 		txs:       make(map[string]*TxResultWithIndex),
 		blockLock: sync.RWMutex{},
@@ -55,7 +66,7 @@ func NewBlockCache() *BlockCache {
 }
 
 // Get returns the block for the given block hash
-func (c *BlockCache) GetBlock(blockHash string) (*btcjson.GetBlockVerboseTxResult, BlockCacheStatus) {
+func (c *blockCache) GetBlock(blockHash string) (*btcjson.GetBlockVerboseTxResult, BlockCacheStatus) {
 	c.blockLock.RLock()
 	defer c.blockLock.RUnlock()
 
@@ -67,7 +78,7 @@ func (c *BlockCache) GetBlock(blockHash string) (*btcjson.GetBlockVerboseTxResul
 }
 
 // Set sets the block for the given block hash
-func (c *BlockCache) SetBlock(blockHash string, block *btcjson.GetBlockVerboseTxResult) {
+func (c *blockCache) SetBlock(blockHash string, block *btcjson.GetBlockVerboseTxResult) {
 	c.blockLock.Lock()
 	defer c.blockLock.Unlock()
 	log.Info().Str("blockHash", blockHash).Msg("SetBlock to cache")
@@ -92,7 +103,7 @@ func (c *BlockCache) SetBlock(blockHash string, block *btcjson.GetBlockVerboseTx
 	}
 }
 
-func (c *BlockCache) GetTx(txHash string) *TxResultWithIndex {
+func (c *blockCache) GetTx(txHash string) *TxResultWithIndex {
 	c.txLock.RLock()
 	defer c.txLock.RUnlock()
 
@@ -104,14 +115,14 @@ func (c *BlockCache) GetTx(txHash string) *TxResultWithIndex {
 	return tx
 }
 
-func (c *BlockCache) SetTx(txHash string, tx *TxResultWithIndex) {
+func (c *blockCache) SetTx(txHash string, tx *TxResultWithIndex) {
 	c.txLock.Lock()
 	defer c.txLock.Unlock()
 
 	c.txs[txHash] = tx
 }
 
-func (c *BlockCache) GetChainInfo() *btcjson.GetBlockChainInfoResult {
+func (c *blockCache) GetChainInfo() *btcjson.GetBlockChainInfoResult {
 	c.chainInfoLock.RLock()
 	defer c.chainInfoLock.RUnlock()
 	if c.chainInfo == nil {
@@ -124,7 +135,7 @@ func (c *BlockCache) GetChainInfo() *btcjson.GetBlockChainInfoResult {
 	return c.chainInfo.GetBlockChainInfoResult
 }
 
-func (c *BlockCache) SetChainInfo(chainInfo *btcjson.GetBlockChainInfoResult) {
+func (c *blockCache) SetChainInfo(chainInfo *btcjson.GetBlockChainInfoResult) {
 	c.chainInfoLock.Lock()
 	defer c.chainInfoLock.Unlock()
 
@@ -134,7 +145,7 @@ func (c *BlockCache) SetChainInfo(chainInfo *btcjson.GetBlockChainInfoResult) {
 	}
 }
 
-func (c *BlockCache) GetBlockStatus(blockHash string) BlockCacheStatus {
+func (c *blockCache) GetBlockStatus(blockHash string) BlockCacheStatus {
 	status, ok := c.blockStatus.Load(blockHash)
 	if !ok {
 		return BlockCacheStatusUndefined
@@ -142,6 +153,6 @@ func (c *BlockCache) GetBlockStatus(blockHash string) BlockCacheStatus {
 	return status.(BlockCacheStatus)
 }
 
-func (c *BlockCache) SetBlockStatus(blockHash string, status BlockCacheStatus) {
+func (c *blockCache) SetBlockStatus(blockHash string, status BlockCacheStatus) {
 	c.blockStatus.Store(blockHash, status)
 }

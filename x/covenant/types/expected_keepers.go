@@ -23,7 +23,7 @@ import (
 
 // Keeper provides keeper functionality of this module
 //
-//go:generate moq -pkg mock -out ./mock/expected_keepers.go . Keeper Snapshotter Staker Slasher Rewarder Nexus
+//go:generate moq -pkg mock -out ./mock/expected_keepers.go . Keeper Snapshotter Rewarder Nexus
 type Keeper interface {
 	Logger(ctx sdk.Context) log.Logger
 	GetParams(ctx sdk.Context) (params Params)
