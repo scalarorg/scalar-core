@@ -16,16 +16,18 @@ func DefaultRedeemSession() *RedeemSession {
 	return &RedeemSession{
 		CustodianGroupUID: chains.ZeroHash,
 		Sequence:          0,
-		CurrentPhase:      exported.Unspecified,
+		CurrentPhase:      exported.Executing,
+		IsSwitching:       true,
 		LastRedeemTx:      nil,
 	}
 }
 
-func NewRedeemSession(CustodianGroupUID chains.Hash, sequence uint64, currentPhase exported.Phase, lastRedeemTx *chains.Hash) *RedeemSession {
+func NewRedeemSession(CustodianGroupUID chains.Hash, sequence uint64, currentPhase exported.Phase, isSwitching bool, lastRedeemTx *chains.Hash) *RedeemSession {
 	return &RedeemSession{
 		CustodianGroupUID: CustodianGroupUID,
 		Sequence:          sequence,
 		CurrentPhase:      currentPhase,
+		IsSwitching:       isSwitching,
 		LastRedeemTx:      lastRedeemTx,
 	}
 }

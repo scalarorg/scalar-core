@@ -8311,7 +8311,6 @@ paths:
                       enum:
                         - PHASE_PREPARING
                         - PHASE_EXECUTING
-                        - PHASE_UNSPECIFIED
                       default: PHASE_PREPARING
         default:
           description: An unexpected error response
@@ -14294,7 +14293,6 @@ paths:
                     enum:
                       - PHASE_PREPARING
                       - PHASE_EXECUTING
-                      - PHASE_UNSPECIFIED
                     default: PHASE_PREPARING
                   last_redeem_tx:
                     type: string
@@ -60452,7 +60450,6 @@ definitions:
         enum:
           - PHASE_PREPARING
           - PHASE_EXECUTING
-          - PHASE_UNSPECIFIED
         default: PHASE_PREPARING
   scalar.chains.v1beta1.RedeemSessionResponse:
     type: object
@@ -60473,7 +60470,6 @@ definitions:
               enum:
                 - PHASE_PREPARING
                 - PHASE_EXECUTING
-                - PHASE_UNSPECIFIED
               default: PHASE_PREPARING
   scalar.chains.v1beta1.RegisterCustodianGroupRequest:
     type: object
@@ -60600,7 +60596,6 @@ definitions:
     enum:
       - PHASE_PREPARING
       - PHASE_EXECUTING
-      - PHASE_UNSPECIFIED
     default: PHASE_PREPARING
   scalar.nexus.exported.v1beta1.TokenDetails:
     type: object
@@ -62129,7 +62124,6 @@ definitions:
         enum:
           - PHASE_PREPARING
           - PHASE_EXECUTING
-          - PHASE_UNSPECIFIED
         default: PHASE_PREPARING
       last_redeem_tx:
         type: string
@@ -62157,7 +62151,6 @@ definitions:
             enum:
               - PHASE_PREPARING
               - PHASE_EXECUTING
-              - PHASE_UNSPECIFIED
             default: PHASE_PREPARING
           last_redeem_tx:
             type: string

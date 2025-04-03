@@ -227,7 +227,7 @@ func handleEnqueuedEvents(
 
 	for _, event := range events {
 		success := utils.RunCached(ctx, k, func(ctx sdk.Context) (bool, error) {
-			err := handleEnqueueEvent(ctx, &event, k, b, pk, nexus, m, s, vote, snapshotter, slashing)
+			err := handleEnqueueEvent(ctx, &event, k, b, pk, nexus, m, s)
 			if err != nil {
 				k.Logger(ctx).Debug(fmt.Sprintf("failed handling event: %s", err.Error()),
 					"chain", event.Chain.String(),
@@ -264,9 +264,6 @@ func handleEnqueueEvent(
 	nexus types.Nexus,
 	m types.MultisigKeeper,
 	s types.ScalarnetKeeper,
-	vote types.Voter,
-	snapshotter types.Snapshotter,
-	slashing types.SlashingKeeper,
 ) error {
 	// if err := validateEvent(ctx, event, bk, n); err != nil {
 	// 	return err
@@ -275,7 +272,7 @@ func handleEnqueueEvent(
 	case *types.Event_RedeemTxsConfirmed:
 		return handleRedeemTxsConfirmed(ctx, event, k, b, m, pk)
 	case *types.Event_SwitchedPhaseConfirmed:
-		return handleSwitchedPhaseConfirmed(ctx, event, k, b, nexus, s, vote, snapshotter, slashing)
+		return handleSwitchedPhaseConfirmed(ctx, event, k, b, nexus, s)
 	case *types.Event_IntializeUtxoSnapshotCompleted:
 		return handleInitializeUtxoSnapshotCompleted(ctx, event, k)
 	default:
@@ -368,9 +365,6 @@ func handleSwitchedPhaseConfirmed(
 	b types.BaseKeeper,
 	n types.Nexus,
 	s types.ScalarnetKeeper,
-	v types.Voter,
-	snapshotter types.Snapshotter,
-	slashing types.SlashingKeeper,
 ) error {
 	confirmedEvent, ok := event.GetEvent().(*types.Event_SwitchedPhaseConfirmed)
 	if !ok {
@@ -423,8 +417,9 @@ func handleSwitchedPhaseConfirmed(
 	if len(slowerChains) == 0 {
 		ctx.Logger().Info("[handleSwitchedPhaseConfirmed] all evm chains have the same session and phase, we can switch the phase")
 		if switchPhaseEvent.ToPhase == exported.Preparing {
-			err := k.UpdateExecutingToPreparing(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
+			err := k.UpdateExecutingToPreparing(ctx, switchPhaseEvent.CustodianGroupUID.Bytes(), switchPhaseEvent.Sequence)
 			if err != nil {
+				ctx.Logger().Error("[handleSwitchedPhaseConfirmed] failed to update executing to preparing", err)
 				return err
 			}
 

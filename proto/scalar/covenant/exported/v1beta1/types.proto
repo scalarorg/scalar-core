@@ -55,5 +55,4 @@ enum Phase {
   option (gogoproto.goproto_enum_prefix) = false;
   PHASE_PREPARING = 0 [(gogoproto.enumvalue_customname) = "Preparing"];
   PHASE_EXECUTING = 1 [(gogoproto.enumvalue_customname) = "Executing"];
-  PHASE_UNSPECIFIED = 2 [(gogoproto.enumvalue_customname) = "Unspecified"];
 }

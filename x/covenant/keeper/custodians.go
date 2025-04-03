@@ -74,7 +74,9 @@ func (k Keeper) SetCustodianGroups(ctx sdk.Context, custodianGroups []*cov.Custo
 	for _, group := range custodianGroups {
 		store.Set(custodianGroupPrefix.Append(utils.KeyFromBz(group.UID.Bytes())), group)
 		//Set default redeem sessions
-		redeemSession := types.NewRedeemSession(group.UID, 0, cov.Unspecified, nil)
+		//Initialize redeem session with executing phase and isSwitching state true
+		//Scalar core waits for all confirmation from evm chains'session for switching to preparing phase
+		redeemSession := types.NewRedeemSession(group.UID, 0, cov.Executing, true, nil)
 		k.setRedeemSession(ctx, redeemSession)
 	}
 }

@@ -2728,7 +2728,6 @@ the deterministic order of the entries
 | ---- | ------ | ----------- |
 | PHASE_PREPARING | 0 |  |
 | PHASE_EXECUTING | 1 |  |
-| PHASE_UNSPECIFIED | 2 |  |
 
 
 

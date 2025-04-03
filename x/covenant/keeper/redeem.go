@@ -86,7 +86,7 @@ func (k Keeper) UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID []
 	return nil
 }
 
-func (k Keeper) UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID []byte) error {
+func (k Keeper) UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID []byte, sequence uint64) error {
 	redeemSession, ok := k.GetRedeemSession(ctx, custodianGroupUID)
 	if !ok {
 		return fmt.Errorf("redeem session not found")
@@ -96,10 +96,10 @@ func (k Keeper) UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID []
 		return fmt.Errorf("redeem session is not in executing phase")
 	}
 
-	if redeemSession.IsSwitching {
-		return fmt.Errorf("redeem session is switching")
+	if !redeemSession.IsSwitching {
+		return fmt.Errorf("redeem session is not in switching state")
 	}
-
+	redeemSession.Sequence = sequence
 	redeemSession.CurrentPhase = covExported.Preparing
 	redeemSession.IsSwitching = false
 	redeemSession.PhaseExpiredAt = uint64(ctx.BlockHeight()) + k.GetParams(ctx).BlockLimitPerSession
