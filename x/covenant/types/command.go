@@ -218,6 +218,10 @@ func NewCommandID(id []byte) CommandID {
 	return commandID
 }
 
+func (c CommandID) Bytes() [32]byte {
+	return c
+}
+
 // Hex returns the hex representation of command ID
 func (c CommandID) Hex() string {
 	return hex.EncodeToString(c[:])

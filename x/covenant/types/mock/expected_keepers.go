@@ -89,6 +89,9 @@ var _ covenanttypes.Keeper = &KeeperMock{}
 //			LoggerFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger {
 //				panic("mock out the Logger method")
 //			},
+//			RenewRedeemSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error {
+//				panic("mock out the RenewRedeemSession method")
+//			},
 //			RotateKeyFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, key multisigtypes.Key) error {
 //				panic("mock out the RotateKey method")
 //			},
@@ -182,6 +185,9 @@ type KeeperMock struct {
 
 	// LoggerFunc mocks the Logger method.
 	LoggerFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger
+
+	// RenewRedeemSessionFunc mocks the RenewRedeemSession method.
+	RenewRedeemSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error
 
 	// RotateKeyFunc mocks the RotateKey method.
 	RotateKeyFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, key multisigtypes.Key) error
@@ -330,6 +336,13 @@ type KeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx github_com_cosmos_cosmos_sdk_types.Context
 		}
+		// RenewRedeemSession holds details about calls to the RenewRedeemSession method.
+		RenewRedeemSession []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// CustodianGroupUID is the custodianGroupUID argument value.
+			CustodianGroupUID []byte
+		}
 		// RotateKey holds details about calls to the RotateKey method.
 		RotateKey []struct {
 			// Ctx is the ctx argument value.
@@ -438,6 +451,7 @@ type KeeperMock struct {
 	lockGetSigningSessions             sync.RWMutex
 	lockGetSigningSessionsByExpiry     sync.RWMutex
 	lockLogger                         sync.RWMutex
+	lockRenewRedeemSession             sync.RWMutex
 	lockRotateKey                      sync.RWMutex
 	lockSetCovenantRouter              sync.RWMutex
 	lockSetKey                         sync.RWMutex
@@ -1067,6 +1081,42 @@ func (mock *KeeperMock) LoggerCalls() []struct {
 	mock.lockLogger.RLock()
 	calls = mock.calls.Logger
 	mock.lockLogger.RUnlock()
+	return calls
+}
+
+// RenewRedeemSession calls RenewRedeemSessionFunc.
+func (mock *KeeperMock) RenewRedeemSession(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error {
+	if mock.RenewRedeemSessionFunc == nil {
+		panic("KeeperMock.RenewRedeemSessionFunc: method is nil but Keeper.RenewRedeemSession was just called")
+	}
+	callInfo := struct {
+		Ctx               github_com_cosmos_cosmos_sdk_types.Context
+		CustodianGroupUID []byte
+	}{
+		Ctx:               ctx,
+		CustodianGroupUID: custodianGroupUID,
+	}
+	mock.lockRenewRedeemSession.Lock()
+	mock.calls.RenewRedeemSession = append(mock.calls.RenewRedeemSession, callInfo)
+	mock.lockRenewRedeemSession.Unlock()
+	return mock.RenewRedeemSessionFunc(ctx, custodianGroupUID)
+}
+
+// RenewRedeemSessionCalls gets all the calls that were made to RenewRedeemSession.
+// Check the length with:
+//
+//	len(mockedKeeper.RenewRedeemSessionCalls())
+func (mock *KeeperMock) RenewRedeemSessionCalls() []struct {
+	Ctx               github_com_cosmos_cosmos_sdk_types.Context
+	CustodianGroupUID []byte
+} {
+	var calls []struct {
+		Ctx               github_com_cosmos_cosmos_sdk_types.Context
+		CustodianGroupUID []byte
+	}
+	mock.lockRenewRedeemSession.RLock()
+	calls = mock.calls.RenewRedeemSession
+	mock.lockRenewRedeemSession.RUnlock()
 	return calls
 }
 
@@ -2746,6 +2796,9 @@ var _ covenanttypes.BaseKeeper = &BaseKeeperMock{}
 //			ForChainFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (chainsTypes.ChainKeeper, error) {
 //				panic("mock out the ForChain method")
 //			},
+//			GetLatestBtcPoolingBatchForChainFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) *chainsTypes.CommandBatch {
+//				panic("mock out the GetLatestBtcPoolingBatchForChain method")
+//			},
 //			GetLatestCommandBatchForChainFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) chainsTypes.CommandBatch {
 //				panic("mock out the GetLatestCommandBatchForChain method")
 //			},
@@ -2761,6 +2814,9 @@ type BaseKeeperMock struct {
 
 	// ForChainFunc mocks the ForChain method.
 	ForChainFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (chainsTypes.ChainKeeper, error)
+
+	// GetLatestBtcPoolingBatchForChainFunc mocks the GetLatestBtcPoolingBatchForChain method.
+	GetLatestBtcPoolingBatchForChainFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) *chainsTypes.CommandBatch
 
 	// GetLatestCommandBatchForChainFunc mocks the GetLatestCommandBatchForChain method.
 	GetLatestCommandBatchForChainFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) chainsTypes.CommandBatch
@@ -2783,6 +2839,13 @@ type BaseKeeperMock struct {
 			// Chain is the chain argument value.
 			Chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
 		}
+		// GetLatestBtcPoolingBatchForChain holds details about calls to the GetLatestBtcPoolingBatchForChain method.
+		GetLatestBtcPoolingBatchForChain []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// Chain is the chain argument value.
+			Chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+		}
 		// GetLatestCommandBatchForChain holds details about calls to the GetLatestCommandBatchForChain method.
 		GetLatestCommandBatchForChain []struct {
 			// Ctx is the ctx argument value.
@@ -2791,9 +2854,10 @@ type BaseKeeperMock struct {
 			ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
 		}
 	}
-	lockCreateNewBtcPoolingBatchToSign sync.RWMutex
-	lockForChain                       sync.RWMutex
-	lockGetLatestCommandBatchForChain  sync.RWMutex
+	lockCreateNewBtcPoolingBatchToSign   sync.RWMutex
+	lockForChain                         sync.RWMutex
+	lockGetLatestBtcPoolingBatchForChain sync.RWMutex
+	lockGetLatestCommandBatchForChain    sync.RWMutex
 }
 
 // CreateNewBtcPoolingBatchToSign calls CreateNewBtcPoolingBatchToSignFunc.
@@ -2869,6 +2933,42 @@ func (mock *BaseKeeperMock) ForChainCalls() []struct {
 	mock.lockForChain.RLock()
 	calls = mock.calls.ForChain
 	mock.lockForChain.RUnlock()
+	return calls
+}
+
+// GetLatestBtcPoolingBatchForChain calls GetLatestBtcPoolingBatchForChainFunc.
+func (mock *BaseKeeperMock) GetLatestBtcPoolingBatchForChain(ctx github_com_cosmos_cosmos_sdk_types.Context, chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) *chainsTypes.CommandBatch {
+	if mock.GetLatestBtcPoolingBatchForChainFunc == nil {
+		panic("BaseKeeperMock.GetLatestBtcPoolingBatchForChainFunc: method is nil but BaseKeeper.GetLatestBtcPoolingBatchForChain was just called")
+	}
+	callInfo := struct {
+		Ctx   github_com_cosmos_cosmos_sdk_types.Context
+		Chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	}{
+		Ctx:   ctx,
+		Chain: chain,
+	}
+	mock.lockGetLatestBtcPoolingBatchForChain.Lock()
+	mock.calls.GetLatestBtcPoolingBatchForChain = append(mock.calls.GetLatestBtcPoolingBatchForChain, callInfo)
+	mock.lockGetLatestBtcPoolingBatchForChain.Unlock()
+	return mock.GetLatestBtcPoolingBatchForChainFunc(ctx, chain)
+}
+
+// GetLatestBtcPoolingBatchForChainCalls gets all the calls that were made to GetLatestBtcPoolingBatchForChain.
+// Check the length with:
+//
+//	len(mockedBaseKeeper.GetLatestBtcPoolingBatchForChainCalls())
+func (mock *BaseKeeperMock) GetLatestBtcPoolingBatchForChainCalls() []struct {
+	Ctx   github_com_cosmos_cosmos_sdk_types.Context
+	Chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+} {
+	var calls []struct {
+		Ctx   github_com_cosmos_cosmos_sdk_types.Context
+		Chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	}
+	mock.lockGetLatestBtcPoolingBatchForChain.RLock()
+	calls = mock.calls.GetLatestBtcPoolingBatchForChain
+	mock.lockGetLatestBtcPoolingBatchForChain.RUnlock()
 	return calls
 }
 

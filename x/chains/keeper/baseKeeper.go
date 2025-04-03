@@ -143,3 +143,11 @@ func (k BaseKeeper) GetLatestCommandBatchForChain(ctx sdk.Context, chain nexus.C
 
 	return ck.GetLatestCommandBatch(ctx)
 }
+
+func (k BaseKeeper) GetLatestBtcPoolingBatchForChain(ctx sdk.Context, chain nexus.ChainName) *types.CommandBatch {
+	ck, err := k.ForChain(ctx, chain)
+	if err != nil {
+		return nil
+	}
+	return ck.GetLatestBtcPoolingBatch(ctx)
+}

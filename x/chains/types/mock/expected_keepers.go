@@ -1920,6 +1920,9 @@ var _ types.ChainKeeper = &ChainKeeperMock{}
 //			GetGatewayAddressFunc: func(ctx sdk.Context) (types.Address, bool) {
 //				panic("mock out the GetGatewayAddress method")
 //			},
+//			GetLatestBtcPoolingBatchFunc: func(ctx sdk.Context) *types.CommandBatch {
+//				panic("mock out the GetLatestBtcPoolingBatch method")
+//			},
 //			GetLatestCommandBatchFunc: func(ctx sdk.Context) types.CommandBatch {
 //				panic("mock out the GetLatestCommandBatch method")
 //			},
@@ -2061,6 +2064,9 @@ type ChainKeeperMock struct {
 
 	// GetGatewayAddressFunc mocks the GetGatewayAddress method.
 	GetGatewayAddressFunc func(ctx sdk.Context) (types.Address, bool)
+
+	// GetLatestBtcPoolingBatchFunc mocks the GetLatestBtcPoolingBatch method.
+	GetLatestBtcPoolingBatchFunc func(ctx sdk.Context) *types.CommandBatch
 
 	// GetLatestCommandBatchFunc mocks the GetLatestCommandBatch method.
 	GetLatestCommandBatchFunc func(ctx sdk.Context) types.CommandBatch
@@ -2293,6 +2299,11 @@ type ChainKeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx sdk.Context
 		}
+		// GetLatestBtcPoolingBatch holds details about calls to the GetLatestBtcPoolingBatch method.
+		GetLatestBtcPoolingBatch []struct {
+			// Ctx is the ctx argument value.
+			Ctx sdk.Context
+		}
 		// GetLatestCommandBatch holds details about calls to the GetLatestCommandBatch method.
 		GetLatestCommandBatch []struct {
 			// Ctx is the ctx argument value.
@@ -2445,6 +2456,7 @@ type ChainKeeperMock struct {
 	lockGetERC20TokenBySymbol          sync.RWMutex
 	lockGetEvent                       sync.RWMutex
 	lockGetGatewayAddress              sync.RWMutex
+	lockGetLatestBtcPoolingBatch       sync.RWMutex
 	lockGetLatestCommandBatch          sync.RWMutex
 	lockGetMetadata                    sync.RWMutex
 	lockGetMinVoterCount               sync.RWMutex
@@ -3298,6 +3310,38 @@ func (mock *ChainKeeperMock) GetGatewayAddressCalls() []struct {
 	mock.lockGetGatewayAddress.RLock()
 	calls = mock.calls.GetGatewayAddress
 	mock.lockGetGatewayAddress.RUnlock()
+	return calls
+}
+
+// GetLatestBtcPoolingBatch calls GetLatestBtcPoolingBatchFunc.
+func (mock *ChainKeeperMock) GetLatestBtcPoolingBatch(ctx sdk.Context) *types.CommandBatch {
+	if mock.GetLatestBtcPoolingBatchFunc == nil {
+		panic("ChainKeeperMock.GetLatestBtcPoolingBatchFunc: method is nil but ChainKeeper.GetLatestBtcPoolingBatch was just called")
+	}
+	callInfo := struct {
+		Ctx sdk.Context
+	}{
+		Ctx: ctx,
+	}
+	mock.lockGetLatestBtcPoolingBatch.Lock()
+	mock.calls.GetLatestBtcPoolingBatch = append(mock.calls.GetLatestBtcPoolingBatch, callInfo)
+	mock.lockGetLatestBtcPoolingBatch.Unlock()
+	return mock.GetLatestBtcPoolingBatchFunc(ctx)
+}
+
+// GetLatestBtcPoolingBatchCalls gets all the calls that were made to GetLatestBtcPoolingBatch.
+// Check the length with:
+//
+//	len(mockedChainKeeper.GetLatestBtcPoolingBatchCalls())
+func (mock *ChainKeeperMock) GetLatestBtcPoolingBatchCalls() []struct {
+	Ctx sdk.Context
+} {
+	var calls []struct {
+		Ctx sdk.Context
+	}
+	mock.lockGetLatestBtcPoolingBatch.RLock()
+	calls = mock.calls.GetLatestBtcPoolingBatch
+	mock.lockGetLatestBtcPoolingBatch.RUnlock()
 	return calls
 }
 

@@ -66,6 +66,7 @@ type Keeper interface {
 
 	SetStandaloneCommandMetadata(ctx sdk.Context, meta StandaloneCommandMetadata, prefix key.Key)
 	SetUnsignedStandaloneCommandID(ctx sdk.Context, id []byte)
+	RenewRedeemSession(ctx sdk.Context, custodianGroupUID []byte) error
 }
 
 // Snapshotter provides snapshot keeper functionality
@@ -126,6 +127,7 @@ type BaseKeeper interface {
 	ForChain(ctx sdk.Context, chain nexus.ChainName) (chainsTypes.ChainKeeper, error)
 	GetLatestCommandBatchForChain(ctx sdk.Context, chainName nexus.ChainName) chainsTypes.CommandBatch
 	CreateNewBtcPoolingBatchToSign(ctx sdk.Context, chainName nexus.ChainName, pk []byte) (chainsTypes.CommandBatch, error)
+	GetLatestBtcPoolingBatchForChain(ctx sdk.Context, chain nexus.ChainName) *chainsTypes.CommandBatch
 }
 
 type ChainKeeper interface {

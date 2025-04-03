@@ -86,6 +86,7 @@ type ChainKeeper interface {
 	GetRedeemSession(ctx sdk.Context, custodianGroupUID []byte) (RedeemSession, bool)
 	GetRedeemSessions(ctx sdk.Context) ([]RedeemSession)
 	SetRedeemSession(ctx sdk.Context, session *RedeemSession) error
+	GetLatestBtcPoolingBatch(ctx sdk.Context) *CommandBatch 
 }
 
 // ParamsKeeper represents a global paramstore

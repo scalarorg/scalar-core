@@ -21,14 +21,15 @@ import (
 var (
 	stringType       = funcs.Must(abi.NewType("string", "string", nil))
 	bytesType        = funcs.Must(abi.NewType("bytes", "bytes", nil))
+	bytes32Type      = funcs.Must(abi.NewType("bytes32", "bytes32", nil))
 	uint256Type      = funcs.Must(abi.NewType("uint256", "uint256", nil))
 	uint64Type       = funcs.Must(abi.NewType("uint64", "uint64", nil))
 	uint256ArrayType = funcs.Must(abi.NewType("uint256[]", "uint256[]", nil))
 	uint32ArrayType  = funcs.Must(abi.NewType("uint32[]", "uint32[]", nil))
 	uint64ArrayType  = funcs.Must(abi.NewType("uint64[]", "uint64[]", nil))
 	stringArrayType  = funcs.Must(abi.NewType("string[]", "string[]", nil))
-	
-	redeemTokenPayloadArguments    = abi.Arguments{{Type: uint64Type}, {Type: bytesType}, {Type: stringArrayType}, {Type: uint32ArrayType}, {Type: uint256ArrayType}, {Type: uint64ArrayType}}
+
+	RedeemTokenPayloadArguments    = abi.Arguments{{Type: uint64Type}, {Type: bytesType}, {Type: stringArrayType}, {Type: uint32ArrayType}, {Type: uint64ArrayType}, {Type: bytes32Type}}
 	callContractWithTokenArguments = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: bytesType}, {Type: stringType}, {Type: uint256Type}}
 )
 
@@ -105,6 +106,25 @@ func (k Keeper) UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID []
 	redeemSession.Sequence = sequence
 	redeemSession.CurrentPhase = covExported.Preparing
 	redeemSession.IsSwitching = false
+	redeemSession.PhaseExpiredAt = uint64(ctx.BlockHeight()) + k.GetParams(ctx).BlockLimitPerSession
+	// Update the redeem session in storage
+	k.setRedeemSession(ctx, redeemSession)
+	return nil
+}
+
+func (k Keeper) RenewRedeemSession(ctx sdk.Context, custodianGroupUID []byte) error {
+	redeemSession, ok := k.GetRedeemSession(ctx, custodianGroupUID)
+	if !ok {
+		return fmt.Errorf("redeem session not found")
+	}
+	if redeemSession.CurrentPhase != covExported.Preparing {
+		return fmt.Errorf("redeem session is not in executing phase")
+	}
+
+	if redeemSession.IsSwitching {
+		return fmt.Errorf("redeem session is not in switching state")
+	}
+
 	redeemSession.PhaseExpiredAt = uint64(ctx.BlockHeight()) + k.GetParams(ctx).BlockLimitPerSession
 	// Update the redeem session in storage
 	k.setRedeemSession(ctx, redeemSession)
@@ -241,11 +261,18 @@ func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 		amounts[i] = utxo.AmountInSats
 	}
 
-	payload, err := redeemTokenPayloadArguments.Pack(req.Amount, req.LockingScript, txIds, vouts, amounts)
+	cmdId := cov.NewCommandID(reqId)
+
+	payload, err := RedeemTokenPayloadArguments.Pack(
+		req.Amount,
+		req.LockingScript,
+		txIds,
+		vouts,
+		amounts,
+		reqId)
 	if err != nil {
 		return nil, nil, err
 	}
-
 	params, err := callContractWithTokenArguments.Pack(
 		req.DestChain,
 		req.Address,
@@ -257,8 +284,6 @@ func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 	if err != nil {
 		return nil, nil, err
 	}
-
-	cmdId := cov.NewCommandID(reqId)
 
 	return params, &cmdId, err
 }

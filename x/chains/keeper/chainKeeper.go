@@ -700,10 +700,6 @@ func (k chainKeeper) CreateNewBtcPoolingBatchToSign(ctx sdk.Context, chain nexus
 		return types.CommandBatch{}, nil
 	}
 
-	if firstCmd == nil {
-		return types.CommandBatch{}, nil
-	}
-
 	return k.createNewBtcBatchFollowCmd(ctx, firstCmd)
 }
 
@@ -721,10 +717,6 @@ func (k chainKeeper) createNewBtcUpcBatchToSign(ctx sdk.Context) (types.CommandB
 		return types.CommandBatch{}, nil
 	}
 
-	if firstCmd == nil {
-		return types.CommandBatch{}, nil
-	}
-
 	return k.createNewBtcBatchFollowCmd(ctx, firstCmd)
 }
 
@@ -735,10 +727,10 @@ func (k chainKeeper) createNewBtcBatchFollowCmd(ctx sdk.Context, cmd *types.Comm
 	keyID := cmd.KeyID
 
 	filter := func(value codec.ProtoMarshaler) bool {
-		cmd, ok := value.(*types.Command)
-		gasCost += cmd.MaxGasCost
+		c, ok := value.(*types.Command)
+		gasCost += c.MaxGasCost
 		// Note: This is used to limit the number of commands in the batch
-		return ok && cmd.KeyID == keyID && gasCost <= gasLimit
+		return ok && c.KeyID == keyID && gasCost <= gasLimit
 	}
 
 	commands := []types.Command{cmd.Clone()}
@@ -839,6 +831,39 @@ func (k chainKeeper) GetLatestCommandBatch(ctx sdk.Context) types.CommandBatch {
 	}
 
 	return types.NonExistentCommand
+}
+
+func (k chainKeeper) GetLatestBtcPoolingBatch(ctx sdk.Context) *types.CommandBatch {
+	chain := k.GetName()
+	if !types.IsBitcoinChain(chain) {
+		return nil
+	}
+	prefix := protocol.GetBTCKeyIDPrefix(protocol.LIQUIDITY_MODEL_POOL)
+
+	var md *types.CommandBatchMetadata
+	iter := k.getStore(ctx).Iterator(utils.LowerCaseKey(commandBatchPrefix))
+	defer utils.CloseLogError(iter, k.Logger(ctx))
+	for ; iter.Valid(); iter.Next() {
+		var batch types.CommandBatchMetadata
+		iter.UnmarshalValue(&batch)
+		if batch.Status == types.BatchNonExistent {
+			continue
+		}
+		if strings.HasPrefix(batch.KeyID.String(), prefix) {
+			md = &batch
+		}
+	}
+
+	if md == nil {
+		return nil
+	}
+
+	setter := func(m types.CommandBatchMetadata) {
+		k.setCommandBatchMetadata(ctx, m)
+	}
+
+	batch := types.NewCommandBatch(*md, setter)
+	return &batch
 }
 
 func (k chainKeeper) getLatestCommandBatchMetadata(ctx sdk.Context) types.CommandBatchMetadata {
