@@ -9,6 +9,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	goutils "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils"
@@ -199,6 +200,7 @@ func handleSwitchPhase(ctx sdk.Context, k types.Keeper, b types.BaseKeeper, pk t
 		_ = success
 	}
 	for _, redeemSession := range expiredRedeemSessions {
+		log.Info().Msgf("turn on the flag isSwitching for redeem session %s", redeemSession.CustodianGroupUID.Hex())
 		k.SetSwitchingForRedeemSession(ctx, redeemSession.CustodianGroupUID[:])
 	}
 }
@@ -745,6 +747,10 @@ func switchPhaseForEvmChain(ctx sdk.Context,
 	evmSession *types.ExpiredEvmSession,
 	newPhase exported.Phase,
 ) error {
+	log.Info().
+		Str("chain", evmSession.Chain.String()).
+		Str("CustodianGroupUID", hex.EncodeToString(evmSession.CustodianGroupUID.Bytes())).
+		Msg("switchPhaseForEvmChain")
 	// Start signing session for reserve redeem utxos
 	keyID, ok := multisig.GetCurrentKeyID(ctx, evmSession.Chain)
 	if !ok {

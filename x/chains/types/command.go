@@ -12,6 +12,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	proto "github.com/gogo/protobuf/proto"
+	"github.com/rs/zerolog/log"
 	"github.com/stoewer/go-strcase"
 
 	"github.com/scalarorg/scalar-core/utils/funcs"
@@ -550,6 +551,7 @@ func DecodeRegisterCustodianGroupParams(bz []byte) chains.Hash {
 }
 
 func DecodeSwitchPhaseParams(bz []byte) (uint8, chains.Hash) {
+	log.Info().Msgf("DecodeSwitchPhaseParams, bz: %s", hex.EncodeToString(bz))
 	params := funcs.Must(StrictDecode(SwitchPhaseArguments, bz))
 
 	return params[0].(uint8), params[1].([common.HashLength]byte)
