@@ -10,7 +10,7 @@ import (
 // InitGenesis initializes the state from a genesis file
 func (k Keeper) InitGenesis(ctx sdk.Context, state types.GenesisState) {
 	k.setParams(ctx, state.Params)
-	slices.ForEach(state.SigningSessions, withContext(ctx, k.setSigningSession))
+	slices.ForEach(state.SigningSessions, withContext(ctx, k.SetSigningSession))
 
 	k.setSigningSessionCount(ctx, uint64(len(state.SigningSessions)))
 

@@ -14,7 +14,7 @@ import (
 )
 
 type msgServer struct {
-	Keeper
+	Keeper      types.Keeper
 	snapshotter types.Snapshotter
 	staker      types.StakingKeeper
 	slashing    types.SlashingKeeper
@@ -28,7 +28,7 @@ type msgServer struct {
 var _ types.MsgServiceServer = msgServer{}
 
 type MsgServerConstructArgs struct {
-	Keeper
+	Keeper      types.Keeper
 	Snapshotter types.Snapshotter
 	Staker      types.StakingKeeper
 	Slashing    types.SlashingKeeper

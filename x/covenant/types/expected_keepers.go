@@ -7,10 +7,10 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/key"
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
-	exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	mtypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -23,7 +23,7 @@ import (
 
 // Keeper provides keeper functionality of this module
 //
-//go:generate moq -pkg mock -out ./mock/expected_keepers.go . Keeper Snapshotter Rewarder Nexus
+//go:generate moq -pkg mock -out ./mock/expected_keepers.go . Keeper Snapshotter StakingKeeper SlashingKeeper Rewarder Nexus MultisigKeeper ProtocolKeeper BaseKeeper ChainKeeper Voter ScalarnetKeeper
 type Keeper interface {
 	Logger(ctx sdk.Context) log.Logger
 	GetParams(ctx sdk.Context) (params Params)
@@ -45,7 +45,7 @@ type Keeper interface {
 	DeleteSigningSession(ctx sdk.Context, id uint64)
 	GetCovenantRouter() CovenantRouter
 
-	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, multiPsbt []exported.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
+	SignPsbt(ctx sdk.Context, keyID multisig.KeyID, multiPsbt []covenant.Psbt, module string, chainName nexus.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
 
 	GetEventsQueue(ctx sdk.Context) utils.BlockHeightKVQueue
 	EnqueueEvent(ctx sdk.Context, event *Event) error
@@ -58,6 +58,14 @@ type Keeper interface {
 	SetUtxoSnapshot(ctx sdk.Context, utxoSnapshot *UTXOSnapshot) error
 
 	GetReserveUTXOCommandByID(ctx sdk.Context, id []byte) StandaloneCommand
+
+	RotateKey(ctx sdk.Context, chainName nexus.ChainName, key mtypes.Key) error
+	GetSigningSession(ctx sdk.Context, id uint64) (signing SigningSession, ok bool)
+	SetSigningSession(ctx sdk.Context, signing SigningSession)
+	CreateRedeemParams(ctx sdk.Context, req *ReserveRedeemUtxoRequest, custodianGrUID []byte) ([]byte, *CommandID, error)
+
+	SetStandaloneCommandMetadata(ctx sdk.Context, meta StandaloneCommandMetadata, prefix key.Key)
+	SetUnsignedStandaloneCommandID(ctx sdk.Context, id []byte)
 }
 
 // Snapshotter provides snapshot keeper functionality

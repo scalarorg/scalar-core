@@ -165,7 +165,7 @@ func (am AppModule) LegacyQuerierHandler(*codec.LegacyAmino) sdk.Querier {
 // module-specific GRPC queries.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
 	msgServer := keeper.NewMsgServerImpl(&keeper.MsgServerConstructArgs{
-		Keeper:      *am.keeper,
+		Keeper:      am.keeper,
 		Snapshotter: am.snapshotter,
 		Staker:      am.staking,
 		Slashing:    am.slashing,

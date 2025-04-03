@@ -37,7 +37,7 @@ func (s msgServer) ConfirmRedeemTxs(c context.Context, req *types.ConfirmRedeemT
 
 	chainParams := chainKeeper.GetParams(ctx)
 
-	s.Logger(ctx).Info("ConfirmRedeemTxs", "chainParams", chainParams)
+	s.Keeper.Logger(ctx).Info("ConfirmRedeemTxs", "chainParams", chainParams)
 
 	nwParams := chainParams.Metadata["params"]
 	if nwParams == "" {
@@ -84,7 +84,7 @@ func (s msgServer) ConfirmRedeemTxs(c context.Context, req *types.ConfirmRedeemT
 		NetworkParams:      nwParams,
 	}
 
-	s.Logger(ctx).Info(fmt.Sprintf("ConfirmRedeemTxStarted: %++v", event))
+	s.Keeper.Logger(ctx).Info(fmt.Sprintf("ConfirmRedeemTxStarted: %++v", event))
 
 	events.Emit(ctx, event)
 
@@ -138,7 +138,7 @@ func (s msgServer) ConfirmSwitchedPhase(c context.Context, req *types.ConfirmSwi
 		CustodianGroupUID:  req.CustodianGroupUID,
 	}
 
-	s.Logger(ctx).Info(fmt.Sprintf("ConfirmSwitchedPhaseStarted: %++v", event))
+	s.Keeper.Logger(ctx).Info(fmt.Sprintf("ConfirmSwitchedPhaseStarted: %++v", event))
 
 	events.Emit(ctx, event)
 	return &types.ConfirmSwitchedPhaseResponse{}, nil
@@ -217,7 +217,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, fmt.Errorf("could not find key ID for '%s'", req.SourceChain)
 	}
 	// Create redeem payload for evm tx
-	params, commandID, err := s.createRedeemParams(ctx, req, protocol.CustodianGroupUID.Bytes())
+	params, commandID, err := s.Keeper.CreateRedeemParams(ctx, req, protocol.CustodianGroupUID.Bytes())
 	if err != nil {
 		return nil, err
 	}
@@ -243,7 +243,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, err
 	}
 
-	logger := s.Logger(ctx)
+	logger := s.Keeper.Logger(ctx)
 	logger.Info("ReserveRedeemUtxoStarted", "amount", req.Amount, "chain", sourceChain.Name, "sender", req.Sender)
 
 	ctx.EventManager().EmitEvent(
@@ -282,11 +282,11 @@ func (s msgServer) createReserveRedeemUtxoStandaloneCommand(
 		return nil, err
 	}
 
-	s.setStandaloneCommandMetadata(ctx, md, reserveUtxoCommandPrefix)
-	s.setUnsignedStandaloneCommandID(ctx, md.ID)
+	s.Keeper.SetStandaloneCommandMetadata(ctx, md, reserveUtxoCommandPrefix)
+	s.Keeper.SetUnsignedStandaloneCommandID(ctx, md.ID)
 
 	setter := func(m types.StandaloneCommandMetadata) {
-		s.setStandaloneCommandMetadata(ctx, m, reserveUtxoCommandPrefix)
+		s.Keeper.SetStandaloneCommandMetadata(ctx, m, reserveUtxoCommandPrefix)
 	}
 
 	cmd := types.NewStandaloneCommand(md, setter)
@@ -296,7 +296,7 @@ func (s msgServer) createReserveRedeemUtxoStandaloneCommand(
 
 func (s msgServer) InitializeUtxo(c context.Context, req *types.InitializeUtxoRequest) (*types.InitializeUtxoResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-	s.Logger(ctx).Info(fmt.Sprintf("[InitializeUtxo] start handling initializingUtxoRequest for chain %s", req.Chain.String()))
+	s.Keeper.Logger(ctx).Info(fmt.Sprintf("[InitializeUtxo] start handling initializingUtxoRequest for chain %s", req.Chain.String()))
 	chain, err := s.validateBtcChain(ctx, req.Chain)
 	if err != nil {
 		return nil, err
@@ -323,7 +323,7 @@ func (s msgServer) InitializeUtxo(c context.Context, req *types.InitializeUtxoRe
 		if err != nil {
 			return nil, err
 		}
-		s.Logger(ctx).Info(fmt.Sprintf("[InitializeUtxo] custodian group %s with taproot address %s", cusGr.UID.Hex(), taprootAddress.String()))
+		s.Keeper.Logger(ctx).Info(fmt.Sprintf("[InitializeUtxo] custodian group %s with taproot address %s", cusGr.UID.Hex(), taprootAddress.String()))
 		threshold := chainParams.VotingThreshold
 
 		snapshot, err := s.createSnapshot(ctx, *chain, threshold)

@@ -14,7 +14,7 @@ import (
 func (s msgServer) SubmitTapScriptSigs(c context.Context, req *types.SubmitTapScriptSigsRequest) (*types.SubmitTapScriptSigsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	signingSession, ok := s.getSigningSession(ctx, req.SigID)
+	signingSession, ok := s.Keeper.GetSigningSession(ctx, req.SigID)
 	if !ok {
 		return nil, fmt.Errorf("signing session %d not found", req.SigID)
 	}
@@ -30,9 +30,9 @@ func (s msgServer) SubmitTapScriptSigs(c context.Context, req *types.SubmitTapSc
 
 	logSigningSession(signingSession)
 
-	s.setSigningSession(ctx, signingSession)
+	s.Keeper.SetSigningSession(ctx, signingSession)
 
-	s.Logger(ctx).Info("new signature submitted",
+	s.Keeper.Logger(ctx).Info("new signature submitted",
 		"sig_id", signingSession.GetID(),
 		"participant", participant.String(),
 		"number_of_signed_psbt_participants", signingSession.GetNumberOfSignedPsbtParticipants().String(),

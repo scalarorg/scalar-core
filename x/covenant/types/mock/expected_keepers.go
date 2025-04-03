@@ -6,15 +6,21 @@ package mock
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
+	stakingTypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	utils "github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/key"
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	github_com_scalarorg_scalar_core_x_covenant_exported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	covenanttypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	github_com_scalarorg_scalar_core_x_multisig_exported "github.com/scalarorg/scalar-core/x/multisig/exported"
 	multisigtypes "github.com/scalarorg/scalar-core/x/multisig/types"
 	github_com_scalarorg_scalar_core_x_nexus_exported "github.com/scalarorg/scalar-core/x/nexus/exported"
+	protocol "github.com/scalarorg/scalar-core/x/protocol/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
+	scalarnetTypes "github.com/scalarorg/scalar-core/x/scalarnet/types"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
+	github_com_scalarorg_scalar_core_x_vote_exported "github.com/scalarorg/scalar-core/x/vote/exported"
 	"github.com/tendermint/tendermint/libs/log"
 	"sync"
 )
@@ -34,6 +40,9 @@ var _ covenanttypes.Keeper = &KeeperMock{}
 //			},
 //			CreateCustodianGroupFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, params covenanttypes.Params) error {
 //				panic("mock out the CreateCustodianGroup method")
+//			},
+//			CreateRedeemParamsFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID []byte) ([]byte, *covenanttypes.CommandID, error) {
+//				panic("mock out the CreateRedeemParams method")
 //			},
 //			DeleteSigningSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, id uint64)  {
 //				panic("mock out the DeleteSigningSession method")
@@ -68,6 +77,9 @@ var _ covenanttypes.Keeper = &KeeperMock{}
 //			GetReserveUTXOCommandByIDFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, id []byte) covenanttypes.StandaloneCommand {
 //				panic("mock out the GetReserveUTXOCommandByID method")
 //			},
+//			GetSigningSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, id uint64) (covenanttypes.SigningSession, bool) {
+//				panic("mock out the GetSigningSession method")
+//			},
 //			GetSigningSessionsFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context) ([]covenanttypes.SigningSession, bool) {
 //				panic("mock out the GetSigningSessions method")
 //			},
@@ -77,14 +89,26 @@ var _ covenanttypes.Keeper = &KeeperMock{}
 //			LoggerFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger {
 //				panic("mock out the Logger method")
 //			},
+//			RotateKeyFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, key multisigtypes.Key) error {
+//				panic("mock out the RotateKey method")
+//			},
 //			SetCovenantRouterFunc: func(router covenanttypes.CovenantRouter)  {
 //				panic("mock out the SetCovenantRouter method")
 //			},
 //			SetKeyFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, key multisigtypes.Key)  {
 //				panic("mock out the SetKey method")
 //			},
+//			SetSigningSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, signing covenanttypes.SigningSession)  {
+//				panic("mock out the SetSigningSession method")
+//			},
+//			SetStandaloneCommandMetadataFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, meta covenanttypes.StandaloneCommandMetadata, prefix key.Key)  {
+//				panic("mock out the SetStandaloneCommandMetadata method")
+//			},
 //			SetSwitchingForRedeemSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error {
 //				panic("mock out the SetSwitchingForRedeemSession method")
+//			},
+//			SetUnsignedStandaloneCommandIDFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, id []byte)  {
+//				panic("mock out the SetUnsignedStandaloneCommandID method")
 //			},
 //			SetUtxoSnapshotFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, utxoSnapshot *covenanttypes.UTXOSnapshot) error {
 //				panic("mock out the SetUtxoSnapshot method")
@@ -110,6 +134,9 @@ type KeeperMock struct {
 
 	// CreateCustodianGroupFunc mocks the CreateCustodianGroup method.
 	CreateCustodianGroupFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, params covenanttypes.Params) error
+
+	// CreateRedeemParamsFunc mocks the CreateRedeemParams method.
+	CreateRedeemParamsFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID []byte) ([]byte, *covenanttypes.CommandID, error)
 
 	// DeleteSigningSessionFunc mocks the DeleteSigningSession method.
 	DeleteSigningSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, id uint64)
@@ -144,6 +171,9 @@ type KeeperMock struct {
 	// GetReserveUTXOCommandByIDFunc mocks the GetReserveUTXOCommandByID method.
 	GetReserveUTXOCommandByIDFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, id []byte) covenanttypes.StandaloneCommand
 
+	// GetSigningSessionFunc mocks the GetSigningSession method.
+	GetSigningSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, id uint64) (covenanttypes.SigningSession, bool)
+
 	// GetSigningSessionsFunc mocks the GetSigningSessions method.
 	GetSigningSessionsFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context) ([]covenanttypes.SigningSession, bool)
 
@@ -153,14 +183,26 @@ type KeeperMock struct {
 	// LoggerFunc mocks the Logger method.
 	LoggerFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger
 
+	// RotateKeyFunc mocks the RotateKey method.
+	RotateKeyFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, key multisigtypes.Key) error
+
 	// SetCovenantRouterFunc mocks the SetCovenantRouter method.
 	SetCovenantRouterFunc func(router covenanttypes.CovenantRouter)
 
 	// SetKeyFunc mocks the SetKey method.
 	SetKeyFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, key multisigtypes.Key)
 
+	// SetSigningSessionFunc mocks the SetSigningSession method.
+	SetSigningSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, signing covenanttypes.SigningSession)
+
+	// SetStandaloneCommandMetadataFunc mocks the SetStandaloneCommandMetadata method.
+	SetStandaloneCommandMetadataFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, meta covenanttypes.StandaloneCommandMetadata, prefix key.Key)
+
 	// SetSwitchingForRedeemSessionFunc mocks the SetSwitchingForRedeemSession method.
 	SetSwitchingForRedeemSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error
+
+	// SetUnsignedStandaloneCommandIDFunc mocks the SetUnsignedStandaloneCommandID method.
+	SetUnsignedStandaloneCommandIDFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, id []byte)
 
 	// SetUtxoSnapshotFunc mocks the SetUtxoSnapshot method.
 	SetUtxoSnapshotFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, utxoSnapshot *covenanttypes.UTXOSnapshot) error
@@ -189,6 +231,15 @@ type KeeperMock struct {
 			Ctx github_com_cosmos_cosmos_sdk_types.Context
 			// Params is the params argument value.
 			Params covenanttypes.Params
+		}
+		// CreateRedeemParams holds details about calls to the CreateRedeemParams method.
+		CreateRedeemParams []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// Req is the req argument value.
+			Req *covenanttypes.ReserveRedeemUtxoRequest
+			// CustodianGrUID is the custodianGrUID argument value.
+			CustodianGrUID []byte
 		}
 		// DeleteSigningSession holds details about calls to the DeleteSigningSession method.
 		DeleteSigningSession []struct {
@@ -255,6 +306,13 @@ type KeeperMock struct {
 			// ID is the id argument value.
 			ID []byte
 		}
+		// GetSigningSession holds details about calls to the GetSigningSession method.
+		GetSigningSession []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// ID is the id argument value.
+			ID uint64
+		}
 		// GetSigningSessions holds details about calls to the GetSigningSessions method.
 		GetSigningSessions []struct {
 			// Ctx is the ctx argument value.
@@ -272,6 +330,15 @@ type KeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx github_com_cosmos_cosmos_sdk_types.Context
 		}
+		// RotateKey holds details about calls to the RotateKey method.
+		RotateKey []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// ChainName is the chainName argument value.
+			ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+			// Key is the key argument value.
+			Key multisigtypes.Key
+		}
 		// SetCovenantRouter holds details about calls to the SetCovenantRouter method.
 		SetCovenantRouter []struct {
 			// Router is the router argument value.
@@ -284,12 +351,35 @@ type KeeperMock struct {
 			// Key is the key argument value.
 			Key multisigtypes.Key
 		}
+		// SetSigningSession holds details about calls to the SetSigningSession method.
+		SetSigningSession []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// Signing is the signing argument value.
+			Signing covenanttypes.SigningSession
+		}
+		// SetStandaloneCommandMetadata holds details about calls to the SetStandaloneCommandMetadata method.
+		SetStandaloneCommandMetadata []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// Meta is the meta argument value.
+			Meta covenanttypes.StandaloneCommandMetadata
+			// Prefix is the prefix argument value.
+			Prefix key.Key
+		}
 		// SetSwitchingForRedeemSession holds details about calls to the SetSwitchingForRedeemSession method.
 		SetSwitchingForRedeemSession []struct {
 			// Ctx is the ctx argument value.
 			Ctx github_com_cosmos_cosmos_sdk_types.Context
 			// CustodianGroupUID is the custodianGroupUID argument value.
 			CustodianGroupUID []byte
+		}
+		// SetUnsignedStandaloneCommandID holds details about calls to the SetUnsignedStandaloneCommandID method.
+		SetUnsignedStandaloneCommandID []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// ID is the id argument value.
+			ID []byte
 		}
 		// SetUtxoSnapshot holds details about calls to the SetUtxoSnapshot method.
 		SetUtxoSnapshot []struct {
@@ -330,29 +420,35 @@ type KeeperMock struct {
 			CustodianGroupUID []byte
 		}
 	}
-	lockCreateCustodian              sync.RWMutex
-	lockCreateCustodianGroup         sync.RWMutex
-	lockDeleteSigningSession         sync.RWMutex
-	lockEnqueueEvent                 sync.RWMutex
-	lockGetAllCustodianGroups        sync.RWMutex
-	lockGetCovenantRouter            sync.RWMutex
-	lockGetCustodianGroup            sync.RWMutex
-	lockGetCustodians                sync.RWMutex
-	lockGetEventsQueue               sync.RWMutex
-	lockGetKey                       sync.RWMutex
-	lockGetParams                    sync.RWMutex
-	lockGetRedeemSession             sync.RWMutex
-	lockGetReserveUTXOCommandByID    sync.RWMutex
-	lockGetSigningSessions           sync.RWMutex
-	lockGetSigningSessionsByExpiry   sync.RWMutex
-	lockLogger                       sync.RWMutex
-	lockSetCovenantRouter            sync.RWMutex
-	lockSetKey                       sync.RWMutex
-	lockSetSwitchingForRedeemSession sync.RWMutex
-	lockSetUtxoSnapshot              sync.RWMutex
-	lockSignPsbt                     sync.RWMutex
-	lockUpdateExecutingToPreparing   sync.RWMutex
-	lockUpdatePreparingToExecuting   sync.RWMutex
+	lockCreateCustodian                sync.RWMutex
+	lockCreateCustodianGroup           sync.RWMutex
+	lockCreateRedeemParams             sync.RWMutex
+	lockDeleteSigningSession           sync.RWMutex
+	lockEnqueueEvent                   sync.RWMutex
+	lockGetAllCustodianGroups          sync.RWMutex
+	lockGetCovenantRouter              sync.RWMutex
+	lockGetCustodianGroup              sync.RWMutex
+	lockGetCustodians                  sync.RWMutex
+	lockGetEventsQueue                 sync.RWMutex
+	lockGetKey                         sync.RWMutex
+	lockGetParams                      sync.RWMutex
+	lockGetRedeemSession               sync.RWMutex
+	lockGetReserveUTXOCommandByID      sync.RWMutex
+	lockGetSigningSession              sync.RWMutex
+	lockGetSigningSessions             sync.RWMutex
+	lockGetSigningSessionsByExpiry     sync.RWMutex
+	lockLogger                         sync.RWMutex
+	lockRotateKey                      sync.RWMutex
+	lockSetCovenantRouter              sync.RWMutex
+	lockSetKey                         sync.RWMutex
+	lockSetSigningSession              sync.RWMutex
+	lockSetStandaloneCommandMetadata   sync.RWMutex
+	lockSetSwitchingForRedeemSession   sync.RWMutex
+	lockSetUnsignedStandaloneCommandID sync.RWMutex
+	lockSetUtxoSnapshot                sync.RWMutex
+	lockSignPsbt                       sync.RWMutex
+	lockUpdateExecutingToPreparing     sync.RWMutex
+	lockUpdatePreparingToExecuting     sync.RWMutex
 }
 
 // CreateCustodian calls CreateCustodianFunc.
@@ -424,6 +520,46 @@ func (mock *KeeperMock) CreateCustodianGroupCalls() []struct {
 	mock.lockCreateCustodianGroup.RLock()
 	calls = mock.calls.CreateCustodianGroup
 	mock.lockCreateCustodianGroup.RUnlock()
+	return calls
+}
+
+// CreateRedeemParams calls CreateRedeemParamsFunc.
+func (mock *KeeperMock) CreateRedeemParams(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID []byte) ([]byte, *covenanttypes.CommandID, error) {
+	if mock.CreateRedeemParamsFunc == nil {
+		panic("KeeperMock.CreateRedeemParamsFunc: method is nil but Keeper.CreateRedeemParams was just called")
+	}
+	callInfo := struct {
+		Ctx            github_com_cosmos_cosmos_sdk_types.Context
+		Req            *covenanttypes.ReserveRedeemUtxoRequest
+		CustodianGrUID []byte
+	}{
+		Ctx:            ctx,
+		Req:            req,
+		CustodianGrUID: custodianGrUID,
+	}
+	mock.lockCreateRedeemParams.Lock()
+	mock.calls.CreateRedeemParams = append(mock.calls.CreateRedeemParams, callInfo)
+	mock.lockCreateRedeemParams.Unlock()
+	return mock.CreateRedeemParamsFunc(ctx, req, custodianGrUID)
+}
+
+// CreateRedeemParamsCalls gets all the calls that were made to CreateRedeemParams.
+// Check the length with:
+//
+//	len(mockedKeeper.CreateRedeemParamsCalls())
+func (mock *KeeperMock) CreateRedeemParamsCalls() []struct {
+	Ctx            github_com_cosmos_cosmos_sdk_types.Context
+	Req            *covenanttypes.ReserveRedeemUtxoRequest
+	CustodianGrUID []byte
+} {
+	var calls []struct {
+		Ctx            github_com_cosmos_cosmos_sdk_types.Context
+		Req            *covenanttypes.ReserveRedeemUtxoRequest
+		CustodianGrUID []byte
+	}
+	mock.lockCreateRedeemParams.RLock()
+	calls = mock.calls.CreateRedeemParams
+	mock.lockCreateRedeemParams.RUnlock()
 	return calls
 }
 
@@ -798,6 +934,42 @@ func (mock *KeeperMock) GetReserveUTXOCommandByIDCalls() []struct {
 	return calls
 }
 
+// GetSigningSession calls GetSigningSessionFunc.
+func (mock *KeeperMock) GetSigningSession(ctx github_com_cosmos_cosmos_sdk_types.Context, id uint64) (covenanttypes.SigningSession, bool) {
+	if mock.GetSigningSessionFunc == nil {
+		panic("KeeperMock.GetSigningSessionFunc: method is nil but Keeper.GetSigningSession was just called")
+	}
+	callInfo := struct {
+		Ctx github_com_cosmos_cosmos_sdk_types.Context
+		ID  uint64
+	}{
+		Ctx: ctx,
+		ID:  id,
+	}
+	mock.lockGetSigningSession.Lock()
+	mock.calls.GetSigningSession = append(mock.calls.GetSigningSession, callInfo)
+	mock.lockGetSigningSession.Unlock()
+	return mock.GetSigningSessionFunc(ctx, id)
+}
+
+// GetSigningSessionCalls gets all the calls that were made to GetSigningSession.
+// Check the length with:
+//
+//	len(mockedKeeper.GetSigningSessionCalls())
+func (mock *KeeperMock) GetSigningSessionCalls() []struct {
+	Ctx github_com_cosmos_cosmos_sdk_types.Context
+	ID  uint64
+} {
+	var calls []struct {
+		Ctx github_com_cosmos_cosmos_sdk_types.Context
+		ID  uint64
+	}
+	mock.lockGetSigningSession.RLock()
+	calls = mock.calls.GetSigningSession
+	mock.lockGetSigningSession.RUnlock()
+	return calls
+}
+
 // GetSigningSessions calls GetSigningSessionsFunc.
 func (mock *KeeperMock) GetSigningSessions(ctx github_com_cosmos_cosmos_sdk_types.Context) ([]covenanttypes.SigningSession, bool) {
 	if mock.GetSigningSessionsFunc == nil {
@@ -898,6 +1070,46 @@ func (mock *KeeperMock) LoggerCalls() []struct {
 	return calls
 }
 
+// RotateKey calls RotateKeyFunc.
+func (mock *KeeperMock) RotateKey(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, key multisigtypes.Key) error {
+	if mock.RotateKeyFunc == nil {
+		panic("KeeperMock.RotateKeyFunc: method is nil but Keeper.RotateKey was just called")
+	}
+	callInfo := struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+		Key       multisigtypes.Key
+	}{
+		Ctx:       ctx,
+		ChainName: chainName,
+		Key:       key,
+	}
+	mock.lockRotateKey.Lock()
+	mock.calls.RotateKey = append(mock.calls.RotateKey, callInfo)
+	mock.lockRotateKey.Unlock()
+	return mock.RotateKeyFunc(ctx, chainName, key)
+}
+
+// RotateKeyCalls gets all the calls that were made to RotateKey.
+// Check the length with:
+//
+//	len(mockedKeeper.RotateKeyCalls())
+func (mock *KeeperMock) RotateKeyCalls() []struct {
+	Ctx       github_com_cosmos_cosmos_sdk_types.Context
+	ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	Key       multisigtypes.Key
+} {
+	var calls []struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+		Key       multisigtypes.Key
+	}
+	mock.lockRotateKey.RLock()
+	calls = mock.calls.RotateKey
+	mock.lockRotateKey.RUnlock()
+	return calls
+}
+
 // SetCovenantRouter calls SetCovenantRouterFunc.
 func (mock *KeeperMock) SetCovenantRouter(router covenanttypes.CovenantRouter) {
 	if mock.SetCovenantRouterFunc == nil {
@@ -966,6 +1178,82 @@ func (mock *KeeperMock) SetKeyCalls() []struct {
 	return calls
 }
 
+// SetSigningSession calls SetSigningSessionFunc.
+func (mock *KeeperMock) SetSigningSession(ctx github_com_cosmos_cosmos_sdk_types.Context, signing covenanttypes.SigningSession) {
+	if mock.SetSigningSessionFunc == nil {
+		panic("KeeperMock.SetSigningSessionFunc: method is nil but Keeper.SetSigningSession was just called")
+	}
+	callInfo := struct {
+		Ctx     github_com_cosmos_cosmos_sdk_types.Context
+		Signing covenanttypes.SigningSession
+	}{
+		Ctx:     ctx,
+		Signing: signing,
+	}
+	mock.lockSetSigningSession.Lock()
+	mock.calls.SetSigningSession = append(mock.calls.SetSigningSession, callInfo)
+	mock.lockSetSigningSession.Unlock()
+	mock.SetSigningSessionFunc(ctx, signing)
+}
+
+// SetSigningSessionCalls gets all the calls that were made to SetSigningSession.
+// Check the length with:
+//
+//	len(mockedKeeper.SetSigningSessionCalls())
+func (mock *KeeperMock) SetSigningSessionCalls() []struct {
+	Ctx     github_com_cosmos_cosmos_sdk_types.Context
+	Signing covenanttypes.SigningSession
+} {
+	var calls []struct {
+		Ctx     github_com_cosmos_cosmos_sdk_types.Context
+		Signing covenanttypes.SigningSession
+	}
+	mock.lockSetSigningSession.RLock()
+	calls = mock.calls.SetSigningSession
+	mock.lockSetSigningSession.RUnlock()
+	return calls
+}
+
+// SetStandaloneCommandMetadata calls SetStandaloneCommandMetadataFunc.
+func (mock *KeeperMock) SetStandaloneCommandMetadata(ctx github_com_cosmos_cosmos_sdk_types.Context, meta covenanttypes.StandaloneCommandMetadata, prefix key.Key) {
+	if mock.SetStandaloneCommandMetadataFunc == nil {
+		panic("KeeperMock.SetStandaloneCommandMetadataFunc: method is nil but Keeper.SetStandaloneCommandMetadata was just called")
+	}
+	callInfo := struct {
+		Ctx    github_com_cosmos_cosmos_sdk_types.Context
+		Meta   covenanttypes.StandaloneCommandMetadata
+		Prefix key.Key
+	}{
+		Ctx:    ctx,
+		Meta:   meta,
+		Prefix: prefix,
+	}
+	mock.lockSetStandaloneCommandMetadata.Lock()
+	mock.calls.SetStandaloneCommandMetadata = append(mock.calls.SetStandaloneCommandMetadata, callInfo)
+	mock.lockSetStandaloneCommandMetadata.Unlock()
+	mock.SetStandaloneCommandMetadataFunc(ctx, meta, prefix)
+}
+
+// SetStandaloneCommandMetadataCalls gets all the calls that were made to SetStandaloneCommandMetadata.
+// Check the length with:
+//
+//	len(mockedKeeper.SetStandaloneCommandMetadataCalls())
+func (mock *KeeperMock) SetStandaloneCommandMetadataCalls() []struct {
+	Ctx    github_com_cosmos_cosmos_sdk_types.Context
+	Meta   covenanttypes.StandaloneCommandMetadata
+	Prefix key.Key
+} {
+	var calls []struct {
+		Ctx    github_com_cosmos_cosmos_sdk_types.Context
+		Meta   covenanttypes.StandaloneCommandMetadata
+		Prefix key.Key
+	}
+	mock.lockSetStandaloneCommandMetadata.RLock()
+	calls = mock.calls.SetStandaloneCommandMetadata
+	mock.lockSetStandaloneCommandMetadata.RUnlock()
+	return calls
+}
+
 // SetSwitchingForRedeemSession calls SetSwitchingForRedeemSessionFunc.
 func (mock *KeeperMock) SetSwitchingForRedeemSession(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error {
 	if mock.SetSwitchingForRedeemSessionFunc == nil {
@@ -999,6 +1287,42 @@ func (mock *KeeperMock) SetSwitchingForRedeemSessionCalls() []struct {
 	mock.lockSetSwitchingForRedeemSession.RLock()
 	calls = mock.calls.SetSwitchingForRedeemSession
 	mock.lockSetSwitchingForRedeemSession.RUnlock()
+	return calls
+}
+
+// SetUnsignedStandaloneCommandID calls SetUnsignedStandaloneCommandIDFunc.
+func (mock *KeeperMock) SetUnsignedStandaloneCommandID(ctx github_com_cosmos_cosmos_sdk_types.Context, id []byte) {
+	if mock.SetUnsignedStandaloneCommandIDFunc == nil {
+		panic("KeeperMock.SetUnsignedStandaloneCommandIDFunc: method is nil but Keeper.SetUnsignedStandaloneCommandID was just called")
+	}
+	callInfo := struct {
+		Ctx github_com_cosmos_cosmos_sdk_types.Context
+		ID  []byte
+	}{
+		Ctx: ctx,
+		ID:  id,
+	}
+	mock.lockSetUnsignedStandaloneCommandID.Lock()
+	mock.calls.SetUnsignedStandaloneCommandID = append(mock.calls.SetUnsignedStandaloneCommandID, callInfo)
+	mock.lockSetUnsignedStandaloneCommandID.Unlock()
+	mock.SetUnsignedStandaloneCommandIDFunc(ctx, id)
+}
+
+// SetUnsignedStandaloneCommandIDCalls gets all the calls that were made to SetUnsignedStandaloneCommandID.
+// Check the length with:
+//
+//	len(mockedKeeper.SetUnsignedStandaloneCommandIDCalls())
+func (mock *KeeperMock) SetUnsignedStandaloneCommandIDCalls() []struct {
+	Ctx github_com_cosmos_cosmos_sdk_types.Context
+	ID  []byte
+} {
+	var calls []struct {
+		Ctx github_com_cosmos_cosmos_sdk_types.Context
+		ID  []byte
+	}
+	mock.lockSetUnsignedStandaloneCommandID.RLock()
+	calls = mock.calls.SetUnsignedStandaloneCommandID
+	mock.lockSetUnsignedStandaloneCommandID.RUnlock()
 	return calls
 }
 
@@ -1353,6 +1677,144 @@ func (mock *SnapshotterMock) GetProxyCalls() []struct {
 	mock.lockGetProxy.RLock()
 	calls = mock.calls.GetProxy
 	mock.lockGetProxy.RUnlock()
+	return calls
+}
+
+// Ensure, that StakingKeeperMock does implement covenanttypes.StakingKeeper.
+// If this is not the case, regenerate this file with moq.
+var _ covenanttypes.StakingKeeper = &StakingKeeperMock{}
+
+// StakingKeeperMock is a mock implementation of covenanttypes.StakingKeeper.
+//
+//	func TestSomethingThatUsesStakingKeeper(t *testing.T) {
+//
+//		// make and configure a mocked covenanttypes.StakingKeeper
+//		mockedStakingKeeper := &StakingKeeperMock{
+//			GetBondedValidatorsByPowerFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context) []stakingTypes.Validator {
+//				panic("mock out the GetBondedValidatorsByPower method")
+//			},
+//		}
+//
+//		// use mockedStakingKeeper in code that requires covenanttypes.StakingKeeper
+//		// and then make assertions.
+//
+//	}
+type StakingKeeperMock struct {
+	// GetBondedValidatorsByPowerFunc mocks the GetBondedValidatorsByPower method.
+	GetBondedValidatorsByPowerFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context) []stakingTypes.Validator
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// GetBondedValidatorsByPower holds details about calls to the GetBondedValidatorsByPower method.
+		GetBondedValidatorsByPower []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+		}
+	}
+	lockGetBondedValidatorsByPower sync.RWMutex
+}
+
+// GetBondedValidatorsByPower calls GetBondedValidatorsByPowerFunc.
+func (mock *StakingKeeperMock) GetBondedValidatorsByPower(ctx github_com_cosmos_cosmos_sdk_types.Context) []stakingTypes.Validator {
+	if mock.GetBondedValidatorsByPowerFunc == nil {
+		panic("StakingKeeperMock.GetBondedValidatorsByPowerFunc: method is nil but StakingKeeper.GetBondedValidatorsByPower was just called")
+	}
+	callInfo := struct {
+		Ctx github_com_cosmos_cosmos_sdk_types.Context
+	}{
+		Ctx: ctx,
+	}
+	mock.lockGetBondedValidatorsByPower.Lock()
+	mock.calls.GetBondedValidatorsByPower = append(mock.calls.GetBondedValidatorsByPower, callInfo)
+	mock.lockGetBondedValidatorsByPower.Unlock()
+	return mock.GetBondedValidatorsByPowerFunc(ctx)
+}
+
+// GetBondedValidatorsByPowerCalls gets all the calls that were made to GetBondedValidatorsByPower.
+// Check the length with:
+//
+//	len(mockedStakingKeeper.GetBondedValidatorsByPowerCalls())
+func (mock *StakingKeeperMock) GetBondedValidatorsByPowerCalls() []struct {
+	Ctx github_com_cosmos_cosmos_sdk_types.Context
+} {
+	var calls []struct {
+		Ctx github_com_cosmos_cosmos_sdk_types.Context
+	}
+	mock.lockGetBondedValidatorsByPower.RLock()
+	calls = mock.calls.GetBondedValidatorsByPower
+	mock.lockGetBondedValidatorsByPower.RUnlock()
+	return calls
+}
+
+// Ensure, that SlashingKeeperMock does implement covenanttypes.SlashingKeeper.
+// If this is not the case, regenerate this file with moq.
+var _ covenanttypes.SlashingKeeper = &SlashingKeeperMock{}
+
+// SlashingKeeperMock is a mock implementation of covenanttypes.SlashingKeeper.
+//
+//	func TestSomethingThatUsesSlashingKeeper(t *testing.T) {
+//
+//		// make and configure a mocked covenanttypes.SlashingKeeper
+//		mockedSlashingKeeper := &SlashingKeeperMock{
+//			IsTombstonedFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, consAddr github_com_cosmos_cosmos_sdk_types.ConsAddress) bool {
+//				panic("mock out the IsTombstoned method")
+//			},
+//		}
+//
+//		// use mockedSlashingKeeper in code that requires covenanttypes.SlashingKeeper
+//		// and then make assertions.
+//
+//	}
+type SlashingKeeperMock struct {
+	// IsTombstonedFunc mocks the IsTombstoned method.
+	IsTombstonedFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, consAddr github_com_cosmos_cosmos_sdk_types.ConsAddress) bool
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// IsTombstoned holds details about calls to the IsTombstoned method.
+		IsTombstoned []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// ConsAddr is the consAddr argument value.
+			ConsAddr github_com_cosmos_cosmos_sdk_types.ConsAddress
+		}
+	}
+	lockIsTombstoned sync.RWMutex
+}
+
+// IsTombstoned calls IsTombstonedFunc.
+func (mock *SlashingKeeperMock) IsTombstoned(ctx github_com_cosmos_cosmos_sdk_types.Context, consAddr github_com_cosmos_cosmos_sdk_types.ConsAddress) bool {
+	if mock.IsTombstonedFunc == nil {
+		panic("SlashingKeeperMock.IsTombstonedFunc: method is nil but SlashingKeeper.IsTombstoned was just called")
+	}
+	callInfo := struct {
+		Ctx      github_com_cosmos_cosmos_sdk_types.Context
+		ConsAddr github_com_cosmos_cosmos_sdk_types.ConsAddress
+	}{
+		Ctx:      ctx,
+		ConsAddr: consAddr,
+	}
+	mock.lockIsTombstoned.Lock()
+	mock.calls.IsTombstoned = append(mock.calls.IsTombstoned, callInfo)
+	mock.lockIsTombstoned.Unlock()
+	return mock.IsTombstonedFunc(ctx, consAddr)
+}
+
+// IsTombstonedCalls gets all the calls that were made to IsTombstoned.
+// Check the length with:
+//
+//	len(mockedSlashingKeeper.IsTombstonedCalls())
+func (mock *SlashingKeeperMock) IsTombstonedCalls() []struct {
+	Ctx      github_com_cosmos_cosmos_sdk_types.Context
+	ConsAddr github_com_cosmos_cosmos_sdk_types.ConsAddress
+} {
+	var calls []struct {
+		Ctx      github_com_cosmos_cosmos_sdk_types.Context
+		ConsAddr github_com_cosmos_cosmos_sdk_types.ConsAddress
+	}
+	mock.lockIsTombstoned.RLock()
+	calls = mock.calls.IsTombstoned
+	mock.lockIsTombstoned.RUnlock()
 	return calls
 }
 
@@ -1797,5 +2259,811 @@ func (mock *NexusMock) SetChainMaintainerStateCalls() []struct {
 	mock.lockSetChainMaintainerState.RLock()
 	calls = mock.calls.SetChainMaintainerState
 	mock.lockSetChainMaintainerState.RUnlock()
+	return calls
+}
+
+// Ensure, that MultisigKeeperMock does implement covenanttypes.MultisigKeeper.
+// If this is not the case, regenerate this file with moq.
+var _ covenanttypes.MultisigKeeper = &MultisigKeeperMock{}
+
+// MultisigKeeperMock is a mock implementation of covenanttypes.MultisigKeeper.
+//
+//	func TestSomethingThatUsesMultisigKeeper(t *testing.T) {
+//
+//		// make and configure a mocked covenanttypes.MultisigKeeper
+//		mockedMultisigKeeper := &MultisigKeeperMock{
+//			AssignKeyFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID) error {
+//				panic("mock out the AssignKey method")
+//			},
+//			GetCurrentKeyIDFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, bool) {
+//				panic("mock out the GetCurrentKeyID method")
+//			},
+//			GetKeyFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID) (github_com_scalarorg_scalar_core_x_multisig_exported.Key, bool) {
+//				panic("mock out the GetKey method")
+//			},
+//			GetNextKeyIDFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, bool) {
+//				panic("mock out the GetNextKeyID method")
+//			},
+//			RotateKeyFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) error {
+//				panic("mock out the RotateKey method")
+//			},
+//			SignFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, payloadHash github_com_scalarorg_scalar_core_x_multisig_exported.Hash, module string, moduleMetadata ...codec.ProtoMarshaler) error {
+//				panic("mock out the Sign method")
+//			},
+//		}
+//
+//		// use mockedMultisigKeeper in code that requires covenanttypes.MultisigKeeper
+//		// and then make assertions.
+//
+//	}
+type MultisigKeeperMock struct {
+	// AssignKeyFunc mocks the AssignKey method.
+	AssignKeyFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID) error
+
+	// GetCurrentKeyIDFunc mocks the GetCurrentKeyID method.
+	GetCurrentKeyIDFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, bool)
+
+	// GetKeyFunc mocks the GetKey method.
+	GetKeyFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID) (github_com_scalarorg_scalar_core_x_multisig_exported.Key, bool)
+
+	// GetNextKeyIDFunc mocks the GetNextKeyID method.
+	GetNextKeyIDFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, bool)
+
+	// RotateKeyFunc mocks the RotateKey method.
+	RotateKeyFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) error
+
+	// SignFunc mocks the Sign method.
+	SignFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, payloadHash github_com_scalarorg_scalar_core_x_multisig_exported.Hash, module string, moduleMetadata ...codec.ProtoMarshaler) error
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// AssignKey holds details about calls to the AssignKey method.
+		AssignKey []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// ChainName is the chainName argument value.
+			ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+			// KeyID is the keyID argument value.
+			KeyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
+		}
+		// GetCurrentKeyID holds details about calls to the GetCurrentKeyID method.
+		GetCurrentKeyID []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// ChainName is the chainName argument value.
+			ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+		}
+		// GetKey holds details about calls to the GetKey method.
+		GetKey []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// KeyID is the keyID argument value.
+			KeyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
+		}
+		// GetNextKeyID holds details about calls to the GetNextKeyID method.
+		GetNextKeyID []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// ChainName is the chainName argument value.
+			ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+		}
+		// RotateKey holds details about calls to the RotateKey method.
+		RotateKey []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// ChainName is the chainName argument value.
+			ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+		}
+		// Sign holds details about calls to the Sign method.
+		Sign []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// KeyID is the keyID argument value.
+			KeyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
+			// PayloadHash is the payloadHash argument value.
+			PayloadHash github_com_scalarorg_scalar_core_x_multisig_exported.Hash
+			// Module is the module argument value.
+			Module string
+			// ModuleMetadata is the moduleMetadata argument value.
+			ModuleMetadata []codec.ProtoMarshaler
+		}
+	}
+	lockAssignKey       sync.RWMutex
+	lockGetCurrentKeyID sync.RWMutex
+	lockGetKey          sync.RWMutex
+	lockGetNextKeyID    sync.RWMutex
+	lockRotateKey       sync.RWMutex
+	lockSign            sync.RWMutex
+}
+
+// AssignKey calls AssignKeyFunc.
+func (mock *MultisigKeeperMock) AssignKey(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID) error {
+	if mock.AssignKeyFunc == nil {
+		panic("MultisigKeeperMock.AssignKeyFunc: method is nil but MultisigKeeper.AssignKey was just called")
+	}
+	callInfo := struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+		KeyID     github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
+	}{
+		Ctx:       ctx,
+		ChainName: chainName,
+		KeyID:     keyID,
+	}
+	mock.lockAssignKey.Lock()
+	mock.calls.AssignKey = append(mock.calls.AssignKey, callInfo)
+	mock.lockAssignKey.Unlock()
+	return mock.AssignKeyFunc(ctx, chainName, keyID)
+}
+
+// AssignKeyCalls gets all the calls that were made to AssignKey.
+// Check the length with:
+//
+//	len(mockedMultisigKeeper.AssignKeyCalls())
+func (mock *MultisigKeeperMock) AssignKeyCalls() []struct {
+	Ctx       github_com_cosmos_cosmos_sdk_types.Context
+	ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	KeyID     github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
+} {
+	var calls []struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+		KeyID     github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
+	}
+	mock.lockAssignKey.RLock()
+	calls = mock.calls.AssignKey
+	mock.lockAssignKey.RUnlock()
+	return calls
+}
+
+// GetCurrentKeyID calls GetCurrentKeyIDFunc.
+func (mock *MultisigKeeperMock) GetCurrentKeyID(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, bool) {
+	if mock.GetCurrentKeyIDFunc == nil {
+		panic("MultisigKeeperMock.GetCurrentKeyIDFunc: method is nil but MultisigKeeper.GetCurrentKeyID was just called")
+	}
+	callInfo := struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	}{
+		Ctx:       ctx,
+		ChainName: chainName,
+	}
+	mock.lockGetCurrentKeyID.Lock()
+	mock.calls.GetCurrentKeyID = append(mock.calls.GetCurrentKeyID, callInfo)
+	mock.lockGetCurrentKeyID.Unlock()
+	return mock.GetCurrentKeyIDFunc(ctx, chainName)
+}
+
+// GetCurrentKeyIDCalls gets all the calls that were made to GetCurrentKeyID.
+// Check the length with:
+//
+//	len(mockedMultisigKeeper.GetCurrentKeyIDCalls())
+func (mock *MultisigKeeperMock) GetCurrentKeyIDCalls() []struct {
+	Ctx       github_com_cosmos_cosmos_sdk_types.Context
+	ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+} {
+	var calls []struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	}
+	mock.lockGetCurrentKeyID.RLock()
+	calls = mock.calls.GetCurrentKeyID
+	mock.lockGetCurrentKeyID.RUnlock()
+	return calls
+}
+
+// GetKey calls GetKeyFunc.
+func (mock *MultisigKeeperMock) GetKey(ctx github_com_cosmos_cosmos_sdk_types.Context, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID) (github_com_scalarorg_scalar_core_x_multisig_exported.Key, bool) {
+	if mock.GetKeyFunc == nil {
+		panic("MultisigKeeperMock.GetKeyFunc: method is nil but MultisigKeeper.GetKey was just called")
+	}
+	callInfo := struct {
+		Ctx   github_com_cosmos_cosmos_sdk_types.Context
+		KeyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
+	}{
+		Ctx:   ctx,
+		KeyID: keyID,
+	}
+	mock.lockGetKey.Lock()
+	mock.calls.GetKey = append(mock.calls.GetKey, callInfo)
+	mock.lockGetKey.Unlock()
+	return mock.GetKeyFunc(ctx, keyID)
+}
+
+// GetKeyCalls gets all the calls that were made to GetKey.
+// Check the length with:
+//
+//	len(mockedMultisigKeeper.GetKeyCalls())
+func (mock *MultisigKeeperMock) GetKeyCalls() []struct {
+	Ctx   github_com_cosmos_cosmos_sdk_types.Context
+	KeyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
+} {
+	var calls []struct {
+		Ctx   github_com_cosmos_cosmos_sdk_types.Context
+		KeyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
+	}
+	mock.lockGetKey.RLock()
+	calls = mock.calls.GetKey
+	mock.lockGetKey.RUnlock()
+	return calls
+}
+
+// GetNextKeyID calls GetNextKeyIDFunc.
+func (mock *MultisigKeeperMock) GetNextKeyID(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, bool) {
+	if mock.GetNextKeyIDFunc == nil {
+		panic("MultisigKeeperMock.GetNextKeyIDFunc: method is nil but MultisigKeeper.GetNextKeyID was just called")
+	}
+	callInfo := struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	}{
+		Ctx:       ctx,
+		ChainName: chainName,
+	}
+	mock.lockGetNextKeyID.Lock()
+	mock.calls.GetNextKeyID = append(mock.calls.GetNextKeyID, callInfo)
+	mock.lockGetNextKeyID.Unlock()
+	return mock.GetNextKeyIDFunc(ctx, chainName)
+}
+
+// GetNextKeyIDCalls gets all the calls that were made to GetNextKeyID.
+// Check the length with:
+//
+//	len(mockedMultisigKeeper.GetNextKeyIDCalls())
+func (mock *MultisigKeeperMock) GetNextKeyIDCalls() []struct {
+	Ctx       github_com_cosmos_cosmos_sdk_types.Context
+	ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+} {
+	var calls []struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	}
+	mock.lockGetNextKeyID.RLock()
+	calls = mock.calls.GetNextKeyID
+	mock.lockGetNextKeyID.RUnlock()
+	return calls
+}
+
+// RotateKey calls RotateKeyFunc.
+func (mock *MultisigKeeperMock) RotateKey(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) error {
+	if mock.RotateKeyFunc == nil {
+		panic("MultisigKeeperMock.RotateKeyFunc: method is nil but MultisigKeeper.RotateKey was just called")
+	}
+	callInfo := struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	}{
+		Ctx:       ctx,
+		ChainName: chainName,
+	}
+	mock.lockRotateKey.Lock()
+	mock.calls.RotateKey = append(mock.calls.RotateKey, callInfo)
+	mock.lockRotateKey.Unlock()
+	return mock.RotateKeyFunc(ctx, chainName)
+}
+
+// RotateKeyCalls gets all the calls that were made to RotateKey.
+// Check the length with:
+//
+//	len(mockedMultisigKeeper.RotateKeyCalls())
+func (mock *MultisigKeeperMock) RotateKeyCalls() []struct {
+	Ctx       github_com_cosmos_cosmos_sdk_types.Context
+	ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+} {
+	var calls []struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	}
+	mock.lockRotateKey.RLock()
+	calls = mock.calls.RotateKey
+	mock.lockRotateKey.RUnlock()
+	return calls
+}
+
+// Sign calls SignFunc.
+func (mock *MultisigKeeperMock) Sign(ctx github_com_cosmos_cosmos_sdk_types.Context, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, payloadHash github_com_scalarorg_scalar_core_x_multisig_exported.Hash, module string, moduleMetadata ...codec.ProtoMarshaler) error {
+	if mock.SignFunc == nil {
+		panic("MultisigKeeperMock.SignFunc: method is nil but MultisigKeeper.Sign was just called")
+	}
+	callInfo := struct {
+		Ctx            github_com_cosmos_cosmos_sdk_types.Context
+		KeyID          github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
+		PayloadHash    github_com_scalarorg_scalar_core_x_multisig_exported.Hash
+		Module         string
+		ModuleMetadata []codec.ProtoMarshaler
+	}{
+		Ctx:            ctx,
+		KeyID:          keyID,
+		PayloadHash:    payloadHash,
+		Module:         module,
+		ModuleMetadata: moduleMetadata,
+	}
+	mock.lockSign.Lock()
+	mock.calls.Sign = append(mock.calls.Sign, callInfo)
+	mock.lockSign.Unlock()
+	return mock.SignFunc(ctx, keyID, payloadHash, module, moduleMetadata...)
+}
+
+// SignCalls gets all the calls that were made to Sign.
+// Check the length with:
+//
+//	len(mockedMultisigKeeper.SignCalls())
+func (mock *MultisigKeeperMock) SignCalls() []struct {
+	Ctx            github_com_cosmos_cosmos_sdk_types.Context
+	KeyID          github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
+	PayloadHash    github_com_scalarorg_scalar_core_x_multisig_exported.Hash
+	Module         string
+	ModuleMetadata []codec.ProtoMarshaler
+} {
+	var calls []struct {
+		Ctx            github_com_cosmos_cosmos_sdk_types.Context
+		KeyID          github_com_scalarorg_scalar_core_x_multisig_exported.KeyID
+		PayloadHash    github_com_scalarorg_scalar_core_x_multisig_exported.Hash
+		Module         string
+		ModuleMetadata []codec.ProtoMarshaler
+	}
+	mock.lockSign.RLock()
+	calls = mock.calls.Sign
+	mock.lockSign.RUnlock()
+	return calls
+}
+
+// Ensure, that ProtocolKeeperMock does implement covenanttypes.ProtocolKeeper.
+// If this is not the case, regenerate this file with moq.
+var _ covenanttypes.ProtocolKeeper = &ProtocolKeeperMock{}
+
+// ProtocolKeeperMock is a mock implementation of covenanttypes.ProtocolKeeper.
+//
+//	func TestSomethingThatUsesProtocolKeeper(t *testing.T) {
+//
+//		// make and configure a mocked covenanttypes.ProtocolKeeper
+//		mockedProtocolKeeper := &ProtocolKeeperMock{
+//			FindProtocolInfoByCustodianGroupUIDFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUIDs [][]byte) []*protocol.ProtocolInfo {
+//				panic("mock out the FindProtocolInfoByCustodianGroupUID method")
+//			},
+//			FindProtocolInfoByExternalSymbolFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, symbol string) (*protocol.ProtocolInfo, error) {
+//				panic("mock out the FindProtocolInfoByExternalSymbol method")
+//			},
+//		}
+//
+//		// use mockedProtocolKeeper in code that requires covenanttypes.ProtocolKeeper
+//		// and then make assertions.
+//
+//	}
+type ProtocolKeeperMock struct {
+	// FindProtocolInfoByCustodianGroupUIDFunc mocks the FindProtocolInfoByCustodianGroupUID method.
+	FindProtocolInfoByCustodianGroupUIDFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUIDs [][]byte) []*protocol.ProtocolInfo
+
+	// FindProtocolInfoByExternalSymbolFunc mocks the FindProtocolInfoByExternalSymbol method.
+	FindProtocolInfoByExternalSymbolFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, symbol string) (*protocol.ProtocolInfo, error)
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// FindProtocolInfoByCustodianGroupUID holds details about calls to the FindProtocolInfoByCustodianGroupUID method.
+		FindProtocolInfoByCustodianGroupUID []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// CustodianGroupUIDs is the custodianGroupUIDs argument value.
+			CustodianGroupUIDs [][]byte
+		}
+		// FindProtocolInfoByExternalSymbol holds details about calls to the FindProtocolInfoByExternalSymbol method.
+		FindProtocolInfoByExternalSymbol []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// Symbol is the symbol argument value.
+			Symbol string
+		}
+	}
+	lockFindProtocolInfoByCustodianGroupUID sync.RWMutex
+	lockFindProtocolInfoByExternalSymbol    sync.RWMutex
+}
+
+// FindProtocolInfoByCustodianGroupUID calls FindProtocolInfoByCustodianGroupUIDFunc.
+func (mock *ProtocolKeeperMock) FindProtocolInfoByCustodianGroupUID(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUIDs [][]byte) []*protocol.ProtocolInfo {
+	if mock.FindProtocolInfoByCustodianGroupUIDFunc == nil {
+		panic("ProtocolKeeperMock.FindProtocolInfoByCustodianGroupUIDFunc: method is nil but ProtocolKeeper.FindProtocolInfoByCustodianGroupUID was just called")
+	}
+	callInfo := struct {
+		Ctx                github_com_cosmos_cosmos_sdk_types.Context
+		CustodianGroupUIDs [][]byte
+	}{
+		Ctx:                ctx,
+		CustodianGroupUIDs: custodianGroupUIDs,
+	}
+	mock.lockFindProtocolInfoByCustodianGroupUID.Lock()
+	mock.calls.FindProtocolInfoByCustodianGroupUID = append(mock.calls.FindProtocolInfoByCustodianGroupUID, callInfo)
+	mock.lockFindProtocolInfoByCustodianGroupUID.Unlock()
+	return mock.FindProtocolInfoByCustodianGroupUIDFunc(ctx, custodianGroupUIDs)
+}
+
+// FindProtocolInfoByCustodianGroupUIDCalls gets all the calls that were made to FindProtocolInfoByCustodianGroupUID.
+// Check the length with:
+//
+//	len(mockedProtocolKeeper.FindProtocolInfoByCustodianGroupUIDCalls())
+func (mock *ProtocolKeeperMock) FindProtocolInfoByCustodianGroupUIDCalls() []struct {
+	Ctx                github_com_cosmos_cosmos_sdk_types.Context
+	CustodianGroupUIDs [][]byte
+} {
+	var calls []struct {
+		Ctx                github_com_cosmos_cosmos_sdk_types.Context
+		CustodianGroupUIDs [][]byte
+	}
+	mock.lockFindProtocolInfoByCustodianGroupUID.RLock()
+	calls = mock.calls.FindProtocolInfoByCustodianGroupUID
+	mock.lockFindProtocolInfoByCustodianGroupUID.RUnlock()
+	return calls
+}
+
+// FindProtocolInfoByExternalSymbol calls FindProtocolInfoByExternalSymbolFunc.
+func (mock *ProtocolKeeperMock) FindProtocolInfoByExternalSymbol(ctx github_com_cosmos_cosmos_sdk_types.Context, symbol string) (*protocol.ProtocolInfo, error) {
+	if mock.FindProtocolInfoByExternalSymbolFunc == nil {
+		panic("ProtocolKeeperMock.FindProtocolInfoByExternalSymbolFunc: method is nil but ProtocolKeeper.FindProtocolInfoByExternalSymbol was just called")
+	}
+	callInfo := struct {
+		Ctx    github_com_cosmos_cosmos_sdk_types.Context
+		Symbol string
+	}{
+		Ctx:    ctx,
+		Symbol: symbol,
+	}
+	mock.lockFindProtocolInfoByExternalSymbol.Lock()
+	mock.calls.FindProtocolInfoByExternalSymbol = append(mock.calls.FindProtocolInfoByExternalSymbol, callInfo)
+	mock.lockFindProtocolInfoByExternalSymbol.Unlock()
+	return mock.FindProtocolInfoByExternalSymbolFunc(ctx, symbol)
+}
+
+// FindProtocolInfoByExternalSymbolCalls gets all the calls that were made to FindProtocolInfoByExternalSymbol.
+// Check the length with:
+//
+//	len(mockedProtocolKeeper.FindProtocolInfoByExternalSymbolCalls())
+func (mock *ProtocolKeeperMock) FindProtocolInfoByExternalSymbolCalls() []struct {
+	Ctx    github_com_cosmos_cosmos_sdk_types.Context
+	Symbol string
+} {
+	var calls []struct {
+		Ctx    github_com_cosmos_cosmos_sdk_types.Context
+		Symbol string
+	}
+	mock.lockFindProtocolInfoByExternalSymbol.RLock()
+	calls = mock.calls.FindProtocolInfoByExternalSymbol
+	mock.lockFindProtocolInfoByExternalSymbol.RUnlock()
+	return calls
+}
+
+// Ensure, that BaseKeeperMock does implement covenanttypes.BaseKeeper.
+// If this is not the case, regenerate this file with moq.
+var _ covenanttypes.BaseKeeper = &BaseKeeperMock{}
+
+// BaseKeeperMock is a mock implementation of covenanttypes.BaseKeeper.
+//
+//	func TestSomethingThatUsesBaseKeeper(t *testing.T) {
+//
+//		// make and configure a mocked covenanttypes.BaseKeeper
+//		mockedBaseKeeper := &BaseKeeperMock{
+//			CreateNewBtcPoolingBatchToSignFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, pk []byte) (chainsTypes.CommandBatch, error) {
+//				panic("mock out the CreateNewBtcPoolingBatchToSign method")
+//			},
+//			ForChainFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (chainsTypes.ChainKeeper, error) {
+//				panic("mock out the ForChain method")
+//			},
+//			GetLatestCommandBatchForChainFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) chainsTypes.CommandBatch {
+//				panic("mock out the GetLatestCommandBatchForChain method")
+//			},
+//		}
+//
+//		// use mockedBaseKeeper in code that requires covenanttypes.BaseKeeper
+//		// and then make assertions.
+//
+//	}
+type BaseKeeperMock struct {
+	// CreateNewBtcPoolingBatchToSignFunc mocks the CreateNewBtcPoolingBatchToSign method.
+	CreateNewBtcPoolingBatchToSignFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, pk []byte) (chainsTypes.CommandBatch, error)
+
+	// ForChainFunc mocks the ForChain method.
+	ForChainFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (chainsTypes.ChainKeeper, error)
+
+	// GetLatestCommandBatchForChainFunc mocks the GetLatestCommandBatchForChain method.
+	GetLatestCommandBatchForChainFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) chainsTypes.CommandBatch
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// CreateNewBtcPoolingBatchToSign holds details about calls to the CreateNewBtcPoolingBatchToSign method.
+		CreateNewBtcPoolingBatchToSign []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// ChainName is the chainName argument value.
+			ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+			// Pk is the pk argument value.
+			Pk []byte
+		}
+		// ForChain holds details about calls to the ForChain method.
+		ForChain []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// Chain is the chain argument value.
+			Chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+		}
+		// GetLatestCommandBatchForChain holds details about calls to the GetLatestCommandBatchForChain method.
+		GetLatestCommandBatchForChain []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// ChainName is the chainName argument value.
+			ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+		}
+	}
+	lockCreateNewBtcPoolingBatchToSign sync.RWMutex
+	lockForChain                       sync.RWMutex
+	lockGetLatestCommandBatchForChain  sync.RWMutex
+}
+
+// CreateNewBtcPoolingBatchToSign calls CreateNewBtcPoolingBatchToSignFunc.
+func (mock *BaseKeeperMock) CreateNewBtcPoolingBatchToSign(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, pk []byte) (chainsTypes.CommandBatch, error) {
+	if mock.CreateNewBtcPoolingBatchToSignFunc == nil {
+		panic("BaseKeeperMock.CreateNewBtcPoolingBatchToSignFunc: method is nil but BaseKeeper.CreateNewBtcPoolingBatchToSign was just called")
+	}
+	callInfo := struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+		Pk        []byte
+	}{
+		Ctx:       ctx,
+		ChainName: chainName,
+		Pk:        pk,
+	}
+	mock.lockCreateNewBtcPoolingBatchToSign.Lock()
+	mock.calls.CreateNewBtcPoolingBatchToSign = append(mock.calls.CreateNewBtcPoolingBatchToSign, callInfo)
+	mock.lockCreateNewBtcPoolingBatchToSign.Unlock()
+	return mock.CreateNewBtcPoolingBatchToSignFunc(ctx, chainName, pk)
+}
+
+// CreateNewBtcPoolingBatchToSignCalls gets all the calls that were made to CreateNewBtcPoolingBatchToSign.
+// Check the length with:
+//
+//	len(mockedBaseKeeper.CreateNewBtcPoolingBatchToSignCalls())
+func (mock *BaseKeeperMock) CreateNewBtcPoolingBatchToSignCalls() []struct {
+	Ctx       github_com_cosmos_cosmos_sdk_types.Context
+	ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	Pk        []byte
+} {
+	var calls []struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+		Pk        []byte
+	}
+	mock.lockCreateNewBtcPoolingBatchToSign.RLock()
+	calls = mock.calls.CreateNewBtcPoolingBatchToSign
+	mock.lockCreateNewBtcPoolingBatchToSign.RUnlock()
+	return calls
+}
+
+// ForChain calls ForChainFunc.
+func (mock *BaseKeeperMock) ForChain(ctx github_com_cosmos_cosmos_sdk_types.Context, chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) (chainsTypes.ChainKeeper, error) {
+	if mock.ForChainFunc == nil {
+		panic("BaseKeeperMock.ForChainFunc: method is nil but BaseKeeper.ForChain was just called")
+	}
+	callInfo := struct {
+		Ctx   github_com_cosmos_cosmos_sdk_types.Context
+		Chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	}{
+		Ctx:   ctx,
+		Chain: chain,
+	}
+	mock.lockForChain.Lock()
+	mock.calls.ForChain = append(mock.calls.ForChain, callInfo)
+	mock.lockForChain.Unlock()
+	return mock.ForChainFunc(ctx, chain)
+}
+
+// ForChainCalls gets all the calls that were made to ForChain.
+// Check the length with:
+//
+//	len(mockedBaseKeeper.ForChainCalls())
+func (mock *BaseKeeperMock) ForChainCalls() []struct {
+	Ctx   github_com_cosmos_cosmos_sdk_types.Context
+	Chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+} {
+	var calls []struct {
+		Ctx   github_com_cosmos_cosmos_sdk_types.Context
+		Chain github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	}
+	mock.lockForChain.RLock()
+	calls = mock.calls.ForChain
+	mock.lockForChain.RUnlock()
+	return calls
+}
+
+// GetLatestCommandBatchForChain calls GetLatestCommandBatchForChainFunc.
+func (mock *BaseKeeperMock) GetLatestCommandBatchForChain(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName) chainsTypes.CommandBatch {
+	if mock.GetLatestCommandBatchForChainFunc == nil {
+		panic("BaseKeeperMock.GetLatestCommandBatchForChainFunc: method is nil but BaseKeeper.GetLatestCommandBatchForChain was just called")
+	}
+	callInfo := struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	}{
+		Ctx:       ctx,
+		ChainName: chainName,
+	}
+	mock.lockGetLatestCommandBatchForChain.Lock()
+	mock.calls.GetLatestCommandBatchForChain = append(mock.calls.GetLatestCommandBatchForChain, callInfo)
+	mock.lockGetLatestCommandBatchForChain.Unlock()
+	return mock.GetLatestCommandBatchForChainFunc(ctx, chainName)
+}
+
+// GetLatestCommandBatchForChainCalls gets all the calls that were made to GetLatestCommandBatchForChain.
+// Check the length with:
+//
+//	len(mockedBaseKeeper.GetLatestCommandBatchForChainCalls())
+func (mock *BaseKeeperMock) GetLatestCommandBatchForChainCalls() []struct {
+	Ctx       github_com_cosmos_cosmos_sdk_types.Context
+	ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+} {
+	var calls []struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		ChainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName
+	}
+	mock.lockGetLatestCommandBatchForChain.RLock()
+	calls = mock.calls.GetLatestCommandBatchForChain
+	mock.lockGetLatestCommandBatchForChain.RUnlock()
+	return calls
+}
+
+// Ensure, that ChainKeeperMock does implement covenanttypes.ChainKeeper.
+// If this is not the case, regenerate this file with moq.
+var _ covenanttypes.ChainKeeper = &ChainKeeperMock{}
+
+// ChainKeeperMock is a mock implementation of covenanttypes.ChainKeeper.
+//
+//	func TestSomethingThatUsesChainKeeper(t *testing.T) {
+//
+//		// make and configure a mocked covenanttypes.ChainKeeper
+//		mockedChainKeeper := &ChainKeeperMock{
+//		}
+//
+//		// use mockedChainKeeper in code that requires covenanttypes.ChainKeeper
+//		// and then make assertions.
+//
+//	}
+type ChainKeeperMock struct {
+	// calls tracks calls to the methods.
+	calls struct {
+	}
+}
+
+// Ensure, that VoterMock does implement covenanttypes.Voter.
+// If this is not the case, regenerate this file with moq.
+var _ covenanttypes.Voter = &VoterMock{}
+
+// VoterMock is a mock implementation of covenanttypes.Voter.
+//
+//	func TestSomethingThatUsesVoter(t *testing.T) {
+//
+//		// make and configure a mocked covenanttypes.Voter
+//		mockedVoter := &VoterMock{
+//			InitializePollFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, pollBuilder github_com_scalarorg_scalar_core_x_vote_exported.PollBuilder) (github_com_scalarorg_scalar_core_x_vote_exported.PollID, error) {
+//				panic("mock out the InitializePoll method")
+//			},
+//		}
+//
+//		// use mockedVoter in code that requires covenanttypes.Voter
+//		// and then make assertions.
+//
+//	}
+type VoterMock struct {
+	// InitializePollFunc mocks the InitializePoll method.
+	InitializePollFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, pollBuilder github_com_scalarorg_scalar_core_x_vote_exported.PollBuilder) (github_com_scalarorg_scalar_core_x_vote_exported.PollID, error)
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// InitializePoll holds details about calls to the InitializePoll method.
+		InitializePoll []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// PollBuilder is the pollBuilder argument value.
+			PollBuilder github_com_scalarorg_scalar_core_x_vote_exported.PollBuilder
+		}
+	}
+	lockInitializePoll sync.RWMutex
+}
+
+// InitializePoll calls InitializePollFunc.
+func (mock *VoterMock) InitializePoll(ctx github_com_cosmos_cosmos_sdk_types.Context, pollBuilder github_com_scalarorg_scalar_core_x_vote_exported.PollBuilder) (github_com_scalarorg_scalar_core_x_vote_exported.PollID, error) {
+	if mock.InitializePollFunc == nil {
+		panic("VoterMock.InitializePollFunc: method is nil but Voter.InitializePoll was just called")
+	}
+	callInfo := struct {
+		Ctx         github_com_cosmos_cosmos_sdk_types.Context
+		PollBuilder github_com_scalarorg_scalar_core_x_vote_exported.PollBuilder
+	}{
+		Ctx:         ctx,
+		PollBuilder: pollBuilder,
+	}
+	mock.lockInitializePoll.Lock()
+	mock.calls.InitializePoll = append(mock.calls.InitializePoll, callInfo)
+	mock.lockInitializePoll.Unlock()
+	return mock.InitializePollFunc(ctx, pollBuilder)
+}
+
+// InitializePollCalls gets all the calls that were made to InitializePoll.
+// Check the length with:
+//
+//	len(mockedVoter.InitializePollCalls())
+func (mock *VoterMock) InitializePollCalls() []struct {
+	Ctx         github_com_cosmos_cosmos_sdk_types.Context
+	PollBuilder github_com_scalarorg_scalar_core_x_vote_exported.PollBuilder
+} {
+	var calls []struct {
+		Ctx         github_com_cosmos_cosmos_sdk_types.Context
+		PollBuilder github_com_scalarorg_scalar_core_x_vote_exported.PollBuilder
+	}
+	mock.lockInitializePoll.RLock()
+	calls = mock.calls.InitializePoll
+	mock.lockInitializePoll.RUnlock()
+	return calls
+}
+
+// Ensure, that ScalarnetKeeperMock does implement covenanttypes.ScalarnetKeeper.
+// If this is not the case, regenerate this file with moq.
+var _ covenanttypes.ScalarnetKeeper = &ScalarnetKeeperMock{}
+
+// ScalarnetKeeperMock is a mock implementation of covenanttypes.ScalarnetKeeper.
+//
+//	func TestSomethingThatUsesScalarnetKeeper(t *testing.T) {
+//
+//		// make and configure a mocked covenanttypes.ScalarnetKeeper
+//		mockedScalarnetKeeper := &ScalarnetKeeperMock{
+//			GetParamsFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context) scalarnetTypes.Params {
+//				panic("mock out the GetParams method")
+//			},
+//		}
+//
+//		// use mockedScalarnetKeeper in code that requires covenanttypes.ScalarnetKeeper
+//		// and then make assertions.
+//
+//	}
+type ScalarnetKeeperMock struct {
+	// GetParamsFunc mocks the GetParams method.
+	GetParamsFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context) scalarnetTypes.Params
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// GetParams holds details about calls to the GetParams method.
+		GetParams []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+		}
+	}
+	lockGetParams sync.RWMutex
+}
+
+// GetParams calls GetParamsFunc.
+func (mock *ScalarnetKeeperMock) GetParams(ctx github_com_cosmos_cosmos_sdk_types.Context) scalarnetTypes.Params {
+	if mock.GetParamsFunc == nil {
+		panic("ScalarnetKeeperMock.GetParamsFunc: method is nil but ScalarnetKeeper.GetParams was just called")
+	}
+	callInfo := struct {
+		Ctx github_com_cosmos_cosmos_sdk_types.Context
+	}{
+		Ctx: ctx,
+	}
+	mock.lockGetParams.Lock()
+	mock.calls.GetParams = append(mock.calls.GetParams, callInfo)
+	mock.lockGetParams.Unlock()
+	return mock.GetParamsFunc(ctx)
+}
+
+// GetParamsCalls gets all the calls that were made to GetParams.
+// Check the length with:
+//
+//	len(mockedScalarnetKeeper.GetParamsCalls())
+func (mock *ScalarnetKeeperMock) GetParamsCalls() []struct {
+	Ctx github_com_cosmos_cosmos_sdk_types.Context
+} {
+	var calls []struct {
+		Ctx github_com_cosmos_cosmos_sdk_types.Context
+	}
+	mock.lockGetParams.RLock()
+	calls = mock.calls.GetParams
+	mock.lockGetParams.RUnlock()
 	return calls
 }

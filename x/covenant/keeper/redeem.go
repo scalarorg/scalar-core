@@ -215,7 +215,7 @@ func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID []byte, requestI
 	return reserveUtxos, nil
 }
 
-func (k Keeper) createRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRequest, custodianGrUID []byte) ([]byte, *cov.CommandID, error) {
+func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRequest, custodianGrUID []byte) ([]byte, *cov.CommandID, error) {
 
 	bz := make([]byte, 8)
 	binary.BigEndian.PutUint64(bz, uint64(ctx.BlockHeight()))
@@ -267,7 +267,7 @@ func (k Keeper) GetReserveUTXOCommandByID(ctx sdk.Context, id []byte) cov.Standa
 	md := k.getStandaloneCommandMetadata(ctx, id, reserveUtxoCommandPrefix)
 
 	setter := func(m cov.StandaloneCommandMetadata) {
-		k.setStandaloneCommandMetadata(ctx, m, reserveUtxoCommandPrefix)
+		k.SetStandaloneCommandMetadata(ctx, m, reserveUtxoCommandPrefix)
 	}
 
 	return cov.NewStandaloneCommand(md, setter)
@@ -279,11 +279,11 @@ func (k Keeper) getStandaloneCommandMetadata(ctx sdk.Context, id []byte, prefix 
 	return md
 }
 
-func (k Keeper) setStandaloneCommandMetadata(ctx sdk.Context, meta cov.StandaloneCommandMetadata, prefix key.Key) {
+func (k Keeper) SetStandaloneCommandMetadata(ctx sdk.Context, meta cov.StandaloneCommandMetadata, prefix key.Key) {
 	funcs.MustNoErr(
 		k.getStore(ctx).SetNewValidated(prefix.Append(key.FromBz(meta.ID)), &meta))
 }
 
-func (k Keeper) setUnsignedStandaloneCommandID(ctx sdk.Context, id []byte) {
+func (k Keeper) SetUnsignedStandaloneCommandID(ctx sdk.Context, id []byte) {
 	k.getStore(ctx).SetRawNew(unsignedStandaloneIDKey, id)
 }

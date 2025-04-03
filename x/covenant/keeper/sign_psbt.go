@@ -58,7 +58,7 @@ func (k Keeper) SignPsbt(ctx sdk.Context, keyID multisig.KeyID, multiPsbt []expo
 		return err
 	}
 
-	k.setSigningSession(ctx, signingSession)
+	k.SetSigningSession(ctx, signingSession)
 
 	events.Emit(ctx, types.NewSigningPsbtStarted(signingSession.GetID(), key, multiPsbt, module, chainName))
 

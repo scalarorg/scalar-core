@@ -17,7 +17,7 @@ func (k Keeper) GetSigningSessions(ctx sdk.Context) (signingSessions []types.Sig
 	return nil, false
 }
 
-func (k Keeper) setSigningSession(ctx sdk.Context, signing types.SigningSession) {
+func (k Keeper) SetSigningSession(ctx sdk.Context, signing types.SigningSession) {
 	// the deletion is necessary because we may update it to a different location depending on the current state of the session
 	deletedKey := expirySigningPrefix.Append(utils.KeyFromInt(signing.ExpiresAt)).Append(utils.KeyFromInt(signing.GetID()))
 	k.getStore(ctx).Delete(deletedKey)
@@ -32,7 +32,7 @@ func (k Keeper) setSigningSession(ctx sdk.Context, signing types.SigningSession)
 	clog.Redf("setSigningSession, signingSessionKey: %+v", signingSessionKey)
 }
 
-func (k Keeper) getSigningSession(ctx sdk.Context, id uint64) (signing types.SigningSession, ok bool) {
+func (k Keeper) GetSigningSession(ctx sdk.Context, id uint64) (signing types.SigningSession, ok bool) {
 	return signing, k.getStore(ctx).Get(getSigningSessionKey(id), &signing)
 }
 
@@ -77,7 +77,7 @@ func (k Keeper) nextSigID(ctx sdk.Context) uint64 {
 
 // DeleteSigningSession deletes the signing session with the given ID
 func (k Keeper) DeleteSigningSession(ctx sdk.Context, id uint64) {
-	signing, ok := k.getSigningSession(ctx, id)
+	signing, ok := k.GetSigningSession(ctx, id)
 	if !ok {
 		return
 	}
@@ -99,7 +99,7 @@ func (k Keeper) GetSigningSessionsByExpiry(ctx sdk.Context, expiry int64) []type
 		iter.UnmarshalValue(&value)
 
 		sigID := value.Value
-		result, ok := k.getSigningSession(ctx, sigID)
+		result, ok := k.GetSigningSession(ctx, sigID)
 		if !ok {
 			panic(fmt.Errorf("signing session %d not found", sigID))
 		}
