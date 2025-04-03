@@ -313,7 +313,7 @@ open-docs:
 .PHONY: mnemonic
 mnemonic:
 	$(eval user := $(filter-out $@,$(MAKECMDGOALS)))
-	$(BIN_PATH) keys export $(user) --keyring-backend $(SCALAR_KEYRING_BACKEND) --unsafe --unarmored-hex --home $(SCALAR_DIR)
+	$(SCALAR_BIN_PATH) keys export $(user) --keyring-backend $(SCALAR_KEYRING_BACKEND) --unsafe --unarmored-hex --home $(SCALAR_HOME_DIR)
 
 
 .PHONY: lib lib-clean

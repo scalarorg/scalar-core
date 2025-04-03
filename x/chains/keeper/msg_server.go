@@ -329,7 +329,8 @@ func (s msgServer) ConfirmToken(c context.Context, req *types.ConfirmTokenReques
 	}
 	token := keeper.GetERC20TokenByAsset(ctx, req.Asset.Symbol)
 
-	if err := token.RecordDeployment(req.TxID); err != nil {
+	err = token.RecordDeployment(req.TxID);
+	if err != nil {
 		return nil, err
 	}
 
