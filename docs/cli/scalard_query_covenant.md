@@ -28,4 +28,6 @@ scalard query covenant [flags]
 * [scalard query](scalard_query.md)	 - Querying subcommands
 * [scalard query covenant custodians](scalard_query_covenant_custodians.md)	 - Find custodians
 * [scalard query covenant groups](scalard_query_covenant_groups.md)	 - Find custodian groups
+* [scalard query covenant redeem-session](scalard_query_covenant_redeem-session.md)	 - Get redeem session by custodian uid
+* [scalard query covenant utxo-snapshot](scalard_query_covenant_utxo-snapshot.md)	 - Get the UTXO snapshot
 

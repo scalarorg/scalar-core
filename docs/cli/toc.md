@@ -48,10 +48,13 @@
 			- [latest-batched-commands [chain]](scalard_query_chains_latest-batched-commands.md)	 - Get the latest batched commands that can be wrapped in an EVM transaction to be executed in Scalar Gateway
 			- [params [chain]](scalard_query_chains_params.md)	 - Returns the params for the evm module
 			- [pending-commands [chain]](scalard_query_chains_pending-commands.md)	 - Get the list of commands not yet added to a batch
+			- [redeem-session [chain]](scalard_query_chains_redeem-session.md)	 - Get redeem session by custodian uid
 			- [token-info [chain]](scalard_query_chains_token-info.md)	 - Returns the info of token by either symbol, asset, or address
 		- [covenant](scalard_query_covenant.md)	 - Querying commands for the covenant module
 			- [custodians](scalard_query_covenant_custodians.md)	 - Find custodians
 			- [groups](scalard_query_covenant_groups.md)	 - Find custodian groups
+			- [redeem-session](scalard_query_covenant_redeem-session.md)	 - Get redeem session by custodian uid
+			- [utxo-snapshot](scalard_query_covenant_utxo-snapshot.md)	 - Get the UTXO snapshot
 		- [distribution](scalard_query_distribution.md)	 - Querying commands for the distribution module
 			- [commission [validator]](scalard_query_distribution_commission.md)	 - Query distribution validator commission
 			- [community-pool](scalard_query_distribution_community-pool.md)	 - Query the amount of coins in the community pool

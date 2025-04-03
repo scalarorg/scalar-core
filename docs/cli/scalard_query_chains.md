@@ -39,5 +39,6 @@ scalard query chains [flags]
 * [scalard query chains latest-batched-commands](scalard_query_chains_latest-batched-commands.md)	 - Get the latest batched commands that can be wrapped in an EVM transaction to be executed in Scalar Gateway
 * [scalard query chains params](scalard_query_chains_params.md)	 - Returns the params for the evm module
 * [scalard query chains pending-commands](scalard_query_chains_pending-commands.md)	 - Get the list of commands not yet added to a batch
+* [scalard query chains redeem-session](scalard_query_chains_redeem-session.md)	 - Get redeem session by custodian uid
 * [scalard query chains token-info](scalard_query_chains_token-info.md)	 - Returns the info of token by either symbol, asset, or address
 

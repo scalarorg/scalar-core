@@ -1941,6 +1941,9 @@ var _ types.ChainKeeper = &ChainKeeperMock{}
 //			GetRedeemSessionFunc: func(ctx sdk.Context, custodianGroupUID []byte) (types.RedeemSession, bool) {
 //				panic("mock out the GetRedeemSession method")
 //			},
+//			GetRedeemSessionsFunc: func(ctx sdk.Context) []types.RedeemSession {
+//				panic("mock out the GetRedeemSessions method")
+//			},
 //			GetRequiredConfirmationHeightFunc: func(ctx sdk.Context) uint64 {
 //				panic("mock out the GetRequiredConfirmationHeight method")
 //			},
@@ -2079,6 +2082,9 @@ type ChainKeeperMock struct {
 
 	// GetRedeemSessionFunc mocks the GetRedeemSession method.
 	GetRedeemSessionFunc func(ctx sdk.Context, custodianGroupUID []byte) (types.RedeemSession, bool)
+
+	// GetRedeemSessionsFunc mocks the GetRedeemSessions method.
+	GetRedeemSessionsFunc func(ctx sdk.Context) []types.RedeemSession
 
 	// GetRequiredConfirmationHeightFunc mocks the GetRequiredConfirmationHeight method.
 	GetRequiredConfirmationHeightFunc func(ctx sdk.Context) uint64
@@ -2322,6 +2328,11 @@ type ChainKeeperMock struct {
 			// CustodianGroupUID is the custodianGroupUID argument value.
 			CustodianGroupUID []byte
 		}
+		// GetRedeemSessions holds details about calls to the GetRedeemSessions method.
+		GetRedeemSessions []struct {
+			// Ctx is the ctx argument value.
+			Ctx sdk.Context
+		}
 		// GetRequiredConfirmationHeight holds details about calls to the GetRequiredConfirmationHeight method.
 		GetRequiredConfirmationHeight []struct {
 			// Ctx is the ctx argument value.
@@ -2441,6 +2452,7 @@ type ChainKeeperMock struct {
 	lockGetParams                      sync.RWMutex
 	lockGetPendingCommands             sync.RWMutex
 	lockGetRedeemSession               sync.RWMutex
+	lockGetRedeemSessions              sync.RWMutex
 	lockGetRequiredConfirmationHeight  sync.RWMutex
 	lockGetRevoteLockingPeriod         sync.RWMutex
 	lockGetTokenByteCode               sync.RWMutex
@@ -3509,6 +3521,38 @@ func (mock *ChainKeeperMock) GetRedeemSessionCalls() []struct {
 	mock.lockGetRedeemSession.RLock()
 	calls = mock.calls.GetRedeemSession
 	mock.lockGetRedeemSession.RUnlock()
+	return calls
+}
+
+// GetRedeemSessions calls GetRedeemSessionsFunc.
+func (mock *ChainKeeperMock) GetRedeemSessions(ctx sdk.Context) []types.RedeemSession {
+	if mock.GetRedeemSessionsFunc == nil {
+		panic("ChainKeeperMock.GetRedeemSessionsFunc: method is nil but ChainKeeper.GetRedeemSessions was just called")
+	}
+	callInfo := struct {
+		Ctx sdk.Context
+	}{
+		Ctx: ctx,
+	}
+	mock.lockGetRedeemSessions.Lock()
+	mock.calls.GetRedeemSessions = append(mock.calls.GetRedeemSessions, callInfo)
+	mock.lockGetRedeemSessions.Unlock()
+	return mock.GetRedeemSessionsFunc(ctx)
+}
+
+// GetRedeemSessionsCalls gets all the calls that were made to GetRedeemSessions.
+// Check the length with:
+//
+//	len(mockedChainKeeper.GetRedeemSessionsCalls())
+func (mock *ChainKeeperMock) GetRedeemSessionsCalls() []struct {
+	Ctx sdk.Context
+} {
+	var calls []struct {
+		Ctx sdk.Context
+	}
+	mock.lockGetRedeemSessions.RLock()
+	calls = mock.calls.GetRedeemSessions
+	mock.lockGetRedeemSessions.RUnlock()
 	return calls
 }
 

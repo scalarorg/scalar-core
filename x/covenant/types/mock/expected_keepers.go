@@ -92,7 +92,7 @@ var _ covenanttypes.Keeper = &KeeperMock{}
 //			SignPsbtFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, multiPsbt []github_com_scalarorg_scalar_core_x_covenant_exported.Psbt, module string, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, moduleMetadata ...codec.ProtoMarshaler) error {
 //				panic("mock out the SignPsbt method")
 //			},
-//			UpdateExecutingToPreparingFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error {
+//			UpdateExecutingToPreparingFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte, sequence uint64) error {
 //				panic("mock out the UpdateExecutingToPreparing method")
 //			},
 //			UpdatePreparingToExecutingFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error {
@@ -169,7 +169,7 @@ type KeeperMock struct {
 	SignPsbtFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, multiPsbt []github_com_scalarorg_scalar_core_x_covenant_exported.Psbt, module string, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
 
 	// UpdateExecutingToPreparingFunc mocks the UpdateExecutingToPreparing method.
-	UpdateExecutingToPreparingFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error
+	UpdateExecutingToPreparingFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte, sequence uint64) error
 
 	// UpdatePreparingToExecutingFunc mocks the UpdatePreparingToExecuting method.
 	UpdatePreparingToExecutingFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error
@@ -319,6 +319,8 @@ type KeeperMock struct {
 			Ctx github_com_cosmos_cosmos_sdk_types.Context
 			// CustodianGroupUID is the custodianGroupUID argument value.
 			CustodianGroupUID []byte
+			// Sequence is the sequence argument value.
+			Sequence uint64
 		}
 		// UpdatePreparingToExecuting holds details about calls to the UpdatePreparingToExecuting method.
 		UpdatePreparingToExecuting []struct {
@@ -1089,21 +1091,23 @@ func (mock *KeeperMock) SignPsbtCalls() []struct {
 }
 
 // UpdateExecutingToPreparing calls UpdateExecutingToPreparingFunc.
-func (mock *KeeperMock) UpdateExecutingToPreparing(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error {
+func (mock *KeeperMock) UpdateExecutingToPreparing(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte, sequence uint64) error {
 	if mock.UpdateExecutingToPreparingFunc == nil {
 		panic("KeeperMock.UpdateExecutingToPreparingFunc: method is nil but Keeper.UpdateExecutingToPreparing was just called")
 	}
 	callInfo := struct {
 		Ctx               github_com_cosmos_cosmos_sdk_types.Context
 		CustodianGroupUID []byte
+		Sequence          uint64
 	}{
 		Ctx:               ctx,
 		CustodianGroupUID: custodianGroupUID,
+		Sequence:          sequence,
 	}
 	mock.lockUpdateExecutingToPreparing.Lock()
 	mock.calls.UpdateExecutingToPreparing = append(mock.calls.UpdateExecutingToPreparing, callInfo)
 	mock.lockUpdateExecutingToPreparing.Unlock()
-	return mock.UpdateExecutingToPreparingFunc(ctx, custodianGroupUID)
+	return mock.UpdateExecutingToPreparingFunc(ctx, custodianGroupUID, sequence)
 }
 
 // UpdateExecutingToPreparingCalls gets all the calls that were made to UpdateExecutingToPreparing.
@@ -1113,10 +1117,12 @@ func (mock *KeeperMock) UpdateExecutingToPreparing(ctx github_com_cosmos_cosmos_
 func (mock *KeeperMock) UpdateExecutingToPreparingCalls() []struct {
 	Ctx               github_com_cosmos_cosmos_sdk_types.Context
 	CustodianGroupUID []byte
+	Sequence          uint64
 } {
 	var calls []struct {
 		Ctx               github_com_cosmos_cosmos_sdk_types.Context
 		CustodianGroupUID []byte
+		Sequence          uint64
 	}
 	mock.lockUpdateExecutingToPreparing.RLock()
 	calls = mock.calls.UpdateExecutingToPreparing
