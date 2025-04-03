@@ -118,16 +118,16 @@ func (k Keeper) SetUtxoSnapshot(ctx sdk.Context, utxoSnapshot *cov.UTXOSnapshot)
 	var results cov.UTXOSnapshot
 	ok := k.getStore(ctx).Get(key, &results)
 	if !ok {
-		k.Logger(ctx).Error("init utxo snapshot not found", "custodianGroupUID", utxoSnapshot.CustodianGroupUID)
+		k.Logger(ctx).Debug("init utxo snapshot not found", "custodianGroupUID", utxoSnapshot.CustodianGroupUID)
 		k.setUtxoSnapshot(ctx, utxoSnapshot)
 		return nil
 	}
 
-	if len(results.Utxos) == 0 {
-		k.setUtxoSnapshot(ctx, utxoSnapshot)
-		return nil
-	}
-
+	// if len(results.Utxos) == 0 {
+	// 	k.setUtxoSnapshot(ctx, utxoSnapshot)
+	// 	return nil
+	// }
+	// Allway update the utxo snapshot with higher block height
 	// Update the utxo snapshot
 	if results.BlockHeight < utxoSnapshot.BlockHeight {
 		k.setUtxoSnapshot(ctx, utxoSnapshot)
