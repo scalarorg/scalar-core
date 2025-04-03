@@ -21,7 +21,7 @@ const (
 
 // GetQueryCmd returns the cli query commands for this module
 func GetQueryCmd(route string) *cobra.Command {
-	protocolQueryCmd := &cobra.Command{
+	queryCmd := &cobra.Command{
 		Use:                        "covenant",
 		Short:                      fmt.Sprintf("Querying commands for the %s module", types.ModuleName),
 		DisableFlagParsing:         true,
@@ -29,12 +29,14 @@ func GetQueryCmd(route string) *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	protocolQueryCmd.AddCommand(
+	queryCmd.AddCommand(
 		GetCmdFindCustodian(),
 		GetCmdFindGroup(),
+		GetCmdRedeemSession(),
+		GetCmdUTXOSnapshot(),
 	)
 
-	return protocolQueryCmd
+	return queryCmd
 }
 func GetCmdFindCustodian() *cobra.Command {
 	cmd := &cobra.Command{

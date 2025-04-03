@@ -48,6 +48,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		getCmdTokenInfo(),
 		getCmdEvent(),
 		getParams(),
+		getCmdRedeemSession(),
 	)
 
 	return chainsQueryCmd
