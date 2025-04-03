@@ -31,8 +31,6 @@ var (
 	bytes32ArrayType = funcs.Must(abi.NewType("bytes32[]", "bytes32[]", nil))
 	stringArrayType  = funcs.Must(abi.NewType("string[]", "string[]", nil))
 	bytesArrayType   = funcs.Must(abi.NewType("bytes[]", "bytes[]", nil))
-
-	switchPhaseArguments = abi.Arguments{{Type: uint8Type}, {Type: bytes32Type}}
 )
 
 const (
@@ -291,7 +289,7 @@ func NewSwitchPhaseCommandWithExpiredSessioin(
 	cmd := chainsTypes.Command{
 		ID:         chainsTypes.NewCommandID(id, chainID),
 		Type:       chainsTypes.COMMAND_TYPE_REDEEM_TOKEN,
-		Params:     createSwitchPhasePayload(session, newPhase),
+		Params:     CreateSwitchPhasePayload(session.CustodianGroupUID, newPhase),
 		Payload:    []byte{},
 		KeyID:      keyID,
 		MaxGasCost: uint32(switchPhaseMaxGasCost),
@@ -300,7 +298,9 @@ func NewSwitchPhaseCommandWithExpiredSessioin(
 	return cmd
 }
 
-func createSwitchPhasePayload(evmSession *ExpiredEvmSession, newPhase covExported.Phase) []byte {
-	payload := funcs.Must(switchPhaseArguments.Pack(newPhase, evmSession.CustodianGroupUID.Bytes()))
+func CreateSwitchPhasePayload(CustodianGroupUID exported.Hash, newPhase covExported.Phase) []byte {
+	var cusID [32]byte
+	copy(cusID[:], CustodianGroupUID.Bytes())
+	payload := funcs.Must(chainsTypes.SwitchPhaseArguments.Pack(uint8(newPhase), cusID))
 	return payload
 }

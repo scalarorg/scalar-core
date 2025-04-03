@@ -2,6 +2,7 @@ package types
 
 import (
 	"encoding/binary"
+	"encoding/hex"
 	fmt "fmt"
 	"math/big"
 	"strconv"
@@ -49,6 +50,7 @@ var (
 	stringType       = funcs.Must(abi.NewType("string", "string", nil))
 	addressType      = funcs.Must(abi.NewType("address", "address", nil))
 	addressesType    = funcs.Must(abi.NewType("address[]", "address[]", nil))
+	bytesType        = funcs.Must(abi.NewType("bytes", "bytes", nil))
 	bytes32Type      = funcs.Must(abi.NewType("bytes32", "bytes32", nil))
 	uint8Type        = funcs.Must(abi.NewType("uint8", "uint8", nil))
 	uint256Type      = funcs.Must(abi.NewType("uint256", "uint256", nil))
@@ -62,6 +64,8 @@ var (
 	approveContractCallArguments         = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: addressType}, {Type: bytes32Type}, {Type: bytes32Type}, {Type: uint256Type}}
 	approveContractCallWithMintArguments = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: addressType}, {Type: bytes32Type}, {Type: stringType}, {Type: uint256Type}, {Type: bytes32Type}, {Type: uint256Type}}
 	registerCustodianGroupArguments      = abi.Arguments{{Type: bytes32Type}}
+	SwitchPhaseArguments                 = abi.Arguments{{Type: uint8Type}, {Type: bytes32Type}}
+	RedeemTokenArguments                 = abi.Arguments{{Type: bytesType}, {Type: bytes32Type}}
 )
 
 // NewBurnTokenCommand creates a command to burn tokens with the given burner's information
@@ -335,6 +339,14 @@ func (m Command) DecodeParams() (map[string]string, error) {
 		custodianGroupUID := DecodeRegisterCustodianGroupParams(m.Params)
 
 		params["custodianGroupUID"] = custodianGroupUID.Hex()
+	case COMMAND_TYPE_SWITCH_PHASE:
+		phase, custodianGroupUID := DecodeSwitchPhaseParams(m.Params)
+		params["phase"] = strconv.FormatUint(uint64(phase), 10)
+		params["custodianGroupUID"] = custodianGroupUID.Hex()
+	case COMMAND_TYPE_REDEEM_TOKEN:
+		executeData, requestID := DecodeRedeemTokenParams(m.Params)
+		params["executeData"] = hex.EncodeToString(executeData)
+		params["requestID"] = requestID.Hex()
 	default:
 		return nil, fmt.Errorf("unknown command type '%s'", m.Type)
 	}
@@ -535,4 +547,16 @@ func DecodeRegisterCustodianGroupParams(bz []byte) chains.Hash {
 	params := funcs.Must(StrictDecode(registerCustodianGroupArguments, bz))
 
 	return params[0].([common.HashLength]byte)
+}
+
+func DecodeSwitchPhaseParams(bz []byte) (uint8, chains.Hash) {
+	params := funcs.Must(StrictDecode(SwitchPhaseArguments, bz))
+
+	return params[0].(uint8), params[1].([common.HashLength]byte)
+}
+
+func DecodeRedeemTokenParams(bz []byte) ([]byte, common.Hash) {
+	params := funcs.Must(StrictDecode(RedeemTokenArguments, bz))
+
+	return params[0].([]byte), params[1].([common.HashLength]byte)
 }
