@@ -288,7 +288,7 @@ func NewSwitchPhaseCommandWithExpiredSessioin(
 
 	cmd := chainsTypes.Command{
 		ID:         chainsTypes.NewCommandID(id, chainID),
-		Type:       chainsTypes.COMMAND_TYPE_REDEEM_TOKEN,
+		Type:       chainsTypes.COMMAND_TYPE_SWITCH_PHASE,
 		Params:     CreateSwitchPhasePayload(session.CustodianGroupUID, newPhase),
 		Payload:    []byte{},
 		KeyID:      keyID,

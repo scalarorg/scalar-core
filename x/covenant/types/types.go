@@ -129,7 +129,9 @@ func (rs UTXOSnapshot) ReserveUtxos(requestID string, amount uint64) ([]*UTXO, e
 			break
 		}
 	}
-
+	if remainingAmount > 0 {
+		return nil, fmt.Errorf("not enough utxos to reserve, remainingAmount %d", remainingAmount)
+	}
 	return reserveUtxos, nil
 }
 
