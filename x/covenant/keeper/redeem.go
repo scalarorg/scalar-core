@@ -22,10 +22,13 @@ var (
 	stringType       = funcs.Must(abi.NewType("string", "string", nil))
 	bytesType        = funcs.Must(abi.NewType("bytes", "bytes", nil))
 	uint256Type      = funcs.Must(abi.NewType("uint256", "uint256", nil))
+	uint64Type       = funcs.Must(abi.NewType("uint64", "uint64", nil))
 	uint256ArrayType = funcs.Must(abi.NewType("uint256[]", "uint256[]", nil))
+	uint32ArrayType  = funcs.Must(abi.NewType("uint32[]", "uint32[]", nil))
+	uint64ArrayType  = funcs.Must(abi.NewType("uint64[]", "uint64[]", nil))
 	stringArrayType  = funcs.Must(abi.NewType("string[]", "string[]", nil))
-
-	redeemTokenPayloadArguments    = abi.Arguments{{Type: uint256Type}, {Type: bytesType}, {Type: stringArrayType}, {Type: uint256ArrayType}, {Type: uint256ArrayType}}
+	
+	redeemTokenPayloadArguments    = abi.Arguments{{Type: uint64Type}, {Type: bytesType}, {Type: stringArrayType}, {Type: uint32ArrayType}, {Type: uint256ArrayType}, {Type: uint64ArrayType}}
 	callContractWithTokenArguments = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: bytesType}, {Type: stringType}, {Type: uint256Type}}
 )
 
