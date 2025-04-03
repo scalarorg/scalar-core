@@ -1,6 +1,8 @@
 package types
 
 import (
+	fmt "fmt"
+
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/covenant/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -56,11 +58,22 @@ type ReservedTx struct {
 	Utxos     []*UTXO `protobuf:"bytes,3,rep,name=utxos,proto3" json:"utxos,omitempty"`
 }
 
-func (utxo *UTXO) AppendReserved(requestID string, amount uint64) {
+func (utxo *UTXO) AppendReserved(requestID string, amount uint64) error {
 	if utxo.Reserved == nil {
 		utxo.Reserved = make(map[string]uint64)
 	}
-	utxo.Reserved[requestID] += amount
+	totalReserved := uint64(0)
+	for id, reserved := range utxo.Reserved {
+		if id == requestID {
+			return fmt.Errorf("requestID already reserved in this utxo %s", utxo.TxID.Hex())
+		}
+		totalReserved += reserved
+	}
+	if totalReserved+amount > utxo.AmountInSats {
+		return fmt.Errorf("amount exceeds utxo amount, totalReserved %d, amount %d, utxo.AmountInSats %d", totalReserved, amount, utxo.AmountInSats)
+	}
+	utxo.Reserved[requestID] = amount
+	return nil
 }
 func (utxo *UTXO) GetReservedAmount() uint64 {
 	amount := uint64(0)
@@ -71,7 +84,8 @@ func (utxo *UTXO) GetReservedAmount() uint64 {
 }
 
 func (utxo *UTXO) AvailableAmount() uint64 {
-	return utxo.AmountInSats - utxo.GetReservedAmount()
+	reservedAmount := utxo.GetReservedAmount()
+	return utxo.AmountInSats - reservedAmount
 }
 
 func (utxo *UTXO) Release(requestID string) uint64 {
