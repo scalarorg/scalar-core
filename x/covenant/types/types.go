@@ -57,6 +57,9 @@ type ReservedTx struct {
 }
 
 func (utxo *UTXO) AppendReserved(requestID string, amount uint64) {
+	if utxo.Reserved == nil {
+		utxo.Reserved = make(map[string]uint64)
+	}
 	utxo.Reserved[requestID] += amount
 }
 func (utxo *UTXO) GetReservedAmount() uint64 {
@@ -72,6 +75,9 @@ func (utxo *UTXO) AvailableAmount() uint64 {
 }
 
 func (utxo *UTXO) Release(requestID string) uint64 {
+	if utxo.Reserved == nil {
+		return 0
+	}
 	amount, ok := utxo.Reserved[requestID]
 	if !ok {
 		return 0
