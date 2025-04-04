@@ -6,6 +6,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 
 	"github.com/scalarorg/scalar-core/utils"
@@ -28,11 +29,13 @@ func NewSigHandler(cdc codec.Codec, keeper types.Keeper) multisig.SigHandler {
 }
 
 func (s sigHandler) HandleCompleted(ctx sdk.Context, sig utils.ValidatedProtoMarshaler, moduleMetadata codec.ProtoMarshaler) error {
+	clog.Green("Multisig/abci: sigHandler.HandleCompleted")
 	sigMetadata := moduleMetadata.(*types.SigMetadata)
 	cmd, err := s.getCommand(ctx, sigMetadata)
 	if err != nil {
 		return err
 	}
+	clog.Green("Multisig/abci: sigHandler.HandleCompleted: cmd: %v", cmd)
 
 	funcs.MustNoErr(cmd.SetSigned(sig))
 

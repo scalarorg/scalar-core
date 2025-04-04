@@ -11,12 +11,13 @@ import (
 )
 
 func TestCreateAbiRedeemTokenParams(t *testing.T) {
-	reqId := bytes.Repeat([]byte("a"), 32)
+	cmdId := types.NewCommandID(bytes.Repeat([]byte("a"), 32))
+
 	params, err := keeper.CreateAbiRedeemTokenParams(
 		&types.ReserveRedeemUtxoRequest{
 			Amount: 100000000,
 		},
-		reqId,
+		cmdId.Bytes(),
 		[]string{"txId1", "txId2"},
 		[]uint32{1, 2},
 		[]uint64{100000000, 200000000},

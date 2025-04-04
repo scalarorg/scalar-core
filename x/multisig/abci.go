@@ -6,6 +6,7 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
@@ -52,7 +53,9 @@ func handleKeygens(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 	// we handle sessions that'll expire on the next block,
 	// to avoid waiting for an additional block
+	clog.Green("Multisig/abci: handleSignings")
 	for _, signing := range k.GetSigningSessionsByExpiry(ctx, ctx.BlockHeight()+1) {
+		clog.Green("Multisig/abci: handleSignings: signing: %v", signing)
 		_ = utils.RunCached(ctx, k, func(cachedCtx sdk.Context) ([]abci.ValidatorUpdate, error) {
 			k.DeleteSigningSession(cachedCtx, signing.GetID())
 			module := signing.GetModule()

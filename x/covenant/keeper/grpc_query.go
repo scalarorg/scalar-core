@@ -11,6 +11,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
@@ -159,6 +160,9 @@ func getExecuteDataAndSigs(ctx sdk.Context, multisigK types.MultisigKeeper, cmd 
 }
 
 func commandToResp(ctx sdk.Context, cmd types.StandaloneCommand, multisigK types.MultisigKeeper) (types.StandaloneCommandResponse, error) {
+
+	clog.Greenf("commandToResp: cmd: %+v", cmd)
+
 	if cmd.Is(types.StandaloneCommandStatusSigned) && cmd.GetSignature() != nil { // check signature for unmigrated batches
 		signature, ok := cmd.GetSignature().(multisig.MultiSig)
 		if ok {
@@ -175,7 +179,6 @@ func commandToResp(ctx sdk.Context, cmd types.StandaloneCommand, multisigK types
 				ExecuteData: hex.EncodeToString(executeData),
 			}, nil
 		}
-
 	}
 
 	return types.StandaloneCommandResponse{}, fmt.Errorf("signature is not multisig")

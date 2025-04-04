@@ -13,9 +13,9 @@ import (
 )
 
 const (
-	AttributeKeyChain  = "chain"
-	AttributeKeyReqId  = "reqId"
-	AttributeCommandId = "commandId"
+	AttributeKeyChain    = "chain"
+	AttributeKeyDataHash = "dataHash"
+	AttributeCommandId   = "commandId"
 )
 
 const (

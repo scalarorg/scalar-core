@@ -247,8 +247,8 @@ func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 	amountz := make([]byte, 8)
 	binary.BigEndian.PutUint64(amountz, req.Amount)
 
-	reqId := crypto.Keccak256(bz, req.Sender.Bytes(), []byte(req.Address), []byte(req.SourceChain), []byte(req.DestChain), []byte(req.Symbol), amountz)
-	reservedUtxos, err := k.reserveUtxos(ctx, custodianGrUID, hex.EncodeToString(reqId), req.Amount)
+	dataHash := crypto.Keccak256(bz, req.Sender.Bytes(), []byte(req.Address), []byte(req.SourceChain), []byte(req.DestChain), []byte(req.Symbol), amountz)
+	reservedUtxos, err := k.reserveUtxos(ctx, custodianGrUID, hex.EncodeToString(dataHash), req.Amount)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -262,8 +262,8 @@ func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 		amounts[i] = utxo.AmountInSats
 	}
 
-	cmdId := cov.NewCommandID(reqId)
-	params, err := CreateAbiRedeemTokenParams(req, reqId, txIds, vouts, amounts)
+	cmdId := cov.NewCommandID(dataHash)
+	params, err := CreateAbiRedeemTokenParams(req, cmdId.Bytes(), txIds, vouts, amounts)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -271,16 +271,14 @@ func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 	return params, &cmdId, err
 }
 
-func CreateAbiRedeemTokenParams(req *cov.ReserveRedeemUtxoRequest, reqId []byte, txIds []string, vouts []uint32, amounts []uint64) ([]byte, error) {
-	abiReqId := [32]byte{}
-	copy(abiReqId[:], reqId)
+func CreateAbiRedeemTokenParams(req *cov.ReserveRedeemUtxoRequest, reqId [32]byte, txIds []string, vouts []uint32, amounts []uint64) ([]byte, error) {
 	payload, err := RedeemTokenPayloadArguments.Pack(
 		req.Amount,
 		req.LockingScript,
 		txIds,
 		vouts,
 		amounts,
-		abiReqId)
+		reqId)
 	if err != nil {
 		return nil, err
 	}
