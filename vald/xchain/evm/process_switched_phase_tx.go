@@ -4,7 +4,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/scalarorg/scalar-core/utils/clog"
-	"github.com/scalarorg/scalar-core/utils/slices"
 	xcommon "github.com/scalarorg/scalar-core/vald/xchain/common"
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
@@ -13,7 +12,8 @@ import (
 )
 
 func (client *EthereumClient) ProcessSwitchedPhaseConfirmation(event *covTypes.ConfirmSwitchedPhaseStarted, proxy sdk.AccAddress) ([]sdk.Msg, error) {
-	txIDs := slices.Map([]chains.Hash{event.TxID}, func(txid chains.Hash) xcommon.Hash { return xcommon.Hash(txid.Bytes()) })
+	//txIDs := slices.Map([]chains.Hash{event.TxID}, func(txid chains.Hash) xcommon.Hash { return xcommon.Hash(txid.Bytes()) })
+	txIDs := []xcommon.Hash{xcommon.Hash(event.TxID.Bytes())}
 	txReceipts, _ := client.GetTxReceiptsIfFinalized(txIDs, event.ConfirmationHeight)
 
 	var votes []sdk.Msg

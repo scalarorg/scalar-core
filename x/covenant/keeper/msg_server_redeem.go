@@ -138,7 +138,7 @@ func (s msgServer) ConfirmSwitchedPhase(c context.Context, req *types.ConfirmSwi
 		CustodianGroupUID:  req.CustodianGroupUID,
 	}
 
-	s.Keeper.Logger(ctx).Info(fmt.Sprintf("ConfirmSwitchedPhaseStarted: %++v", event))
+	s.Keeper.Logger(ctx).Info(fmt.Sprintf("ConfirmSwitchedPhaseStarted: txid: %s, %++v", hex.EncodeToString(event.TxID[:]), event))
 
 	events.Emit(ctx, event)
 	return &types.ConfirmSwitchedPhaseResponse{}, nil
