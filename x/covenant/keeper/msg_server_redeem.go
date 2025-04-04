@@ -27,7 +27,7 @@ func (s msgServer) ConfirmRedeemTxs(c context.Context, req *types.ConfirmRedeemT
 
 	cusGr, ok := s.Keeper.GetCustodianGroup(ctx, req.CustodianGroupUID)
 	if !ok {
-		return nil, fmt.Errorf("custodian group %s not found", req.CustodianGroupUID)
+		return nil, fmt.Errorf("custodian group %s not found", req.CustodianGroupUID.Hex())
 	}
 
 	chainKeeper, err := s.chains.ForChain(ctx, req.Chain)
@@ -97,7 +97,10 @@ func (s msgServer) ConfirmSwitchedPhase(c context.Context, req *types.ConfirmSwi
 	if err != nil {
 		return nil, err
 	}
-
+	_, ok := s.Keeper.GetCustodianGroup(ctx, req.CustodianGroupUID)
+	if !ok {
+		return nil, fmt.Errorf("custodian group %s not found", req.CustodianGroupUID.Hex())
+	}
 	chainKeeper, err := s.chains.ForChain(ctx, req.Chain)
 	if err != nil {
 		return nil, err
@@ -138,7 +141,14 @@ func (s msgServer) ConfirmSwitchedPhase(c context.Context, req *types.ConfirmSwi
 		CustodianGroupUID:  req.CustodianGroupUID,
 	}
 
-	s.Keeper.Logger(ctx).Info(fmt.Sprintf("ConfirmSwitchedPhaseStarted: txid: %s, %++v", hex.EncodeToString(event.TxID[:]), event))
+	s.Keeper.Logger(ctx).Info(
+		fmt.Sprintf("ConfirmSwitchedPhaseStarted: pollID: %s, txid: %s, chain: %s, custodian group: %s",
+			event.PollID,
+			hex.EncodeToString(event.TxID[:]),
+			event.Chain,
+			event.CustodianGroupUID.Hex(),
+		),
+	)
 
 	events.Emit(ctx, event)
 	return &types.ConfirmSwitchedPhaseResponse{}, nil

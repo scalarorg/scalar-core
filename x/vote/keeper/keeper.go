@@ -165,7 +165,6 @@ func (k Keeper) nextPollID(ctx sdk.Context) exported.PollID {
 	copy(bz, txHash[:])
 	binary.BigEndian.PutUint64(bz[len(txHash):], val.Value)
 	pollID := hex.EncodeToString(bz)
-	k.Logger(ctx).Info("nextPollID", "pollID", pollID)
 	return exported.PollID(pollID)
 }
 
