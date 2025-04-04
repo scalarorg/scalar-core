@@ -99,7 +99,7 @@ message PollMapping {
     (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "TxID"
   ];
-  uint64 poll_id = 2 [
+  string poll_id = 2 [
     (gogoproto.nullable) = false,
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
@@ -122,7 +122,7 @@ message PollFailed {
     (gogoproto.customname) = "TxID"
   ];
   string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
-  uint64 poll_id = 3 [
+  string poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
     (gogoproto.nullable) = false
@@ -136,7 +136,7 @@ message PollExpired {
     (gogoproto.customname) = "TxID"
   ];
   string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
-  uint64 poll_id = 3 [
+  string poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
     (gogoproto.nullable) = false
@@ -150,7 +150,7 @@ message PollCompleted {
     (gogoproto.customname) = "TxID"
   ];
   string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
-  uint64 poll_id = 3 [
+  string poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
     (gogoproto.nullable) = false

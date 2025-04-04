@@ -25544,7 +25544,6 @@ paths:
                 format: byte
               poll_id:
                 type: string
-                format: uint64
               vote:
                 type: object
                 properties:
@@ -65226,7 +65225,6 @@ definitions:
         format: byte
       poll_id:
         type: string
-        format: uint64
       vote:
         type: object
         properties:

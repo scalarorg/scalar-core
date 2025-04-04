@@ -5,6 +5,7 @@ package keeper
 
 import (
 	"encoding/binary"
+	"encoding/hex"
 	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -14,6 +15,7 @@ import (
 	gogoprototypes "github.com/gogo/protobuf/types"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/tendermint/tendermint/libs/log"
+	"golang.org/x/crypto/sha3"
 
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/key"
@@ -77,7 +79,7 @@ func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 func (k Keeper) InitializePoll(ctx sdk.Context, pollBuilder exported.PollBuilder) (exported.PollID, error) {
 	pollMetadata, err := pollBuilder.ID(k.nextPollID(ctx)).Build(ctx.BlockHeight())
 	if err != nil {
-		return 0, err
+		return "", err
 	}
 
 	ctx.GasMeter().ConsumeGas(voteCostPerMaintainer*uint64(len(pollMetadata.Snapshot.GetParticipantAddresses())), "initialize poll")
@@ -157,8 +159,14 @@ func (k Keeper) nextPollID(ctx sdk.Context) exported.PollID {
 	k.getKVStore(ctx).GetNew(key.FromStr(countKey), &val)
 	funcs.MustNoErr(
 		k.getKVStore(ctx).SetNewValidated(key.FromStr(countKey), utils.NoValidation(&gogoprototypes.UInt64Value{Value: val.Value + 1})))
-
-	return exported.PollID(val.Value)
+	// Change the poll id from uint64 to string by prepending the tx hash
+	txHash := sha3.Sum256(ctx.TxBytes())
+	bz := make([]byte, len(txHash)+8)
+	copy(bz, txHash[:])
+	binary.BigEndian.PutUint64(bz[len(txHash):], val.Value)
+	pollID := hex.EncodeToString(bz)
+	k.Logger(ctx).Info("nextPollID", "pollID", pollID)
+	return exported.PollID(pollID)
 }
 
 func (k Keeper) setPollMetadata(ctx sdk.Context, metadata exported.PollMetadata) {
