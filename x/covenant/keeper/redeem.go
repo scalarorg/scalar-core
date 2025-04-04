@@ -118,11 +118,11 @@ func (k Keeper) RenewRedeemSession(ctx sdk.Context, custodianGroupUID []byte) er
 		return fmt.Errorf("redeem session not found")
 	}
 	if redeemSession.CurrentPhase != covExported.Preparing {
-		return fmt.Errorf("redeem session is not in executing phase")
+		return fmt.Errorf("redeem session is not in preparing phase")
 	}
 
 	if redeemSession.IsSwitching {
-		return fmt.Errorf("redeem session is not in switching state")
+		return fmt.Errorf("redeem session is in switching state")
 	}
 
 	redeemSession.PhaseExpiredAt = uint64(ctx.BlockHeight()) + k.GetParams(ctx).BlockLimitPerSession

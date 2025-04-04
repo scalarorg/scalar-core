@@ -287,7 +287,7 @@ func GenerateGenesis(clientCtx client.Context,
 		return appGenState, err
 	}
 
-	custodiansGr := covenantexported.NewCustodianGroup("scalar", []byte(custodianGroupPubKey), uint32(quorum), "Default custodial group, which contains all custodians", custodians)
+	custodiansGr := covenantexported.NewCustodianGroup(covenantexported.DefaultCustodianName, []byte(custodianGroupPubKey), uint32(quorum), "Default custodial group, which contains all custodians", custodians)
 
 	// Activate the default custodian group
 	custodiansGr.Status = covenantexported.Custodian_Activated

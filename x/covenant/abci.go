@@ -56,12 +56,14 @@ func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock,
 	snapshotter types.Snapshotter,
 	slashing types.SlashingKeeper,
 ) ([]abci.ValidatorUpdate, error) {
-	clog.Greenf("Covenant EndBlocker, ctx.BlockHeight: %+v", ctx.BlockHeight())
+	clog.Greenf("[x/covenant] [ABCI] EndBlocker, ctx.BlockHeight: %+v", ctx.BlockHeight())
 
-	supportedChains := []nexus.ChainName{
-		"bitcoin|4",
+	supportedBtcChains := []nexus.ChainName{}
+	for _, chain := range n.GetChains(ctx) {
+		if chainsTypes.IsBitcoinChain(chain.Name) {
+			supportedBtcChains = append(supportedBtcChains, chain.Name)
+		}
 	}
-
 	neededKeepers := &neededKeeper{
 		keeper:      k,
 		chains:      b,
@@ -75,8 +77,8 @@ func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock,
 		slashing:    slashing,
 	}
 
-	for _, chain := range supportedChains {
-		clog.Greenf("Covenant EndBlocker, chain: %+v", chain)
+	for _, chain := range supportedBtcChains {
+		clog.Greenf("[x/covenant] [ABCI] EndBlocker, chain: %+v", chain)
 		handleEnqueuedEvents(ctx, neededKeepers, chain)
 		handleSwitchPhase(ctx, neededKeepers, chain)
 	}
@@ -710,60 +712,21 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk type
 		if !ok {
 			continue
 		}
-		if redeemSession.CurrentPhase == exported.Preparing && redeemSession.PhaseExpiredAt < uint64(currentHeight) {
-			// renew redeem session
-			// reserveRedeemCommands := []*types.StandaloneCommand{}
-			batch := ck.GetLatestBtcPoolingBatch(ctx)
-			if batch == nil || len(batch.GetCommandIDs()) == 0 {
-				// TODO: renew redeem session
-				// RenewRedeemSession(ctx sdk.Context, custodianGroupUID []byte) error {
+		if redeemSession.CurrentPhase == exported.Preparing && redeemSession.PhaseExpiredAt <= uint64(currentHeight) {
+			// We switch the expired session to the executing phase if there are pending redeem commands
+			// Otherwise, we extend current prepering phase
+			if hasPendingRedeemCommands(ctx, k, ck) {
+				expiredGroups = append(expiredGroups, group.UID.Bytes())
+				expiredSessions[group.UID.Hex()] = redeemSession
+			} else {
 				err := k.RenewRedeemSession(ctx, group.UID.Bytes())
 				if err != nil {
 					log.Error().
 						Err(err).
 						Str("CustodianGroupUID", group.UID.Hex()).
 						Msg("failed to renew redeem session")
-					panic(err)
 				}
-			} else {
-				extraData := batch.GetExtraData()
-				// extra data is the array of payload of each redeem command, check contract for the payload
-				// the payload of each reserve redeem utxo command doesn't contain the command ID,
-				// so we cannot detect which reserve redeem utxo command is sent to the evm
-				extraDataIncludesAllReserveCommandsInTheRedeemSession := true
-
-				// because all of reserve redeem utxo commands must be confirmed in one batch, we can just check if all command can be taken by the command ID
-				for _, payload := range extraData {
-					params, err := chainsTypes.StrictDecode(keeper.RedeemTokenPayloadArguments, payload)
-					if err != nil {
-						panic(err)
-					}
-					commandID := params[5].([32]byte)
-					// // check if the command is sent to the evm
-					command := k.GetReserveUTXOCommandByID(ctx, commandID[:])
-					if command.Is(types.StandaloneCommandStatusNonExistent) {
-						extraDataIncludesAllReserveCommandsInTheRedeemSession = false
-						break
-					}
-				}
-
-				if !extraDataIncludesAllReserveCommandsInTheRedeemSession {
-					// renew redeem session
-					err := k.RenewRedeemSession(ctx, group.UID.Bytes())
-					if err != nil {
-						log.Error().
-							Err(err).
-							Str("CustodianGroupUID", group.UID.Hex()).
-							Msg("failed to renew redeem session")
-						panic(err)
-					}
-				}
-
-				// if not all reserve redeem utxo commands are sent to the evm
-				expiredGroups = append(expiredGroups, group.UID.Bytes())
-				expiredSessions[group.UID.Hex()] = redeemSession
 			}
-
 		}
 	}
 
@@ -789,4 +752,45 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk type
 		}
 	}
 	return result, expiredSessions
+}
+
+func hasPendingRedeemCommands(ctx sdk.Context, k types.Keeper, ck chainsTypes.ChainKeeper) bool {
+	batch := ck.GetLatestBtcPoolingBatch(ctx)
+	if batch == nil || len(batch.GetCommandIDs()) == 0 {
+		return false
+	}
+	extraData := batch.GetExtraData()
+	// extra data is the array of payload of each redeem command, check contract for the payload
+	// the payload of each reserve redeem utxo command doesn't contain the command ID,
+	// so we cannot detect which reserve redeem utxo command is sent to the evm
+	// extraDataIncludesAllReserveCommandsInTheRedeemSession := true
+
+	// because all of reserve redeem utxo commands must be confirmed in one batch, we can just check if all command can be taken by the command ID
+	for _, payload := range extraData {
+		params, err := chainsTypes.StrictDecode(keeper.RedeemTokenPayloadArguments, payload)
+		if err != nil {
+			panic(err)
+		}
+		commandID := params[5].([32]byte)
+		//todo: check if the command is sent to the evm
+		command := k.GetReserveUTXOCommandByID(ctx, commandID[:])
+		if command.Is(types.StandaloneCommandStatusNonExistent) {
+			return true
+			// extraDataIncludesAllReserveCommandsInTheRedeemSession = false
+			// break
+		}
+	}
+
+	return false
+	// if !extraDataIncludesAllReserveCommandsInTheRedeemSession {
+	// 	// renew redeem session
+	// 	err := k.RenewRedeemSession(ctx, group.UID.Bytes())
+	// 	if err != nil {
+	// 		log.Error().
+	// 			Err(err).
+	// 			Str("CustodianGroupUID", group.UID.Hex()).
+	// 			Msg("failed to renew redeem session")
+	// 		panic(err)
+	// 	}
+	// }
 }
