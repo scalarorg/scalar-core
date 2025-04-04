@@ -1095,7 +1095,7 @@ Msg defines the nexus Msg service.
 | ----- | ---- | ----- | ----------- |
 | `tx_id` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 
 
 
@@ -1112,7 +1112,7 @@ Msg defines the nexus Msg service.
 | ----- | ---- | ----- | ----------- |
 | `tx_id` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 
 
 
@@ -1129,7 +1129,7 @@ Msg defines the nexus Msg service.
 | ----- | ---- | ----- | ----------- |
 | `tx_id` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 
 
 
@@ -1145,7 +1145,7 @@ Msg defines the nexus Msg service.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `tx_id` | [bytes](#bytes) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 
 
 
@@ -1802,7 +1802,7 @@ vote can have any data type
 | `reward_pool_name` | [string](#string) |  |  |
 | `grace_period` | [int64](#int64) |  |  |
 | `completed_at` | [int64](#int64) |  |  |
-| `id` | [uint64](#uint64) |  |  |
+| `id` | [string](#string) |  |  |
 | `snapshot` | [scalar.snapshot.exported.v1beta1.Snapshot](#scalar.snapshot.exported.v1beta1.Snapshot) |  |  |
 | `module` | [string](#string) |  |  |
 | `module_metadata` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
@@ -1820,7 +1820,7 @@ PollParticipants should be embedded in poll events in other modules
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 | `participants` | [bytes](#bytes) | repeated |  |
 
 
@@ -2316,7 +2316,7 @@ PollParticipants should be embedded in poll events in other modules
 | ----- | ---- | ----- | ----------- |
 | `tx_id` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 
 
 
@@ -4297,7 +4297,7 @@ quorum threshold e.g.,3 |
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 | `tx_ids` | [bytes](#bytes) | repeated |  |
 | `chain` | [string](#string) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
@@ -4319,7 +4319,7 @@ For Validation process
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 | `tx_id` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
@@ -4376,7 +4376,7 @@ For Validation process
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 | `chain` | [string](#string) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
 | `participants` | [bytes](#bytes) | repeated |  |
@@ -4824,7 +4824,7 @@ For Validation process
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
 | `data` | [bytes](#bytes) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 
 
 
@@ -4841,7 +4841,7 @@ For Validation process
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
 | `data` | [bytes](#bytes) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 
 
 
@@ -4858,7 +4858,7 @@ For Validation process
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
 | `data` | [bytes](#bytes) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 
 
 
@@ -4891,7 +4891,7 @@ For Validation process
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
 | `data` | [bytes](#bytes) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 
 
 
@@ -11044,7 +11044,7 @@ ParamsRequest represents a message that queries the params
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `sender` | [bytes](#bytes) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 | `vote` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
 
 
@@ -11130,7 +11130,7 @@ validators voting for the same data
 | ----- | ---- | ----- | ----------- |
 | `tally` | [bytes](#bytes) |  |  |
 | `data` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
-| `poll_id` | [uint64](#uint64) |  |  |
+| `poll_id` | [string](#string) |  |  |
 | `is_voter_late` | [TalliedVote.IsVoterLateEntry](#scalar.vote.v1beta1.TalliedVote.IsVoterLateEntry) | repeated |  |
 
 

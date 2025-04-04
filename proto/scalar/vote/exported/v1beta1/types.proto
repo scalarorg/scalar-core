@@ -28,7 +28,7 @@ message PollMetadata {
   string reward_pool_name = 10;
   int64 grace_period = 11;
   int64 completed_at = 12;
-  uint64 id = 13 [
+  string id = 13 [
     (gogoproto.customname) = "ID",
     (gogoproto.customtype) = "PollID",
     (gogoproto.nullable) = false
@@ -63,7 +63,7 @@ enum PollState {
 
 // PollParticipants should be embedded in poll events in other modules
 message PollParticipants {
-  uint64 poll_id = 1 [
+  string poll_id = 1 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) = "PollID",
     (gogoproto.nullable) = false

@@ -255,7 +255,7 @@ func TestMgr_ProcessTokenConfirmationNoTopicsNotPanics(t *testing.T) {
 
 	assert.NotPanics(t, func() {
 		mgr.ProcessTokenConfirmation(&types.ConfirmTokenStarted{TxID: exported.Hash{1},
-			PollParticipants: vote.PollParticipants{PollID: 10, Participants: []sdk.ValAddress{valAddr}},
+			PollParticipants: vote.PollParticipants{PollID: "10", Participants: []sdk.ValAddress{valAddr}},
 			Chain:            chain,
 		})
 	})

@@ -68,7 +68,7 @@ message SwitchPhaseCompleted {
 
 // For Validation process
 message ConfirmSwitchedPhaseStarted {
-  uint64 poll_id = 1 [
+  string poll_id = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
@@ -90,7 +90,7 @@ message ConfirmSwitchedPhaseStarted {
 }
 
 message ConfirmRedeemTxStarted {
-  uint64 poll_id = 1 [
+  string poll_id = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
@@ -115,7 +115,7 @@ message ConfirmRedeemTxStarted {
 }
 
 message IntializeUtxoSnapshotStarted {
-  uint64 poll_id = 1 [
+  string poll_id = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID"

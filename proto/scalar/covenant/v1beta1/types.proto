@@ -53,7 +53,7 @@ message BasicPollFailed {
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   bytes data = 2;
-  uint64 poll_id = 3 [
+  string poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
@@ -66,7 +66,7 @@ message BasicPollExpired {
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   bytes data = 2;
-  uint64 poll_id = 3 [
+  string poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
@@ -79,7 +79,7 @@ message BasicPollCompleted {
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   bytes data = 2;
-  uint64 poll_id = 3 [
+  string poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/vote/exported.PollID",
@@ -92,7 +92,7 @@ message BasicPollNoEventsConfirmed {
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
   bytes data = 2;
-  uint64 poll_id = 3 [
+  string poll_id = 3 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/vote/exported.PollID",

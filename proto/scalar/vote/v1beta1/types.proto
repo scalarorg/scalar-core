@@ -22,7 +22,7 @@ message TalliedVote {
   ];
   google.protobuf.Any data = 3 [ (cosmos_proto.accepts_interface) =
                                      "github.com/cosmos/codec/ProtoMarshaler" ];
-  uint64 poll_id = 4 [
+  string poll_id = 4 [
     (gogoproto.customname) = "PollID",
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/vote/exported.PollID",

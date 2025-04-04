@@ -3,7 +3,6 @@ package exported
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -41,11 +40,25 @@ type VoteHandler interface {
 }
 
 // PollID represents ID of polls
-type PollID uint64
+type PollID string
 
 // String converts the given poll ID to string
 func (id PollID) String() string {
-	return strconv.FormatUint(uint64(id), 10)
+	//return strconv.FormatUint(uint64(id), 10)
+	return string(id)
+}
+func (id PollID) Size() int {
+	return len([]byte(id))
+}
+func (id PollID) MarshalTo(data []byte) (n int, err error) {
+	return copy(data, []byte(id)), nil
+}
+func (id PollID) Marshal() ([]byte, error) {
+	return []byte(id), nil
+}
+func (id *PollID) Unmarshal(data []byte) error {
+	*id = PollID(data)
+	return nil
 }
 
 // Deprecated: String converts the given poll key to string
