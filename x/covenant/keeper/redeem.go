@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
+	"math/big"
 
 	"github.com/scalarorg/scalar-core/utils"
 
@@ -262,25 +263,7 @@ func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 	}
 
 	cmdId := cov.NewCommandID(reqId)
-
-	payload, err := RedeemTokenPayloadArguments.Pack(
-		req.Amount,
-		req.LockingScript,
-		txIds,
-		vouts,
-		amounts,
-		reqId)
-	if err != nil {
-		return nil, nil, err
-	}
-	params, err := callContractWithTokenArguments.Pack(
-		req.DestChain,
-		req.Address,
-		payload,
-		req.Symbol,
-		req.Amount,
-	)
-
+	params, err := CreateAbiRedeemTokenParams(req, reqId, txIds, vouts, amounts)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -288,6 +271,29 @@ func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 	return params, &cmdId, err
 }
 
+func CreateAbiRedeemTokenParams(req *cov.ReserveRedeemUtxoRequest, reqId []byte, txIds []string, vouts []uint32, amounts []uint64) ([]byte, error) {
+	abiReqId := [32]byte{}
+	copy(abiReqId[:], reqId)
+	payload, err := RedeemTokenPayloadArguments.Pack(
+		req.Amount,
+		req.LockingScript,
+		txIds,
+		vouts,
+		amounts,
+		abiReqId)
+	if err != nil {
+		return nil, err
+	}
+
+	params, err := callContractWithTokenArguments.Pack(
+		req.DestChain,
+		req.Address,
+		payload,
+		req.Symbol,
+		big.NewInt(int64(req.Amount)),
+	)
+	return params, err
+}
 func (k Keeper) GetReserveUTXOCommandByID(ctx sdk.Context, id []byte) cov.StandaloneCommand {
 	md := k.getStandaloneCommandMetadata(ctx, id, reserveUtxoCommandPrefix)
 

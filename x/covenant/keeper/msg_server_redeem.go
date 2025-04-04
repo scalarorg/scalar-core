@@ -99,6 +99,7 @@ func (s msgServer) ConfirmSwitchedPhase(c context.Context, req *types.ConfirmSwi
 	}
 	_, ok := s.Keeper.GetCustodianGroup(ctx, req.CustodianGroupUID)
 	if !ok {
+		s.Keeper.Logger(ctx).Error(fmt.Sprintf("custodian group %s not found", req.CustodianGroupUID.Hex()))
 		return nil, fmt.Errorf("custodian group %s not found", req.CustodianGroupUID.Hex())
 	}
 	chainKeeper, err := s.chains.ForChain(ctx, req.Chain)
@@ -236,7 +237,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 	if err != nil {
 		return nil, err
 	}
-
+	s.Keeper.Logger(ctx).Info("ReserveRedeemUtxoStarted", "amount", req.Amount, "chain", sourceChain.Name, "sender", req.Sender)
 	command, err := s.createReserveRedeemUtxoStandaloneCommand(ctx, keyID, *chainID, *commandID, params)
 	if err != nil {
 		return nil, fmt.Errorf("could not create reserve utxo command")
