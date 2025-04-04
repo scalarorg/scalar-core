@@ -36,7 +36,7 @@ func (mgr *Mgr) ProcessKeygenStarted(event *types.KeygenStarted) error {
 
 	msg := types.NewSubmitPubKeyRequest(mgr.ctx.FromAddress, event.GetKeyID(), pubKey, sig)
 	if _, err := mgr.broadcaster.Broadcast(context.Background(), msg); err != nil {
-		return sdkerrors.Wrap(err, "handler goroutine: failure to broadcast outgoing submit pub key message")
+		return sdkerrors.Wrap(err, "multisig/handler goroutine: failure to broadcast outgoing submit pub key message")
 	}
 
 	return nil

@@ -136,7 +136,7 @@ func (mgr *Mgr) ProcessSigningPsbtStarted(event *covenantTypes.SigningPsbtStarte
 
 	clog.Greenf("SubmitTapScriptSigsRequest: %+v", msg)
 	if _, err := mgr.b.Broadcast(context.Background(), msg); err != nil {
-		return sdkerrors.Wrap(err, "handler goroutine: failure to broadcast outgoing submit signature message")
+		return sdkerrors.Wrap(err, "psbt/handler goroutine: failure to broadcast outgoing submit signature message")
 	}
 
 	return nil

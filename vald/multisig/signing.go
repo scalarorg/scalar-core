@@ -29,7 +29,7 @@ func (mgr *Mgr) ProcessSigningStarted(event *types.SigningStarted) error {
 
 	msg := types.NewSubmitSignatureRequest(mgr.ctx.FromAddress, event.GetSigID(), sig)
 	if _, err := mgr.broadcaster.Broadcast(context.Background(), msg); err != nil {
-		return sdkerrors.Wrap(err, "handler goroutine: failure to broadcast outgoing submit signature message")
+		return sdkerrors.Wrap(err, "multisig/handler goroutine: failure to broadcast outgoing submit signature message")
 	}
 
 	return nil
