@@ -53,9 +53,10 @@ func handleKeygens(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 	// we handle sessions that'll expire on the next block,
 	// to avoid waiting for an additional block
-	clog.Green("Multisig/abci: handleSignings")
-	for _, signing := range k.GetSigningSessionsByExpiry(ctx, ctx.BlockHeight()+1) {
-		clog.Green("Multisig/abci: handleSignings: signing: %v", signing)
+	expiredSigningSessions := k.GetSigningSessionsByExpiry(ctx, ctx.BlockHeight()+1)
+	clog.Green("[x/multisig] [ABCI]: handle %d expired SigningSessions", len(expiredSigningSessions))
+	for _, signing := range expiredSigningSessions {
+		clog.Greenf("[x/multisig] [ABCI]: handleExpiredSignings: signing: %+v", signing)
 		_ = utils.RunCached(ctx, k, func(cachedCtx sdk.Context) ([]abci.ValidatorUpdate, error) {
 			k.DeleteSigningSession(cachedCtx, signing.GetID())
 			module := signing.GetModule()
@@ -81,7 +82,7 @@ func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 			}
 
 			events.Emit(cachedCtx, types.NewSigningCompleted(signing.GetID()))
-			k.Logger(cachedCtx).Info("signing session completed",
+			k.Logger(cachedCtx).Info("[x/multisig] [ABCI] signing session completed",
 				"sig_id", signing.GetID(),
 				"key_id", sig.GetKeyID(),
 				"module", module,

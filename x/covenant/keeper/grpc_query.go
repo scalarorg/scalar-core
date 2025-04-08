@@ -139,12 +139,11 @@ func getProof(key multisig.Key, signature multisig.MultiSig) ([]common.Address, 
 	return addresses, weights, threshold, signatures
 }
 
-func getExecuteDataAndSigs(ctx sdk.Context, multisigK types.MultisigKeeper, cmd types.StandaloneCommand, signature multisig.MultiSig) ([]byte, chainsTypes.Proof, error) {
-	key := funcs.MustOk(multisigK.GetKey(ctx, signature.GetKeyID()))
+func CreateExecuteDataAndSigs(key multisig.Key, cmdData []byte, signature multisig.MultiSig) ([]byte, chainsTypes.Proof, error) {
 
 	addresses, weights, threshold, signatures := getProof(key, signature)
 
-	executeData, err := chainsTypes.CreateExecuteDataMultisig(cmd.GetData(), addresses, weights, threshold, signatures)
+	executeData, err := chainsTypes.CreateExecuteDataMultisig(cmdData, addresses, weights, threshold, signatures)
 	if err != nil {
 		return nil, chainsTypes.Proof{}, fmt.Errorf("could not create transaction data: %s", err)
 	}
@@ -166,7 +165,9 @@ func commandToResp(ctx sdk.Context, cmd types.StandaloneCommand, multisigK types
 	if cmd.Is(types.StandaloneCommandStatusSigned) && cmd.GetSignature() != nil { // check signature for unmigrated batches
 		signature, ok := cmd.GetSignature().(multisig.MultiSig)
 		if ok {
-			executeData, _, err := getExecuteDataAndSigs(ctx, multisigK, cmd, signature)
+			key := funcs.MustOk(multisigK.GetKey(ctx, signature.GetKeyID()))
+			cmdData := cmd.GetData()
+			executeData, _, err := CreateExecuteDataAndSigs(key, cmdData, signature)
 			if err != nil {
 				return types.StandaloneCommandResponse{}, sdkerrors.Wrap(err, "could not create transaction data")
 			}

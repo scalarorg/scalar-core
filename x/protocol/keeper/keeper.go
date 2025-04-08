@@ -189,14 +189,14 @@ func (k Keeper) FindProtocolByExternalSymbol(ctx sdk.Context, symbol string) (*t
 }
 
 func (k Keeper) FindProtocolInfoByExternalSymbol(ctx sdk.Context, symbol string) (*pexported.ProtocolInfo, error) {
-	clog.Redf("[FindProtocolInfoByExternalSymbol], symbol: %s", symbol)
+	clog.Greenf("[x/protocol] [keeper] [FindProtocolInfoByExternalSymbol], symbol: %s", symbol)
 	protocol, err := k.FindProtocolByExternalSymbol(ctx, symbol)
 	if err != nil {
-		clog.Redf("FindProtocolInfoByExternalSymbol, FindProtocolByExternalSymbol error: %v", err)
+		clog.Redf("[x/protocol] [keeper] [FindProtocolInfoByExternalSymbol], FindProtocolByExternalSymbol error: %v", err)
 		return nil, err
 	}
 	protocolInfo := protocol.ToProtocolInfo()
-	clog.Redf("[FindProtocolInfoByExternalSymbol], found protocolInfo: %+v", protocolInfo)
+	clog.Greenf("[x/protocol] [keeper] [FindProtocolInfoByExternalSymbol], found protocolInfo: %+v", protocolInfo)
 	return protocolInfo, nil
 }
 func (k Keeper) FindProtocolInfoByCustodianGroupUID(ctx sdk.Context, custodianGroupUIDs [][]byte) []*pexported.ProtocolInfo {

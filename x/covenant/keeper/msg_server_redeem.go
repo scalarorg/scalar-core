@@ -237,7 +237,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 	if err != nil {
 		return nil, err
 	}
-	s.Keeper.Logger(ctx).Info("ReserveRedeemUtxoStarted", "amount", req.Amount, "chain", sourceChain.Name, "sender", req.Sender)
+	// s.Keeper.Logger(ctx).Info("ReserveRedeemUtxoStarted", "amount", req.Amount, "chain", sourceChain.Name, "sender", req.Sender)
 	command, err := s.createReserveRedeemUtxoStandaloneCommand(ctx, keyID, *chainID, *dataHash, params)
 	if err != nil {
 		return nil, fmt.Errorf("could not create reserve utxo command")
@@ -254,8 +254,7 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, err
 	}
 
-	logger := s.Keeper.Logger(ctx)
-	logger.Info("ReserveRedeemUtxoStarted", "amount", req.Amount, "chain", sourceChain.Name, "sender", req.Sender)
+	s.Keeper.Logger(ctx).Info("ReserveRedeemUtxoStarted", "amount", req.Amount, "chain", sourceChain.Name, "sender", req.Sender)
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
