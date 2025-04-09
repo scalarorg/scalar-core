@@ -12,6 +12,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/key"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
@@ -282,6 +283,8 @@ func CreateAbiRedeemTokenParams(req *cov.ReserveRedeemUtxoRequest, reqId [32]byt
 	if err != nil {
 		return nil, err
 	}
+
+	payload = encode.AppendPayload(encode.ContractCallWithTokenPayloadType_CustodianOnly, payload)
 
 	params, err := callContractWithTokenArguments.Pack(
 		req.DestChain,

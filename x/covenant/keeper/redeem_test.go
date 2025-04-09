@@ -25,6 +25,7 @@ func TestCreateAbiRedeemTokenParams(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, params)
 	t.Log(params)
+	t.Logf("hex: %x", params)
 }
 
 func TestAbiTypes(t *testing.T) {

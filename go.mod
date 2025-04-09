@@ -17,7 +17,7 @@ require (
 	github.com/cosmos/ibc-go/v4 v4.6.0
 	github.com/cucumber/godog v0.12.5
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.3.0
-	github.com/ethereum/go-ethereum v1.14.12
+	github.com/ethereum/go-ethereum v1.14.13
 	github.com/go-errors/errors v1.5.1
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/mock v1.6.0
@@ -32,8 +32,8 @@ require (
 	github.com/rakyll/statik v0.1.7
 	github.com/regen-network/cosmos-proto v0.3.1
 	github.com/rs/zerolog v1.33.0
-	github.com/scalarorg/bitcoin-vault/ffi/go-vault v0.0.0-20250205093245-57c4541ffbc7
-	github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20250205093245-57c4541ffbc7
+	github.com/scalarorg/bitcoin-vault/ffi/go-vault v0.0.0-20250409030013-d7efef3d2c9d
+	github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20250409030013-d7efef3d2c9d
 	github.com/smallnest/chanx v1.0.1-0.20211205150931-349643806662
 	github.com/spf13/cast v1.7.0
 	github.com/spf13/cobra v1.8.1
