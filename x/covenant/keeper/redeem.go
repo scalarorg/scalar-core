@@ -32,7 +32,7 @@ var (
 	stringArrayType  = funcs.Must(abi.NewType("string[]", "string[]", nil))
 
 	RedeemTokenPayloadArguments    = abi.Arguments{{Type: uint64Type}, {Type: bytesType}, {Type: stringArrayType}, {Type: uint32ArrayType}, {Type: uint64ArrayType}, {Type: bytes32Type}}
-	callContractWithTokenArguments = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: bytesType}, {Type: stringType}, {Type: uint256Type}}
+	CallContractWithTokenArguments = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: bytesType}, {Type: stringType}, {Type: uint256Type}}
 )
 
 func CreateRedeemSessionKey(uid []byte) utils.Key {
@@ -286,7 +286,7 @@ func CreateAbiRedeemTokenParams(req *cov.ReserveRedeemUtxoRequest, reqId [32]byt
 
 	payload = encode.AppendPayload(encode.ContractCallWithTokenPayloadType_CustodianOnly, payload)
 
-	params, err := callContractWithTokenArguments.Pack(
+	params, err := CallContractWithTokenArguments.Pack(
 		req.DestChain,
 		req.Address,
 		payload,
