@@ -34,9 +34,7 @@ type DeployInfo struct {
 	ID           string `json:"id" mapstructure:"id"`
 	ChainId      uint64 `json:"chain_id" mapstructure:"chain_id"`
 	Name         string `json:"name" mapstructure:"name"`
-	Gateway      string `json:"gateway" mapstructure:"gateway"`
 	TokenAddress string `json:"token_address" mapstructure:"token_address"`
-	TxHash       string `json:"tx_hash" mapstructure:"tx_hash"`
 }
 type Token struct {
 	ID             string       `json:"id" mapstructure:"id"`
