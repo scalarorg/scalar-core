@@ -615,8 +615,8 @@ func aggregatePsbtFromCommandBatch(
 
 	tag := scalarnetParams.Tag
 	version := scalarnetParams.Version
-	// TODO: fix me
-	serviceTag := []byte("no-tag")
+	// Note: because of we have multiple protocols in one signle redeem transaction so we hardcode the service tag to "pools"
+	serviceTag := []byte("pools")
 	network := ck.GetParams(ctx).NetworkKind
 	custodianPubKeys := slices.Map(group.Custodians, func(c *exported.Custodian) goutils.PublicKey {
 		pk := make([]byte, 33)
