@@ -8,7 +8,6 @@ import (
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
 	goutils "github.com/scalarorg/bitcoin-vault/go-utils/types"
@@ -550,57 +549,42 @@ func aggregatePsbtFromCommandBatch(
 	group *exported.CustodianGroup) (exported.Psbt, error) {
 	multiPayload := commandBatch.GetExtraData()
 
-	bytesType := funcs.Must(abi.NewType("bytes", "bytes", nil))
-	uint256Type := funcs.Must(abi.NewType("uint256", "uint256", nil))
-	uint256ArrayType := funcs.Must(abi.NewType("uint256[]", "uint256[]", nil))
-	stringArrayType := funcs.Must(abi.NewType("string[]", "string[]", nil))
-
-	arg := abi.Arguments{
-		{Type: uint256Type},
-		{Type: bytesType},
-		{Type: stringArrayType},
-		{Type: uint256ArrayType},
-		{Type: uint256ArrayType},
-	}
+	params := types.RedeemTokenPayload{}
 
 	visited := map[string]bool{}
 	inputs := []goutils.PreviousStakingUTXO{}
 	outputs := []goutils.UnstakingOutput{}
 
+	fmt.Println("multiPayload: ", multiPayload)
+
 	for _, payload := range multiPayload {
-		params, err := chainsTypes.StrictDecode(arg, payload)
+		err := params.AbiUnpack(payload)
 		if err != nil {
+			fmt.Println("err: ", err)
 			return nil, err
 		}
 
-		reqAmount := params[0].(*uint64)
-		lockingScript := params[1].([]byte)
-
 		outputs = append(outputs, goutils.UnstakingOutput{
-			Amount:        *reqAmount,
-			LockingScript: lockingScript,
+			Amount:        params.Amount,
+			LockingScript: params.LockingScript,
 		})
 
-		txIds := params[2].([]string)
-		vouts := params[3].([]*uint64)
-		amountInSats := params[4].([]*uint64)
-
-		for i, txId := range txIds {
-			key := fmt.Sprintf("%s:%d", txId, *vouts[i])
+		for _, utxo := range params.Utxos {
+			key := fmt.Sprintf("%x:%d", utxo.TxID, utxo.Vout)
 			if visited[key] {
 				continue
 			}
 			visited[key] = true
-			txHash, err := chainhash.NewHashFromStr(txId)
+			txHash, err := chainhash.NewHashFromStr(strings.TrimPrefix(utxo.TxID.Hex(), "0x"))
 			if err != nil {
 				return nil, err
 			}
 			inputs = append(inputs, goutils.PreviousStakingUTXO{
 				OutPoint: goutils.OutPoint{
 					Txid: [32]byte(txHash.CloneBytes()),
-					Vout: uint32(*vouts[i]),
+					Vout: utxo.Vout,
 				},
-				Amount: *amountInSats[i],
+				Amount: utxo.AmountInSats,
 				Script: group.BitcoinPubkey,
 			})
 		}
@@ -615,6 +599,7 @@ func aggregatePsbtFromCommandBatch(
 
 	tag := scalarnetParams.Tag
 	version := scalarnetParams.Version
+
 	// Note: because of we have multiple protocols in one signle redeem transaction so we hardcode the service tag to "pools"
 	serviceTag := []byte("pools")
 	network := ck.GetParams(ctx).NetworkKind
@@ -626,6 +611,16 @@ func aggregatePsbtFromCommandBatch(
 	custodianQuorum := group.Quorum
 	rbf := false
 	feeRate := uint64(1)
+
+	fmt.Printf("tag: %s\n", tag)
+	fmt.Printf("version: %d\n", version)
+	fmt.Printf("serviceTag: %s\n", serviceTag)
+	fmt.Printf("custodianPubKeys: %+v\n", custodianPubKeys)
+	fmt.Printf("custodianQuorum: %d\n", custodianQuorum)
+	fmt.Printf("rbf: %v\n", rbf)
+	fmt.Printf("feeRate: %d\n", feeRate)
+	fmt.Printf("inputs: %+v\n", inputs)
+	fmt.Printf("outputs: %+v\n", outputs)
 
 	psbt, err := vault.BuildCustodianOnlyUnstakingTx(
 		tag,
