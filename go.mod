@@ -33,7 +33,7 @@ require (
 	github.com/regen-network/cosmos-proto v0.3.1
 	github.com/rs/zerolog v1.33.0
 	github.com/scalarorg/bitcoin-vault/ffi/go-vault v0.0.0-20250409030013-d7efef3d2c9d
-	github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20250409030013-d7efef3d2c9d
+	github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20250409074352-eec5b904014f
 	github.com/smallnest/chanx v1.0.1-0.20211205150931-349643806662
 	github.com/spf13/cast v1.7.0
 	github.com/spf13/cobra v1.8.1
@@ -184,6 +184,7 @@ require (
 	github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7 // indirect
 	github.com/tendermint/go-amino v0.16.0 // indirect

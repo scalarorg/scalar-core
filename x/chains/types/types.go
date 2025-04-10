@@ -1018,3 +1018,39 @@ func (m *RedeemSession) ValidateBasic() error {
 
 	return nil
 }
+
+func (m EventRedeemToken) ValidateBasic() error {
+	if m.Sender.IsZeroAddress() {
+		return fmt.Errorf("invalid sender")
+	}
+
+	if err := m.DestinationChain.Validate(); err != nil {
+		return sdkerrors.Wrap(err, "invalid destination chain")
+	}
+
+	if err := utils.ValidateString(m.DestinationContractAddress); err != nil {
+		return sdkerrors.Wrap(err, "invalid destination address")
+	}
+
+	if len(m.DestinationContractAddress) > maxReceiverLength {
+		return fmt.Errorf("receiver length %d is greater than %d", len(m.DestinationContractAddress), maxReceiverLength)
+	}
+
+	if m.PayloadHash.IsZero() {
+		return fmt.Errorf("invalid payload hash")
+	}
+
+	if err := utils.ValidateString(m.Symbol); err != nil {
+		return sdkerrors.Wrap(err, "invalid symbol")
+	}
+
+	if m.Amount.IsZero() {
+		return fmt.Errorf("invalid amount")
+	}
+
+	if m.Sequence == 0 {
+		return fmt.Errorf("invalid sequence")
+	}
+
+	return nil
+}

@@ -198,6 +198,7 @@ const (
 	COMMAND_TYPE_REGISTER_CUSTODIAN_GROUP        CommandType = 8
 	COMMAND_TYPE_SWITCH_PHASE                    CommandType = 9
 	COMMAND_TYPE_REDEEM_TOKEN                    CommandType = 10
+	COMMAND_TYPE_APPROVE_REDEEM_TOKEN CommandType = 11
 )
 
 var CommandType_name = map[int32]string{

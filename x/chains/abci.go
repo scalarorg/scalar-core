@@ -97,6 +97,8 @@ func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 		return handleSourceConfirmationEvent(ctx, event, n)
 	case *types.Event_ContractCallWithToken:
 		return handleContractCallWithToken(ctx, event, bk, n, m, p, cov)
+	case *types.Event_RedeemToken:
+		return handleRedeemToken(ctx, event, bk, n, m, p, cov)
 	case *types.Event_TokenSent:
 		return handleTokenSent(ctx, event, bk, n, cov)
 	case *types.Event_Transfer:
@@ -263,6 +265,120 @@ func handleContractCallWithToken(ctx sdk.Context, event types.Event, bk types.Ba
 		// set as general message in nexus, so the dest module can handle the message
 		return setMessageToNexus(ctx, n, event, &coin)
 	}
+}
+
+func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper, cov types.CovenantKeeper) error {
+	e := event.GetRedeemToken()
+	if e == nil {
+		panic(fmt.Errorf("event is nil"))
+	}
+
+	destinationChain := funcs.MustOk(n.GetChain(ctx, e.DestinationChain))
+
+	types.IsBitcoinChain(destinationChain.Name)
+	if !types.IsEvmChain(destinationChain.Name) {
+		return fmt.Errorf("destination chain %s is not an EVM chain", destinationChain.Name)
+	}
+
+	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
+
+	sourceCk := funcs.Must(bk.ForChain(ctx, sourceChain.Name))
+	token := sourceCk.GetERC20TokenBySymbol(ctx, e.Symbol)
+	if !token.Is(types.Confirmed) {
+		return fmt.Errorf("token with symbol %s not confirmed on source chain", e.Symbol)
+	}
+	asset := token.GetAsset()
+
+	if err := n.RateLimitTransfer(ctx, sourceChain.Name, sdk.NewCoin(asset, sdk.Int(e.Amount)), nexus.TransferDirectionFrom); err != nil {
+		return err
+	}
+
+	destinationCk := funcs.Must(bk.ForChain(ctx, destinationChain.Name))
+
+	destinationToken := destinationCk.GetERC20TokenByAsset(ctx, asset)
+	if !destinationToken.Is(types.Confirmed) {
+		log.Debug().Any("destinationToken", destinationToken).Msg("[handleContractCallWithTokenToBTC]")
+		return fmt.Errorf("token with asset %s not confirmed on destination chain %s", e.Symbol, destinationChain)
+	}
+
+	if !common.IsHexAddress(e.DestinationContractAddress) {
+		return fmt.Errorf("invalid contract address %s", e.DestinationContractAddress)
+	}
+
+	coin := sdk.NewCoin(asset, sdk.Int(e.Amount))
+
+	if err := n.RateLimitTransfer(ctx, destinationChain.Name, coin, nexus.TransferDirectionTo); err != nil {
+		return err
+	}
+	// keyId, ok := m.GetCurrentKeyID(ctx, destinationChain)
+	// if !ok {
+	// 	keyId = multisigexported.KeyID(destinationChain)
+	// }
+	protocolInfo, err := p.FindProtocolInfoByExternalSymbol(ctx, e.Symbol)
+	if err != nil {
+		return err
+	}
+
+	if !protocolInfo.IsSupportedChain(sourceChain.Name) {
+		return fmt.Errorf("source chain %s is not supported by protocol %s", sourceChain, e.Symbol)
+	}
+
+	cusGr, ok := cov.GetCustodianGroup(ctx, protocolInfo.CustodianGroupUID)
+	if !ok {
+		return fmt.Errorf("covenant not found")
+	}
+
+	clog.Yellowf("[abci/chains] covenant: %+v", cusGr)
+
+	// With Pool model, we can handle multiple command in one batch so dont need to different keyId for each command
+	// On the other hand, UPC model, we need to different keyId for each command
+	if protocolInfo.LiquidityModel == pexported.LIQUIDITY_MODEL_UNSPECIFIED {
+		return fmt.Errorf("invalid liquidity model, %s", protocolInfo.LiquidityModel.String())
+	}
+
+	keyID, err := pexported.FormatContractCallWithTokenToBTCKeyID(cusGr.BitcoinPubkey, protocolInfo.LiquidityModel)
+	if err != nil {
+		return err
+	}
+
+	cmd := types.NewApproveRedeemTokenCommandWithPayload(
+		funcs.MustOk(destinationCk.GetChainID(ctx)),
+		keyID,
+		nexus.ChainName(sourceChain.Name.String()),
+		event.TxID,
+		event.Index,
+		*e,
+		e.Amount,
+		destinationToken.GetDetails().Symbol,
+		event.GetContractCallWithToken().Payload,
+	)
+
+	clog.Magentaf("[abci/chains] created %s command for event: %+v", cmd.Type, cmd)
+
+	funcs.MustNoErr(destinationCk.EnqueueCommand(ctx, cmd))
+
+	bk.Logger(ctx).Info(fmt.Sprintf("created %s command for event", cmd.Type),
+		"chain", destinationChain,
+		"eventID", event.GetID(),
+		"commandID", cmd.ID.Hex(),
+	)
+
+	approvedEvent := &types.EventRedeemTokenApproved{
+		Chain:            event.Chain,
+		EventID:          event.GetID(),
+		CommandID:        cmd.ID,
+		Sender:           e.Sender.Hex(),
+		DestinationChain: e.DestinationChain,
+		ContractAddress:  e.DestinationContractAddress,
+		PayloadHash:      e.PayloadHash,
+		Asset:            coin,
+	}
+
+	clog.Yellowf("[abci/chains] emitted EventRedeemTokenApproved event for event: %v", approvedEvent)
+
+	events.Emit(ctx, approvedEvent)
+
+	return nil
 }
 
 func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, p types.ProtocolKeeper, cov types.CovenantKeeper, sourceChain, destinationChain nexus.ChainName, asset string) error {

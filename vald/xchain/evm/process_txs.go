@@ -114,6 +114,27 @@ func (c *EthereumClient) processTxReceipt(event *types.EventConfirmSourceTxsStar
 					TokenSent: &gatewayEvent,
 				},
 			})
+		case RedeemTokenSig:
+			clog.Red("RedeemTokenSig", "txlog", txlog)
+			gatewayEvent, err := DecodeEventRedeemToken(txlog)
+			if err != nil {
+				c.logger().Infof(sdkerrors.Wrap(err, "decode event ContractCallWithToken failed").Error())
+				continue
+			}
+
+			if err := gatewayEvent.ValidateBasic(); err != nil {
+				c.logger().Debug(sdkerrors.Wrap(err, "invalid event ContractCallWithToken").Error())
+				continue
+			}
+
+			events = append(events, types.Event{
+				Chain: event.Chain,
+				TxID:  exported.Hash(txlog.TxHash),
+				Index: uint64(txlog.Index),
+				Event: &types.Event_RedeemToken{
+					RedeemToken: &gatewayEvent,
+				},
+			})
 		default:
 			c.logger().Errorf("unknown event type: %s", txlog.Topics[0])
 		}

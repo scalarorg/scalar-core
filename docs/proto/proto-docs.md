@@ -108,6 +108,8 @@
     - [EventContractCallWithToken](#scalar.chains.v1beta1.EventContractCallWithToken)
     - [EventMultisigOperatorshipTransferred](#scalar.chains.v1beta1.EventMultisigOperatorshipTransferred)
     - [EventMultisigOwnershipTransferred](#scalar.chains.v1beta1.EventMultisigOwnershipTransferred)
+    - [EventRedeemToken](#scalar.chains.v1beta1.EventRedeemToken)
+    - [EventRedeemTokenApproved](#scalar.chains.v1beta1.EventRedeemTokenApproved)
     - [EventTokenDeployed](#scalar.chains.v1beta1.EventTokenDeployed)
     - [EventTokenSent](#scalar.chains.v1beta1.EventTokenSent)
     - [EventTransfer](#scalar.chains.v1beta1.EventTransfer)
@@ -2110,6 +2112,7 @@ PollParticipants should be embedded in poll events in other modules
 | `token_deployed` | [EventTokenDeployed](#scalar.chains.v1beta1.EventTokenDeployed) |  |  |
 | `multisig_operatorship_transferred` | [EventMultisigOperatorshipTransferred](#scalar.chains.v1beta1.EventMultisigOperatorshipTransferred) |  |  |
 | `source_tx_confirmation_event` | [SourceTxConfirmationEvent](#scalar.chains.v1beta1.SourceTxConfirmationEvent) |  | for general chains |
+| `redeem_token` | [EventRedeemToken](#scalar.chains.v1beta1.EventRedeemToken) |  | for btc |
 
 
 
@@ -2224,6 +2227,51 @@ PollParticipants should be embedded in poll events in other modules
 | `prev_threshold` | [bytes](#bytes) |  |  |
 | `new_owners` | [bytes](#bytes) | repeated |  |
 | `new_threshold` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventRedeemToken"></a>
+
+### EventRedeemToken
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `sequence` | [uint64](#uint64) |  |  |
+| `custodian_group_id` | [bytes](#bytes) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `destination_contract_address` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `payload` | [bytes](#bytes) |  |  |
+| `symbol` | [string](#string) |  |  |
+| `amount` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventRedeemTokenApproved"></a>
+
+### EventRedeemTokenApproved
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `event_id` | [string](#string) |  |  |
+| `command_id` | [bytes](#bytes) |  |  |
+| `sender` | [string](#string) |  |  |
+| `destination_chain` | [string](#string) |  |  |
+| `contract_address` | [string](#string) |  |  |
+| `payload_hash` | [bytes](#bytes) |  |  |
+| `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 

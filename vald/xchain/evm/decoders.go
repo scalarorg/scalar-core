@@ -35,7 +35,9 @@ var (
 	ContractCallSig                 = crypto.Keccak256Hash([]byte("ContractCall(address,string,string,bytes32,bytes)"))
 	ContractCallWithTokenSig        = crypto.Keccak256Hash([]byte("ContractCallWithToken(address,string,string,bytes32,bytes,string,uint256)"))
 	TokenSentSig                    = crypto.Keccak256Hash([]byte("TokenSent(address,string,string,string,uint256)"))
-	ContractCallDataArgs            = abi.Arguments{
+
+	RedeemTokenSig       = crypto.Keccak256Hash([]byte("RedeemToken(address,uint64,bytes32,string,string,bytes32,bytes,string,uint256)"))
+	ContractCallDataArgs = abi.Arguments{
 		{Type: stringType},
 		{Type: stringType},
 		{Type: bytesType},
@@ -246,4 +248,52 @@ func DecodeEventSwitchPhase(log *geth.Log) (*covTypes.SwitchedPhaseConfirmed, er
 		ToPhase:           covExported.Phase(to),
 	}, nil
 
+}
+
+func DecodeEventRedeemToken(log *geth.Log) (types.EventRedeemToken, error) {
+	stringType := funcs.Must(abi.NewType("string", "string", nil))
+	bytesType := funcs.Must(abi.NewType("bytes", "bytes", nil))
+	uint256Type := funcs.Must(abi.NewType("uint256", "uint256", nil))
+	bytes32Type := funcs.Must(abi.NewType("bytes32", "bytes32", nil))
+
+	arguments := abi.Arguments{
+		{Type: bytes32Type},
+		{Type: stringType},
+		{Type: stringType},
+		{Type: bytesType},
+		{Type: stringType},
+		{Type: uint256Type},
+	}
+	params, err := types.StrictDecode(arguments, log.Data)
+	if err != nil {
+		clog.Greenf("[Vald/decoders] failed to StrictDecode Data: %+v\n, Argurments: (string, string, bytes, string, uint256)", log.Data)
+		return types.EventRedeemToken{}, err
+	}
+	payload, ok := params[3].([]byte)
+	if !ok {
+		return types.EventRedeemToken{}, fmt.Errorf("invalid payload")
+	}
+
+	clog.Greenf("[Vald/decoders] tx %x raw payload: %x", log.TxHash, payload)
+
+	// this function is used to check if the payload is valid or not
+	_, err = encode.DecodeContractCallWithTokenPayload(payload)
+	if err != nil {
+		clog.Redf("[Vald/decoders] Payload is invalid, err: %+v\n", err)
+		return types.EventRedeemToken{}, fmt.Errorf("error decoding contract call payload: %w", err)
+	}
+
+	clog.Greenf("[Vald/decoders] Payload is valid")
+
+	return types.EventRedeemToken{
+		Sender:                     types.Address(common.BytesToAddress(log.Topics[1].Bytes())),
+		Sequence:                   log.Topics[2].Big().Uint64(),
+		CustodianGroupId:           exported.Hash(params[0].([32]byte)),
+		DestinationChain:           nexus.ChainName(params[1].(string)),
+		DestinationContractAddress: params[2].(string),
+		PayloadHash:                exported.Hash(common.BytesToHash(log.Topics[2].Bytes())),
+		Symbol:                     params[4].(string),
+		Amount:                     sdk.NewUintFromBigInt(params[5].(*big.Int)),
+		Payload:                    payload,
+	}, nil
 }

@@ -241,6 +241,30 @@ func NewApproveContractCallWithMintCommandWithPayload(
 	}
 }
 
+func NewApproveRedeemTokenCommandWithPayload(
+	chainID sdk.Int,
+	keyID multisig.KeyID,
+	sourceChain nexus.ChainName,
+	sourceTxID exported.Hash,
+	sourceEventIndex uint64,
+	event EventRedeemToken,
+	amount sdk.Uint,
+	symbol string,
+	payload []byte,
+) Command {
+	sourceEventIndexBz := make([]byte, 8)
+	binary.LittleEndian.PutUint64(sourceEventIndexBz, sourceEventIndex)
+
+	return Command{
+		ID:         NewCommandID(append(sourceTxID.Bytes(), sourceEventIndexBz...), chainID),
+		Type:       COMMAND_TYPE_APPROVE_REDEEM_TOKEN,
+		Params:     createApproveRedeemTokenParams(sourceChain, sourceTxID, sourceEventIndex, event, amount, symbol),
+		Payload:    payload,
+		KeyID:      keyID,
+		MaxGasCost: uint32(approveContractCallWithMintMaxGasCost),
+	}
+}
+
 // NewApproveContractCallWithMintGeneric creates a command to approve contract call with mint
 func NewApproveContractCallWithMintGeneric(
 	chainID sdk.Int,
@@ -448,6 +472,25 @@ func createApproveContractCallWithMintParams(
 		sourceChain,
 		event.Sender.Hex(),
 		common.HexToAddress(event.ContractAddress),
+		common.Hash(event.PayloadHash),
+		symbol,
+		amount.BigInt(),
+		common.Hash(sourceTxID),
+		new(big.Int).SetUint64(sourceEventIndex),
+	))
+}
+
+func createApproveRedeemTokenParams(
+	sourceChain nexus.ChainName,
+	sourceTxID exported.Hash,
+	sourceEventIndex uint64,
+	event EventRedeemToken,
+	amount sdk.Uint,
+	symbol string) []byte {
+	return funcs.Must(approveContractCallWithMintArguments.Pack(
+		sourceChain,
+		event.Sender.Hex(),
+		common.HexToAddress(event.DestinationContractAddress),
 		common.Hash(event.PayloadHash),
 		symbol,
 		amount.BigInt(),
