@@ -3,11 +3,12 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils/key"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 )
 
-func (k chainKeeper) GetRedeemSession(ctx sdk.Context, custodianGroupUID []byte) (session types.RedeemSession, ok bool) {
-	ok = k.getStore(ctx).GetNew(redeemSessionPrefix.Append(key.FromBz(custodianGroupUID)), &session)
+func (k chainKeeper) GetRedeemSession(ctx sdk.Context, custodianGroupUID exported.Hash) (session types.RedeemSession, ok bool) {
+	ok = k.getStore(ctx).GetNew(redeemSessionPrefix.Append(key.FromBz(custodianGroupUID.Bytes())), &session)
 	return session, ok
 }
 

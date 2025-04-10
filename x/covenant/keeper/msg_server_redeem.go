@@ -11,6 +11,7 @@ import (
 	"github.com/scalarorg/bitcoin-vault/go-utils/btc"
 	"github.com/scalarorg/scalar-core/utils/events"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
+	"github.com/scalarorg/scalar-core/x/covenant/exported"
 	types "github.com/scalarorg/scalar-core/x/covenant/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -227,8 +228,16 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 	if !ok {
 		return nil, fmt.Errorf("could not find key ID for '%s'", req.SourceChain)
 	}
+	// Get current session
+	session, ok := s.Keeper.GetRedeemSession(ctx, protocol.CustodianGroupUID)
+	if !ok {
+		return nil, fmt.Errorf("could not find redeem session for '%s'", protocol.CustodianGroupUID.Hex())
+	}
+	if session.CurrentPhase != exported.Preparing {
+		return nil, fmt.Errorf("redeem session is not in preparing phase")
+	}
 	// Create redeem payload for evm tx
-	params, dataHash, err := s.Keeper.CreateRedeemParams(ctx, req, protocol.CustodianGroupUID.Bytes())
+	params, dataHash, err := s.Keeper.CreateRedeemParams(ctx, req, protocol.CustodianGroupUID, session.Sequence)
 	if err != nil {
 		return nil, err
 	}

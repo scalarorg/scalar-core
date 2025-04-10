@@ -20,7 +20,6 @@ import (
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	"github.com/scalarorg/scalar-core/x/covenant/exported"
-	"github.com/scalarorg/scalar-core/x/covenant/keeper"
 	"github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -238,7 +237,7 @@ func handleSwitchPhase(ctx sdk.Context, nk *neededKeeper, chain nexus.ChainName)
 	}
 	for _, redeemSession := range expiredRedeemSessions {
 		log.Info().Msgf("turn on the flag isSwitching for redeem session %s", redeemSession.CustodianGroupUID.Hex())
-		nk.keeper.SetSwitchingForRedeemSession(ctx, redeemSession.CustodianGroupUID[:])
+		nk.keeper.SetSwitchingForRedeemSession(ctx, redeemSession.CustodianGroupUID)
 	}
 }
 
@@ -335,12 +334,12 @@ func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, nk *neededKee
 
 	utxos := confirmedEvent.RedeemTxsConfirmed.GetUtxoSnapshot()
 
-	group, ok := nk.keeper.GetCustodianGroup(ctx, chains.Hash(utxos.CustodianGroupUID.Bytes()))
+	group, ok := nk.keeper.GetCustodianGroup(ctx, utxos.CustodianGroupUID)
 	if !ok {
 		return fmt.Errorf("not found custodian group")
 	}
 
-	redeemSession, ok := nk.keeper.GetRedeemSession(ctx, group.UID.Bytes())
+	redeemSession, ok := nk.keeper.GetRedeemSession(ctx, group.UID)
 	if !ok {
 		return fmt.Errorf("not found redeem session")
 	}
@@ -382,7 +381,7 @@ func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, nk *neededKee
 	}
 
 	nk.keeper.SetUtxoSnapshot(ctx, utxos)
-	nk.keeper.SetSwitchingForRedeemSession(ctx, utxos.CustodianGroupUID[:] /*, keyID*/)
+	nk.keeper.SetSwitchingForRedeemSession(ctx, utxos.CustodianGroupUID /*, keyID*/)
 	return nil
 }
 
@@ -427,7 +426,7 @@ func handleSwitchedPhaseConfirmed(
 				ctx.Logger().Error(fmt.Sprintf("[handleSwitchedPhaseConfirmed] failed to get chain keeper for chain %s", c.Name.String()), err)
 				return err
 			}
-			redeemSession, ok := ck.GetRedeemSession(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
+			redeemSession, ok := ck.GetRedeemSession(ctx, switchPhaseEvent.CustodianGroupUID)
 			if !ok {
 				ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] not found redeem session with custodian group uid %s for chain %s", hex.EncodeToString(switchPhaseEvent.CustodianGroupUID.Bytes()), c.Name.String()))
 				slowerChains = append(slowerChains, c)
@@ -443,7 +442,7 @@ func handleSwitchedPhaseConfirmed(
 	if len(slowerChains) == 0 {
 		ctx.Logger().Info("[handleSwitchedPhaseConfirmed] all evm chains have the same session and phase, we can switch the phase")
 		if switchPhaseEvent.ToPhase == exported.Preparing {
-			err := nk.keeper.UpdateExecutingToPreparing(ctx, switchPhaseEvent.CustodianGroupUID.Bytes(), switchPhaseEvent.Sequence)
+			err := nk.keeper.UpdateExecutingToPreparing(ctx, switchPhaseEvent.CustodianGroupUID, switchPhaseEvent.Sequence)
 			if err != nil {
 				ctx.Logger().Error("[handleSwitchedPhaseConfirmed] failed to update executing to preparing", err)
 				return err
@@ -456,12 +455,12 @@ func handleSwitchedPhaseConfirmed(
 
 			// TODO:
 		} else if switchPhaseEvent.ToPhase == exported.Executing {
-			err := nk.keeper.UpdatePreparingToExecuting(ctx, switchPhaseEvent.CustodianGroupUID.Bytes())
+			err := nk.keeper.UpdatePreparingToExecuting(ctx, switchPhaseEvent.CustodianGroupUID)
 			if err != nil {
 				return err
 			}
 
-			err = signAllPendingRedeemCommands(ctx, nk, chain, switchPhaseEvent.CustodianGroupUID.Bytes())
+			err = signAllPendingRedeemCommands(ctx, nk, chain, switchPhaseEvent.CustodianGroupUID)
 			if err != nil {
 				return err
 			}
@@ -478,9 +477,9 @@ func signAllPendingRedeemCommands(
 	ctx sdk.Context,
 	nk *neededKeeper,
 	chain nexus.ChainName,
-	custodianGroupUID []byte,
+	custodianGroupUID chains.Hash,
 ) error {
-	group, ok := nk.keeper.GetCustodianGroup(ctx, chains.Hash(custodianGroupUID))
+	group, ok := nk.keeper.GetCustodianGroup(ctx, custodianGroupUID)
 	if !ok {
 		return fmt.Errorf("not found custodian group")
 	}
@@ -587,10 +586,11 @@ func aggregatePsbtFromCommandBatch(
 		amountInSats := params[4].([]*uint64)
 
 		for i, txId := range txIds {
-			if visited[txId] {
+			key := fmt.Sprintf("%s:%d", txId, *vouts[i])
+			if visited[key] {
 				continue
 			}
-			visited[txId] = true
+			visited[key] = true
 			txHash, err := chainhash.NewHashFromStr(txId)
 			if err != nil {
 				return nil, err
@@ -708,7 +708,7 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk type
 	}
 
 	for _, group := range groups {
-		redeemSession, ok := k.GetRedeemSession(ctx, group.UID.Bytes())
+		redeemSession, ok := k.GetRedeemSession(ctx, group.UID)
 		if !ok {
 			continue
 		}
@@ -719,7 +719,7 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk type
 				expiredGroups = append(expiredGroups, group.UID.Bytes())
 				expiredSessions[group.UID.Hex()] = redeemSession
 			} else {
-				err := k.RenewRedeemSession(ctx, group.UID.Bytes())
+				err := k.RenewRedeemSession(ctx, group.UID)
 				if err != nil {
 					log.Error().
 						Err(err).
@@ -767,13 +767,13 @@ func hasPendingRedeemCommands(ctx sdk.Context, k types.Keeper, ck chainsTypes.Ch
 
 	// because all of reserve redeem utxo commands must be confirmed in one batch, we can just check if all command can be taken by the command ID
 	for _, payload := range extraData {
-		params, err := chainsTypes.StrictDecode(keeper.RedeemTokenPayloadArguments, payload)
+		redeemTokenPayload := types.RedeemTokenPayload{}
+		err := redeemTokenPayload.AbiUnpack(payload)
 		if err != nil {
 			panic(err)
 		}
-		commandID := params[5].([32]byte)
 		//todo: check if the command is sent to the evm
-		command := k.GetReserveUTXOCommandByID(ctx, commandID[:])
+		command := k.GetReserveUTXOCommandByID(ctx, redeemTokenPayload.RequestId[:])
 		if command.Is(types.StandaloneCommandStatusNonExistent) {
 			return true
 			// extraDataIncludesAllReserveCommandsInTheRedeemSession = false

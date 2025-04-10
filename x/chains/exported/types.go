@@ -3,6 +3,7 @@ package exported
 import (
 	"bytes"
 	"fmt"
+	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
 )
@@ -52,6 +53,7 @@ func (h Hash) Size() int {
 }
 
 func HashFromHex(hex string) (Hash, error) {
+	hex = strings.TrimPrefix(hex, "0x")
 	if len(hex) != common.HashLength*2 {
 		return Hash{}, fmt.Errorf("invalid hash length")
 	}

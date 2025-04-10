@@ -72,7 +72,7 @@ func (q Querier) Params(context.Context, *types.ParamsRequest) (*types.ParamsRes
 }
 
 func (q Querier) RedeemSession(ctx context.Context, req *types.RedeemSessionRequest) (*types.RedeemSessionResponse, error) {
-	session, ok := q.keeper.GetRedeemSession(sdk.UnwrapSDKContext(ctx), req.UID.Bytes())
+	session, ok := q.keeper.GetRedeemSession(sdk.UnwrapSDKContext(ctx), req.UID)
 	if !ok {
 		return nil, status.Errorf(codes.NotFound, "redeem session not found")
 	}
@@ -84,9 +84,9 @@ func (q Querier) RedeemSession(ctx context.Context, req *types.RedeemSessionRequ
 func (q Querier) UTXOSnapshot(ctx context.Context, req *types.UTXOSnapshotRequest) (*types.UTXOSnapshotResponse, error) {
 
 	c := sdk.UnwrapSDKContext(ctx)
-	snapshot, ok := q.keeper.GetUtxoSnapshot(c, req.UID.Bytes())
+	snapshot, ok := q.keeper.GetUtxoSnapshot(c, req.UID)
 	if !ok {
-		return nil, status.Errorf(codes.NotFound, "utxo snapshot not found, uid: %x", req.UID.Bytes())
+		return nil, status.Errorf(codes.NotFound, "utxo snapshot not found, uid: %x", req.UID)
 	}
 	return &types.UTXOSnapshotResponse{
 		UtxoSnapshot: snapshot,

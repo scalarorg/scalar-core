@@ -41,7 +41,7 @@ var _ covenanttypes.Keeper = &KeeperMock{}
 //			CreateCustodianGroupFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, params covenanttypes.Params) error {
 //				panic("mock out the CreateCustodianGroup method")
 //			},
-//			CreateRedeemParamsFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID []byte) ([]byte, *covenanttypes.CommandID, error) {
+//			CreateRedeemParamsFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID chains.Hash, sequence uint64) ([]byte, *covenanttypes.CommandID, error) {
 //				panic("mock out the CreateRedeemParams method")
 //			},
 //			DeleteSigningSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, id uint64)  {
@@ -71,7 +71,7 @@ var _ covenanttypes.Keeper = &KeeperMock{}
 //			GetParamsFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context) covenanttypes.Params {
 //				panic("mock out the GetParams method")
 //			},
-//			GetRedeemSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) (*covenanttypes.RedeemSession, bool) {
+//			GetRedeemSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) (*covenanttypes.RedeemSession, bool) {
 //				panic("mock out the GetRedeemSession method")
 //			},
 //			GetReserveUTXOCommandByIDFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, id []byte) covenanttypes.StandaloneCommand {
@@ -89,7 +89,7 @@ var _ covenanttypes.Keeper = &KeeperMock{}
 //			LoggerFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger {
 //				panic("mock out the Logger method")
 //			},
-//			RenewRedeemSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error {
+//			RenewRedeemSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) error {
 //				panic("mock out the RenewRedeemSession method")
 //			},
 //			RotateKeyFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, key multisigtypes.Key) error {
@@ -107,7 +107,7 @@ var _ covenanttypes.Keeper = &KeeperMock{}
 //			SetStandaloneCommandMetadataFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, meta covenanttypes.StandaloneCommandMetadata, prefix key.Key)  {
 //				panic("mock out the SetStandaloneCommandMetadata method")
 //			},
-//			SetSwitchingForRedeemSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error {
+//			SetSwitchingForRedeemSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) error {
 //				panic("mock out the SetSwitchingForRedeemSession method")
 //			},
 //			SetUnsignedStandaloneCommandIDFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, id []byte)  {
@@ -119,10 +119,10 @@ var _ covenanttypes.Keeper = &KeeperMock{}
 //			SignPsbtFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, multiPsbt []github_com_scalarorg_scalar_core_x_covenant_exported.Psbt, module string, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, moduleMetadata ...codec.ProtoMarshaler) error {
 //				panic("mock out the SignPsbt method")
 //			},
-//			UpdateExecutingToPreparingFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte, sequence uint64) error {
+//			UpdateExecutingToPreparingFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash, sequence uint64) error {
 //				panic("mock out the UpdateExecutingToPreparing method")
 //			},
-//			UpdatePreparingToExecutingFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error {
+//			UpdatePreparingToExecutingFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) error {
 //				panic("mock out the UpdatePreparingToExecuting method")
 //			},
 //		}
@@ -139,7 +139,7 @@ type KeeperMock struct {
 	CreateCustodianGroupFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, params covenanttypes.Params) error
 
 	// CreateRedeemParamsFunc mocks the CreateRedeemParams method.
-	CreateRedeemParamsFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID []byte) ([]byte, *covenanttypes.CommandID, error)
+	CreateRedeemParamsFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID chains.Hash, sequence uint64) ([]byte, *covenanttypes.CommandID, error)
 
 	// DeleteSigningSessionFunc mocks the DeleteSigningSession method.
 	DeleteSigningSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, id uint64)
@@ -169,7 +169,7 @@ type KeeperMock struct {
 	GetParamsFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context) covenanttypes.Params
 
 	// GetRedeemSessionFunc mocks the GetRedeemSession method.
-	GetRedeemSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) (*covenanttypes.RedeemSession, bool)
+	GetRedeemSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) (*covenanttypes.RedeemSession, bool)
 
 	// GetReserveUTXOCommandByIDFunc mocks the GetReserveUTXOCommandByID method.
 	GetReserveUTXOCommandByIDFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, id []byte) covenanttypes.StandaloneCommand
@@ -187,7 +187,7 @@ type KeeperMock struct {
 	LoggerFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger
 
 	// RenewRedeemSessionFunc mocks the RenewRedeemSession method.
-	RenewRedeemSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error
+	RenewRedeemSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) error
 
 	// RotateKeyFunc mocks the RotateKey method.
 	RotateKeyFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, key multisigtypes.Key) error
@@ -205,7 +205,7 @@ type KeeperMock struct {
 	SetStandaloneCommandMetadataFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, meta covenanttypes.StandaloneCommandMetadata, prefix key.Key)
 
 	// SetSwitchingForRedeemSessionFunc mocks the SetSwitchingForRedeemSession method.
-	SetSwitchingForRedeemSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error
+	SetSwitchingForRedeemSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) error
 
 	// SetUnsignedStandaloneCommandIDFunc mocks the SetUnsignedStandaloneCommandID method.
 	SetUnsignedStandaloneCommandIDFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, id []byte)
@@ -217,10 +217,10 @@ type KeeperMock struct {
 	SignPsbtFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, keyID github_com_scalarorg_scalar_core_x_multisig_exported.KeyID, multiPsbt []github_com_scalarorg_scalar_core_x_covenant_exported.Psbt, module string, chainName github_com_scalarorg_scalar_core_x_nexus_exported.ChainName, moduleMetadata ...codec.ProtoMarshaler) error
 
 	// UpdateExecutingToPreparingFunc mocks the UpdateExecutingToPreparing method.
-	UpdateExecutingToPreparingFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte, sequence uint64) error
+	UpdateExecutingToPreparingFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash, sequence uint64) error
 
 	// UpdatePreparingToExecutingFunc mocks the UpdatePreparingToExecuting method.
-	UpdatePreparingToExecutingFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error
+	UpdatePreparingToExecutingFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) error
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -245,7 +245,9 @@ type KeeperMock struct {
 			// Req is the req argument value.
 			Req *covenanttypes.ReserveRedeemUtxoRequest
 			// CustodianGrUID is the custodianGrUID argument value.
-			CustodianGrUID []byte
+			CustodianGrUID chains.Hash
+			// Sequence is the sequence argument value.
+			Sequence uint64
 		}
 		// DeleteSigningSession holds details about calls to the DeleteSigningSession method.
 		DeleteSigningSession []struct {
@@ -303,7 +305,7 @@ type KeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx github_com_cosmos_cosmos_sdk_types.Context
 			// CustodianGroupUID is the custodianGroupUID argument value.
-			CustodianGroupUID []byte
+			CustodianGroupUID chains.Hash
 		}
 		// GetReserveUTXOCommandByID holds details about calls to the GetReserveUTXOCommandByID method.
 		GetReserveUTXOCommandByID []struct {
@@ -341,7 +343,7 @@ type KeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx github_com_cosmos_cosmos_sdk_types.Context
 			// CustodianGroupUID is the custodianGroupUID argument value.
-			CustodianGroupUID []byte
+			CustodianGroupUID chains.Hash
 		}
 		// RotateKey holds details about calls to the RotateKey method.
 		RotateKey []struct {
@@ -385,7 +387,7 @@ type KeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx github_com_cosmos_cosmos_sdk_types.Context
 			// CustodianGroupUID is the custodianGroupUID argument value.
-			CustodianGroupUID []byte
+			CustodianGroupUID chains.Hash
 		}
 		// SetUnsignedStandaloneCommandID holds details about calls to the SetUnsignedStandaloneCommandID method.
 		SetUnsignedStandaloneCommandID []struct {
@@ -421,7 +423,7 @@ type KeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx github_com_cosmos_cosmos_sdk_types.Context
 			// CustodianGroupUID is the custodianGroupUID argument value.
-			CustodianGroupUID []byte
+			CustodianGroupUID chains.Hash
 			// Sequence is the sequence argument value.
 			Sequence uint64
 		}
@@ -430,7 +432,7 @@ type KeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx github_com_cosmos_cosmos_sdk_types.Context
 			// CustodianGroupUID is the custodianGroupUID argument value.
-			CustodianGroupUID []byte
+			CustodianGroupUID chains.Hash
 		}
 	}
 	lockCreateCustodian                sync.RWMutex
@@ -538,23 +540,25 @@ func (mock *KeeperMock) CreateCustodianGroupCalls() []struct {
 }
 
 // CreateRedeemParams calls CreateRedeemParamsFunc.
-func (mock *KeeperMock) CreateRedeemParams(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID []byte) ([]byte, *covenanttypes.CommandID, error) {
+func (mock *KeeperMock) CreateRedeemParams(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID chains.Hash, sequence uint64) ([]byte, *covenanttypes.CommandID, error) {
 	if mock.CreateRedeemParamsFunc == nil {
 		panic("KeeperMock.CreateRedeemParamsFunc: method is nil but Keeper.CreateRedeemParams was just called")
 	}
 	callInfo := struct {
 		Ctx            github_com_cosmos_cosmos_sdk_types.Context
 		Req            *covenanttypes.ReserveRedeemUtxoRequest
-		CustodianGrUID []byte
+		CustodianGrUID chains.Hash
+		Sequence       uint64
 	}{
 		Ctx:            ctx,
 		Req:            req,
 		CustodianGrUID: custodianGrUID,
+		Sequence:       sequence,
 	}
 	mock.lockCreateRedeemParams.Lock()
 	mock.calls.CreateRedeemParams = append(mock.calls.CreateRedeemParams, callInfo)
 	mock.lockCreateRedeemParams.Unlock()
-	return mock.CreateRedeemParamsFunc(ctx, req, custodianGrUID)
+	return mock.CreateRedeemParamsFunc(ctx, req, custodianGrUID, sequence)
 }
 
 // CreateRedeemParamsCalls gets all the calls that were made to CreateRedeemParams.
@@ -564,12 +568,14 @@ func (mock *KeeperMock) CreateRedeemParams(ctx github_com_cosmos_cosmos_sdk_type
 func (mock *KeeperMock) CreateRedeemParamsCalls() []struct {
 	Ctx            github_com_cosmos_cosmos_sdk_types.Context
 	Req            *covenanttypes.ReserveRedeemUtxoRequest
-	CustodianGrUID []byte
+	CustodianGrUID chains.Hash
+	Sequence       uint64
 } {
 	var calls []struct {
 		Ctx            github_com_cosmos_cosmos_sdk_types.Context
 		Req            *covenanttypes.ReserveRedeemUtxoRequest
-		CustodianGrUID []byte
+		CustodianGrUID chains.Hash
+		Sequence       uint64
 	}
 	mock.lockCreateRedeemParams.RLock()
 	calls = mock.calls.CreateRedeemParams
@@ -877,13 +883,13 @@ func (mock *KeeperMock) GetParamsCalls() []struct {
 }
 
 // GetRedeemSession calls GetRedeemSessionFunc.
-func (mock *KeeperMock) GetRedeemSession(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) (*covenanttypes.RedeemSession, bool) {
+func (mock *KeeperMock) GetRedeemSession(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) (*covenanttypes.RedeemSession, bool) {
 	if mock.GetRedeemSessionFunc == nil {
 		panic("KeeperMock.GetRedeemSessionFunc: method is nil but Keeper.GetRedeemSession was just called")
 	}
 	callInfo := struct {
 		Ctx               github_com_cosmos_cosmos_sdk_types.Context
-		CustodianGroupUID []byte
+		CustodianGroupUID chains.Hash
 	}{
 		Ctx:               ctx,
 		CustodianGroupUID: custodianGroupUID,
@@ -900,11 +906,11 @@ func (mock *KeeperMock) GetRedeemSession(ctx github_com_cosmos_cosmos_sdk_types.
 //	len(mockedKeeper.GetRedeemSessionCalls())
 func (mock *KeeperMock) GetRedeemSessionCalls() []struct {
 	Ctx               github_com_cosmos_cosmos_sdk_types.Context
-	CustodianGroupUID []byte
+	CustodianGroupUID chains.Hash
 } {
 	var calls []struct {
 		Ctx               github_com_cosmos_cosmos_sdk_types.Context
-		CustodianGroupUID []byte
+		CustodianGroupUID chains.Hash
 	}
 	mock.lockGetRedeemSession.RLock()
 	calls = mock.calls.GetRedeemSession
@@ -1085,13 +1091,13 @@ func (mock *KeeperMock) LoggerCalls() []struct {
 }
 
 // RenewRedeemSession calls RenewRedeemSessionFunc.
-func (mock *KeeperMock) RenewRedeemSession(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error {
+func (mock *KeeperMock) RenewRedeemSession(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) error {
 	if mock.RenewRedeemSessionFunc == nil {
 		panic("KeeperMock.RenewRedeemSessionFunc: method is nil but Keeper.RenewRedeemSession was just called")
 	}
 	callInfo := struct {
 		Ctx               github_com_cosmos_cosmos_sdk_types.Context
-		CustodianGroupUID []byte
+		CustodianGroupUID chains.Hash
 	}{
 		Ctx:               ctx,
 		CustodianGroupUID: custodianGroupUID,
@@ -1108,11 +1114,11 @@ func (mock *KeeperMock) RenewRedeemSession(ctx github_com_cosmos_cosmos_sdk_type
 //	len(mockedKeeper.RenewRedeemSessionCalls())
 func (mock *KeeperMock) RenewRedeemSessionCalls() []struct {
 	Ctx               github_com_cosmos_cosmos_sdk_types.Context
-	CustodianGroupUID []byte
+	CustodianGroupUID chains.Hash
 } {
 	var calls []struct {
 		Ctx               github_com_cosmos_cosmos_sdk_types.Context
-		CustodianGroupUID []byte
+		CustodianGroupUID chains.Hash
 	}
 	mock.lockRenewRedeemSession.RLock()
 	calls = mock.calls.RenewRedeemSession
@@ -1305,13 +1311,13 @@ func (mock *KeeperMock) SetStandaloneCommandMetadataCalls() []struct {
 }
 
 // SetSwitchingForRedeemSession calls SetSwitchingForRedeemSessionFunc.
-func (mock *KeeperMock) SetSwitchingForRedeemSession(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error {
+func (mock *KeeperMock) SetSwitchingForRedeemSession(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) error {
 	if mock.SetSwitchingForRedeemSessionFunc == nil {
 		panic("KeeperMock.SetSwitchingForRedeemSessionFunc: method is nil but Keeper.SetSwitchingForRedeemSession was just called")
 	}
 	callInfo := struct {
 		Ctx               github_com_cosmos_cosmos_sdk_types.Context
-		CustodianGroupUID []byte
+		CustodianGroupUID chains.Hash
 	}{
 		Ctx:               ctx,
 		CustodianGroupUID: custodianGroupUID,
@@ -1328,11 +1334,11 @@ func (mock *KeeperMock) SetSwitchingForRedeemSession(ctx github_com_cosmos_cosmo
 //	len(mockedKeeper.SetSwitchingForRedeemSessionCalls())
 func (mock *KeeperMock) SetSwitchingForRedeemSessionCalls() []struct {
 	Ctx               github_com_cosmos_cosmos_sdk_types.Context
-	CustodianGroupUID []byte
+	CustodianGroupUID chains.Hash
 } {
 	var calls []struct {
 		Ctx               github_com_cosmos_cosmos_sdk_types.Context
-		CustodianGroupUID []byte
+		CustodianGroupUID chains.Hash
 	}
 	mock.lockSetSwitchingForRedeemSession.RLock()
 	calls = mock.calls.SetSwitchingForRedeemSession
@@ -1465,13 +1471,13 @@ func (mock *KeeperMock) SignPsbtCalls() []struct {
 }
 
 // UpdateExecutingToPreparing calls UpdateExecutingToPreparingFunc.
-func (mock *KeeperMock) UpdateExecutingToPreparing(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte, sequence uint64) error {
+func (mock *KeeperMock) UpdateExecutingToPreparing(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash, sequence uint64) error {
 	if mock.UpdateExecutingToPreparingFunc == nil {
 		panic("KeeperMock.UpdateExecutingToPreparingFunc: method is nil but Keeper.UpdateExecutingToPreparing was just called")
 	}
 	callInfo := struct {
 		Ctx               github_com_cosmos_cosmos_sdk_types.Context
-		CustodianGroupUID []byte
+		CustodianGroupUID chains.Hash
 		Sequence          uint64
 	}{
 		Ctx:               ctx,
@@ -1490,12 +1496,12 @@ func (mock *KeeperMock) UpdateExecutingToPreparing(ctx github_com_cosmos_cosmos_
 //	len(mockedKeeper.UpdateExecutingToPreparingCalls())
 func (mock *KeeperMock) UpdateExecutingToPreparingCalls() []struct {
 	Ctx               github_com_cosmos_cosmos_sdk_types.Context
-	CustodianGroupUID []byte
+	CustodianGroupUID chains.Hash
 	Sequence          uint64
 } {
 	var calls []struct {
 		Ctx               github_com_cosmos_cosmos_sdk_types.Context
-		CustodianGroupUID []byte
+		CustodianGroupUID chains.Hash
 		Sequence          uint64
 	}
 	mock.lockUpdateExecutingToPreparing.RLock()
@@ -1505,13 +1511,13 @@ func (mock *KeeperMock) UpdateExecutingToPreparingCalls() []struct {
 }
 
 // UpdatePreparingToExecuting calls UpdatePreparingToExecutingFunc.
-func (mock *KeeperMock) UpdatePreparingToExecuting(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID []byte) error {
+func (mock *KeeperMock) UpdatePreparingToExecuting(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) error {
 	if mock.UpdatePreparingToExecutingFunc == nil {
 		panic("KeeperMock.UpdatePreparingToExecutingFunc: method is nil but Keeper.UpdatePreparingToExecuting was just called")
 	}
 	callInfo := struct {
 		Ctx               github_com_cosmos_cosmos_sdk_types.Context
-		CustodianGroupUID []byte
+		CustodianGroupUID chains.Hash
 	}{
 		Ctx:               ctx,
 		CustodianGroupUID: custodianGroupUID,
@@ -1528,11 +1534,11 @@ func (mock *KeeperMock) UpdatePreparingToExecuting(ctx github_com_cosmos_cosmos_
 //	len(mockedKeeper.UpdatePreparingToExecutingCalls())
 func (mock *KeeperMock) UpdatePreparingToExecutingCalls() []struct {
 	Ctx               github_com_cosmos_cosmos_sdk_types.Context
-	CustodianGroupUID []byte
+	CustodianGroupUID chains.Hash
 } {
 	var calls []struct {
 		Ctx               github_com_cosmos_cosmos_sdk_types.Context
-		CustodianGroupUID []byte
+		CustodianGroupUID chains.Hash
 	}
 	mock.lockUpdatePreparingToExecuting.RLock()
 	calls = mock.calls.UpdatePreparingToExecuting

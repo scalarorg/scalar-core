@@ -2,7 +2,10 @@ package types
 
 import (
 	fmt "fmt"
+	"math/big"
 
+	"github.com/rs/zerolog/log"
+	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/covenant/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -56,6 +59,104 @@ type ReservedTx struct {
 	RequestID string  `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
 	Amount    uint64  `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`
 	Utxos     []*UTXO `protobuf:"bytes,3,rep,name=utxos,proto3" json:"utxos,omitempty"`
+}
+
+type RedeemTokenPayload struct {
+	Amount        uint64
+	LockingScript []byte
+	Utxos         []*UTXO
+	RequestId     [32]byte
+}
+
+func (p *RedeemTokenPayload) AbiPack() ([]byte, error) {
+	txIds := make([]string, len(p.Utxos))
+	vouts := make([]uint32, len(p.Utxos))
+	amounts := make([]uint64, len(p.Utxos))
+	for i, utxo := range p.Utxos {
+		txIds[i] = utxo.TxID.Hex()
+		vouts[i] = utxo.Vout
+		amounts[i] = utxo.AmountInSats
+	}
+	return RedeemTokenPayloadArguments.Pack(
+		p.Amount,
+		p.LockingScript,
+		txIds,
+		vouts,
+		amounts,
+		p.RequestId,
+	)
+}
+
+func (p *RedeemTokenPayload) AbiUnpack(data []byte) error {
+	unpacked, err := RedeemTokenPayloadArguments.Unpack(data)
+	if err != nil {
+		return err
+	}
+	p.Amount = unpacked[0].(uint64)
+	p.LockingScript = unpacked[1].([]byte)
+	txIds := unpacked[2].([]string)
+	vouts := unpacked[3].([]uint32)
+	amounts := unpacked[4].([]uint64)
+	p.Utxos = make([]*UTXO, len(txIds))
+	for i, txId := range txIds {
+		hash, err := chains.HashFromHex(txId)
+		if err != nil {
+			log.Error().Err(err).Msg("txId hash error")
+			return err
+		}
+		p.Utxos[i] = &UTXO{TxID: hash, Vout: vouts[i], AmountInSats: amounts[i]}
+	}
+	p.RequestId = unpacked[5].([32]byte)
+	return nil
+}
+
+type RedeemTokenParams struct {
+	DestinationChain   string //Bitcoin chain
+	DestinationAddress string //Bitcoin user address
+	Payload            RedeemTokenPayload
+	RawPayload         []byte //Use in unpacking
+	Symbol             string
+	Amount             uint64
+	CustodianGroupUID  [32]byte
+	SessionSequence    uint64
+}
+
+func (p *RedeemTokenParams) AbiPack() ([]byte, error) {
+	payload, err := p.Payload.AbiPack()
+	if err != nil {
+		return nil, err
+	}
+	payload = encode.AppendPayload(encode.ContractCallWithTokenPayloadType_CustodianOnly, payload)
+	return RedeemTokenArguments.Pack(
+		p.DestinationChain,
+		p.DestinationAddress,
+		payload,
+		p.Symbol,
+		big.NewInt(int64(p.Amount)),
+		p.CustodianGroupUID,
+		p.SessionSequence,
+	)
+}
+
+func (p *RedeemTokenParams) AbiUnpack(data []byte) error {
+	unpacked, err := RedeemTokenArguments.Unpack(data)
+	if err != nil {
+		log.Error().Err(err).Msg("redeem token params abi unpack error")
+		return err
+	}
+	p.DestinationChain = unpacked[0].(string)
+	p.DestinationAddress = unpacked[1].(string)
+	p.RawPayload = unpacked[2].([]byte)
+	err = p.Payload.AbiUnpack(p.RawPayload[1:])
+	if err != nil {
+		log.Error().Err(err).Msg("payload abi unpack error")
+		return err
+	}
+	p.Symbol = unpacked[3].(string)
+	p.Amount = *unpacked[4].(*uint64)
+	p.CustodianGroupUID = unpacked[5].([32]byte)
+	p.SessionSequence = unpacked[6].(uint64)
+	return nil
 }
 
 func (utxo *UTXO) AppendReserved(requestID string, amount uint64) error {

@@ -5,14 +5,11 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
-	"math/big"
 
 	"github.com/scalarorg/scalar-core/utils"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/key"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
@@ -20,30 +17,15 @@ import (
 	cov "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
-var (
-	stringType       = funcs.Must(abi.NewType("string", "string", nil))
-	bytesType        = funcs.Must(abi.NewType("bytes", "bytes", nil))
-	bytes32Type      = funcs.Must(abi.NewType("bytes32", "bytes32", nil))
-	uint256Type      = funcs.Must(abi.NewType("uint256", "uint256", nil))
-	uint64Type       = funcs.Must(abi.NewType("uint64", "uint64", nil))
-	uint256ArrayType = funcs.Must(abi.NewType("uint256[]", "uint256[]", nil))
-	uint32ArrayType  = funcs.Must(abi.NewType("uint32[]", "uint32[]", nil))
-	uint64ArrayType  = funcs.Must(abi.NewType("uint64[]", "uint64[]", nil))
-	stringArrayType  = funcs.Must(abi.NewType("string[]", "string[]", nil))
-
-	RedeemTokenPayloadArguments    = abi.Arguments{{Type: uint64Type}, {Type: bytesType}, {Type: stringArrayType}, {Type: uint32ArrayType}, {Type: uint64ArrayType}, {Type: bytes32Type}}
-	CallContractWithTokenArguments = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: bytesType}, {Type: stringType}, {Type: uint256Type}}
-)
-
-func CreateRedeemSessionKey(uid []byte) utils.Key {
-	return redeemSessionPrefix.Append(utils.KeyFromBz(uid))
+func CreateRedeemSessionKey(uid exported.Hash) utils.Key {
+	return redeemSessionPrefix.Append(utils.KeyFromBz(uid[:]))
 }
 
-func CreateUTXOSnapshotKey(uid []byte) utils.Key {
-	return utxoSnapshotPrefix.Append(utils.KeyFromBz(uid))
+func CreateUTXOSnapshotKey(uid exported.Hash) utils.Key {
+	return utxoSnapshotPrefix.Append(utils.KeyFromBz(uid[:]))
 }
 
-func (k Keeper) GetRedeemSession(ctx sdk.Context, CustodianGroupUID []byte) (*cov.RedeemSession, bool) {
+func (k Keeper) GetRedeemSession(ctx sdk.Context, CustodianGroupUID exported.Hash) (*cov.RedeemSession, bool) {
 	var results cov.RedeemSession
 
 	ok := k.getStore(ctx).Get(CreateRedeemSessionKey(CustodianGroupUID), &results)
@@ -55,7 +37,7 @@ func (k Keeper) GetRedeemSession(ctx sdk.Context, CustodianGroupUID []byte) (*co
 	return &results, true
 }
 
-func (k Keeper) SetSwitchingForRedeemSession(ctx sdk.Context, custodianGroupUID []byte) error {
+func (k Keeper) SetSwitchingForRedeemSession(ctx sdk.Context, custodianGroupUID exported.Hash) error {
 	redeemSession, ok := k.GetRedeemSession(ctx, custodianGroupUID)
 	if !ok {
 		return fmt.Errorf("redeem session not found")
@@ -70,7 +52,7 @@ func (k Keeper) SetSwitchingForRedeemSession(ctx sdk.Context, custodianGroupUID 
 	return nil
 }
 
-func (k Keeper) UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID []byte) error {
+func (k Keeper) UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID exported.Hash) error {
 	redeemSession, ok := k.GetRedeemSession(ctx, custodianGroupUID)
 	if !ok {
 		return fmt.Errorf("redeem session not found")
@@ -92,7 +74,7 @@ func (k Keeper) UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID []
 	return nil
 }
 
-func (k Keeper) UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID []byte, sequence uint64) error {
+func (k Keeper) UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID exported.Hash, sequence uint64) error {
 	redeemSession, ok := k.GetRedeemSession(ctx, custodianGroupUID)
 	if !ok {
 		return fmt.Errorf("redeem session not found")
@@ -114,7 +96,7 @@ func (k Keeper) UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID []
 	return nil
 }
 
-func (k Keeper) RenewRedeemSession(ctx sdk.Context, custodianGroupUID []byte) error {
+func (k Keeper) RenewRedeemSession(ctx sdk.Context, custodianGroupUID exported.Hash) error {
 	redeemSession, ok := k.GetRedeemSession(ctx, custodianGroupUID)
 	if !ok {
 		return fmt.Errorf("redeem session not found")
@@ -134,11 +116,11 @@ func (k Keeper) RenewRedeemSession(ctx sdk.Context, custodianGroupUID []byte) er
 }
 
 func (k Keeper) setRedeemSession(ctx sdk.Context, redeemSession *cov.RedeemSession) {
-	k.getStore(ctx).Set(CreateRedeemSessionKey(redeemSession.CustodianGroupUID[:]), redeemSession)
+	k.getStore(ctx).Set(CreateRedeemSessionKey(redeemSession.CustodianGroupUID), redeemSession)
 }
 
 func (k Keeper) SetUtxoSnapshot(ctx sdk.Context, utxoSnapshot *cov.UTXOSnapshot) error {
-	key := CreateUTXOSnapshotKey(utxoSnapshot.CustodianGroupUID.Bytes())
+	key := CreateUTXOSnapshotKey(utxoSnapshot.CustodianGroupUID)
 
 	var results cov.UTXOSnapshot
 	ok := k.getStore(ctx).Get(key, &results)
@@ -163,10 +145,10 @@ func (k Keeper) SetUtxoSnapshot(ctx sdk.Context, utxoSnapshot *cov.UTXOSnapshot)
 }
 
 func (k Keeper) setUtxoSnapshot(ctx sdk.Context, utxoSnapshot *cov.UTXOSnapshot) {
-	k.getStore(ctx).Set(CreateUTXOSnapshotKey(utxoSnapshot.CustodianGroupUID.Bytes()), utxoSnapshot)
+	k.getStore(ctx).Set(CreateUTXOSnapshotKey(utxoSnapshot.CustodianGroupUID), utxoSnapshot)
 }
 
-func (k Keeper) GetUtxoSnapshot(ctx sdk.Context, custodianGroupUID []byte) (*cov.UTXOSnapshot, bool) {
+func (k Keeper) GetUtxoSnapshot(ctx sdk.Context, custodianGroupUID exported.Hash) (*cov.UTXOSnapshot, bool) {
 	var results cov.UTXOSnapshot
 
 	ok := k.getStore(ctx).Get(CreateUTXOSnapshotKey(custodianGroupUID), &results)
@@ -186,7 +168,7 @@ func (k Keeper) AppendUtxo(ctx sdk.Context, txID exported.Hash, vout uint32, scr
 
 	for _, custodianGroup := range custodianGroups {
 		if bytes.Equal(custodianGroup.BitcoinPubkey, scriptPubkey) {
-			utxoSnapshot, ok := k.GetUtxoSnapshot(ctx, custodianGroup.UID.Bytes())
+			utxoSnapshot, ok := k.GetUtxoSnapshot(ctx, custodianGroup.UID)
 			if !ok {
 				return fmt.Errorf("utxo snapshot not found")
 			}
@@ -204,7 +186,7 @@ func (k Keeper) AppendUtxo(ctx sdk.Context, txID exported.Hash, vout uint32, scr
 }
 
 // findAvailableUtxos uses knapsack algorithm to find optimal UTXO combination
-func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID []byte, requestID string, amount uint64) ([]*cov.UTXO, error) {
+func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID [32]byte, requestID string, amount uint64) ([]*cov.UTXO, error) {
 	redeemSession, ok := k.GetRedeemSession(ctx, custodianGroupUID)
 	if !ok {
 		return nil, fmt.Errorf("redeem session not found")
@@ -237,7 +219,7 @@ func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID []byte, requestI
 	return reserveUtxos, nil
 }
 
-func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRequest, custodianGrUID []byte) ([]byte, *cov.CommandID, error) {
+func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRequest, custodianGrUID exported.Hash, sequence uint64) ([]byte, *cov.CommandID, error) {
 
 	bz := make([]byte, 8)
 	binary.BigEndian.PutUint64(bz, uint64(ctx.BlockHeight()))
@@ -253,18 +235,23 @@ func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 	if err != nil {
 		return nil, nil, err
 	}
-	// TODO: optimize the datatype
-	txIds := make([]string, len(reservedUtxos))
-	vouts := make([]uint32, len(reservedUtxos))
-	amounts := make([]uint64, len(reservedUtxos))
-	for i, utxo := range reservedUtxos {
-		txIds[i] = utxo.TxID.Hex()
-		vouts[i] = utxo.Vout
-		amounts[i] = utxo.AmountInSats
-	}
-
 	cmdId := cov.NewCommandID(dataHash)
-	params, err := CreateAbiRedeemTokenParams(req, cmdId.Bytes(), txIds, vouts, amounts)
+	payload := &cov.RedeemTokenPayload{
+		Amount:        req.Amount,
+		LockingScript: req.LockingScript,
+		Utxos:         reservedUtxos,
+		RequestId:     cmdId.Bytes(),
+	}
+	redeemTokenParams := &cov.RedeemTokenParams{
+		DestinationChain:   req.DestChain.String(),
+		DestinationAddress: req.Address,
+		Payload:            *payload,
+		Symbol:             req.Symbol,
+		Amount:             req.Amount,
+		CustodianGroupUID:  custodianGrUID,
+		SessionSequence:    sequence,
+	}
+	params, err := redeemTokenParams.AbiPack()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -272,29 +259,6 @@ func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 	return params, &cmdId, err
 }
 
-func CreateAbiRedeemTokenParams(req *cov.ReserveRedeemUtxoRequest, reqId [32]byte, txIds []string, vouts []uint32, amounts []uint64) ([]byte, error) {
-	payload, err := RedeemTokenPayloadArguments.Pack(
-		req.Amount,
-		req.LockingScript,
-		txIds,
-		vouts,
-		amounts,
-		reqId)
-	if err != nil {
-		return nil, err
-	}
-
-	payload = encode.AppendPayload(encode.ContractCallWithTokenPayloadType_CustodianOnly, payload)
-
-	params, err := CallContractWithTokenArguments.Pack(
-		req.DestChain,
-		req.Address,
-		payload,
-		req.Symbol,
-		big.NewInt(int64(req.Amount)),
-	)
-	return params, err
-}
 func (k Keeper) GetReserveUTXOCommandByID(ctx sdk.Context, id []byte) cov.StandaloneCommand {
 	md := k.getStandaloneCommandMetadata(ctx, id, reserveUtxoCommandPrefix)
 

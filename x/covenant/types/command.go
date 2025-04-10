@@ -20,19 +20,6 @@ import (
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
-var (
-	stringType       = funcs.Must(abi.NewType("string", "string", nil))
-	addressType      = funcs.Must(abi.NewType("address", "address", nil))
-	addressesType    = funcs.Must(abi.NewType("address[]", "address[]", nil))
-	bytes32Type      = funcs.Must(abi.NewType("bytes32", "bytes32", nil))
-	uint8Type        = funcs.Must(abi.NewType("uint8", "uint8", nil))
-	uint256Type      = funcs.Must(abi.NewType("uint256", "uint256", nil))
-	uint256ArrayType = funcs.Must(abi.NewType("uint256[]", "uint256[]", nil))
-	bytes32ArrayType = funcs.Must(abi.NewType("bytes32[]", "bytes32[]", nil))
-	stringArrayType  = funcs.Must(abi.NewType("string[]", "string[]", nil))
-	bytesArrayType   = funcs.Must(abi.NewType("bytes[]", "bytes[]", nil))
-)
-
 const (
 	switchPhaseMaxGasCost = 100000
 )

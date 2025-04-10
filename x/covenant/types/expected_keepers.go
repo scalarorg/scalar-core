@@ -50,11 +50,11 @@ type Keeper interface {
 	GetEventsQueue(ctx sdk.Context) utils.BlockHeightKVQueue
 	EnqueueEvent(ctx sdk.Context, event *Event) error
 
-	GetRedeemSession(ctx sdk.Context, custodianGroupUID []byte) (*RedeemSession, bool)
+	GetRedeemSession(ctx sdk.Context, custodianGroupUID chains.Hash) (*RedeemSession, bool)
 	// GetRedeemSessionByExpiry(ctx sdk.Context, expiry int64) []RedeemSession
-	SetSwitchingForRedeemSession(ctx sdk.Context, custodianGroupUID []byte) error
-	UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID []byte) error
-	UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID []byte, sequence uint64) error
+	SetSwitchingForRedeemSession(ctx sdk.Context, custodianGroupUID chains.Hash) error
+	UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID chains.Hash) error
+	UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID chains.Hash, sequence uint64) error
 	SetUtxoSnapshot(ctx sdk.Context, utxoSnapshot *UTXOSnapshot) error
 
 	GetReserveUTXOCommandByID(ctx sdk.Context, id []byte) StandaloneCommand
@@ -62,11 +62,11 @@ type Keeper interface {
 	RotateKey(ctx sdk.Context, chainName nexus.ChainName, key mtypes.Key) error
 	GetSigningSession(ctx sdk.Context, id uint64) (signing SigningSession, ok bool)
 	SetSigningSession(ctx sdk.Context, signing SigningSession)
-	CreateRedeemParams(ctx sdk.Context, req *ReserveRedeemUtxoRequest, custodianGrUID []byte) ([]byte, *CommandID, error)
+	CreateRedeemParams(ctx sdk.Context, req *ReserveRedeemUtxoRequest, custodianGrUID chains.Hash, sequence uint64) ([]byte, *CommandID, error)
 
 	SetStandaloneCommandMetadata(ctx sdk.Context, meta StandaloneCommandMetadata, prefix key.Key)
 	SetUnsignedStandaloneCommandID(ctx sdk.Context, id []byte)
-	RenewRedeemSession(ctx sdk.Context, custodianGroupUID []byte) error
+	RenewRedeemSession(ctx sdk.Context, custodianGroupUID chains.Hash) error
 }
 
 // Snapshotter provides snapshot keeper functionality
