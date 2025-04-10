@@ -9,14 +9,15 @@ import (
 
 var _ sdk.Msg = &ReserveRedeemUtxoRequest{}
 
-func NewReserveRedeemUtxoRequest(sender sdk.AccAddress, sourceChain, destChain nexus.ChainName, address string, symbol string, amount uint64) *ReserveRedeemUtxoRequest {
+func NewReserveRedeemUtxoRequest(sender sdk.AccAddress, sourceChain, destChain nexus.ChainName, address string, symbol string, amount uint64, lockingScript []byte) *ReserveRedeemUtxoRequest {
 	return &ReserveRedeemUtxoRequest{
-		Sender:      sender,
-		SourceChain: sourceChain,
-		DestChain:   destChain,
-		Address:     address,
-		Symbol:      symbol,
-		Amount:      amount,
+		Sender:        sender,
+		SourceChain:   sourceChain,
+		DestChain:     destChain,
+		Address:       address,
+		Symbol:        symbol,
+		Amount:        amount,
+		LockingScript: lockingScript,
 	}
 }
 
@@ -51,6 +52,10 @@ func (msg *ReserveRedeemUtxoRequest) ValidateBasic() error {
 
 	if msg.Amount == 0 {
 		return fmt.Errorf("amount is required")
+	}
+
+	if msg.LockingScript == nil {
+		return fmt.Errorf("locking script is required")
 	}
 
 	return nil
