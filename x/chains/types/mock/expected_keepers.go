@@ -1941,7 +1941,7 @@ var _ types.ChainKeeper = &ChainKeeperMock{}
 //			GetPendingCommandsFunc: func(ctx sdk.Context) []types.Command {
 //				panic("mock out the GetPendingCommands method")
 //			},
-//			GetRedeemSessionFunc: func(ctx sdk.Context, custodianGroupUID []byte) (types.RedeemSession, bool) {
+//			GetRedeemSessionFunc: func(ctx sdk.Context, custodianGroupUID github_com_scalarorg_scalar_core_x_chains_exported.Hash) (types.RedeemSession, bool) {
 //				panic("mock out the GetRedeemSession method")
 //			},
 //			GetRedeemSessionsFunc: func(ctx sdk.Context) []types.RedeemSession {
@@ -2087,7 +2087,7 @@ type ChainKeeperMock struct {
 	GetPendingCommandsFunc func(ctx sdk.Context) []types.Command
 
 	// GetRedeemSessionFunc mocks the GetRedeemSession method.
-	GetRedeemSessionFunc func(ctx sdk.Context, custodianGroupUID []byte) (types.RedeemSession, bool)
+	GetRedeemSessionFunc func(ctx sdk.Context, custodianGroupUID github_com_scalarorg_scalar_core_x_chains_exported.Hash) (types.RedeemSession, bool)
 
 	// GetRedeemSessionsFunc mocks the GetRedeemSessions method.
 	GetRedeemSessionsFunc func(ctx sdk.Context) []types.RedeemSession
@@ -2337,7 +2337,7 @@ type ChainKeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx sdk.Context
 			// CustodianGroupUID is the custodianGroupUID argument value.
-			CustodianGroupUID []byte
+			CustodianGroupUID github_com_scalarorg_scalar_core_x_chains_exported.Hash
 		}
 		// GetRedeemSessions holds details about calls to the GetRedeemSessions method.
 		GetRedeemSessions []struct {
@@ -3533,13 +3533,13 @@ func (mock *ChainKeeperMock) GetPendingCommandsCalls() []struct {
 }
 
 // GetRedeemSession calls GetRedeemSessionFunc.
-func (mock *ChainKeeperMock) GetRedeemSession(ctx sdk.Context, custodianGroupUID []byte) (types.RedeemSession, bool) {
+func (mock *ChainKeeperMock) GetRedeemSession(ctx sdk.Context, custodianGroupUID github_com_scalarorg_scalar_core_x_chains_exported.Hash) (types.RedeemSession, bool) {
 	if mock.GetRedeemSessionFunc == nil {
 		panic("ChainKeeperMock.GetRedeemSessionFunc: method is nil but ChainKeeper.GetRedeemSession was just called")
 	}
 	callInfo := struct {
 		Ctx               sdk.Context
-		CustodianGroupUID []byte
+		CustodianGroupUID github_com_scalarorg_scalar_core_x_chains_exported.Hash
 	}{
 		Ctx:               ctx,
 		CustodianGroupUID: custodianGroupUID,
@@ -3556,11 +3556,11 @@ func (mock *ChainKeeperMock) GetRedeemSession(ctx sdk.Context, custodianGroupUID
 //	len(mockedChainKeeper.GetRedeemSessionCalls())
 func (mock *ChainKeeperMock) GetRedeemSessionCalls() []struct {
 	Ctx               sdk.Context
-	CustodianGroupUID []byte
+	CustodianGroupUID github_com_scalarorg_scalar_core_x_chains_exported.Hash
 } {
 	var calls []struct {
 		Ctx               sdk.Context
-		CustodianGroupUID []byte
+		CustodianGroupUID github_com_scalarorg_scalar_core_x_chains_exported.Hash
 	}
 	mock.lockGetRedeemSession.RLock()
 	calls = mock.calls.GetRedeemSession
