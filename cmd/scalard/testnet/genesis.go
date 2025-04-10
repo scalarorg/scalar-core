@@ -54,13 +54,13 @@ func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGro
 		}
 		tokenInfo := tokenInfos[i]
 		supportedChains := []*pexported.SupportedChain{}
-		for _, chain := range tokenInfo.Deployments {
-			supportedChains = append(supportedChains, &pexported.SupportedChain{
-				Chain:   nexus.ChainName(chain.ID),
-				Name:    chain.Name,
-				Address: chain.TokenAddress,
-			})
-		}
+		// for _, chain := range tokenInfo.Deployments {
+		// 	supportedChains = append(supportedChains, &pexported.SupportedChain{
+		// 		Chain:   nexus.ChainName(chain.ID),
+		// 		Name:    chain.Name,
+		// 		Address: chain.TokenAddress,
+		// 	})
+		// }
 		var model pexported.LiquidityModel
 		if protocol.LiquidityModel == "upc" {
 			model = pexported.LIQUIDITY_MODEL_UPC
