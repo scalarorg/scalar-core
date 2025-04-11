@@ -6,7 +6,6 @@ package mock
 import (
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	"github.com/scalarorg/scalar-core/utils"
-	exported1 "github.com/scalarorg/scalar-core/x/nexus/exported"
 	"github.com/scalarorg/scalar-core/x/protocol/types"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
@@ -282,109 +281,6 @@ func (mock *BaseKeeperMock) Logger(ctx github_com_cosmos_cosmos_sdk_types.Contex
 //
 //	len(mockedBaseKeeper.LoggerCalls())
 func (mock *BaseKeeperMock) LoggerCalls() []struct {
-	Ctx github_com_cosmos_cosmos_sdk_types.Context
-} {
-	var calls []struct {
-		Ctx github_com_cosmos_cosmos_sdk_types.Context
-	}
-	mock.lockLogger.RLock()
-	calls = mock.calls.Logger
-	mock.lockLogger.RUnlock()
-	return calls
-}
-
-// Ensure, that ChainKeeperMock does implement types.ChainKeeper.
-// If this is not the case, regenerate this file with moq.
-var _ types.ChainKeeper = &ChainKeeperMock{}
-
-// ChainKeeperMock is a mock implementation of types.ChainKeeper.
-//
-//	func TestSomethingThatUsesChainKeeper(t *testing.T) {
-//
-//		// make and configure a mocked types.ChainKeeper
-//		mockedChainKeeper := &ChainKeeperMock{
-//			GetNameFunc: func() exported1.ChainName {
-//				panic("mock out the GetName method")
-//			},
-//			LoggerFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger {
-//				panic("mock out the Logger method")
-//			},
-//		}
-//
-//		// use mockedChainKeeper in code that requires types.ChainKeeper
-//		// and then make assertions.
-//
-//	}
-type ChainKeeperMock struct {
-	// GetNameFunc mocks the GetName method.
-	GetNameFunc func() exported1.ChainName
-
-	// LoggerFunc mocks the Logger method.
-	LoggerFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger
-
-	// calls tracks calls to the methods.
-	calls struct {
-		// GetName holds details about calls to the GetName method.
-		GetName []struct {
-		}
-		// Logger holds details about calls to the Logger method.
-		Logger []struct {
-			// Ctx is the ctx argument value.
-			Ctx github_com_cosmos_cosmos_sdk_types.Context
-		}
-	}
-	lockGetName sync.RWMutex
-	lockLogger  sync.RWMutex
-}
-
-// GetName calls GetNameFunc.
-func (mock *ChainKeeperMock) GetName() exported1.ChainName {
-	if mock.GetNameFunc == nil {
-		panic("ChainKeeperMock.GetNameFunc: method is nil but ChainKeeper.GetName was just called")
-	}
-	callInfo := struct {
-	}{}
-	mock.lockGetName.Lock()
-	mock.calls.GetName = append(mock.calls.GetName, callInfo)
-	mock.lockGetName.Unlock()
-	return mock.GetNameFunc()
-}
-
-// GetNameCalls gets all the calls that were made to GetName.
-// Check the length with:
-//
-//	len(mockedChainKeeper.GetNameCalls())
-func (mock *ChainKeeperMock) GetNameCalls() []struct {
-} {
-	var calls []struct {
-	}
-	mock.lockGetName.RLock()
-	calls = mock.calls.GetName
-	mock.lockGetName.RUnlock()
-	return calls
-}
-
-// Logger calls LoggerFunc.
-func (mock *ChainKeeperMock) Logger(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger {
-	if mock.LoggerFunc == nil {
-		panic("ChainKeeperMock.LoggerFunc: method is nil but ChainKeeper.Logger was just called")
-	}
-	callInfo := struct {
-		Ctx github_com_cosmos_cosmos_sdk_types.Context
-	}{
-		Ctx: ctx,
-	}
-	mock.lockLogger.Lock()
-	mock.calls.Logger = append(mock.calls.Logger, callInfo)
-	mock.lockLogger.Unlock()
-	return mock.LoggerFunc(ctx)
-}
-
-// LoggerCalls gets all the calls that were made to Logger.
-// Check the length with:
-//
-//	len(mockedChainKeeper.LoggerCalls())
-func (mock *ChainKeeperMock) LoggerCalls() []struct {
 	Ctx github_com_cosmos_cosmos_sdk_types.Context
 } {
 	var calls []struct {

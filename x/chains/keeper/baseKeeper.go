@@ -98,14 +98,14 @@ func (k BaseKeeper) ForChain(ctx sdk.Context, chain nexus.ChainName) (types.Chai
 	return k.forChain(ctx, chain)
 }
 
-func (k BaseKeeper) forChain(ctx sdk.Context, chain nexus.ChainName) (chainKeeper, error) {
+func (k BaseKeeper) forChain(ctx sdk.Context, chain nexus.ChainName) (ChainKeeper, error) {
 	chainKey := key.FromStr(subspacePrefix).Append(key.From(chain))
 	if !k.getBaseStore(ctx).HasNew(chainKey) {
 		clog.Red("chainKey", chainKey)
-		return chainKeeper{}, fmt.Errorf("unknown chain %s", chain)
+		return ChainKeeper{}, fmt.Errorf("unknown chain %s", chain)
 	}
 
-	return chainKeeper{
+	return ChainKeeper{
 		internalKeeper: k.internalKeeper,
 		chain:          chain,
 	}, nil

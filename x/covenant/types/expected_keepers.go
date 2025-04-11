@@ -23,7 +23,7 @@ import (
 
 // Keeper provides keeper functionality of this module
 //
-//go:generate moq -pkg mock -out ./mock/expected_keepers.go . Keeper Snapshotter StakingKeeper SlashingKeeper Rewarder Nexus MultisigKeeper ProtocolKeeper BaseKeeper ChainKeeper Voter ScalarnetKeeper
+//go:generate moq -pkg mock -out ./mock/expected_keepers.go . Keeper Snapshotter StakingKeeper SlashingKeeper Rewarder Nexus MultisigKeeper ProtocolKeeper BaseKeeper Voter ScalarnetKeeper
 type Keeper interface {
 	Logger(ctx sdk.Context) log.Logger
 	GetParams(ctx sdk.Context) (params Params)
@@ -128,9 +128,6 @@ type BaseKeeper interface {
 	GetLatestCommandBatchForChain(ctx sdk.Context, chainName nexus.ChainName) chainsTypes.CommandBatch
 	CreateNewBtcPoolingBatchToSign(ctx sdk.Context, chainName nexus.ChainName, pk []byte) (chainsTypes.CommandBatch, error)
 	GetLatestBtcPoolingBatchForChain(ctx sdk.Context, chain nexus.ChainName) *chainsTypes.CommandBatch
-}
-
-type ChainKeeper interface {
 }
 
 type Voter interface {

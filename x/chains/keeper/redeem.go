@@ -7,16 +7,16 @@ import (
 	"github.com/scalarorg/scalar-core/x/chains/types"
 )
 
-func (k chainKeeper) GetRedeemSession(ctx sdk.Context, custodianGroupUID exported.Hash) (session types.RedeemSession, ok bool) {
+func (k ChainKeeper) GetRedeemSession(ctx sdk.Context, custodianGroupUID exported.Hash) (session types.RedeemSession, ok bool) {
 	ok = k.getStore(ctx).GetNew(redeemSessionPrefix.Append(key.FromBz(custodianGroupUID.Bytes())), &session)
 	return session, ok
 }
 
-func (k chainKeeper) SetRedeemSession(ctx sdk.Context, session *types.RedeemSession) error {
+func (k ChainKeeper) SetRedeemSession(ctx sdk.Context, session *types.RedeemSession) error {
 	return k.getStore(ctx).SetNewValidated(redeemSessionPrefix.Append(key.FromBz(session.CustodianGroupUID.Bytes())), session)
 }
 
-func (k chainKeeper) GetRedeemSessions(ctx sdk.Context) []types.RedeemSession {
+func (k ChainKeeper) GetRedeemSessions(ctx sdk.Context) []types.RedeemSession {
 	iter := k.getStore(ctx).IteratorNew(redeemSessionPrefix)
 	defer iter.Close()
 	var sessions []types.RedeemSession

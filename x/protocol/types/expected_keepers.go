@@ -6,16 +6,16 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/scalarorg/scalar-core/utils"
+	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	reward "github.com/scalarorg/scalar-core/x/reward/exported"
 	snapshot "github.com/scalarorg/scalar-core/x/snapshot/exported"
 	vote "github.com/scalarorg/scalar-core/x/vote/exported"
-	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/tendermint/tendermint/libs/log"
 )
 
-//go:generate moq -out ./mock/expected_keepers.go -pkg mock . Voter Snapshotter BaseKeeper ChainKeeper Rewarder StakingKeeper SlashingKeeper 
+//go:generate moq -out ./mock/expected_keepers.go -pkg mock . Voter Snapshotter BaseKeeper Rewarder StakingKeeper SlashingKeeper
 
 // BaseKeeper is implemented by this module's base keeper
 type BaseKeeper interface {
@@ -23,12 +23,6 @@ type BaseKeeper interface {
 
 	// CreateChain(ctx sdk.Context, params Params) error
 	// ForChain(ctx sdk.Context, chain nexus.ChainName) (ChainKeeper, error)
-}
-
-// ChainKeeper is implemented by this module's chain keeper
-type ChainKeeper interface {
-	Logger(ctx sdk.Context) log.Logger
-	GetName() nexus.ChainName
 }
 
 // ParamsKeeper represents a global paramstore

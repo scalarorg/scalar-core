@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/btcsuite/btcd/btcec/v2"
 	"github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
@@ -362,4 +363,16 @@ func Context(store types.MultiStore) sdk.Context {
 // Of returns a random item from the given slice
 func Of[T any](items ...T) T {
 	return items[I64Between(0, int64(len(items)))]
+}
+
+func PublicKey() []byte {
+	privateKey, err := btcec.NewPrivateKey()
+	if err != nil {
+		panic(err)
+	}
+
+	// Get the public key from the private key
+	publicKey := privateKey.PubKey()
+
+	return publicKey.SerializeCompressed()
 }

@@ -16,7 +16,7 @@ func (k BaseKeeper) InitGenesis(ctx sdk.Context, state types.GenesisState) {
 	for _, chain := range state.Chains {
 		clog.Red("InitGenesis", "chain", chain.Params.Chain)
 		funcs.MustNoErr(k.CreateChain(ctx, chain.Params))
-		ck := funcs.Must(k.ForChain(ctx, chain.Params.Chain)).(chainKeeper)
+		ck := funcs.Must(k.ForChain(ctx, chain.Params.Chain)).(ChainKeeper)
 
 		if err := ck.validateCommandQueueState(chain.CommandQueue, commandQueueName); err != nil {
 			panic(err)
@@ -69,7 +69,7 @@ func (k BaseKeeper) getChains(ctx sdk.Context) []types.GenesisState_Chain {
 
 	var chains []types.GenesisState_Chain
 	for ; iter.Valid(); iter.Next() {
-		ck := funcs.Must(k.ForChain(ctx, nexus.ChainName(iter.Value()))).(chainKeeper)
+		ck := funcs.Must(k.ForChain(ctx, nexus.ChainName(iter.Value()))).(ChainKeeper)
 
 		chain := types.GenesisState_Chain{
 			Params:              ck.GetParams(ctx),

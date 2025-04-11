@@ -3014,28 +3014,6 @@ func (mock *BaseKeeperMock) GetLatestCommandBatchForChainCalls() []struct {
 	return calls
 }
 
-// Ensure, that ChainKeeperMock does implement covenanttypes.ChainKeeper.
-// If this is not the case, regenerate this file with moq.
-var _ covenanttypes.ChainKeeper = &ChainKeeperMock{}
-
-// ChainKeeperMock is a mock implementation of covenanttypes.ChainKeeper.
-//
-//	func TestSomethingThatUsesChainKeeper(t *testing.T) {
-//
-//		// make and configure a mocked covenanttypes.ChainKeeper
-//		mockedChainKeeper := &ChainKeeperMock{
-//		}
-//
-//		// use mockedChainKeeper in code that requires covenanttypes.ChainKeeper
-//		// and then make assertions.
-//
-//	}
-type ChainKeeperMock struct {
-	// calls tracks calls to the methods.
-	calls struct {
-	}
-}
-
 // Ensure, that VoterMock does implement covenanttypes.Voter.
 // If this is not the case, regenerate this file with moq.
 var _ covenanttypes.Voter = &VoterMock{}

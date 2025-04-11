@@ -555,12 +555,9 @@ func aggregatePsbtFromCommandBatch(
 	inputs := []goutils.PreviousStakingUTXO{}
 	outputs := []goutils.UnstakingOutput{}
 
-	fmt.Println("multiPayload: ", multiPayload)
-
 	for _, payload := range multiPayload {
 		err := params.AbiUnpack(payload)
 		if err != nil {
-			fmt.Println("err: ", err)
 			return nil, err
 		}
 
@@ -612,15 +609,19 @@ func aggregatePsbtFromCommandBatch(
 	rbf := false
 	feeRate := uint64(1)
 
-	fmt.Printf("tag: %s\n", tag)
-	fmt.Printf("version: %d\n", version)
-	fmt.Printf("serviceTag: %s\n", serviceTag)
-	fmt.Printf("custodianPubKeys: %+v\n", custodianPubKeys)
-	fmt.Printf("custodianQuorum: %d\n", custodianQuorum)
-	fmt.Printf("rbf: %v\n", rbf)
-	fmt.Printf("feeRate: %d\n", feeRate)
-	fmt.Printf("inputs: %+v\n", inputs)
-	fmt.Printf("outputs: %+v\n", outputs)
+	for _, input := range inputs {
+		clog.Greenf("Input: %+v\n", input)
+	}
+
+	for _, output := range outputs {
+		clog.Greenf("Output: %+v\n", output)
+	}
+
+	for _, pk := range custodianPubKeys {
+		clog.Greenf("CustodianPubKey: %+x\n", pk)
+	}
+
+	clog.Greenf("CustodianQuorum: %+v\n", custodianQuorum)
 
 	psbt, err := vault.BuildCustodianOnlyUnstakingTx(
 		tag,
