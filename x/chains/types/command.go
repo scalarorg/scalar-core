@@ -57,8 +57,8 @@ var (
 	uint256Type      = funcs.Must(abi.NewType("uint256", "uint256", nil))
 	uint256ArrayType = funcs.Must(abi.NewType("uint256[]", "uint256[]", nil))
 
-	deployTokenArguments                 = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: uint8Type}, {Type: uint256Type}, {Type: addressType}, {Type: uint256Type}}
-	deployToken2Arguments                = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: uint8Type}, {Type: uint256Type}, {Type: addressType}, {Type: uint256Type}, {Type: bytes32Type}}
+	// deployTokenArguments                 = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: uint8Type}, {Type: uint256Type}, {Type: addressType}, {Type: uint256Type}}
+	deployTokenArguments                 = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: uint8Type}, {Type: uint256Type}, {Type: addressType}, {Type: uint256Type}, {Type: bytes32Type}}
 	mintTokenArguments                   = abi.Arguments{{Type: stringType}, {Type: addressType}, {Type: uint256Type}}
 	burnTokenArguments                   = abi.Arguments{{Type: stringType}, {Type: bytes32Type}}
 	transferMultisigArguments            = abi.Arguments{{Type: addressesType}, {Type: uint256ArrayType}, {Type: uint256Type}}
@@ -89,26 +89,26 @@ func NewBurnTokenCommand(chainID sdk.Int, keyID multisig.KeyID, height int64, bu
 }
 
 // NewDeployTokenCommand creates a command to deploy a token
-func NewDeployTokenCommand(chainID sdk.Int, keyID multisig.KeyID, asset string, tokenDetails nexus.TokenDetails, address Address, dailyMintLimit sdk.Uint) Command {
+func NewDeployTokenCommand(chainID sdk.Int, keyID multisig.KeyID, asset string, tokenDetails nexus.TokenDetails, address Address, dailyMintLimit sdk.Uint, custodianGroupUID chains.Hash) Command {
 	return Command{
 		ID:         NewCommandID([]byte(fmt.Sprintf("%s_%s", asset, tokenDetails.Symbol)), chainID),
 		Type:       COMMAND_TYPE_DEPLOY_TOKEN,
-		Params:     createDeployTokenParams(tokenDetails.TokenName, tokenDetails.Symbol, tokenDetails.Decimals, tokenDetails.Capacity, address, dailyMintLimit),
+		Params:     createDeployTokenParams(tokenDetails.TokenName, tokenDetails.Symbol, tokenDetails.Decimals, tokenDetails.Capacity, address, dailyMintLimit, custodianGroupUID),
 		KeyID:      keyID,
 		MaxGasCost: deployTokenMaxGasCost,
 	}
 }
 
 // NewDeployToken2Command creates a command to deploy a token
-func NewDeployToken2Command(chainID sdk.Int, keyID multisig.KeyID, asset string, tokenDetails nexus.TokenDetails, address Address, dailyMintLimit sdk.Uint, custodianGroupUID chains.Hash) Command {
-	return Command{
-		ID:         NewCommandID([]byte(fmt.Sprintf("%s_%s", asset, tokenDetails.Symbol)), chainID),
-		Type:       COMMAND_TYPE_DEPLOY_TOKEN2,
-		Params:     createDeployToken2Params(tokenDetails.TokenName, tokenDetails.Symbol, tokenDetails.Decimals, tokenDetails.Capacity, address, dailyMintLimit, custodianGroupUID),
-		KeyID:      keyID,
-		MaxGasCost: deployTokenMaxGasCost,
-	}
-}
+// func NewDeployToken2Command(chainID sdk.Int, keyID multisig.KeyID, asset string, tokenDetails nexus.TokenDetails, address Address, dailyMintLimit sdk.Uint, custodianGroupUID chains.Hash) Command {
+// 	return Command{
+// 		ID:         NewCommandID([]byte(fmt.Sprintf("%s_%s", asset, tokenDetails.Symbol)), chainID),
+// 		Type:       COMMAND_TYPE_DEPLOY_TOKEN2,
+// 		Params:     createDeployToken2Params(tokenDetails.TokenName, tokenDetails.Symbol, tokenDetails.Decimals, tokenDetails.Capacity, address, dailyMintLimit, custodianGroupUID),
+// 		KeyID:      keyID,
+// 		MaxGasCost: deployTokenMaxGasCost,
+// 	}
+// }
 
 // NewMintTokenCommand creates a command to mint token to the given address
 func NewMintTokenCommand(keyID multisig.KeyID, transfer nexus.CrossChainTransfer, symbol string, address common.Address, amount *big.Int) Command {
@@ -325,16 +325,7 @@ func (m Command) DecodeParams() (map[string]string, error) {
 		params["sourceTxHash"] = sourceTxID.Hex()
 		params["sourceEventIndex"] = sourceEventIndex.String()
 	case COMMAND_TYPE_DEPLOY_TOKEN:
-		name, symbol, decs, cap, tokenAddress, dailyMintLimit := DecodeDeployTokenParams(m.Params)
-
-		params["name"] = name
-		params["symbol"] = symbol
-		params["decimals"] = strconv.FormatUint(uint64(decs), 10)
-		params["cap"] = cap.String()
-		params["tokenAddress"] = tokenAddress.Hex()
-		params["dailyMintLimit"] = dailyMintLimit.String()
-	case COMMAND_TYPE_DEPLOY_TOKEN2:
-		name, symbol, decs, cap, tokenAddress, dailyMintLimit, custodianGroupUID := DecodeDeployToken2Params(m.Params)
+		name, symbol, decs, cap, tokenAddress, dailyMintLimit, custodianGroupUID := DecodeDeployTokenParams(m.Params)
 
 		params["name"] = name
 		params["symbol"] = symbol
@@ -343,6 +334,16 @@ func (m Command) DecodeParams() (map[string]string, error) {
 		params["tokenAddress"] = tokenAddress.Hex()
 		params["dailyMintLimit"] = dailyMintLimit.String()
 		params["custodianGroupUID"] = custodianGroupUID.Hex()
+	// case COMMAND_TYPE_DEPLOY_TOKEN2:
+	// 	name, symbol, decs, cap, tokenAddress, dailyMintLimit, custodianGroupUID := DecodeDeployToken2Params(m.Params)
+
+	// 	params["name"] = name
+	// 	params["symbol"] = symbol
+	// 	params["decimals"] = strconv.FormatUint(uint64(decs), 10)
+	// 	params["cap"] = cap.String()
+	// 	params["tokenAddress"] = tokenAddress.Hex()
+	// 	params["dailyMintLimit"] = dailyMintLimit.String()
+	// 	params["custodianGroupUID"] = custodianGroupUID.Hex()
 	case COMMAND_TYPE_MINT_TOKEN:
 		symbol, addr, amount := DecodeMintTokenParams(m.Params)
 
@@ -399,21 +400,21 @@ func createBurnTokenParams(symbol string, salt common.Hash) []byte {
 	return funcs.Must(burnTokenArguments.Pack(symbol, salt))
 }
 
-func createDeployTokenParams(tokenName string, symbol string, decimals uint8, capacity sdk.Uint, address Address, dailyMintLimit sdk.Uint) []byte {
-	return funcs.Must(deployTokenArguments.Pack(
-		tokenName,
-		symbol,
-		decimals,
-		capacity.BigInt(),
-		address,
-		dailyMintLimit.BigInt(),
-	))
-}
+// func createDeployTokenParams(tokenName string, symbol string, decimals uint8, capacity sdk.Uint, address Address, dailyMintLimit sdk.Uint) []byte {
+// 	return funcs.Must(deployTokenArguments.Pack(
+// 		tokenName,
+// 		symbol,
+// 		decimals,
+// 		capacity.BigInt(),
+// 		address,
+// 		dailyMintLimit.BigInt(),
+// 	))
+// }
 
-func createDeployToken2Params(tokenName string, symbol string, decimals uint8, capacity sdk.Uint, address Address, dailyMintLimit sdk.Uint, custodianGroupUID chains.Hash) []byte {
+func createDeployTokenParams(tokenName string, symbol string, decimals uint8, capacity sdk.Uint, address Address, dailyMintLimit sdk.Uint, custodianGroupUID chains.Hash) []byte {
 	groupUID := [32]byte{}
 	copy(groupUID[:], custodianGroupUID.Bytes())
-	return funcs.Must(deployToken2Arguments.Pack(
+	return funcs.Must(deployTokenArguments.Pack(
 		tokenName,
 		symbol,
 		decimals,
@@ -560,18 +561,18 @@ func DecodeMintTokenParams(bz []byte) (string, common.Address, *big.Int) {
 }
 
 // DecodeDeployTokenParams decodes the call arguments from the given contract call
-func DecodeDeployTokenParams(bz []byte) (string, string, uint8, *big.Int, common.Address, sdk.Uint) {
+func DecodeDeployTokenParams(bz []byte) (string, string, uint8, *big.Int, common.Address, sdk.Uint, chains.Hash) {
 	params := funcs.Must(StrictDecode(deployTokenArguments, bz))
-
-	return params[0].(string), params[1].(string), params[2].(uint8), params[3].(*big.Int), params[4].(common.Address), sdk.NewUintFromBigInt(params[5].(*big.Int))
-}
-
-// DecodeDeployToken2Params decodes the call arguments from the given contract call
-func DecodeDeployToken2Params(bz []byte) (string, string, uint8, *big.Int, common.Address, sdk.Uint, chains.Hash) {
-	params := funcs.Must(StrictDecode(deployToken2Arguments, bz))
 
 	return params[0].(string), params[1].(string), params[2].(uint8), params[3].(*big.Int), params[4].(common.Address), sdk.NewUintFromBigInt(params[5].(*big.Int)), chains.Hash(params[6].([32]byte))
 }
+
+// DecodeDeployToken2Params decodes the call arguments from the given contract call
+// func DecodeDeployToken2Params(bz []byte) (string, string, uint8, *big.Int, common.Address, sdk.Uint, chains.Hash) {
+// 	params := funcs.Must(StrictDecode(deployToken2Arguments, bz))
+
+// 	return params[0].(string), params[1].(string), params[2].(uint8), params[3].(*big.Int), params[4].(common.Address), sdk.NewUintFromBigInt(params[5].(*big.Int)), chains.Hash(params[6].([32]byte))
+// }
 
 // DecodeBurnTokenParams decodes the call arguments from the given contract call
 func DecodeBurnTokenParams(bz []byte) (string, common.Hash) {

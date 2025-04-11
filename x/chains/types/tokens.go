@@ -82,25 +82,17 @@ func (t *ERC20Token) CreateDeployCommand(keyID multisig.KeyID, dailyMintLimit sd
 	if err := keyID.ValidateBasic(); err != nil {
 		return Command{}, err
 	}
-
+	address := ZeroAddress
 	if t.IsExternal() {
-		return NewDeployToken2Command(
-			t.metadata.ChainID,
-			keyID,
-			t.GetAsset(),
-			t.metadata.Details,
-			t.GetAddress(),
-			dailyMintLimit,
-			custodianGroupUID,
-		), nil
+		address = t.GetAddress()
 	}
 
-	return NewDeployToken2Command(
+	return NewDeployTokenCommand(
 		t.metadata.ChainID,
 		keyID,
 		t.GetAsset(),
 		t.metadata.Details,
-		ZeroAddress,
+		address,
 		dailyMintLimit,
 		custodianGroupUID,
 	), nil

@@ -46,9 +46,12 @@ import (
 // DefaultProtocol returns the default chains for a genesis state
 // Each protocol has a token info with the same index
 func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGroupUID chainsexported.Hash) []*protocoltypes.Protocol {
-	log.Debug().Any("TokenInfos", tokenInfos).Any("ProtocolInfos", protocolInfos).Msg("Create defaultProtocols")
+	//log.Debug().Any("TokenInfos", tokenInfos).Any("ProtocolInfos", protocolInfos).Msg("Create defaultProtocols")
 	protocols := []*protocoltypes.Protocol{}
 	for i, protocol := range protocolInfos {
+		log.Debug().Any("Protocol", protocol).
+			Str("Token", tokenInfos[i].Symbol).
+			Any("Token Deployments", tokenInfos[i].Deployments).Msg("Create defaultProtocols")
 		if i >= len(tokenInfos) {
 			break
 		}
@@ -56,9 +59,9 @@ func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGro
 		supportedChains := []*pexported.SupportedChain{}
 		for _, chain := range tokenInfo.Deployments {
 			supportedChains = append(supportedChains, &pexported.SupportedChain{
-				Chain: nexus.ChainName(chain.ID),
-				Name:  chain.Name,
-				//Address: chain.TokenAddress,
+				Chain:   nexus.ChainName(chain.ID),
+				Name:    chain.Name,
+				Address: chain.TokenAddress,
 			})
 		}
 		var model pexported.LiquidityModel

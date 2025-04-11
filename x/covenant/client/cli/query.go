@@ -111,6 +111,7 @@ func addGroupFlagsToCmd(cmd *cobra.Command) {
 	cmd.Flags().String(FlagPubKey, "", "Custodian pubkey")
 	cmd.Flags().String(FlagStatus, "", "Status of the custodian")
 	cmd.Flags().String(FlagName, "", "Name of the custodian")
+	cmd.Flags().String(FlagUID, "", "UID of the custodian group")
 }
 
 func readGroupFlags(cmd *cobra.Command, request *types.GroupsRequest) {
@@ -118,9 +119,11 @@ func readGroupFlags(cmd *cobra.Command, request *types.GroupsRequest) {
 		return
 	}
 	uidStr, _ := cmd.Flags().GetString(FlagUID)
-	uid, err := chains.HashFromHex(uidStr)
-	if err != nil {
-		log.Fatal("Failed to decode uid", err)
+	if uidStr != "" {
+		uid, err := chains.HashFromHex(uidStr)
+		if err != nil {
+			log.Fatal("Failed to decode uid", err)
+		}
+		request.UID = &uid
 	}
-	request.UID = uid
 }
