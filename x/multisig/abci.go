@@ -54,7 +54,7 @@ func handleSignings(ctx sdk.Context, k types.Keeper, rewarder types.Rewarder) {
 	// we handle sessions that'll expire on the next block,
 	// to avoid waiting for an additional block
 	expiredSigningSessions := k.GetSigningSessionsByExpiry(ctx, ctx.BlockHeight()+1)
-	clog.Green("[x/multisig] [ABCI]: handle %d expired SigningSessions", len(expiredSigningSessions))
+	clog.Green("[x/multisig] [ABCI]: handle expired SigningSessions", len(expiredSigningSessions))
 	for _, signing := range expiredSigningSessions {
 		clog.Greenf("[x/multisig] [ABCI]: handleExpiredSignings: signing: %+v", signing)
 		_ = utils.RunCached(ctx, k, func(cachedCtx sdk.Context) ([]abci.ValidatorUpdate, error) {

@@ -226,7 +226,13 @@ func processPsbt(p *types.PsbtMultiSig, tapScriptSigsMapByEachPsbt []map[string]
 // Hande switch phase from Prepaing to Executing
 func handleSwitchPhase(ctx sdk.Context, nk *neededKeeper, chain nexus.ChainName) {
 	expiredEvmSessions, expiredRedeemSessions := findExpiredEvmSessionsAndRenewable(ctx, nk.keeper, nk.protocol, nk.chains, chain)
-
+	if len(expiredEvmSessions) > 0 || len(expiredRedeemSessions) > 0 {
+		log.Info().
+			Str("Chain", chain.String()).
+			Int("expiredEvmSessions", len(expiredEvmSessions)).
+			Int("expiredRedeemSessions", len(expiredRedeemSessions)).
+			Msg("[x/covenant] [handleSwitchPhase] [Found expired evm sessions]")
+	}
 	for _, evmSession := range expiredEvmSessions {
 		success := utils.RunCached(ctx, nk.keeper, func(ctx sdk.Context) (bool, error) {
 			switchPhaseForEvmChain(ctx, nk.chains, nk.multisig, evmSession, exported.Executing)
@@ -660,7 +666,8 @@ func switchPhaseForEvmChain(ctx sdk.Context,
 	log.Info().
 		Str("chain", evmSession.Chain.String()).
 		Str("CustodianGroupUID", hex.EncodeToString(evmSession.CustodianGroupUID.Bytes())).
-		Msg("switchPhaseForEvmChain")
+		Any("newPhase", newPhase).
+		Msg("[x/covenant] [switchPhaseForEvmChain]")
 	// Start signing session for reserve redeem utxos
 	keyID, ok := multisig.GetCurrentKeyID(ctx, evmSession.Chain)
 	if !ok {
@@ -706,15 +713,29 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk type
 	for _, group := range groups {
 		redeemSession, ok := k.GetRedeemSession(ctx, group.UID)
 		if !ok {
+			log.Debug().
+				Str("CustodianGroupUID", group.UID.Hex()).
+				Msg("[x/covenant] [findExpiredEvmSessionsAndRenewable] [Not found redeem session]")
 			continue
 		}
 		if redeemSession.CurrentPhase == exported.Preparing && redeemSession.PhaseExpiredAt <= uint64(currentHeight) {
+			log.Info().
+				Str("CustodianGroupUID", group.UID.Hex()).
+				Int64("currentHeight", currentHeight).
+				Uint64("phaseExpiredAt", redeemSession.PhaseExpiredAt).
+				Msg("[x/covenant] Found expired redeem session")
 			// We switch the expired session to the executing phase if there are pending redeem commands
 			// Otherwise, we extend current prepering phase
 			if hasPendingRedeemCommands(ctx, k, ck) {
+				log.Info().
+					Str("CustodianGroupUID", group.UID.Hex()).
+					Msg("[x/covenant][Switching redeem session to executing phase]")
 				expiredGroups = append(expiredGroups, group.UID.Bytes())
 				expiredSessions[group.UID.Hex()] = redeemSession
 			} else {
+				log.Info().
+					Str("CustodianGroupUID", group.UID.Hex()).
+					Msg("[x/covenant] [Renewing redeem session]")
 				err := k.RenewRedeemSession(ctx, group.UID)
 				if err != nil {
 					log.Error().
@@ -743,6 +764,10 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk type
 					Tokens:            []string{},
 				}
 			}
+			log.Info().
+				Str("CustodianGroupUID", protocol.CustodianGroupUID.Hex()).
+				Str("Chain", chain.ChainName.String()).
+				Msg("[x/covenant] [Found expired evm session]")
 			evmSession.Tokens = append(evmSession.Tokens, protocol.Symbol)
 			result[chain.ChainName.String()] = evmSession
 		}
@@ -753,6 +778,8 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk type
 func hasPendingRedeemCommands(ctx sdk.Context, k types.Keeper, ck chainsTypes.ChainKeeper) bool {
 	batch := ck.GetLatestBtcPoolingBatch(ctx)
 	if batch == nil || len(batch.GetCommandIDs()) == 0 {
+		log.Debug().
+			Msg("[x/covenant] [hasPendingRedeemCommands] [No pending redeem commands]")
 		return false
 	}
 	extraData := batch.GetExtraData()
@@ -768,6 +795,9 @@ func hasPendingRedeemCommands(ctx sdk.Context, k types.Keeper, ck chainsTypes.Ch
 		if err != nil {
 			panic(err)
 		}
+		log.Debug().
+			Any("payload", payload).
+			Msg("[x/covenant] [hasPendingRedeemCommands]")
 		//todo: check if the command is sent to the evm
 		command := k.GetReserveUTXOCommandByID(ctx, redeemTokenPayload.RequestId[:])
 		if command.Is(types.StandaloneCommandStatusNonExistent) {

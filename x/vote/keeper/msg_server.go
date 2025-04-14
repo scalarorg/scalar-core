@@ -36,7 +36,7 @@ func (s msgServer) Vote(c context.Context, req *types.VoteRequest) (*types.VoteR
 	if !ok {
 		return nil, fmt.Errorf("poll %s not found", req.PollID)
 	}
-	s.Logger(ctx).Debug(fmt.Sprintf("[Vote] poll %s found with state: %+v", req.PollID.String(), poll.GetState()))
+	s.Logger(ctx).Info(fmt.Sprintf("[Vote] poll %s found with state: %+v", req.PollID.String(), poll.GetState()))
 	voteResult, err := poll.Vote(voter, ctx.BlockHeight(), req.Vote.GetCachedValue().(codec.ProtoMarshaler))
 	if err != nil {
 		return nil, err
@@ -54,7 +54,7 @@ func (s msgServer) Vote(c context.Context, req *types.VoteRequest) (*types.VoteR
 	}
 
 	pollState := poll.GetState()
-
+	s.Logger(ctx).Info(fmt.Sprintf("[Vote] poll %s in module %s new state: %+v with result: %+v", req.PollID.String(), poll.GetModule(), pollState, voteResult))
 	switch pollState {
 	case vote.Pending:
 		return &types.VoteResponse{Log: fmt.Sprintf("not enough votes to confirm poll %s yet", req.PollID.String())}, nil

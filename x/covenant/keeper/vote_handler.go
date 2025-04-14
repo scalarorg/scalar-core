@@ -5,6 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 
@@ -77,7 +78,7 @@ func (v voteHandler) HandleExpiredPoll(ctx sdk.Context, poll vote.Poll) error {
 
 		if !hasVoted {
 			rewardPool.ClearRewards(voter)
-			msg := fmt.Sprintf("penalized voter %s due to timeout", voter.String())
+			msg := fmt.Sprintf("[x/covenant] [HandleExpiredPoll] [Penalized voter %s due to timeout]", voter.String())
 			clog.Red("HandleExpiredPoll", msg)
 			v.keeper.Logger(ctx).Debug(msg,
 				"voter", voter.String(),
@@ -177,6 +178,7 @@ func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error 
 }
 
 func (v voteHandler) HandleResult(ctx sdk.Context, result codec.ProtoMarshaler) error {
+	log.Debug().Msgf("[x/covenant] [voteHandler] HandleResult")
 	voteEvents := result.(*types.VoteEvents)
 
 	if v.IsFalsyResult(result) {
@@ -193,7 +195,7 @@ func (v voteHandler) HandleResult(ctx sdk.Context, result codec.ProtoMarshaler) 
 }
 
 func (v voteHandler) handleEvent(ctx sdk.Context, event types.Event, k types.Keeper) error {
-
+	log.Debug().Msgf("[x/covenant] [voteHandler] handleEvent")
 	eventType := event.GetEvent()
 	switch eventType.(type) {
 	case *types.Event_RedeemTxsConfirmed:

@@ -268,6 +268,7 @@ func handleContractCallWithToken(ctx sdk.Context, event types.Event, bk types.Ba
 }
 
 func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper, cov types.CovenantKeeper) error {
+	log.Debug().Msgf("[x/chains] [ABCI] handleRedeemToken")
 	e := event.GetRedeemToken()
 	if e == nil {
 		panic(fmt.Errorf("event is nil"))
