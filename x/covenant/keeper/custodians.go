@@ -116,7 +116,7 @@ func isMatchCustodian(protocol *cov.Custodian, req *types.CustodiansRequest) boo
 
 // Todo: Implement Matching function
 func isMatchCustodianGroup(group *cov.CustodianGroup, req *types.GroupsRequest) bool {
-	if req.UID.Bytes() != nil && bytes.Equal(group.UID.Bytes(), req.UID.Bytes()) {
+	if req.UID != nil && bytes.Equal(group.UID.Bytes(), req.UID) {
 		return false
 	}
 

@@ -14,6 +14,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
+	chainsExported "github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	"github.com/scalarorg/scalar-core/x/covenant/types"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
@@ -72,7 +73,8 @@ func (q Querier) Params(context.Context, *types.ParamsRequest) (*types.ParamsRes
 }
 
 func (q Querier) RedeemSession(ctx context.Context, req *types.RedeemSessionRequest) (*types.RedeemSessionResponse, error) {
-	session, ok := q.keeper.GetRedeemSession(sdk.UnwrapSDKContext(ctx), req.UID)
+	hash := chainsExported.Hash(common.BytesToHash(req.UID))
+	session, ok := q.keeper.GetRedeemSession(sdk.UnwrapSDKContext(ctx), hash)
 	if !ok {
 		return nil, status.Errorf(codes.NotFound, "redeem session not found")
 	}
@@ -82,11 +84,10 @@ func (q Querier) RedeemSession(ctx context.Context, req *types.RedeemSessionRequ
 }
 
 func (q Querier) UTXOSnapshot(ctx context.Context, req *types.UTXOSnapshotRequest) (*types.UTXOSnapshotResponse, error) {
-
-	c := sdk.UnwrapSDKContext(ctx)
-	snapshot, ok := q.keeper.GetUtxoSnapshot(c, req.UID)
+	hash := chainsExported.Hash(common.BytesToHash(req.UID))
+	snapshot, ok := q.keeper.GetUtxoSnapshot(sdk.UnwrapSDKContext(ctx), hash)
 	if !ok {
-		return nil, status.Errorf(codes.NotFound, "utxo snapshot not found, uid: %x", req.UID)
+		return nil, status.Errorf(codes.NotFound, "utxo snapshot not found, uid: %x", hash)
 	}
 	return &types.UTXOSnapshotResponse{
 		UtxoSnapshot: snapshot,

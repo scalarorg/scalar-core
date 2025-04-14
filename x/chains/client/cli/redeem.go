@@ -47,7 +47,7 @@ func readRedeemSessionFlags(cmd *cobra.Command, request *types.RedeemSessionRequ
 		return
 	}
 	var err error
-	chain, _ := cmd.Flags().GetString(flagChain)
+	chain, err := cmd.Flags().GetString(flagChain)
 	request.Chain = chain
 	if err != nil {
 		log.Fatal("Failed to decode pubkey", err)

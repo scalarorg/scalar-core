@@ -44,10 +44,11 @@ func readRedeemSessionFlags(cmd *cobra.Command, request *types.RedeemSessionRequ
 	}
 	var err error
 	uid, _ := cmd.Flags().GetString(FlagUID)
-	request.UID, err = chainsExported.HashFromHex(uid)
+	uidHash, err := chainsExported.HashFromHex(uid)
 	if err != nil {
 		log.Fatal("Failed to decode pubkey", err)
 	}
+	request.UID = uidHash[:]
 }
 func GetCmdUTXOSnapshot() *cobra.Command {
 	cmd := &cobra.Command{
@@ -81,8 +82,9 @@ func readUTXOSnapshotFlags(cmd *cobra.Command, request *types.UTXOSnapshotReques
 	}
 	var err error
 	uid, _ := cmd.Flags().GetString(FlagUID)
-	request.UID, err = chainsExported.HashFromHex(uid)
+	uidHash, err := chainsExported.HashFromHex(uid)
 	if err != nil {
 		log.Fatal("Failed to decode pubkey", err)
 	}
+	request.UID = uidHash[:]
 }
