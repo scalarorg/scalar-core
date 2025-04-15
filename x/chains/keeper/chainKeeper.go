@@ -696,6 +696,7 @@ func (k ChainKeeper) CreateNewBtcPoolingBatchToSign(ctx sdk.Context, chain nexus
 
 func (k ChainKeeper) HasBtcPoolingCommands(ctx sdk.Context, pk []byte) bool {
 	if !types.IsBitcoinChain(k.GetName()) {
+		clog.Redf("chain %s is not a bitcoin chain", k.GetName())
 		return false
 	}
 	_, ok := k.getFirstBtcPoolingCommand(ctx, pk)
@@ -703,16 +704,17 @@ func (k ChainKeeper) HasBtcPoolingCommands(ctx sdk.Context, pk []byte) bool {
 }
 
 func (k ChainKeeper) getFirstBtcPoolingCommand(ctx sdk.Context, pk []byte) (*types.Command, bool) {
-	prefix := protocol.GetBTCKeyIDPrefix(protocol.LIQUIDITY_MODEL_POOL)
-	key := prefix + hex.EncodeToString(pk)
+	key := protocol.GetBTCKeyID(protocol.LIQUIDITY_MODEL_POOL, pk)
+	clog.Magentaf("[ChainKeeper] getFirstBtcPoolingCommand, Key: %s", key)
 	firstCmdFilter := func(value codec.ProtoMarshaler) bool {
 		cmd, ok := value.(*types.Command)
-		return ok && cmd.KeyID.String() == key
+		return ok && cmd.KeyID.String() == key.String()
 	}
 
 	var firstCmd *types.Command
 
 	ok := k.getCommandQueue(ctx).DequeueUntil(firstCmd, firstCmdFilter)
+	clog.Redf("firstCmd: %v, %v", firstCmd, ok)
 	return firstCmd, ok
 }
 

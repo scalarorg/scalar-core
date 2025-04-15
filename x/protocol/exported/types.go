@@ -27,17 +27,6 @@ func (p *ProtocolInfo) IsActivated() bool {
 	return p.Status == Activated
 }
 
-func FormatContractCallWithTokenToBTCKeyID(bitcoinPubKey []byte, model LiquidityModel) (multisig.KeyID, error) {
-	if _, ok := LiquidityModel_name[int32(model)]; !ok {
-		return "", fmt.Errorf("FormatContractCallWithTokenToBTCKeyID > invalid model")
-	}
-
-	bytes := make([]byte, 4)
-	binary.BigEndian.PutUint32(bytes, uint32(model))
-
-	return multisig.KeyID(hex.EncodeToString(bytes) + "|" + hex.EncodeToString(bitcoinPubKey)), nil
-}
-
 func GetBTCKeyIDPrefix(model LiquidityModel) string {
 	if _, ok := LiquidityModel_name[int32(model)]; !ok {
 		return ""
@@ -45,6 +34,18 @@ func GetBTCKeyIDPrefix(model LiquidityModel) string {
 	bytes := make([]byte, 4)
 	binary.BigEndian.PutUint32(bytes, uint32(model))
 	return hex.EncodeToString(bytes) + "|"
+}
+
+func GetBTCKeyID(model LiquidityModel, bitcoinPubKey []byte) multisig.KeyID {
+	return multisig.KeyID(GetBTCKeyIDPrefix(model) + hex.EncodeToString(bitcoinPubKey))
+}
+
+func FormatContractCallWithTokenToBTCKeyID(bitcoinPubKey []byte, model LiquidityModel) (multisig.KeyID, error) {
+	if _, ok := LiquidityModel_name[int32(model)]; !ok {
+		return "", fmt.Errorf("FormatContractCallWithTokenToBTCKeyID > invalid model")
+	}
+
+	return GetBTCKeyID(model, bitcoinPubKey), nil
 }
 
 func ParseContractCallWithTokenToBTCKeyID(keyID multisig.KeyID) (bitcoinPubKey []byte, model LiquidityModel, err error) {

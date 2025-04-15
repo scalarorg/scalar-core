@@ -75,10 +75,10 @@ func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock,
 		slashing:    slashing,
 	}
 
-	for _, chain := range supportedBtcChains {
-		clog.Greenf("[x/covenant] [ABCI] EndBlocker, chain: %+v", chain)
-		handleEnqueuedEvents(ctx, neededKeepers, chain)
-		handleSwitchPhase(ctx, neededKeepers, chain)
+	for _, btcChain := range supportedBtcChains {
+		clog.Greenf("[x/covenant] [ABCI] EndBlocker, chain: %+v", btcChain)
+		handleEnqueuedEvents(ctx, neededKeepers, btcChain)
+		handleSwitchPhase(ctx, neededKeepers, btcChain)
 	}
 
 	handleSignings(ctx, k, rewarder)
@@ -224,11 +224,11 @@ func processPsbt(p *types.PsbtMultiSig, tapScriptSigsMapByEachPsbt []map[string]
 }
 
 // Hande switch phase from Prepaing to Executing
-func handleSwitchPhase(ctx sdk.Context, nk *neededKeeper, chain nexus.ChainName) {
-	expiredEvmSessions, expiredRedeemSessions := findExpiredEvmSessionsAndRenewable(ctx, nk.keeper, nk.protocol, nk.chains, chain)
+func handleSwitchPhase(ctx sdk.Context, nk *neededKeeper, btcChain nexus.ChainName) {
+	expiredEvmSessions, expiredRedeemSessions := findExpiredEvmSessionsAndRenewable(ctx, nk.keeper, nk.protocol, nk.chains, btcChain)
 	if len(expiredEvmSessions) > 0 || len(expiredRedeemSessions) > 0 {
 		log.Info().
-			Str("Chain", chain.String()).
+			Str("Chain", btcChain.String()).
 			Int("expiredEvmSessions", len(expiredEvmSessions)).
 			Int("expiredRedeemSessions", len(expiredRedeemSessions)).
 			Msg("[x/covenant] [handleSwitchPhase] [Found expired evm sessions]")

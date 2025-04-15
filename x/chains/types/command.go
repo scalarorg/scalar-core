@@ -373,6 +373,17 @@ func (m Command) DecodeParams() (map[string]string, error) {
 		executeData, requestID := DecodeRedeemTokenParams(m.Params)
 		params["executeData"] = hex.EncodeToString(executeData)
 		params["requestID"] = requestID.Hex()
+	case COMMAND_TYPE_APPROVE_REDEEM_TOKEN:
+		sourceChain, sourceAddress, contractAddress, payloadHash, symbol, amount, sourceTxID, sourceEventIndex := DecodeApproveRedeemTokenParams(m.Params)
+
+		params["sourceChain"] = sourceChain
+		params["sourceAddress"] = sourceAddress
+		params["contractAddress"] = contractAddress.Hex()
+		params["payloadHash"] = payloadHash.Hex()
+		params["symbol"] = symbol
+		params["amount"] = amount.String()
+		params["sourceTxHash"] = sourceTxID.Hex()
+		params["sourceEventIndex"] = sourceEventIndex.String()
 	default:
 		return nil, fmt.Errorf("unknown command type '%s'", m.Type)
 	}
@@ -536,6 +547,10 @@ func DecodeApproveContractCallWithMintParams(bz []byte) (string, string, common.
 		params[5].(*big.Int),
 		common.BytesToHash(sourceTxID[:]),
 		params[7].(*big.Int)
+}
+
+func DecodeApproveRedeemTokenParams(bz []byte) (string, string, common.Address, common.Hash, string, *big.Int, common.Hash, *big.Int) {
+	return DecodeApproveContractCallWithMintParams(bz)
 }
 
 // DecodeApproveContractCallParams decodes the call arguments from the given contract call

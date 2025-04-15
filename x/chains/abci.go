@@ -369,7 +369,7 @@ func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, 
 		Asset:            coin,
 	}
 
-	clog.Yellowf("[x/chains] ABXI emitted EventRedeemTokenApproved event for event: %v", approvedEvent)
+	clog.Yellowf("[x/chains] ABCI emitted EventRedeemTokenApproved event for event: %v", approvedEvent)
 
 	events.Emit(ctx, approvedEvent)
 
@@ -426,6 +426,7 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 	}
 
 	keyID, err := pexported.FormatContractCallWithTokenToBTCKeyID(cusGr.BitcoinPubkey, protocolInfo.LiquidityModel)
+	clog.Magentaf("[ABCI] FormatContractCallWithTokenToBTCKeyID: %s", keyID)
 	if err != nil {
 		return err
 	}
