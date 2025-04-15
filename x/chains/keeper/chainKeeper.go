@@ -704,7 +704,7 @@ func (k ChainKeeper) CreateNewBtcPoolingBatchToSign(ctx sdk.Context, chain nexus
 }
 
 func (k ChainKeeper) createNewBtcUpcBatchToSign(ctx sdk.Context) (types.CommandBatch, error) {
-	prefix := protocol.GetBTCKeyIDPrefix(protocol.LIQUIDITY_MODEL_POOL)
+	prefix := protocol.GetBTCKeyIDPrefix(protocol.LIQUIDITY_MODEL_UPC)
 	firstCmdFilter := func(value codec.ProtoMarshaler) bool {
 		cmd, ok := value.(*types.Command)
 		return ok && strings.HasPrefix(cmd.KeyID.String(), prefix)
