@@ -2,8 +2,10 @@ package testnet
 
 import (
 	"bufio"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"math/big"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -29,10 +31,16 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/go-bip39"
 	"github.com/decred/dcrd/dcrec/secp256k1/v4"
+	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
+	"github.com/scalarorg/scalar-core/utils/evm"
 	"github.com/scalarorg/scalar-core/vald/config"
+	"github.com/scalarorg/scalar-core/x/chains/types"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	scalarnetexported "github.com/scalarorg/scalar-core/x/scalarnet/exported"
 	"github.com/tendermint/tendermint/privval"
 
@@ -402,6 +410,14 @@ func initProtocols(args initArgs) ([]Protocol, []Token) {
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to parse chains config")
 	}
+	chainsConfigs, err := ParseJsonArrayConfig[chainsTypes.ChainConfig](fmt.Sprintf("%s/chains/chains.json", args.configPath))
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to parse chains config")
+	}
+	gateways := map[string]string{}
+	for _, chainConfig := range chainsConfigs {
+		gateways[chainConfig.ID] = chainConfig.Gateway
+	}
 	//Generate protocol's keyring in the first node, then mount to de deployment container
 	workingDir := filepath.Join(args.outputDir, fmt.Sprintf("%s%d", args.nodeDirPrefix, 1), args.nodeDaemonHome)
 	os.RemoveAll(fmt.Sprintf("%s/keyring-test", workingDir))
@@ -417,7 +433,18 @@ func initProtocols(args initArgs) ([]Protocol, []Token) {
 			Tag:            config.Tag,
 			LiquidityModel: config.LiquidityModel,
 		}
+		deployments := []DeployInfo{}
+		for _, deployment := range config.TokenConfig.Deployments {
+			gatewayAddress := gateways[deployment.ID]
+			deployment.TokenAddress, err = generateTokenAddress(gatewayAddress, config.TokenConfig)
+			if err != nil {
+				log.Error().Err(err).Msg("Failed to generate token address")
+			}
+			deployments = append(deployments, deployment)
+		}
+
 		tokens[i] = config.TokenConfig
+		tokens[i].Deployments = deployments
 		if config.ScalarMnemonic != "" {
 			// Create privKey and address of protocol by keyring algorithm
 			//Default bip44 path is m/44'/118'/0'/0/0 if bip44Path is not set
@@ -449,7 +476,27 @@ func initProtocols(args initArgs) ([]Protocol, []Token) {
 	}
 	return protocols, tokens
 }
+func generateTokenAddress(gatewayAddress string, tokenConfig Token) (string, error) {
+	var saltToken [32]byte
+	copy(saltToken[:], crypto.Keccak256Hash([]byte(tokenConfig.Symbol)).Bytes())
+	gatewayAddr := common.HexToAddress(gatewayAddress)
 
+	arguments := abi.Arguments{{Type: evm.StringType}, {Type: evm.StringType}, {Type: evm.Uint8Type}, {Type: evm.Uint256Type}}
+	packed, err := arguments.Pack(tokenConfig.Name, tokenConfig.Symbol, tokenConfig.Decimals, big.NewInt(tokenConfig.Capacity))
+	if err != nil {
+		return "", err
+	}
+
+	bytecode, err := hex.DecodeString(types.Token)
+	if err != nil {
+		return "", err
+	}
+	tokenInitCode := append(bytecode, packed...)
+	tokenInitCodeHash := crypto.Keccak256Hash(tokenInitCode)
+
+	tokenAddr := types.Address(crypto.CreateAddress2(gatewayAddr, saltToken, tokenInitCodeHash.Bytes()))
+	return tokenAddr.Hex(), nil
+}
 func createPubkeyFromSecret(config *tmconfig.Config, secret []byte, pvKeyName string) (cryptotypes.PubKey, error) {
 	privKey := tmed25519.GenPrivKeyFromSecret(secret)
 	var pvKeyFile, pvStateFile string
