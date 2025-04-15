@@ -708,6 +708,8 @@ func (k ChainKeeper) getFirstBtcPoolingCommand(ctx sdk.Context, pk []byte) (*typ
 	clog.Magentaf("[ChainKeeper] getFirstBtcPoolingCommand, Key: %s", key)
 	firstCmdFilter := func(value codec.ProtoMarshaler) bool {
 		cmd, ok := value.(*types.Command)
+		clog.Magentaf("[ChainKeeper] filter firstcmd, ok: %v, cmd.KeyID: %v, key: %v", ok, cmd.KeyID.String(), key.String())
+		clog.Redf("[ChainKeeper] cmd: %v, %v", cmd, ok)
 		return ok && cmd.KeyID.String() == key.String()
 	}
 
