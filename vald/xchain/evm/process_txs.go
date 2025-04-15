@@ -136,7 +136,7 @@ func (c *EthereumClient) processTxReceipt(event *types.EventConfirmSourceTxsStar
 				},
 			})
 		default:
-			c.logger().Errorf("unknown event type: %s", txlog.Topics[0])
+			c.logger().Debugf("unknown event type: %s", txlog.Topics[0])
 		}
 	}
 

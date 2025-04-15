@@ -128,6 +128,10 @@ func validateEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n ty
 		*types.Event_MultisigOperatorshipTransferred:
 		// skip checks for non-gateway tx event
 		return nil
+	case *types.Event_RedeemToken:
+		//destinationChainName = event.RedeemToken.DestinationChain
+		//TODO: need to validate
+		return nil
 	default:
 		panic(fmt.Errorf("unsupported event type %T", event))
 	}
@@ -276,9 +280,8 @@ func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, 
 
 	destinationChain := funcs.MustOk(n.GetChain(ctx, e.DestinationChain))
 
-	types.IsBitcoinChain(destinationChain.Name)
-	if !types.IsEvmChain(destinationChain.Name) {
-		return fmt.Errorf("destination chain %s is not an EVM chain", destinationChain.Name)
+	if !types.IsBitcoinChain(destinationChain.Name) {
+		return fmt.Errorf("destination chain %s is not a bitcoin chain", destinationChain.Name)
 	}
 
 	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
@@ -295,13 +298,7 @@ func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, 
 	}
 
 	destinationCk := funcs.Must(bk.ForChain(ctx, destinationChain.Name))
-
-	destinationToken := destinationCk.GetERC20TokenByAsset(ctx, asset)
-	if !destinationToken.Is(types.Confirmed) {
-		log.Debug().Any("destinationToken", destinationToken).Msg("[handleContractCallWithTokenToBTC]")
-		return fmt.Errorf("token with asset %s not confirmed on destination chain %s", e.Symbol, destinationChain)
-	}
-
+	//TODO: validate destination contract address is valid address on the destination btc chain
 	if !common.IsHexAddress(e.DestinationContractAddress) {
 		return fmt.Errorf("invalid contract address %s", e.DestinationContractAddress)
 	}
@@ -311,17 +308,14 @@ func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, 
 	if err := n.RateLimitTransfer(ctx, destinationChain.Name, coin, nexus.TransferDirectionTo); err != nil {
 		return err
 	}
-	// keyId, ok := m.GetCurrentKeyID(ctx, destinationChain)
-	// if !ok {
-	// 	keyId = multisigexported.KeyID(destinationChain)
-	// }
+
 	protocolInfo, err := p.FindProtocolInfoByExternalSymbol(ctx, e.Symbol)
 	if err != nil {
 		return err
 	}
 
 	if !protocolInfo.IsSupportedChain(sourceChain.Name) {
-		return fmt.Errorf("source chain %s is not supported by protocol %s", sourceChain, e.Symbol)
+		return fmt.Errorf("source chain %s is not supported by protocol %s", sourceChain.Name, e.Symbol)
 	}
 
 	cusGr, ok := cov.GetCustodianGroup(ctx, protocolInfo.CustodianGroupUID)
@@ -350,11 +344,11 @@ func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, 
 		event.Index,
 		*e,
 		e.Amount,
-		destinationToken.GetDetails().Symbol,
-		event.GetContractCallWithToken().Payload,
+		token.GetDetails().Symbol,
+		event.GetRedeemToken().Payload,
 	)
 
-	clog.Magentaf("[abci/chains] created %s command for event: %+v", cmd.Type, cmd)
+	clog.Magentaf("[x/chains] ABCI created %s command for event: %+v", cmd.Type, cmd)
 
 	funcs.MustNoErr(destinationCk.EnqueueCommand(ctx, cmd))
 
@@ -375,7 +369,7 @@ func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, 
 		Asset:            coin,
 	}
 
-	clog.Yellowf("[abci/chains] emitted EventRedeemTokenApproved event for event: %v", approvedEvent)
+	clog.Yellowf("[x/chains] ABXI emitted EventRedeemTokenApproved event for event: %v", approvedEvent)
 
 	events.Emit(ctx, approvedEvent)
 
