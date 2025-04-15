@@ -1962,6 +1962,9 @@ var _ types.ChainKeeper = &ChainKeeperMock{}
 //			GetVotingThresholdFunc: func(ctx sdk.Context) utils.Threshold {
 //				panic("mock out the GetVotingThreshold method")
 //			},
+//			HasBtcPoolingCommandsFunc: func(ctx sdk.Context, pk []byte) bool {
+//				panic("mock out the HasBtcPoolingCommands method")
+//			},
 //			LoggerFunc: func(ctx sdk.Context) log.Logger {
 //				panic("mock out the Logger method")
 //			},
@@ -2106,6 +2109,9 @@ type ChainKeeperMock struct {
 
 	// GetVotingThresholdFunc mocks the GetVotingThreshold method.
 	GetVotingThresholdFunc func(ctx sdk.Context) utils.Threshold
+
+	// HasBtcPoolingCommandsFunc mocks the HasBtcPoolingCommands method.
+	HasBtcPoolingCommandsFunc func(ctx sdk.Context, pk []byte) bool
 
 	// LoggerFunc mocks the Logger method.
 	LoggerFunc func(ctx sdk.Context) log.Logger
@@ -2369,6 +2375,13 @@ type ChainKeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx sdk.Context
 		}
+		// HasBtcPoolingCommands holds details about calls to the HasBtcPoolingCommands method.
+		HasBtcPoolingCommands []struct {
+			// Ctx is the ctx argument value.
+			Ctx sdk.Context
+			// Pk is the pk argument value.
+			Pk []byte
+		}
 		// Logger holds details about calls to the Logger method.
 		Logger []struct {
 			// Ctx is the ctx argument value.
@@ -2470,6 +2483,7 @@ type ChainKeeperMock struct {
 	lockGetTokenByteCode               sync.RWMutex
 	lockGetTokens                      sync.RWMutex
 	lockGetVotingThreshold             sync.RWMutex
+	lockHasBtcPoolingCommands          sync.RWMutex
 	lockLogger                         sync.RWMutex
 	lockSetBurnerInfo                  sync.RWMutex
 	lockSetConfirmedEvent              sync.RWMutex
@@ -3757,6 +3771,42 @@ func (mock *ChainKeeperMock) GetVotingThresholdCalls() []struct {
 	mock.lockGetVotingThreshold.RLock()
 	calls = mock.calls.GetVotingThreshold
 	mock.lockGetVotingThreshold.RUnlock()
+	return calls
+}
+
+// HasBtcPoolingCommands calls HasBtcPoolingCommandsFunc.
+func (mock *ChainKeeperMock) HasBtcPoolingCommands(ctx sdk.Context, pk []byte) bool {
+	if mock.HasBtcPoolingCommandsFunc == nil {
+		panic("ChainKeeperMock.HasBtcPoolingCommandsFunc: method is nil but ChainKeeper.HasBtcPoolingCommands was just called")
+	}
+	callInfo := struct {
+		Ctx sdk.Context
+		Pk  []byte
+	}{
+		Ctx: ctx,
+		Pk:  pk,
+	}
+	mock.lockHasBtcPoolingCommands.Lock()
+	mock.calls.HasBtcPoolingCommands = append(mock.calls.HasBtcPoolingCommands, callInfo)
+	mock.lockHasBtcPoolingCommands.Unlock()
+	return mock.HasBtcPoolingCommandsFunc(ctx, pk)
+}
+
+// HasBtcPoolingCommandsCalls gets all the calls that were made to HasBtcPoolingCommands.
+// Check the length with:
+//
+//	len(mockedChainKeeper.HasBtcPoolingCommandsCalls())
+func (mock *ChainKeeperMock) HasBtcPoolingCommandsCalls() []struct {
+	Ctx sdk.Context
+	Pk  []byte
+} {
+	var calls []struct {
+		Ctx sdk.Context
+		Pk  []byte
+	}
+	mock.lockHasBtcPoolingCommands.RLock()
+	calls = mock.calls.HasBtcPoolingCommands
+	mock.lockHasBtcPoolingCommands.RUnlock()
 	return calls
 }
 

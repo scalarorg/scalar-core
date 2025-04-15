@@ -135,6 +135,14 @@ func (k BaseKeeper) CreateNewBtcPoolingBatchToSign(ctx sdk.Context, chain nexus.
 	return ck.CreateNewBtcPoolingBatchToSign(ctx, chain, pk)
 }
 
+func (k BaseKeeper) HasBtcPoolingCommands(ctx sdk.Context, chain nexus.ChainName, pk []byte) bool {
+	ck, err := k.ForChain(ctx, chain)
+	if err!= nil {
+		return false
+	}
+	return ck.HasBtcPoolingCommands(ctx, pk)
+}
+
 func (k BaseKeeper) GetLatestCommandBatchForChain(ctx sdk.Context, chain nexus.ChainName) types.CommandBatch {
 	ck, err := k.ForChain(ctx, chain)
 	if err != nil {

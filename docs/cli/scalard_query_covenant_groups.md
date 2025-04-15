@@ -16,6 +16,7 @@ scalard query covenant groups [flags]
   -o, --output string   Output format (text|json) (default "text")
       --pubkey string   Custodian pubkey
       --status string   Status of the custodian
+      --uid string      UID of the custodian group
 ```
 
 ### Options inherited from parent commands

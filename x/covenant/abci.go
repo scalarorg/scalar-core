@@ -726,7 +726,7 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk type
 				Msg("[x/covenant] Found expired redeem session")
 			// We switch the expired session to the executing phase if there are pending redeem commands
 			// Otherwise, we extend current prepering phase
-			if hasPendingRedeemCommands(ctx, k, ck) {
+			if ck.HasBtcPoolingCommands(ctx, group.BitcoinPubkey) {
 				log.Info().
 					Str("CustodianGroupUID", group.UID.Hex()).
 					Msg("[x/covenant][Switching redeem session to executing phase]")
@@ -775,48 +775,48 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk type
 	return result, expiredSessions
 }
 
-func hasPendingRedeemCommands(ctx sdk.Context, k types.Keeper, ck chainsTypes.ChainKeeper) bool {
-	batch := ck.GetLatestBtcPoolingBatch(ctx)
-	if batch == nil || len(batch.GetCommandIDs()) == 0 {
-		log.Debug().
-			Msg("[x/covenant] [hasPendingRedeemCommands] [No pending redeem commands]")
-		return false
-	}
-	extraData := batch.GetExtraData()
-	// extra data is the array of payload of each redeem command, check contract for the payload
-	// the payload of each reserve redeem utxo command doesn't contain the command ID,
-	// so we cannot detect which reserve redeem utxo command is sent to the evm
-	// extraDataIncludesAllReserveCommandsInTheRedeemSession := true
+// func hasPendingRedeemCommands(ctx sdk.Context, k types.Keeper, ck chainsTypes.ChainKeeper) bool {
+// 	batch := ck.GetLatestBtcPoolingBatch(ctx)
+// 	if batch == nil || len(batch.GetCommandIDs()) == 0 {
+// 		log.Debug().
+// 			Msg("[x/covenant] [hasPendingRedeemCommands] [No pending redeem commands]")
+// 		return false
+// 	}
+// 	extraData := batch.GetExtraData()
+// 	// extra data is the array of payload of each redeem command, check contract for the payload
+// 	// the payload of each reserve redeem utxo command doesn't contain the command ID,
+// 	// so we cannot detect which reserve redeem utxo command is sent to the evm
+// 	// extraDataIncludesAllReserveCommandsInTheRedeemSession := true
 
-	// because all of reserve redeem utxo commands must be confirmed in one batch, we can just check if all command can be taken by the command ID
-	for _, payload := range extraData {
-		redeemTokenPayload := types.RedeemTokenPayload{}
-		err := redeemTokenPayload.AbiUnpack(payload)
-		if err != nil {
-			panic(err)
-		}
-		log.Debug().
-			Any("payload", payload).
-			Msg("[x/covenant] [hasPendingRedeemCommands]")
-		//todo: check if the command is sent to the evm
-		command := k.GetReserveUTXOCommandByID(ctx, redeemTokenPayload.RequestId[:])
-		if command.Is(types.StandaloneCommandStatusNonExistent) {
-			return true
-			// extraDataIncludesAllReserveCommandsInTheRedeemSession = false
-			// break
-		}
-	}
+// 	// because all of reserve redeem utxo commands must be confirmed in one batch, we can just check if all command can be taken by the command ID
+// 	for _, payload := range extraData {
+// 		redeemTokenPayload := types.RedeemTokenPayload{}
+// 		err := redeemTokenPayload.AbiUnpack(payload)
+// 		if err != nil {
+// 			panic(err)
+// 		}
+// 		log.Debug().
+// 			Any("payload", payload).
+// 			Msg("[x/covenant] [hasPendingRedeemCommands]")
+// 		//todo: check if the command is sent to the evm
+// 		command := k.GetReserveUTXOCommandByID(ctx, redeemTokenPayload.RequestId[:])
+// 		if command.Is(types.StandaloneCommandStatusNonExistent) {
+// 			return true
+// 			// extraDataIncludesAllReserveCommandsInTheRedeemSession = false
+// 			// break
+// 		}
+// 	}
 
-	return false
-	// if !extraDataIncludesAllReserveCommandsInTheRedeemSession {
-	// 	// renew redeem session
-	// 	err := k.RenewRedeemSession(ctx, group.UID.Bytes())
-	// 	if err != nil {
-	// 		log.Error().
-	// 			Err(err).
-	// 			Str("CustodianGroupUID", group.UID.Hex()).
-	// 			Msg("failed to renew redeem session")
-	// 		panic(err)
-	// 	}
-	// }
-}
+// 	return false
+// 	// if !extraDataIncludesAllReserveCommandsInTheRedeemSession {
+// 	// 	// renew redeem session
+// 	// 	err := k.RenewRedeemSession(ctx, group.UID.Bytes())
+// 	// 	if err != nil {
+// 	// 		log.Error().
+// 	// 			Err(err).
+// 	// 			Str("CustodianGroupUID", group.UID.Hex()).
+// 	// 			Msg("failed to renew redeem session")
+// 	// 		panic(err)
+// 	// 	}
+// 	// }
+// }

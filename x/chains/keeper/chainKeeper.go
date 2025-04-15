@@ -686,6 +686,23 @@ func (k ChainKeeper) CreateNewBtcPoolingBatchToSign(ctx sdk.Context, chain nexus
 		return types.CommandBatch{}, fmt.Errorf("pooling is only supported for bitcoin chains")
 	}
 
+	firstCmd, ok := k.getFirstBtcPoolingCommand(ctx, pk)
+	if !ok {
+		return types.CommandBatch{}, nil
+	}
+
+	return k.createNewBtcBatchFollowCmd(ctx, firstCmd)
+}
+
+func (k ChainKeeper) HasBtcPoolingCommands(ctx sdk.Context, pk []byte) bool {
+	if !types.IsBitcoinChain(k.GetName()) {
+		return false
+	}
+	_, ok := k.getFirstBtcPoolingCommand(ctx, pk)
+	return ok
+}
+
+func (k ChainKeeper) getFirstBtcPoolingCommand(ctx sdk.Context, pk []byte) (*types.Command, bool) {
 	prefix := protocol.GetBTCKeyIDPrefix(protocol.LIQUIDITY_MODEL_POOL)
 	key := prefix + hex.EncodeToString(pk)
 	firstCmdFilter := func(value codec.ProtoMarshaler) bool {
@@ -696,11 +713,7 @@ func (k ChainKeeper) CreateNewBtcPoolingBatchToSign(ctx sdk.Context, chain nexus
 	var firstCmd *types.Command
 
 	ok := k.getCommandQueue(ctx).DequeueUntil(firstCmd, firstCmdFilter)
-	if !ok {
-		return types.CommandBatch{}, nil
-	}
-
-	return k.createNewBtcBatchFollowCmd(ctx, firstCmd)
+	return firstCmd, ok
 }
 
 func (k ChainKeeper) createNewBtcUpcBatchToSign(ctx sdk.Context) (types.CommandBatch, error) {
