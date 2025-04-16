@@ -233,6 +233,7 @@ func handleSwitchPhase(ctx sdk.Context, nk *neededKeeper, btcChain nexus.ChainNa
 			Int("expiredRedeemSessions", len(expiredRedeemSessions)).
 			Msg("[x/covenant] [handleSwitchPhase] [Found expired evm sessions]")
 	}
+	
 	for _, evmSession := range expiredEvmSessions {
 		success := utils.RunCached(ctx, nk.keeper, func(ctx sdk.Context) (bool, error) {
 			switchPhaseForEvmChain(ctx, nk.chains, nk.multisig, evmSession, exported.Executing)
@@ -240,6 +241,7 @@ func handleSwitchPhase(ctx sdk.Context, nk *neededKeeper, btcChain nexus.ChainNa
 		})
 		_ = success
 	}
+
 	for _, redeemSession := range expiredRedeemSessions {
 		log.Info().Msgf("turn on the flag isSwitching for redeem session %s", redeemSession.CustodianGroupUID.Hex())
 		nk.keeper.SetSwitchingForRedeemSession(ctx, redeemSession.CustodianGroupUID)

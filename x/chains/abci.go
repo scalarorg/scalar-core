@@ -67,7 +67,7 @@ func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.
 					"chain", chain.Name.String(),
 					"eventID", event.GetID(),
 				)
-				clog.Magentaf("[x/chains] [ABCI]-handleConfirmedEventsForChain %++v of type %T failed with error: %+v", event, event.GetEvent(), err)
+				clog.Magentaf("[x/chains] [ABCI]-handleConfirmedEventsForChain %+v of type %T failed with error: %+v", event, event.GetEvent(), err)
 				return false, err
 			}
 

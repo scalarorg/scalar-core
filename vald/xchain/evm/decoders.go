@@ -291,7 +291,7 @@ func DecodeEventRedeemToken(log *geth.Log) (types.EventRedeemToken, error) {
 		CustodianGroupId:           exported.Hash(params[0].([32]byte)),
 		DestinationChain:           nexus.ChainName(params[1].(string)),
 		DestinationContractAddress: params[2].(string),
-		PayloadHash:                exported.Hash(common.BytesToHash(log.Topics[2].Bytes())),
+		PayloadHash:                exported.Hash(common.BytesToHash(log.Topics[3].Bytes())),
 		Symbol:                     params[4].(string),
 		Amount:                     sdk.NewUintFromBigInt(params[5].(*big.Int)),
 		Payload:                    payload,

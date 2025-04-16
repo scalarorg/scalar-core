@@ -45,7 +45,7 @@ func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsS
 	}
 	clog.Greenf("[BTC] btcEvent: %+v\n", tokenSent)
 
-	if err := tokenSent.ValidateBasic(); err != nil {
+	if err = tokenSent.ValidateBasic(); err != nil {
 		client.logger().Error(sdkerrors.Wrap(err, "invalid event TokenSent").Error())
 		return nil
 	}
