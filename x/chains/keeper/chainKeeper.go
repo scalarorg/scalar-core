@@ -699,7 +699,31 @@ func (k ChainKeeper) HasBtcPoolingCommands(ctx sdk.Context, pk []byte) bool {
 		clog.Redf("chain %s is not a bitcoin chain", k.GetName())
 		return false
 	}
-	_, ok := k.getFirstBtcPoolingCommand(ctx, pk)
+	clog.Greenf("[ChainKeeper] [HasBtcPoolingCommands] chain: %+v", k.GetName())
+	keys := k.getCommandQueue(ctx).Keys()
+	clog.Redf("[ChainKeeper] [HasBtcPoolingCommands] keys: %+v", keys)
+	for _, queueKey := range keys {
+		var cmd types.Command
+		ok := k.getStore(ctx).GetNew(key.FromBz(queueKey.AsKey()), &cmd)
+		if ok {
+			clog.Redf("[ChainKeeper] [HasBtcPoolingCommands] cmd: %+v", cmd)
+		}
+	}
+	key := protocol.GetBTCKeyID(protocol.LIQUIDITY_MODEL_POOL, pk)
+	// Loop through the command queue and check if there are any commands with the given key
+	firstCmdFilter := func(value codec.ProtoMarshaler) bool {
+		cmd, ok := value.(*types.Command)
+		clog.Magentaf("[ChainKeeper] filter firstcmd, ok: %v, cmd.KeyID: %v, key: %v", ok, cmd.KeyID.String(), key.String())
+		clog.Redf("[ChainKeeper] cmd: %v, %v", cmd, ok)
+		return ok && cmd.KeyID.String() == key.String()
+	}
+	var firstCmd types.Command
+
+	ok := k.getCommandQueue(ctx).FindUntil(&firstCmd, firstCmdFilter)
+
+	//Do not dequeue the first command like in the function getFirstBtcPoolingCommand
+	//ok := k.getCommandQueue(ctx).DequeueUntil(&firstCmd, firstCmdFilter)
+	clog.Redf("[ChainKeeper] [HasBtcPoolingCommands] chain: %+v, firstCmd: %v, %v", k.GetName(), firstCmd, ok)
 	return ok
 }
 
@@ -713,11 +737,10 @@ func (k ChainKeeper) getFirstBtcPoolingCommand(ctx sdk.Context, pk []byte) (*typ
 		return ok && cmd.KeyID.String() == key.String()
 	}
 
-	var firstCmd *types.Command
-
-	ok := k.getCommandQueue(ctx).DequeueUntil(firstCmd, firstCmdFilter)
+	var firstCmd types.Command
+	ok := k.getCommandQueue(ctx).DequeueUntil(&firstCmd, firstCmdFilter)
 	clog.Redf("firstCmd: %v, %v", firstCmd, ok)
-	return firstCmd, ok
+	return &firstCmd, ok
 }
 
 func (k ChainKeeper) createNewBtcUpcBatchToSign(ctx sdk.Context) (types.CommandBatch, error) {

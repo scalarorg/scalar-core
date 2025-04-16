@@ -76,9 +76,10 @@ func EndBlocker(ctx sdk.Context, _ abci.RequestEndBlock,
 	}
 
 	for _, btcChain := range supportedBtcChains {
-		clog.Greenf("[x/covenant] [ABCI] EndBlocker, chain: %+v", btcChain)
+		clog.Greenf("[x/covenant] [ABCI] Start EndBlocker, chain: %+v", btcChain)
 		handleEnqueuedEvents(ctx, neededKeepers, btcChain)
 		handleSwitchPhase(ctx, neededKeepers, btcChain)
+		clog.Greenf("[x/covenant] [ABCI] Finish EndBlocker, chain: %+v", btcChain)
 	}
 
 	handleSignings(ctx, k, rewarder)
@@ -233,7 +234,7 @@ func handleSwitchPhase(ctx sdk.Context, nk *neededKeeper, btcChain nexus.ChainNa
 			Int("expiredRedeemSessions", len(expiredRedeemSessions)).
 			Msg("[x/covenant] [handleSwitchPhase] [Found expired evm sessions]")
 	}
-	
+
 	for _, evmSession := range expiredEvmSessions {
 		success := utils.RunCached(ctx, nk.keeper, func(ctx sdk.Context) (bool, error) {
 			switchPhaseForEvmChain(ctx, nk.chains, nk.multisig, evmSession, exported.Executing)
@@ -697,7 +698,7 @@ func switchPhaseForEvmChain(ctx sdk.Context,
 // TODO: review this method
 
 // return map[chainName]ExpiredEvmSession
-func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk types.ProtocolKeeper, c types.BaseKeeper, chain nexus.ChainName) (map[string]*types.ExpiredEvmSession, map[string]*types.RedeemSession) {
+func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk types.ProtocolKeeper, c types.BaseKeeper, btcChain nexus.ChainName) (map[string]*types.ExpiredEvmSession, map[string]*types.RedeemSession) {
 	result := map[string]*types.ExpiredEvmSession{}
 	expiredGroups := [][]byte{}
 	expiredSessions := map[string]*types.RedeemSession{}
@@ -707,7 +708,7 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk type
 	}
 	currentHeight := ctx.BlockHeight()
 
-	ck, err := c.ForChain(ctx, chain)
+	ck, err := c.ForChain(ctx, btcChain)
 	if err != nil {
 		panic(err)
 	}

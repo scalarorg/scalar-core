@@ -87,6 +87,7 @@ func (q GeneralKVQueue) DequeueUntil(value codec.ProtoMarshaler, filter func(val
 }
 
 func (q GeneralKVQueue) dequeue(value codec.ProtoMarshaler, iter db.Iterator, filter func(value codec.ProtoMarshaler) bool, continueIfNotQualified bool) bool {
+	q.logger.Debug("[GeneralKVQueue] [dequeue] %s", q.name)
 	for ; iter.Valid(); iter.Next() {
 		var key gogoprototypes.BytesValue
 		q.store.cdc.MustUnmarshalLengthPrefixed(iter.Value(), &key)
@@ -104,6 +105,27 @@ func (q GeneralKVQueue) dequeue(value codec.ProtoMarshaler, iter db.Iterator, fi
 
 		if !continueIfNotQualified {
 			return false
+		}
+	}
+
+	return false
+}
+
+func (q GeneralKVQueue) FindUntil(value codec.ProtoMarshaler, filter func(value codec.ProtoMarshaler) bool) bool {
+	iter := sdk.KVStorePrefixIterator(q.store.KVStore, q.name.AsKey())
+	defer CloseLogError(iter, q.logger)
+
+	for ; iter.Valid(); iter.Next() {
+		var key gogoprototypes.BytesValue
+		q.store.cdc.MustUnmarshalLengthPrefixed(iter.Value(), &key)
+		if ok := q.store.Get(KeyFromBz(key.Value), value); !ok {
+			return false
+		}
+
+		isQualified := filter(value)
+		if isQualified {
+
+			return true
 		}
 	}
 

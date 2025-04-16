@@ -298,6 +298,7 @@ func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, 
 	}
 
 	destinationCk := funcs.Must(bk.ForChain(ctx, destinationChain.Name))
+	log.Debug().Msgf("[x/chains] [ABCI] handleRedeemToken, destinationChain: %s", destinationChain.Name)
 	//TODO: validate destination contract address is valid address on the destination btc chain
 	if !common.IsHexAddress(e.DestinationContractAddress) {
 		return fmt.Errorf("invalid contract address %s", e.DestinationContractAddress)
@@ -351,7 +352,6 @@ func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, 
 	clog.Magentaf("[x/chains] ABCI created %s command for event: %+v", cmd.Type, cmd)
 
 	funcs.MustNoErr(destinationCk.EnqueueCommand(ctx, cmd))
-
 	bk.Logger(ctx).Info(fmt.Sprintf("created %s command for event", cmd.Type),
 		"chain", destinationChain,
 		"eventID", event.GetID(),

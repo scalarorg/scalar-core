@@ -371,7 +371,8 @@ func generateStakingGenesis(coinDenom string, validatorInfos []ValidatorInfo) *s
 }
 func generateNexusGenesis(configPath string, validatorAddrs []sdk.ValAddress, tokenInfos []Token, coinDenom string) *nexustypes.GenesisState {
 	nexusGenState := nexustypes.DefaultGenesisState()
-	nexusGenState.Chains = []nexus.Chain{scalarnetexported.Scalarnet, chainsexported.Bitcoin}
+	//Done add bitcoin mainnet
+	nexusGenState.Chains = []nexus.Chain{scalarnetexported.Scalarnet}
 	if configPath != "" {
 		chainConfigs, err := ParseJsonArrayConfig[chainsTypes.ChainConfig](fmt.Sprintf("%s/chains/chains.json", configPath))
 		if err != nil {
