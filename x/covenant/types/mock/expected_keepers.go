@@ -101,6 +101,9 @@ var _ covenanttypes.Keeper = &KeeperMock{}
 //			SetKeyFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, key multisigtypes.Key)  {
 //				panic("mock out the SetKey method")
 //			},
+//			SetRedeemSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, redeemSession *covenanttypes.RedeemSession)  {
+//				panic("mock out the SetRedeemSession method")
+//			},
 //			SetSigningSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, signing covenanttypes.SigningSession)  {
 //				panic("mock out the SetSigningSession method")
 //			},
@@ -197,6 +200,9 @@ type KeeperMock struct {
 
 	// SetKeyFunc mocks the SetKey method.
 	SetKeyFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, key multisigtypes.Key)
+
+	// SetRedeemSessionFunc mocks the SetRedeemSession method.
+	SetRedeemSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, redeemSession *covenanttypes.RedeemSession)
 
 	// SetSigningSessionFunc mocks the SetSigningSession method.
 	SetSigningSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, signing covenanttypes.SigningSession)
@@ -366,6 +372,13 @@ type KeeperMock struct {
 			// Key is the key argument value.
 			Key multisigtypes.Key
 		}
+		// SetRedeemSession holds details about calls to the SetRedeemSession method.
+		SetRedeemSession []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// RedeemSession is the redeemSession argument value.
+			RedeemSession *covenanttypes.RedeemSession
+		}
 		// SetSigningSession holds details about calls to the SetSigningSession method.
 		SetSigningSession []struct {
 			// Ctx is the ctx argument value.
@@ -457,6 +470,7 @@ type KeeperMock struct {
 	lockRotateKey                      sync.RWMutex
 	lockSetCovenantRouter              sync.RWMutex
 	lockSetKey                         sync.RWMutex
+	lockSetRedeemSession               sync.RWMutex
 	lockSetSigningSession              sync.RWMutex
 	lockSetStandaloneCommandMetadata   sync.RWMutex
 	lockSetSwitchingForRedeemSession   sync.RWMutex
@@ -1231,6 +1245,42 @@ func (mock *KeeperMock) SetKeyCalls() []struct {
 	mock.lockSetKey.RLock()
 	calls = mock.calls.SetKey
 	mock.lockSetKey.RUnlock()
+	return calls
+}
+
+// SetRedeemSession calls SetRedeemSessionFunc.
+func (mock *KeeperMock) SetRedeemSession(ctx github_com_cosmos_cosmos_sdk_types.Context, redeemSession *covenanttypes.RedeemSession) {
+	if mock.SetRedeemSessionFunc == nil {
+		panic("KeeperMock.SetRedeemSessionFunc: method is nil but Keeper.SetRedeemSession was just called")
+	}
+	callInfo := struct {
+		Ctx           github_com_cosmos_cosmos_sdk_types.Context
+		RedeemSession *covenanttypes.RedeemSession
+	}{
+		Ctx:           ctx,
+		RedeemSession: redeemSession,
+	}
+	mock.lockSetRedeemSession.Lock()
+	mock.calls.SetRedeemSession = append(mock.calls.SetRedeemSession, callInfo)
+	mock.lockSetRedeemSession.Unlock()
+	mock.SetRedeemSessionFunc(ctx, redeemSession)
+}
+
+// SetRedeemSessionCalls gets all the calls that were made to SetRedeemSession.
+// Check the length with:
+//
+//	len(mockedKeeper.SetRedeemSessionCalls())
+func (mock *KeeperMock) SetRedeemSessionCalls() []struct {
+	Ctx           github_com_cosmos_cosmos_sdk_types.Context
+	RedeemSession *covenanttypes.RedeemSession
+} {
+	var calls []struct {
+		Ctx           github_com_cosmos_cosmos_sdk_types.Context
+		RedeemSession *covenanttypes.RedeemSession
+	}
+	mock.lockSetRedeemSession.RLock()
+	calls = mock.calls.SetRedeemSession
+	mock.lockSetRedeemSession.RUnlock()
 	return calls
 }
 

@@ -48,7 +48,7 @@ func (k Keeper) SetSwitchingForRedeemSession(ctx sdk.Context, custodianGroupUID 
 
 	redeemSession.IsSwitching = true
 
-	k.setRedeemSession(ctx, redeemSession)
+	k.SetRedeemSession(ctx, redeemSession)
 	return nil
 }
 
@@ -70,7 +70,7 @@ func (k Keeper) UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID ex
 	redeemSession.IsSwitching = false
 	redeemSession.PhaseExpiredAt = 0 // reset the phase expired at
 	// Update the redeem session in storage
-	k.setRedeemSession(ctx, redeemSession)
+	k.SetRedeemSession(ctx, redeemSession)
 	return nil
 }
 
@@ -92,7 +92,7 @@ func (k Keeper) UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID ex
 	redeemSession.IsSwitching = false
 	redeemSession.PhaseExpiredAt = uint64(ctx.BlockHeight()) + k.GetParams(ctx).BlockLimitPerSession
 	// Update the redeem session in storage
-	k.setRedeemSession(ctx, redeemSession)
+	k.SetRedeemSession(ctx, redeemSession)
 	return nil
 }
 
@@ -111,11 +111,11 @@ func (k Keeper) RenewRedeemSession(ctx sdk.Context, custodianGroupUID exported.H
 
 	redeemSession.PhaseExpiredAt = uint64(ctx.BlockHeight()) + k.GetParams(ctx).BlockLimitPerSession
 	// Update the redeem session in storage
-	k.setRedeemSession(ctx, redeemSession)
+	k.SetRedeemSession(ctx, redeemSession)
 	return nil
 }
 
-func (k Keeper) setRedeemSession(ctx sdk.Context, redeemSession *cov.RedeemSession) {
+func (k Keeper) SetRedeemSession(ctx sdk.Context, redeemSession *cov.RedeemSession) {
 	k.getStore(ctx).Set(CreateRedeemSessionKey(redeemSession.CustodianGroupUID), redeemSession)
 }
 

@@ -76,8 +76,8 @@ func (k Keeper) SetCustodianGroups(ctx sdk.Context, custodianGroups []*cov.Custo
 		//Set default redeem sessions
 		//Initialize redeem session with executing phase and isSwitching state true
 		//Scalar core waits for all confirmation from evm chains'session for switching to preparing phase
-		redeemSession := types.NewRedeemSession(group.UID, 0, cov.Executing, true, nil)
-		k.setRedeemSession(ctx, redeemSession)
+		redeemSession := types.NewRedeemSession(group.UID, 0, cov.Preparing, true, nil)
+		k.SetRedeemSession(ctx, redeemSession)
 	}
 }
 
