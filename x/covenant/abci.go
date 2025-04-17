@@ -21,6 +21,7 @@ import (
 	"github.com/scalarorg/scalar-core/x/covenant/exported"
 	"github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+	protocol "github.com/scalarorg/scalar-core/x/protocol/exported"
 	abci "github.com/tendermint/tendermint/abci/types"
 )
 
@@ -226,7 +227,7 @@ func processPsbt(p *types.PsbtMultiSig, tapScriptSigsMapByEachPsbt []map[string]
 
 // Hande switch phase from Prepaing to Executing
 func handleSwitchPhase(ctx sdk.Context, nk *neededKeeper, btcChain nexus.ChainName) {
-	expiredEvmSessions, expiredRedeemSessions := findExpiredEvmSessionsAndRenewable(ctx, nk.keeper, nk.protocol, nk.chains, btcChain)
+	expiredEvmSessions, expiredRedeemSessions := findExpiredEvmSessionsAndRenewable(ctx, nk, nk.protocol, nk.chains, btcChain)
 	if len(expiredEvmSessions) > 0 || len(expiredRedeemSessions) > 0 {
 		log.Info().
 			Str("Chain", btcChain.String()).
@@ -234,7 +235,6 @@ func handleSwitchPhase(ctx sdk.Context, nk *neededKeeper, btcChain nexus.ChainNa
 			Int("expiredRedeemSessions", len(expiredRedeemSessions)).
 			Msg("[x/covenant] [handleSwitchPhase] [Found expired evm sessions]")
 	}
-
 	for _, evmSession := range expiredEvmSessions {
 		success := utils.RunCached(ctx, nk.keeper, func(ctx sdk.Context) (bool, error) {
 			switchPhaseForEvmChain(ctx, nk.chains, nk.multisig, evmSession, exported.Executing)
@@ -393,6 +393,8 @@ func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, nk *neededKee
 	return nil
 }
 
+// Update the redeem session for the chain
+// Check and update the redeem session for custodian group to the lowest phase of all evm chains
 func handleSwitchedPhaseConfirmed(
 	ctx sdk.Context,
 	event *types.Event,
@@ -422,33 +424,16 @@ func handleSwitchedPhaseConfirmed(
 	} else {
 		ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] set redeem session %+v for chain %s", chainRedeemSession, event.Chain.String()))
 	}
-	allChains := nk.nexus.GetChains(ctx)
-	//Store the slower chains which have old session or phase
-	//If this array is empty, all evm chains have the same session and phase, we can switch the phase
-	slowerChains := []nexus.Chain{}
-	//Check if all evm chains have the same session and phase
-	for _, c := range allChains {
-		if c.Name.String() != event.Chain.String() && chainsTypes.IsEvmChain(c.Name) {
-			ck, err := nk.chains.ForChain(ctx, c.Name)
-			if err != nil {
-				ctx.Logger().Error(fmt.Sprintf("[handleSwitchedPhaseConfirmed] failed to get chain keeper for chain %s", c.Name.String()), err)
-				return err
-			}
-			redeemSession, ok := ck.GetRedeemSession(ctx, switchPhaseEvent.CustodianGroupUID)
-			if !ok {
-				ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] not found redeem session with custodian group uid %s for chain %s", hex.EncodeToString(switchPhaseEvent.CustodianGroupUID.Bytes()), c.Name.String()))
-				slowerChains = append(slowerChains, c)
-			} else if redeemSession.Sequence < switchPhaseEvent.Sequence ||
-				(redeemSession.Sequence == switchPhaseEvent.Sequence && redeemSession.CurrentPhase < switchPhaseEvent.ToPhase) {
-				ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] slower chain %s with session %++v", c.Name.String(), redeemSession))
-				slowerChains = append(slowerChains, c)
-			} else {
-				ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] chain %s is already switch to phase %+v", c.Name.String(), chainRedeemSession))
-			}
-		}
+
+	highestRedeemSession, lowestRedeemSession, err := getMinMaxRedeemSession(ctx, nk, switchPhaseEvent.CustodianGroupUID)
+	if err != nil {
+		ctx.Logger().Error("[handleSwitchedPhaseConfirmed] failed to get min max redeem session", err)
+		return err
 	}
-	if len(slowerChains) == 0 {
-		ctx.Logger().Info("[handleSwitchedPhaseConfirmed] all evm chains have the same session and phase, we can switch the phase")
+
+	ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] highest redeem session: %++v, lowest redeem session: %++v", highestRedeemSession, lowestRedeemSession))
+	diff := highestRedeemSession.Cmp(lowestRedeemSession)
+	if diff == 0 {
 		if switchPhaseEvent.ToPhase == exported.Preparing {
 			err := nk.keeper.UpdateExecutingToPreparing(ctx, switchPhaseEvent.CustodianGroupUID, switchPhaseEvent.Sequence)
 			if err != nil {
@@ -473,14 +458,65 @@ func handleSwitchedPhaseConfirmed(
 				return err
 			}
 		}
-	} else {
-		ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] there are %d slower chains, we need to handle them", len(slowerChains)))
-		//TODO: handle the slower chains
+	} else if diff == 1 {
+		//Set the redeem session to the lowest phase
+		covRedeemSession, ok := nk.keeper.GetRedeemSession(ctx, switchPhaseEvent.CustodianGroupUID)
+		if !ok {
+			return fmt.Errorf("not found redeem session")
+		}
+		covRedeemSession.Sequence = lowestRedeemSession.Sequence
+		covRedeemSession.CurrentPhase = lowestRedeemSession.CurrentPhase
+		covRedeemSession.IsSwitching = true
+		if covRedeemSession.PhaseExpiredAt <= uint64(ctx.BlockHeight()) {
+			covRedeemSession.PhaseExpiredAt = uint64(ctx.BlockHeight()) + 1
+		}
+		nk.keeper.SetRedeemSession(ctx, covRedeemSession)
+	} else if diff > 1 {
+		//this must not happen
+		ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] highest redeem session: %++v, lowest redeem session: %++v", highestRedeemSession, lowestRedeemSession))
+		return fmt.Errorf("the difference between the highest and lowest redeem session is greater than 1")
 	}
-
 	return nil
 }
-
+func getMinMaxRedeemSession(ctx sdk.Context, nk *neededKeeper, custodianGroupUID chains.Hash) (*chainsTypes.RedeemSession, *chainsTypes.RedeemSession, error) {
+	allChains := nk.nexus.GetChains(ctx)
+	//Store the highest and lowest redeem session for the chain
+	//If them are equal, we can switch the phase, otherwise we need to handle the slower chains
+	highestRedeemSession := chainsTypes.RedeemSession{
+		CustodianGroupUID: custodianGroupUID,
+		Sequence:          0,
+		CurrentPhase:      exported.Preparing,
+	}
+	lowestRedeemSession := chainsTypes.RedeemSession{
+		CustodianGroupUID: custodianGroupUID,
+		Sequence:          0,
+		CurrentPhase:      exported.Preparing,
+	}
+	//Loop through all chains and find the highest and lowest redeem session
+	for _, c := range allChains {
+		if chainsTypes.IsEvmChain(c.Name) {
+			ck, err := nk.chains.ForChain(ctx, c.Name)
+			if err != nil {
+				return nil, nil, fmt.Errorf("[handleSwitchedPhaseConfirmed] failed to get chain keeper for chain %s", c.Name.String())
+			}
+			redeemSession, ok := ck.GetRedeemSession(ctx, custodianGroupUID)
+			if !ok {
+				ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] not found redeem session with custodian group uid %s for chain %s", hex.EncodeToString(custodianGroupUID.Bytes()), c.Name.String()))
+				//Missing redeem session, set the lowest session phase to preparing	and sequence to 0
+				lowestRedeemSession.Sequence = 0
+				lowestRedeemSession.CurrentPhase = exported.Preparing
+				continue
+			}
+			if redeemSession.Cmp(&highestRedeemSession) > 0 {
+				highestRedeemSession = redeemSession
+			}
+			if redeemSession.Cmp(&lowestRedeemSession) < 0 {
+				lowestRedeemSession = redeemSession
+			}
+		}
+	}
+	return &highestRedeemSession, &lowestRedeemSession, nil
+}
 func signAllPendingRedeemCommands(
 	ctx sdk.Context,
 	nk *neededKeeper,
@@ -698,11 +734,11 @@ func switchPhaseForEvmChain(ctx sdk.Context,
 // TODO: review this method
 
 // return map[chainName]ExpiredEvmSession
-func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk types.ProtocolKeeper, c types.BaseKeeper, btcChain nexus.ChainName) (map[string]*types.ExpiredEvmSession, map[string]*types.RedeemSession) {
+func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, nk *neededKeeper, pk types.ProtocolKeeper, c types.BaseKeeper, btcChain nexus.ChainName) (map[string]*types.ExpiredEvmSession, map[string]*types.RedeemSession) {
 	result := map[string]*types.ExpiredEvmSession{}
 	expiredGroups := [][]byte{}
 	expiredSessions := map[string]*types.RedeemSession{}
-	groups, ok := k.GetAllCustodianGroups(ctx)
+	groups, ok := nk.keeper.GetAllCustodianGroups(ctx)
 	if !ok {
 		return result, expiredSessions
 	}
@@ -714,14 +750,23 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk type
 	}
 
 	for _, group := range groups {
-		redeemSession, ok := k.GetRedeemSession(ctx, group.UID)
+		redeemSession, ok := nk.keeper.GetRedeemSession(ctx, group.UID)
 		if !ok {
 			log.Debug().
 				Str("CustodianGroupUID", group.UID.Hex()).
 				Msg("[x/covenant] [findExpiredEvmSessionsAndRenewable] [Not found redeem session]")
 			continue
 		}
-		if redeemSession.CurrentPhase == exported.Preparing && redeemSession.PhaseExpiredAt <= uint64(currentHeight) {
+		//Check if redeem session is switching we need to continue switch process
+		//TODO: check if the redeem session is switching but all evm sessions are successfully switched
+		if redeemSession.IsSwitching {
+			log.Info().
+				Str("CustodianGroupUID", group.UID.Hex()).
+				Msg("[x/covenant] [Switching redeem session]")
+			expiredGroups = append(expiredGroups, group.UID.Bytes())
+			expiredSessions[group.UID.Hex()] = redeemSession
+		} else if redeemSession.PhaseExpiredAt <= uint64(currentHeight) &&
+			redeemSession.CurrentPhase == exported.Preparing {
 			log.Info().
 				Str("CustodianGroupUID", group.UID.Hex()).
 				Int64("currentHeight", currentHeight).
@@ -739,7 +784,7 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk type
 				log.Info().
 					Str("CustodianGroupUID", group.UID.Hex()).
 					Msg("[x/covenant] [Renewing redeem session]")
-				err := k.RenewRedeemSession(ctx, group.UID)
+				err := nk.keeper.RenewRedeemSession(ctx, group.UID)
 				if err != nil {
 					log.Error().
 						Err(err).
@@ -751,12 +796,45 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk type
 	}
 
 	protocols := pk.FindProtocolInfoByCustodianGroupUID(ctx, expiredGroups)
+	result, err = findExpiredEvmRedeemSessions(ctx, protocols, expiredSessions, nk)
+	if err != nil {
+		log.Error().
+			Err(err).
+			Msg("[x/covenant] [findExpiredEvmSessionsAndRenewable] [Failed to find expired evm sessions]")
+	}
+	return result, expiredSessions
+}
+
+func findExpiredEvmRedeemSessions(ctx sdk.Context, protocols []*protocol.ProtocolInfo, expiredSessions map[string]*types.RedeemSession,
+	nk *neededKeeper) (map[string]*types.ExpiredEvmSession, error) {
+	result := map[string]*types.ExpiredEvmSession{}
 	for _, protocol := range protocols {
 		redeemSession, ok := expiredSessions[protocol.CustodianGroupUID.Hex()]
 		if !ok {
 			continue
 		}
 		for _, chain := range protocol.MinorAddresses {
+			ck, err := nk.chains.ForChain(ctx, chain.ChainName)
+			if err != nil {
+				return nil, err
+			}
+			evmRedeemSession, ok := ck.GetRedeemSession(ctx, protocol.CustodianGroupUID)
+			if !ok {
+				log.Error().
+					Str("CustodianGroupUID", protocol.CustodianGroupUID.Hex()).
+					Msg("[x/covenant] [findExpiredEvmRedeemSessions] [Not found evm redeem session]")
+				continue
+			}
+			if evmRedeemSession.Sequence > redeemSession.Sequence ||
+				(evmRedeemSession.Sequence == redeemSession.Sequence && evmRedeemSession.CurrentPhase > redeemSession.CurrentPhase) {
+				log.Info().
+					Str("CustodianGroupUID", protocol.CustodianGroupUID.Hex()).
+					Str("Chain", chain.ChainName.String()).
+					Any("evmRedeemSession", evmRedeemSession).
+					Any("redeemSession", redeemSession).
+					Msg("[x/covenant] [findExpiredEvmRedeemSessions] evm session is already switch. No need to request again")
+				continue
+			}
 			evmSession, ok := result[chain.ChainName.String()]
 			if !ok {
 				evmSession = &types.ExpiredEvmSession{
@@ -770,12 +848,14 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, k types.Keeper, pk type
 			log.Info().
 				Str("CustodianGroupUID", protocol.CustodianGroupUID.Hex()).
 				Str("Chain", chain.ChainName.String()).
+				Any("evmRedeemSession", evmRedeemSession).
+				Any("redeemSession", redeemSession).
 				Msg("[x/covenant] [Found expired evm session]")
 			evmSession.Tokens = append(evmSession.Tokens, protocol.Symbol)
 			result[chain.ChainName.String()] = evmSession
 		}
 	}
-	return result, expiredSessions
+	return result, nil
 }
 
 // func hasPendingRedeemCommands(ctx sdk.Context, k types.Keeper, ck chainsTypes.ChainKeeper) bool {

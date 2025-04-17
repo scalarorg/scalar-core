@@ -51,6 +51,7 @@ type Keeper interface {
 	EnqueueEvent(ctx sdk.Context, event *Event) error
 
 	GetRedeemSession(ctx sdk.Context, custodianGroupUID chains.Hash) (*RedeemSession, bool)
+	SetRedeemSession(ctx sdk.Context, redeemSession *RedeemSession)
 	// GetRedeemSessionByExpiry(ctx sdk.Context, expiry int64) []RedeemSession
 	SetSwitchingForRedeemSession(ctx sdk.Context, custodianGroupUID chains.Hash) error
 	UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID chains.Hash) error
