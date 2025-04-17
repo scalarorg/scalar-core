@@ -424,14 +424,16 @@ func handleSwitchedPhaseConfirmed(
 	} else {
 		ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] set redeem session %+v for chain %s", chainRedeemSession, event.Chain.String()))
 	}
-
-	highestRedeemSession, lowestRedeemSession, err := getMinMaxRedeemSession(ctx, nk, switchPhaseEvent.CustodianGroupUID)
-	if err != nil {
-		ctx.Logger().Error("[handleSwitchedPhaseConfirmed] failed to get min max redeem session", err)
-		return err
+	// Get the highest and lowest redeem session for the custodian group
+	// Result: highestRedeemSession, lowestRedeemSession are not nil because we have at least one evm chain
+	highestRedeemSession, lowestRedeemSession, missing := getMinMaxRedeemSession(ctx, nk, switchPhaseEvent.CustodianGroupUID)
+	ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] highest redeem session: %s, lowest redeem session: %s missing: %d",
+		highestRedeemSession.ToString(), lowestRedeemSession.ToString(), missing))
+	if missing > 0 {
+		ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] missing %d redeem sessions. Waiting for them", missing))
+		return nil
 	}
 
-	ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] highest redeem session: %++v, lowest redeem session: %++v", highestRedeemSession, lowestRedeemSession))
 	diff := highestRedeemSession.Cmp(lowestRedeemSession)
 	if diff == 0 {
 		if switchPhaseEvent.ToPhase == exported.Preparing {
@@ -489,44 +491,44 @@ func handleSwitchedPhaseConfirmed(
 	}
 	return nil
 }
-func getMinMaxRedeemSession(ctx sdk.Context, nk *neededKeeper, custodianGroupUID chains.Hash) (*chainsTypes.RedeemSession, *chainsTypes.RedeemSession, error) {
+
+// Get the highest and lowest redeem session for the custodian group
+// Result: highestRedeemSession, lowestRedeemSession are not nil because we have at least one evm chain
+// missing: the number of missing redeem sessions
+func getMinMaxRedeemSession(ctx sdk.Context, nk *neededKeeper, custodianGroupUID chains.Hash) (*chainsTypes.RedeemSession, *chainsTypes.RedeemSession, int) {
 	allChains := nk.nexus.GetChains(ctx)
 	//Store the highest and lowest redeem session for the chain
 	//If them are equal, we can switch the phase, otherwise we need to handle the slower chains
-	highestRedeemSession := chainsTypes.RedeemSession{
-		CustodianGroupUID: custodianGroupUID,
-		Sequence:          0,
-		CurrentPhase:      exported.Preparing,
-	}
-	lowestRedeemSession := chainsTypes.RedeemSession{
-		CustodianGroupUID: custodianGroupUID,
-		Sequence:          0,
-		CurrentPhase:      exported.Preparing,
-	}
+	var highestRedeemSession *chainsTypes.RedeemSession
+	var lowestRedeemSession *chainsTypes.RedeemSession
+	missing := 0
 	//Loop through all chains and find the highest and lowest redeem session
 	for _, c := range allChains {
 		if chainsTypes.IsEvmChain(c.Name) {
 			ck, err := nk.chains.ForChain(ctx, c.Name)
 			if err != nil {
-				return nil, nil, fmt.Errorf("[handleSwitchedPhaseConfirmed] failed to get chain keeper for chain %s", c.Name.String())
+				log.Debug().
+					Str("chain", c.Name.String()).
+					Msg("[getMinMaxRedeemSession] failed to get chain keeper")
+				missing++
+				continue
 			}
 			redeemSession, ok := ck.GetRedeemSession(ctx, custodianGroupUID)
 			if !ok {
 				ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] not found redeem session with custodian group uid %s for chain %s", hex.EncodeToString(custodianGroupUID.Bytes()), c.Name.String()))
-				//Missing redeem session, set the lowest session phase to preparing	and sequence to 0
-				lowestRedeemSession.Sequence = 0
-				lowestRedeemSession.CurrentPhase = exported.Preparing
+				//Missing redeem session
+				missing++
 				continue
 			}
-			if redeemSession.Cmp(&highestRedeemSession) > 0 {
-				highestRedeemSession = redeemSession
+			if highestRedeemSession == nil || redeemSession.Cmp(highestRedeemSession) > 0 {
+				highestRedeemSession = &redeemSession
 			}
-			if redeemSession.Cmp(&lowestRedeemSession) < 0 {
-				lowestRedeemSession = redeemSession
+			if lowestRedeemSession == nil || redeemSession.Cmp(lowestRedeemSession) < 0 {
+				lowestRedeemSession = &redeemSession
 			}
 		}
 	}
-	return &highestRedeemSession, &lowestRedeemSession, nil
+	return highestRedeemSession, lowestRedeemSession, missing
 }
 func signAllPendingRedeemCommands(
 	ctx sdk.Context,
