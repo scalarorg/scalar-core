@@ -473,8 +473,19 @@ func handleSwitchedPhaseConfirmed(
 		nk.keeper.SetRedeemSession(ctx, covRedeemSession)
 	} else if diff > 1 {
 		//this must not happen
-		ctx.Logger().Info(fmt.Sprintf("[handleSwitchedPhaseConfirmed] highest redeem session: %++v, lowest redeem session: %++v", highestRedeemSession, lowestRedeemSession))
-		return fmt.Errorf("the difference between the highest and lowest redeem session is greater than 1")
+		ctx.Logger().Info("[handleSwitchedPhaseConfirmed] difference between highest and lowest redeem sessions is greater than 1")
+		//Set the redeem session to the lowest phase
+		covRedeemSession, ok := nk.keeper.GetRedeemSession(ctx, switchPhaseEvent.CustodianGroupUID)
+		if !ok {
+			return fmt.Errorf("not found redeem session")
+		}
+		covRedeemSession.Sequence = lowestRedeemSession.Sequence
+		covRedeemSession.CurrentPhase = lowestRedeemSession.CurrentPhase
+		covRedeemSession.IsSwitching = true
+		if covRedeemSession.PhaseExpiredAt <= uint64(ctx.BlockHeight()) {
+			covRedeemSession.PhaseExpiredAt = uint64(ctx.BlockHeight()) + 1
+		}
+		nk.keeper.SetRedeemSession(ctx, covRedeemSession)
 	}
 	return nil
 }
@@ -814,6 +825,9 @@ func findExpiredEvmRedeemSessions(ctx sdk.Context, protocols []*protocol.Protoco
 			continue
 		}
 		for _, chain := range protocol.MinorAddresses {
+			if !chainsTypes.IsEvmChain(chain.ChainName) {
+				continue
+			}
 			ck, err := nk.chains.ForChain(ctx, chain.ChainName)
 			if err != nil {
 				return nil, err
@@ -821,6 +835,7 @@ func findExpiredEvmRedeemSessions(ctx sdk.Context, protocols []*protocol.Protoco
 			evmRedeemSession, ok := ck.GetRedeemSession(ctx, protocol.CustodianGroupUID)
 			if !ok {
 				log.Error().
+					Str("chain", chain.ChainName.String()).
 					Str("CustodianGroupUID", protocol.CustodianGroupUID.Hex()).
 					Msg("[x/covenant] [findExpiredEvmRedeemSessions] [Not found evm redeem session]")
 				continue
