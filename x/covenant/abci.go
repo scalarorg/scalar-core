@@ -605,8 +605,9 @@ func aggregatePsbtFromCommandBatch(
 	chainName nexus.ChainName,
 	commandBatch chainsTypes.CommandBatch,
 	group *exported.CustodianGroup) (exported.Psbt, error) {
+	clog.Yellow("[abci/covenant] [aggregatePsbtFromCommandBatch] start")
 	multiPayload := commandBatch.GetExtraData()
-
+	clog.Yellowf("[abci/covenant] [aggregatePsbtFromCommandBatch] multiPayload: %+v", multiPayload)
 	params := types.RedeemTokenPayload{}
 
 	visited := map[string]bool{}
@@ -618,6 +619,8 @@ func aggregatePsbtFromCommandBatch(
 		if err != nil {
 			return nil, err
 		}
+
+		clog.Yellowf("[abci/covenant] [aggregatePsbtFromCommandBatch] payload: %+x", payload)
 
 		outputs = append(outputs, goutils.UnstakingOutput{
 			Amount:        params.Amount,

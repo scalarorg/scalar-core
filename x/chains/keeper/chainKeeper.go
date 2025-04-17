@@ -781,7 +781,7 @@ func (k ChainKeeper) createNewBtcBatchFollowCmd(ctx sdk.Context, cmd *types.Comm
 			break
 		}
 
-		clog.Magentaf("[keeper] [CreateNewBatchToSign] command: %+x", cmd)
+		clog.Magentaf("[keeper] [createNewBtcBatchFollowCmd] command: %+v", cmd)
 
 		// Note: Becareful with cmd.Clone() if you want to add more fields to the command, please update this function
 		clonedCmd := cmd.Clone()
@@ -805,6 +805,7 @@ func (k ChainKeeper) createNewBtcBatchFollowCmd(ctx sdk.Context, cmd *types.Comm
 	setter := func(m types.CommandBatchMetadata) {
 		k.setCommandBatchMetadata(ctx, m)
 	}
+	clog.Greenf("[ChainKeeper] [createNewBtcBatchFollowCmd] commandBatch: %+v", commandBatch)
 	return types.NewCommandBatch(commandBatch, setter), nil
 }
 
@@ -835,7 +836,7 @@ func (k ChainKeeper) createNewBatchToSign(ctx sdk.Context) (types.CommandBatch, 
 			break
 		}
 
-		clog.Magentaf("[keeper] [CreateNewBatchToSign] command: %+x", cmd)
+		clog.Magentaf("[keeper] [createNewBatchToSign] command: %+v", cmd)
 
 		// Note: Becareful with cmd.Clone() if you want to add more fields to the command, please update this function
 		clonedCmd := cmd.Clone()
