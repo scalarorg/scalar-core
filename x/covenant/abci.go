@@ -421,6 +421,7 @@ func handleSwitchedPhaseConfirmed(
 	if ok && !existingRedeemSession.IsSwitching {
 		ctx.Logger().Info("[handleSwitchedPhaseConfirmed] redeem session is not in switching state, scalar received switch phase to Executing due to recovering mode, set it to switching for safety update to Execution")
 		nk.keeper.SetSwitchingForRedeemSession(ctx, switchPhaseEvent.CustodianGroupUID)
+
 	}
 	err = ck.SetRedeemSession(ctx, &chainRedeemSession)
 	if err != nil {
@@ -613,13 +614,14 @@ func aggregatePsbtFromCommandBatch(
 	clog.Yellow("[abci/covenant] [aggregatePsbtFromCommandBatch] start")
 	multiPayload := commandBatch.GetExtraData()
 	clog.Yellowf("[abci/covenant] [aggregatePsbtFromCommandBatch] multiPayload: %+v", multiPayload)
-	params := types.RedeemTokenPayload{}
+	params := types.RedeemTokenPayloadWithType{}
 
 	visited := map[string]bool{}
 	inputs := []goutils.PreviousStakingUTXO{}
 	outputs := []goutils.UnstakingOutput{}
 
 	for _, payload := range multiPayload {
+		//First byte is the payload type
 		err := params.AbiUnpack(payload)
 		if err != nil {
 			return nil, err

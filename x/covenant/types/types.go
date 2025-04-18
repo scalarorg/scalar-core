@@ -68,6 +68,30 @@ type RedeemTokenPayload struct {
 	RequestId     [32]byte
 }
 
+type RedeemTokenPayloadWithType struct {
+	RedeemTokenPayload
+	PayloadType encode.ContractCallWithTokenPayloadType
+}
+
+func (p *RedeemTokenPayloadWithType) AbiPack() ([]byte, error) {
+	payload, err := p.RedeemTokenPayload.AbiPack()
+	if err != nil {
+		return nil, err
+	}
+	return encode.AppendPayload(encode.ContractCallWithTokenPayloadType(p.PayloadType), payload), nil
+}
+
+func (p *RedeemTokenPayloadWithType) AbiUnpack(data []byte) error {
+	p.PayloadType = encode.ContractCallWithTokenPayloadType(data[0])
+	var payload RedeemTokenPayload
+	err := payload.AbiUnpack(data[1:])
+	if err != nil {
+		return err
+	}
+	p.RedeemTokenPayload = payload
+	return nil
+}
+
 func (p *RedeemTokenPayload) AbiPack() ([]byte, error) {
 	txIds := make([]string, len(p.Utxos))
 	vouts := make([]uint32, len(p.Utxos))
