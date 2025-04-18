@@ -90,6 +90,7 @@ func (p *RedeemTokenPayload) AbiPack() ([]byte, error) {
 func (p *RedeemTokenPayload) AbiUnpack(data []byte) error {
 	unpacked, err := RedeemTokenPayloadArguments.Unpack(data)
 	if err != nil {
+		log.Error().Err(err).Msg("redeem token payload abi unpack error")
 		return err
 	}
 	p.Amount = unpacked[0].(uint64)
@@ -127,7 +128,7 @@ func (p *RedeemTokenParams) AbiPack() ([]byte, error) {
 		return nil, err
 	}
 	payload = encode.AppendPayload(encode.ContractCallWithTokenPayloadType_CustodianOnly, payload)
-	return RedeemTokenArguments.Pack(
+	packed, err := RedeemTokenArguments.Pack(
 		p.DestinationChain,
 		p.DestinationAddress,
 		payload,
@@ -136,6 +137,10 @@ func (p *RedeemTokenParams) AbiPack() ([]byte, error) {
 		p.CustodianGroupUID,
 		p.SessionSequence,
 	)
+	if err != nil {
+		return nil, err
+	}
+	return packed, nil
 }
 
 func (p *RedeemTokenParams) AbiUnpack(data []byte) error {
@@ -147,13 +152,14 @@ func (p *RedeemTokenParams) AbiUnpack(data []byte) error {
 	p.DestinationChain = unpacked[0].(string)
 	p.DestinationAddress = unpacked[1].(string)
 	p.RawPayload = unpacked[2].([]byte)
+	//Remove prefix
 	err = p.Payload.AbiUnpack(p.RawPayload[1:])
 	if err != nil {
 		log.Error().Err(err).Msg("payload abi unpack error")
 		return err
 	}
 	p.Symbol = unpacked[3].(string)
-	p.Amount = *unpacked[4].(*uint64)
+	p.Amount = unpacked[4].(*big.Int).Uint64()
 	p.CustodianGroupUID = unpacked[5].([32]byte)
 	p.SessionSequence = unpacked[6].(uint64)
 	return nil
