@@ -461,7 +461,7 @@ func handleSwitchedPhaseConfirmed(
 				return err
 			}
 
-			err = signAllPendingRedeemCommands(ctx, nk, chain, switchPhaseEvent.CustodianGroupUID)
+			err = signAllPendingRedeemCommands(ctx, nk, chain, switchPhaseEvent.CustodianGroupUID, switchPhaseEvent.Sequence)
 			if err != nil {
 				return err
 			}
@@ -541,6 +541,7 @@ func signAllPendingRedeemCommands(
 	nk *neededKeeper,
 	chain nexus.ChainName,
 	custodianGroupUID chains.Hash,
+	seq uint64,
 ) error {
 	group, ok := nk.keeper.GetCustodianGroup(ctx, custodianGroupUID)
 	if !ok {
@@ -556,7 +557,7 @@ func signAllPendingRedeemCommands(
 		return nil
 	}
 
-	psbt, err := aggregatePsbtFromCommandBatch(ctx, nk.scalar, nk.chains, chain, commandBatch, group)
+	psbt, err := aggregatePsbtFromCommandBatch(ctx, nk.scalar, nk.chains, chain, commandBatch, group, seq)
 	if err != nil {
 		return err
 	}
@@ -610,7 +611,9 @@ func aggregatePsbtFromCommandBatch(
 	b types.BaseKeeper,
 	chainName nexus.ChainName,
 	commandBatch chainsTypes.CommandBatch,
-	group *exported.CustodianGroup) (exported.Psbt, error) {
+	group *exported.CustodianGroup,
+	seq uint64,
+) (exported.Psbt, error) {
 	clog.Yellow("[abci/covenant] [aggregatePsbtFromCommandBatch] start")
 	multiPayload := commandBatch.GetExtraData()
 	clog.Yellowf("[abci/covenant] [aggregatePsbtFromCommandBatch] multiPayload: %+v", multiPayload)
@@ -691,7 +694,7 @@ func aggregatePsbtFromCommandBatch(
 
 	clog.Greenf("CustodianQuorum: %+v\n", custodianQuorum)
 
-	psbt, err := vault.BuildCustodianOnlyUnstakingTx(
+	psbt, err := vault.BuildPoolingRedeemTx(
 		tag,
 		serviceTag,
 		uint8(version),
@@ -702,6 +705,8 @@ func aggregatePsbtFromCommandBatch(
 		uint8(custodianQuorum),
 		rbf,
 		feeRate,
+		seq,
+		group.UID.Bytes(),
 	)
 	return psbt, err
 }

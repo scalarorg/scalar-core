@@ -44,6 +44,7 @@ func TestAggregatePsbtFromCommandBatch(t *testing.T) {
 		chainName,
 		commandBatch,
 		group,
+		0,
 	)
 
 	// Assertions
