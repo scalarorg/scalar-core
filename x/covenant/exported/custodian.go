@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	DefaultCustodianName = "scalarv32"
+	DefaultCustodianName = "scalarv33"
 )
 
 func DefaultCustodian() *Custodian {
