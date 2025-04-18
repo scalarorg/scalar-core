@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
+	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/utils"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -79,14 +80,20 @@ func (k Keeper) UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID ex
 	if !ok {
 		return fmt.Errorf("redeem session not found")
 	}
-
-	if redeemSession.CurrentPhase != covExported.Executing {
-		return fmt.Errorf("redeem session is not in executing phase")
+	//Check if it the recovering request
+	if sequence > 0 {
+		//In normal mode
+		if redeemSession.Sequence != sequence-1 && redeemSession.CurrentPhase != covExported.Executing {
+			return fmt.Errorf("redeem session is not in executing phase")
+		}
+		if !redeemSession.IsSwitching {
+			return fmt.Errorf("redeem session is not in switching state")
+		}
+	} else {
+		log.Debug().Msg("[UpdateExecutingToPreparing] redeem session is in recovering mode")
+		//In recovering mode we don check sequence and phase, this is the first request set the phase to preparing
 	}
 
-	if !redeemSession.IsSwitching {
-		return fmt.Errorf("redeem session is not in switching state")
-	}
 	redeemSession.Sequence = sequence
 	redeemSession.CurrentPhase = covExported.Preparing
 	redeemSession.IsSwitching = false

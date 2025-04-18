@@ -417,6 +417,11 @@ func handleSwitchedPhaseConfirmed(
 		ctx.Logger().Error("[handleSwitchedPhaseConfirmed] failed to get chain keeper for chain %s", event.Chain, err)
 		return err
 	}
+	existingRedeemSession, ok := nk.keeper.GetRedeemSession(ctx, switchPhaseEvent.CustodianGroupUID)
+	if ok && !existingRedeemSession.IsSwitching {
+		ctx.Logger().Info("[handleSwitchedPhaseConfirmed] redeem session is not in switching state, scalar received switch phase to Executing due to recovering mode, set it to switching for safety update to Execution")
+		nk.keeper.SetSwitchingForRedeemSession(ctx, switchPhaseEvent.CustodianGroupUID)
+	}
 	err = ck.SetRedeemSession(ctx, &chainRedeemSession)
 	if err != nil {
 		ctx.Logger().Error("[handleSwitchedPhaseConfirmed] failed to set redeem session for chain %s", event.Chain, err)
