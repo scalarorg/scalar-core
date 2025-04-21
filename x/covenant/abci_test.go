@@ -39,6 +39,7 @@ func TestAggregatePsbtFromCommandBatch(t *testing.T) {
 	// Execute test
 	psbt, err := aggregatePsbtFromCommandBatch(
 		ctx,
+		mockKeepers.keeper,
 		mockKeepers.scalarnet,
 		mockKeepers.base,
 		chainName,
@@ -57,6 +58,7 @@ func TestAggregatePsbtFromCommandBatch(t *testing.T) {
 type mockKeepers struct {
 	scalarnet *mock.ScalarnetKeeperMock
 	base      *mock.BaseKeeperMock
+	keeper    *mock.KeeperMock
 }
 
 type redeemParams struct {
@@ -85,6 +87,8 @@ func setupMockKeepers() mockKeepers {
 		},
 	}
 
+	keeper := &mock.KeeperMock{}
+
 	baseKeeper := &mock.BaseKeeperMock{
 		ForChainFunc: func(ctx sdk.Context, chain nexus.ChainName) (chainsTypes.ChainKeeper, error) {
 			return &mockChains.ChainKeeperMock{
@@ -98,6 +102,7 @@ func setupMockKeepers() mockKeepers {
 	return mockKeepers{
 		scalarnet: scalarnetKeeper,
 		base:      baseKeeper,
+		keeper:    keeper,
 	}
 }
 

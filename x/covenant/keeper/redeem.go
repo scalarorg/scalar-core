@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/rs/zerolog/log"
+	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
 	"github.com/scalarorg/scalar-core/utils"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -221,7 +222,7 @@ func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID [32]byte, reques
 	}
 
 	// Update the redeem session in storage
-	k.SetUtxoSnapshot(ctx, utxoSnapshot)
+	k.setUtxoSnapshot(ctx, utxoSnapshot)
 
 	return reserveUtxos, nil
 }
@@ -243,11 +244,14 @@ func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 		return nil, nil, err
 	}
 	cmdId := cov.NewCommandID(dataHash)
-	payload := &cov.RedeemTokenPayload{
-		Amount:        req.Amount,
-		LockingScript: req.LockingScript,
-		Utxos:         reservedUtxos,
-		RequestId:     cmdId.Bytes(),
+	payload := &cov.RedeemTokenPayloadWithType{
+		RedeemTokenPayload: cov.RedeemTokenPayload{
+			Amount:        req.Amount,
+			LockingScript: req.LockingScript,
+			Utxos:         reservedUtxos,
+			RequestId:     cmdId.Bytes(),
+		},
+		PayloadType: encode.ContractCallWithTokenPayloadType_CustodianOnly,
 	}
 	redeemTokenParams := &cov.RedeemTokenParams{
 		DestinationChain:   req.DestChain.String(),
@@ -289,4 +293,33 @@ func (k Keeper) SetStandaloneCommandMetadata(ctx sdk.Context, meta cov.Standalon
 
 func (k Keeper) SetUnsignedStandaloneCommandID(ctx sdk.Context, id []byte) {
 	k.getStore(ctx).SetRawNew(unsignedStandaloneIDKey, id)
+}
+
+func (k Keeper) MarkReservedUtxo(ctx sdk.Context, uid exported.Hash, payload []byte) error {
+	p := &cov.RedeemTokenPayloadWithType{}
+	err := p.AbiUnpack(payload)
+	if err != nil {
+		return err
+	}
+
+	utxoSnapshot, ok := k.GetUtxoSnapshot(ctx, uid)
+	if !ok {
+		return fmt.Errorf("utxo snapshot not found")
+	}
+
+	reqId := hex.EncodeToString(p.RequestId[:])
+	for _, reqUtxo := range p.Utxos {
+		for _, utxo := range utxoSnapshot.Utxos {
+			if utxo.TxID.Hex() == reqUtxo.TxID.Hex() && utxo.Vout == reqUtxo.Vout {
+				if utxo.Reserved == nil {
+					utxo.Reserved = make(map[string]uint64)
+				}
+				utxo.Reserved[reqId] = reqUtxo.AmountInSats
+				break
+			}
+		}
+	}
+
+	k.setUtxoSnapshot(ctx, utxoSnapshot)
+	return nil
 }

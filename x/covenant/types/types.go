@@ -138,7 +138,7 @@ func (p *RedeemTokenPayload) AbiUnpack(data []byte) error {
 type RedeemTokenParams struct {
 	DestinationChain   string //Bitcoin chain
 	DestinationAddress string //Bitcoin user address
-	Payload            RedeemTokenPayload
+	Payload            RedeemTokenPayloadWithType
 	RawPayload         []byte //Use in unpacking
 	Symbol             string
 	Amount             uint64
@@ -151,7 +151,6 @@ func (p *RedeemTokenParams) AbiPack() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	payload = encode.AppendPayload(encode.ContractCallWithTokenPayloadType_CustodianOnly, payload)
 	packed, err := RedeemTokenArguments.Pack(
 		p.DestinationChain,
 		p.DestinationAddress,
@@ -177,7 +176,7 @@ func (p *RedeemTokenParams) AbiUnpack(data []byte) error {
 	p.DestinationAddress = unpacked[1].(string)
 	p.RawPayload = unpacked[2].([]byte)
 	//Remove prefix
-	err = p.Payload.AbiUnpack(p.RawPayload[1:])
+	err = p.Payload.AbiUnpack(p.RawPayload)
 	if err != nil {
 		log.Error().Err(err).Msg("payload abi unpack error")
 		return err
@@ -231,9 +230,9 @@ func (utxo *UTXO) Release(requestID string) uint64 {
 	return amount
 }
 
-func (rs UTXOSnapshot) ReleaseUtxos(requestID string) uint64 {
+func (s UTXOSnapshot) ReleaseUtxos(requestID string) uint64 {
 	releasedAmount := uint64(0)
-	for _, utxo := range rs.Utxos {
+	for _, utxo := range s.Utxos {
 		releasedAmount += utxo.Release(requestID)
 	}
 	return releasedAmount
@@ -241,10 +240,10 @@ func (rs UTXOSnapshot) ReleaseUtxos(requestID string) uint64 {
 
 // Utxos list is sorted by amount in sats and txid for deterministic results
 // Each utxo is reserved if it is part of the optimal combination
-func (rs UTXOSnapshot) ReserveUtxos(requestID string, amount uint64) ([]*UTXO, error) {
+func (s UTXOSnapshot) ReserveUtxos(requestID string, amount uint64) ([]*UTXO, error) {
 	remainingAmount := amount
 	reserveUtxos := make([]*UTXO, 0)
-	for _, utxo := range rs.Utxos {
+	for _, utxo := range s.Utxos {
 		availableAmount := utxo.AvailableAmount()
 		if availableAmount > 0 {
 			//Reserve amount is min(availableAmount, remainingAmount)
@@ -252,7 +251,13 @@ func (rs UTXOSnapshot) ReserveUtxos(requestID string, amount uint64) ([]*UTXO, e
 			if reserveAmount > remainingAmount {
 				reserveAmount = remainingAmount
 			}
-			reserveUtxos = append(reserveUtxos, utxo)
+			reservedUtxo := &UTXO{
+				TxID:         utxo.TxID,
+				Vout:         utxo.Vout,
+				AmountInSats: reserveAmount,
+				ScriptPubkey: utxo.ScriptPubkey,
+			}
+			reserveUtxos = append(reserveUtxos, reservedUtxo)
 			utxo.AppendReserved(requestID, reserveAmount)
 			remainingAmount -= reserveAmount
 		}
@@ -273,6 +278,15 @@ func (rs *UTXOSnapshot) GetHash() chains.Hash {
 	}
 	hash := sha3.Sum256(bytes)
 	return chains.Hash(hash[:])
+}
+
+func (s *UTXOSnapshot) FindUtxo(txID chains.Hash, vout uint32) *UTXO {
+	for _, utxo := range s.Utxos {
+		if utxo.TxID == txID && utxo.Vout == vout {
+			return utxo
+		}
+	}
+	return nil
 }
 
 func NewVoteEvents(chain nexus.ChainName, events ...Event) *VoteEvents {

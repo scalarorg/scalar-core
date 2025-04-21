@@ -86,6 +86,9 @@ var _ covenanttypes.Keeper = &KeeperMock{}
 //			GetSigningSessionsByExpiryFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, expiry int64) []covenanttypes.SigningSession {
 //				panic("mock out the GetSigningSessionsByExpiry method")
 //			},
+//			GetUtxoSnapshotFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) (*covenanttypes.UTXOSnapshot, bool) {
+//				panic("mock out the GetUtxoSnapshot method")
+//			},
 //			LoggerFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger {
 //				panic("mock out the Logger method")
 //			},
@@ -185,6 +188,9 @@ type KeeperMock struct {
 
 	// GetSigningSessionsByExpiryFunc mocks the GetSigningSessionsByExpiry method.
 	GetSigningSessionsByExpiryFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, expiry int64) []covenanttypes.SigningSession
+
+	// GetUtxoSnapshotFunc mocks the GetUtxoSnapshot method.
+	GetUtxoSnapshotFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) (*covenanttypes.UTXOSnapshot, bool)
 
 	// LoggerFunc mocks the Logger method.
 	LoggerFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger
@@ -339,6 +345,13 @@ type KeeperMock struct {
 			// Expiry is the expiry argument value.
 			Expiry int64
 		}
+		// GetUtxoSnapshot holds details about calls to the GetUtxoSnapshot method.
+		GetUtxoSnapshot []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// CustodianGroupUID is the custodianGroupUID argument value.
+			CustodianGroupUID chains.Hash
+		}
 		// Logger holds details about calls to the Logger method.
 		Logger []struct {
 			// Ctx is the ctx argument value.
@@ -465,6 +478,7 @@ type KeeperMock struct {
 	lockGetSigningSession              sync.RWMutex
 	lockGetSigningSessions             sync.RWMutex
 	lockGetSigningSessionsByExpiry     sync.RWMutex
+	lockGetUtxoSnapshot                sync.RWMutex
 	lockLogger                         sync.RWMutex
 	lockRenewRedeemSession             sync.RWMutex
 	lockRotateKey                      sync.RWMutex
@@ -1069,6 +1083,42 @@ func (mock *KeeperMock) GetSigningSessionsByExpiryCalls() []struct {
 	mock.lockGetSigningSessionsByExpiry.RLock()
 	calls = mock.calls.GetSigningSessionsByExpiry
 	mock.lockGetSigningSessionsByExpiry.RUnlock()
+	return calls
+}
+
+// GetUtxoSnapshot calls GetUtxoSnapshotFunc.
+func (mock *KeeperMock) GetUtxoSnapshot(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) (*covenanttypes.UTXOSnapshot, bool) {
+	if mock.GetUtxoSnapshotFunc == nil {
+		panic("KeeperMock.GetUtxoSnapshotFunc: method is nil but Keeper.GetUtxoSnapshot was just called")
+	}
+	callInfo := struct {
+		Ctx               github_com_cosmos_cosmos_sdk_types.Context
+		CustodianGroupUID chains.Hash
+	}{
+		Ctx:               ctx,
+		CustodianGroupUID: custodianGroupUID,
+	}
+	mock.lockGetUtxoSnapshot.Lock()
+	mock.calls.GetUtxoSnapshot = append(mock.calls.GetUtxoSnapshot, callInfo)
+	mock.lockGetUtxoSnapshot.Unlock()
+	return mock.GetUtxoSnapshotFunc(ctx, custodianGroupUID)
+}
+
+// GetUtxoSnapshotCalls gets all the calls that were made to GetUtxoSnapshot.
+// Check the length with:
+//
+//	len(mockedKeeper.GetUtxoSnapshotCalls())
+func (mock *KeeperMock) GetUtxoSnapshotCalls() []struct {
+	Ctx               github_com_cosmos_cosmos_sdk_types.Context
+	CustodianGroupUID chains.Hash
+} {
+	var calls []struct {
+		Ctx               github_com_cosmos_cosmos_sdk_types.Context
+		CustodianGroupUID chains.Hash
+	}
+	mock.lockGetUtxoSnapshot.RLock()
+	calls = mock.calls.GetUtxoSnapshot
+	mock.lockGetUtxoSnapshot.RUnlock()
 	return calls
 }
 

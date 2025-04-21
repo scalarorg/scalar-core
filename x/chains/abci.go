@@ -358,6 +358,11 @@ func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, 
 		"commandID", cmd.ID.Hex(),
 	)
 
+	err = cov.MarkReservedUtxo(ctx, e.CustodianGroupId, e.Payload)
+	if err != nil {
+		return err
+	}
+
 	approvedEvent := &types.EventRedeemTokenApproved{
 		Chain:            event.Chain,
 		EventID:          event.GetID(),

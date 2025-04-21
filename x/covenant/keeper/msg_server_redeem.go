@@ -214,10 +214,6 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, err
 	}
 
-	if err := validateChainActivated(ctx, s.nexus, destChain); err != nil {
-		return nil, err
-	}
-
 	protocol, err := s.protocol.FindProtocolInfoByExternalSymbol(ctx, req.Symbol)
 	if err != nil {
 		return nil, err

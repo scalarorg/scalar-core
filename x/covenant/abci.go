@@ -557,7 +557,7 @@ func signAllPendingRedeemCommands(
 		return nil
 	}
 
-	psbt, err := aggregatePsbtFromCommandBatch(ctx, nk.scalar, nk.chains, chain, commandBatch, group, seq)
+	psbt, err := aggregatePsbtFromCommandBatch(ctx, nk.keeper, nk.scalar, nk.chains, chain, commandBatch, group, seq)
 	if err != nil {
 		return err
 	}
@@ -607,6 +607,7 @@ func signAllPendingRedeemCommands(
 
 func aggregatePsbtFromCommandBatch(
 	ctx sdk.Context,
+	cov types.Keeper,
 	s types.ScalarnetKeeper,
 	b types.BaseKeeper,
 	chainName nexus.ChainName,
@@ -619,9 +620,15 @@ func aggregatePsbtFromCommandBatch(
 	clog.Yellowf("[abci/covenant] [aggregatePsbtFromCommandBatch] multiPayload: %+v", multiPayload)
 	params := types.RedeemTokenPayloadWithType{}
 
-	visited := map[string]bool{}
 	inputs := []goutils.PreviousStakingUTXO{}
 	outputs := []goutils.UnstakingOutput{}
+
+	visited := map[string]bool{}
+
+	utxoSnapshot, ok := cov.GetUtxoSnapshot(ctx, group.UID)
+	if !ok {
+		return nil, fmt.Errorf("[abci/covenant]: utxo snapshot not found")
+	}
 
 	for _, payload := range multiPayload {
 		//First byte is the payload type
@@ -643,16 +650,21 @@ func aggregatePsbtFromCommandBatch(
 				continue
 			}
 			visited[key] = true
-			txHash, err := chainhash.NewHashFromStr(strings.TrimPrefix(utxo.TxID.Hex(), "0x"))
+			foundUtxo := utxoSnapshot.FindUtxo(utxo.TxID, utxo.Vout)
+			if foundUtxo == nil {
+				return nil, fmt.Errorf("[abci/covenant]: utxo not found in snapshot")
+			}
+
+			txHash, err := chainhash.NewHashFromStr(strings.TrimPrefix(foundUtxo.TxID.Hex(), "0x"))
 			if err != nil {
 				return nil, err
 			}
 			inputs = append(inputs, goutils.PreviousStakingUTXO{
 				OutPoint: goutils.OutPoint{
 					Txid: [32]byte(txHash.CloneBytes()),
-					Vout: utxo.Vout,
+					Vout: foundUtxo.Vout,
 				},
-				Amount: utxo.AmountInSats,
+				Amount: foundUtxo.AmountInSats,
 				Script: group.BitcoinPubkey,
 			})
 		}

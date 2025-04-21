@@ -8,6 +8,7 @@ import (
 
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/key"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
@@ -68,6 +69,8 @@ type Keeper interface {
 	SetStandaloneCommandMetadata(ctx sdk.Context, meta StandaloneCommandMetadata, prefix key.Key)
 	SetUnsignedStandaloneCommandID(ctx sdk.Context, id []byte)
 	RenewRedeemSession(ctx sdk.Context, custodianGroupUID chains.Hash) error
+
+	GetUtxoSnapshot(ctx sdk.Context, custodianGroupUID exported.Hash) (*UTXOSnapshot, bool)
 }
 
 // Snapshotter provides snapshot keeper functionality
