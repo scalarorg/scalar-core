@@ -1,8 +1,10 @@
 package covenant
 
 import (
+	"bytes"
 	"encoding/hex"
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
@@ -691,6 +693,22 @@ func aggregatePsbtFromCommandBatch(
 	custodianQuorum := group.Quorum
 	rbf := false
 	feeRate := uint64(1)
+
+	sort.Slice(inputs, func(i, j int) bool {
+		txidCmp := bytes.Compare(inputs[i].OutPoint.Txid[:], inputs[j].OutPoint.Txid[:])
+		if txidCmp != 0 {
+			return txidCmp < 0
+		}
+		return inputs[i].OutPoint.Vout < inputs[j].OutPoint.Vout
+	})
+
+	sort.Slice(outputs, func(i, j int) bool {
+		lockingScriptCmp := bytes.Compare(outputs[i].LockingScript[:], outputs[j].LockingScript[:])
+		if lockingScriptCmp != 0 {
+			return lockingScriptCmp < 0
+		}
+		return outputs[i].Amount < outputs[j].Amount
+	})
 
 	for _, input := range inputs {
 		clog.Greenf("Input: %+v\n", input)
