@@ -1,6 +1,8 @@
 package btc
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/scalarorg/scalar-core/utils/clog"
@@ -36,11 +38,12 @@ func (client *BtcClient) ProcessSourceTxsConfirmation(event *types.EventConfirmS
 }
 func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsStarted, receipt BTCTxReceipt) []types.Event {
 	// TODO: 🛑 validate the btc protocol address from the event
-	clog.Bluef("[BTC] txReceipt.Raw.Hash: %+v, TxIndex: %+v", receipt.Raw.Hash, receipt.TransactionIndex)
+	clog.Bluef("[BTC] txReceipt.Raw.Txid: %+v, TxIndex: %+v", receipt.Raw.Txid, receipt.TransactionIndex)
 	var events []types.Event
 	tokenSent, err := client.createEventTokenSent(event, &receipt)
 	if err != nil {
 		client.logger().Error(sdkerrors.Wrap(err, "decode event EventConfirmSourceTxsStarted failed").Error())
+		client.logger().Error(fmt.Sprintf("receipt txid: %s, raw hex: %s", receipt.Raw.Txid, receipt.Raw.Hex))
 		return nil
 	}
 	clog.Greenf("[BTC] btcEvent: %+v\n", tokenSent)

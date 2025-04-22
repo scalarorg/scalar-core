@@ -55,7 +55,7 @@ type Keeper interface {
 	SetRedeemSession(ctx sdk.Context, redeemSession *RedeemSession)
 	// GetRedeemSessionByExpiry(ctx sdk.Context, expiry int64) []RedeemSession
 	SetSwitchingForRedeemSession(ctx sdk.Context, custodianGroupUID chains.Hash) error
-	UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID chains.Hash) error
+	UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID chains.Hash, sequence uint64) error
 	UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID chains.Hash, sequence uint64) error
 	SetUtxoSnapshot(ctx sdk.Context, utxoSnapshot *UTXOSnapshot) error
 

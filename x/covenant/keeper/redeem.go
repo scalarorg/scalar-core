@@ -54,7 +54,7 @@ func (k Keeper) SetSwitchingForRedeemSession(ctx sdk.Context, custodianGroupUID 
 	return nil
 }
 
-func (k Keeper) UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID exported.Hash) error {
+func (k Keeper) UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID exported.Hash, sequence uint64) error {
 	redeemSession, ok := k.GetRedeemSession(ctx, custodianGroupUID)
 	if !ok {
 		return fmt.Errorf("redeem session not found")
@@ -67,7 +67,7 @@ func (k Keeper) UpdatePreparingToExecuting(ctx sdk.Context, custodianGroupUID ex
 	if !redeemSession.IsSwitching {
 		return fmt.Errorf("redeem session is not switching")
 	}
-
+	redeemSession.Sequence = sequence
 	redeemSession.CurrentPhase = covExported.Executing
 	redeemSession.IsSwitching = false
 	redeemSession.PhaseExpiredAt = 0 // reset the phase expired at

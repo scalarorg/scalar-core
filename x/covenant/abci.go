@@ -458,7 +458,7 @@ func handleSwitchedPhaseConfirmed(
 
 			// TODO:
 		} else if switchPhaseEvent.ToPhase == exported.Executing {
-			err := nk.keeper.UpdatePreparingToExecuting(ctx, switchPhaseEvent.CustodianGroupUID)
+			err := nk.keeper.UpdatePreparingToExecuting(ctx, switchPhaseEvent.CustodianGroupUID, switchPhaseEvent.Sequence)
 			if err != nil {
 				return err
 			}

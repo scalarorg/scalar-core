@@ -128,7 +128,7 @@ var _ covenanttypes.Keeper = &KeeperMock{}
 //			UpdateExecutingToPreparingFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash, sequence uint64) error {
 //				panic("mock out the UpdateExecutingToPreparing method")
 //			},
-//			UpdatePreparingToExecutingFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) error {
+//			UpdatePreparingToExecutingFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash, sequence uint64) error {
 //				panic("mock out the UpdatePreparingToExecuting method")
 //			},
 //		}
@@ -232,7 +232,7 @@ type KeeperMock struct {
 	UpdateExecutingToPreparingFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash, sequence uint64) error
 
 	// UpdatePreparingToExecutingFunc mocks the UpdatePreparingToExecuting method.
-	UpdatePreparingToExecutingFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) error
+	UpdatePreparingToExecutingFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash, sequence uint64) error
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -459,6 +459,8 @@ type KeeperMock struct {
 			Ctx github_com_cosmos_cosmos_sdk_types.Context
 			// CustodianGroupUID is the custodianGroupUID argument value.
 			CustodianGroupUID chains.Hash
+			// Sequence is the sequence argument value.
+			Sequence uint64
 		}
 	}
 	lockCreateCustodian                sync.RWMutex
@@ -1611,21 +1613,23 @@ func (mock *KeeperMock) UpdateExecutingToPreparingCalls() []struct {
 }
 
 // UpdatePreparingToExecuting calls UpdatePreparingToExecutingFunc.
-func (mock *KeeperMock) UpdatePreparingToExecuting(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash) error {
+func (mock *KeeperMock) UpdatePreparingToExecuting(ctx github_com_cosmos_cosmos_sdk_types.Context, custodianGroupUID chains.Hash, sequence uint64) error {
 	if mock.UpdatePreparingToExecutingFunc == nil {
 		panic("KeeperMock.UpdatePreparingToExecutingFunc: method is nil but Keeper.UpdatePreparingToExecuting was just called")
 	}
 	callInfo := struct {
 		Ctx               github_com_cosmos_cosmos_sdk_types.Context
 		CustodianGroupUID chains.Hash
+		Sequence          uint64
 	}{
 		Ctx:               ctx,
 		CustodianGroupUID: custodianGroupUID,
+		Sequence:          sequence,
 	}
 	mock.lockUpdatePreparingToExecuting.Lock()
 	mock.calls.UpdatePreparingToExecuting = append(mock.calls.UpdatePreparingToExecuting, callInfo)
 	mock.lockUpdatePreparingToExecuting.Unlock()
-	return mock.UpdatePreparingToExecutingFunc(ctx, custodianGroupUID)
+	return mock.UpdatePreparingToExecutingFunc(ctx, custodianGroupUID, sequence)
 }
 
 // UpdatePreparingToExecutingCalls gets all the calls that were made to UpdatePreparingToExecuting.
@@ -1635,10 +1639,12 @@ func (mock *KeeperMock) UpdatePreparingToExecuting(ctx github_com_cosmos_cosmos_
 func (mock *KeeperMock) UpdatePreparingToExecutingCalls() []struct {
 	Ctx               github_com_cosmos_cosmos_sdk_types.Context
 	CustodianGroupUID chains.Hash
+	Sequence          uint64
 } {
 	var calls []struct {
 		Ctx               github_com_cosmos_cosmos_sdk_types.Context
 		CustodianGroupUID chains.Hash
+		Sequence          uint64
 	}
 	mock.lockUpdatePreparingToExecuting.RLock()
 	calls = mock.calls.UpdatePreparingToExecuting
