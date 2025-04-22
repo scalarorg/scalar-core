@@ -568,7 +568,7 @@ func signAllPendingRedeemCommands(
 		[]exported.Psbt{psbt},
 		chainsTypes.ModuleName,
 		chain,
-		types.NewSigMetadata(types.SigCommand, chain, commandBatch.GetID()),
+		chainsTypes.NewSigMetadata(chainsTypes.SigCommand, chain, commandBatch.GetID()),
 	); err != nil {
 		return err
 	}
