@@ -622,8 +622,8 @@ func aggregatePsbtFromCommandBatch(
 	clog.Yellowf("[abci/covenant] [aggregatePsbtFromCommandBatch] multiPayload: %+v", multiPayload)
 	params := types.RedeemTokenPayloadWithType{}
 
-	inputs := []goutils.PreviousStakingUTXO{}
-	outputs := []goutils.UnstakingOutput{}
+	inputs := []goutils.PreviousOutpoint{}
+	outputs := []goutils.UnlockingOutput{}
 
 	visited := map[string]bool{}
 
@@ -641,7 +641,7 @@ func aggregatePsbtFromCommandBatch(
 
 		clog.Yellowf("[abci/covenant] [aggregatePsbtFromCommandBatch] payload: %+x", payload)
 
-		outputs = append(outputs, goutils.UnstakingOutput{
+		outputs = append(outputs, goutils.UnlockingOutput{
 			Amount:        params.Amount,
 			LockingScript: params.LockingScript,
 		})
@@ -661,7 +661,7 @@ func aggregatePsbtFromCommandBatch(
 			if err != nil {
 				return nil, err
 			}
-			inputs = append(inputs, goutils.PreviousStakingUTXO{
+			inputs = append(inputs, goutils.PreviousOutpoint{
 				OutPoint: goutils.OutPoint{
 					Txid: [32]byte(txHash.CloneBytes()),
 					Vout: foundUtxo.Vout,

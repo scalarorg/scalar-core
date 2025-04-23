@@ -23,7 +23,7 @@ import (
 
 var (
 	EmbeddedDataOutputIndex = 0
-	StakingOutputIndex      = 1
+	LockingOutputIndex      = 1
 )
 
 var (
@@ -65,12 +65,12 @@ func (client *BtcClient) createEventTokenSent(event *chainsTypes.EventConfirmSou
 		return nil, ErrInvalidOpReturnData
 	}
 
-	if output.TransactionType != go_utils.TransactionTypeStaking {
+	if output.TransactionType != go_utils.TransactionTypeLocking {
 		return nil, ErrInvalidTransactionType
 	}
 
-	var stakingAmount int64 = tx.MsgTx.TxOut[StakingOutputIndex].Value
-	var scriptPubkey []byte = tx.MsgTx.TxOut[StakingOutputIndex].PkScript
+	var stakingAmount int64 = tx.MsgTx.TxOut[LockingOutputIndex].Value
+	var scriptPubkey []byte = tx.MsgTx.TxOut[LockingOutputIndex].PkScript
 	destinationChain := chain.NewChainInfoFromBytes(output.DestinationChain)
 	if destinationChain == nil {
 		return nil, ErrInvalidDestinationChain
@@ -106,7 +106,7 @@ func (client *BtcClient) createEventTokenSent(event *chainsTypes.EventConfirmSou
 		DestinationAddress: chainsTypes.Address(destinationRecipientAddress).Hex(),
 		Asset:              sdk.NewCoin(response.Protocol.Asset.Symbol, sdk.NewInt(stakingAmount)),
 		ScriptPubkey:       scriptPubkey,
-		Vout:               uint32(StakingOutputIndex),
+		Vout:               uint32(LockingOutputIndex),
 	}, nil
 }
 
