@@ -82,7 +82,7 @@ func (k Keeper) UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID ex
 		return fmt.Errorf("redeem session not found")
 	}
 	//Check if it the recovering request
-	if sequence > 0 {
+	if redeemSession.Sequence > 0 {
 		//In normal mode
 		if redeemSession.Sequence != sequence-1 && redeemSession.CurrentPhase != covExported.Executing {
 			return fmt.Errorf("redeem session is not in executing phase")
@@ -91,8 +91,10 @@ func (k Keeper) UpdateExecutingToPreparing(ctx sdk.Context, custodianGroupUID ex
 			return fmt.Errorf("redeem session is not in switching state")
 		}
 	} else {
+		//In recovering mode we don't check sequence and phase, this is the first request set the phase to preparing
+		//redeemSession.Sequence = 0 for in recovering
 		log.Debug().Msg("[UpdateExecutingToPreparing] redeem session is in recovering mode")
-		//In recovering mode we don check sequence and phase, this is the first request set the phase to preparing
+
 	}
 
 	redeemSession.Sequence = sequence
