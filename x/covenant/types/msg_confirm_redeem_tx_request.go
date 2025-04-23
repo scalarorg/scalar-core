@@ -4,17 +4,23 @@ import (
 	fmt "fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/rs/zerolog/log"
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 var _ sdk.Msg = &ConfirmRedeemTxsRequest{}
 
-func NewConfirmRedeemTxRequest(sender sdk.AccAddress, chain string, txIDs []chains.Hash) *ConfirmRedeemTxsRequest {
+func NewConfirmRedeemTxRequest(sender sdk.AccAddress, chain string, groupUid string, txIDs []chains.Hash) *ConfirmRedeemTxsRequest {
+	custodianGroupUid, err := chains.HashFromHex(groupUid)
+	if err != nil {
+		log.Error().Err(err).Msg("Invalid groupUid")
+	}
 	return &ConfirmRedeemTxsRequest{
-		Sender: sender,
-		Chain:  nexus.ChainName(chain),
-		TxIDs:  txIDs,
+		Sender:            sender,
+		Chain:             nexus.ChainName(chain),
+		CustodianGroupUID: custodianGroupUid,
+		TxIDs:             txIDs,
 	}
 }
 

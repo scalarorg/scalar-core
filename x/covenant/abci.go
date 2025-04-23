@@ -354,32 +354,31 @@ func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, nk *neededKee
 		return fmt.Errorf("not found redeem session")
 	}
 
-	if redeemSession.CurrentPhase != exported.Preparing {
-		return fmt.Errorf("redeem session is not in preparing phase")
+	if redeemSession.CurrentPhase != exported.Executing {
+		return fmt.Errorf("redeem session is not in executing phase")
 	}
 
 	protocols := nk.protocol.FindProtocolInfoByCustodianGroupUID(ctx, [][]byte{group.UID.Bytes()})
-	if len(protocols) != 1 {
-		return fmt.Errorf("not found protocol")
+	if len(protocols) == 0 {
+		return fmt.Errorf("[handleRedeemTxsConfirmed] protocol ")
 	}
 
-	protocol := protocols[0]
-
 	evmSessions := make(map[string]*types.ExpiredEvmSession)
-
-	for _, chain := range protocol.MinorAddresses {
-		s, ok := evmSessions[chain.ChainName.String()]
-		if !ok {
-			s = &types.ExpiredEvmSession{
-				CustodianGroupUID: protocol.CustodianGroupUID,
-				Chain:             chain.ChainName,
-				Sequence:          redeemSession.Sequence,
-				CurrentPhase:      exported.Preparing,
-				Tokens:            []string{},
+	for _, protocol := range protocols {
+		for _, chain := range protocol.MinorAddresses {
+			s, ok := evmSessions[chain.ChainName.String()]
+			if !ok {
+				s = &types.ExpiredEvmSession{
+					CustodianGroupUID: protocol.CustodianGroupUID,
+					Chain:             chain.ChainName,
+					Sequence:          redeemSession.Sequence,
+					CurrentPhase:      redeemSession.CurrentPhase,
+					Tokens:            []string{},
+				}
 			}
+			s.Tokens = append(s.Tokens, protocol.Symbol)
+			evmSessions[chain.ChainName.String()] = s
 		}
-		s.Tokens = append(s.Tokens, protocol.Symbol)
-		evmSessions[chain.ChainName.String()] = s
 	}
 
 	for _, session := range evmSessions {

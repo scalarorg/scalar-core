@@ -64,7 +64,7 @@ func (client *BtcClient) ProcessRedeemTxsConfirmation(event *covTypes.ConfirmRed
 	votes := []sdk.Msg{
 		voteTypes.NewVoteRequest(proxy, event.PollID, voteEvent),
 	}
-	clog.Redf("broadcasting vote %v for poll %s", votes, event.PollID.String())
+	clog.Redf("[ProcessRedeemTxsConfirmation] broadcasting vote for poll %s", event.PollID.String())
 
 	return votes, nil
 }
