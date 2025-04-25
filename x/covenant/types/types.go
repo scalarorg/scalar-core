@@ -289,6 +289,13 @@ func (s *UTXOSnapshot) FindUtxo(txID chains.Hash, vout uint32) *UTXO {
 	return nil
 }
 
+func (s *UTXOSnapshot) ToString() string {
+	output := s.CustodianGroupUID.Hex() + ";"
+	for _, utxo := range s.Utxos {
+		output += fmt.Sprintf("%s:%d;", utxo.TxID.Hex(), utxo.Vout)
+	}
+	return output
+}
 func NewVoteEvents(chain nexus.ChainName, events ...Event) *VoteEvents {
 	return &VoteEvents{
 		Chain:  chain,

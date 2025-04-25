@@ -653,6 +653,9 @@ func aggregatePsbtFromCommandBatch(
 			visited[key] = true
 			foundUtxo := utxoSnapshot.FindUtxo(utxo.TxID, utxo.Vout)
 			if foundUtxo == nil {
+				log.Error().Str("TxID", utxo.TxID.Hex()).
+					Str("UTXOs", utxoSnapshot.ToString()).
+					Uint32("Vout", utxo.Vout).Msg("[abci/covenant]: utxo not found in snapshot")
 				return nil, fmt.Errorf("[abci/covenant]: utxo not found in snapshot")
 			}
 
