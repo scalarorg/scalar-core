@@ -690,6 +690,33 @@ func aggregatePsbtFromCommandBatch(
 		}
 	}
 
+	var choosenUtxo *types.UTXO
+
+	for _, utxo := range utxoSnapshot.Utxos {
+		key := fmt.Sprintf("%x:%d", utxo.TxID, utxo.Vout)
+		if visited[key] {
+			continue
+		}
+
+		choosenUtxo = utxo
+		break
+	}
+
+	if choosenUtxo != nil {
+		txHash, err := chainhash.NewHashFromStr(strings.TrimPrefix(choosenUtxo.TxID.Hex(), "0x"))
+		if err != nil {
+			return nil, err
+		}
+		inputs = append(inputs, goutils.PreviousOutpoint{
+			OutPoint: goutils.OutPoint{
+				Txid: [32]byte(txHash.CloneBytes()),
+				Vout: choosenUtxo.Vout,
+			},
+			Amount: choosenUtxo.AmountInSats,
+			Script: group.BitcoinPubkey,
+		})
+	}
+
 	ck, err := b.ForChain(ctx, chainName)
 	if err != nil {
 		return nil, err
