@@ -50,8 +50,8 @@ func (msg *ReserveRedeemUtxoRequest) ValidateBasic() error {
 		return fmt.Errorf("symbol is required")
 	}
 
-	if msg.Amount == 0 {
-		return fmt.Errorf("amount is required")
+	if msg.Amount < 1000 {
+		return fmt.Errorf("amount is too small")
 	}
 
 	if msg.LockingScript == nil {
