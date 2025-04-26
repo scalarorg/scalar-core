@@ -15,7 +15,7 @@ func NewGenesisState(params *Params, signingSessions []SigningSession, custodian
 
 // DefaultGenesisState returns a default genesis state
 func DefaultGenesisState() GenesisState {
-	custodians := []*cov.Custodian{cov.DefaultCustodian()}
+	custodians := []*cov.Custodian{}
 	group := cov.DefaultCustodianGroup()
 	params := DefaultParams()
 	session := []SigningSession{}

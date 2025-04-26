@@ -45,7 +45,7 @@ func (client *BtcClient) ProcessRedeemTxsConfirmation(event *covTypes.ConfirmRed
 	}
 	utxoSnapshot := covTypes.UTXOSnapshot{
 		CustodianGroupUID: event.CustodianGroupUID,
-		BlockHeight:       1, // TODO: fill me
+		BlockHeight:       1, // TODO: get block height from event
 		Utxos:             utxos,
 	}
 	hash := utxoSnapshot.GetHash()

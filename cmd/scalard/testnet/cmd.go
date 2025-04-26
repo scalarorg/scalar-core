@@ -90,6 +90,7 @@ var (
 	flagPrintMnemonic       = "print-mnemonic"
 	flagGRPCAddress         = "grpc.address"
 	flagJSONRPCAddress      = "json-rpc.address"
+	flagCustodianGroup      = "custodian-group"
 )
 
 type initArgs struct {
@@ -109,6 +110,7 @@ type initArgs struct {
 	portOffset     int
 	baseFee        sdk.Int
 	minGasPrice    sdk.Dec
+	custodianGroup string
 }
 
 type startArgs struct {
@@ -209,6 +211,7 @@ Example:
 			args.portOffset, _ = cmd.Flags().GetInt(flagPortOffset)
 			args.configPath, _ = cmd.Flags().GetString(flagConfigPath)
 			args.algo, _ = cmd.Flags().GetString(flagKeyType)
+			args.custodianGroup, _ = cmd.Flags().GetString(flagCustodianGroup)
 			baseFee, _ := cmd.Flags().GetString(flagBaseFee)
 			minGasPrice, _ := cmd.Flags().GetString(flagMinGasPrice)
 
@@ -247,6 +250,7 @@ Example:
 		*./tokens/btc.json* stores all btc token configs ...
 		`)
 	cmd.Flags().String(flags.FlagKeyringBackend, flags.DefaultKeyringBackend, "Select keyring's backend (os|file|test)")
+	cmd.Flags().String(flagCustodianGroup, "scalar", "Default custodian group name")
 	cmd.Flags().String(flagEnvFile, "", "Path to environment file to load (optional)")
 
 	return cmd

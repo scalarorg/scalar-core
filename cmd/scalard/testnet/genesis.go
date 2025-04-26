@@ -45,7 +45,7 @@ import (
 
 // DefaultProtocol returns the default chains for a genesis state
 // Each protocol has a token info with the same index
-func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGroupUID chainsexported.Hash) []*protocoltypes.Protocol {
+func DefaultProtocols(protocolInfos []Protocol, tokenInfos []Token, custodianGroupUID exported.Hash) []*protocoltypes.Protocol {
 	//log.Debug().Any("TokenInfos", tokenInfos).Any("ProtocolInfos", protocolInfos).Msg("Create defaultProtocols")
 	protocols := []*protocoltypes.Protocol{}
 	for i, protocol := range protocolInfos {
@@ -290,7 +290,7 @@ func GenerateGenesis(clientCtx client.Context,
 		return appGenState, err
 	}
 
-	custodiansGr := covenantexported.NewCustodianGroup(covenantexported.DefaultCustodianName, []byte(custodianGroupPubKey), uint32(quorum), "Default custodial group, which contains all custodians", custodians)
+	custodiansGr := covenantexported.NewCustodianGroup(args.custodianGroup, []byte(custodianGroupPubKey), uint32(quorum), "Default custodial group, which contains all custodians", custodians)
 
 	// Activate the default custodian group
 	custodiansGr.Status = covenantexported.Custodian_Activated

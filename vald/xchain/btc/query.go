@@ -73,7 +73,8 @@ func (c *BtcClient) getUtxoList(taprootAddress string) ([]*cov.UTXO, []uint64, e
 func SortUTXOsByBlockHeight(utxos []MempoolUtxo) []MempoolUtxo {
 	sort.Slice(utxos, func(i, j int) bool {
 		return (utxos[i].Status.BlockHeight < utxos[j].Status.BlockHeight) ||
-			(utxos[i].Status.BlockHeight == utxos[j].Status.BlockHeight && utxos[i].Txid < utxos[j].Txid)
+			(utxos[i].Status.BlockHeight == utxos[j].Status.BlockHeight && utxos[i].Txid < utxos[j].Txid) ||
+			(utxos[i].Status.BlockHeight == utxos[j].Status.BlockHeight && utxos[i].Txid == utxos[j].Txid && utxos[i].Vout < utxos[j].Vout)
 	})
 	return utxos
 }

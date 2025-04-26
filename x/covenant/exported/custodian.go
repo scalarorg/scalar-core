@@ -13,21 +13,21 @@ import (
 )
 
 const (
-	DefaultCustodianName = "scalarv33"
+	defaultCustodianName = "scalar"
 )
 
-func DefaultCustodian() *Custodian {
-	custodian := &Custodian{
-		Name:   DefaultCustodianName,
-		Status: Custodian_Activated,
-	}
-	return custodian
-}
+// func DefaultCustodian() *Custodian {
+// 	custodian := &Custodian{
+// 		Name:   DefaultCustodianName,
+// 		Status: Custodian_Activated,
+// 	}
+// 	return custodian
+// }
 
 func DefaultCustodianGroup() *CustodianGroup {
 	return &CustodianGroup{
-		UID:  CalculateUID(DefaultCustodianName),
-		Name: DefaultCustodianName,
+		UID:  CalculateUID(defaultCustodianName),
+		Name: defaultCustodianName,
 	}
 }
 
