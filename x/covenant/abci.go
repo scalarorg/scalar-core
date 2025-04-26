@@ -401,13 +401,15 @@ func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, nk *neededKee
 		for _, utxo := range utxos.Utxos {
 			key := fmt.Sprintf("%s:%d", utxo.TxID.Hex(), utxo.Vout)
 			if reservedUtxos[key] {
-				log.Error().Str("ReservedUtxo", key).Err(fmt.Errorf("Reserved utxo found"))
+				log.Error().Str("ReservedUtxo", key).Err(fmt.Errorf("reserved utxo found"))
 			}
 		}
 	}
-	nk.keeper.SetUtxoSnapshot(ctx, utxos)
-	nk.keeper.SetSwitchingForRedeemSession(ctx, utxos.CustodianGroupUID /*, keyID*/)
-	return nil
+	err := nk.keeper.SetUtxoSnapshot(ctx, utxos)
+	if err != nil {
+		return err
+	}
+	return nk.keeper.SetSwitchingForRedeemSession(ctx, utxos.CustodianGroupUID /*, keyID*/)
 }
 
 // Update the redeem session for the chain
@@ -860,6 +862,10 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, nk *neededKeeper, pk ty
 				Msg("[x/covenant] [findExpiredEvmSessionsAndRenewable] [Not found redeem session]")
 			continue
 		}
+		if redeemSession.CurrentPhase != exported.Preparing {
+			//Switching phase on expired apply for preparing phase only
+			continue
+		}
 		//Check if redeem session is switching we need to continue switch process
 		//TODO: check if the redeem session is switching but all evm sessions are successfully switched
 		if redeemSession.IsSwitching {
@@ -868,8 +874,7 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, nk *neededKeeper, pk ty
 				Msg("[x/covenant] [Switching redeem session]")
 			expiredGroups = append(expiredGroups, group.UID.Bytes())
 			expiredSessions[group.UID.Hex()] = redeemSession
-		} else if redeemSession.PhaseExpiredAt <= uint64(currentHeight) &&
-			redeemSession.CurrentPhase == exported.Preparing {
+		} else if redeemSession.PhaseExpiredAt <= uint64(currentHeight) {
 			log.Info().
 				Str("CustodianGroupUID", group.UID.Hex()).
 				Int64("currentHeight", currentHeight).
