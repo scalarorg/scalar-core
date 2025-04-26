@@ -27,6 +27,7 @@ type BTCTxReceipt struct {
 	TransactionIndex int
 	PrevTxOuts       []*btcjson.Vout
 	MsgTx            *wire.MsgTx
+	BlockHeight      *int64
 }
 
 type BTCTxResult = results.Result[common.TxReceipt]

@@ -118,12 +118,12 @@ func (c *BtcClient) GetRawTx(txID common.Hash) (results.Result[BTCTxReceipt], er
 		}
 		tx.Raw = txResult
 	}
-	return results.FromOk[BTCTxReceipt](tx), nil
+	return results.FromOk(tx), nil
 }
 func (c *BtcClient) GetBlockVerboseTx(hashStr string) (results.Result[*btcjson.GetBlockVerboseTxResult], error) {
 	block, _ := c.blockCache.GetBlock(hashStr)
 	if block != nil {
-		return results.FromOk[*btcjson.GetBlockVerboseTxResult](block), nil
+		return results.FromOk(block), nil
 	}
 	blockHash, err := chainhash.NewHashFromStr(hashStr)
 	if err != nil {
@@ -134,7 +134,7 @@ func (c *BtcClient) GetBlockVerboseTx(hashStr string) (results.Result[*btcjson.G
 		return results.FromErr[*btcjson.GetBlockVerboseTxResult](err), err
 	}
 	c.blockCache.SetBlock(hashStr, block)
-	return results.FromOk[*btcjson.GetBlockVerboseTxResult](block), nil
+	return results.FromOk(block), nil
 }
 func (c *BtcClient) createBtcTxResult(rawReceipt *BTCTxReceipt, block *btcjson.GetBlockVerboseTxResult) (BTCTxResult, error) {
 	var txReceipt BTCTxReceipt
@@ -250,6 +250,10 @@ func (c *BtcClient) GetTransaction(txID common.Hash) (BTCTxResult, error) {
 	// 	c.logger("failed to get BTC transaction", "txID", txID, "error", err)
 	// 	return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
 	// }
+
+	if block != nil {
+		tx.BlockHeight = &block.Height
+	}
 
 	return results.FromOk[common.TxReceipt](tx), nil
 }

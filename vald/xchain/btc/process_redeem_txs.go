@@ -18,6 +18,10 @@ import (
 func (client *BtcClient) ProcessRedeemTxsConfirmation(event *covTypes.ConfirmRedeemTxStarted, proxy sdk.AccAddress) ([]sdk.Msg, error) {
 	txIDs := slices.Map(event.TxIDs, func(m chains.Hash) xcommon.Hash { return xcommon.Hash(m.Bytes()) })
 	txReceipts, _ := client.GetTxReceiptsIfFinalized(txIDs, event.ConfirmationHeight)
+	if len(txReceipts) != len(txIDs) {
+		// This ensures all of the txs are valid
+		return nil, fmt.Errorf("invalid txReceipts length: %d, txIDs length: %d", len(txReceipts), len(txIDs))
+	}
 
 	var eventIds []chainsTypes.EventID
 	for i, txReceipt := range txReceipts {
@@ -38,14 +42,16 @@ func (client *BtcClient) ProcessRedeemTxsConfirmation(event *covTypes.ConfirmRed
 		return nil, err
 	}
 
-	// TODO: Ensure the utxos are confirmed with the correct number of confirmations
 	utxos, _, err := client.getUtxoList(taprootAddress.String())
 	if err != nil {
 		return nil, err
 	}
+
+	maxBlockHeight := maxInt64(slices.Map(txReceipts, func(m BTCTxResult) int64 { return *m.Ok().(BTCTxReceipt).BlockHeight }))
+
 	utxoSnapshot := covTypes.UTXOSnapshot{
 		CustodianGroupUID: event.CustodianGroupUID,
-		BlockHeight:       1, // TODO: get block height from event
+		BlockHeight:       uint64(maxBlockHeight),
 		Utxos:             utxos,
 	}
 	hash := utxoSnapshot.GetHash()
