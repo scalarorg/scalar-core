@@ -160,7 +160,7 @@ func (c *BtcClient) createBtcTxResult(rawReceipt *BTCTxReceipt, block *btcjson.G
 	}
 	txReceipt.MsgTx = msgTx
 	//Try to set prevTxOuts
-
+	txReceipt.BlockHeight = &block.Height
 	txReceipt.PrevTxOuts, err = c.GetTxOuts(slices.Map(msgTx.TxIn, func(txIn *wire.TxIn) wire.OutPoint {
 		return txIn.PreviousOutPoint
 	}))
@@ -250,10 +250,6 @@ func (c *BtcClient) GetTransaction(txID common.Hash) (BTCTxResult, error) {
 	// 	c.logger("failed to get BTC transaction", "txID", txID, "error", err)
 	// 	return BTCTxResult(results.FromErr[common.TxReceipt](err)), err
 	// }
-
-	if block != nil {
-		tx.BlockHeight = &block.Height
-	}
 
 	return results.FromOk[common.TxReceipt](tx), nil
 }

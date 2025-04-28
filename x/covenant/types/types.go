@@ -300,9 +300,9 @@ func (s *UTXOSnapshot) FindUtxo(txID chains.Hash, vout uint32) *UTXO {
 }
 
 func (s *UTXOSnapshot) ToString() string {
-	output := s.CustodianGroupUID.Hex() + ";"
+	output := s.CustodianGroupUID.Hex() + ";\n"
 	for _, utxo := range s.Utxos {
-		output += fmt.Sprintf("%s:%d;", utxo.TxID.Hex(), utxo.Vout)
+		output += fmt.Sprintf("%s:%d;\n", utxo.TxID.Hex(), utxo.Vout)
 	}
 	return output
 }

@@ -388,23 +388,6 @@ func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, nk *neededKee
 		})
 		_ = success
 	}
-	currentUtxoSnapshot, present := nk.keeper.GetUtxoSnapshot(ctx, utxos.CustodianGroupUID)
-	if present {
-		//Check if new utxo don't contain any resrved utxo
-		reservedUtxos := map[string]bool{}
-		for _, utxo := range currentUtxoSnapshot.Utxos {
-			if len(utxo.Reservations) > 0 {
-				key := fmt.Sprintf("%s:%d", utxo.TxID.Hex(), utxo.Vout)
-				reservedUtxos[key] = true
-			}
-		}
-		for _, utxo := range utxos.Utxos {
-			key := fmt.Sprintf("%s:%d", utxo.TxID.Hex(), utxo.Vout)
-			if reservedUtxos[key] {
-				log.Error().Str("ReservedUtxo", key).Err(fmt.Errorf("reserved utxo found"))
-			}
-		}
-	}
 	err := nk.keeper.SetUtxoSnapshot(ctx, utxos)
 	if err != nil {
 		return err

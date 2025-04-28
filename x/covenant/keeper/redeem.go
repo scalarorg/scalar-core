@@ -132,8 +132,8 @@ func (k Keeper) SetRedeemSession(ctx sdk.Context, redeemSession *cov.RedeemSessi
 func (k Keeper) SetUtxoSnapshot(ctx sdk.Context, utxoSnapshot *cov.UTXOSnapshot) error {
 	key := CreateUTXOSnapshotKey(utxoSnapshot.CustodianGroupUID)
 
-	var results cov.UTXOSnapshot
-	ok := k.getStore(ctx).Get(key, &results)
+	var currentUtxoSnapshot cov.UTXOSnapshot
+	ok := k.getStore(ctx).Get(key, &currentUtxoSnapshot)
 	if !ok {
 		k.Logger(ctx).Debug("init utxo snapshot not found", "custodianGroupUID", utxoSnapshot.CustodianGroupUID)
 		k.setUtxoSnapshot(ctx, utxoSnapshot)
@@ -146,12 +146,26 @@ func (k Keeper) SetUtxoSnapshot(ctx sdk.Context, utxoSnapshot *cov.UTXOSnapshot)
 	// }
 	// Allway update the utxo snapshot with higher block height
 	// Update the utxo snapshot
-	if results.BlockHeight < utxoSnapshot.BlockHeight {
+	if currentUtxoSnapshot.BlockHeight < utxoSnapshot.BlockHeight {
 		k.setUtxoSnapshot(ctx, utxoSnapshot)
-		return nil
+		log.Debug().Uint64("Stored UtxoSnapShot blockheight", currentUtxoSnapshot.BlockHeight).
+			Uint64("Update UtxoSnapshot blockheight", utxoSnapshot.BlockHeight).
+			Msg("[x/covenant] [Keeper] Successfully update utxosnapshot")
+	} else {
+		currentHash := currentUtxoSnapshot.GetHash()
+		updatingHash := utxoSnapshot.GetHash()
+		log.Debug().Uint64("Current UtxoSnapShot blockheight", currentUtxoSnapshot.BlockHeight).
+			Hex("Current UtxoSnapshot hash", currentHash.Bytes()).
+			Uint64("Update UtxoSnapshot blockheight", utxoSnapshot.BlockHeight).
+			Hex("Update UtxoSnapshot hash", updatingHash.Bytes()).
+			Msg("[x/covenant] [Keeper] UtxoSnapShot already updated")
+		if !bytes.Equal(currentHash[:], updatingHash[:]) {
+			log.Debug().Str("Current UtxoSnapshot", currentUtxoSnapshot.ToString()).Msg("")
+			log.Debug().Str("Update UtxoSnapshot", utxoSnapshot.ToString()).Msg("")
+		}
 	}
 
-	return fmt.Errorf("utxo snapshot already exists")
+	return nil
 }
 
 func (k Keeper) setUtxoSnapshot(ctx sdk.Context, utxoSnapshot *cov.UTXOSnapshot) {

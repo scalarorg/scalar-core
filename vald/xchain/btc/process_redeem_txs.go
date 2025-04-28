@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/bitcoin-vault/go-utils/btc"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/slices"
@@ -46,9 +47,9 @@ func (client *BtcClient) ProcessRedeemTxsConfirmation(event *covTypes.ConfirmRed
 	if err != nil {
 		return nil, err
 	}
-
+	txIDStrs := slices.Map(event.TxIDs, func(tx chains.Hash) string { return tx.Hex() })
 	maxBlockHeight := maxInt64(slices.Map(txReceipts, func(m BTCTxResult) int64 { return *m.Ok().(BTCTxReceipt).BlockHeight }))
-
+	log.Debug().Any("RedeemTx Ids", txIDStrs).Int64("MaxBlockHeight", maxBlockHeight).Msg("Create new UtxoSnapshot")
 	utxoSnapshot := covTypes.UTXOSnapshot{
 		CustodianGroupUID: event.CustodianGroupUID,
 		BlockHeight:       uint64(maxBlockHeight),
