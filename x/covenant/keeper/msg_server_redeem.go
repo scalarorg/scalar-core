@@ -231,6 +231,8 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, fmt.Errorf("could not find redeem session for '%s'", protocol.CustodianGroupUID.Hex())
 	}
 	log.Info().Any("RedeemSession", session).
+		Bool("IsSwitching", session.IsSwitching).
+		Any("CurrentPhase", session.CurrentPhase).
 		Hex("CustodianGroupUid", protocol.CustodianGroupUID[:]).
 		Msg("[x/covernant] reserveUtxos found redeem session")
 	if session.CurrentPhase != exported.Preparing {

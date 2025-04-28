@@ -189,26 +189,29 @@ func (p *RedeemTokenParams) AbiUnpack(data []byte) error {
 }
 
 func (utxo *UTXO) AppendReserved(requestID string, amount uint64) error {
-	if utxo.Reserved == nil {
-		utxo.Reserved = make(map[string]uint64)
+	if utxo.Reservations == nil {
+		utxo.Reservations = []*Reservation{}
 	}
 	totalReserved := uint64(0)
-	for id, reserved := range utxo.Reserved {
-		if id == requestID {
+	for _, reserved := range utxo.Reservations {
+		if reserved.Request == requestID {
 			return fmt.Errorf("requestID already reserved in this utxo %s", utxo.TxID.Hex())
 		}
-		totalReserved += reserved
+		totalReserved += reserved.Amount
 	}
 	if totalReserved+amount > utxo.AmountInSats {
 		return fmt.Errorf("amount exceeds utxo amount, totalReserved %d, amount %d, utxo.AmountInSats %d", totalReserved, amount, utxo.AmountInSats)
 	}
-	utxo.Reserved[requestID] = amount
+	utxo.Reservations = append(utxo.Reservations, &Reservation{
+		Request: requestID,
+		Amount:  amount,
+	})
 	return nil
 }
 func (utxo *UTXO) GetReservedAmount() uint64 {
 	amount := uint64(0)
-	for _, reserved := range utxo.Reserved {
-		amount += reserved
+	for _, reserved := range utxo.Reservations {
+		amount += reserved.Amount
 	}
 	return amount
 }
@@ -219,15 +222,21 @@ func (utxo *UTXO) AvailableAmount() uint64 {
 }
 
 func (utxo *UTXO) Release(requestID string) uint64 {
-	if utxo.Reserved == nil {
+	if utxo.Reservations == nil {
 		return 0
 	}
-	amount, ok := utxo.Reserved[requestID]
-	if !ok {
-		return 0
+	i := 0
+	releaseAmount := uint64(0)
+	for _, reserved := range utxo.Reservations {
+		if reserved.Request != requestID {
+			utxo.Reservations[i] = reserved
+			i++
+		} else {
+			releaseAmount = reserved.Amount
+		}
 	}
-	delete(utxo.Reserved, requestID)
-	return amount
+	utxo.Reservations = utxo.Reservations[:i]
+	return releaseAmount
 }
 
 func (s UTXOSnapshot) ReleaseUtxos(requestID string) uint64 {

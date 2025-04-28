@@ -7,6 +7,10 @@ import "scalar/covenant/exported/v1beta1/types.proto";
 option go_package = "github.com/scalarorg/scalar-core/x/covenant/types";
 option (gogoproto.goproto_getters_all) = false;
 
+message Reservation {
+  string request = 1;
+  uint64 amount = 2;
+}
 message UTXO {
   bytes txid = 1 [
     (gogoproto.nullable) = false,
@@ -17,7 +21,7 @@ message UTXO {
   bytes script_pubkey = 3;
   uint64 amount_in_sats = 4;
   // Reserved amount for each request id
-  map<string, uint64> reserved = 5;
+  repeated Reservation reservations = 5;
 }
 
 message UTXOSnapshot {

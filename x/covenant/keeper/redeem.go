@@ -317,10 +317,15 @@ func (k Keeper) MarkReservedUtxo(ctx sdk.Context, uid exported.Hash, payload []b
 	for _, reqUtxo := range p.Utxos {
 		for _, utxo := range utxoSnapshot.Utxos {
 			if utxo.TxID.Hex() == reqUtxo.TxID.Hex() && utxo.Vout == reqUtxo.Vout {
-				if utxo.Reserved == nil {
-					utxo.Reserved = make(map[string]uint64)
+				reservation := &cov.Reservation{
+					Request: reqId,
+					Amount:  reqUtxo.AmountInSats,
 				}
-				utxo.Reserved[reqId] = reqUtxo.AmountInSats
+				if utxo.Reservations == nil {
+					utxo.Reservations = []*cov.Reservation{reservation}
+				} else {
+					utxo.Reservations = append(utxo.Reservations, reservation)
+				}
 				break
 			}
 		}

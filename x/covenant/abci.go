@@ -393,7 +393,7 @@ func handleRedeemTxsConfirmed(ctx sdk.Context, event *types.Event, nk *neededKee
 		//Check if new utxo don't contain any resrved utxo
 		reservedUtxos := map[string]bool{}
 		for _, utxo := range currentUtxoSnapshot.Utxos {
-			if len(utxo.Reserved) > 0 {
+			if len(utxo.Reservations) > 0 {
 				key := fmt.Sprintf("%s:%d", utxo.TxID.Hex(), utxo.Vout)
 				reservedUtxos[key] = true
 			}

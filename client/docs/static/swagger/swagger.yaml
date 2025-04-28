@@ -16093,11 +16093,16 @@ paths:
                         amount_in_sats:
                           type: string
                           format: uint64
-                        reserved:
-                          type: object
-                          additionalProperties:
-                            type: string
-                            format: uint64
+                        reservations:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              request:
+                                type: string
+                              amount:
+                                type: string
+                                format: uint64
                           title: Reserved amount for each request id
         default:
           description: An unexpected error response
@@ -62284,6 +62289,14 @@ definitions:
         format: byte
       description:
         type: string
+  scalar.covenant.v1beta1.Reservation:
+    type: object
+    properties:
+      request:
+        type: string
+      amount:
+        type: string
+        format: uint64
   scalar.covenant.v1beta1.ReserveRedeemUtxoRequest:
     type: object
     properties:
@@ -62406,11 +62419,16 @@ definitions:
       amount_in_sats:
         type: string
         format: uint64
-      reserved:
-        type: object
-        additionalProperties:
-          type: string
-          format: uint64
+      reservations:
+        type: array
+        items:
+          type: object
+          properties:
+            request:
+              type: string
+            amount:
+              type: string
+              format: uint64
         title: Reserved amount for each request id
   scalar.covenant.v1beta1.UTXOSnapshot:
     type: object
@@ -62438,11 +62456,16 @@ definitions:
             amount_in_sats:
               type: string
               format: uint64
-            reserved:
-              type: object
-              additionalProperties:
-                type: string
-                format: uint64
+            reservations:
+              type: array
+              items:
+                type: object
+                properties:
+                  request:
+                    type: string
+                  amount:
+                    type: string
+                    format: uint64
               title: Reserved amount for each request id
   scalar.covenant.v1beta1.UTXOSnapshotResponse:
     type: object
@@ -62473,11 +62496,16 @@ definitions:
                 amount_in_sats:
                   type: string
                   format: uint64
-                reserved:
-                  type: object
-                  additionalProperties:
-                    type: string
-                    format: uint64
+                reservations:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      request:
+                        type: string
+                      amount:
+                        type: string
+                        format: uint64
                   title: Reserved amount for each request id
   scalar.covenant.v1beta1.UpdateCustodianGroupRequest:
     type: object

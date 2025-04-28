@@ -62,7 +62,7 @@ func (c *BtcClient) getUtxoList(taprootAddress string) ([]*cov.UTXO, []uint64, e
 			TxID:         txID,
 			Vout:         utxo.Vout,
 			AmountInSats: utxo.Value,
-			Reserved:     make(map[string]uint64),
+			Reservations: []*cov.Reservation{},
 		})
 		blockHeights = append(blockHeights, utxo.Status.BlockHeight)
 	}

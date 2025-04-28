@@ -251,8 +251,8 @@
 - [scalar/covenant/v1beta1/redeem.proto](#scalar/covenant/v1beta1/redeem.proto)
     - [ExpiredEvmSession](#scalar.covenant.v1beta1.ExpiredEvmSession)
     - [RedeemSession](#scalar.covenant.v1beta1.RedeemSession)
+    - [Reservation](#scalar.covenant.v1beta1.Reservation)
     - [UTXO](#scalar.covenant.v1beta1.UTXO)
-    - [UTXO.ReservedEntry](#scalar.covenant.v1beta1.UTXO.ReservedEntry)
     - [UTXOSnapshot](#scalar.covenant.v1beta1.UTXOSnapshot)
   
 - [scalar/covenant/v1beta1/events.proto](#scalar/covenant/v1beta1/events.proto)
@@ -4269,6 +4269,22 @@ quorum threshold e.g.,3 |
 
 
 
+<a name="scalar.covenant.v1beta1.Reservation"></a>
+
+### Reservation
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `request` | [string](#string) |  |  |
+| `amount` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
 <a name="scalar.covenant.v1beta1.UTXO"></a>
 
 ### UTXO
@@ -4281,23 +4297,7 @@ quorum threshold e.g.,3 |
 | `vout` | [uint32](#uint32) |  |  |
 | `script_pubkey` | [bytes](#bytes) |  |  |
 | `amount_in_sats` | [uint64](#uint64) |  |  |
-| `reserved` | [UTXO.ReservedEntry](#scalar.covenant.v1beta1.UTXO.ReservedEntry) | repeated | Reserved amount for each request id |
-
-
-
-
-
-
-<a name="scalar.covenant.v1beta1.UTXO.ReservedEntry"></a>
-
-### UTXO.ReservedEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `key` | [string](#string) |  |  |
-| `value` | [uint64](#uint64) |  |  |
+| `reservations` | [Reservation](#scalar.covenant.v1beta1.Reservation) | repeated | Reserved amount for each request id |
 
 
 
