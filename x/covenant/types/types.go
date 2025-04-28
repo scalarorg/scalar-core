@@ -3,6 +3,7 @@ package types
 import (
 	fmt "fmt"
 	"math/big"
+	"strings"
 
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
@@ -124,7 +125,7 @@ func (p *RedeemTokenPayload) AbiUnpack(data []byte) error {
 	amounts := unpacked[4].([]uint64)
 	p.Utxos = make([]*UTXO, len(txIds))
 	for i, txId := range txIds {
-		hash, err := chains.HashFromHex(txId)
+		hash, err := chains.HashFromHex(strings.TrimPrefix(txId, "0x"))
 		if err != nil {
 			log.Error().Err(err).Msg("txId hash error")
 			return err
