@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/bitcoin-vault/go-utils/btc"
 	"github.com/scalarorg/scalar-core/utils/events"
 	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
@@ -203,11 +204,11 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 	}
 
 	if !chainsTypes.IsEvmChain(sourceChain.Name) {
-		return nil, fmt.Errorf("chain %s is not a EVM chain", sourceChain.Name)
+		return nil, fmt.Errorf("source chain %s is not a EVM chain", sourceChain.Name)
 	}
 
 	if !chainsTypes.IsBitcoinChain(destChain.Name) {
-		return nil, fmt.Errorf("chain %s is not a bitcoin chain", destChain.Name)
+		return nil, fmt.Errorf("destination chain %s is not a bitcoin chain", destChain.Name)
 	}
 
 	if err := validateChainActivated(ctx, s.nexus, sourceChain); err != nil {
@@ -229,8 +230,15 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 	if !ok {
 		return nil, fmt.Errorf("could not find redeem session for '%s'", protocol.CustodianGroupUID.Hex())
 	}
+	log.Info().Any("RedeemSession", session).
+		Hex("CustodianGroupUid", protocol.CustodianGroupUID[:]).
+		Msg("[x/covernant] reserveUtxos found redeem session")
 	if session.CurrentPhase != exported.Preparing {
 		return nil, fmt.Errorf("redeem session is not in preparing phase")
+	}
+
+	if session.IsSwitching {
+		return nil, fmt.Errorf("redeem session is in switching")
 	}
 	// Create redeem payload for evm tx
 	params, dataHash, err := s.Keeper.CreateRedeemParams(ctx, req, protocol.CustodianGroupUID, session.Sequence)

@@ -197,16 +197,20 @@ func (k Keeper) AppendUtxo(ctx sdk.Context, txID exported.Hash, vout uint32, scr
 
 // findAvailableUtxos uses knapsack algorithm to find optimal UTXO combination
 func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID [32]byte, requestID string, amount uint64) ([]*cov.UTXO, error) {
-	redeemSession, ok := k.GetRedeemSession(ctx, custodianGroupUID)
-	if !ok {
-		return nil, fmt.Errorf("redeem session not found")
-	}
-	if redeemSession.IsSwitching {
-		return nil, fmt.Errorf("redeem phase is switching")
-	}
-	if redeemSession.CurrentPhase != covExported.Preparing {
-		return nil, fmt.Errorf("redeem session is not in preparing phase")
-	}
+	// We've already validated redeem session in the outer function
+	// redeemSession, ok := k.GetRedeemSession(ctx, custodianGroupUID)
+	// if !ok {
+	// 	return nil, fmt.Errorf("redeem session not found")
+	// }
+	// log.Info().Any("RedeemSession", redeemSession).
+	// 	Hex("CustodianGroupUid", custodianGroupUID[:]).
+	// 	Msg("[x/covernant] reserveUtxos found redeem session")
+	// if redeemSession.IsSwitching {
+	// 	return nil, fmt.Errorf("redeem phase is switching")
+	// }
+	// if redeemSession.CurrentPhase != covExported.Preparing {
+	// 	return nil, fmt.Errorf("redeem session is not in preparing phase")
+	// }
 	utxoSnapshot, ok := k.GetUtxoSnapshot(ctx, custodianGroupUID)
 	if !ok {
 		return nil, fmt.Errorf("utxo snapshot not found")
