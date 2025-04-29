@@ -30,4 +30,8 @@ message Params {
   int64 end_blocker_limit = 12;
   uint64 transfer_limit = 13;
   map<string, string> metadata = 14;
+
+  // limite redeem
+  uint64 redeem_session_amount_limit = 15;
+  uint64 redeem_txs_vsize_limit = 16;
 }

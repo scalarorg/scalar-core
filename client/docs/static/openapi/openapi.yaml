@@ -7210,6 +7210,13 @@ paths:
                         type: object
                         additionalProperties:
                           type: string
+                      redeem_session_amount_limit:
+                        type: string
+                        format: uint64
+                        title: limite redeem
+                      redeem_txs_vsize_limit:
+                        type: string
+                        format: uint64
         default:
           description: An unexpected error response
           content:
@@ -55709,6 +55716,13 @@ components:
           type: object
           additionalProperties:
             type: string
+        redeem_session_amount_limit:
+          type: string
+          format: uint64
+          title: limite redeem
+        redeem_txs_vsize_limit:
+          type: string
+          format: uint64
     scalar.chains.v1beta1.ParamsResponse:
       type: object
       properties:
@@ -55768,6 +55782,13 @@ components:
               type: object
               additionalProperties:
                 type: string
+            redeem_session_amount_limit:
+              type: string
+              format: uint64
+              title: limite redeem
+            redeem_txs_vsize_limit:
+              type: string
+              format: uint64
     scalar.chains.v1beta1.PendingCommandsResponse:
       type: object
       properties:

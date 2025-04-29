@@ -2462,6 +2462,8 @@ PollParticipants should be embedded in poll events in other modules
 | `end_blocker_limit` | [int64](#int64) |  |  |
 | `transfer_limit` | [uint64](#uint64) |  |  |
 | `metadata` | [Params.MetadataEntry](#scalar.chains.v1beta1.Params.MetadataEntry) | repeated |  |
+| `redeem_session_amount_limit` | [uint64](#uint64) |  | limite redeem |
+| `redeem_txs_vsize_limit` | [uint64](#uint64) |  |  |
 
 
 

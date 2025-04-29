@@ -46,20 +46,22 @@ func DefaultChainParams(chainId sdk.Int, chain nexus.ChainName, networkKind type
 		panic(err)
 	}
 	return Params{
-		ChainID:             chainId,
-		Chain:               chain,
-		ConfirmationHeight:  2,
-		NetworkKind:         networkKind,
-		TokenCode:           bzToken,
-		Burnable:            bzBurnable,
-		RevoteLockingPeriod: 50,
-		VotingThreshold:     utils.Threshold{Numerator: 51, Denominator: 100},
-		MinVoterCount:       1,
-		CommandsGasLimit:    5000000,
-		VotingGracePeriod:   50,
-		EndBlockerLimit:     50,
-		TransferLimit:       1000,
-		Metadata:            metadata,
+		ChainID:                  chainId,
+		Chain:                    chain,
+		ConfirmationHeight:       2,
+		NetworkKind:              networkKind,
+		TokenCode:                bzToken,
+		Burnable:                 bzBurnable,
+		RevoteLockingPeriod:      50,
+		VotingThreshold:          utils.Threshold{Numerator: 51, Denominator: 100},
+		MinVoterCount:            1,
+		CommandsGasLimit:         5000000,
+		VotingGracePeriod:        50,
+		EndBlockerLimit:          50,
+		TransferLimit:            1000,
+		Metadata:                 metadata,
+		RedeemSessionAmountLimit: 100_000_000,
+		RedeemTxsVsizeLimit:      200_000,
 	}
 }
 
