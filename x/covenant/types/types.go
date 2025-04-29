@@ -286,6 +286,7 @@ func (s *UTXOSnapshot) ReserveUtxos(requestID string, amount uint64, quorum uint
 	newInput := 0
 	newOutput := 1
 	remainingAmount := amount
+	reserveUtxos := make([]*UTXO, 0)
 	mapNewResevations := map[int]uint64{}
 	for ind, utxo := range s.Utxos {
 		availableAmount := utxo.AvailableAmount()
@@ -296,6 +297,12 @@ func (s *UTXOSnapshot) ReserveUtxos(requestID string, amount uint64, quorum uint
 				reserveAmount = remainingAmount
 			}
 			mapNewResevations[ind] = reserveAmount
+			reserveUtxos = append(reserveUtxos, &UTXO{
+				TxID:         utxo.TxID,
+				Vout:         utxo.Vout,
+				AmountInSats: reserveAmount,
+				ScriptPubkey: utxo.ScriptPubkey,
+			})
 			remainingAmount -= reserveAmount
 			//First reservation
 			if len(utxo.Reservations) == 0 {
@@ -314,16 +321,9 @@ func (s *UTXOSnapshot) ReserveUtxos(requestID string, amount uint64, quorum uint
 	if newVsize > vSizeLimit {
 		return nil, fmt.Errorf("new virtual size exceeds the limit %d > %d", newVsize, vSizeLimit)
 	}
-	reserveUtxos := make([]*UTXO, 0)
+
 	for ind, reserveAmount := range mapNewResevations {
 		utxo := s.Utxos[ind]
-		reservedUtxo := &UTXO{
-			TxID:         utxo.TxID,
-			Vout:         utxo.Vout,
-			AmountInSats: reserveAmount,
-			ScriptPubkey: utxo.ScriptPubkey,
-		}
-		reserveUtxos = append(reserveUtxos, reservedUtxo)
 		utxo.AppendReserved(requestID, reserveAmount)
 	}
 
