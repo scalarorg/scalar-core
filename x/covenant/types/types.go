@@ -1,6 +1,7 @@
 package types
 
 import (
+	"bytes"
 	fmt "fmt"
 	"math/big"
 	"strings"
@@ -299,10 +300,26 @@ func (s *UTXOSnapshot) FindUtxo(txID chains.Hash, vout uint32) *UTXO {
 	return nil
 }
 
+func (s *UTXOSnapshot) Compare(other *UTXOSnapshot) bool {
+	if other == nil {
+		return false
+	}
+	if len(s.Utxos) != len(other.Utxos) {
+		return false
+	}
+	for i, utxo := range s.Utxos {
+		otherUtxo := other.Utxos[i]
+		if !bytes.Equal(utxo.TxID[:], otherUtxo.TxID[:]) || utxo.Vout != otherUtxo.Vout {
+			return false
+		}
+	}
+	return true
+}
+
 func (s *UTXOSnapshot) ToString() string {
-	output := s.CustodianGroupUID.Hex() + ";\n"
+	output := fmt.Sprintf("GroupUid:%s;", s.CustodianGroupUID.Hex())
 	for _, utxo := range s.Utxos {
-		output += fmt.Sprintf("%s:%d;\n", utxo.TxID.Hex(), utxo.Vout)
+		output += fmt.Sprintf("%s:%d;", utxo.TxID.Hex(), utxo.Vout)
 	}
 	return output
 }

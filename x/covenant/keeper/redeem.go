@@ -159,7 +159,7 @@ func (k Keeper) SetUtxoSnapshot(ctx sdk.Context, utxoSnapshot *cov.UTXOSnapshot)
 			Uint64("Update UtxoSnapshot blockheight", utxoSnapshot.BlockHeight).
 			Hex("Update UtxoSnapshot hash", updatingHash.Bytes()).
 			Msg("[x/covenant] [Keeper] UtxoSnapShot already updated")
-		if !bytes.Equal(currentHash[:], updatingHash[:]) {
+		if !currentUtxoSnapshot.Compare(utxoSnapshot) {
 			log.Debug().Str("Current UtxoSnapshot", currentUtxoSnapshot.ToString()).Msg("")
 			log.Debug().Str("Update UtxoSnapshot", utxoSnapshot.ToString()).Msg("")
 		}
