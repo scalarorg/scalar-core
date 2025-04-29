@@ -199,16 +199,16 @@ func (k Keeper) AppendUtxo(ctx sdk.Context, blockHeight uint64, txID exported.Ha
 			if !ok {
 				return fmt.Errorf("utxo snapshot not found")
 			}
-			utxoSnapshot.Utxos = append(utxoSnapshot.Utxos, &cov.UTXO{
-				TxID:         txID,
-				Vout:         vout,
-				ScriptPubkey: scriptPubkey,
-				AmountInSats: amountInSats,
-			})
-			if blockHeight > 0 {
+			if utxoSnapshot.BlockHeight <= blockHeight {
+				utxoSnapshot.AppendUtxo(&cov.UTXO{
+					TxID:         txID,
+					Vout:         vout,
+					ScriptPubkey: scriptPubkey,
+					AmountInSats: amountInSats,
+				})
 				utxoSnapshot.BlockHeight = blockHeight
+				k.SetUtxoSnapshot(ctx, utxoSnapshot)
 			}
-			k.SetUtxoSnapshot(ctx, utxoSnapshot)
 			break
 		} else {
 			clog.Redf("not found custodian group for scriptPubkey: %x, got: %x", scriptPubkey, custodianGroup.BitcoinPubkey)

@@ -263,6 +263,22 @@ func (s *UTXOSnapshot) CountInputOutput() (int, int) {
 	return inputs, len(mapRequests)
 }
 
+// Return true if utxo is appended
+func (s *UTXOSnapshot) AppendUtxo(utxo *UTXO) bool {
+	exists := false
+	for _, item := range s.Utxos {
+		if bytes.Equal(item.TxID[:], utxo.TxID[:]) && item.Vout == utxo.Vout {
+			exists = true
+			break
+		}
+	}
+	if !exists {
+		s.Utxos = append(s.Utxos, utxo)
+		return true
+	}
+	return false
+}
+
 // Utxos list is sorted by amount in sats and txid for deterministic results
 // Each utxo is reserved if it is part of the optimal combination
 func (s *UTXOSnapshot) ReserveUtxos(requestID string, amount uint64, quorum uint64, vSizeLimit uint64) ([]*UTXO, error) {
