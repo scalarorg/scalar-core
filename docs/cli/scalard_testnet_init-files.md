@@ -32,6 +32,7 @@ scalard testnet init-files [flags]
                                     		*./tokens/evm.json* stores all evm erc20 token configs ...
                                     		*./tokens/btc.json* stores all btc token configs ...
                                     		 (default "./configs")
+      --custodian-group string      Default custodian group name (default "scalar")
       --env-file string             Path to environment file to load (optional)
   -h, --help                        help for init-files
       --key-type string             Key signing algorithm to generate keys for (default "secp256k1")

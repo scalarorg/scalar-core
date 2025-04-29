@@ -243,7 +243,12 @@ func (s msgServer) ReserveRedeemUtxo(c context.Context, req *types.ReserveRedeem
 		return nil, fmt.Errorf("redeem session is in switching")
 	}
 	// Create redeem payload for evm tx
-	params, dataHash, err := s.Keeper.CreateRedeemParams(ctx, req, protocol.CustodianGroupUID, session.Sequence)
+	ck, err := s.chains.ForChain(ctx, destChainName)
+	if err != nil {
+		return nil, fmt.Errorf("ChainKeeper not found for chain %s", destChainName)
+	}
+	chainParams := ck.GetParams(ctx)
+	params, dataHash, err := s.Keeper.CreateRedeemParams(ctx, req, protocol.CustodianGroupUID, &chainParams, session.Sequence)
 	if err != nil {
 		return nil, err
 	}

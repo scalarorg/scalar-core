@@ -41,7 +41,7 @@ var _ covenanttypes.Keeper = &KeeperMock{}
 //			CreateCustodianGroupFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, params covenanttypes.Params) error {
 //				panic("mock out the CreateCustodianGroup method")
 //			},
-//			CreateRedeemParamsFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID chains.Hash, sequence uint64) ([]byte, *covenanttypes.CommandID, error) {
+//			CreateRedeemParamsFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID chains.Hash, chainParams *chainsTypes.Params, sequence uint64) ([]byte, *covenanttypes.CommandID, error) {
 //				panic("mock out the CreateRedeemParams method")
 //			},
 //			DeleteSigningSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, id uint64)  {
@@ -145,7 +145,7 @@ type KeeperMock struct {
 	CreateCustodianGroupFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, params covenanttypes.Params) error
 
 	// CreateRedeemParamsFunc mocks the CreateRedeemParams method.
-	CreateRedeemParamsFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID chains.Hash, sequence uint64) ([]byte, *covenanttypes.CommandID, error)
+	CreateRedeemParamsFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID chains.Hash, chainParams *chainsTypes.Params, sequence uint64) ([]byte, *covenanttypes.CommandID, error)
 
 	// DeleteSigningSessionFunc mocks the DeleteSigningSession method.
 	DeleteSigningSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, id uint64)
@@ -258,6 +258,8 @@ type KeeperMock struct {
 			Req *covenanttypes.ReserveRedeemUtxoRequest
 			// CustodianGrUID is the custodianGrUID argument value.
 			CustodianGrUID chains.Hash
+			// ChainParams is the chainParams argument value.
+			ChainParams *chainsTypes.Params
 			// Sequence is the sequence argument value.
 			Sequence uint64
 		}
@@ -570,7 +572,7 @@ func (mock *KeeperMock) CreateCustodianGroupCalls() []struct {
 }
 
 // CreateRedeemParams calls CreateRedeemParamsFunc.
-func (mock *KeeperMock) CreateRedeemParams(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID chains.Hash, sequence uint64) ([]byte, *covenanttypes.CommandID, error) {
+func (mock *KeeperMock) CreateRedeemParams(ctx github_com_cosmos_cosmos_sdk_types.Context, req *covenanttypes.ReserveRedeemUtxoRequest, custodianGrUID chains.Hash, chainParams *chainsTypes.Params, sequence uint64) ([]byte, *covenanttypes.CommandID, error) {
 	if mock.CreateRedeemParamsFunc == nil {
 		panic("KeeperMock.CreateRedeemParamsFunc: method is nil but Keeper.CreateRedeemParams was just called")
 	}
@@ -578,17 +580,19 @@ func (mock *KeeperMock) CreateRedeemParams(ctx github_com_cosmos_cosmos_sdk_type
 		Ctx            github_com_cosmos_cosmos_sdk_types.Context
 		Req            *covenanttypes.ReserveRedeemUtxoRequest
 		CustodianGrUID chains.Hash
+		ChainParams    *chainsTypes.Params
 		Sequence       uint64
 	}{
 		Ctx:            ctx,
 		Req:            req,
 		CustodianGrUID: custodianGrUID,
+		ChainParams:    chainParams,
 		Sequence:       sequence,
 	}
 	mock.lockCreateRedeemParams.Lock()
 	mock.calls.CreateRedeemParams = append(mock.calls.CreateRedeemParams, callInfo)
 	mock.lockCreateRedeemParams.Unlock()
-	return mock.CreateRedeemParamsFunc(ctx, req, custodianGrUID, sequence)
+	return mock.CreateRedeemParamsFunc(ctx, req, custodianGrUID, chainParams, sequence)
 }
 
 // CreateRedeemParamsCalls gets all the calls that were made to CreateRedeemParams.
@@ -599,12 +603,14 @@ func (mock *KeeperMock) CreateRedeemParamsCalls() []struct {
 	Ctx            github_com_cosmos_cosmos_sdk_types.Context
 	Req            *covenanttypes.ReserveRedeemUtxoRequest
 	CustodianGrUID chains.Hash
+	ChainParams    *chainsTypes.Params
 	Sequence       uint64
 } {
 	var calls []struct {
 		Ctx            github_com_cosmos_cosmos_sdk_types.Context
 		Req            *covenanttypes.ReserveRedeemUtxoRequest
 		CustodianGrUID chains.Hash
+		ChainParams    *chainsTypes.Params
 		Sequence       uint64
 	}
 	mock.lockCreateRedeemParams.RLock()

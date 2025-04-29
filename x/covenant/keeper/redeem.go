@@ -16,6 +16,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/key"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covExported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	cov "github.com/scalarorg/scalar-core/x/covenant/types"
 )
@@ -217,7 +218,7 @@ func (k Keeper) AppendUtxo(ctx sdk.Context, blockHeight uint64, txID exported.Ha
 }
 
 // findAvailableUtxos uses knapsack algorithm to find optimal UTXO combination
-func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID [32]byte, requestID string, amount uint64) ([]*cov.UTXO, error) {
+func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID [32]byte, requestID string, amount uint64, vsizeLimit uint64) ([]*cov.UTXO, error) {
 	// We've already validated redeem session in the outer function
 	// redeemSession, ok := k.GetRedeemSession(ctx, custodianGroupUID)
 	// if !ok {
@@ -232,6 +233,10 @@ func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID [32]byte, reques
 	// if redeemSession.CurrentPhase != covExported.Preparing {
 	// 	return nil, fmt.Errorf("redeem session is not in preparing phase")
 	// }
+	group, ok := k.GetCustodianGroup(ctx, custodianGroupUID)
+	if !ok {
+		return nil, fmt.Errorf("custodian group not found")
+	}
 	utxoSnapshot, ok := k.GetUtxoSnapshot(ctx, custodianGroupUID)
 	if !ok {
 		return nil, fmt.Errorf("utxo snapshot not found")
@@ -242,7 +247,7 @@ func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID [32]byte, reques
 	}
 
 	// Find optimal UTXO combination using knapsack algorithm
-	reserveUtxos, err := utxoSnapshot.ReserveUtxos(requestID, amount)
+	reserveUtxos, err := utxoSnapshot.ReserveUtxos(requestID, amount, uint64(group.Quorum), vsizeLimit)
 	if err != nil {
 		k.Logger(ctx).Error("failed to reserve utxos", "error", err)
 		return nil, err
@@ -254,7 +259,8 @@ func (k Keeper) reserveUtxos(ctx sdk.Context, custodianGroupUID [32]byte, reques
 	return reserveUtxos, nil
 }
 
-func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRequest, custodianGrUID exported.Hash, sequence uint64) ([]byte, *cov.CommandID, error) {
+func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRequest, custodianGrUID exported.Hash,
+	chainParams *chainsTypes.Params, sequence uint64) ([]byte, *cov.CommandID, error) {
 
 	bz := make([]byte, 8)
 	binary.BigEndian.PutUint64(bz, uint64(ctx.BlockHeight()))
@@ -266,7 +272,8 @@ func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 	binary.BigEndian.PutUint64(amountz, req.Amount)
 
 	dataHash := crypto.Keccak256(bz, req.Sender.Bytes(), []byte(req.Address), []byte(req.SourceChain), []byte(req.DestChain), []byte(req.Symbol), amountz)
-	reservedUtxos, err := k.reserveUtxos(ctx, custodianGrUID, hex.EncodeToString(dataHash), req.Amount)
+	reservedUtxos, err := k.reserveUtxos(ctx, custodianGrUID, hex.EncodeToString(dataHash), req.Amount,
+		chainParams.RedeemTxsVsizeLimit)
 	if err != nil {
 		return nil, nil, err
 	}

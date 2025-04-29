@@ -8,6 +8,7 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
+	"github.com/scalarorg/scalar-core/utils"
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/covenant/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -241,20 +242,36 @@ func (utxo *UTXO) Release(requestID string) uint64 {
 	return releaseAmount
 }
 
-func (s UTXOSnapshot) ReleaseUtxos(requestID string) uint64 {
+func (s *UTXOSnapshot) ReleaseUtxos(requestID string) uint64 {
 	releasedAmount := uint64(0)
 	for _, utxo := range s.Utxos {
 		releasedAmount += utxo.Release(requestID)
 	}
 	return releasedAmount
 }
+func (s *UTXOSnapshot) CountInputOutput() (int, int) {
+	inputs := 0
+	mapRequests := map[string]bool{}
+	for _, utxo := range s.Utxos {
+		if len(utxo.Reservations) > 0 {
+			inputs += 1
+			for _, reservation := range utxo.Reservations {
+				mapRequests[reservation.Request] = true
+			}
+		}
+	}
+	return inputs, len(mapRequests)
+}
 
 // Utxos list is sorted by amount in sats and txid for deterministic results
 // Each utxo is reserved if it is part of the optimal combination
-func (s UTXOSnapshot) ReserveUtxos(requestID string, amount uint64) ([]*UTXO, error) {
+func (s *UTXOSnapshot) ReserveUtxos(requestID string, amount uint64, quorum uint64, vSizeLimit uint64) ([]*UTXO, error) {
+	currentInputs, currentOutputs := s.CountInputOutput()
+	newInput := 0
+	newOutput := 1
 	remainingAmount := amount
-	reserveUtxos := make([]*UTXO, 0)
-	for _, utxo := range s.Utxos {
+	mapNewResevations := map[int]uint64{}
+	for ind, utxo := range s.Utxos {
 		availableAmount := utxo.AvailableAmount()
 		if availableAmount > 0 {
 			//Reserve amount is min(availableAmount, remainingAmount)
@@ -262,15 +279,12 @@ func (s UTXOSnapshot) ReserveUtxos(requestID string, amount uint64) ([]*UTXO, er
 			if reserveAmount > remainingAmount {
 				reserveAmount = remainingAmount
 			}
-			reservedUtxo := &UTXO{
-				TxID:         utxo.TxID,
-				Vout:         utxo.Vout,
-				AmountInSats: reserveAmount,
-				ScriptPubkey: utxo.ScriptPubkey,
-			}
-			reserveUtxos = append(reserveUtxos, reservedUtxo)
-			utxo.AppendReserved(requestID, reserveAmount)
+			mapNewResevations[ind] = reserveAmount
 			remainingAmount -= reserveAmount
+			//First reservation
+			if len(utxo.Reservations) == 0 {
+				newInput += 1
+			}
 		}
 		if remainingAmount == 0 {
 			break
@@ -279,6 +293,24 @@ func (s UTXOSnapshot) ReserveUtxos(requestID string, amount uint64) ([]*UTXO, er
 	if remainingAmount > 0 {
 		return nil, fmt.Errorf("not enough utxos to reserve, remainingAmount %d", remainingAmount)
 	}
+	//Add extra input and output for collect change amount
+	newVsize := utils.CalculateVsize(currentInputs+newInput+1, currentOutputs+newOutput+1, quorum)
+	if newVsize > vSizeLimit {
+		return nil, fmt.Errorf("new virtual size exceeds the limit %d > %d", newVsize, vSizeLimit)
+	}
+	reserveUtxos := make([]*UTXO, 0)
+	for ind, reserveAmount := range mapNewResevations {
+		utxo := s.Utxos[ind]
+		reservedUtxo := &UTXO{
+			TxID:         utxo.TxID,
+			Vout:         utxo.Vout,
+			AmountInSats: reserveAmount,
+			ScriptPubkey: utxo.ScriptPubkey,
+		}
+		reserveUtxos = append(reserveUtxos, reservedUtxo)
+		utxo.AppendReserved(requestID, reserveAmount)
+	}
+
 	return reserveUtxos, nil
 }
 

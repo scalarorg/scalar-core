@@ -64,7 +64,7 @@ type Keeper interface {
 	RotateKey(ctx sdk.Context, chainName nexus.ChainName, key mtypes.Key) error
 	GetSigningSession(ctx sdk.Context, id uint64) (signing SigningSession, ok bool)
 	SetSigningSession(ctx sdk.Context, signing SigningSession)
-	CreateRedeemParams(ctx sdk.Context, req *ReserveRedeemUtxoRequest, custodianGrUID chains.Hash, sequence uint64) ([]byte, *CommandID, error)
+	CreateRedeemParams(ctx sdk.Context, req *ReserveRedeemUtxoRequest, custodianGrUID chains.Hash, chainParams *chainsTypes.Params, sequence uint64) ([]byte, *CommandID, error)
 
 	SetStandaloneCommandMetadata(ctx sdk.Context, meta StandaloneCommandMetadata, prefix key.Key)
 	SetUnsignedStandaloneCommandID(ctx sdk.Context, id []byte)

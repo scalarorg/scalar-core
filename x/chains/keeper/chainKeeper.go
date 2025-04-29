@@ -762,14 +762,10 @@ func (k ChainKeeper) createNewBtcUpcBatchToSign(ctx sdk.Context) (types.CommandB
 
 func (k ChainKeeper) createNewBtcBatchFollowCmd(ctx sdk.Context, cmd *types.Command) (types.CommandBatch, error) {
 	chainID := sdk.NewIntFromBigInt(k.getSigner(ctx).ChainID())
-	// TODO: replace gasLimit and maxGasCost based on the concept of bitcoin limitation, not evm
-	gasCost := cmd.MaxGasCost
 	keyID := cmd.KeyID
 
 	filter := func(value codec.ProtoMarshaler) bool {
 		c, ok := value.(*types.Command)
-		gasCost += c.MaxGasCost
-		// Note: This is used to limit the number of commands in the batch
 		return ok && c.KeyID == keyID
 	}
 
@@ -784,6 +780,7 @@ func (k ChainKeeper) createNewBtcBatchFollowCmd(ctx sdk.Context, cmd *types.Comm
 		clog.Magentaf("[keeper] [createNewBtcBatchFollowCmd] command: %+v", cmd)
 
 		// Note: Becareful with cmd.Clone() if you want to add more fields to the command, please update this function
+		//TODO: change to commands = append(commands, cmd)
 		clonedCmd := cmd.Clone()
 		commands = append(commands, clonedCmd)
 	}
