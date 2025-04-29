@@ -177,7 +177,7 @@ type CovenantKeeper interface {
 
 	GetCustodianGroup(ctx sdk.Context, uid exported.Hash) (group *covenantTypes.CustodianGroup, ok bool)
 
-	AppendUtxo(ctx sdk.Context, txID exported.Hash, vout uint32, scriptPubkey []byte, amountInSats uint64) error
+	AppendUtxo(ctx sdk.Context, blockHeight uint64, txID exported.Hash, vout uint32, scriptPubkey []byte, amountInSats uint64) error
 	// GetCurrentKeyID(ctx sdk.Context, chainName nexus.ChainName) (multisig.KeyID, bool)
 	MarkReservedUtxo(ctx sdk.Context, uid exported.Hash, payload []byte) error
 }

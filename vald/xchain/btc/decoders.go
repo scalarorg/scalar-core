@@ -97,6 +97,11 @@ func (client *BtcClient) createEventTokenSent(event *chainsTypes.EventConfirmSou
 
 	clog.Greenf("EventTokenSent/Asset Response protocol name: %s", response.Protocol.Name)
 
+	var blockHeight uint64 = 0
+	if tx.BlockHeight != nil {
+		blockHeight = uint64(*tx.BlockHeight)
+	}
+
 	return &chainsTypes.EventTokenSent{
 		EventID:            eventId,
 		Sender:             tx.PrevTxOuts[0].ScriptPubKey.Address,
@@ -107,6 +112,7 @@ func (client *BtcClient) createEventTokenSent(event *chainsTypes.EventConfirmSou
 		Asset:              sdk.NewCoin(response.Protocol.Asset.Symbol, sdk.NewInt(stakingAmount)),
 		ScriptPubkey:       scriptPubkey,
 		Vout:               uint32(LockingOutputIndex),
+		BlockHeight:        blockHeight,
 	}, nil
 }
 

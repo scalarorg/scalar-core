@@ -21,10 +21,6 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 )
 
-var (
-	StakingOutputIndex = 1
-)
-
 // BeginBlocker check for infraction evidence or downtime of validators
 // on every begin block
 func BeginBlocker(sdk.Context, abci.RequestBeginBlock, types.BaseKeeper) {}
@@ -217,21 +213,13 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 	)
 	clog.Magentaf("[x/chains] [ABCI]-Emited EventTokenSent")
 	//Append utxo to Utxo snapshot
-	err = cov.AppendUtxo(ctx, event.TxID, uint32(StakingOutputIndex), e.ScriptPubkey, e.Asset.Amount.Uint64())
+	err = cov.AppendUtxo(ctx, e.BlockHeight, event.TxID, uint32(e.Vout), e.ScriptPubkey, e.Asset.Amount.Uint64())
 	if err != nil {
 		ctx.Logger().Error("failed appending utxo to utxo snapshot", "error", err)
 		return err
 	}
-	events.Emit(ctx, &types.EventTokenSent{
-		Chain:              event.Chain,
-		EventID:            event.GetID(),
-		TransferID:         transferID,
-		CommandID:          event.TxID.Hex(),
-		Sender:             e.Sender,
-		DestinationChain:   e.DestinationChain,
-		DestinationAddress: e.DestinationAddress,
-		Asset:              amount,
-	})
+
+	events.Emit(ctx, e)
 
 	return nil
 }

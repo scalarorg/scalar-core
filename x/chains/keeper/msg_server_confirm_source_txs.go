@@ -46,16 +46,12 @@ func (s msgServer) ConfirmSourceTxs(c context.Context, req *types.ConfirmSourceT
 		return nil, err
 	}
 
-	event := &types.EventConfirmSourceTxsStarted{
+	events.Emit(ctx, &types.EventConfirmSourceTxsStarted{
 		Chain:              chain.Name,
 		PollMappings:       pollMappings,
 		ConfirmationHeight: keeper.GetRequiredConfirmationHeight(ctx),
 		Participants:       snapshot.GetParticipantAddresses(),
-	}
-
-	clog.Green("ConfirmStakingTxsStarted", event)
-
-	events.Emit(ctx, event)
+	})
 
 	return &types.ConfirmSourceTxsResponse{}, nil
 }

@@ -6797,6 +6797,9 @@ paths:
                       vout:
                         type: integer
                         format: int64
+                      block_height:
+                        type: string
+                        format: uint64
                   contract_call:
                     type: object
                     properties:
@@ -59788,6 +59791,9 @@ definitions:
           vout:
             type: integer
             format: int64
+          block_height:
+            type: string
+            format: uint64
       contract_call:
         type: object
         properties:
@@ -60118,6 +60124,9 @@ definitions:
               vout:
                 type: integer
                 format: int64
+              block_height:
+                type: string
+                format: uint64
           contract_call:
             type: object
             properties:
@@ -60315,6 +60324,9 @@ definitions:
       vout:
         type: integer
         format: int64
+      block_height:
+        type: string
+        format: uint64
   scalar.chains.v1beta1.EventTransfer:
     type: object
     properties:

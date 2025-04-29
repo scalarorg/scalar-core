@@ -762,6 +762,7 @@ func (k ChainKeeper) createNewBtcUpcBatchToSign(ctx sdk.Context) (types.CommandB
 
 func (k ChainKeeper) createNewBtcBatchFollowCmd(ctx sdk.Context, cmd *types.Command) (types.CommandBatch, error) {
 	chainID := sdk.NewIntFromBigInt(k.getSigner(ctx).ChainID())
+	// TODO: replace gasLimit and maxGasCost based on the concept of bitcoin limitation, not evm
 	gasLimit := k.getCommandsGasLimit(ctx)
 	gasCost := cmd.MaxGasCost
 	keyID := cmd.KeyID

@@ -12,6 +12,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/key"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
@@ -146,7 +147,7 @@ func (k Keeper) SetUtxoSnapshot(ctx sdk.Context, utxoSnapshot *cov.UTXOSnapshot)
 	// }
 	// Allway update the utxo snapshot with higher block height
 	// Update the utxo snapshot
-	if currentUtxoSnapshot.BlockHeight < utxoSnapshot.BlockHeight {
+	if currentUtxoSnapshot.BlockHeight <= utxoSnapshot.BlockHeight {
 		k.setUtxoSnapshot(ctx, utxoSnapshot)
 		log.Debug().Uint64("Stored UtxoSnapShot blockheight", currentUtxoSnapshot.BlockHeight).
 			Uint64("Update UtxoSnapshot blockheight", utxoSnapshot.BlockHeight).
@@ -184,7 +185,8 @@ func (k Keeper) GetUtxoSnapshot(ctx sdk.Context, custodianGroupUID exported.Hash
 	return &results, true
 }
 
-func (k Keeper) AppendUtxo(ctx sdk.Context, txID exported.Hash, vout uint32, scriptPubkey []byte, amountInSats uint64) error {
+func (k Keeper) AppendUtxo(ctx sdk.Context, blockHeight uint64, txID exported.Hash, vout uint32, scriptPubkey []byte, amountInSats uint64) error {
+	clog.Magentaf("[x/covenant] [Keeper] AppendUtxo, txID: %s, vout: %d, scriptPubkey: %s, amountInSats: %d", txID, vout, hex.EncodeToString(scriptPubkey), amountInSats)
 	custodianGroups, ok := k.GetAllCustodianGroups(ctx)
 	if !ok {
 		return fmt.Errorf("custodian groups not found")
@@ -202,8 +204,13 @@ func (k Keeper) AppendUtxo(ctx sdk.Context, txID exported.Hash, vout uint32, scr
 				ScriptPubkey: scriptPubkey,
 				AmountInSats: amountInSats,
 			})
+			if blockHeight > 0 {
+				utxoSnapshot.BlockHeight = blockHeight
+			}
 			k.SetUtxoSnapshot(ctx, utxoSnapshot)
 			break
+		} else {
+			clog.Redf("not found custodian group for scriptPubkey: %x, got: %x", scriptPubkey, custodianGroup.BitcoinPubkey)
 		}
 	}
 	return nil

@@ -2312,6 +2312,7 @@ PollParticipants should be embedded in poll events in other modules
 | `asset` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `script_pubkey` | [bytes](#bytes) |  | Extra fields for form new utxo |
 | `vout` | [uint32](#uint32) |  |  |
+| `block_height` | [uint64](#uint64) |  |  |
 
 
 

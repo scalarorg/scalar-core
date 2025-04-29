@@ -207,6 +207,7 @@ message EventTokenSent {
   // Extra fields for form new utxo
   bytes script_pubkey = 9;
   uint32 vout = 10;
+  uint64 block_height = 11;
 }
 
 message EventContractCall {
