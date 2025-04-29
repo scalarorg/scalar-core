@@ -42,7 +42,7 @@ type Params struct {
 	EndBlockerLimit     int64                                                         `protobuf:"varint,12,opt,name=end_blocker_limit,json=endBlockerLimit,proto3" json:"end_blocker_limit,omitempty"`
 	TransferLimit       uint64                                                        `protobuf:"varint,13,opt,name=transfer_limit,json=transferLimit,proto3" json:"transfer_limit,omitempty"`
 	Metadata            map[string]string                                             `protobuf:"bytes,14,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	// limite redeem
+	// Redeem limit
 	RedeemSessionAmountLimit uint64 `protobuf:"varint,15,opt,name=redeem_session_amount_limit,json=redeemSessionAmountLimit,proto3" json:"redeem_session_amount_limit,omitempty"`
 	RedeemTxsVsizeLimit      uint64 `protobuf:"varint,16,opt,name=redeem_txs_vsize_limit,json=redeemTxsVsizeLimit,proto3" json:"redeem_txs_vsize_limit,omitempty"`
 }

@@ -14,20 +14,22 @@ import (
 
 // Parameter keys
 var (
-	KeyChainName           = []byte("chainName")
-	KeyConfirmationHeight  = []byte("confirmationHeight")
-	KeyNetworkKind         = []byte("networkKind")
-	KeyRevoteLockingPeriod = []byte("revoteLockingPeriod")
-	KeyChainID             = []byte("chainId")
-	KeyVotingThreshold     = []byte("votingThreshold")
-	KeyToken               = []byte("token")
-	KeyBurnable            = []byte("burnable")
-	KeyMinVoterCount       = []byte("minVoterCount")
-	KeyCommandsGasLimit    = []byte("commandsGasLimit")
-	KeyVotingGracePeriod   = []byte("votingGracePeriod")
-	KeyEndBlockerLimit     = []byte("endBlockerLimit")
-	KeyTransferLimit       = []byte("transferLimit")
-	KeyMetadata            = []byte("metadata")
+	KeyChainName                = []byte("chainName")
+	KeyConfirmationHeight       = []byte("confirmationHeight")
+	KeyNetworkKind              = []byte("networkKind")
+	KeyRevoteLockingPeriod      = []byte("revoteLockingPeriod")
+	KeyChainID                  = []byte("chainId")
+	KeyVotingThreshold          = []byte("votingThreshold")
+	KeyToken                    = []byte("token")
+	KeyBurnable                 = []byte("burnable")
+	KeyMinVoterCount            = []byte("minVoterCount")
+	KeyCommandsGasLimit         = []byte("commandsGasLimit")
+	KeyVotingGracePeriod        = []byte("votingGracePeriod")
+	KeyEndBlockerLimit          = []byte("endBlockerLimit")
+	KeyTransferLimit            = []byte("transferLimit")
+	KeyMetadata                 = []byte("metadata")
+	KeyRedeemSessionAmountLimit = []byte("redeemSessionAmountLimit")
+	KeyRedeemTxsVsizeLimit      = []byte("redeemTxsVsizeLimit")
 )
 
 func KeyTable() params.KeyTable {
@@ -87,6 +89,8 @@ func (m *Params) ParamSetPairs() params.ParamSetPairs {
 		params.NewParamSetPair(KeyEndBlockerLimit, &m.EndBlockerLimit, validateEndBlockerLimit),
 		params.NewParamSetPair(KeyTransferLimit, &m.TransferLimit, validateTransferLimit),
 		params.NewParamSetPair(KeyMetadata, &m.Metadata, validateMetadata),
+		params.NewParamSetPair(KeyRedeemSessionAmountLimit, &m.RedeemSessionAmountLimit, validateRedeemSessionAmountLimit),
+		params.NewParamSetPair(KeyRedeemTxsVsizeLimit, &m.RedeemTxsVsizeLimit, validateRedeemTxsVsizeLimit),
 	}
 }
 
@@ -236,6 +240,24 @@ func validateMetadata(i interface{}) error {
 	_, ok := i.(map[string]string)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	return nil
+}
+
+func validateRedeemSessionAmountLimit(redeemSessionAmountLimit interface{}) error {
+	_, ok := redeemSessionAmountLimit.(uint64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type for redeem session amount limit: %T", redeemSessionAmountLimit)
+	}
+
+	return nil
+}
+
+func validateRedeemTxsVsizeLimit(redeemTxsVsizeLimit interface{}) error {
+	_, ok := redeemTxsVsizeLimit.(uint64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type for redeem txs vsize limit: %T", redeemTxsVsizeLimit)
 	}
 
 	return nil
