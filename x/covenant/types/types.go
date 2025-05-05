@@ -224,6 +224,15 @@ func (utxo *UTXO) AvailableAmount() uint64 {
 	return utxo.AmountInSats - reservedAmount
 }
 
+func (utxo *UTXO) IsReserved(requestID string) bool {
+	for _, reserved := range utxo.Reservations {
+		if reserved.Request == requestID {
+			return true
+		}
+	}
+	return false
+}
+
 func (utxo *UTXO) Release(requestID string) uint64 {
 	if utxo.Reservations == nil {
 		return 0
@@ -289,6 +298,9 @@ func (s *UTXOSnapshot) ReserveUtxos(requestID string, amount uint64, quorum uint
 	reserveUtxos := make([]*UTXO, 0)
 	mapNewResevations := map[int]uint64{}
 	for ind, utxo := range s.Utxos {
+		if utxo.IsReserved(requestID) {
+			return nil, fmt.Errorf("requestID %s is already reserved in utxo %s", requestID, utxo.TxID.Hex())
+		}
 		availableAmount := utxo.AvailableAmount()
 		if availableAmount > 0 {
 			//Reserve amount is min(availableAmount, remainingAmount)
@@ -296,6 +308,7 @@ func (s *UTXOSnapshot) ReserveUtxos(requestID string, amount uint64, quorum uint
 			if reserveAmount > remainingAmount {
 				reserveAmount = remainingAmount
 			}
+			remainingAmount -= reserveAmount
 			mapNewResevations[ind] = reserveAmount
 			reserveUtxos = append(reserveUtxos, &UTXO{
 				TxID:         utxo.TxID,
@@ -303,7 +316,6 @@ func (s *UTXOSnapshot) ReserveUtxos(requestID string, amount uint64, quorum uint
 				AmountInSats: reserveAmount,
 				ScriptPubkey: utxo.ScriptPubkey,
 			})
-			remainingAmount -= reserveAmount
 			//First reservation
 			if len(utxo.Reservations) == 0 {
 				newInput += 1
