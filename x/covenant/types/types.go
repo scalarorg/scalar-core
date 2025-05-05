@@ -2,6 +2,7 @@ package types
 
 import (
 	"bytes"
+	"encoding/hex"
 	fmt "fmt"
 	"math/big"
 	"strings"
@@ -340,6 +341,37 @@ func (s *UTXOSnapshot) ReserveUtxos(requestID string, amount uint64, quorum uint
 	}
 
 	return reserveUtxos, nil
+}
+
+// Return:
+// true if new reservation is set;
+// false if reservation already exists
+func (s *UTXOSnapshot) SetReservation(p *RedeemTokenPayloadWithType) bool {
+	reqId := hex.EncodeToString(p.RequestId[:])
+	for _, reqUtxo := range p.Utxos {
+		reqUtxoId := reqUtxo.TxID.Hex()
+		for _, utxo := range s.Utxos {
+			if utxo.TxID.Hex() == reqUtxoId && utxo.Vout == reqUtxo.Vout {
+				for _, reservation := range utxo.Reservations {
+					if reservation.Request == reqId {
+						//Reservation already exists
+						return false
+					}
+				}
+				reservation := &Reservation{
+					Request: reqId,
+					Amount:  reqUtxo.AmountInSats,
+				}
+				if utxo.Reservations == nil {
+					utxo.Reservations = []*Reservation{reservation}
+				} else {
+					utxo.Reservations = append(utxo.Reservations, reservation)
+				}
+				break
+			}
+		}
+	}
+	return true
 }
 
 func (rs *UTXOSnapshot) GetHash() chains.Hash {

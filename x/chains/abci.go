@@ -94,7 +94,7 @@ func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 	case *types.Event_ContractCallWithToken:
 		return handleContractCallWithToken(ctx, event, bk, n, m, p, cov)
 	case *types.Event_RedeemToken:
-		return handleRedeemToken(ctx, event, bk, n, m, p, cov)
+		return handleRedeemToken(ctx, event, bk, n, p, cov)
 	case *types.Event_TokenSent:
 		return handleTokenSent(ctx, event, bk, n, cov)
 	case *types.Event_Transfer:
@@ -259,7 +259,7 @@ func handleContractCallWithToken(ctx sdk.Context, event types.Event, bk types.Ba
 	}
 }
 
-func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper, cov types.CovenantKeeper) error {
+func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, p types.ProtocolKeeper, cov types.CovenantKeeper) error {
 	log.Debug().Msgf("[x/chains] [ABCI] handleRedeemToken")
 	e := event.GetRedeemToken()
 	if e == nil {

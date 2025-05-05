@@ -277,6 +277,10 @@ func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 	if err != nil {
 		return nil, nil, err
 	}
+	log.Info().Str("requestID", hex.EncodeToString(dataHash)).
+		Uint64("amount", req.Amount).
+		Any("reservedUtxos", reservedUtxos).
+		Msg("[UTXOSnapshot] ReserveUtxos")
 	cmdId := cov.NewCommandID(dataHash)
 	payload := &cov.RedeemTokenPayloadWithType{
 		RedeemTokenPayload: cov.RedeemTokenPayload{
@@ -340,23 +344,11 @@ func (k Keeper) MarkReservedUtxo(ctx sdk.Context, uid exported.Hash, payload []b
 	if !ok {
 		return fmt.Errorf("utxo snapshot not found")
 	}
-
-	reqId := hex.EncodeToString(p.RequestId[:])
-	for _, reqUtxo := range p.Utxos {
-		for _, utxo := range utxoSnapshot.Utxos {
-			if utxo.TxID.Hex() == reqUtxo.TxID.Hex() && utxo.Vout == reqUtxo.Vout {
-				reservation := &cov.Reservation{
-					Request: reqId,
-					Amount:  reqUtxo.AmountInSats,
-				}
-				if utxo.Reservations == nil {
-					utxo.Reservations = []*cov.Reservation{reservation}
-				} else {
-					utxo.Reservations = append(utxo.Reservations, reservation)
-				}
-				break
-			}
-		}
+	reservationAlreadySet := utxoSnapshot.SetReservation(p)
+	if reservationAlreadySet {
+		log.Info().Str("requestID", hex.EncodeToString(p.RequestId[:])).
+			Uint64("amount", p.Amount).
+			Msg("[UTXOSnapshot] Set new reservation to the utxo snapshot")
 	}
 
 	k.setUtxoSnapshot(ctx, utxoSnapshot)
