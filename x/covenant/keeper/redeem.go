@@ -187,7 +187,7 @@ func (k Keeper) GetUtxoSnapshot(ctx sdk.Context, custodianGroupUID exported.Hash
 }
 
 func (k Keeper) AppendUtxo(ctx sdk.Context, blockHeight uint64, txID exported.Hash, vout uint32, scriptPubkey []byte, amountInSats uint64) error {
-	clog.Magentaf("[x/covenant] [Keeper] AppendUtxo, txID: %s, vout: %d, scriptPubkey: %s, amountInSats: %d", txID, vout, hex.EncodeToString(scriptPubkey), amountInSats)
+	clog.Magentaf("[x/covenant] [Keeper] AppendUtxo, txID: %s, vout: %d, scriptPubkey: %s, amountInSats: %d", hex.EncodeToString(txID[:]), vout, hex.EncodeToString(scriptPubkey), amountInSats)
 	custodianGroups, ok := k.GetAllCustodianGroups(ctx)
 	if !ok {
 		return fmt.Errorf("custodian groups not found")

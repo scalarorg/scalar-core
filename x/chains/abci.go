@@ -1,6 +1,7 @@
 package chains
 
 import (
+	"encoding/hex"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -180,7 +181,7 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 	if e == nil {
 		panic(fmt.Errorf("event is nil"))
 	}
-
+	log.Debug().Msgf("[x/chains] [ABCI] handleTokenSent, eventID: %s, chain: %s", event.GetID(), event.Chain)
 	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
 	destinationChain := funcs.MustOk(n.GetChain(ctx, e.DestinationChain))
 	sourceCk := funcs.Must(bk.ForChain(ctx, sourceChain.Name))
@@ -211,7 +212,9 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 		"eventID", event.GetID(),
 		"transferID", transferID.String(),
 	)
-	clog.Magentaf("[x/chains] [ABCI]-Emited EventTokenSent")
+	clog.Magentaf(fmt.Sprintf("[x/chains] [ABCI]-Emited EventTokenSent, eventID: %s, txID: %s, vout: %d, scriptPubkey: %s, amountInSats: %d",
+		event.GetID(), hex.EncodeToString(event.TxID[:]), e.Vout, hex.EncodeToString(e.ScriptPubkey), e.Asset.Amount.Uint64(),
+	))
 	//Append utxo to Utxo snapshot
 	err = cov.AppendUtxo(ctx, e.BlockHeight, event.TxID, uint32(e.Vout), e.ScriptPubkey, e.Asset.Amount.Uint64())
 	if err != nil {

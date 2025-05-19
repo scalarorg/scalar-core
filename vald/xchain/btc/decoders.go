@@ -95,7 +95,7 @@ func (client *BtcClient) createEventTokenSent(event *chainsTypes.EventConfirmSou
 		return nil, err
 	}
 
-	clog.Greenf("EventTokenSent/Asset Response protocol name: %s", response.Protocol.Name)
+	clog.Greenf("EventTokenSent/Asset Response protocol name: %s, EventID: %s", response.Protocol.Name, eventId)
 
 	var blockHeight uint64 = 0
 	if tx.BlockHeight != nil {
