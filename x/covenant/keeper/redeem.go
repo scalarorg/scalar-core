@@ -194,27 +194,29 @@ func (k Keeper) AppendUtxo(ctx sdk.Context, blockHeight uint64, txID exported.Ha
 	}
 
 	for _, custodianGroup := range custodianGroups {
-		if bytes.Equal(custodianGroup.BitcoinPubkey, scriptPubkey) {
-			utxoSnapshot, ok := k.GetUtxoSnapshot(ctx, custodianGroup.UID)
-			if !ok {
-				return fmt.Errorf("utxo snapshot not found")
-			}
-			if utxoSnapshot.BlockHeight <= blockHeight {
-				utxoSnapshot.AppendUtxo(&cov.UTXO{
-					TxID:         txID,
-					Vout:         vout,
-					ScriptPubkey: scriptPubkey,
-					AmountInSats: amountInSats,
-				})
-				utxoSnapshot.BlockHeight = blockHeight
-				k.SetUtxoSnapshot(ctx, utxoSnapshot)
-			}
-			break
-		} else {
-			clog.Redf("not found custodian group for scriptPubkey: %x, got: %x", scriptPubkey, custodianGroup.BitcoinPubkey)
+		if !bytes.Equal(custodianGroup.BitcoinPubkey, scriptPubkey) {
+			continue
 		}
+
+		utxoSnapshot, ok := k.GetUtxoSnapshot(ctx, custodianGroup.UID)
+		if !ok {
+			return fmt.Errorf("utxo snapshot not found")
+		}
+		if utxoSnapshot.BlockHeight <= blockHeight {
+			utxoSnapshot.AppendUtxo(&cov.UTXO{
+				TxID:         txID,
+				Vout:         vout,
+				ScriptPubkey: scriptPubkey,
+				AmountInSats: amountInSats,
+			})
+			utxoSnapshot.BlockHeight = blockHeight
+			k.SetUtxoSnapshot(ctx, utxoSnapshot)
+		}
+		return nil
 	}
-	return nil
+
+	clog.Red("not found custodian group for scriptPubkey: %x", scriptPubkey)
+	return fmt.Errorf("custodian group not found")
 }
 
 // findAvailableUtxos uses knapsack algorithm to find optimal UTXO combination

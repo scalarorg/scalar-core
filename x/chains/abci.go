@@ -212,16 +212,24 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 		"eventID", event.GetID(),
 		"transferID", transferID.String(),
 	)
-	clog.Magentaf(fmt.Sprintf("[x/chains] [ABCI]-Emited EventTokenSent, eventID: %s, txID: %s, vout: %d, scriptPubkey: %s, amountInSats: %d",
-		event.GetID(), hex.EncodeToString(event.TxID[:]), e.Vout, hex.EncodeToString(e.ScriptPubkey), e.Asset.Amount.Uint64(),
-	))
-	//Append utxo to Utxo snapshot
-	err = cov.AppendUtxo(ctx, e.BlockHeight, event.TxID, uint32(e.Vout), e.ScriptPubkey, e.Asset.Amount.Uint64())
-	if err != nil {
-		ctx.Logger().Error("failed appending utxo to utxo snapshot", "error", err)
-		return err
+
+	// TODO: distinguish between bridge transaction and transfer transaction
+	// check if script pubkey is nil
+	if len(e.ScriptPubkey) != 0 {
+		clog.Magentaf(fmt.Sprintf("[x/chains] [ABCI]-Emited EventTokenSent, eventID: %s, txID: %s, vout: %d, scriptPubkey: %s, amountInSats: %d",
+			event.GetID(), hex.EncodeToString(event.TxID[:]), e.Vout, hex.EncodeToString(e.ScriptPubkey), e.Asset.Amount.Uint64(),
+		))
+		//Append utxo to Utxo snapshot
+		err = cov.AppendUtxo(ctx, e.BlockHeight, event.TxID, uint32(e.Vout), e.ScriptPubkey, e.Asset.Amount.Uint64())
+		if err != nil {
+			ctx.Logger().Error("failed appending utxo to utxo snapshot", "error", err)
+			return err
+		}
 	}
 
+	clog.Bluef("[x/chains] [ABCI] Emit EventTokenSent: eventID: %s, txID: %s, vout: %d, scriptPubkey: %s, amountInSats: %d",
+		event.GetID(), hex.EncodeToString(event.TxID[:]), e.Vout, hex.EncodeToString(e.ScriptPubkey), e.Asset.Amount.Uint64(),
+	)
 	events.Emit(ctx, e)
 
 	return nil

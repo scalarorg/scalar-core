@@ -875,7 +875,7 @@ func findExpiredEvmSessionsAndRenewable(ctx sdk.Context, nk *neededKeeper, pk ty
 				log.Info().
 					Str("CustodianGroupUID", group.UID.Hex()).
 					Msg("[x/covenant] [Renewing redeem session]")
-				err := nk.keeper.RenewRedeemSession(ctx, group.UID)
+				err = nk.keeper.RenewRedeemSession(ctx, group.UID)
 				if err != nil {
 					log.Error().
 						Err(err).

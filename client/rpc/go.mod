@@ -5,7 +5,7 @@ go 1.23.3
 require (
 	github.com/cosmos/cosmos-sdk v0.45.16
 	github.com/cosmos/go-bip39 v1.0.0
-	github.com/ethereum/go-ethereum v1.14.12
+	github.com/ethereum/go-ethereum v1.14.13
 	github.com/joho/godotenv v1.5.1
 	github.com/rs/zerolog v1.33.0
 	github.com/scalarorg/scalar-core v1.1.2
@@ -17,7 +17,7 @@ require (
 	github.com/cosmos/gogoproto v1.7.0 // indirect
 	github.com/gogo/protobuf v1.3.3
 	github.com/gorilla/websocket v1.5.3 // indirect
-	github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20250205093245-57c4541ffbc7
+	github.com/scalarorg/bitcoin-vault/go-utils v0.0.0-20250426033010-eb69d1a47edd
 	github.com/spf13/cobra v1.8.1 // indirect
 	github.com/spf13/viper v1.19.0 // indirect
 )
@@ -91,7 +91,6 @@ require (
 	github.com/google/btree v1.1.3 // indirect
 	github.com/google/flatbuffers v2.0.8+incompatible // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
