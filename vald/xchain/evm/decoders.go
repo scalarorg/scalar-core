@@ -16,6 +16,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
+	chainsTypes "github.com/scalarorg/scalar-core/x/chains/types"
 	covExported "github.com/scalarorg/scalar-core/x/covenant/exported"
 	covTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -162,7 +163,7 @@ func DecodeEventContractCallWithToken(log *geth.Log) (types.EventContractCallWit
 	}, nil
 }
 
-func DecodeEventTokenSent(log *geth.Log) (types.EventTokenSent, error) {
+func DecodeEventTokenSent(event *types.EventConfirmSourceTxsStarted, log *geth.Log) (types.EventTokenSent, error) {
 	stringType := funcs.Must(abi.NewType("string", "string", nil))
 	uint256Type := funcs.Must(abi.NewType("uint256", "uint256", nil))
 
@@ -177,11 +178,16 @@ func DecodeEventTokenSent(log *geth.Log) (types.EventTokenSent, error) {
 		return types.EventTokenSent{}, err
 	}
 
+	eventId := chainsTypes.NewEventID(exported.Hash(log.TxHash), uint64(log.TxIndex))
+
 	return types.EventTokenSent{
+		EventID:            eventId,
 		Sender:             types.Address(common.BytesToAddress(log.Topics[1].Bytes())).String(),
+		Chain:              nexus.ChainName(event.Chain),
 		DestinationChain:   nexus.ChainName(params[0].(string)),
 		DestinationAddress: params[1].(string),
 		Asset:              sdk.NewCoin(params[2].(string), sdk.NewIntFromBigInt(params[3].(*big.Int))),
+		BlockHeight:        log.BlockNumber,
 	}, nil
 }
 

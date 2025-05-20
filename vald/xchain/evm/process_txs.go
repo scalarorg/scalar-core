@@ -96,7 +96,7 @@ func (c *EthereumClient) processTxReceipt(event *types.EventConfirmSourceTxsStar
 				},
 			})
 		case TokenSentSig:
-			gatewayEvent, err := DecodeEventTokenSent(txlog)
+			gatewayEvent, err := DecodeEventTokenSent(event, txlog)
 			if err != nil {
 				c.logger().Debug(sdkerrors.Wrap(err, "decode event TokenSent failed").Error())
 			}

@@ -58,7 +58,7 @@ func TestDecodeEventTokenSent(t *testing.T) {
 		DestinationAddress: "0x58ea4103ed955dCBbdc8a0fEbaba395B6e44d15F",
 		Asset:              sdk.NewCoin("ethereum-1-uaxl", sdk.NewInt(10000000)),
 	}
-	actual, err := evm.DecodeEventTokenSent(log)
+	actual, err := evm.DecodeEventTokenSent(&types.EventConfirmSourceTxsStarted{}, log)
 
 	assert.NoError(t, err)
 	assert.Equal(t, expected, actual)
