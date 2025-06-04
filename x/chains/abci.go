@@ -177,18 +177,18 @@ func handleSourceConfirmationEvent(ctx sdk.Context, event types.Event, n types.N
 }
 
 func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, cov types.CovenantKeeper) error {
-	e := event.GetEvent().(*types.Event_TokenSent).TokenSent
-	if e == nil {
+	tokenSentEvent := event.GetEvent().(*types.Event_TokenSent).TokenSent
+	if tokenSentEvent == nil {
 		panic(fmt.Errorf("event is nil"))
 	}
 	log.Debug().Msgf("[x/chains] [ABCI] handleTokenSent, eventID: %s, chain: %s", event.GetID(), event.Chain)
 	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
-	destinationChain := funcs.MustOk(n.GetChain(ctx, e.DestinationChain))
+	destinationChain := funcs.MustOk(n.GetChain(ctx, tokenSentEvent.DestinationChain))
 	sourceCk := funcs.Must(bk.ForChain(ctx, sourceChain.Name))
 	// Find token by symbol, which user request to transfer on the EVM
-	token := sourceCk.GetERC20TokenBySymbol(ctx, e.Asset.Denom)
+	token := sourceCk.GetERC20TokenBySymbol(ctx, tokenSentEvent.Asset.Denom)
 	if !token.Is(types.Confirmed) {
-		return fmt.Errorf("token with symbol %s not confirmed on source chain", e.Asset.Denom)
+		return fmt.Errorf("token with symbol %s not confirmed on source chain", tokenSentEvent.Asset.Denom)
 	}
 	//Get asset string from found token
 	//asset.Name is unique in the whole scalar network
@@ -197,12 +197,12 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 	// check erc20 token status if destination is an evm chain
 	if destinationCk, err := bk.ForChain(ctx, destinationChain.Name); err == nil {
 		if token := destinationCk.GetERC20TokenByAsset(ctx, asset); !token.Is(types.Confirmed) {
-			return fmt.Errorf("token with asset %s not confirmed on destination chain", e.Asset.Denom)
+			return fmt.Errorf("token with asset %s not confirmed on destination chain", tokenSentEvent.Asset.Denom)
 		}
 	}
 
-	recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: e.DestinationAddress}
-	amount := sdk.NewCoin(asset, sdk.Int(e.Asset.Amount))
+	recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: tokenSentEvent.DestinationAddress}
+	amount := sdk.NewCoin(asset, sdk.Int(tokenSentEvent.Asset.Amount))
 	transferID, err := n.EnqueueCrossChainTransfer(ctx, sourceChain, common.Hash(event.TxID), recipient, amount)
 	if err != nil {
 		return sdkerrors.Wrap(err, "failed enqueuing transfer for event")
@@ -215,12 +215,12 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 
 	// TODO: distinguish between bridge transaction and transfer transaction
 	// check if script pubkey is nil
-	if len(e.ScriptPubkey) != 0 {
+	if len(tokenSentEvent.ScriptPubkey) != 0 {
 		clog.Magentaf(fmt.Sprintf("[x/chains] [ABCI]-Emited EventTokenSent, eventID: %s, txID: %s, vout: %d, scriptPubkey: %s, amountInSats: %d",
-			event.GetID(), hex.EncodeToString(event.TxID[:]), e.Vout, hex.EncodeToString(e.ScriptPubkey), e.Asset.Amount.Uint64(),
+			event.GetID(), hex.EncodeToString(event.TxID[:]), tokenSentEvent.Vout, hex.EncodeToString(tokenSentEvent.ScriptPubkey), tokenSentEvent.Asset.Amount.Uint64(),
 		))
 		//Append utxo to Utxo snapshot
-		err = cov.AppendUtxo(ctx, e.BlockHeight, event.TxID, uint32(e.Vout), e.ScriptPubkey, e.Asset.Amount.Uint64())
+		err = cov.AppendUtxo(ctx, tokenSentEvent.BlockHeight, event.TxID, uint32(tokenSentEvent.Vout), tokenSentEvent.ScriptPubkey, tokenSentEvent.Asset.Amount.Uint64())
 		if err != nil {
 			ctx.Logger().Error("failed appending utxo to utxo snapshot", "error", err)
 			return err
@@ -228,9 +228,9 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 	}
 
 	clog.Bluef("[x/chains] [ABCI] Emit EventTokenSent: eventID: %s, txID: %s, vout: %d, scriptPubkey: %s, amountInSats: %d",
-		event.GetID(), hex.EncodeToString(event.TxID[:]), e.Vout, hex.EncodeToString(e.ScriptPubkey), e.Asset.Amount.Uint64(),
+		event.GetID(), hex.EncodeToString(event.TxID[:]), tokenSentEvent.Vout, hex.EncodeToString(tokenSentEvent.ScriptPubkey), tokenSentEvent.Asset.Amount.Uint64(),
 	)
-	events.Emit(ctx, e)
+	events.Emit(ctx, tokenSentEvent)
 
 	return nil
 }

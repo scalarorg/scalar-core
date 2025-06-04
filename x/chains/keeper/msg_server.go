@@ -329,7 +329,7 @@ func (s msgServer) ConfirmToken(c context.Context, req *types.ConfirmTokenReques
 	}
 	token := keeper.GetERC20TokenByAsset(ctx, req.Asset.Symbol)
 
-	err = token.RecordDeployment(req.TxID);
+	err = token.RecordDeployment(req.TxID)
 	if err != nil {
 		return nil, err
 	}
@@ -753,6 +753,8 @@ func (s msgServer) createTransferKeyCommand(ctx sdk.Context, keeper types.ChainK
 
 func getCommandBatchToSign(ctx sdk.Context, keeper types.ChainKeeper) (types.CommandBatch, error) {
 	latest := keeper.GetLatestCommandBatch(ctx)
+
+	clog.Yellowf("latest command batch: %+v, chain: %s, at: %d", latest, keeper.GetName(), ctx.BlockHeight())
 
 	switch latest.GetStatus() {
 	case types.BatchSigning:

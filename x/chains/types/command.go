@@ -301,7 +301,6 @@ func NewRegisterCustodianGroupCommand(chainID sdk.Int, keyID multisig.KeyID, cus
 
 // DecodeParams returns the decoded parameters in the given command
 func (m Command) DecodeParams() (map[string]string, error) {
-	log.Info().Str("type", m.Type.String()).Msgf("DecodeParams, m.Params: %s", hex.EncodeToString(m.Params))
 	params := make(map[string]string)
 	switch m.Type {
 	case COMMAND_TYPE_APPROVE_CONTRACT_CALL_WITH_MINT:

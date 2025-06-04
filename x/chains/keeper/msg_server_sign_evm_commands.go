@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 )
 
@@ -38,10 +39,12 @@ func (s msgServer) SignCommands(c context.Context, req *types.SignCommandsReques
 	if err != nil {
 		return nil, err
 	}
-	
+
 	if len(commandBatch.GetCommandIDs()) == 0 {
 		return &types.SignCommandsResponse{CommandCount: 0, BatchedCommandsID: nil}, nil
 	}
+
+	clog.Magenta("signing command batch %s for chain %s", hex.EncodeToString(commandBatch.GetID()), chain.Name)
 
 	if err := s.multisig.Sign(
 		ctx,
@@ -59,15 +62,6 @@ func (s msgServer) SignCommands(c context.Context, req *types.SignCommandsReques
 
 	batchedCommandsIDHex := hex.EncodeToString(commandBatch.GetID())
 	commandList := types.CommandIDsToStrings(commandBatch.GetCommandIDs())
-	for _, commandID := range commandList {
-		s.Logger(ctx).Info(
-			fmt.Sprintf("signing command %s in batch %s for chain %s using key %s", commandID, batchedCommandsIDHex, chain.Name, string(commandBatch.GetKeyID())),
-			types.AttributeKeyChain, chain.Name,
-			types.AttributeKeyKeyID, string(commandBatch.GetKeyID()),
-			"commandBatchID", batchedCommandsIDHex,
-			"commandID", commandID,
-		)
-	}
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
