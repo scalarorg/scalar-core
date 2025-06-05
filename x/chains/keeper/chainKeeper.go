@@ -750,14 +750,14 @@ func (k ChainKeeper) createNewBtcUpcBatchToSign(ctx sdk.Context) (types.CommandB
 		return ok && strings.HasPrefix(cmd.KeyID.String(), prefix)
 	}
 
-	var firstCmd *types.Command
+	var firstCmd types.Command
 
-	ok := k.getCommandQueue(ctx).DequeueUntil(firstCmd, firstCmdFilter)
+	ok := k.getCommandQueue(ctx).DequeueUntil(&firstCmd, firstCmdFilter)
 	if !ok {
 		return types.CommandBatch{}, nil
 	}
 
-	return k.createNewBtcBatchFollowCmd(ctx, firstCmd)
+	return k.createNewBtcBatchFollowCmd(ctx, &firstCmd)
 }
 
 func (k ChainKeeper) createNewBtcBatchFollowCmd(ctx sdk.Context, cmd *types.Command) (types.CommandBatch, error) {
