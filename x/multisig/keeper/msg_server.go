@@ -33,7 +33,7 @@ func NewMsgServer(keeper Keeper, snapshotter Snapshotter, staker types.Staker, n
 
 func (s msgServer) StartKeygen(c context.Context, req *types.StartKeygenRequest) (*types.StartKeygenResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-
+	s.Logger(ctx).Info("StartKeygen", "block_height", ctx.BlockHeight(), "key_id", req.KeyID.String(), "is_check_tx", ctx.IsCheckTx())
 	snap, err := s.snapshotter.CreateSnapshot(ctx, s.GetParams(ctx).KeygenThreshold)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "unable to create snapshot for keygen")
@@ -41,6 +41,7 @@ func (s msgServer) StartKeygen(c context.Context, req *types.StartKeygenRequest)
 
 	err = s.createKeygenSession(ctx, req.KeyID, snap)
 	if err != nil {
+		s.Logger(ctx).Error("unable to start keygen", "key_id", req.KeyID.String(), "error", err)
 		return nil, sdkerrors.Wrap(err, "unable to start keygen")
 	}
 
@@ -49,22 +50,25 @@ func (s msgServer) StartKeygen(c context.Context, req *types.StartKeygenRequest)
 
 func (s msgServer) SubmitPubKey(c context.Context, req *types.SubmitPubKeyRequest) (*types.SubmitPubKeyResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-
+	s.Logger(ctx).Info("Received SubmitPubKey", "key_id", req.KeyID.String(), "sender", req.Sender.String())
 	keygenSession, ok := s.getKeygenSession(ctx, req.KeyID)
 	if !ok {
+		s.Logger(ctx).Error("keygen session not found", "key_id", req.KeyID.String())
 		return nil, fmt.Errorf("keygen session %s not found", req.KeyID)
 	}
 
 	participant := s.snapshotter.GetOperator(ctx, req.Sender)
 	if participant.Empty() {
+		s.Logger(ctx).Error("sender not a registered proxy", "sender", req.Sender.String())
 		return nil, fmt.Errorf("sender %s is not a registered proxy", req.Sender.String())
 	}
 
 	err := keygenSession.AddKey(ctx.BlockHeight(), participant, req.PubKey)
 	if err != nil {
+		s.Logger(ctx).Error("unable to add public key for keygen", "key_id", req.KeyID.String(), "sender", req.Sender.String(), "error", err)
 		return nil, sdkerrors.Wrap(err, "unable to add public key for keygen")
 	}
-
+	s.Logger(ctx).Info("Update new pubkey to current keygen session", "key_id", req.KeyID.String(), "sender", req.Sender.String())
 	s.setKeygenSession(ctx, keygenSession)
 
 	s.Logger(ctx).Debug("new public key submitted",

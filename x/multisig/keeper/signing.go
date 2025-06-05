@@ -86,7 +86,11 @@ func (k Keeper) Sign(ctx sdk.Context, keyID exported.KeyID, payloadHash exported
 	}
 
 	k.setSigningSession(ctx, signingSession)
-
+	if ctx.IsCheckTx() {
+		k.Logger(ctx).Info("[CheckTx] phase")
+	} else {
+		k.Logger(ctx).Info("[DeliverTx] phase")
+	}
 	events.Emit(ctx, types.NewSigningStarted(signingSession.GetID(), key, payloadHash[:], module))
 	k.Logger(ctx).Info("signing session started",
 		"sig_id", signingSession.GetID(),
@@ -98,7 +102,6 @@ func (k Keeper) Sign(ctx sdk.Context, keyID exported.KeyID, payloadHash exported
 		"signing_threshold", key.GetSigningThreshold().String(),
 		"expires_at", expiresAt,
 	)
-
 	return nil
 }
 

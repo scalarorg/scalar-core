@@ -100,12 +100,18 @@ func (k Keeper) HasOptedOut(ctx sdk.Context, participant sdk.AccAddress) bool {
 }
 
 func (k Keeper) createKeygenSession(ctx sdk.Context, id exported.KeyID, snapshot snapshot.Snapshot) error {
+	k.Logger(ctx).Info("createKeygenSession", "key_id", id.String(), "block_height", ctx.BlockHeight(), "is_check_tx", ctx.IsCheckTx())
 	if _, ok := k.getKeygenSession(ctx, id); ok {
+		k.Logger(ctx).Info("keygen session already exists", "key_id", id.String())
 		return fmt.Errorf("key %s already being generated", id)
+	} else {
+		k.Logger(ctx).Info("keygen session not exists, continue generating", "key_id", id.String())
 	}
 
 	if _, ok := k.getKey(ctx, id); ok {
 		return fmt.Errorf("key %s already set", id)
+	} else {
+		k.Logger(ctx).Info("key not exists, continue generating", "key_id", id.String())
 	}
 
 	params := k.GetParams(ctx)
@@ -115,22 +121,27 @@ func (k Keeper) createKeygenSession(ctx sdk.Context, id exported.KeyID, snapshot
 	if err := keygenSession.ValidateBasic(); err != nil {
 		return err
 	}
-
+	k.Logger(ctx).Info("[Keeper] begin setKeygenSession", "key_id", id.String())
 	k.setKeygenSession(ctx, keygenSession)
+	k.Logger(ctx).Info("[Keeper] finish setKeygenSession", "key_id", id.String())
+	if ctx.IsCheckTx() {
+		k.Logger(ctx).Info("[CheckTx] phase")
+	} else {
+		k.Logger(ctx).Info("[DeliverTx] phase, emit keygen started event")
+		participants := snapshot.GetParticipantAddresses()
+		events.Emit(ctx, types.NewKeygenStarted(id, participants))
 
-	participants := snapshot.GetParticipantAddresses()
-	events.Emit(ctx, types.NewKeygenStarted(id, participants))
-
-	k.Logger(ctx).Info("keygen session started",
-		"key_id", id,
-		"participant_count", len(participants),
-		"participants", strings.Join(slices.Map(participants, sdk.ValAddress.String), ", "),
-		"participants_weight", snapshot.GetParticipantsWeight().String(),
-		"bonded_weight", snapshot.BondedWeight.String(),
-		"keygen_threshold", params.KeygenThreshold.String(),
-		"signing_threshold", params.SigningThreshold.String(),
-		"expires_at", expiresAt,
-	)
+		k.Logger(ctx).Info("keygen session started",
+			"key_id", id,
+			"participant_count", len(participants),
+			"participants", strings.Join(slices.Map(participants, sdk.ValAddress.String), ", "),
+			"participants_weight", snapshot.GetParticipantsWeight().String(),
+			"bonded_weight", snapshot.BondedWeight.String(),
+			"keygen_threshold", params.KeygenThreshold.String(),
+			"signing_threshold", params.SigningThreshold.String(),
+			"expires_at", expiresAt,
+		)
+	}
 
 	return nil
 }
@@ -147,7 +158,6 @@ func (k Keeper) setKeygenSession(ctx sdk.Context, keygen types.KeygenSession) {
 	// the deletion is necessary because we may update it to a different location depending on the current state of the session
 	k.getStore(ctx).Delete(expiryKeygenPrefix.Append(utils.KeyFromInt(keygen.ExpiresAt)).Append(utils.LowerCaseKey(keygen.GetKeyID().String())))
 	k.getStore(ctx).SetRaw(getKeygenSessionExpiryKey(keygen), []byte(keygen.GetKeyID()))
-
 	k.getStore(ctx).Set(getKeygenSessionKey(keygen.GetKeyID()), &keygen)
 }
 

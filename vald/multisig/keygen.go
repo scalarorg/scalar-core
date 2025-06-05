@@ -14,6 +14,7 @@ import (
 
 // ProcessKeygenStarted handles event keygen started
 func (mgr *Mgr) ProcessKeygenStarted(event *types.KeygenStarted) error {
+	log.Infof("ProcessKeygenStarted: %s", event.KeyID.String())
 	if !slices.Any(event.Participants, mgr.isParticipant) {
 		return nil
 	}
