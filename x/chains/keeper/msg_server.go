@@ -11,6 +11,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
+	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -118,6 +119,8 @@ func (s msgServer) createSnapshot(ctx sdk.Context, chain nexus.Chain) (snapshot.
 	params := keeper.GetParams(ctx)
 
 	candidates := s.nexus.GetChainMaintainers(ctx, chain)
+
+	s.Logger(ctx).Info("createSnapshot", "candidates", slices.Map(candidates, sdk.ValAddress.String))
 	return s.snapshotter.CreateSnapshot(
 		ctx,
 		candidates,
@@ -158,7 +161,7 @@ func (s msgServer) initializePolls(ctx sdk.Context, chain nexus.Chain, snapshot 
 	}
 
 	params := keeper.GetParams(ctx)
-	expiresAt := ctx.BlockHeight() + params.RevoteLockingPeriod
+	expiresAt := s.estimateExpireBlock(ctx, params)
 
 	pollMappings := make([]types.PollMapping, len(txIDs))
 	for i, txID := range txIDs {
@@ -185,7 +188,16 @@ func (s msgServer) initializePolls(ctx sdk.Context, chain nexus.Chain, snapshot 
 
 	return pollMappings, nil
 }
-
+func (s msgServer) estimateExpireBlock(ctx sdk.Context, params types.Params) int64 {
+	pendingPolls := s.voter.CountPendingPolls(ctx)
+	chunk := (pendingPolls + 1) / params.PollPeriodCounter
+	if chunk*params.PollPeriodCounter <= pendingPolls {
+		chunk++
+	}
+	expireBlock := ctx.BlockHeight() + params.RevoteLockingPeriod*chunk
+	s.Logger(ctx).Info("estimateExpireBlock", "pendingPolls", pendingPolls, "currentBlock", ctx.BlockHeight(), "expireBlock", expireBlock)
+	return expireBlock
+}
 func (s msgServer) SetGateway(c context.Context, req *types.SetGatewayRequest) (*types.SetGatewayResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 

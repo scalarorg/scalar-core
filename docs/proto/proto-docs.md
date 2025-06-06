@@ -2464,6 +2464,7 @@ PollParticipants should be embedded in poll events in other modules
 | `metadata` | [Params.MetadataEntry](#scalar.chains.v1beta1.Params.MetadataEntry) | repeated |  |
 | `redeem_session_amount_limit` | [uint64](#uint64) |  | limite redeem |
 | `redeem_txs_vsize_limit` | [uint64](#uint64) |  |  |
+| `poll_period_counter` | [int64](#int64) |  | If we have many polls, we need to extend expire time of each poll |
 
 
 

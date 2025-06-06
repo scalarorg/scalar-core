@@ -34,4 +34,7 @@ message Params {
   // limite redeem
   uint64 redeem_session_amount_limit = 15;
   uint64 redeem_txs_vsize_limit = 16;
+    //If we have many polls, we need to extend expire time of each poll
+  int64 poll_period_counter = 17;
+
 }

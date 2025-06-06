@@ -22,7 +22,7 @@ func (s msgServer) ConfirmSourceTxs(c context.Context, req *types.ConfirmSourceT
 		return nil, err
 	}
 
-	clog.Red("After validateChainActivated", chain)
+	clog.Green("After validateChainActivated", chain)
 
 	keeper, err := s.ForChain(ctx, chain.Name)
 	if err != nil {
@@ -38,6 +38,7 @@ func (s msgServer) ConfirmSourceTxs(c context.Context, req *types.ConfirmSourceT
 
 	snapshot, err := s.createSnapshot(ctx, chain)
 	if err != nil {
+		s.Logger(ctx).Error("createSnapshot failed", "error", err)
 		return nil, err
 	}
 
@@ -52,6 +53,5 @@ func (s msgServer) ConfirmSourceTxs(c context.Context, req *types.ConfirmSourceT
 		ConfirmationHeight: keeper.GetRequiredConfirmationHeight(ctx),
 		Participants:       snapshot.GetParticipantAddresses(),
 	})
-
 	return &types.ConfirmSourceTxsResponse{}, nil
 }

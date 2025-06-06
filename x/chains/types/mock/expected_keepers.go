@@ -31,6 +31,9 @@ var _ types.Voter = &VoterMock{}
 //
 //		// make and configure a mocked types.Voter
 //		mockedVoter := &VoterMock{
+//			CountPendingPollsFunc: func(ctx sdk.Context) int64 {
+//				panic("mock out the CountPendingPolls method")
+//			},
 //			InitializePollFunc: func(ctx sdk.Context, pollBuilder github_com_scalarorg_scalar_core_x_vote_exported.PollBuilder) (github_com_scalarorg_scalar_core_x_vote_exported.PollID, error) {
 //				panic("mock out the InitializePoll method")
 //			},
@@ -41,11 +44,19 @@ var _ types.Voter = &VoterMock{}
 //
 //	}
 type VoterMock struct {
+	// CountPendingPollsFunc mocks the CountPendingPolls method.
+	CountPendingPollsFunc func(ctx sdk.Context) int64
+
 	// InitializePollFunc mocks the InitializePoll method.
 	InitializePollFunc func(ctx sdk.Context, pollBuilder github_com_scalarorg_scalar_core_x_vote_exported.PollBuilder) (github_com_scalarorg_scalar_core_x_vote_exported.PollID, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
+		// CountPendingPolls holds details about calls to the CountPendingPolls method.
+		CountPendingPolls []struct {
+			// Ctx is the ctx argument value.
+			Ctx sdk.Context
+		}
 		// InitializePoll holds details about calls to the InitializePoll method.
 		InitializePoll []struct {
 			// Ctx is the ctx argument value.
@@ -54,7 +65,40 @@ type VoterMock struct {
 			PollBuilder github_com_scalarorg_scalar_core_x_vote_exported.PollBuilder
 		}
 	}
-	lockInitializePoll sync.RWMutex
+	lockCountPendingPolls sync.RWMutex
+	lockInitializePoll    sync.RWMutex
+}
+
+// CountPendingPolls calls CountPendingPollsFunc.
+func (mock *VoterMock) CountPendingPolls(ctx sdk.Context) int64 {
+	if mock.CountPendingPollsFunc == nil {
+		panic("VoterMock.CountPendingPollsFunc: method is nil but Voter.CountPendingPolls was just called")
+	}
+	callInfo := struct {
+		Ctx sdk.Context
+	}{
+		Ctx: ctx,
+	}
+	mock.lockCountPendingPolls.Lock()
+	mock.calls.CountPendingPolls = append(mock.calls.CountPendingPolls, callInfo)
+	mock.lockCountPendingPolls.Unlock()
+	return mock.CountPendingPollsFunc(ctx)
+}
+
+// CountPendingPollsCalls gets all the calls that were made to CountPendingPolls.
+// Check the length with:
+//
+//	len(mockedVoter.CountPendingPollsCalls())
+func (mock *VoterMock) CountPendingPollsCalls() []struct {
+	Ctx sdk.Context
+} {
+	var calls []struct {
+		Ctx sdk.Context
+	}
+	mock.lockCountPendingPolls.RLock()
+	calls = mock.calls.CountPendingPolls
+	mock.lockCountPendingPolls.RUnlock()
+	return calls
 }
 
 // InitializePoll calls InitializePollFunc.

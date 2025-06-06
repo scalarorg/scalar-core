@@ -99,6 +99,7 @@ type ParamsKeeper interface {
 // Voter exposes voting functionality
 type Voter interface {
 	InitializePoll(ctx sdk.Context, pollBuilder vote.PollBuilder) (vote.PollID, error)
+	CountPendingPolls(ctx sdk.Context) int64
 }
 
 // Nexus provides functionality to manage cross-chain transfers

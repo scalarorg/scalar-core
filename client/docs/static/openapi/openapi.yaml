@@ -7217,6 +7217,10 @@ paths:
                       redeem_txs_vsize_limit:
                         type: string
                         format: uint64
+                      poll_period_counter:
+                        type: string
+                        format: int64
+                        title: If we have many polls, we need to extend expire time of each poll
         default:
           description: An unexpected error response
           content:
@@ -55723,6 +55727,10 @@ components:
         redeem_txs_vsize_limit:
           type: string
           format: uint64
+        poll_period_counter:
+          type: string
+          format: int64
+          title: If we have many polls, we need to extend expire time of each poll
     scalar.chains.v1beta1.ParamsResponse:
       type: object
       properties:
@@ -55789,6 +55797,10 @@ components:
             redeem_txs_vsize_limit:
               type: string
               format: uint64
+            poll_period_counter:
+              type: string
+              format: int64
+              title: If we have many polls, we need to extend expire time of each poll
     scalar.chains.v1beta1.PendingCommandsResponse:
       type: object
       properties:

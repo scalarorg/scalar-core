@@ -18,6 +18,7 @@ var (
 	KeyConfirmationHeight       = []byte("confirmationHeight")
 	KeyNetworkKind              = []byte("networkKind")
 	KeyRevoteLockingPeriod      = []byte("revoteLockingPeriod")
+	KeyPollPeriodCounter        = []byte("pollPeriodCounter")
 	KeyChainID                  = []byte("chainId")
 	KeyVotingThreshold          = []byte("votingThreshold")
 	KeyToken                    = []byte("token")
@@ -55,6 +56,7 @@ func DefaultChainParams(chainId sdk.Int, chain nexus.ChainName, networkKind type
 		TokenCode:                bzToken,
 		Burnable:                 bzBurnable,
 		RevoteLockingPeriod:      50,
+		PollPeriodCounter:        10,
 		VotingThreshold:          utils.Threshold{Numerator: 51, Denominator: 100},
 		MinVoterCount:            1,
 		CommandsGasLimit:         5000000,
@@ -81,6 +83,7 @@ func (m *Params) ParamSetPairs() params.ParamSetPairs {
 		params.NewParamSetPair(KeyToken, &m.TokenCode, validateBytes),
 		params.NewParamSetPair(KeyBurnable, &m.Burnable, validateBurnable),
 		params.NewParamSetPair(KeyRevoteLockingPeriod, &m.RevoteLockingPeriod, validateRevoteLockingPeriod),
+		params.NewParamSetPair(KeyPollPeriodCounter, &m.PollPeriodCounter, validatePollPeriodCounter),
 		params.NewParamSetPair(KeyChainID, &m.ChainID, validateChainId),
 		params.NewParamSetPair(KeyVotingThreshold, &m.VotingThreshold, validateVotingThreshold),
 		params.NewParamSetPair(KeyMinVoterCount, &m.MinVoterCount, validateMinVoterCount),
@@ -144,6 +147,18 @@ func validateRevoteLockingPeriod(i interface{}) error {
 
 	if period < 1 {
 		return fmt.Errorf("revote locking period must be greater than 0")
+	}
+	return nil
+}
+
+func validatePollPeriodCounter(i interface{}) error {
+	counter, ok := i.(int64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if counter < 1 {
+		return fmt.Errorf("vote preriod counter must be greater than 0")
 	}
 	return nil
 }

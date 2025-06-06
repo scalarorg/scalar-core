@@ -42,6 +42,7 @@ func NewManager(
 }
 
 func (mgr Manager) ProcessSourceTxsConfirmation(event *types.EventConfirmSourceTxsStarted) error {
+	mgr.logger("chain", event.Chain, "poll_mappings", event.PollMappings).Info("[ProcessSourceTxsConfirmation]")
 	if !mgr.isParticipantOf(event.Participants) {
 		pollIDs := slices.Map(event.PollMappings, func(m types.PollMapping) vote.PollID { return m.PollID })
 		mgr.logger("poll_ids", pollIDs).Debug("ignoring staking txs confirmation poll: not a participant")

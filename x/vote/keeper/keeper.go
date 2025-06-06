@@ -235,3 +235,15 @@ func (k Keeper) getTalliedVote(ctx sdk.Context, pollID exported.PollID, dataHash
 		&talliedVote,
 	)
 }
+
+func (k Keeper) CountPendingPolls(ctx sdk.Context) int64 {
+	iter := k.getKVStore(ctx).Iterator(utils.KeyFromStr(pollPrefix))
+	defer utils.CloseLogError(iter, k.Logger(ctx))
+
+	count := 0
+	for ; iter.Valid(); iter.Next() {
+		count++
+	}
+
+	return int64(count)
+}

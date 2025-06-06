@@ -47,13 +47,12 @@ func (c *BtcClient) getUtxoList(taprootAddress string) ([]*cov.UTXO, []uint64, e
 	if err := json.Unmarshal(body, &utxos); err != nil {
 		return nil, nil, fmt.Errorf("failed to decode UTXOs: %w", err)
 	}
+	log.Info().Msgf("[GetUtxoList] utxos length: %d", len(utxos))
 	utxos = SortUTXOsByBlockHeight(utxos)
-	for _, utxo := range utxos {
-		log.Info().Msgf("[GetUtxoList] block height: %d, txid: %s, vout: %d, amount: %d", utxo.Status.BlockHeight, utxo.Txid, utxo.Vout, utxo.Value)
-	}
 	utxosList := []*cov.UTXO{}
 	blockHeights := make([]uint64, len(utxos))
 	for _, utxo := range utxos {
+		//log.Info().Msgf("[GetUtxoList] block height: %d, txid: %s, vout: %d, amount: %d", utxo.Status.BlockHeight, utxo.Txid, utxo.Vout, utxo.Value)
 		txID, err := chainsExported.HashFromHex(utxo.Txid)
 		if err != nil {
 			return nil, nil, fmt.Errorf("failed to convert txid to hash: %w", err)

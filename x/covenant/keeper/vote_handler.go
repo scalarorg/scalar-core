@@ -97,7 +97,7 @@ func (v voteHandler) HandleExpiredPoll(ctx sdk.Context, poll vote.Poll) error {
 
 func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error {
 
-	clog.Red("[Covenant] HandleCompletedPoll", "poll", poll.GetID().String())
+	clog.Green("[Covenant] HandleCompletedPoll", "poll", poll.GetID().String())
 
 	voteEvents := poll.GetResult().(*types.VoteEvents)
 
