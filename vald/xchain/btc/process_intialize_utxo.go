@@ -25,8 +25,10 @@ func (client *BtcClient) ProcessInitializeUtxo(event *covTypes.IntializeUtxoSnap
 	//Ouput utxos already sorted by block height and txId
 	utxos, blockHeights, err := client.getUtxoList(event.Address)
 	if err != nil {
-		log.Error().Msgf("[ProcessInitializeUtxo] failed to get utxo list for address %s", event.Address)
-		return nil, err
+		log.Error().Msgf("[ProcessInitializeUtxo] failed to get utxo list for address %s. Use empty utxo list", event.Address)
+		if utxos == nil {
+			utxos = []*covTypes.UTXO{}
+		}
 	}
 
 	filteredUtxos := []*covTypes.UTXO{}

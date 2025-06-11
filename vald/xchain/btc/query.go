@@ -25,37 +25,38 @@ type MempoolUtxo struct {
 }
 
 func (c *BtcClient) getUtxoList(taprootAddress string) ([]*cov.UTXO, []uint64, error) {
+	utxosList := []*cov.UTXO{}
 	if c.mempoolUrl == "" {
-		return nil, nil, fmt.Errorf("mempool URL is not set")
+		return utxosList, nil, fmt.Errorf("mempool URL is not set")
 	}
 	url := fmt.Sprintf("%s/address/%s/utxo", c.mempoolUrl, taprootAddress)
 
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to get UTXOs: %w", err)
+		return utxosList, nil, fmt.Errorf("failed to get UTXOs: %w", err)
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to read response body: %w", err)
+		return utxosList, nil, fmt.Errorf("failed to read response body: %w", err)
 	}
 
 	//log.Debug().Msgf("[BtcClient] [GetAddressTxsUtxo] body: %v", string(body))
 
 	var utxos []MempoolUtxo
 	if err := json.Unmarshal(body, &utxos); err != nil {
-		return nil, nil, fmt.Errorf("failed to decode UTXOs: %w", err)
+		return utxosList, nil, fmt.Errorf("failed to decode UTXOs: %w", err)
 	}
 	log.Info().Msgf("[GetUtxoList] utxos length: %d", len(utxos))
 	utxos = SortUTXOsByBlockHeight(utxos)
-	utxosList := []*cov.UTXO{}
+
 	blockHeights := make([]uint64, len(utxos))
 	for _, utxo := range utxos {
 		//log.Info().Msgf("[GetUtxoList] block height: %d, txid: %s, vout: %d, amount: %d", utxo.Status.BlockHeight, utxo.Txid, utxo.Vout, utxo.Value)
 		txID, err := chainsExported.HashFromHex(utxo.Txid)
 		if err != nil {
-			return nil, nil, fmt.Errorf("failed to convert txid to hash: %w", err)
+			return utxosList, nil, fmt.Errorf("failed to convert txid to hash: %w", err)
 		}
 		utxosList = append(utxosList, &cov.UTXO{
 			TxID:         txID,
