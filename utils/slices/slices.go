@@ -46,6 +46,28 @@ func Filter[T any](source []T, predicate func(T) bool) []T {
 	return out
 }
 
+// Find returns the first element that matches the predicate
+func Find[T any](source []T, predicate func(T) bool) T {
+	var zero T
+	for i := range source {
+		if predicate(source[i]) {
+			return source[i]
+		}
+	}
+	return zero
+}
+
+// FindIndex returns the index of the first element that matches the predicate
+func FindIndex[T any](source []T, predicate func(T) bool) int {
+	for i := range source {
+		if predicate(source[i]) {
+			return i
+		}
+	}
+
+	return -1
+}
+
 // ForEach performs the given function on every element of the slice
 func ForEach[T any](source []T, f func(T)) {
 	for i := range source {

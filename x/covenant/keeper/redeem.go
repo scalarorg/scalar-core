@@ -274,8 +274,10 @@ func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 	binary.BigEndian.PutUint64(amountz, req.Amount)
 
 	dataHash := crypto.Keccak256(bz, req.Sender.Bytes(), []byte(req.Address), []byte(req.SourceChain), []byte(req.DestChain), []byte(req.Symbol), amountz)
-	reservedUtxos, err := k.reserveUtxos(ctx, custodianGrUID, hex.EncodeToString(dataHash), req.Amount,
-		chainParams.RedeemTxsVsizeLimit)
+
+	dataHex := hex.EncodeToString(dataHash)
+
+	reservedUtxos, err := k.reserveUtxos(ctx, custodianGrUID, dataHex, req.Amount, chainParams.RedeemTxsVsizeLimit)
 	if err != nil {
 		return nil, nil, err
 	}

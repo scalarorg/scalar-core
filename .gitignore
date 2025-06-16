@@ -11,3 +11,5 @@ lib
 
 scalard
 *.txt
+
+cmd/playground

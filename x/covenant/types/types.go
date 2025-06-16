@@ -212,6 +212,7 @@ func (utxo *UTXO) AppendReserved(requestID string, amount uint64) error {
 	})
 	return nil
 }
+
 func (utxo *UTXO) GetReservedAmount() uint64 {
 	amount := uint64(0)
 	for _, reserved := range utxo.Reservations {
@@ -291,14 +292,14 @@ func (s *UTXOSnapshot) AppendUtxo(utxo *UTXO) bool {
 
 // Utxos list is sorted by amount in sats and txid for deterministic results
 // Each utxo is reserved if it is part of the optimal combination
-func (s *UTXOSnapshot) ReserveUtxos(requestID string, amount uint64, quorum uint64, vSizeLimit uint64) ([]*UTXO, error) {
-	currentInputs, currentOutputs := s.CountInputOutput()
+func (snapshot *UTXOSnapshot) ReserveUtxos(requestID string, amount uint64, quorum uint64, vSizeLimit uint64) ([]*UTXO, error) {
+	currentInputs, currentOutputs := snapshot.CountInputOutput()
 	newInput := 0
 	newOutput := 1
 	remainingAmount := amount
 	reserveUtxos := make([]*UTXO, 0)
 	mapNewResevations := map[int]uint64{}
-	for ind, utxo := range s.Utxos {
+	for ind, utxo := range snapshot.Utxos {
 		if utxo.IsReserved(requestID) {
 			return nil, fmt.Errorf("requestID %s is already reserved in utxo %s", requestID, utxo.TxID.Hex())
 		}
@@ -336,7 +337,7 @@ func (s *UTXOSnapshot) ReserveUtxos(requestID string, amount uint64, quorum uint
 	}
 
 	for ind, reserveAmount := range mapNewResevations {
-		utxo := s.Utxos[ind]
+		utxo := snapshot.Utxos[ind]
 		utxo.AppendReserved(requestID, reserveAmount)
 	}
 
