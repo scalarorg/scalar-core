@@ -120,6 +120,7 @@ func (c *BtcClient) GetRawTx(txID common.Hash) (results.Result[BTCTxReceipt], er
 	}
 	return results.FromOk(tx), nil
 }
+
 func (c *BtcClient) GetBlockVerboseTx(hashStr string) (results.Result[*btcjson.GetBlockVerboseTxResult], error) {
 	block, _ := c.blockCache.GetBlock(hashStr)
 	if block != nil {
@@ -136,6 +137,7 @@ func (c *BtcClient) GetBlockVerboseTx(hashStr string) (results.Result[*btcjson.G
 	c.blockCache.SetBlock(hashStr, block)
 	return results.FromOk(block), nil
 }
+
 func (c *BtcClient) createBtcTxResult(rawReceipt *BTCTxReceipt, block *btcjson.GetBlockVerboseTxResult) (BTCTxResult, error) {
 	var txReceipt BTCTxReceipt
 	txReceipt.Raw = rawReceipt.Raw

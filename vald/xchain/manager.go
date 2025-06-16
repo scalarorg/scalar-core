@@ -162,6 +162,32 @@ func (mgr Manager) ProcessInitializeUtxo(event *cov.IntializeUtxoSnapshotStarted
 	return err
 }
 
+func (mgr Manager) ProcessNewBlockConfirmation(event *types.ConfirmBtcNewBlockStarted) error {
+	if !mgr.isParticipantOf(event.Participants) {
+		mgr.logger("poll_id", event.PollID).Debug("ignoring block header confirmation poll: not a participant")
+		return nil
+	}
+
+	chainInfoBytes := chain.ChainInfoBytes{}
+
+	err := chainInfoBytes.FromString(event.Chain.String())
+	if err != nil {
+		return err
+	}
+
+	btcClient, ok := mgr.rpcs[chainInfoBytes].(xcommon.BtcClient)
+	if !ok {
+		return fmt.Errorf("rpc client not found for chain %s", event.Chain.String())
+	}
+
+	votes, err := btcClient.ProcessNewBlockConfirmation(event, mgr.proxy)
+	if err != nil {
+		return err
+	}
+	_, err = mgr.broadcaster.Broadcast(context.TODO(), votes...)
+	return err
+}
+
 // isParticipantOf checks if the validator is in the poll participants list
 func (mgr Manager) isParticipantOf(participants []sdk.ValAddress) bool {
 	return slices.Any(participants, func(v sdk.ValAddress) bool { return v.Equals(mgr.validator) })

@@ -32,7 +32,7 @@ type BTCTxReceipt struct {
 
 type BTCTxResult = results.Result[common.TxReceipt]
 
-var _ common.Client = &BtcClient{}
+var _ common.BtcClient = &BtcClient{}
 
 func NewClient(cfg *config.BTCConfig) (common.Client, error) {
 	rpcConfig := MapBTCConfigToRPCConfig(cfg)

@@ -96,12 +96,14 @@
     - [ChainEventRetryFailed](#scalar.chains.v1beta1.ChainEventRetryFailed)
     - [CommandBatchAborted](#scalar.chains.v1beta1.CommandBatchAborted)
     - [CommandBatchSigned](#scalar.chains.v1beta1.CommandBatchSigned)
+    - [ConfirmBtcNewBlockStarted](#scalar.chains.v1beta1.ConfirmBtcNewBlockStarted)
     - [ConfirmDepositStarted](#scalar.chains.v1beta1.ConfirmDepositStarted)
     - [ConfirmKeyTransferStarted](#scalar.chains.v1beta1.ConfirmKeyTransferStarted)
     - [ConfirmTokenStarted](#scalar.chains.v1beta1.ConfirmTokenStarted)
     - [ContractCallApproved](#scalar.chains.v1beta1.ContractCallApproved)
     - [ContractCallFailed](#scalar.chains.v1beta1.ContractCallFailed)
     - [Event](#scalar.chains.v1beta1.Event)
+    - [EventBtcBlockHeader](#scalar.chains.v1beta1.EventBtcBlockHeader)
     - [EventConfirmSourceTxsStarted](#scalar.chains.v1beta1.EventConfirmSourceTxsStarted)
     - [EventContractCall](#scalar.chains.v1beta1.EventContractCall)
     - [EventContractCallWithMintApproved](#scalar.chains.v1beta1.EventContractCallWithMintApproved)
@@ -1994,6 +1996,26 @@ PollParticipants should be embedded in poll events in other modules
 
 
 
+<a name="scalar.chains.v1beta1.ConfirmBtcNewBlockStarted"></a>
+
+### ConfirmBtcNewBlockStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `poll_id` | [string](#string) |  |  |
+| `participants` | [bytes](#bytes) | repeated |  |
+| `chain` | [string](#string) |  |  |
+| `block_hash` | [bytes](#bytes) |  | in reverse byte order |
+| `previous_block_hash` | [bytes](#bytes) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
 <a name="scalar.chains.v1beta1.ConfirmDepositStarted"></a>
 
 ### ConfirmDepositStarted
@@ -2113,6 +2135,23 @@ PollParticipants should be embedded in poll events in other modules
 | `multisig_operatorship_transferred` | [EventMultisigOperatorshipTransferred](#scalar.chains.v1beta1.EventMultisigOperatorshipTransferred) |  |  |
 | `source_tx_confirmation_event` | [SourceTxConfirmationEvent](#scalar.chains.v1beta1.SourceTxConfirmationEvent) |  | for general chains |
 | `redeem_token` | [EventRedeemToken](#scalar.chains.v1beta1.EventRedeemToken) |  | for btc |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventBtcBlockHeader"></a>
+
+### EventBtcBlockHeader
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `block_hash` | [bytes](#bytes) |  |  |
+| `previous_block_hash` | [bytes](#bytes) |  |  |
+| `merkle_root` | [bytes](#bytes) |  |  |
 
 
 

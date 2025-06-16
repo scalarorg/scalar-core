@@ -70,6 +70,22 @@ func (c *BtcClient) getUtxoList(taprootAddress string) ([]*cov.UTXO, []uint64, e
 	return utxosList, blockHeights, nil
 }
 
+type Block struct {
+	ID                string  `json:"id"`
+	Height            uint64  `json:"height"`
+	Version           uint32  `json:"version"`
+	Timestamp         uint64  `json:"timestamp"`
+	TxCount           uint32  `json:"tx_count"`
+	Size              uint32  `json:"size"`
+	Weight            uint32  `json:"weight"`
+	MerkleRoot        string  `json:"merkle_root"`
+	PreviousBlockHash string  `json:"previousblockhash"`
+	MedianTime        uint64  `json:"mediantime"`
+	Nonce             uint64  `json:"nonce"`
+	Bits              uint32  `json:"bits"`
+	Difficulty        float64 `json:"difficulty"`
+}
+
 func SortUTXOsByBlockHeight(utxos []MempoolUtxo) []MempoolUtxo {
 	sort.Slice(utxos, func(i, j int) bool {
 		return (utxos[i].Status.BlockHeight < utxos[j].Status.BlockHeight) ||

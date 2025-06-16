@@ -48,6 +48,10 @@ func (h Hash) Hex() string {
 	return common.Hash(h).Hex()
 }
 
+func (h Hash) String() string {
+	return strings.TrimPrefix(common.Hash(h).String(), "0x")
+}
+
 func (h Hash) Size() int {
 	return common.HashLength
 }
