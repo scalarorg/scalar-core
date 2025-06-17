@@ -36,6 +36,7 @@ var (
 	burnedDepositPrefixDeprecated    = "burned_deposit"    // Deprecated
 	commandBatchPrefix               = "batched_commands"
 	commandPrefix                    = "command"
+	blockPrefix                      = "block"
 	eventPrefix                      = utils.KeyFromStr("event")
 	confirmedEventQueueName          = "confirmed_event_queue"
 	commandQueueName                 = "cmd_queue"
@@ -228,6 +229,37 @@ func (k ChainKeeper) GetMetadata(ctx sdk.Context) map[string]string {
 
 func (k ChainKeeper) GetRequiredConfirmationHeight(ctx sdk.Context) uint64 {
 	return getParam[uint64](k, ctx, types.KeyConfirmationHeight)
+}
+
+func (k ChainKeeper) SetBlock(ctx sdk.Context, meta types.BlockMetadata) {
+	newMeta := types.BlockMetadata{
+		BlockHash:  meta.BlockHash,
+		MerkleRoot: meta.MerkleRoot,
+		Height:     meta.Height,
+	}
+
+	funcs.MustNoErr(
+		k.getStore(ctx).SetNewValidated(key.FromStr(blockPrefix).Append(key.FromUInt(meta.Height)), &newMeta))
+}
+
+func (k ChainKeeper) GetCurrentBlock(ctx sdk.Context) (*types.BlockMetadata, error) {
+	iter := k.getStore(ctx).IteratorNew(key.FromStr(blockPrefix))
+	defer utils.CloseLogError(iter, k.Logger(ctx))
+
+	if !iter.Valid() {
+		return nil, fmt.Errorf("no block metadata found")
+	}
+
+	var current types.BlockMetadata
+	iter.UnmarshalValue(&current)
+
+	if iter.Next(); iter.Valid() {
+		var prev types.BlockMetadata
+		iter.UnmarshalValue(&prev)
+		current.PreviousBlockHash = &prev.BlockHash
+	}
+
+	return &current, nil
 }
 
 func getParam[T any](k ChainKeeper, ctx sdk.Context, paramKey []byte) T {

@@ -1040,3 +1040,15 @@ func (m EventRedeemToken) ValidateBasic() error {
 
 	return nil
 }
+
+func (m BlockMetadata) ValidateBasic() error {
+	if m.MerkleRoot.IsZero() {
+		return fmt.Errorf("invalid merkle root")
+	}
+
+	if m.BlockHash.IsZero() {
+		return fmt.Errorf("invalid previous block hash")
+	}
+
+	return nil
+}

@@ -24,38 +24,6 @@ message EventConfirmSourceTxsStarted {
             "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
 }
 
-message ConfirmBtcNewBlockStarted {
-  string poll_id = 1 [
-    (gogoproto.nullable) = false,
-    (gogoproto.customname) = "PollID",
-    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/vote/exported.PollID"
-  ];
-
-  repeated bytes participants = 2
-      [ (gogoproto.casttype) =
-            "github.com/cosmos/cosmos-sdk/types.ValAddress" ];
-
-  string chain = 3
-      [ (gogoproto.casttype) =
-            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  // in reverse byte order
-  bytes block_hash = 4 [
-    (gogoproto.nullable) = false,
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
-    (gogoproto.customname) = "BlockHash"
-  ];
-
-  bytes previous_block_hash = 5 [
-    (gogoproto.nullable) = false,
-    (gogoproto.customtype) =
-        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
-    (gogoproto.customname) = "PreviousBlockHash"
-  ];
-
-  uint64 confirmation_height = 6;
-}
-
 message ConfirmDepositStarted {
   bytes tx_id = 1 [
     (gogoproto.nullable) = false,
@@ -110,6 +78,31 @@ message ConfirmKeyTransferStarted {
   bytes gateway_address = 3
       [ (gogoproto.nullable) = false, (gogoproto.customtype) = "Address" ];
   uint64 confirmation_height = 4;
+  vote.exported.v1beta1.PollParticipants participants = 5
+      [ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+}
+
+message ConfirmNewBlockStarted {
+  string chain = 1
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  // in reverse byte order
+  bytes block_hash = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "BlockHash"
+  ];
+
+  bytes previous_block_hash = 3 [
+    (gogoproto.nullable) = true,
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "PreviousBlockHash"
+  ];
+
+  uint64 confirmation_height = 4;
+
   vote.exported.v1beta1.PollParticipants participants = 5
       [ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
 }
@@ -349,7 +342,7 @@ message EventMultisigOperatorshipTransferred {
   ];
 }
 
-message EventBtcBlockHeader {
+message EventNewBlockConfirmed {
   bytes block_hash = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) =
@@ -358,7 +351,7 @@ message EventBtcBlockHeader {
   ];
 
   bytes previous_block_hash = 2 [
-    (gogoproto.nullable) = false,
+    (gogoproto.nullable) = true,
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "PreviousBlockHash"
@@ -370,6 +363,8 @@ message EventBtcBlockHeader {
         "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
     (gogoproto.customname) = "MerkleRoot"
   ];
+
+  uint64 block_height = 4;
 }
 
 message Event {
@@ -412,6 +407,7 @@ message Event {
 
     // for btc
     EventRedeemToken redeem_token = 13;
+    EventNewBlockConfirmed new_block_confirmed = 14;
   }
 }
 

@@ -88,6 +88,10 @@ type ChainKeeper interface {
 	SetRedeemSession(ctx sdk.Context, session *RedeemSession) error
 	GetLatestBtcPoolingBatch(ctx sdk.Context) *CommandBatch
 	HasBtcPoolingCommands(ctx sdk.Context, pk []byte) bool
+
+	// block
+	GetCurrentBlock(ctx sdk.Context) (*BlockMetadata, error)
+	SetBlock(ctx sdk.Context, block BlockMetadata)
 }
 
 // ParamsKeeper represents a global paramstore

@@ -28,6 +28,7 @@
   
 - [scalar/chains/v1beta1/types.proto](#scalar/chains/v1beta1/types.proto)
     - [Asset](#scalar.chains.v1beta1.Asset)
+    - [BlockMetadata](#scalar.chains.v1beta1.BlockMetadata)
     - [BurnerInfo](#scalar.chains.v1beta1.BurnerInfo)
     - [Command](#scalar.chains.v1beta1.Command)
     - [CommandBatchMetadata](#scalar.chains.v1beta1.CommandBatchMetadata)
@@ -96,20 +97,20 @@
     - [ChainEventRetryFailed](#scalar.chains.v1beta1.ChainEventRetryFailed)
     - [CommandBatchAborted](#scalar.chains.v1beta1.CommandBatchAborted)
     - [CommandBatchSigned](#scalar.chains.v1beta1.CommandBatchSigned)
-    - [ConfirmBtcNewBlockStarted](#scalar.chains.v1beta1.ConfirmBtcNewBlockStarted)
     - [ConfirmDepositStarted](#scalar.chains.v1beta1.ConfirmDepositStarted)
     - [ConfirmKeyTransferStarted](#scalar.chains.v1beta1.ConfirmKeyTransferStarted)
+    - [ConfirmNewBlockStarted](#scalar.chains.v1beta1.ConfirmNewBlockStarted)
     - [ConfirmTokenStarted](#scalar.chains.v1beta1.ConfirmTokenStarted)
     - [ContractCallApproved](#scalar.chains.v1beta1.ContractCallApproved)
     - [ContractCallFailed](#scalar.chains.v1beta1.ContractCallFailed)
     - [Event](#scalar.chains.v1beta1.Event)
-    - [EventBtcBlockHeader](#scalar.chains.v1beta1.EventBtcBlockHeader)
     - [EventConfirmSourceTxsStarted](#scalar.chains.v1beta1.EventConfirmSourceTxsStarted)
     - [EventContractCall](#scalar.chains.v1beta1.EventContractCall)
     - [EventContractCallWithMintApproved](#scalar.chains.v1beta1.EventContractCallWithMintApproved)
     - [EventContractCallWithToken](#scalar.chains.v1beta1.EventContractCallWithToken)
     - [EventMultisigOperatorshipTransferred](#scalar.chains.v1beta1.EventMultisigOperatorshipTransferred)
     - [EventMultisigOwnershipTransferred](#scalar.chains.v1beta1.EventMultisigOwnershipTransferred)
+    - [EventNewBlockConfirmed](#scalar.chains.v1beta1.EventNewBlockConfirmed)
     - [EventRedeemToken](#scalar.chains.v1beta1.EventRedeemToken)
     - [EventRedeemTokenApproved](#scalar.chains.v1beta1.EventRedeemTokenApproved)
     - [EventTokenDeployed](#scalar.chains.v1beta1.EventTokenDeployed)
@@ -156,6 +157,8 @@
 - [scalar/chains/v1beta1/query.proto](#scalar/chains/v1beta1/query.proto)
     - [BatchedCommandsRequest](#scalar.chains.v1beta1.BatchedCommandsRequest)
     - [BatchedCommandsResponse](#scalar.chains.v1beta1.BatchedCommandsResponse)
+    - [BlockRequest](#scalar.chains.v1beta1.BlockRequest)
+    - [BlockResponse](#scalar.chains.v1beta1.BlockResponse)
     - [BurnerInfoRequest](#scalar.chains.v1beta1.BurnerInfoRequest)
     - [BurnerInfoResponse](#scalar.chains.v1beta1.BurnerInfoResponse)
     - [BytecodeRequest](#scalar.chains.v1beta1.BytecodeRequest)
@@ -199,6 +202,8 @@
 - [scalar/chains/v1beta1/tx.proto](#scalar/chains/v1beta1/tx.proto)
     - [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest)
     - [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse)
+    - [ConfirmBlockRequest](#scalar.chains.v1beta1.ConfirmBlockRequest)
+    - [ConfirmBlockResponse](#scalar.chains.v1beta1.ConfirmBlockResponse)
     - [ConfirmDepositRequest](#scalar.chains.v1beta1.ConfirmDepositRequest)
     - [ConfirmDepositResponse](#scalar.chains.v1beta1.ConfirmDepositResponse)
     - [ConfirmRegisterCustodianGroupRequest](#scalar.chains.v1beta1.ConfirmRegisterCustodianGroupRequest)
@@ -1005,6 +1010,24 @@ Msg defines the nexus Msg service.
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
 | `symbol` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.BlockMetadata"></a>
+
+### BlockMetadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `block_hash` | [bytes](#bytes) |  |  |
+| `merkle_root` | [bytes](#bytes) |  |  |
+| `previous_block_hash` | [bytes](#bytes) |  |  |
+| `height` | [uint64](#uint64) |  |  |
 
 
 
@@ -1996,26 +2019,6 @@ PollParticipants should be embedded in poll events in other modules
 
 
 
-<a name="scalar.chains.v1beta1.ConfirmBtcNewBlockStarted"></a>
-
-### ConfirmBtcNewBlockStarted
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `poll_id` | [string](#string) |  |  |
-| `participants` | [bytes](#bytes) | repeated |  |
-| `chain` | [string](#string) |  |  |
-| `block_hash` | [bytes](#bytes) |  | in reverse byte order |
-| `previous_block_hash` | [bytes](#bytes) |  |  |
-| `confirmation_height` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
 <a name="scalar.chains.v1beta1.ConfirmDepositStarted"></a>
 
 ### ConfirmDepositStarted
@@ -2048,6 +2051,25 @@ PollParticipants should be embedded in poll events in other modules
 | `chain` | [string](#string) |  |  |
 | `tx_id` | [bytes](#bytes) |  |  |
 | `gateway_address` | [bytes](#bytes) |  |  |
+| `confirmation_height` | [uint64](#uint64) |  |  |
+| `participants` | [scalar.vote.exported.v1beta1.PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmNewBlockStarted"></a>
+
+### ConfirmNewBlockStarted
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+| `block_hash` | [bytes](#bytes) |  | in reverse byte order |
+| `previous_block_hash` | [bytes](#bytes) |  |  |
 | `confirmation_height` | [uint64](#uint64) |  |  |
 | `participants` | [scalar.vote.exported.v1beta1.PollParticipants](#scalar.vote.exported.v1beta1.PollParticipants) |  |  |
 
@@ -2135,23 +2157,7 @@ PollParticipants should be embedded in poll events in other modules
 | `multisig_operatorship_transferred` | [EventMultisigOperatorshipTransferred](#scalar.chains.v1beta1.EventMultisigOperatorshipTransferred) |  |  |
 | `source_tx_confirmation_event` | [SourceTxConfirmationEvent](#scalar.chains.v1beta1.SourceTxConfirmationEvent) |  | for general chains |
 | `redeem_token` | [EventRedeemToken](#scalar.chains.v1beta1.EventRedeemToken) |  | for btc |
-
-
-
-
-
-
-<a name="scalar.chains.v1beta1.EventBtcBlockHeader"></a>
-
-### EventBtcBlockHeader
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `block_hash` | [bytes](#bytes) |  |  |
-| `previous_block_hash` | [bytes](#bytes) |  |  |
-| `merkle_root` | [bytes](#bytes) |  |  |
+| `new_block_confirmed` | [EventNewBlockConfirmed](#scalar.chains.v1beta1.EventNewBlockConfirmed) |  |  |
 
 
 
@@ -2266,6 +2272,24 @@ PollParticipants should be embedded in poll events in other modules
 | `prev_threshold` | [bytes](#bytes) |  |  |
 | `new_owners` | [bytes](#bytes) | repeated |  |
 | `new_threshold` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.EventNewBlockConfirmed"></a>
+
+### EventNewBlockConfirmed
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `block_hash` | [bytes](#bytes) |  |  |
+| `previous_block_hash` | [bytes](#bytes) |  |  |
+| `merkle_root` | [bytes](#bytes) |  |  |
+| `block_height` | [uint64](#uint64) |  |  |
 
 
 
@@ -2922,6 +2946,36 @@ the deterministic order of the entries
 
 
 
+<a name="scalar.chains.v1beta1.BlockRequest"></a>
+
+### BlockRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `chain` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.BlockResponse"></a>
+
+### BlockResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `block` | [BlockMetadata](#scalar.chains.v1beta1.BlockMetadata) |  |  |
+
+
+
+
+
+
 <a name="scalar.chains.v1beta1.BurnerInfoRequest"></a>
 
 ### BurnerInfoRequest
@@ -3565,6 +3619,33 @@ ParamsRequest represents a message that queries the params
 
 
 
+<a name="scalar.chains.v1beta1.ConfirmBlockRequest"></a>
+
+### ConfirmBlockRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `block_hash` | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmBlockResponse"></a>
+
+### ConfirmBlockResponse
+
+
+
+
+
+
+
 <a name="scalar.chains.v1beta1.ConfirmDepositRequest"></a>
 
 ### ConfirmDepositRequest
@@ -4049,6 +4130,7 @@ Msg defines the btc Msg service.
 | `AddChain` | [AddChainRequest](#scalar.chains.v1beta1.AddChainRequest) | [AddChainResponse](#scalar.chains.v1beta1.AddChainResponse) |  | POST|/scalar/chains/v1beta1/add_chain|
 | `RetryFailedEvent` | [RetryFailedEventRequest](#scalar.chains.v1beta1.RetryFailedEventRequest) | [RetryFailedEventResponse](#scalar.chains.v1beta1.RetryFailedEventResponse) |  | POST|/scalar/chains/v1beta1/retry-failed-event|
 | `RegisterCustodianGroup` | [RegisterCustodianGroupRequest](#scalar.chains.v1beta1.RegisterCustodianGroupRequest) | [RegisterCustodianGroupResponse](#scalar.chains.v1beta1.RegisterCustodianGroupResponse) |  | POST|/scalar/covenant/v1beta1/register_custodian_group|
+| `ConfirmBlock` | [ConfirmBlockRequest](#scalar.chains.v1beta1.ConfirmBlockRequest) | [ConfirmBlockResponse](#scalar.chains.v1beta1.ConfirmBlockResponse) |  | POST|/scalar/chains/v1beta1/confirm_block|
 
 
 <a name="scalar.chains.v1beta1.QueryService"></a>
@@ -4072,6 +4154,7 @@ QueryService defines the gRPC querier service.
 | `TokenInfo` | [TokenInfoRequest](#scalar.chains.v1beta1.TokenInfoRequest) | [TokenInfoResponse](#scalar.chains.v1beta1.TokenInfoResponse) | TokenInfo queries the token info for a registered ERC20 Token | GET|/scalar/chains/v1beta1/token_info/{chain}|
 | `Params` | [ParamsRequest](#scalar.chains.v1beta1.ParamsRequest) | [ParamsResponse](#scalar.chains.v1beta1.ParamsResponse) |  | GET|/scalar/chains/v1beta1/params/{chain}|
 | `RedeemSession` | [RedeemSessionRequest](#scalar.chains.v1beta1.RedeemSessionRequest) | [RedeemSessionResponse](#scalar.chains.v1beta1.RedeemSessionResponse) |  | GET|/scalar/chains/v1beta1/redeem_session/{chain}|
+| `Block` | [BlockRequest](#scalar.chains.v1beta1.BlockRequest) | [BlockResponse](#scalar.chains.v1beta1.BlockResponse) |  | GET|/scalar/chains/v1beta1/block/{chain}|
 
  <!-- end services -->
 

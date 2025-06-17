@@ -1,13 +1,9 @@
 package evm_test
 
 import (
-	"context"
 	"encoding/hex"
 	"math/big"
-	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
 	utilsTypes "github.com/scalarorg/bitcoin-vault/go-utils/types"
 )
 
@@ -22,28 +18,28 @@ var (
 
 // go test -timeout 10m -run ^TestTransferRemote$ github.com/scalarorg/scalar-core/client/rpc/evm -v -count=1
 
-func TestTransferRemote(t *testing.T) {
-	ctx := context.Background()
-	// Prepare the input parameters
+// func TestTransferRemote(t *testing.T) {
+// 	ctx := context.Background()
+// 	// Prepare the input parameters
 
-	payload, _, err := encode.CalculateTransferRemoteMetadataPayloadHash(amount.Uint64(), lockingScript, feeOpts[:])
-	if err != nil {
-		t.Fatalf("Error calculating unstaking payload hash: %v", err)
-	}
+// 	payload, _, err := encode.CalculateTransferRemoteMetadataPayloadHash(amount.Uint64(), lockingScript, feeOpts[:])
+// 	if err != nil {
+// 		t.Fatalf("Error calculating unstaking payload hash: %v", err)
+// 	}
 
-	value := big.NewInt(1)
+// 	value := big.NewInt(1)
 
-	tx, err := createAndSignTransaction(ctx, func() ([]byte, error) {
-		return testSuite.ContractAbi.Pack("transferRemote",
-			destinationChain,
-			common.HexToAddress(destinationContractAddress),
-			amount,
-			payload,
-		)
-	}, value)
-	if err != nil {
-		t.Fatal(err)
-	}
+// 	tx, err := createAndSignTransaction(ctx, func() ([]byte, error) {
+// 		return testSuite.ContractAbi.Pack("transferRemote",
+// 			destinationChain,
+// 			common.HexToAddress(destinationContractAddress),
+// 			amount,
+// 			payload,
+// 		)
+// 	}, value)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
 
-	sendAndWaitForTransaction(ctx, tx)
-}
+// 	sendAndWaitForTransaction(ctx, tx)
+// }

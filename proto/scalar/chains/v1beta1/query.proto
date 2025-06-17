@@ -232,10 +232,15 @@ message ParamsRequest { string chain = 1; }
 
 message ParamsResponse { Params params = 1 [ (gogoproto.nullable) = false ]; }
 
-message RedeemSessionRequest {
-  string chain = 1;
-}
+message RedeemSessionRequest { string chain = 1; }
 
 message RedeemSessionResponse {
-  repeated scalar.chains.v1beta1.RedeemSession redeem_session = 1 [ (gogoproto.nullable) = false ];
+  repeated scalar.chains.v1beta1.RedeemSession redeem_session = 1
+      [ (gogoproto.nullable) = false ];
+}
+
+message BlockRequest { string chain = 1; }
+
+message BlockResponse {
+  scalar.chains.v1beta1.BlockMetadata block = 1 [ (gogoproto.nullable) = true ];
 }

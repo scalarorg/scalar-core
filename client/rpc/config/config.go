@@ -6,7 +6,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
-	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
+	"github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/client/rpc/codec"
 )
 
@@ -38,7 +38,7 @@ type CosmosNetworkConfig struct {
 }
 
 func (c *CosmosNetworkConfig) GetFamily() string {
-	return chain.ChainTypeCosmos.String()
+	return types.ChainTypeCosmos.String()
 }
 
 func (c *CosmosNetworkConfig) GetChainId() uint64 {

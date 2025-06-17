@@ -26,6 +26,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&RetryFailedEventRequest{},
 		&ConfirmSourceTxsRequest{},
 		&RegisterCustodianGroupRequest{},
+		&ConfirmBlockRequest{},
 	)
 	registry.RegisterImplementations((*codec.ProtoMarshaler)(nil),
 		&gogoprototypes.BoolValue{},

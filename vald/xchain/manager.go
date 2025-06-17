@@ -162,7 +162,7 @@ func (mgr Manager) ProcessInitializeUtxo(event *cov.IntializeUtxoSnapshotStarted
 	return err
 }
 
-func (mgr Manager) ProcessNewBlockConfirmation(event *types.ConfirmBtcNewBlockStarted) error {
+func (mgr Manager) ProcessNewBlockConfirmation(event *types.ConfirmNewBlockStarted) error {
 	if !mgr.isParticipantOf(event.Participants) {
 		mgr.logger("poll_id", event.PollID).Debug("ignoring block header confirmation poll: not a participant")
 		return nil

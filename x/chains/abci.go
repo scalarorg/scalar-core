@@ -1,6 +1,7 @@
 package chains
 
 import (
+	"bytes"
 	"encoding/hex"
 	"fmt"
 
@@ -104,6 +105,8 @@ func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 		return handleTokenDeployed(ctx, event, bk, n, p)
 	case *types.Event_MultisigOperatorshipTransferred:
 		return handleMultisigTransferKey(ctx, event, bk, n, m)
+	case *types.Event_NewBlockConfirmed:
+		return handleNewBlockConfirmed(ctx, event, bk, n)
 	default:
 		panic(fmt.Errorf("unsupported event type %T", event))
 	}
@@ -526,6 +529,38 @@ func handleContractCallWithTokenToEVM(ctx sdk.Context, event types.Event, bk typ
 		ContractAddress:  e.ContractAddress,
 		PayloadHash:      e.PayloadHash,
 		Asset:            coin,
+	})
+
+	return nil
+}
+
+func handleNewBlockConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus) error {
+	e := event.GetNewBlockConfirmed()
+	if e == nil {
+		panic(fmt.Errorf("event is nil"))
+	}
+
+	chain := funcs.MustOk(n.GetChain(ctx, event.Chain))
+	ck := funcs.Must(bk.ForChain(ctx, chain.Name))
+
+	currentBlock, err := ck.GetCurrentBlock(ctx)
+	if err != nil {
+		return err
+	}
+
+	if currentBlock.Height >= e.BlockHeight {
+		return fmt.Errorf("current block height %d is greater than or equal to new block height %d", currentBlock.Height, e.BlockHeight)
+	}
+
+	if e.PreviousBlockHash != nil && !bytes.Equal(e.PreviousBlockHash.Bytes(), currentBlock.BlockHash.Bytes()) {
+		return fmt.Errorf("previous block hash is not correct")
+	}
+
+	ck.SetBlock(ctx, types.BlockMetadata{
+		Height:            e.BlockHeight,
+		BlockHash:         e.BlockHash,
+		MerkleRoot:        e.MerkleRoot,
+		PreviousBlockHash: e.PreviousBlockHash,
 	})
 
 	return nil

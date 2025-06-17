@@ -9,6 +9,10 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
+
+	"github.com/cosmos/cosmos-sdk/store"
+	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+	dbm "github.com/tendermint/tm-db"
 )
 
 func TestGetTokenAddress(t *testing.T) {
@@ -58,4 +62,23 @@ func createTokenAddress(details nexus.TokenDetails, gatewayAddr types.Address, b
 
 	tokenAddr := types.Address(crypto.CreateAddress2(common.Address(gatewayAddr), saltToken, tokenInitCodeHash.Bytes()))
 	return tokenAddr, nil
+}
+
+func NewTestContextWithRocksDB(t *testing.T) sdk.Context {
+	// Use a temp dir for test DB
+	dir := t.TempDir()
+	db, err := dbm.NewDB("testdb", dbm.RocksDBBackend, dir)
+	if err != nil {
+		t.Fatalf("failed to create rocksdb: %v", err)
+	}
+
+	storeKey := sdk.NewKVStoreKey("testStoreKey")
+	ms := store.NewCommitMultiStore(db)
+	ms.MountStoreWithDB(storeKey, sdk.StoreTypeDB, db)
+	if err := ms.LoadLatestVersion(); err != nil {
+		t.Fatalf("failed to load latest version: %v", err)
+	}
+
+	ctx := sdk.NewContext(ms, tmproto.Header{}, false, nil)
+	return ctx
 }

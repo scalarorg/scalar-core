@@ -4,11 +4,13 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/scalarorg/scalar-core/utils/clog"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
 
-func (client *BtcClient) ProcessNewBlockConfirmation(event *types.ConfirmBtcNewBlockStarted, proxy sdk.AccAddress) ([]sdk.Msg, error) {
+func (client *BtcClient) ProcessNewBlockConfirmation(event *types.ConfirmNewBlockStarted, proxy sdk.AccAddress) ([]sdk.Msg, error) {
 	result, err := client.GetBlockVerboseTx(event.BlockHash.String())
 	if err != nil {
 		return nil, err
@@ -23,9 +25,30 @@ func (client *BtcClient) ProcessNewBlockConfirmation(event *types.ConfirmBtcNewB
 		return nil, fmt.Errorf("block confirmations are less than confirmation height: %d < %d", block.Confirmations, event.ConfirmationHeight)
 	}
 
-	if block.PreviousHash != event.PreviousBlockHash.String() {
+	if event.PreviousBlockHash != nil && block.PreviousHash != event.PreviousBlockHash.String() {
 		return nil, fmt.Errorf("block previous block hash does not match")
 	}
 
-	return []sdk.Msg{voteTypes.NewVoteRequest(proxy, event.PollID, types.NewVoteEvents(event.Chain))}, nil
+	merkleRoot, err := exported.HashFromHex(block.MerkleRoot)
+	if err != nil {
+		return nil, err
+	}
+
+	voteEvent := types.NewVoteEvents(event.Chain, types.Event{
+		Chain: event.Chain,
+		TxID:  exported.Hash{},
+		Event: &types.Event_NewBlockConfirmed{
+			NewBlockConfirmed: &types.EventNewBlockConfirmed{
+				BlockHash:         event.BlockHash,
+				PreviousBlockHash: event.PreviousBlockHash,
+				MerkleRoot:        merkleRoot,
+				BlockHeight:       uint64(block.Height),
+			},
+		},
+		Index: uint64(block.Height),
+	})
+
+	clog.Greenf("New block confirmed: %+v", voteEvent)
+
+	return []sdk.Msg{voteTypes.NewVoteRequest(proxy, event.PollID, voteEvent)}, nil
 }

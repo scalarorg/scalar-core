@@ -135,6 +135,24 @@ func (q Querier) BurnerInfo(c context.Context, req *types.BurnerInfoRequest) (*t
 	return nil, status.Error(codes.NotFound, "unknown address")
 }
 
+func (q Querier) Block(c context.Context, req *types.BlockRequest) (*types.BlockResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	ck, err := q.keeper.ForChain(ctx, nexustypes.ChainName(req.Chain))
+	if err != nil {
+		return nil, status.Error(codes.NotFound, sdkerrors.Wrap(types.ErrEVM, fmt.Sprintf("%s is not a registered chain", req.Chain)).Error())
+	}
+
+	block, err := ck.GetCurrentBlock(ctx)
+	if err != nil {
+		return nil, status.Error(codes.NotFound, sdkerrors.Wrap(types.ErrEVM, err.Error()).Error())
+	}
+
+	return &types.BlockResponse{
+		Block: block,
+	}, nil
+}
+
 // optimizeSignatureSet returns optimized signature set, sorted in ascending order by corresponding evm address
 func optimizeSignatureSet(operators []types.Operator, minPassingWeight sdk.Uint) [][]byte {
 	sort.SliceStable(operators, func(i, j int) bool {

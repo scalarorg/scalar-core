@@ -37,7 +37,7 @@ type internalKeeper struct {
 	paramsKeeper types.ParamsKeeper
 }
 
-// NewKeeper returns a new BTC base keeper
+// NewKeeper returns a new base keeper
 func NewKeeper(cdc codec.BinaryCodec, storeKey sdk.StoreKey, paramsKeeper types.ParamsKeeper) *BaseKeeper {
 	return &BaseKeeper{
 		internalKeeper: internalKeeper{

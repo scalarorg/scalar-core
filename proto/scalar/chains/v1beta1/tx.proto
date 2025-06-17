@@ -245,3 +245,15 @@ message ConfirmRegisterCustodianGroupRequest {
 }
 
 message ConfirmRegisterCustodianGroupResponse  {}
+
+message ConfirmBlockRequest {
+  bytes sender = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string chain = 2 [(gogoproto.casttype) = "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName"];
+  bytes block_hash = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "BlockHash"
+  ];
+}
+
+message ConfirmBlockResponse {}

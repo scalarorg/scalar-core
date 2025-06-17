@@ -1943,6 +1943,9 @@ var _ types.ChainKeeper = &ChainKeeperMock{}
 //			GetConfirmedEventQueueFunc: func(ctx sdk.Context) utils.KVQueue {
 //				panic("mock out the GetConfirmedEventQueue method")
 //			},
+//			GetCurrentBlockFunc: func(ctx sdk.Context) (*types.BlockMetadata, error) {
+//				panic("mock out the GetCurrentBlock method")
+//			},
 //			GetDepositFunc: func(ctx sdk.Context, txID github_com_scalarorg_scalar_core_x_chains_exported.Hash, logIndex uint64) (types.ERC20Deposit, types.DepositStatus, bool) {
 //				panic("mock out the GetDeposit method")
 //			},
@@ -2011,6 +2014,9 @@ var _ types.ChainKeeper = &ChainKeeperMock{}
 //			},
 //			LoggerFunc: func(ctx sdk.Context) log.Logger {
 //				panic("mock out the Logger method")
+//			},
+//			SetBlockFunc: func(ctx sdk.Context, block types.BlockMetadata)  {
+//				panic("mock out the SetBlock method")
 //			},
 //			SetBurnerInfoFunc: func(ctx sdk.Context, burnerInfo types.BurnerInfo)  {
 //				panic("mock out the SetBurnerInfo method")
@@ -2091,6 +2097,9 @@ type ChainKeeperMock struct {
 	// GetConfirmedEventQueueFunc mocks the GetConfirmedEventQueue method.
 	GetConfirmedEventQueueFunc func(ctx sdk.Context) utils.KVQueue
 
+	// GetCurrentBlockFunc mocks the GetCurrentBlock method.
+	GetCurrentBlockFunc func(ctx sdk.Context) (*types.BlockMetadata, error)
+
 	// GetDepositFunc mocks the GetDeposit method.
 	GetDepositFunc func(ctx sdk.Context, txID github_com_scalarorg_scalar_core_x_chains_exported.Hash, logIndex uint64) (types.ERC20Deposit, types.DepositStatus, bool)
 
@@ -2159,6 +2168,9 @@ type ChainKeeperMock struct {
 
 	// LoggerFunc mocks the Logger method.
 	LoggerFunc func(ctx sdk.Context) log.Logger
+
+	// SetBlockFunc mocks the SetBlock method.
+	SetBlockFunc func(ctx sdk.Context, block types.BlockMetadata)
 
 	// SetBurnerInfoFunc mocks the SetBurnerInfo method.
 	SetBurnerInfoFunc func(ctx sdk.Context, burnerInfo types.BurnerInfo)
@@ -2298,6 +2310,11 @@ type ChainKeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx sdk.Context
 		}
+		// GetCurrentBlock holds details about calls to the GetCurrentBlock method.
+		GetCurrentBlock []struct {
+			// Ctx is the ctx argument value.
+			Ctx sdk.Context
+		}
 		// GetDeposit holds details about calls to the GetDeposit method.
 		GetDeposit []struct {
 			// Ctx is the ctx argument value.
@@ -2431,6 +2448,13 @@ type ChainKeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx sdk.Context
 		}
+		// SetBlock holds details about calls to the SetBlock method.
+		SetBlock []struct {
+			// Ctx is the ctx argument value.
+			Ctx sdk.Context
+			// Block is the block argument value.
+			Block types.BlockMetadata
+		}
 		// SetBurnerInfo holds details about calls to the SetBurnerInfo method.
 		SetBurnerInfo []struct {
 			// Ctx is the ctx argument value.
@@ -2506,6 +2530,7 @@ type ChainKeeperMock struct {
 	lockGetCommand                     sync.RWMutex
 	lockGetConfirmedDepositsPaginated  sync.RWMutex
 	lockGetConfirmedEventQueue         sync.RWMutex
+	lockGetCurrentBlock                sync.RWMutex
 	lockGetDeposit                     sync.RWMutex
 	lockGetDepositsByTxID              sync.RWMutex
 	lockGetERC20TokenByAddress         sync.RWMutex
@@ -2529,6 +2554,7 @@ type ChainKeeperMock struct {
 	lockGetVotingThreshold             sync.RWMutex
 	lockHasBtcPoolingCommands          sync.RWMutex
 	lockLogger                         sync.RWMutex
+	lockSetBlock                       sync.RWMutex
 	lockSetBurnerInfo                  sync.RWMutex
 	lockSetConfirmedEvent              sync.RWMutex
 	lockSetDeposit                     sync.RWMutex
@@ -3112,6 +3138,38 @@ func (mock *ChainKeeperMock) GetConfirmedEventQueueCalls() []struct {
 	mock.lockGetConfirmedEventQueue.RLock()
 	calls = mock.calls.GetConfirmedEventQueue
 	mock.lockGetConfirmedEventQueue.RUnlock()
+	return calls
+}
+
+// GetCurrentBlock calls GetCurrentBlockFunc.
+func (mock *ChainKeeperMock) GetCurrentBlock(ctx sdk.Context) (*types.BlockMetadata, error) {
+	if mock.GetCurrentBlockFunc == nil {
+		panic("ChainKeeperMock.GetCurrentBlockFunc: method is nil but ChainKeeper.GetCurrentBlock was just called")
+	}
+	callInfo := struct {
+		Ctx sdk.Context
+	}{
+		Ctx: ctx,
+	}
+	mock.lockGetCurrentBlock.Lock()
+	mock.calls.GetCurrentBlock = append(mock.calls.GetCurrentBlock, callInfo)
+	mock.lockGetCurrentBlock.Unlock()
+	return mock.GetCurrentBlockFunc(ctx)
+}
+
+// GetCurrentBlockCalls gets all the calls that were made to GetCurrentBlock.
+// Check the length with:
+//
+//	len(mockedChainKeeper.GetCurrentBlockCalls())
+func (mock *ChainKeeperMock) GetCurrentBlockCalls() []struct {
+	Ctx sdk.Context
+} {
+	var calls []struct {
+		Ctx sdk.Context
+	}
+	mock.lockGetCurrentBlock.RLock()
+	calls = mock.calls.GetCurrentBlock
+	mock.lockGetCurrentBlock.RUnlock()
 	return calls
 }
 
@@ -3883,6 +3941,42 @@ func (mock *ChainKeeperMock) LoggerCalls() []struct {
 	mock.lockLogger.RLock()
 	calls = mock.calls.Logger
 	mock.lockLogger.RUnlock()
+	return calls
+}
+
+// SetBlock calls SetBlockFunc.
+func (mock *ChainKeeperMock) SetBlock(ctx sdk.Context, block types.BlockMetadata) {
+	if mock.SetBlockFunc == nil {
+		panic("ChainKeeperMock.SetBlockFunc: method is nil but ChainKeeper.SetBlock was just called")
+	}
+	callInfo := struct {
+		Ctx   sdk.Context
+		Block types.BlockMetadata
+	}{
+		Ctx:   ctx,
+		Block: block,
+	}
+	mock.lockSetBlock.Lock()
+	mock.calls.SetBlock = append(mock.calls.SetBlock, callInfo)
+	mock.lockSetBlock.Unlock()
+	mock.SetBlockFunc(ctx, block)
+}
+
+// SetBlockCalls gets all the calls that were made to SetBlock.
+// Check the length with:
+//
+//	len(mockedChainKeeper.SetBlockCalls())
+func (mock *ChainKeeperMock) SetBlockCalls() []struct {
+	Ctx   sdk.Context
+	Block types.BlockMetadata
+} {
+	var calls []struct {
+		Ctx   sdk.Context
+		Block types.BlockMetadata
+	}
+	mock.lockSetBlock.RLock()
+	calls = mock.calls.SetBlock
+	mock.lockSetBlock.RUnlock()
 	return calls
 }
 
