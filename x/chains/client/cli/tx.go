@@ -378,3 +378,29 @@ func GetCmdSignBtcCommands() *cobra.Command {
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }
+
+// GetCmdConfirmBlock returns the cli command to confirm a block
+func GetCmdConfirmBlock() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "confirm-block [chain] [block hash]",
+		Short: "Confirm a block",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cliCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			hash, err := exported.HashFromHex(args[1])
+			if err != nil {
+				return fmt.Errorf("failed to parse block hash: %v", err)
+			}
+
+			msg := types.NewConfirmBlock(cliCtx.GetFromAddress(), nexus.ChainName(args[0]), hash)
+
+			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
+		},
+	}
+	flags.AddTxFlagsToCmd(cmd)
+	return cmd
+}
