@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
@@ -56,14 +57,14 @@ func (s msgServer) ConfirmSourceTxsV2(c context.Context, req *types.ConfirmSourc
 	if err != nil {
 		return nil, err
 	}
-
+	start := time.Now()
 	for _, tx := range req.Batch.Txs {
 		if err := s.validateAndSaveTokenSent(ctx, keeper, chain.Name, tx, block); err != nil {
 			clog.Redf("Failed to validate and save token sent: %v", err)
 			continue
 		}
 	}
-
+	s.Logger(ctx).Info("ConfirmSourceTxsV2", "time", time.Since(start), "number of txs", len(req.Batch.Txs))
 	return &types.ConfirmSourceTxsResponseV2{}, nil
 }
 

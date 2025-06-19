@@ -35,6 +35,11 @@ func (s msgServer) ConfirmBlock(c context.Context, req *types.ConfirmBlockReques
 	if err != nil {
 		return nil, err
 	}
+	s.Logger(ctx).Info("ConfirmBlock",
+		"blockHeight", currentBlockHash.Height,
+		"blockHash", req.BlockHash,
+		"previousBlockHash", currentBlockHash.PreviousBlockHash,
+		"confirmationHeight", keeper.GetRequiredConfirmationHeight(ctx))
 
 	events.Emit(ctx, &types.ConfirmNewBlockStarted{
 		Chain:              chain.Name,
