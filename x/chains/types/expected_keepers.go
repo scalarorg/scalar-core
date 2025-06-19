@@ -91,6 +91,7 @@ type ChainKeeper interface {
 
 	// block
 	GetCurrentBlock(ctx sdk.Context) (*BlockMetadata, error)
+	GetBlock(ctx sdk.Context, hash exported.Hash) (*BlockMetadata, error)
 	SetBlock(ctx sdk.Context, block BlockMetadata)
 }
 
@@ -189,5 +190,6 @@ type CovenantKeeper interface {
 
 type ProtocolKeeper interface {
 	FindProtocolInfoByExternalSymbol(ctx sdk.Context, symbol string) (*pexported.ProtocolInfo, error)
+	FindProtocolInfoByInternalAddress(ctx sdk.Context, originChain nexus.ChainName, minorChain nexus.ChainName, internalAddress string) (*pexported.ProtocolInfo, error)
 	AddTokenForProtocol(ctx sdk.Context, chain nexus.ChainName, symbol, address string, name string) bool
 }

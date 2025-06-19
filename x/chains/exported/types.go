@@ -63,3 +63,7 @@ func HashFromHex(hex string) (Hash, error) {
 	}
 	return Hash(common.HexToHash(hex)), nil
 }
+
+func HashFromBytes(b []byte) Hash {
+	return Hash(common.BytesToHash(b))
+}

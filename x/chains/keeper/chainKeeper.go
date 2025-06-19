@@ -243,7 +243,7 @@ func (k ChainKeeper) SetBlock(ctx sdk.Context, meta types.BlockMetadata) {
 }
 
 func (k ChainKeeper) GetCurrentBlock(ctx sdk.Context) (*types.BlockMetadata, error) {
-	iter := k.getStore(ctx).IteratorNew(key.FromStr(blockPrefix))
+	iter := k.getStore(ctx).ReverseIterator(utils.KeyFromStr(blockPrefix))
 	defer utils.CloseLogError(iter, k.Logger(ctx))
 
 	if !iter.Valid() {
@@ -260,6 +260,25 @@ func (k ChainKeeper) GetCurrentBlock(ctx sdk.Context) (*types.BlockMetadata, err
 	}
 
 	return &current, nil
+}
+
+func (k ChainKeeper) GetBlock(ctx sdk.Context, hash exported.Hash) (*types.BlockMetadata, error) {
+	iter := k.getStore(ctx).ReverseIterator(utils.KeyFromStr(blockPrefix))
+	defer utils.CloseLogError(iter, k.Logger(ctx))
+
+	if !iter.Valid() {
+		return nil, fmt.Errorf("no block metadata found")
+	}
+
+	for ; iter.Valid(); iter.Next() {
+		var block types.BlockMetadata
+		iter.UnmarshalValue(&block)
+		if block.BlockHash == hash {
+			return &block, nil
+		}
+	}
+
+	return nil, fmt.Errorf("block metadata not found")
 }
 
 func getParam[T any](k ChainKeeper, ctx sdk.Context, paramKey []byte) T {

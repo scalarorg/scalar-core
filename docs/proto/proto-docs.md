@@ -236,6 +236,12 @@
     - [SignCommandsRequest](#scalar.chains.v1beta1.SignCommandsRequest)
     - [SignCommandsResponse](#scalar.chains.v1beta1.SignCommandsResponse)
   
+- [scalar/chains/v1beta1/v2.proto](#scalar/chains/v1beta1/v2.proto)
+    - [ConfirmSourceTxsRequestV2](#scalar.chains.v1beta1.ConfirmSourceTxsRequestV2)
+    - [ConfirmSourceTxsResponseV2](#scalar.chains.v1beta1.ConfirmSourceTxsResponseV2)
+    - [TrustedTx](#scalar.chains.v1beta1.TrustedTx)
+    - [TrustedTxsByBlock](#scalar.chains.v1beta1.TrustedTxsByBlock)
+  
 - [scalar/chains/v1beta1/service.proto](#scalar/chains/v1beta1/service.proto)
     - [MsgService](#scalar.chains.v1beta1.MsgService)
     - [QueryService](#scalar.chains.v1beta1.QueryService)
@@ -4095,6 +4101,85 @@ address
 
 
 
+<a name="scalar/chains/v1beta1/v2.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## scalar/chains/v1beta1/v2.proto
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmSourceTxsRequestV2"></a>
+
+### ConfirmSourceTxsRequestV2
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [bytes](#bytes) |  |  |
+| `chain` | [string](#string) |  |  |
+| `batch` | [TrustedTxsByBlock](#scalar.chains.v1beta1.TrustedTxsByBlock) |  |  |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.ConfirmSourceTxsResponseV2"></a>
+
+### ConfirmSourceTxsResponseV2
+
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.TrustedTx"></a>
+
+### TrustedTx
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `hash` | [bytes](#bytes) |  |  |
+| `tx_index` | [uint64](#uint64) |  |  |
+| `raw` | [bytes](#bytes) |  |  |
+| `merkle_path` | [bytes](#bytes) | repeated |  |
+| `block_hash_chain` | [bytes](#bytes) | repeated | TODO: add security checks for fields below |
+| `prev_outpoint_script_pubkey` | [bytes](#bytes) |  | for btc, this is the script pubkey of the previous outpoint |
+
+
+
+
+
+
+<a name="scalar.chains.v1beta1.TrustedTxsByBlock"></a>
+
+### TrustedTxsByBlock
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `block_hash` | [bytes](#bytes) |  |  |
+| `txs` | [TrustedTx](#scalar.chains.v1beta1.TrustedTx) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="scalar/chains/v1beta1/service.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -4115,6 +4200,7 @@ Msg defines the btc Msg service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `ConfirmSourceTxsV2` | [ConfirmSourceTxsRequestV2](#scalar.chains.v1beta1.ConfirmSourceTxsRequestV2) | [ConfirmSourceTxsResponseV2](#scalar.chains.v1beta1.ConfirmSourceTxsResponseV2) | V2 | POST|/scalar/chains/v1beta1/confirm_source_txs_v2|
 | `ConfirmSourceTxs` | [ConfirmSourceTxsRequest](#scalar.chains.v1beta1.ConfirmSourceTxsRequest) | [ConfirmSourceTxsResponse](#scalar.chains.v1beta1.ConfirmSourceTxsResponse) |  | POST|/scalar/chains/v1beta1/confirm_source_txs|
 | `SetGateway` | [SetGatewayRequest](#scalar.chains.v1beta1.SetGatewayRequest) | [SetGatewayResponse](#scalar.chains.v1beta1.SetGatewayResponse) |  | POST|/scalar/chains/v1beta1/set_gateway|
 | `Link` | [LinkRequest](#scalar.chains.v1beta1.LinkRequest) | [LinkResponse](#scalar.chains.v1beta1.LinkResponse) |  | POST|/scalar/chains/v1beta1/link|

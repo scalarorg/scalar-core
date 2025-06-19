@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package scalar.chains.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "scalar/permission/exported/v1beta1/types.proto";
+
+option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
+option (gogoproto.goproto_getters_all) = false;
+
+message TrustedTx {
+  bytes hash = 1 [
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "Hash",
+    (gogoproto.nullable) = false
+  ];
+  uint64 tx_index = 2;
+  bytes raw = 3;
+  repeated bytes merkle_path = 4 [
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.nullable) = false
+  ];
+
+  // TODO: add security checks for fields below
+  repeated bytes block_hash_chain = 5 [
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.nullable) = false
+  ];
+
+  // for btc, this is the script pubkey of the previous outpoint
+  bytes prev_outpoint_script_pubkey = 6;
+}
+
+message TrustedTxsByBlock {
+  bytes block_hash = 1 [
+    (gogoproto.customtype) =
+        "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
+    (gogoproto.customname) = "BlockHash",
+    (gogoproto.nullable) = false
+  ];
+  repeated TrustedTx txs = 2;
+}
+
+message ConfirmSourceTxsRequestV2 {
+  option (scalar.permission.exported.v1beta1.permission_role) =
+      ROLE_UNRESTRICTED;
+  bytes sender = 1 [ (gogoproto.casttype) =
+                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+  string chain = 2
+      [ (gogoproto.casttype) =
+            "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
+  TrustedTxsByBlock batch = 3;
+}
+
+message ConfirmSourceTxsResponseV2 {}

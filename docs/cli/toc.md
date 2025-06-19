@@ -42,6 +42,7 @@
 			- [chains](scalard_query_chains_chains.md)	 - Return the supported EVM chains by status
 			- [command [chain] [id]](scalard_query_chains_command.md)	 - Get information about an EVM gateway command given a chain and the command ID
 			- [confirmation-height [chain]](scalard_query_chains_confirmation-height.md)	 - Returns the minimum confirmation height for the given chain
+			- [current-block [chain]](scalard_query_chains_current-block.md)	 - Returns the current block for the given chain
 			- [erc20-tokens [chain]](scalard_query_chains_erc20-tokens.md)	 - Returns the ERC20 tokens for the given chain
 			- [event [chain] [event-id]](scalard_query_chains_event.md)	 - Returns an event for the given chain
 			- [gateway-address [chain]](scalard_query_chains_gateway-address.md)	 - Query the Scalar Gateway contract address

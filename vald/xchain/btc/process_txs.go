@@ -40,7 +40,7 @@ func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsS
 	// TODO: 🛑 validate the btc protocol address from the event
 	clog.Bluef("[BTC] txReceipt.Raw.Txid: %+v, TxIndex: %+v", receipt.Raw.Txid, receipt.TransactionIndex)
 	var events []types.Event
-	tokenSent, err := client.createEventTokenSent(event, &receipt)
+	tokenSent, err := client.CreateEventTokenSent(event, &receipt)
 	if err != nil {
 		client.logger().Error(sdkerrors.Wrap(err, "decode event EventConfirmSourceTxsStarted failed").Error())
 		client.logger().Error(fmt.Sprintf("receipt txid: %s, raw hex: %s", receipt.Raw.Txid, receipt.Raw.Hex))

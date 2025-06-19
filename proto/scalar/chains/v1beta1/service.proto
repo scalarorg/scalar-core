@@ -5,12 +5,22 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "scalar/chains/v1beta1/query.proto";
 import "scalar/chains/v1beta1/tx.proto";
+import "scalar/chains/v1beta1/v2.proto";
 
 option go_package = "github.com/scalarorg/scalar-core/x/chains/types";
 option (gogoproto.goproto_registration) = true;
 
 // Msg defines the btc Msg service.
 service MsgService {
+  // V2
+  rpc ConfirmSourceTxsV2(ConfirmSourceTxsRequestV2)
+      returns (ConfirmSourceTxsResponseV2) {
+    option (google.api.http) = {
+      post : "/scalar/chains/v1beta1/confirm_source_txs_v2"
+      body : "*"
+    };
+  }
+
   rpc ConfirmSourceTxs(ConfirmSourceTxsRequest)
       returns (ConfirmSourceTxsResponse) {
     option (google.api.http) = {

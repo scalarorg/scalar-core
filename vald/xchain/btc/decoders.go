@@ -41,7 +41,7 @@ const (
 	SYMBOL_SCALAR_BTC  = "sBtc" //Todo: get from keeper
 )
 
-func (client *BtcClient) createEventTokenSent(event *chainsTypes.EventConfirmSourceTxsStarted, tx *BTCTxReceipt) (*chainsTypes.EventTokenSent, error) {
+func (client *BtcClient) CreateEventTokenSent(event *chainsTypes.EventConfirmSourceTxsStarted, tx *BTCTxReceipt) (*chainsTypes.EventTokenSent, error) {
 	if len(tx.MsgTx.TxOut) < MinNumberOfOutputs {
 		return nil, ErrInvalidTxOutCount
 	}
@@ -115,54 +115,3 @@ func (client *BtcClient) createEventTokenSent(event *chainsTypes.EventConfirmSou
 		BlockHeight:        blockHeight,
 	}, nil
 }
-
-// func (client *BtcClient) decodeSourceTxConfirmationEvent(tx *BTCTxReceipt) (*chainsTypes.SourceTxConfirmationEvent, error) {
-// 	if len(tx.MsgTx.TxOut) < MinNumberOfOutputs {
-// 		return nil, ErrInvalidTxOutCount
-// 	}
-
-// 	embeddedDataTxOut := tx.MsgTx.TxOut[EmbeddedDataOutputIndex]
-// 	if embeddedDataTxOut == nil || embeddedDataTxOut.PkScript == nil || embeddedDataTxOut.PkScript[0] != txscript.OP_RETURN {
-// 		return nil, ErrInvalidOpReturn
-// 	}
-
-// 	output, err := vault.ParseVaultEmbeddedData(embeddedDataTxOut.PkScript)
-// 	if err != nil || output == nil {
-// 		return nil, ErrInvalidOpReturnData
-// 	}
-
-// 	var stakingAmount int64 = tx.MsgTx.TxOut[StakingOutputIndex].Value
-
-// 	destinationChain := chain.NewChainInfoFromBytes(output.DestinationChain)
-// 	if destinationChain == nil {
-// 		return nil, ErrInvalidDestinationChain
-// 	}
-
-// 	var destinationContractAddress chainsTypes.Address
-// 	err = destinationContractAddress.Unmarshal(output.DestinationTokenAddress)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	payload, payloadHash, err := encode.SafeCalculateDestPayload(uint64(stakingAmount), tx.MsgTx.TxID(), output.DestinationRecipientAddress)
-// 	if err != nil {
-// 		return nil, ErrInvalidPayloadHash
-// 	}
-
-// 	var destinationRecipientAddress chainsTypes.Address
-// 	err = destinationRecipientAddress.Unmarshal(output.DestinationRecipientAddress)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	return &chainsTypes.SourceTxConfirmationEvent{
-// 		Sender:                      tx.PrevTxOuts[0].ScriptPubKey.Address,
-// 		DestinationChain:            nexus.ChainName(destinationChain.ToBytes().String()),
-// 		Amount:                      uint64(stakingAmount),
-// 		Asset:                       "satoshi",
-// 		PayloadHash:                 chainsexported.Hash(payloadHash),
-// 		Payload:                     payload,
-// 		DestinationContractAddress:  chainsTypes.Address(destinationContractAddress).Hex(),
-// 		DestinationRecipientAddress: chainsTypes.Address(destinationRecipientAddress).Hex(),
-// 	}, nil
-// }

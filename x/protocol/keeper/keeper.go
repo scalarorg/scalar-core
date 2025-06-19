@@ -199,6 +199,14 @@ func (k Keeper) FindProtocolInfoByExternalSymbol(ctx sdk.Context, symbol string)
 	clog.Greenf("[x/protocol] [keeper] [FindProtocolInfoByExternalSymbol], found protocolInfo: %+v", protocolInfo)
 	return protocolInfo, nil
 }
+
+func (k Keeper) FindProtocolInfoByInternalAddress(ctx sdk.Context, originChain nexus.ChainName, minorChain nexus.ChainName, internalAddress string) (*pexported.ProtocolInfo, error) {
+	protocol, err := k.FindProtocolByInternalAddress(ctx, originChain, minorChain, internalAddress)
+	if err != nil {
+		return nil, err
+	}
+	return protocol.ToProtocolInfo(), nil
+}
 func (k Keeper) FindProtocolInfoByCustodianGroupUID(ctx sdk.Context, custodianGroupUIDs [][]byte) []*pexported.ProtocolInfo {
 	result := []*pexported.ProtocolInfo{}
 	protocols, ok := k.GetAllProtocols(ctx)
