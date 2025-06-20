@@ -10,7 +10,6 @@ import (
 	geth "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/scalarorg/go-common/encode"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 	"github.com/scalarorg/scalar-core/utils/slices"
@@ -144,7 +143,8 @@ func DecodeEventContractCallWithToken(log *geth.Log) (types.EventContractCallWit
 
 	clog.Greenf("[Vald/decoders] tx %x raw payload: %x", log.TxHash, payload)
 
-	_, err = encode.DecodeContractCallWithTokenPayload(payload)
+	var redeemTokenPayloadWithType covTypes.RedeemTokenPayloadWithType
+	err = redeemTokenPayloadWithType.AbiUnpack(payload)
 	if err != nil {
 		clog.Redf("[Vald/decoders] Payload is invalid, err: %+v\n", err)
 		return types.EventContractCallWithToken{}, fmt.Errorf("error decoding contract call payload: %w", err)
@@ -282,8 +282,8 @@ func DecodeEventRedeemToken(log *geth.Log) (types.EventRedeemToken, error) {
 
 	clog.Greenf("[Vald/decoders] tx %x raw payload: %x", log.TxHash, payload)
 
-	// this function is used to check if the payload is valid or not
-	_, err = encode.DecodeContractCallWithTokenPayload(payload)
+	var redeemTokenPayloadWithType covTypes.RedeemTokenPayloadWithType
+	err = redeemTokenPayloadWithType.AbiUnpack(payload)
 	if err != nil {
 		clog.Redf("[Vald/decoders] Payload is invalid, err: %+v\n", err)
 		return types.EventRedeemToken{}, fmt.Errorf("error decoding contract call payload: %w", err)

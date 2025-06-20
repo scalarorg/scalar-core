@@ -7,10 +7,10 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/scalarorg/go-common/encode"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/exported"
+	cov "github.com/scalarorg/scalar-core/x/covenant/types"
 )
 
 func (s msgServer) SignBtcCommand(c context.Context, req *types.SignBtcCommandsRequest) (*types.SignCommandsResponse, error) {
@@ -55,16 +55,17 @@ func (s msgServer) SignBtcCommand(c context.Context, req *types.SignBtcCommandsR
 		if !ok {
 			return nil, fmt.Errorf("command %s not found", commandID.Hex())
 		}
-		payload, err := encode.DecodeContractCallWithTokenPayload(command.Payload)
+		var redeemTokenPayloadWithType cov.RedeemTokenPayloadWithType
+		err = redeemTokenPayloadWithType.AbiUnpack(command.Payload)
 		if err != nil {
 			return nil, err
 		}
 
-		if payload.PayloadType != encode.ContractCallWithTokenPayloadType_UPC {
+		if redeemTokenPayloadWithType.Type != cov.RedeemUPC {
 			return nil, fmt.Errorf("command %s is not a contract call with token in UPC model", commandID.Hex())
 		}
 
-		multiPsbt = append(multiPsbt, payload.UPC.Psbt)
+		multiPsbt = append(multiPsbt, redeemTokenPayloadWithType.RedeemUPCPayload.Psbt)
 	}
 
 	if err := s.covenant.SignPsbt(

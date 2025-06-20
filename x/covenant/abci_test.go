@@ -134,8 +134,8 @@ func createTestCommandBatch(params []*redeemParams) chainsTypes.CommandBatch {
 	return chainsTypes.NewCommandBatch(md, func(m chainsTypes.CommandBatchMetadata) {})
 }
 
-func createRedeemPayload(amount uint64, utxoAmounts []uint64) types.RedeemTokenPayload {
-	return types.RedeemTokenPayload{
+func createRedeemPayload(amount uint64, utxoAmounts []uint64) types.RedeemCustodianPayload {
+	return types.RedeemCustodianPayload{
 		Amount:        amount,
 		LockingScript: []byte("test_script"),
 		Utxos:         createTestUTXOs(utxoAmounts),

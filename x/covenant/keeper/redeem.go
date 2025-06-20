@@ -7,7 +7,6 @@ import (
 	"fmt"
 
 	"github.com/rs/zerolog/log"
-	"github.com/scalarorg/go-common/encode"
 	"github.com/scalarorg/scalar-core/utils"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -287,13 +286,13 @@ func (k Keeper) CreateRedeemParams(ctx sdk.Context, req *cov.ReserveRedeemUtxoRe
 		Msg("[UTXOSnapshot] ReserveUtxos")
 	cmdId := cov.NewCommandID(dataHash)
 	payload := &cov.RedeemTokenPayloadWithType{
-		RedeemTokenPayload: cov.RedeemTokenPayload{
+		RedeemCustodianPayload: &cov.RedeemCustodianPayload{
 			Amount:        req.Amount,
 			LockingScript: req.LockingScript,
 			Utxos:         reservedUtxos,
 			RequestId:     cmdId.Bytes(),
 		},
-		PayloadType: encode.ContractCallWithTokenPayloadType_CustodianOnly,
+		Type: cov.RedeemCustodianOnly,
 	}
 	redeemTokenParams := &cov.RedeemTokenParams{
 		DestinationChain:   req.DestChain.String(),

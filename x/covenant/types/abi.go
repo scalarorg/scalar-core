@@ -21,6 +21,22 @@ var (
 	stringArrayType  = funcs.Must(abi.NewType("string[]", "string[]", nil))
 	addressArrayType = funcs.Must(abi.NewType("address[]", "address[]", nil))
 
-	RedeemTokenPayloadArguments = abi.Arguments{{Type: uint64Type}, {Type: bytesType}, {Type: stringArrayType}, {Type: uint32ArrayType}, {Type: uint64ArrayType}, {Type: bytes32Type}}
-	RedeemTokenArguments        = abi.Arguments{{Type: stringType}, {Type: stringType}, {Type: bytesType}, {Type: stringType}, {Type: uint256Type}, {Type: bytes32Type}, {Type: uint64Type}}
+	RedeemCustodianOnlyPayloadAbi = abi.Arguments{
+		{Type: uint64Type, Name: "amount"},
+		{Type: bytesType, Name: "lockingScript"},
+		{Type: stringArrayType, Name: "txIds"},
+		{Type: uint32ArrayType, Name: "vouts"},
+		{Type: uint64ArrayType, Name: "amounts"},
+		{Type: bytes32Type, Name: "requestId"},
+	}
+
+	RedeemTokenArguments = abi.Arguments{
+		{Type: stringType, Name: "destinationChain"},
+		{Type: stringType, Name: "destinationAddress"},
+		{Type: bytesType, Name: "payload"},
+		{Type: stringType, Name: "symbol"},
+		{Type: uint256Type, Name: "amount"},
+		{Type: bytes32Type, Name: "custodianGroupUID"},
+		{Type: uint64Type, Name: "sessionSequence"},
+	}
 )

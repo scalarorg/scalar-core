@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog/log"
-	"github.com/scalarorg/go-common/encode"
 	"github.com/scalarorg/scalar-core/utils"
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/covenant/exported"
@@ -65,38 +64,90 @@ type ReservedTx struct {
 	Utxos     []*UTXO `protobuf:"bytes,3,rep,name=utxos,proto3" json:"utxos,omitempty"`
 }
 
-type RedeemTokenPayload struct {
+type RedeemCustodianPayload struct {
 	Amount        uint64
 	LockingScript []byte
 	Utxos         []*UTXO
 	RequestId     [32]byte
 }
 
+type RedeemUPCPayload struct {
+	Psbt []byte
+}
+
+type RedeemTokenType uint8
+
+const (
+	RedeemCustodianOnly RedeemTokenType = iota
+	RedeemUPC
+)
+
+func (c RedeemTokenType) Bytes() []byte {
+	return []byte{byte(c)}
+}
+
+func RedeemTypeFromBytes(b byte) RedeemTokenType {
+	return RedeemTokenType(b)
+}
+
 type RedeemTokenPayloadWithType struct {
-	RedeemTokenPayload
-	PayloadType encode.ContractCallWithTokenPayloadType
+	*RedeemCustodianPayload
+	*RedeemUPCPayload
+	Type RedeemTokenType
 }
 
 func (p *RedeemTokenPayloadWithType) AbiPack() ([]byte, error) {
-	payload, err := p.RedeemTokenPayload.AbiPack()
+	var payload []byte
+	var err error
+	switch p.Type {
+	case RedeemCustodianOnly:
+		if p.RedeemCustodianPayload == nil {
+			return nil, fmt.Errorf("redeem custodian payload is nil")
+		}
+		payload, err = p.RedeemCustodianPayload.AbiPack()
+	case RedeemUPC:
+		if p.RedeemUPCPayload == nil {
+			return nil, fmt.Errorf("redeem upc payload is nil")
+		}
+		payload, err = p.RedeemUPCPayload.AbiPack()
+	default:
+		return nil, fmt.Errorf("invalid redeem token type %d", p.Type)
+	}
 	if err != nil {
 		return nil, err
 	}
-	return encode.AppendPayload(encode.ContractCallWithTokenPayloadType(p.PayloadType), payload), nil
+	return appendPayload(p.Type, payload), nil
+}
+
+func appendPayload(payloadType RedeemTokenType, encodedPayload []byte) []byte {
+	var finalPayload []byte
+	finalPayload = append(finalPayload, payloadType.Bytes()...)
+	finalPayload = append(finalPayload, encodedPayload...)
+	return finalPayload
 }
 
 func (p *RedeemTokenPayloadWithType) AbiUnpack(data []byte) error {
-	p.PayloadType = encode.ContractCallWithTokenPayloadType(data[0])
-	var payload RedeemTokenPayload
-	err := payload.AbiUnpack(data[1:])
-	if err != nil {
-		return err
+	p.Type = RedeemTypeFromBytes(data[0])
+	switch p.Type {
+	case RedeemCustodianOnly:
+		payload := &RedeemCustodianPayload{}
+		err := payload.AbiUnpack(data[1:])
+		if err != nil {
+			return err
+		}
+		p.RedeemCustodianPayload = payload
+	case RedeemUPC:
+		payload := &RedeemUPCPayload{}
+		err := payload.AbiUnpack(data[1:])
+		if err != nil {
+			return err
+		}
+		p.RedeemUPCPayload = payload
 	}
-	p.RedeemTokenPayload = payload
 	return nil
 }
 
-func (p *RedeemTokenPayload) AbiPack() ([]byte, error) {
+func (p *RedeemCustodianPayload) AbiPack() ([]byte, error) {
 	txIds := make([]string, len(p.Utxos))
 	vouts := make([]uint32, len(p.Utxos))
 	amounts := make([]uint64, len(p.Utxos))
@@ -105,7 +156,7 @@ func (p *RedeemTokenPayload) AbiPack() ([]byte, error) {
 		vouts[i] = utxo.Vout
 		amounts[i] = utxo.AmountInSats
 	}
-	return RedeemTokenPayloadArguments.Pack(
+	return RedeemCustodianOnlyPayloadAbi.Pack(
 		p.Amount,
 		p.LockingScript,
 		txIds,
@@ -115,8 +166,8 @@ func (p *RedeemTokenPayload) AbiPack() ([]byte, error) {
 	)
 }
 
-func (p *RedeemTokenPayload) AbiUnpack(data []byte) error {
-	unpacked, err := RedeemTokenPayloadArguments.Unpack(data)
+func (p *RedeemCustodianPayload) AbiUnpack(data []byte) error {
+	unpacked, err := RedeemCustodianOnlyPayloadAbi.Unpack(data)
 	if err != nil {
 		log.Error().Err(err).Msg("redeem token payload abi unpack error")
 		return err
@@ -136,6 +187,15 @@ func (p *RedeemTokenPayload) AbiUnpack(data []byte) error {
 		p.Utxos[i] = &UTXO{TxID: hash, Vout: vouts[i], AmountInSats: amounts[i]}
 	}
 	p.RequestId = unpacked[5].([32]byte)
+	return nil
+}
+
+func (p *RedeemUPCPayload) AbiPack() ([]byte, error) {
+	return p.Psbt, nil
+}
+
+func (p *RedeemUPCPayload) AbiUnpack(data []byte) error {
+	p.Psbt = data
 	return nil
 }
 
