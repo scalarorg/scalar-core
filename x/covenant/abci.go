@@ -643,7 +643,7 @@ func aggregatePsbtFromCommandBatch(
 
 		outputs = append(outputs, goutils.UnlockingOutput{
 			Amount:        params.Amount,
-			LockingScript: params.LockingScript,
+			LockingScript: params.RedeemCustodianPayload.LockingScript,
 		})
 
 		for _, utxo := range params.Utxos {

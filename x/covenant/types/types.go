@@ -71,6 +71,10 @@ type RedeemCustodianPayload struct {
 	RequestId     [32]byte
 }
 
+type RedeemCustodianPayloadV2 struct {
+	LockingScript []byte
+}
+
 type RedeemUPCPayload struct {
 	Psbt []byte
 }
@@ -80,6 +84,7 @@ type RedeemTokenType uint8
 const (
 	RedeemCustodianOnly RedeemTokenType = iota
 	RedeemUPC
+	RedeemCustodianOnlyV2
 )
 
 func (c RedeemTokenType) Bytes() []byte {
@@ -93,6 +98,7 @@ func RedeemTypeFromBytes(b byte) RedeemTokenType {
 type RedeemTokenPayloadWithType struct {
 	*RedeemCustodianPayload
 	*RedeemUPCPayload
+	*RedeemCustodianPayloadV2
 	Type RedeemTokenType
 }
 
@@ -110,6 +116,11 @@ func (p *RedeemTokenPayloadWithType) AbiPack() ([]byte, error) {
 			return nil, fmt.Errorf("redeem upc payload is nil")
 		}
 		payload, err = p.RedeemUPCPayload.AbiPack()
+	case RedeemCustodianOnlyV2:
+		if p.RedeemCustodianPayloadV2 == nil {
+			return nil, fmt.Errorf("redeem custodian payload v2 is nil")
+		}
+		payload, err = p.RedeemCustodianPayloadV2.AbiPack()
 	default:
 		return nil, fmt.Errorf("invalid redeem token type %d", p.Type)
 	}
@@ -143,6 +154,13 @@ func (p *RedeemTokenPayloadWithType) AbiUnpack(data []byte) error {
 			return err
 		}
 		p.RedeemUPCPayload = payload
+	case RedeemCustodianOnlyV2:
+		payload := &RedeemCustodianPayloadV2{}
+		err := payload.AbiUnpack(data[1:])
+		if err != nil {
+			return err
+		}
+		p.RedeemCustodianPayloadV2 = payload
 	}
 	return nil
 }
@@ -196,6 +214,15 @@ func (p *RedeemUPCPayload) AbiPack() ([]byte, error) {
 
 func (p *RedeemUPCPayload) AbiUnpack(data []byte) error {
 	p.Psbt = data
+	return nil
+}
+
+func (p *RedeemCustodianPayloadV2) AbiPack() ([]byte, error) {
+	return p.LockingScript, nil
+}
+
+func (p *RedeemCustodianPayloadV2) AbiUnpack(data []byte) error {
+	p.LockingScript = data
 	return nil
 }
 
