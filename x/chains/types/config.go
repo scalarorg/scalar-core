@@ -1,7 +1,7 @@
 package types
 
 import (
-	"github.com/scalarorg/bitcoin-vault/go-utils/types"
+	"github.com/scalarorg/go-common/types"
 	"github.com/scalarorg/scalar-core/utils"
 )
 

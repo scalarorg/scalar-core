@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/rs/zerolog/log"
-	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
+	"github.com/scalarorg/go-common/encode"
 	"github.com/scalarorg/scalar-core/utils"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -348,8 +348,8 @@ func (k Keeper) MarkReservedUtxo(ctx sdk.Context, uid exported.Hash, payload []b
 	if !ok {
 		return fmt.Errorf("utxo snapshot not found")
 	}
-	reservationAlreadySet := utxoSnapshot.SetReservation(p)
-	if reservationAlreadySet {
+	alreadySetReservation := utxoSnapshot.SetReservation(p)
+	if alreadySetReservation {
 		log.Info().Str("requestID", hex.EncodeToString(p.RequestId[:])).
 			Uint64("amount", p.Amount).
 			Msg("[UTXOSnapshot] Set new reservation to the utxo snapshot")

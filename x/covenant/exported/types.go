@@ -7,7 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	utiltypes "github.com/scalarorg/bitcoin-vault/go-utils/types"
+	utiltypes "github.com/scalarorg/go-common/types"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"

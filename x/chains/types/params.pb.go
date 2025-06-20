@@ -5,15 +5,16 @@ package types
 
 import (
 	fmt "fmt"
-	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
-	_ "github.com/gogo/protobuf/gogoproto"
-	proto "github.com/gogo/protobuf/proto"
-	github_com_scalarorg_bitcoin_vault_go_utils_types "github.com/scalarorg/bitcoin-vault/go-utils/types"
-	utils "github.com/scalarorg/scalar-core/utils"
-	github_com_scalarorg_scalar_core_x_nexus_exported "github.com/scalarorg/scalar-core/x/nexus/exported"
 	io "io"
 	math "math"
 	math_bits "math/bits"
+
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
+	_ "github.com/gogo/protobuf/gogoproto"
+	proto "github.com/gogo/protobuf/proto"
+	github_com_scalarorg_bitcoin_vault_go_utils_types "github.com/scalarorg/go-common/types"
+	utils "github.com/scalarorg/scalar-core/utils"
+	github_com_scalarorg_scalar_core_x_nexus_exported "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -30,7 +31,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type Params struct {
 	Chain               github_com_scalarorg_scalar_core_x_nexus_exported.ChainName   `protobuf:"bytes,1,opt,name=chain,proto3,casttype=github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" json:"chain,omitempty"`
 	ConfirmationHeight  uint64                                                        `protobuf:"varint,2,opt,name=confirmation_height,json=confirmationHeight,proto3" json:"confirmation_height,omitempty"`
-	NetworkKind         github_com_scalarorg_bitcoin_vault_go_utils_types.NetworkKind `protobuf:"varint,3,opt,name=network_kind,json=networkKind,proto3,casttype=github.com/scalarorg/bitcoin-vault/go-utils/types.NetworkKind" json:"network_kind,omitempty"`
+	NetworkKind         github_com_scalarorg_bitcoin_vault_go_utils_types.NetworkKind `protobuf:"varint,3,opt,name=network_kind,json=networkKind,proto3,casttype=github.com/scalarorg/go-common/types.NetworkKind" json:"network_kind,omitempty"`
 	TokenCode           []byte                                                        `protobuf:"bytes,4,opt,name=token_code,json=tokenCode,proto3" json:"token_code,omitempty"`
 	Burnable            []byte                                                        `protobuf:"bytes,5,opt,name=burnable,proto3" json:"burnable,omitempty"`
 	RevoteLockingPeriod int64                                                         `protobuf:"varint,6,opt,name=revote_locking_period,json=revoteLockingPeriod,proto3" json:"revote_locking_period,omitempty"`

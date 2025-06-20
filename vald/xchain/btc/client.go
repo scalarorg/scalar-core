@@ -8,7 +8,7 @@ import (
 	"github.com/btcsuite/btcd/rpcclient"
 	"github.com/btcsuite/btcd/wire"
 	"github.com/rs/zerolog/log"
-	btcChain "github.com/scalarorg/bitcoin-vault/go-utils/btc"
+	btcChain "github.com/scalarorg/go-common/btc"
 	"github.com/scalarorg/scalar-core/utils/monads/results"
 	"github.com/scalarorg/scalar-core/vald/config"
 	"github.com/scalarorg/scalar-core/vald/xchain/common"

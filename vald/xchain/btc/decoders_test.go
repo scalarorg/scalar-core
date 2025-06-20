@@ -8,8 +8,8 @@ import (
 
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
-	vault "github.com/scalarorg/bitcoin-vault/ffi/go-vault"
-	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
+	vault "github.com/scalarorg/bitcoin-vault/ffi/go"
+	go_utils "github.com/scalarorg/go-common/types"
 )
 
 // CGO_LDFLAGS="-L./lib -lbitcoin_vault_ffi" CGO_CFLAGS="-I./lib" go test -timeout 10m -run ^TestDecodeBridgeTx$ github.com/scalarorg/scalar-core/vald/xchain/btc -v -count=1

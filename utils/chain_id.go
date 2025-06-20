@@ -1,6 +1,6 @@
 package utils
 
-import "github.com/scalarorg/bitcoin-vault/go-utils/chain"
+import "github.com/scalarorg/go-common/chain"
 
 func ChainInfoBytesFromID(chainID string) (chain.ChainInfoBytes, error) {
 	return ChainInfoBytesFromString(chainID)

@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/scalarorg/bitcoin-vault/go-utils/encode"
+	"github.com/scalarorg/go-common/encode"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/exported"

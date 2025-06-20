@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"math/big"
 
-	utilsTypes "github.com/scalarorg/bitcoin-vault/go-utils/types"
+	utilsTypes "github.com/scalarorg/go-common/types"
 )
 
 var (

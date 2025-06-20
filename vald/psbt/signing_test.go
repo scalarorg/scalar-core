@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
-	"github.com/scalarorg/bitcoin-vault/go-utils/types"
+	vault "github.com/scalarorg/bitcoin-vault/ffi/go"
+	"github.com/scalarorg/go-common/types"
 	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"
 )
 

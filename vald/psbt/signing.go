@@ -7,7 +7,7 @@ import (
 	"sync"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
+	go_utils "github.com/scalarorg/go-common/types"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	grpc_client "github.com/scalarorg/scalar-core/vald/grpc-client"
 	"github.com/scalarorg/scalar-core/x/chains/types"

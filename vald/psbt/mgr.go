@@ -8,9 +8,9 @@ import (
 	"github.com/decred/dcrd/dcrec/secp256k1/v4"
 
 	btcRpcClient "github.com/btcsuite/btcd/rpcclient"
-	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
-	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
-	"github.com/scalarorg/bitcoin-vault/go-utils/types"
+	vault "github.com/scalarorg/bitcoin-vault/ffi/go"
+	"github.com/scalarorg/go-common/chain"
+	"github.com/scalarorg/go-common/types"
 	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	covenant "github.com/scalarorg/scalar-core/x/covenant/exported"

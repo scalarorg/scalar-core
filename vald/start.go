@@ -27,7 +27,7 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	btcRpcClient "github.com/btcsuite/btcd/rpcclient"
-	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
+	"github.com/scalarorg/go-common/chain"
 	"github.com/scalarorg/scalar-core/app"
 	"github.com/scalarorg/scalar-core/cmd/scalard/cmd/utils"
 	"github.com/scalarorg/scalar-core/sdk-utils/broadcast"

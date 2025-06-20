@@ -3,7 +3,7 @@ package types
 import (
 	fmt "fmt"
 
-	"github.com/scalarorg/bitcoin-vault/go-utils/types"
+	"github.com/scalarorg/go-common/types"
 	utils "github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/log"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
