@@ -1166,6 +1166,19 @@ func (k ChainKeeper) FindPendingConfirmRequestsByBlockHash(ctx sdk.Context, bloc
 
 	return batches
 }
+func (k ChainKeeper) HasPendingConfirmRequest(ctx sdk.Context, blockHash exported.Hash) bool {
+	iter := k.getStore(ctx).IteratorNew(pendingConfirmRequestPrefix)
+	defer utils.CloseLogError(iter, k.Logger(ctx))
+
+	for ; iter.Valid(); iter.Next() {
+		var batch types.TrustedTxsByBlock
+		iter.UnmarshalValue(&batch)
+		if batch.BlockHash == blockHash {
+			return true
+		}
+	}
+	return false
+}
 
 // DeletePendingConfirmRequest removes a batch from storage using the pollId
 func (k ChainKeeper) DeletePendingConfirmRequest(ctx sdk.Context, pollID vote.PollID) {

@@ -2022,6 +2022,9 @@ var _ types.ChainKeeper = &ChainKeeperMock{}
 //			HasBtcPoolingCommandsFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, pk []byte) bool {
 //				panic("mock out the HasBtcPoolingCommands method")
 //			},
+//			HasPendingConfirmRequestFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, blockHash github_com_scalarorg_scalar_core_x_chains_exported.Hash) bool {
+//				panic("mock out the HasPendingConfirmRequest method")
+//			},
 //			LoggerFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger {
 //				panic("mock out the Logger method")
 //			},
@@ -2190,6 +2193,9 @@ type ChainKeeperMock struct {
 
 	// HasBtcPoolingCommandsFunc mocks the HasBtcPoolingCommands method.
 	HasBtcPoolingCommandsFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, pk []byte) bool
+
+	// HasPendingConfirmRequestFunc mocks the HasPendingConfirmRequest method.
+	HasPendingConfirmRequestFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, blockHash github_com_scalarorg_scalar_core_x_chains_exported.Hash) bool
 
 	// LoggerFunc mocks the Logger method.
 	LoggerFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger
@@ -2495,6 +2501,13 @@ type ChainKeeperMock struct {
 			// Pk is the pk argument value.
 			Pk []byte
 		}
+		// HasPendingConfirmRequest holds details about calls to the HasPendingConfirmRequest method.
+		HasPendingConfirmRequest []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// BlockHash is the blockHash argument value.
+			BlockHash github_com_scalarorg_scalar_core_x_chains_exported.Hash
+		}
 		// Logger holds details about calls to the Logger method.
 		Logger []struct {
 			// Ctx is the ctx argument value.
@@ -2632,6 +2645,7 @@ type ChainKeeperMock struct {
 	lockGetTokens                             sync.RWMutex
 	lockGetVotingThreshold                    sync.RWMutex
 	lockHasBtcPoolingCommands                 sync.RWMutex
+	lockHasPendingConfirmRequest              sync.RWMutex
 	lockLogger                                sync.RWMutex
 	lockProcessConfirmRequestTx               sync.RWMutex
 	lockSetBlock                              sync.RWMutex
@@ -4098,6 +4112,42 @@ func (mock *ChainKeeperMock) HasBtcPoolingCommandsCalls() []struct {
 	mock.lockHasBtcPoolingCommands.RLock()
 	calls = mock.calls.HasBtcPoolingCommands
 	mock.lockHasBtcPoolingCommands.RUnlock()
+	return calls
+}
+
+// HasPendingConfirmRequest calls HasPendingConfirmRequestFunc.
+func (mock *ChainKeeperMock) HasPendingConfirmRequest(ctx github_com_cosmos_cosmos_sdk_types.Context, blockHash github_com_scalarorg_scalar_core_x_chains_exported.Hash) bool {
+	if mock.HasPendingConfirmRequestFunc == nil {
+		panic("ChainKeeperMock.HasPendingConfirmRequestFunc: method is nil but ChainKeeper.HasPendingConfirmRequest was just called")
+	}
+	callInfo := struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		BlockHash github_com_scalarorg_scalar_core_x_chains_exported.Hash
+	}{
+		Ctx:       ctx,
+		BlockHash: blockHash,
+	}
+	mock.lockHasPendingConfirmRequest.Lock()
+	mock.calls.HasPendingConfirmRequest = append(mock.calls.HasPendingConfirmRequest, callInfo)
+	mock.lockHasPendingConfirmRequest.Unlock()
+	return mock.HasPendingConfirmRequestFunc(ctx, blockHash)
+}
+
+// HasPendingConfirmRequestCalls gets all the calls that were made to HasPendingConfirmRequest.
+// Check the length with:
+//
+//	len(mockedChainKeeper.HasPendingConfirmRequestCalls())
+func (mock *ChainKeeperMock) HasPendingConfirmRequestCalls() []struct {
+	Ctx       github_com_cosmos_cosmos_sdk_types.Context
+	BlockHash github_com_scalarorg_scalar_core_x_chains_exported.Hash
+} {
+	var calls []struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		BlockHash github_com_scalarorg_scalar_core_x_chains_exported.Hash
+	}
+	mock.lockHasPendingConfirmRequest.RLock()
+	calls = mock.calls.HasPendingConfirmRequest
+	mock.lockHasPendingConfirmRequest.RUnlock()
 	return calls
 }
 

@@ -97,6 +97,7 @@ type ChainKeeper interface {
 
 	// pending batch storage
 	SetPendingConfirmRequest(ctx sdk.Context, pollID vote.PollID, batch *TrustedTxsByBlock)
+	HasPendingConfirmRequest(ctx sdk.Context, blockHash exported.Hash) bool
 	FindPendingConfirmRequestsByBlockHash(ctx sdk.Context, blockHash exported.Hash) map[vote.PollID]*TrustedTxsByBlock
 	DeletePendingConfirmRequest(ctx sdk.Context, pollID vote.PollID)
 	ProcessConfirmRequestTx(ctx sdk.Context, txInfo *btc.VaultInfo, txIndex uint64, blockHeight uint64, symbol string, sender string) error

@@ -99,24 +99,32 @@ func (s msgServer) ConfirmSourceTxsV2(c context.Context, req *types.ConfirmSourc
 		}
 		s.Logger(ctx).Info("ConfirmSourceTxsV2", "time", time.Since(start), "number of txs", len(req.Batch.Txs))
 	} else {
-		s.Logger(ctx).Info("Block not found, start to confirm block", "block_hash", req.Batch.BlockHash)
-		if !ctx.IsCheckTx() {
-			s.startConfirmBlock(ctx, keeper, chain, req.Batch)
+		if !keeper.HasPendingConfirmRequest(ctx, req.Batch.BlockHash) {
+			s.Logger(ctx).Info("First time see the block, start to confirm block header", "block_hash", req.Batch.BlockHash.Hex())
+			err := s.startConfirmBlock(ctx, keeper, chain, req.Batch)
+			if err != nil {
+				s.Logger(ctx).Error("Failed to start confirm block", "error", err)
+				return nil, err
+			}
+		} else {
+			s.Logger(ctx).Info("Block already has pending confirm request", "block_hash", req.Batch.BlockHash)
 		}
 	}
 	return &types.ConfirmSourceTxsResponseV2{}, nil
 }
 
-func (s msgServer) startConfirmBlock(ctx sdk.Context, keeper types.ChainKeeper, chain nexus.Chain, batch *types.TrustedTxsByBlock) {
+func (s msgServer) startConfirmBlock(ctx sdk.Context, keeper types.ChainKeeper, chain nexus.Chain, batch *types.TrustedTxsByBlock) error {
 	//Store request
 	pollParticipants, err := s.initializePoll(ctx, chain, batch.BlockHash)
 	if err != nil {
-		return
+		s.Logger(ctx).Error("Failed to initialize poll", "error", err)
+		return err
 	}
 
 	// Store the batch using pollId as the key
 	keeper.SetPendingConfirmRequest(ctx, pollParticipants.PollID, batch)
-	s.Logger(ctx).Info("Emet event ConfirmNewBlockStarted")
+
+	s.Logger(ctx).Info("Emit event ConfirmNewBlockStarted")
 	events.Emit(ctx, &types.ConfirmNewBlockStarted{
 		Chain:              chain.Name,
 		BlockHash:          batch.BlockHash,
@@ -124,6 +132,8 @@ func (s msgServer) startConfirmBlock(ctx sdk.Context, keeper types.ChainKeeper, 
 		ConfirmationHeight: keeper.GetRequiredConfirmationHeight(ctx),
 		PollParticipants:   pollParticipants,
 	})
+
+	return nil
 }
 
 func validateTxProof(txId []byte, txIndex uint64, merklePath []exported.Hash, blockMerkleRoot exported.Hash) error {
