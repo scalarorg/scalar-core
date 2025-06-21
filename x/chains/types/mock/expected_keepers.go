@@ -9,6 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/ethereum/go-ethereum/common"
 	utils "github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/btc"
 	github_com_scalarorg_scalar_core_x_chains_exported "github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	github_com_scalarorg_scalar_core_x_multisig_exported "github.com/scalarorg/scalar-core/x/multisig/exported"
@@ -1907,6 +1908,9 @@ var _ types.ChainKeeper = &ChainKeeperMock{}
 //			DeleteDepositFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, deposit types.ERC20Deposit)  {
 //				panic("mock out the DeleteDeposit method")
 //			},
+//			DeletePendingConfirmRequestFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, pollID github_com_scalarorg_scalar_core_x_vote_exported.PollID)  {
+//				panic("mock out the DeletePendingConfirmRequest method")
+//			},
 //			DeleteUnsignedCommandBatchIDFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context)  {
 //				panic("mock out the DeleteUnsignedCommandBatchID method")
 //			},
@@ -1915,6 +1919,9 @@ var _ types.ChainKeeper = &ChainKeeperMock{}
 //			},
 //			EnqueueConfirmedEventFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, eventID types.EventID) error {
 //				panic("mock out the EnqueueConfirmedEvent method")
+//			},
+//			FindPendingConfirmRequestsByBlockHashFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, blockHash github_com_scalarorg_scalar_core_x_chains_exported.Hash) map[github_com_scalarorg_scalar_core_x_vote_exported.PollID]*types.TrustedTxsByBlock {
+//				panic("mock out the FindPendingConfirmRequestsByBlockHash method")
 //			},
 //			GenerateSaltFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, recipient string) github_com_scalarorg_scalar_core_x_chains_exported.Hash {
 //				panic("mock out the GenerateSalt method")
@@ -2018,6 +2025,9 @@ var _ types.ChainKeeper = &ChainKeeperMock{}
 //			LoggerFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger {
 //				panic("mock out the Logger method")
 //			},
+//			ProcessConfirmRequestTxFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, txInfo *btc.VaultInfo, txIndex uint64, blockHeight uint64, symbol string, sender string) error {
+//				panic("mock out the ProcessConfirmRequestTx method")
+//			},
 //			SetBlockFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, block types.BlockMetadata)  {
 //				panic("mock out the SetBlock method")
 //			},
@@ -2042,6 +2052,9 @@ var _ types.ChainKeeper = &ChainKeeperMock{}
 //			SetLatestSignedCommandBatchIDFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, id []byte)  {
 //				panic("mock out the SetLatestSignedCommandBatchID method")
 //			},
+//			SetPendingConfirmRequestFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, pollID github_com_scalarorg_scalar_core_x_vote_exported.PollID, batch *types.TrustedTxsByBlock)  {
+//				panic("mock out the SetPendingConfirmRequest method")
+//			},
 //			SetRedeemSessionFunc: func(ctx github_com_cosmos_cosmos_sdk_types.Context, session *types.RedeemSession) error {
 //				panic("mock out the SetRedeemSession method")
 //			},
@@ -2064,6 +2077,9 @@ type ChainKeeperMock struct {
 	// DeleteDepositFunc mocks the DeleteDeposit method.
 	DeleteDepositFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, deposit types.ERC20Deposit)
 
+	// DeletePendingConfirmRequestFunc mocks the DeletePendingConfirmRequest method.
+	DeletePendingConfirmRequestFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, pollID github_com_scalarorg_scalar_core_x_vote_exported.PollID)
+
 	// DeleteUnsignedCommandBatchIDFunc mocks the DeleteUnsignedCommandBatchID method.
 	DeleteUnsignedCommandBatchIDFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context)
 
@@ -2072,6 +2088,9 @@ type ChainKeeperMock struct {
 
 	// EnqueueConfirmedEventFunc mocks the EnqueueConfirmedEvent method.
 	EnqueueConfirmedEventFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, eventID types.EventID) error
+
+	// FindPendingConfirmRequestsByBlockHashFunc mocks the FindPendingConfirmRequestsByBlockHash method.
+	FindPendingConfirmRequestsByBlockHashFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, blockHash github_com_scalarorg_scalar_core_x_chains_exported.Hash) map[github_com_scalarorg_scalar_core_x_vote_exported.PollID]*types.TrustedTxsByBlock
 
 	// GenerateSaltFunc mocks the GenerateSalt method.
 	GenerateSaltFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, recipient string) github_com_scalarorg_scalar_core_x_chains_exported.Hash
@@ -2175,6 +2194,9 @@ type ChainKeeperMock struct {
 	// LoggerFunc mocks the Logger method.
 	LoggerFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context) log.Logger
 
+	// ProcessConfirmRequestTxFunc mocks the ProcessConfirmRequestTx method.
+	ProcessConfirmRequestTxFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, txInfo *btc.VaultInfo, txIndex uint64, blockHeight uint64, symbol string, sender string) error
+
 	// SetBlockFunc mocks the SetBlock method.
 	SetBlockFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, block types.BlockMetadata)
 
@@ -2198,6 +2220,9 @@ type ChainKeeperMock struct {
 
 	// SetLatestSignedCommandBatchIDFunc mocks the SetLatestSignedCommandBatchID method.
 	SetLatestSignedCommandBatchIDFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, id []byte)
+
+	// SetPendingConfirmRequestFunc mocks the SetPendingConfirmRequest method.
+	SetPendingConfirmRequestFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, pollID github_com_scalarorg_scalar_core_x_vote_exported.PollID, batch *types.TrustedTxsByBlock)
 
 	// SetRedeemSessionFunc mocks the SetRedeemSession method.
 	SetRedeemSessionFunc func(ctx github_com_cosmos_cosmos_sdk_types.Context, session *types.RedeemSession) error
@@ -2236,6 +2261,13 @@ type ChainKeeperMock struct {
 			// Deposit is the deposit argument value.
 			Deposit types.ERC20Deposit
 		}
+		// DeletePendingConfirmRequest holds details about calls to the DeletePendingConfirmRequest method.
+		DeletePendingConfirmRequest []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// PollID is the pollID argument value.
+			PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID
+		}
 		// DeleteUnsignedCommandBatchID holds details about calls to the DeleteUnsignedCommandBatchID method.
 		DeleteUnsignedCommandBatchID []struct {
 			// Ctx is the ctx argument value.
@@ -2254,6 +2286,13 @@ type ChainKeeperMock struct {
 			Ctx github_com_cosmos_cosmos_sdk_types.Context
 			// EventID is the eventID argument value.
 			EventID types.EventID
+		}
+		// FindPendingConfirmRequestsByBlockHash holds details about calls to the FindPendingConfirmRequestsByBlockHash method.
+		FindPendingConfirmRequestsByBlockHash []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// BlockHash is the blockHash argument value.
+			BlockHash github_com_scalarorg_scalar_core_x_chains_exported.Hash
 		}
 		// GenerateSalt holds details about calls to the GenerateSalt method.
 		GenerateSalt []struct {
@@ -2461,6 +2500,21 @@ type ChainKeeperMock struct {
 			// Ctx is the ctx argument value.
 			Ctx github_com_cosmos_cosmos_sdk_types.Context
 		}
+		// ProcessConfirmRequestTx holds details about calls to the ProcessConfirmRequestTx method.
+		ProcessConfirmRequestTx []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// TxInfo is the txInfo argument value.
+			TxInfo *btc.VaultInfo
+			// TxIndex is the txIndex argument value.
+			TxIndex uint64
+			// BlockHeight is the blockHeight argument value.
+			BlockHeight uint64
+			// Symbol is the symbol argument value.
+			Symbol string
+			// Sender is the sender argument value.
+			Sender string
+		}
 		// SetBlock holds details about calls to the SetBlock method.
 		SetBlock []struct {
 			// Ctx is the ctx argument value.
@@ -2519,6 +2573,15 @@ type ChainKeeperMock struct {
 			// ID is the id argument value.
 			ID []byte
 		}
+		// SetPendingConfirmRequest holds details about calls to the SetPendingConfirmRequest method.
+		SetPendingConfirmRequest []struct {
+			// Ctx is the ctx argument value.
+			Ctx github_com_cosmos_cosmos_sdk_types.Context
+			// PollID is the pollID argument value.
+			PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID
+			// Batch is the batch argument value.
+			Batch *types.TrustedTxsByBlock
+		}
 		// SetRedeemSession holds details about calls to the SetRedeemSession method.
 		SetRedeemSession []struct {
 			// Ctx is the ctx argument value.
@@ -2527,56 +2590,60 @@ type ChainKeeperMock struct {
 			Session *types.RedeemSession
 		}
 	}
-	lockCreateERC20Token               sync.RWMutex
-	lockCreateNewBatchToSign           sync.RWMutex
-	lockCreateNewBtcPoolingBatchToSign sync.RWMutex
-	lockDeleteDeposit                  sync.RWMutex
-	lockDeleteUnsignedCommandBatchID   sync.RWMutex
-	lockEnqueueCommand                 sync.RWMutex
-	lockEnqueueConfirmedEvent          sync.RWMutex
-	lockGenerateSalt                   sync.RWMutex
-	lockGetBatchByID                   sync.RWMutex
-	lockGetBlock                       sync.RWMutex
-	lockGetBurnerAddress               sync.RWMutex
-	lockGetBurnerByteCode              sync.RWMutex
-	lockGetBurnerInfo                  sync.RWMutex
-	lockGetChainID                     sync.RWMutex
-	lockGetCommand                     sync.RWMutex
-	lockGetConfirmedDepositsPaginated  sync.RWMutex
-	lockGetConfirmedEventQueue         sync.RWMutex
-	lockGetCurrentBlock                sync.RWMutex
-	lockGetDeposit                     sync.RWMutex
-	lockGetDepositsByTxID              sync.RWMutex
-	lockGetERC20TokenByAddress         sync.RWMutex
-	lockGetERC20TokenByAsset           sync.RWMutex
-	lockGetERC20TokenBySymbol          sync.RWMutex
-	lockGetEvent                       sync.RWMutex
-	lockGetGatewayAddress              sync.RWMutex
-	lockGetLatestBtcPoolingBatch       sync.RWMutex
-	lockGetLatestCommandBatch          sync.RWMutex
-	lockGetMetadata                    sync.RWMutex
-	lockGetMinVoterCount               sync.RWMutex
-	lockGetName                        sync.RWMutex
-	lockGetParams                      sync.RWMutex
-	lockGetPendingCommands             sync.RWMutex
-	lockGetRedeemSession               sync.RWMutex
-	lockGetRedeemSessions              sync.RWMutex
-	lockGetRequiredConfirmationHeight  sync.RWMutex
-	lockGetRevoteLockingPeriod         sync.RWMutex
-	lockGetTokenByteCode               sync.RWMutex
-	lockGetTokens                      sync.RWMutex
-	lockGetVotingThreshold             sync.RWMutex
-	lockHasBtcPoolingCommands          sync.RWMutex
-	lockLogger                         sync.RWMutex
-	lockSetBlock                       sync.RWMutex
-	lockSetBurnerInfo                  sync.RWMutex
-	lockSetConfirmedEvent              sync.RWMutex
-	lockSetDeposit                     sync.RWMutex
-	lockSetEventCompleted              sync.RWMutex
-	lockSetEventFailed                 sync.RWMutex
-	lockSetGateway                     sync.RWMutex
-	lockSetLatestSignedCommandBatchID  sync.RWMutex
-	lockSetRedeemSession               sync.RWMutex
+	lockCreateERC20Token                      sync.RWMutex
+	lockCreateNewBatchToSign                  sync.RWMutex
+	lockCreateNewBtcPoolingBatchToSign        sync.RWMutex
+	lockDeleteDeposit                         sync.RWMutex
+	lockDeletePendingConfirmRequest           sync.RWMutex
+	lockDeleteUnsignedCommandBatchID          sync.RWMutex
+	lockEnqueueCommand                        sync.RWMutex
+	lockEnqueueConfirmedEvent                 sync.RWMutex
+	lockFindPendingConfirmRequestsByBlockHash sync.RWMutex
+	lockGenerateSalt                          sync.RWMutex
+	lockGetBatchByID                          sync.RWMutex
+	lockGetBlock                              sync.RWMutex
+	lockGetBurnerAddress                      sync.RWMutex
+	lockGetBurnerByteCode                     sync.RWMutex
+	lockGetBurnerInfo                         sync.RWMutex
+	lockGetChainID                            sync.RWMutex
+	lockGetCommand                            sync.RWMutex
+	lockGetConfirmedDepositsPaginated         sync.RWMutex
+	lockGetConfirmedEventQueue                sync.RWMutex
+	lockGetCurrentBlock                       sync.RWMutex
+	lockGetDeposit                            sync.RWMutex
+	lockGetDepositsByTxID                     sync.RWMutex
+	lockGetERC20TokenByAddress                sync.RWMutex
+	lockGetERC20TokenByAsset                  sync.RWMutex
+	lockGetERC20TokenBySymbol                 sync.RWMutex
+	lockGetEvent                              sync.RWMutex
+	lockGetGatewayAddress                     sync.RWMutex
+	lockGetLatestBtcPoolingBatch              sync.RWMutex
+	lockGetLatestCommandBatch                 sync.RWMutex
+	lockGetMetadata                           sync.RWMutex
+	lockGetMinVoterCount                      sync.RWMutex
+	lockGetName                               sync.RWMutex
+	lockGetParams                             sync.RWMutex
+	lockGetPendingCommands                    sync.RWMutex
+	lockGetRedeemSession                      sync.RWMutex
+	lockGetRedeemSessions                     sync.RWMutex
+	lockGetRequiredConfirmationHeight         sync.RWMutex
+	lockGetRevoteLockingPeriod                sync.RWMutex
+	lockGetTokenByteCode                      sync.RWMutex
+	lockGetTokens                             sync.RWMutex
+	lockGetVotingThreshold                    sync.RWMutex
+	lockHasBtcPoolingCommands                 sync.RWMutex
+	lockLogger                                sync.RWMutex
+	lockProcessConfirmRequestTx               sync.RWMutex
+	lockSetBlock                              sync.RWMutex
+	lockSetBurnerInfo                         sync.RWMutex
+	lockSetConfirmedEvent                     sync.RWMutex
+	lockSetDeposit                            sync.RWMutex
+	lockSetEventCompleted                     sync.RWMutex
+	lockSetEventFailed                        sync.RWMutex
+	lockSetGateway                            sync.RWMutex
+	lockSetLatestSignedCommandBatchID         sync.RWMutex
+	lockSetPendingConfirmRequest              sync.RWMutex
+	lockSetRedeemSession                      sync.RWMutex
 }
 
 // CreateERC20Token calls CreateERC20TokenFunc.
@@ -2731,6 +2798,42 @@ func (mock *ChainKeeperMock) DeleteDepositCalls() []struct {
 	return calls
 }
 
+// DeletePendingConfirmRequest calls DeletePendingConfirmRequestFunc.
+func (mock *ChainKeeperMock) DeletePendingConfirmRequest(ctx github_com_cosmos_cosmos_sdk_types.Context, pollID github_com_scalarorg_scalar_core_x_vote_exported.PollID) {
+	if mock.DeletePendingConfirmRequestFunc == nil {
+		panic("ChainKeeperMock.DeletePendingConfirmRequestFunc: method is nil but ChainKeeper.DeletePendingConfirmRequest was just called")
+	}
+	callInfo := struct {
+		Ctx    github_com_cosmos_cosmos_sdk_types.Context
+		PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID
+	}{
+		Ctx:    ctx,
+		PollID: pollID,
+	}
+	mock.lockDeletePendingConfirmRequest.Lock()
+	mock.calls.DeletePendingConfirmRequest = append(mock.calls.DeletePendingConfirmRequest, callInfo)
+	mock.lockDeletePendingConfirmRequest.Unlock()
+	mock.DeletePendingConfirmRequestFunc(ctx, pollID)
+}
+
+// DeletePendingConfirmRequestCalls gets all the calls that were made to DeletePendingConfirmRequest.
+// Check the length with:
+//
+//	len(mockedChainKeeper.DeletePendingConfirmRequestCalls())
+func (mock *ChainKeeperMock) DeletePendingConfirmRequestCalls() []struct {
+	Ctx    github_com_cosmos_cosmos_sdk_types.Context
+	PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID
+} {
+	var calls []struct {
+		Ctx    github_com_cosmos_cosmos_sdk_types.Context
+		PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID
+	}
+	mock.lockDeletePendingConfirmRequest.RLock()
+	calls = mock.calls.DeletePendingConfirmRequest
+	mock.lockDeletePendingConfirmRequest.RUnlock()
+	return calls
+}
+
 // DeleteUnsignedCommandBatchID calls DeleteUnsignedCommandBatchIDFunc.
 func (mock *ChainKeeperMock) DeleteUnsignedCommandBatchID(ctx github_com_cosmos_cosmos_sdk_types.Context) {
 	if mock.DeleteUnsignedCommandBatchIDFunc == nil {
@@ -2832,6 +2935,42 @@ func (mock *ChainKeeperMock) EnqueueConfirmedEventCalls() []struct {
 	mock.lockEnqueueConfirmedEvent.RLock()
 	calls = mock.calls.EnqueueConfirmedEvent
 	mock.lockEnqueueConfirmedEvent.RUnlock()
+	return calls
+}
+
+// FindPendingConfirmRequestsByBlockHash calls FindPendingConfirmRequestsByBlockHashFunc.
+func (mock *ChainKeeperMock) FindPendingConfirmRequestsByBlockHash(ctx github_com_cosmos_cosmos_sdk_types.Context, blockHash github_com_scalarorg_scalar_core_x_chains_exported.Hash) map[github_com_scalarorg_scalar_core_x_vote_exported.PollID]*types.TrustedTxsByBlock {
+	if mock.FindPendingConfirmRequestsByBlockHashFunc == nil {
+		panic("ChainKeeperMock.FindPendingConfirmRequestsByBlockHashFunc: method is nil but ChainKeeper.FindPendingConfirmRequestsByBlockHash was just called")
+	}
+	callInfo := struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		BlockHash github_com_scalarorg_scalar_core_x_chains_exported.Hash
+	}{
+		Ctx:       ctx,
+		BlockHash: blockHash,
+	}
+	mock.lockFindPendingConfirmRequestsByBlockHash.Lock()
+	mock.calls.FindPendingConfirmRequestsByBlockHash = append(mock.calls.FindPendingConfirmRequestsByBlockHash, callInfo)
+	mock.lockFindPendingConfirmRequestsByBlockHash.Unlock()
+	return mock.FindPendingConfirmRequestsByBlockHashFunc(ctx, blockHash)
+}
+
+// FindPendingConfirmRequestsByBlockHashCalls gets all the calls that were made to FindPendingConfirmRequestsByBlockHash.
+// Check the length with:
+//
+//	len(mockedChainKeeper.FindPendingConfirmRequestsByBlockHashCalls())
+func (mock *ChainKeeperMock) FindPendingConfirmRequestsByBlockHashCalls() []struct {
+	Ctx       github_com_cosmos_cosmos_sdk_types.Context
+	BlockHash github_com_scalarorg_scalar_core_x_chains_exported.Hash
+} {
+	var calls []struct {
+		Ctx       github_com_cosmos_cosmos_sdk_types.Context
+		BlockHash github_com_scalarorg_scalar_core_x_chains_exported.Hash
+	}
+	mock.lockFindPendingConfirmRequestsByBlockHash.RLock()
+	calls = mock.calls.FindPendingConfirmRequestsByBlockHash
+	mock.lockFindPendingConfirmRequestsByBlockHash.RUnlock()
 	return calls
 }
 
@@ -3994,6 +4133,58 @@ func (mock *ChainKeeperMock) LoggerCalls() []struct {
 	return calls
 }
 
+// ProcessConfirmRequestTx calls ProcessConfirmRequestTxFunc.
+func (mock *ChainKeeperMock) ProcessConfirmRequestTx(ctx github_com_cosmos_cosmos_sdk_types.Context, txInfo *btc.VaultInfo, txIndex uint64, blockHeight uint64, symbol string, sender string) error {
+	if mock.ProcessConfirmRequestTxFunc == nil {
+		panic("ChainKeeperMock.ProcessConfirmRequestTxFunc: method is nil but ChainKeeper.ProcessConfirmRequestTx was just called")
+	}
+	callInfo := struct {
+		Ctx         github_com_cosmos_cosmos_sdk_types.Context
+		TxInfo      *btc.VaultInfo
+		TxIndex     uint64
+		BlockHeight uint64
+		Symbol      string
+		Sender      string
+	}{
+		Ctx:         ctx,
+		TxInfo:      txInfo,
+		TxIndex:     txIndex,
+		BlockHeight: blockHeight,
+		Symbol:      symbol,
+		Sender:      sender,
+	}
+	mock.lockProcessConfirmRequestTx.Lock()
+	mock.calls.ProcessConfirmRequestTx = append(mock.calls.ProcessConfirmRequestTx, callInfo)
+	mock.lockProcessConfirmRequestTx.Unlock()
+	return mock.ProcessConfirmRequestTxFunc(ctx, txInfo, txIndex, blockHeight, symbol, sender)
+}
+
+// ProcessConfirmRequestTxCalls gets all the calls that were made to ProcessConfirmRequestTx.
+// Check the length with:
+//
+//	len(mockedChainKeeper.ProcessConfirmRequestTxCalls())
+func (mock *ChainKeeperMock) ProcessConfirmRequestTxCalls() []struct {
+	Ctx         github_com_cosmos_cosmos_sdk_types.Context
+	TxInfo      *btc.VaultInfo
+	TxIndex     uint64
+	BlockHeight uint64
+	Symbol      string
+	Sender      string
+} {
+	var calls []struct {
+		Ctx         github_com_cosmos_cosmos_sdk_types.Context
+		TxInfo      *btc.VaultInfo
+		TxIndex     uint64
+		BlockHeight uint64
+		Symbol      string
+		Sender      string
+	}
+	mock.lockProcessConfirmRequestTx.RLock()
+	calls = mock.calls.ProcessConfirmRequestTx
+	mock.lockProcessConfirmRequestTx.RUnlock()
+	return calls
+}
+
 // SetBlock calls SetBlockFunc.
 func (mock *ChainKeeperMock) SetBlock(ctx github_com_cosmos_cosmos_sdk_types.Context, block types.BlockMetadata) {
 	if mock.SetBlockFunc == nil {
@@ -4283,6 +4474,46 @@ func (mock *ChainKeeperMock) SetLatestSignedCommandBatchIDCalls() []struct {
 	mock.lockSetLatestSignedCommandBatchID.RLock()
 	calls = mock.calls.SetLatestSignedCommandBatchID
 	mock.lockSetLatestSignedCommandBatchID.RUnlock()
+	return calls
+}
+
+// SetPendingConfirmRequest calls SetPendingConfirmRequestFunc.
+func (mock *ChainKeeperMock) SetPendingConfirmRequest(ctx github_com_cosmos_cosmos_sdk_types.Context, pollID github_com_scalarorg_scalar_core_x_vote_exported.PollID, batch *types.TrustedTxsByBlock) {
+	if mock.SetPendingConfirmRequestFunc == nil {
+		panic("ChainKeeperMock.SetPendingConfirmRequestFunc: method is nil but ChainKeeper.SetPendingConfirmRequest was just called")
+	}
+	callInfo := struct {
+		Ctx    github_com_cosmos_cosmos_sdk_types.Context
+		PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID
+		Batch  *types.TrustedTxsByBlock
+	}{
+		Ctx:    ctx,
+		PollID: pollID,
+		Batch:  batch,
+	}
+	mock.lockSetPendingConfirmRequest.Lock()
+	mock.calls.SetPendingConfirmRequest = append(mock.calls.SetPendingConfirmRequest, callInfo)
+	mock.lockSetPendingConfirmRequest.Unlock()
+	mock.SetPendingConfirmRequestFunc(ctx, pollID, batch)
+}
+
+// SetPendingConfirmRequestCalls gets all the calls that were made to SetPendingConfirmRequest.
+// Check the length with:
+//
+//	len(mockedChainKeeper.SetPendingConfirmRequestCalls())
+func (mock *ChainKeeperMock) SetPendingConfirmRequestCalls() []struct {
+	Ctx    github_com_cosmos_cosmos_sdk_types.Context
+	PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID
+	Batch  *types.TrustedTxsByBlock
+} {
+	var calls []struct {
+		Ctx    github_com_cosmos_cosmos_sdk_types.Context
+		PollID github_com_scalarorg_scalar_core_x_vote_exported.PollID
+		Batch  *types.TrustedTxsByBlock
+	}
+	mock.lockSetPendingConfirmRequest.RLock()
+	calls = mock.calls.SetPendingConfirmRequest
+	mock.lockSetPendingConfirmRequest.RUnlock()
 	return calls
 }
 

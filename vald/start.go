@@ -310,6 +310,7 @@ func listenWithTimeout(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg co
 
 	// TODO: Version2: handle staking and unstaking events for multiple chains, currently it uses type of btc, we need to change it to more generic type
 	sourceEventConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.EventConfirmSourceTxsStarted]())
+	confirmNewBlockEventConf := eventBus.Subscribe(tmEvents.Filter[*chainsTypes.ConfirmNewBlockStarted]())
 	redeemEventConf := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.ConfirmRedeemTxStarted]())
 	switchedPhaseEventConf := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.ConfirmSwitchedPhaseStarted]())
 	initializeUtxoEvent := eventBus.Subscribe(tmEvents.Filter[*covenantTypes.IntializeUtxoSnapshotStarted]())
@@ -374,7 +375,7 @@ func listenWithTimeout(clientCtx sdkClient.Context, txf tx.Factory, scalarCfg co
 		// createJobTyped(evmGatewayTxsConf, evmMgr.ProcessGatewayTxsConfirmation, cancelEventCtx),
 		createJobTyped(multisigKeygen, multisigMgr.ProcessKeygenStarted, cancelEventCtx),
 		createJobTyped(multisigSigning, multisigMgr.ProcessSigningStarted, cancelEventCtx),
-
+		createJobTyped(confirmNewBlockEventConf, xMgr.ProcessNewBlockConfirmation, cancelEventCtx),
 		createJobTyped(sourceEventConf, xMgr.ProcessSourceTxsConfirmation, cancelEventCtx),
 		createJobTyped(redeemEventConf, xMgr.ProcessRedeemTxConfirmation, cancelEventCtx),
 		createJobTyped(switchedPhaseEventConf, xMgr.ProcessSwitchedPhaseConfirmation, cancelEventCtx),

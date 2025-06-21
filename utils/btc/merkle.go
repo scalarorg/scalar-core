@@ -1,6 +1,8 @@
 package btc
 
-import "crypto/sha256"
+import (
+	"crypto/sha256"
+)
 
 func doubleSha256(b []byte) []byte {
 	first := sha256.Sum256(b)

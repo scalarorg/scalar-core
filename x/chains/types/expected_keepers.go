@@ -9,6 +9,7 @@ import (
 	params "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/ethereum/go-ethereum/common"
 	utils "github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/btc"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
 	covenantTypes "github.com/scalarorg/scalar-core/x/covenant/exported"
 	multisig "github.com/scalarorg/scalar-core/x/multisig/exported"
@@ -93,6 +94,12 @@ type ChainKeeper interface {
 	GetCurrentBlock(ctx sdk.Context) (*BlockMetadata, error)
 	GetBlock(ctx sdk.Context, hash exported.Hash) (*BlockMetadata, error)
 	SetBlock(ctx sdk.Context, block BlockMetadata)
+
+	// pending batch storage
+	SetPendingConfirmRequest(ctx sdk.Context, pollID vote.PollID, batch *TrustedTxsByBlock)
+	FindPendingConfirmRequestsByBlockHash(ctx sdk.Context, blockHash exported.Hash) map[vote.PollID]*TrustedTxsByBlock
+	DeletePendingConfirmRequest(ctx sdk.Context, pollID vote.PollID)
+	ProcessConfirmRequestTx(ctx sdk.Context, txInfo *btc.VaultInfo, txIndex uint64, blockHeight uint64, symbol string, sender string) error
 }
 
 // ParamsKeeper represents a global paramstore

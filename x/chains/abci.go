@@ -9,7 +9,9 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
+	btc_utils "github.com/scalarorg/bitcoin-vault/go-utils/btc"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/btc"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
@@ -106,7 +108,7 @@ func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 	case *types.Event_MultisigOperatorshipTransferred:
 		return handleMultisigTransferKey(ctx, event, bk, n, m)
 	case *types.Event_NewBlockConfirmed:
-		return handleNewBlockConfirmed(ctx, event, bk, n)
+		return handleNewBlockConfirmed(ctx, event, bk, n, p)
 	default:
 		panic(fmt.Errorf("unsupported event type %T", event))
 	}
@@ -534,7 +536,7 @@ func handleContractCallWithTokenToEVM(ctx sdk.Context, event types.Event, bk typ
 	return nil
 }
 
-func handleNewBlockConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus) error {
+func handleNewBlockConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, p types.ProtocolKeeper) error {
 	e := event.GetNewBlockConfirmed()
 	if e == nil {
 		panic(fmt.Errorf("event is nil"))
@@ -562,10 +564,60 @@ func handleNewBlockConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKe
 		MerkleRoot:        e.MerkleRoot,
 		PreviousBlockHash: e.PreviousBlockHash,
 	})
+	// Get sender address
+	chainParams := ck.GetParams(ctx)
 
+	nwParams := chainParams.Metadata["params"]
+	if nwParams == "" {
+		return fmt.Errorf("params are required")
+	}
+	batches := ck.FindPendingConfirmRequestsByBlockHash(ctx, e.BlockHash)
+	for pollID, batch := range batches {
+		for _, tx := range batch.Txs {
+			txInfo, err := btc.ParseTx(tx.Raw)
+			if err != nil {
+				ck.Logger(ctx).Error("failed to parse tx", "error", err)
+				continue
+			}
+			err = validateTxProof(txInfo.TxID, tx.TxIndex, tx.MerklePath, e.MerkleRoot)
+			if err != nil {
+				ck.Logger(ctx).Error("failed to validate tx proof", "error", err)
+				continue
+			}
+			protocolInfo, err := p.FindProtocolInfoByInternalAddress(ctx, event.Chain, nexus.ChainName(txInfo.DestinationChain), txInfo.DestinationTokenAddress)
+			if err != nil {
+				ck.Logger(ctx).Error("failed to find protocol info by internal address", "error", err)
+				continue
+			}
+
+			sender, err := btc_utils.ScriptPubKeyToAddress(tx.PrevOutpointScriptPubkey, nwParams)
+			if err != nil {
+				ck.Logger(ctx).Error("Failed to get sender address", "error", err)
+				continue
+			}
+			err = ck.ProcessConfirmRequestTx(ctx, txInfo, tx.TxIndex, e.BlockHeight, protocolInfo.Symbol, sender.String())
+			if err != nil {
+				ck.Logger(ctx).Error("failed to process confirm request batch", "error", err)
+				continue
+			}
+		}
+		// Delete the batch from storage after processing
+		ck.DeletePendingConfirmRequest(ctx, pollID)
+	}
 	return nil
 }
 
+func validateTxProof(txId []byte, txIndex uint64, merklePath []exported.Hash, blockMerkleRoot exported.Hash) error {
+	merkleRoot := btc.GetMerkleRootFromPath(txId, txIndex, slices.Map(merklePath, func(p exported.Hash) []byte {
+		return p.Bytes()
+	}), true)
+
+	if !bytes.Equal(merkleRoot, blockMerkleRoot.Bytes()) {
+		return fmt.Errorf("merkle root mismatch: %s != %s", merkleRoot, blockMerkleRoot.Bytes())
+	}
+
+	return nil
+}
 func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset *sdk.Coin) error {
 
 	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))

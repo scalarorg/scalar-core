@@ -16,6 +16,7 @@ import (
 	chainsTypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/scalarorg/scalar-core/utils"
+	"github.com/scalarorg/scalar-core/utils/btc"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/funcs"
@@ -24,6 +25,7 @@ import (
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	protocol "github.com/scalarorg/scalar-core/x/protocol/exported"
+	vote "github.com/scalarorg/scalar-core/x/vote/exported"
 )
 
 var (
@@ -40,6 +42,7 @@ var (
 	eventPrefix                      = utils.KeyFromStr("event")
 	confirmedEventQueueName          = "confirmed_event_queue"
 	commandQueueName                 = "cmd_queue"
+	pendingConfirmRequestPrefix      = key.FromStr("pending_confirm_request")
 
 	burnerAddrPrefix       = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 1)
 	confirmedDepositPrefix = key.RegisterStaticKey(types.ModuleName+types.ChainNamespace, 2)
@@ -1124,4 +1127,93 @@ func (k ChainKeeper) GetCommand(ctx sdk.Context, id types.CommandID) (types.Comm
 	found := k.getStore(ctx).GetNew(key.FromStr(commandPrefix).Append(key.FromStr(id.Hex())), &cmd)
 
 	return cmd, found
+}
+
+// SetPendingConfirmRequest stores a batch with the given pollId as the key
+func (k ChainKeeper) SetPendingConfirmRequest(ctx sdk.Context, pollID vote.PollID, batch *types.TrustedTxsByBlock) {
+	funcs.MustNoErr(
+		k.getStore(ctx).SetNewValidated(
+			pendingConfirmRequestPrefix.Append(key.FromStr(pollID.String())), utils.NoValidation(batch)))
+}
+
+// FindPendingConfirmRequestsByBlockHash finds all pending confirm requests that match the given blockHash
+func (k ChainKeeper) FindPendingConfirmRequestsByBlockHash(ctx sdk.Context, blockHash exported.Hash) map[vote.PollID]*types.TrustedTxsByBlock {
+	batches := make(map[vote.PollID]*types.TrustedTxsByBlock)
+
+	iter := k.getStore(ctx).IteratorNew(pendingConfirmRequestPrefix)
+	defer utils.CloseLogError(iter, k.Logger(ctx))
+
+	for ; iter.Valid(); iter.Next() {
+		var batch types.TrustedTxsByBlock
+		iter.UnmarshalValue(&batch)
+
+		// Extract pollID from the iterator key
+		// The key structure is: pendingConfirmRequestPrefix + "_" + pollID.String()
+		keyBytes := iter.Key()
+		prefixBytes := pendingConfirmRequestPrefix.Bytes()
+
+		// Remove the prefix from the key to get the pollID part
+		if len(keyBytes) > len(prefixBytes) {
+			// Skip the prefix and the delimiter "_"
+			pollIDBytes := keyBytes[len(prefixBytes)+1:] // +1 to skip the "_" delimiter
+			pollID := vote.PollID(string(pollIDBytes))
+
+			if batch.BlockHash == blockHash {
+				batches[pollID] = &batch
+			}
+		}
+	}
+
+	return batches
+}
+
+// DeletePendingConfirmRequest removes a batch from storage using the pollId
+func (k ChainKeeper) DeletePendingConfirmRequest(ctx sdk.Context, pollID vote.PollID) {
+	k.getStore(ctx).DeleteNew(pendingConfirmRequestPrefix.Append(key.FromStr(pollID.String())))
+}
+
+// ProcessConfirmRequestBatch processes a batch of confirm requests and deletes them from storage
+func (k ChainKeeper) ProcessConfirmRequestTx(ctx sdk.Context,
+	txInfo *btc.VaultInfo, txIndex uint64, blockHeight uint64, symbol string, sender string) error {
+	// Get chain params
+	chainParams := k.GetParams(ctx)
+	nwParams := chainParams.Metadata["params"]
+	if nwParams == "" {
+		k.Logger(ctx).Error("params are required")
+	}
+
+	txHash := exported.HashFromBytes(txInfo.TxID)
+	eventId := types.NewEventID(txHash, txIndex)
+
+	tokenSent := &types.EventTokenSent{
+		EventID:            eventId,
+		Sender:             sender,
+		Chain:              nexus.ChainName(txInfo.DestinationChain),
+		TransferID:         nexus.TransferID(1),
+		DestinationChain:   nexus.ChainName(txInfo.DestinationChain),
+		DestinationAddress: types.Address(txInfo.DestinationRecipientAddress).Hex(),
+		Asset:              sdk.NewCoin(symbol, sdk.NewInt(txInfo.StakingAmount)),
+		ScriptPubkey:       txInfo.ScriptPubkey,
+		Vout:               uint32(txInfo.Vout),
+		BlockHeight:        blockHeight,
+	}
+	// Create a basic event for now - the detailed token sent event creation will be handled by the msgServer
+	event := types.Event{
+		Chain: k.GetName(),
+		TxID:  txHash,
+		Event: &types.Event_TokenSent{
+			TokenSent: tokenSent,
+		},
+		Index: uint64(txIndex),
+	}
+
+	if err := k.SetConfirmedEvent(ctx, event); err != nil {
+		k.Logger(ctx).Error("Failed to set confirmed event", "error", err)
+		return err
+	}
+
+	k.EnqueueConfirmedEvent(ctx, event.GetID())
+	k.Logger(ctx).Info("Confirmed event", "event_id", event.GetID())
+
+	return nil
 }

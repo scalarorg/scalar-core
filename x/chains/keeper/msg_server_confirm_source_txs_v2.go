@@ -17,6 +17,7 @@ import (
 	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
 	"github.com/scalarorg/scalar-core/utils/btc"
 	"github.com/scalarorg/scalar-core/utils/clog"
+	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/slices"
 	btcVald "github.com/scalarorg/scalar-core/vald/xchain/btc"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
@@ -54,20 +55,90 @@ func (s msgServer) ConfirmSourceTxsV2(c context.Context, req *types.ConfirmSourc
 	// 3. TODO: validate block_hash_chain, 6-12 blocks
 
 	block, err := keeper.GetBlock(ctx, req.Batch.BlockHash)
-	if err != nil {
-		return nil, err
-	}
-	start := time.Now()
-	for _, tx := range req.Batch.Txs {
-		if err := s.validateAndSaveTokenSent(ctx, keeper, chain.Name, tx, block); err != nil {
-			clog.Redf("Failed to validate and save token sent: %v", err)
-			continue
+	if err == nil {
+		s.Logger(ctx).Info("Block found, start to confirm txs", "block_hash", req.Batch.BlockHash)
+		start := time.Now()
+		// Get sender address
+		chainParams := keeper.GetParams(ctx)
+
+		nwParams := chainParams.Metadata["params"]
+		if nwParams == "" {
+			return nil, fmt.Errorf("params are required")
+		}
+		for _, tx := range req.Batch.Txs {
+			txInfo, err := btc.ParseTx(tx.Raw)
+			if err != nil {
+				s.Logger(ctx).Error("failed to parse tx", "error", err)
+				continue
+			}
+			err = validateTxProof(txInfo.TxID, tx.TxIndex, tx.MerklePath, block.MerkleRoot)
+			if err != nil {
+				s.Logger(ctx).Error("failed to validate tx proof", "error", err)
+				continue
+			}
+			protocolInfo, err := s.protocol.FindProtocolInfoByInternalAddress(ctx, chain.Name, nexus.ChainName(txInfo.DestinationChain), txInfo.DestinationTokenAddress)
+			if err != nil {
+				s.Logger(ctx).Error("failed to find protocol info by internal address", "error", err)
+				continue
+			}
+
+			sender, err := btc_utils.ScriptPubKeyToAddress(tx.PrevOutpointScriptPubkey, nwParams)
+			if err != nil {
+				s.Logger(ctx).Error("Failed to get sender address", "error", err)
+				continue
+			}
+			err = keeper.ProcessConfirmRequestTx(ctx, txInfo, tx.TxIndex, block.Height, protocolInfo.Symbol, sender.String())
+			if err != nil {
+				s.Logger(ctx).Error("failed to process confirm request batch", "error", err)
+				continue
+			}
+			// if err := s.validateAndSaveTokenSent(ctx, keeper, chain.Name, tx, block); err != nil {
+			// 	clog.Redf("Failed to validate and save token sent: %v", err)
+			// 	continue
+			// }
+		}
+		s.Logger(ctx).Info("ConfirmSourceTxsV2", "time", time.Since(start), "number of txs", len(req.Batch.Txs))
+	} else {
+		s.Logger(ctx).Info("Block not found, start to confirm block", "block_hash", req.Batch.BlockHash)
+		if !ctx.IsCheckTx() {
+			s.startConfirmBlock(ctx, keeper, chain, req.Batch)
 		}
 	}
-	s.Logger(ctx).Info("ConfirmSourceTxsV2", "time", time.Since(start), "number of txs", len(req.Batch.Txs))
 	return &types.ConfirmSourceTxsResponseV2{}, nil
 }
 
+func (s msgServer) startConfirmBlock(ctx sdk.Context, keeper types.ChainKeeper, chain nexus.Chain, batch *types.TrustedTxsByBlock) {
+	//Store request
+	pollParticipants, err := s.initializePoll(ctx, chain, batch.BlockHash)
+	if err != nil {
+		return
+	}
+
+	// Store the batch using pollId as the key
+	keeper.SetPendingConfirmRequest(ctx, pollParticipants.PollID, batch)
+	s.Logger(ctx).Info("Emet event ConfirmNewBlockStarted")
+	events.Emit(ctx, &types.ConfirmNewBlockStarted{
+		Chain:              chain.Name,
+		BlockHash:          batch.BlockHash,
+		PreviousBlockHash:  nil,
+		ConfirmationHeight: keeper.GetRequiredConfirmationHeight(ctx),
+		PollParticipants:   pollParticipants,
+	})
+}
+
+func validateTxProof(txId []byte, txIndex uint64, merklePath []exported.Hash, blockMerkleRoot exported.Hash) error {
+	merkleRoot := btc.GetMerkleRootFromPath(txId, txIndex, slices.Map(merklePath, func(p exported.Hash) []byte {
+		return p.Bytes()
+	}), true)
+
+	if !bytes.Equal(merkleRoot, blockMerkleRoot.Bytes()) {
+		return fmt.Errorf("merkle root mismatch: %s != %s", merkleRoot, blockMerkleRoot.Bytes())
+	}
+
+	return nil
+}
+
+// TODO: remove this function
 func (s msgServer) validateAndSaveTokenSent(ctx sdk.Context, keeper types.ChainKeeper, chain nexus.ChainName, tx *types.TrustedTx, block *types.BlockMetadata) error {
 	reader := bytes.NewReader(tx.Raw)
 	var msgTx wire.MsgTx
@@ -190,3 +261,31 @@ func (s msgServer) createEventTokenSent(ctx sdk.Context, eventChain nexus.ChainN
 		BlockHeight:        blockHeight,
 	}, nil
 }
+
+// ProcessConfirmedBlock handles the confirmation of a block and processes the stored batch
+// func (s msgServer) ProcessConfirmedBlock(ctx sdk.Context, keeper types.ChainKeeper, chain nexus.ChainName, blockHash exported.Hash) error {
+// 	// Find all pending confirm requests for this block hash
+// 	batches := keeper.FindPendingConfirmRequestsByBlockHash(ctx, blockHash)
+// 	if len(batches) == 0 {
+// 		s.Logger(ctx).Info("No pending batches found for block", "block_hash", blockHash)
+// 		return nil
+// 	}
+
+// 	s.Logger(ctx).Info("Processing confirmed block batches", "block_hash", blockHash, "batch_count", len(batches))
+
+// 	// Process all batches for this block
+// 	start := time.Now()
+// 	for pollID, batch := range batches {
+// 		if err := keeper.ProcessConfirmRequestBatch(ctx, batch, pollID); err != nil {
+// 			s.Logger(ctx).Error("Failed to process confirm request batch", "error", err, "block_hash", batch.BlockHash, "poll_id", pollID)
+// 			continue
+// 		}
+// 	}
+
+// 	s.Logger(ctx).Info("Processed confirmed block batches",
+// 		"time", time.Since(start),
+// 		"batch_count", len(batches),
+// 		"block_hash", blockHash)
+
+// 	return nil
+// }
