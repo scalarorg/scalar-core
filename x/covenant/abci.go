@@ -632,7 +632,14 @@ func aggregatePsbtFromCommandBatch(
 		return nil, fmt.Errorf("[abci/covenant]: utxo snapshot not found")
 	}
 
-	for _, payload := range multiPayload {
+	chainKeeper, err := b.ForChain(ctx, chainName)
+	if err != nil {
+		return nil, err
+	}
+
+	unreservedParams := make([]*chainsTypes.DecodedRedeemTokenParams, 0)
+
+	for index, payload := range multiPayload {
 		//First byte is the payload type
 		err := params.AbiUnpack(payload)
 		if err != nil {
@@ -641,10 +648,32 @@ func aggregatePsbtFromCommandBatch(
 
 		clog.Yellowf("[abci/covenant] [aggregatePsbtFromCommandBatch] payload: %+x", payload)
 
-		outputs = append(outputs, goutils.UnlockingOutput{
-			Amount:        params.Amount,
-			LockingScript: params.RedeemCustodianPayload.LockingScript,
-		})
+		switch params.Type {
+		case types.RedeemCustodianOnly:
+			outputs = append(outputs, goutils.UnlockingOutput{
+				Amount:        params.Amount,
+				LockingScript: params.RedeemCustodianPayload.LockingScript,
+			})
+		case types.RedeemCustodianOnlyV2:
+			outputs = append(outputs, goutils.UnlockingOutput{
+				Amount:        params.Amount,
+				LockingScript: params.RedeemCustodianPayloadV2.LockingScript,
+			})
+			// unreservedParams = append(unreservedParams, params)
+			// key := fmt.Sprintf("%x:%d", params.RedeemCustodianPayloadV2.LockingScript, params.Amount
+
+			commandId := commandBatch.GetCommandIDs()[index]
+			command, ok := chainKeeper.GetCommand(ctx, commandId)
+			if !ok {
+				return nil, fmt.Errorf("command not found")
+			}
+
+			commandParams := command.DecodeRedeemTokenParams()
+			unreservedParams = append(unreservedParams, &commandParams)
+			continue
+		default:
+			return nil, fmt.Errorf("invalid redeem token type %d", params.Type)
+		}
 
 		for _, utxo := range params.Utxos {
 			key := fmt.Sprintf("%x:%d", utxo.TxID, utxo.Vout)
@@ -675,6 +704,12 @@ func aggregatePsbtFromCommandBatch(
 		}
 	}
 
+	//TODO: handle unreserved params
+	for _, param := range unreservedParams {
+		commandId := commandBatch.GetCommandIDs()[param.SourceEventIndex]
+		_ = commandId
+	}
+
 	var choosenUtxo *types.UTXO
 
 	for _, utxo := range utxoSnapshot.Utxos {
@@ -702,19 +737,15 @@ func aggregatePsbtFromCommandBatch(
 		})
 	}
 
-	ck, err := b.ForChain(ctx, chainName)
-	if err != nil {
-		return nil, err
-	}
-
 	scalarnetParams := s.GetParams(ctx)
 
 	tag := scalarnetParams.Tag
 	version := scalarnetParams.Version
-
 	// Note: because of we have multiple protocols in one signle redeem transaction so we hardcode the service tag to "pools"
 	serviceTag := []byte("pools")
-	network := ck.GetParams(ctx).NetworkKind
+
+	network := chainKeeper.GetParams(ctx).NetworkKind
+
 	custodianPubKeys := slices.Map(group.Custodians, func(c *exported.Custodian) goutils.PublicKey {
 		pk := make([]byte, 33)
 		copy(pk, c.BitcoinPubkey)

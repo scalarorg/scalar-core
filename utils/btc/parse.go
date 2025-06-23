@@ -7,9 +7,9 @@ import (
 
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
-	"github.com/scalarorg/bitcoin-vault/ffi/go-vault"
-	"github.com/scalarorg/bitcoin-vault/go-utils/chain"
-	go_utils "github.com/scalarorg/bitcoin-vault/go-utils/types"
+	"github.com/scalarorg/bitcoin-vault/ffi/go"
+	"github.com/scalarorg/go-common/chain"
+	go_utils "github.com/scalarorg/go-common/types"
 )
 
 var (

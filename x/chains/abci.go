@@ -9,7 +9,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
-	btc_utils "github.com/scalarorg/bitcoin-vault/go-utils/btc"
+	btc_utils "github.com/scalarorg/go-common/btc"
 	"github.com/scalarorg/scalar-core/utils"
 	"github.com/scalarorg/scalar-core/utils/btc"
 	"github.com/scalarorg/scalar-core/utils/clog"
@@ -18,6 +18,7 @@ import (
 	"github.com/scalarorg/scalar-core/utils/slices"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
+	covTypes "github.com/scalarorg/scalar-core/x/covenant/types"
 	mexported "github.com/scalarorg/scalar-core/x/multisig/exported"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 	pexported "github.com/scalarorg/scalar-core/x/protocol/exported"
@@ -364,9 +365,18 @@ func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, 
 		"commandID", cmd.ID.Hex(),
 	)
 
-	err = cov.MarkReservedUtxo(ctx, e.CustodianGroupId, e.Payload)
+	var redeemTokenPayloadWithType covTypes.RedeemTokenPayloadWithType
+	err = redeemTokenPayloadWithType.AbiUnpack(e.Payload)
 	if err != nil {
 		return err
+	}
+
+	// RedeemCustodianOnlyV2 no need to mark utxo
+	if redeemTokenPayloadWithType.Type == covTypes.RedeemCustodianOnly {
+		err = cov.MarkReservedUtxo(ctx, e.CustodianGroupId, e.Payload)
+		if err != nil {
+			return err
+		}
 	}
 
 	approvedEvent := &types.EventRedeemTokenApproved{

@@ -514,6 +514,31 @@ func createApproveRedeemTokenParams(
 	))
 }
 
+type DecodedRedeemTokenParams struct {
+	SourceChain                nexus.ChainName
+	Sender                     string
+	DestinationContractAddress string
+	PayloadHash                common.Hash
+	Symbol                     string
+	Amount                     sdk.Uint
+	SourceTxID                 exported.Hash
+	SourceEventIndex           uint64
+}
+
+func (c *Command) DecodeRedeemTokenParams() DecodedRedeemTokenParams {
+	params := funcs.Must(StrictDecode(approveContractCallWithMintArguments, c.Params))
+	return DecodedRedeemTokenParams{
+		SourceChain:                nexus.ChainName(params[0].(string)),
+		Sender:                     params[1].(string),
+		DestinationContractAddress: params[2].(string),
+		PayloadHash:                params[3].(common.Hash),
+		Symbol:                     params[4].(string),
+		Amount:                     sdk.NewUintFromBigInt(params[5].(*big.Int)),
+		SourceTxID:                 exported.Hash(params[6].(common.Hash)),
+		SourceEventIndex:           params[7].(uint64),
+	}
+}
+
 func createApproveContractCallWithMintParamsGeneric(
 	contractAddress common.Address,
 	payloadHash common.Hash,
