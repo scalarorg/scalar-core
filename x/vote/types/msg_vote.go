@@ -5,6 +5,7 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/funcs"
 
 	"github.com/scalarorg/scalar-core/utils"
@@ -57,6 +58,8 @@ func (m VoteRequest) ValidateBasic() error {
 	if !ok {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "vote is not implement ValidatedProtoMarshaler %T", vote)
 	}
+
+	clog.Greenf("ValidateBasic: VoteRequest: %+v", v)
 
 	if err := v.ValidateBasic(); err != nil {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
