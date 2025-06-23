@@ -261,6 +261,9 @@ func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event ty
 			return err
 		}
 	default:
+		if eventType.(*types.Event_NewBlockConfirmed) != nil {
+			ck.Logger(ctx).Info("new block confirmed event", "event", event.GetID())
+		}
 		funcs.MustNoErr(ck.EnqueueConfirmedEvent(ctx, event.GetID()))
 	}
 
