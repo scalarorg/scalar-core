@@ -662,12 +662,17 @@ func handleNewBlockConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKe
 }
 
 func validateTxProof(txId []byte, txIndex uint64, merklePath []exported.Hash, blockMerkleRoot exported.Hash) error {
+	log.Info().Msgf("txId: %s, txIndex: %d, blockMerkleRoot: %s",
+		hex.EncodeToString(txId), txIndex, blockMerkleRoot.Hex())
+	for i, p := range merklePath {
+		log.Info().Msgf("merklePath[%d]: %s", i, p.Hex())
+	}
 	merkleRoot := btc.GetMerkleRootFromPath(txId, txIndex, slices.Map(merklePath, func(p exported.Hash) []byte {
 		return p.Bytes()
 	}), true)
 
 	if !bytes.Equal(merkleRoot, blockMerkleRoot.Bytes()) {
-		return fmt.Errorf("merkle root mismatch: %s != %s", merkleRoot, blockMerkleRoot.Bytes())
+		return fmt.Errorf("merkle root mismatch: %s != %s", hex.EncodeToString(merkleRoot), blockMerkleRoot.Hex())
 	}
 
 	return nil
