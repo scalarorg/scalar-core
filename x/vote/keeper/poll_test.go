@@ -332,7 +332,7 @@ func TestPoll_GetMetaData(t *testing.T) {
 	)
 	expectedMetadata := &chainsTypes.PollMetadata{
 		Chain: "chain",
-		TxID:  [common.HashLength]byte{},
+		Hash:  [common.HashLength]byte{},
 	}
 	pollBuilder := exported.NewPollBuilder(
 		"some_module",

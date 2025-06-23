@@ -173,7 +173,7 @@ func (s msgServer) initializePolls(ctx sdk.Context, chain nexus.Chain, snapshot 
 				GracePeriod(keeper.GetParams(ctx).VotingGracePeriod).
 				ModuleMetadata(&types.PollMetadata{
 					Chain: chain.Name,
-					TxID:  txID,
+					Hash:  txID,
 				}),
 		)
 		if err != nil {
@@ -181,7 +181,7 @@ func (s msgServer) initializePolls(ctx sdk.Context, chain nexus.Chain, snapshot 
 		}
 
 		pollMappings[i] = types.PollMapping{
-			TxID:   txID,
+			Hash:   txID,
 			PollID: pollID,
 		}
 	}
@@ -880,7 +880,7 @@ func (s msgServer) initializePoll(ctx sdk.Context, chain nexus.Chain, txID expor
 			GracePeriod(keeper.GetParams(ctx).VotingGracePeriod).
 			ModuleMetadata(&types.PollMetadata{
 				Chain: chain.Name,
-				TxID:  txID,
+				Hash:  txID,
 			}),
 	)
 
@@ -891,31 +891,5 @@ func (s msgServer) initializePoll(ctx sdk.Context, chain nexus.Chain, txID expor
 }
 
 func (s msgServer) initializeBlockConfirmPoll(ctx sdk.Context, chain nexus.Chain, blockHash exported.Hash) (vote.PollParticipants, error) {
-	keeper, err := s.ForChain(ctx, chain.Name)
-	if err != nil {
-		return vote.PollParticipants{}, err
-	}
-
-	params := keeper.GetParams(ctx)
-	snap, err := s.CreateSnapshot(ctx, chain)
-	if err != nil {
-		return vote.PollParticipants{}, err
-	}
-
-	pollID, err := s.voter.InitializePoll(
-		ctx,
-		vote.NewPollBuilder(types.ModuleName, params.VotingThreshold, snap, ctx.BlockHeight()+params.RevoteLockingPeriod).
-			MinVoterCount(params.MinVoterCount).
-			RewardPoolName(chain.Name.String()).
-			GracePeriod(keeper.GetParams(ctx).VotingGracePeriod).
-			ModuleMetadata(&types.BlockConfirmPollMetadata{
-				Chain:     chain.Name,
-				BlockHash: blockHash,
-			}),
-	)
-
-	return vote.PollParticipants{
-		PollID:       pollID,
-		Participants: snap.GetParticipantAddresses(),
-	}, err
+	return s.initializePoll(ctx, chain, blockHash)
 }

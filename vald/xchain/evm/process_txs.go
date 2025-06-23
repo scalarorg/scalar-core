@@ -15,7 +15,7 @@ func (client *EthereumClient) ProcessSourceTxsConfirmation(event *types.EventCon
 
 	clog.Red("ProcessSourceTxsConfirmation", "event", event)
 
-	txIDs := slices.Map(event.PollMappings, func(m types.PollMapping) xcommon.Hash { return xcommon.Hash(m.TxID) })
+	txIDs := slices.Map(event.PollMappings, func(m types.PollMapping) xcommon.Hash { return xcommon.Hash(m.Hash) })
 	txReceipts, _ := client.GetTxReceiptsIfFinalized(txIDs, event.ConfirmationHeight)
 
 	var votes []sdk.Msg

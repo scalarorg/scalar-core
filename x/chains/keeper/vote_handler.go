@@ -38,13 +38,13 @@ func NewVoteHandler(cdc codec.Codec, keeper types.BaseKeeper, nexus types.Nexus,
 func (v voteHandler) HandleFailedPoll(ctx sdk.Context, poll vote.Poll) error {
 	md := mustGetMetadata(poll)
 	events.Emit(ctx, &types.PollFailed{
-		TxID:   md.TxID,
+		Hash:   md.Hash,
 		Chain:  md.Chain,
 		PollID: poll.GetID(),
 	})
 
 	// Handle failed block confirmation polls by cleaning up pending batches
-	if md.TxID.IsZero() && md.Chain != "" {
+	if md.Hash.IsZero() && md.Chain != "" {
 		// This is likely a block confirmation poll (block hash is stored in metadata)
 		chain, ok := v.nexus.GetChain(ctx, md.Chain)
 		if !ok {
@@ -58,14 +58,14 @@ func (v voteHandler) HandleFailedPoll(ctx sdk.Context, poll vote.Poll) error {
 
 		// Try to get block confirm poll metadata
 		if pollMetadata, ok := poll.GetMetaData(); ok {
-			if blockConfirmMetadata, ok := pollMetadata.(*types.BlockConfirmPollMetadata); ok {
+			if blockConfirmMetadata, ok := pollMetadata.(*types.PollMetadata); ok {
 				// Clean up pending batches for this specific block hash
-				batches := ck.FindPendingConfirmRequestsByBlockHash(ctx, blockConfirmMetadata.BlockHash)
+				batches := ck.FindPendingConfirmRequestsByBlockHash(ctx, blockConfirmMetadata.Hash)
 				for pollID := range batches {
 					ck.DeletePendingConfirmRequest(ctx, pollID)
 					ck.Logger(ctx).Info("Cleaned up pending batch for failed block confirmation",
 						"poll_id", pollID.String(),
-						"block_hash", blockConfirmMetadata.BlockHash.Hex())
+						"block_hash", blockConfirmMetadata.Hash.Hex())
 				}
 			}
 		}
@@ -85,13 +85,13 @@ func (v voteHandler) IsFalsyResult(result codec.ProtoMarshaler) bool {
 func (v voteHandler) HandleExpiredPoll(ctx sdk.Context, poll vote.Poll) error {
 	md := mustGetMetadata(poll)
 	events.Emit(ctx, &types.PollExpired{
-		TxID:   md.TxID,
+		Hash:   md.Hash,
 		Chain:  md.Chain,
 		PollID: poll.GetID(),
 	})
 
 	// Handle expired block confirmation polls by cleaning up pending batches
-	if md.TxID.IsZero() && md.Chain != "" {
+	if md.Hash.IsZero() && md.Chain != "" {
 		// This is likely a block confirmation poll (block hash is stored in metadata)
 		chain, ok := v.nexus.GetChain(ctx, md.Chain)
 		if !ok {
@@ -105,14 +105,14 @@ func (v voteHandler) HandleExpiredPoll(ctx sdk.Context, poll vote.Poll) error {
 
 		// Try to get block confirm poll metadata
 		if pollMetadata, ok := poll.GetMetaData(); ok {
-			if blockConfirmMetadata, ok := pollMetadata.(*types.BlockConfirmPollMetadata); ok {
+			if blockConfirmMetadata, ok := pollMetadata.(*types.PollMetadata); ok {
 				// Clean up pending batches for this specific block hash
-				batches := ck.FindPendingConfirmRequestsByBlockHash(ctx, blockConfirmMetadata.BlockHash)
+				batches := ck.FindPendingConfirmRequestsByBlockHash(ctx, blockConfirmMetadata.Hash)
 				for pollID := range batches {
 					ck.DeletePendingConfirmRequest(ctx, pollID)
 					ck.Logger(ctx).Info("Cleaned up pending batch for expired block confirmation",
 						"poll_id", pollID.String(),
-						"block_hash", blockConfirmMetadata.BlockHash.Hex())
+						"block_hash", blockConfirmMetadata.Hash.Hex())
 				}
 			}
 		}
@@ -139,7 +139,7 @@ func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error 
 	}
 
 	// Check if this is a block confirmation poll
-	if md.TxID.IsZero() && md.Chain != "" {
+	if md.Hash.IsZero() && md.Chain != "" {
 		// This is likely a block confirmation poll
 		ck, err := v.keeper.ForChain(ctx, chain.Name)
 		if err != nil {
@@ -148,10 +148,10 @@ func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error 
 
 		// Try to get block confirm poll metadata
 		if pollMetadata, ok := poll.GetMetaData(); ok {
-			if blockConfirmMetadata, ok := pollMetadata.(*types.BlockConfirmPollMetadata); ok {
+			if blockConfirmMetadata, ok := pollMetadata.(*types.PollMetadata); ok {
 				ck.Logger(ctx).Info("Block confirmation poll completed successfully",
 					"poll_id", poll.GetID().String(),
-					"block_hash", blockConfirmMetadata.BlockHash.Hex(),
+					"block_hash", blockConfirmMetadata.Hash.Hex(),
 					"chain", md.Chain)
 			}
 		}
@@ -201,14 +201,14 @@ func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error 
 	voteEvents := poll.GetResult().(*types.VoteEvents)
 	if v.IsFalsyResult(voteEvents) {
 		events.Emit(ctx, &types.NoEventsConfirmed{
-			TxID:   md.TxID,
+			Hash:   md.Hash,
 			Chain:  md.Chain,
 			PollID: poll.GetID(),
 		})
 	}
 
 	event := &types.PollCompleted{
-		TxID:   md.TxID,
+		Hash:   md.Hash,
 		Chain:  md.Chain,
 		PollID: poll.GetID(),
 	}

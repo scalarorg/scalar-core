@@ -112,11 +112,11 @@ message Command {
 }
 
 message PollMapping {
-  bytes tx_id = 1 [
+  bytes hash = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
-    (gogoproto.customname) = "TxID"
+    (gogoproto.customname) = "Hash"
   ];
   string poll_id = 2 [
     (gogoproto.nullable) = false,
@@ -130,8 +130,8 @@ message PollMetadata {
   string chain = 1
       [ (gogoproto.casttype) =
             "github.com/scalarorg/scalar-core/x/nexus/exported.ChainName" ];
-  bytes tx_id = 2 [
-    (gogoproto.customname) = "TxID",
+  bytes hash = 2 [
+    (gogoproto.customname) = "Hash",
     (gogoproto.nullable) = false,
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/chains/exported.Hash"
@@ -139,11 +139,11 @@ message PollMetadata {
 }
 
 message PollFailed {
-  bytes tx_id = 1 [
+  bytes hash = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
-    (gogoproto.customname) = "TxID"
+    (gogoproto.customname) = "Hash"
   ];
   string chain = 2
       [ (gogoproto.casttype) =
@@ -157,11 +157,11 @@ message PollFailed {
 }
 
 message PollExpired {
-  bytes tx_id = 1 [
+  bytes hash = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
-    (gogoproto.customname) = "TxID"
+    (gogoproto.customname) = "Hash"
   ];
   string chain = 2
       [ (gogoproto.casttype) =
@@ -175,11 +175,11 @@ message PollExpired {
 }
 
 message PollCompleted {
-  bytes tx_id = 1 [
+  bytes hash = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
-    (gogoproto.customname) = "TxID"
+    (gogoproto.customname) = "Hash"
   ];
   string chain = 2
       [ (gogoproto.casttype) =

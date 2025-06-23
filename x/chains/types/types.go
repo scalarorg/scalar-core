@@ -5,7 +5,6 @@ import (
 	"crypto/ecdsa"
 	"encoding/binary"
 	"encoding/hex"
-	"encoding/json"
 	"errors"
 	fmt "fmt"
 	"reflect"
@@ -1052,58 +1051,4 @@ func (m BlockMetadata) ValidateBasic() error {
 	}
 
 	return nil
-}
-
-// BlockConfirmPollMetadata represents metadata for block confirmation polls
-type BlockConfirmPollMetadata struct {
-	Chain     nexus.ChainName `json:"chain"`
-	BlockHash exported.Hash   `json:"block_hash"`
-}
-
-// Marshal implements codec.ProtoMarshaler
-func (m *BlockConfirmPollMetadata) Marshal() ([]byte, error) {
-	return json.Marshal(m)
-}
-
-// MarshalTo implements codec.ProtoMarshaler
-func (m *BlockConfirmPollMetadata) MarshalTo(dAtA []byte) (int, error) {
-	data, err := json.Marshal(m)
-	if err != nil {
-		return 0, err
-	}
-	copy(dAtA, data)
-	return len(data), nil
-}
-
-// MarshalToSizedBuffer implements codec.ProtoMarshaler
-func (m *BlockConfirmPollMetadata) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	return m.MarshalTo(dAtA)
-}
-
-// ProtoMessage implements codec.ProtoMarshaler
-func (m *BlockConfirmPollMetadata) ProtoMessage() {}
-
-// Reset implements codec.ProtoMarshaler
-func (m *BlockConfirmPollMetadata) Reset() {
-	*m = BlockConfirmPollMetadata{}
-}
-
-// Unmarshal implements codec.ProtoMarshaler
-func (m *BlockConfirmPollMetadata) Unmarshal(dAtA []byte) error {
-	return json.Unmarshal(dAtA, m)
-}
-
-// Size implements codec.ProtoMarshaler
-func (m *BlockConfirmPollMetadata) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	data, _ := json.Marshal(m)
-	return len(data)
-}
-
-// String implements codec.ProtoMarshaler
-func (m *BlockConfirmPollMetadata) String() string {
-	data, _ := json.Marshal(m)
-	return string(data)
 }

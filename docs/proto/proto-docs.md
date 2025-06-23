@@ -1126,7 +1126,7 @@ Msg defines the nexus Msg service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `tx_id` | [bytes](#bytes) |  |  |
+| `hash` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
 | `poll_id` | [string](#string) |  |  |
 
@@ -1143,7 +1143,7 @@ Msg defines the nexus Msg service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `tx_id` | [bytes](#bytes) |  |  |
+| `hash` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
 | `poll_id` | [string](#string) |  |  |
 
@@ -1160,7 +1160,7 @@ Msg defines the nexus Msg service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `tx_id` | [bytes](#bytes) |  |  |
+| `hash` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
 | `poll_id` | [string](#string) |  |  |
 
@@ -1177,7 +1177,7 @@ Msg defines the nexus Msg service.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `tx_id` | [bytes](#bytes) |  |  |
+| `hash` | [bytes](#bytes) |  |  |
 | `poll_id` | [string](#string) |  |  |
 
 
@@ -1194,7 +1194,7 @@ Msg defines the nexus Msg service.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
-| `tx_id` | [bytes](#bytes) |  |  |
+| `hash` | [bytes](#bytes) |  |  |
 
 
 
@@ -2432,7 +2432,7 @@ PollParticipants should be embedded in poll events in other modules
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `tx_id` | [bytes](#bytes) |  |  |
+| `hash` | [bytes](#bytes) |  |  |
 | `chain` | [string](#string) |  |  |
 | `poll_id` | [string](#string) |  |  |
 

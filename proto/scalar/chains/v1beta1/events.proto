@@ -412,11 +412,11 @@ message Event {
 }
 
 message NoEventsConfirmed {
-  bytes tx_id = 1 [
+  bytes hash = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) =
         "github.com/scalarorg/scalar-core/x/chains/exported.Hash",
-    (gogoproto.customname) = "TxID"
+    (gogoproto.customname) = "Hash"
   ];
   string chain = 2
       [ (gogoproto.casttype) =
