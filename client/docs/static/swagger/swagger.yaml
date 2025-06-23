@@ -7434,7 +7434,7 @@ paths:
                 properties:
                   chain:
                     type: string
-                  tx_id:
+                  hash:
                     type: string
                     format: byte
                   status:
@@ -60548,7 +60548,7 @@ definitions:
     properties:
       chain:
         type: string
-      tx_id:
+      hash:
         type: string
         format: byte
       status:
@@ -60911,7 +60911,7 @@ definitions:
         properties:
           chain:
             type: string
-          tx_id:
+          hash:
             type: string
             format: byte
           status:

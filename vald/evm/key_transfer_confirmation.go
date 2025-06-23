@@ -69,7 +69,7 @@ func (mgr Mgr) processTransferKeyLogs(event *types.ConfirmKeyTransferStarted, lo
 		}
 
 		return []types.Event{{Chain: event.Chain,
-			TxID:  event.TxID,
+			Hash:  event.TxID,
 			Index: uint64(i),
 			Event: &types.Event_MultisigOperatorshipTransferred{
 				MultisigOperatorshipTransferred: &transferOperatorshipEvent,

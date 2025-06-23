@@ -418,7 +418,7 @@ func (k ChainKeeper) GetConfirmedEventQueue(ctx sdk.Context) utils.KVQueue {
 			binary.BigEndian.PutUint64(indexBz, event.Index)
 
 			return utils.KeyFromBz(blockHeightBz).
-				Append(utils.KeyFromBz(event.TxID.Bytes())).
+				Append(utils.KeyFromBz(event.Hash.Bytes())).
 				Append(utils.KeyFromBz(indexBz))
 		},
 	)
@@ -1213,7 +1213,7 @@ func (k ChainKeeper) ProcessConfirmRequestTx(ctx sdk.Context,
 	// Create a basic event for now - the detailed token sent event creation will be handled by the msgServer
 	event := types.Event{
 		Chain: k.GetName(),
-		TxID:  txHash,
+		Hash:  txHash,
 		Event: &types.Event_TokenSent{
 			TokenSent: tokenSent,
 		},

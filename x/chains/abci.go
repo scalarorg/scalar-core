@@ -209,7 +209,7 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 
 	recipient := nexus.CrossChainAddress{Chain: destinationChain, Address: tokenSentEvent.DestinationAddress}
 	amount := sdk.NewCoin(asset, sdk.Int(tokenSentEvent.Asset.Amount))
-	transferID, err := n.EnqueueCrossChainTransfer(ctx, sourceChain, common.Hash(event.TxID), recipient, amount)
+	transferID, err := n.EnqueueCrossChainTransfer(ctx, sourceChain, common.Hash(event.Hash), recipient, amount)
 	if err != nil {
 		return sdkerrors.Wrap(err, "failed enqueuing transfer for event")
 	}
@@ -223,10 +223,10 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 	// check if script pubkey is nil
 	if len(tokenSentEvent.ScriptPubkey) != 0 {
 		clog.Magentaf(fmt.Sprintf("[x/chains] [ABCI]-Emited EventTokenSent, eventID: %s, txID: %s, vout: %d, scriptPubkey: %s, amountInSats: %d",
-			event.GetID(), hex.EncodeToString(event.TxID[:]), tokenSentEvent.Vout, hex.EncodeToString(tokenSentEvent.ScriptPubkey), tokenSentEvent.Asset.Amount.Uint64(),
+			event.GetID(), hex.EncodeToString(event.Hash[:]), tokenSentEvent.Vout, hex.EncodeToString(tokenSentEvent.ScriptPubkey), tokenSentEvent.Asset.Amount.Uint64(),
 		))
 		//Append utxo to Utxo snapshot
-		err = cov.AppendUtxo(ctx, tokenSentEvent.BlockHeight, event.TxID, uint32(tokenSentEvent.Vout), tokenSentEvent.ScriptPubkey, tokenSentEvent.Asset.Amount.Uint64())
+		err = cov.AppendUtxo(ctx, tokenSentEvent.BlockHeight, event.Hash, uint32(tokenSentEvent.Vout), tokenSentEvent.ScriptPubkey, tokenSentEvent.Asset.Amount.Uint64())
 		if err != nil {
 			ctx.Logger().Error("failed appending utxo to utxo snapshot", "error", err)
 			return err
@@ -234,7 +234,7 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 	}
 
 	clog.Bluef("[x/chains] [ABCI] Emit EventTokenSent: eventID: %s, txID: %s, vout: %d, scriptPubkey: %s, amountInSats: %d",
-		event.GetID(), hex.EncodeToString(event.TxID[:]), tokenSentEvent.Vout, hex.EncodeToString(tokenSentEvent.ScriptPubkey), tokenSentEvent.Asset.Amount.Uint64(),
+		event.GetID(), hex.EncodeToString(event.Hash[:]), tokenSentEvent.Vout, hex.EncodeToString(tokenSentEvent.ScriptPubkey), tokenSentEvent.Asset.Amount.Uint64(),
 	)
 	events.Emit(ctx, tokenSentEvent)
 
@@ -346,7 +346,7 @@ func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, 
 		funcs.MustOk(destinationCk.GetChainID(ctx)),
 		keyID,
 		nexus.ChainName(sourceChain.Name.String()),
-		event.TxID,
+		event.Hash,
 		event.Index,
 		e.Sender.Hex(),
 		e.DestinationContractAddress,
@@ -456,7 +456,7 @@ func handleContractCallWithTokenToBTC(ctx sdk.Context, event types.Event, bk typ
 		funcs.MustOk(destinationCk.GetChainID(ctx)),
 		keyID,
 		sourceChain,
-		event.TxID,
+		event.Hash,
 		event.Index,
 		*e,
 		e.Amount,
@@ -520,7 +520,7 @@ func handleContractCallWithTokenToEVM(ctx sdk.Context, event types.Event, bk typ
 		funcs.MustOk(destinationCk.GetChainID(ctx)),
 		funcs.MustOk(multisig.GetCurrentKeyID(ctx, destinationChain)),
 		sourceChain,
-		event.TxID,
+		event.Hash,
 		event.Index,
 		*e,
 		e.Amount,
@@ -700,7 +700,7 @@ func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset 
 			sender,
 			recipient,
 			e.SourceTxConfirmationEvent.PayloadHash.Bytes(),
-			event.TxID.Bytes(),
+			event.Hash.Bytes(),
 			event.Index,
 			nil,
 			e.SourceTxConfirmationEvent.Payload,
@@ -725,7 +725,7 @@ func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset 
 			sender,
 			recipient,
 			e.ContractCallWithToken.PayloadHash.Bytes(),
-			event.TxID.Bytes(),
+			event.Hash.Bytes(),
 			event.Index,
 			asset,
 			event.GetContractCallWithToken().Payload,
@@ -770,14 +770,14 @@ func handleConfirmDeposit(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 	// }
 
 	amount := sdk.NewCoin(burnerInfo.Asset, sdk.NewIntFromBigInt(e.Amount.BigInt()))
-	transferID, err := n.EnqueueForCrossChainTransfer(ctx, depositAddr, common.Hash(event.TxID), amount)
+	transferID, err := n.EnqueueForCrossChainTransfer(ctx, depositAddr, common.Hash(event.Hash), amount)
 	if err != nil {
 		return err
 	}
 
 	// set confirmed deposit
 	erc20Deposit := types.ERC20Deposit{
-		TxID:             event.TxID,
+		TxID:             event.Hash,
 		LogIndex:         event.Index,
 		Amount:           e.Amount,
 		Asset:            burnerInfo.Asset,
@@ -792,7 +792,7 @@ func handleConfirmDeposit(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 		"chain", chain.Name,
 		"depositAddress", depositAddr.Address,
 		"eventID", event.GetID(),
-		"txID", event.TxID.Hex(),
+		"txID", event.Hash.Hex(),
 	)
 
 	ctx.EventManager().EmitEvent(
@@ -806,7 +806,7 @@ func handleConfirmDeposit(ctx sdk.Context, event types.Event, bk types.BaseKeepe
 			sdk.NewAttribute(types.AttributeKeyAsset, burnerInfo.Asset),
 			sdk.NewAttribute(types.AttributeKeyDepositAddress, depositAddr.Address),
 			sdk.NewAttribute(types.AttributeKeyTokenAddress, burnerInfo.TokenAddress.Hex()),
-			sdk.NewAttribute(types.AttributeKeyTxID, event.TxID.Hex()),
+			sdk.NewAttribute(types.AttributeKeyTxID, event.Hash.Hex()),
 			sdk.NewAttribute(types.AttributeKeyTransferID, transferID.String()),
 			sdk.NewAttribute(types.AttributeKeyEventID, string(event.GetID())),
 			sdk.NewAttribute(sdk.AttributeKeyAction, types.AttributeValueConfirm),
@@ -841,7 +841,7 @@ func handleTokenDeployed(ctx sdk.Context, event types.Event, bk types.BaseKeeper
 		"chain", chain.Name,
 		"asset", token.GetAsset(),
 		"eventID", event.GetID(),
-		"txID", event.TxID.Hex(),
+		"txID", event.Hash.Hex(),
 	)
 
 	tokenDetails := token.GetDetails()
@@ -860,7 +860,7 @@ func handleTokenDeployed(ctx sdk.Context, event types.Event, bk types.BaseKeeper
 			sdk.NewAttribute(types.AttributeKeyAsset, token.GetAsset()),
 			sdk.NewAttribute(types.AttributeKeySymbol, token.GetDetails().Symbol),
 			sdk.NewAttribute(types.AttributeKeyTokenAddress, token.GetAddress().Hex()),
-			sdk.NewAttribute(types.AttributeKeyTxID, event.TxID.Hex()),
+			sdk.NewAttribute(types.AttributeKeyTxID, event.Hash.Hex()),
 			sdk.NewAttribute(types.AttributeKeyEventID, string(event.GetID())),
 			sdk.NewAttribute(sdk.AttributeKeyAction, types.AttributeValueConfirm),
 		))
@@ -924,7 +924,7 @@ func handleMultisigTransferKey(ctx sdk.Context, event types.Event, bk types.Base
 
 	ck.Logger(ctx).Info(fmt.Sprintf("successfully confirmed key transfer for chain %s", chain.Name),
 		"chain", chain.Name,
-		"txID", event.TxID.Hex(),
+		"txID", event.Hash.Hex(),
 		"eventID", event.GetID(),
 		"keyID", nextKeyID,
 	)
@@ -933,7 +933,7 @@ func handleMultisigTransferKey(ctx sdk.Context, event types.Event, bk types.Base
 		types.EventTypeTransferKeyConfirmation,
 		sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
 		sdk.NewAttribute(types.AttributeKeyChain, chain.Name.String()),
-		sdk.NewAttribute(types.AttributeKeyTxID, event.TxID.Hex()),
+		sdk.NewAttribute(types.AttributeKeyTxID, event.Hash.Hex()),
 		sdk.NewAttribute(types.AttributeKeyEventID, string(event.GetID())),
 		sdk.NewAttribute(sdk.AttributeKeyAction, types.AttributeValueConfirm),
 	))

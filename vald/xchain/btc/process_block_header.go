@@ -36,7 +36,7 @@ func (client *BtcClient) ProcessNewBlockConfirmation(event *types.ConfirmNewBloc
 
 	voteEvent := types.NewVoteEvents(event.Chain, types.Event{
 		Chain: event.Chain,
-		TxID:  exported.Hash{},
+		Hash:  event.BlockHash,
 		Event: &types.Event_NewBlockConfirmed{
 			NewBlockConfirmed: &types.EventNewBlockConfirmed{
 				BlockHash:         event.BlockHash,

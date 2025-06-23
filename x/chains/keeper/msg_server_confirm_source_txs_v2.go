@@ -200,7 +200,7 @@ func (s msgServer) validateAndSaveTokenSent(ctx sdk.Context, keeper types.ChainK
 
 	event := types.Event{
 		Chain: chain,
-		TxID:  tx.Hash,
+		Hash:  tx.Hash,
 		Event: &types.Event_TokenSent{
 			TokenSent: tokenSent,
 		},

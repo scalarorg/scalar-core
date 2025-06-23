@@ -61,7 +61,7 @@ func (client *BtcClient) processSrcTxReceipt(event *types.EventConfirmSourceTxsS
 	}
 	events = append(events, types.Event{
 		Chain: event.Chain,
-		TxID:  txID,
+		Hash:  txID,
 		Event: &types.Event_TokenSent{
 			TokenSent: tokenSent,
 		},

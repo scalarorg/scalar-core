@@ -74,7 +74,7 @@ func (mgr Mgr) processDepositConfirmationLogs(event *types.ConfirmDepositStarted
 
 		events = append(events, types.Event{
 			Chain: event.Chain,
-			TxID:  event.TxID,
+			Hash:  event.TxID,
 			Index: uint64(i),
 			Event: &types.Event_Transfer{
 				Transfer: &erc20Event,

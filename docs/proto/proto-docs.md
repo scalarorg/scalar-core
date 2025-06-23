@@ -2151,7 +2151,7 @@ PollParticipants should be embedded in poll events in other modules
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `chain` | [string](#string) |  |  |
-| `tx_id` | [bytes](#bytes) |  |  |
+| `hash` | [bytes](#bytes) |  |  |
 | `status` | [Event.Status](#scalar.chains.v1beta1.Event.Status) |  |  |
 | `index` | [uint64](#uint64) |  |  |
 | `token_sent` | [EventTokenSent](#scalar.chains.v1beta1.EventTokenSent) |  |  |

@@ -89,7 +89,7 @@ func (c *EthereumClient) processTxReceipt(event *types.EventConfirmSourceTxsStar
 
 			events = append(events, types.Event{
 				Chain: event.Chain,
-				TxID:  exported.Hash(txlog.TxHash),
+				Hash:  exported.Hash(txlog.TxHash),
 				Index: uint64(txlog.Index),
 				Event: &types.Event_ContractCallWithToken{
 					ContractCallWithToken: &gatewayEvent,
@@ -108,7 +108,7 @@ func (c *EthereumClient) processTxReceipt(event *types.EventConfirmSourceTxsStar
 
 			events = append(events, types.Event{
 				Chain: event.Chain,
-				TxID:  exported.Hash(txlog.TxHash),
+				Hash:  exported.Hash(txlog.TxHash),
 				Index: uint64(txlog.Index),
 				Event: &types.Event_TokenSent{
 					TokenSent: &gatewayEvent,
@@ -129,7 +129,7 @@ func (c *EthereumClient) processTxReceipt(event *types.EventConfirmSourceTxsStar
 
 			events = append(events, types.Event{
 				Chain: event.Chain,
-				TxID:  exported.Hash(txlog.TxHash),
+				Hash:  exported.Hash(txlog.TxHash),
 				Index: uint64(txlog.Index),
 				Event: &types.Event_RedeemToken{
 					RedeemToken: &gatewayEvent,

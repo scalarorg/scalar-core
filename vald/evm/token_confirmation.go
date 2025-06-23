@@ -74,7 +74,7 @@ func (mgr Mgr) processTokenConfirmationLogs(event *types.ConfirmTokenStarted, lo
 
 		return []types.Event{{
 			Chain: event.Chain,
-			TxID:  event.TxID,
+			Hash:  event.TxID,
 			Index: uint64(i),
 			Event: &types.Event_TokenDeployed{
 				TokenDeployed: &erc20Event,
