@@ -260,10 +260,10 @@ func (v voteHandler) handleEvent(ctx sdk.Context, ck types.ChainKeeper, event ty
 		if err := v.handleCrossChainEvent(ctx, ck, event); err != nil {
 			return err
 		}
+	case *types.Event_NewBlockConfirmed:
+		ck.Logger(ctx).Info("new block confirmed event", "event", event.GetID())
+		funcs.MustNoErr(ck.EnqueueConfirmedEvent(ctx, event.GetID()))
 	default:
-		if eventType.(*types.Event_NewBlockConfirmed) != nil {
-			ck.Logger(ctx).Info("new block confirmed event", "event", event.GetID())
-		}
 		funcs.MustNoErr(ck.EnqueueConfirmedEvent(ctx, event.GetID()))
 	}
 

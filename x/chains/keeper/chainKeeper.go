@@ -1033,7 +1033,8 @@ func (k ChainKeeper) EnqueueConfirmedEvent(ctx sdk.Context, id types.EventID) er
 		*types.Event_TokenDeployed,
 		*types.Event_MultisigOperatorshipTransferred,
 		*types.Event_SourceTxConfirmationEvent,
-		*types.Event_RedeemToken:
+		*types.Event_RedeemToken,
+		*types.Event_NewBlockConfirmed:
 		k.GetConfirmedEventQueue(ctx).Enqueue(getEventKey(id), &event)
 	default:
 		return fmt.Errorf("unsupported event type %T", event)
