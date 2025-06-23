@@ -560,19 +560,20 @@ func handleNewBlockConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKe
 	chain := funcs.MustOk(n.GetChain(ctx, event.Chain))
 	ck := funcs.Must(bk.ForChain(ctx, chain.Name))
 
-	currentBlock, err := ck.GetCurrentBlock(ctx)
-	if err != nil {
-		clog.Redf("[abci/chains] failed to get current block: %+v", err)
-		return err
-	}
+	// Don't check check current block
+	// currentBlock, err := ck.GetCurrentBlock(ctx)
+	// if err != nil {
+	// 	clog.Redf("[abci/chains] failed to get current block: %+v", err)
+	// 	return err
+	// }
 
-	if currentBlock.Height >= e.BlockHeight {
-		return fmt.Errorf("current block height %d is greater than or equal to new block height %d", currentBlock.Height, e.BlockHeight)
-	}
+	// if currentBlock.Height >= e.BlockHeight {
+	// 	return fmt.Errorf("current block height %d is greater than or equal to new block height %d", currentBlock.Height, e.BlockHeight)
+	// }
 
-	if e.PreviousBlockHash != nil && !bytes.Equal(e.PreviousBlockHash.Bytes(), currentBlock.BlockHash.Bytes()) {
-		return fmt.Errorf("previous block hash is not correct")
-	}
+	// if e.PreviousBlockHash != nil && !bytes.Equal(e.PreviousBlockHash.Bytes(), currentBlock.BlockHash.Bytes()) {
+	// 	return fmt.Errorf("previous block hash is not correct")
+	// }
 
 	// Set the new block metadata
 	ck.SetBlock(ctx, types.BlockMetadata{
