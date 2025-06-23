@@ -64,6 +64,7 @@ func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.
 	for _, event := range events {
 		success := utils.RunCached(ctx, bk, func(ctx sdk.Context) (bool, error) {
 			if err := handleConfirmedEvent(ctx, event, bk, n, m, p, cov); err != nil {
+				clog.Redf("[abci/chains] handleConfirmedEventsForChain: %+v", event.GetID())
 				ck.Logger(ctx).Debug(fmt.Sprintf("failed handling event: %s", err.Error()),
 					"chain", chain.Name.String(),
 					"eventID", event.GetID(),
