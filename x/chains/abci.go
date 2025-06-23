@@ -537,6 +537,7 @@ func handleContractCallWithTokenToEVM(ctx sdk.Context, event types.Event, bk typ
 }
 
 func handleNewBlockConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, p types.ProtocolKeeper) error {
+	clog.Greenf("[abci/chains] handleNewBlockConfirmed: %+v", event)
 	e := event.GetNewBlockConfirmed()
 	if e == nil {
 		panic(fmt.Errorf("event is nil"))
@@ -547,6 +548,7 @@ func handleNewBlockConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKe
 
 	currentBlock, err := ck.GetCurrentBlock(ctx)
 	if err != nil {
+		clog.Redf("[abci/chains] failed to get current block: %+v", err)
 		return err
 	}
 
@@ -558,52 +560,84 @@ func handleNewBlockConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKe
 		return fmt.Errorf("previous block hash is not correct")
 	}
 
+	// Set the new block metadata
 	ck.SetBlock(ctx, types.BlockMetadata{
 		Height:            e.BlockHeight,
 		BlockHash:         e.BlockHash,
 		MerkleRoot:        e.MerkleRoot,
 		PreviousBlockHash: e.PreviousBlockHash,
 	})
-	// Get sender address
-	chainParams := ck.GetParams(ctx)
 
+	// Get chain params
+	chainParams := ck.GetParams(ctx)
 	nwParams := chainParams.Metadata["params"]
 	if nwParams == "" {
 		return fmt.Errorf("params are required")
 	}
+
+	// Process pending batches for this confirmed block
 	batches := ck.FindPendingConfirmRequestsByBlockHash(ctx, e.BlockHash)
+	if len(batches) == 0 {
+		ck.Logger(ctx).Info("No pending batches found for confirmed block", "block_hash", e.BlockHash.Hex())
+		return nil
+	}
+
+	ck.Logger(ctx).Info("Processing pending batches for confirmed block",
+		"block_hash", e.BlockHash.Hex(),
+		"batch_count", len(batches))
+
+	// Process all batches for this block
 	for pollID, batch := range batches {
+		ck.Logger(ctx).Info("Processing batch", "poll_id", pollID.String(), "tx_count", len(batch.Txs))
+
+		successCount := 0
 		for _, tx := range batch.Txs {
 			txInfo, err := btc.ParseTx(tx.Raw)
 			if err != nil {
-				ck.Logger(ctx).Error("failed to parse tx", "error", err)
+				ck.Logger(ctx).Error("failed to parse tx", "error", err, "tx_hash", tx.Hash.Hex())
 				continue
 			}
+
 			err = validateTxProof(txInfo.TxID, tx.TxIndex, tx.MerklePath, e.MerkleRoot)
 			if err != nil {
-				ck.Logger(ctx).Error("failed to validate tx proof", "error", err)
+				ck.Logger(ctx).Error("failed to validate tx proof", "error", err, "tx_hash", tx.Hash.Hex())
 				continue
 			}
+
 			protocolInfo, err := p.FindProtocolInfoByInternalAddress(ctx, event.Chain, nexus.ChainName(txInfo.DestinationChain), txInfo.DestinationTokenAddress)
 			if err != nil {
-				ck.Logger(ctx).Error("failed to find protocol info by internal address", "error", err)
+				ck.Logger(ctx).Error("failed to find protocol info by internal address", "error", err, "tx_hash", tx.Hash.Hex())
 				continue
 			}
 
 			sender, err := btc_utils.ScriptPubKeyToAddress(tx.PrevOutpointScriptPubkey, nwParams)
 			if err != nil {
-				ck.Logger(ctx).Error("Failed to get sender address", "error", err)
+				ck.Logger(ctx).Error("Failed to get sender address", "error", err, "tx_hash", tx.Hash.Hex())
 				continue
 			}
+
 			err = ck.ProcessConfirmRequestTx(ctx, txInfo, tx.TxIndex, e.BlockHeight, protocolInfo.Symbol, sender.String())
 			if err != nil {
-				ck.Logger(ctx).Error("failed to process confirm request batch", "error", err)
+				ck.Logger(ctx).Error("failed to process confirm request tx", "error", err, "tx_hash", tx.Hash.Hex())
 				continue
 			}
+
+			successCount++
 		}
-		// Delete the batch from storage after processing
+
+		ck.Logger(ctx).Info("Batch processing completed",
+			"poll_id", pollID.String(),
+			"success_count", successCount,
+			"total_count", len(batch.Txs))
+
+		// Delete the batch from storage after processing (regardless of success/failure)
 		ck.DeletePendingConfirmRequest(ctx, pollID)
 	}
+
+	ck.Logger(ctx).Info("Block confirmation processing completed",
+		"block_hash", e.BlockHash.Hex(),
+		"block_height", e.BlockHeight)
+
 	return nil
 }
 

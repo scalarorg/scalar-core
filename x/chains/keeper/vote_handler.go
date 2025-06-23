@@ -43,6 +43,38 @@ func (v voteHandler) HandleFailedPoll(ctx sdk.Context, poll vote.Poll) error {
 		PollID: poll.GetID(),
 	})
 
+	// Handle failed block confirmation polls by cleaning up pending batches
+	if md.TxID.IsZero() && md.Chain != "" {
+		// This is likely a block confirmation poll (block hash is stored in metadata)
+		chain, ok := v.nexus.GetChain(ctx, md.Chain)
+		if !ok {
+			return fmt.Errorf("%s is not a registered chain", md.Chain)
+		}
+
+		ck, err := v.keeper.ForChain(ctx, chain.Name)
+		if err != nil {
+			return fmt.Errorf("failed to get chain keeper for %s", md.Chain)
+		}
+
+		// Try to get block confirm poll metadata
+		if pollMetadata, ok := poll.GetMetaData(); ok {
+			if blockConfirmMetadata, ok := pollMetadata.(*types.BlockConfirmPollMetadata); ok {
+				// Clean up pending batches for this specific block hash
+				batches := ck.FindPendingConfirmRequestsByBlockHash(ctx, blockConfirmMetadata.BlockHash)
+				for pollID := range batches {
+					ck.DeletePendingConfirmRequest(ctx, pollID)
+					ck.Logger(ctx).Info("Cleaned up pending batch for failed block confirmation",
+						"poll_id", pollID.String(),
+						"block_hash", blockConfirmMetadata.BlockHash.Hex())
+				}
+			}
+		}
+
+		ck.Logger(ctx).Info("Block confirmation poll failed, pending batches cleaned up",
+			"poll_id", poll.GetID().String(),
+			"chain", md.Chain)
+	}
+
 	return nil
 }
 
@@ -51,6 +83,49 @@ func (v voteHandler) IsFalsyResult(result codec.ProtoMarshaler) bool {
 }
 
 func (v voteHandler) HandleExpiredPoll(ctx sdk.Context, poll vote.Poll) error {
+	md := mustGetMetadata(poll)
+	events.Emit(ctx, &types.PollExpired{
+		TxID:   md.TxID,
+		Chain:  md.Chain,
+		PollID: poll.GetID(),
+	})
+
+	// Handle expired block confirmation polls by cleaning up pending batches
+	if md.TxID.IsZero() && md.Chain != "" {
+		// This is likely a block confirmation poll (block hash is stored in metadata)
+		chain, ok := v.nexus.GetChain(ctx, md.Chain)
+		if !ok {
+			return fmt.Errorf("%s is not a registered chain", md.Chain)
+		}
+
+		ck, err := v.keeper.ForChain(ctx, chain.Name)
+		if err != nil {
+			return fmt.Errorf("failed to get chain keeper for %s", md.Chain)
+		}
+
+		// Try to get block confirm poll metadata
+		if pollMetadata, ok := poll.GetMetaData(); ok {
+			if blockConfirmMetadata, ok := pollMetadata.(*types.BlockConfirmPollMetadata); ok {
+				// Clean up pending batches for this specific block hash
+				batches := ck.FindPendingConfirmRequestsByBlockHash(ctx, blockConfirmMetadata.BlockHash)
+				for pollID := range batches {
+					ck.DeletePendingConfirmRequest(ctx, pollID)
+					ck.Logger(ctx).Info("Cleaned up pending batch for expired block confirmation",
+						"poll_id", pollID.String(),
+						"block_hash", blockConfirmMetadata.BlockHash.Hex())
+				}
+			}
+		}
+
+		ck.Logger(ctx).Info("Block confirmation poll expired, pending batches cleaned up",
+			"poll_id", poll.GetID().String(),
+			"chain", md.Chain)
+	}
+
+	return nil
+}
+
+func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error {
 	rewardPoolName, ok := poll.GetRewardPoolName()
 	if !ok {
 		return fmt.Errorf("reward pool not set for poll %s", poll.GetID().String())
@@ -62,80 +137,45 @@ func (v voteHandler) HandleExpiredPoll(ctx sdk.Context, poll vote.Poll) error {
 	if !ok {
 		return fmt.Errorf("%s is not a registered chain", md.Chain)
 	}
-	// Penalize voters who failed to vote
+
+	// Check if this is a block confirmation poll
+	if md.TxID.IsZero() && md.Chain != "" {
+		// This is likely a block confirmation poll
+		ck, err := v.keeper.ForChain(ctx, chain.Name)
+		if err != nil {
+			return fmt.Errorf("failed to get chain keeper for %s", md.Chain)
+		}
+
+		// Try to get block confirm poll metadata
+		if pollMetadata, ok := poll.GetMetaData(); ok {
+			if blockConfirmMetadata, ok := pollMetadata.(*types.BlockConfirmPollMetadata); ok {
+				ck.Logger(ctx).Info("Block confirmation poll completed successfully",
+					"poll_id", poll.GetID().String(),
+					"block_hash", blockConfirmMetadata.BlockHash.Hex(),
+					"chain", md.Chain)
+			}
+		}
+	}
+
+	// Penalize voters who voted incorrectly or failed to vote
 	for _, voter := range poll.GetVoters() {
 		hasVoted := poll.HasVoted(voter)
+		hasVotedIncorrectly := poll.HasVoted(voter) && !poll.HasVotedCorrectly(voter)
+
 		if maintainerState, ok := v.nexus.GetChainMaintainerState(ctx, chain, voter); ok {
 			maintainerState.MarkMissingVote(!hasVoted)
+			maintainerState.MarkIncorrectVote(hasVotedIncorrectly)
 			funcs.MustNoErr(v.nexus.SetChainMaintainerState(ctx, maintainerState))
 
 			msg := fmt.Sprintf("marked voter %s behaviour", voter.String())
-			clog.Red("HandleExpiredPoll", msg)
+			clog.Red("HandleCompletedPoll", msg)
 			v.keeper.Logger(ctx).Debug(msg,
 				"voter", voter.String(),
 				"missing_vote", !hasVoted,
+				"incorrect_vote", hasVotedIncorrectly,
 				"poll", poll.GetID().String(),
 			)
 		}
-
-		if !hasVoted {
-			rewardPool.ClearRewards(voter)
-			msg := fmt.Sprintf("penalized voter %s due to timeout", voter.String())
-			clog.Red("HandleExpiredPoll", msg)
-			v.keeper.Logger(ctx).Debug(msg,
-				"voter", voter.String(),
-				"poll", poll.GetID().String())
-		}
-	}
-
-	events.Emit(ctx, &types.PollExpired{
-		TxID:   md.TxID,
-		Chain:  md.Chain,
-		PollID: poll.GetID(),
-	})
-
-	return nil
-}
-
-func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error {
-
-	clog.Green("HandleCompletedPoll", "poll", poll.GetID().String())
-
-	voteEvents := poll.GetResult().(*types.VoteEvents)
-
-	chain, ok := v.nexus.GetChain(ctx, voteEvents.Chain)
-	if !ok {
-		return fmt.Errorf("%s is not a registered chain", voteEvents.Chain)
-	}
-
-	rewardPoolName, ok := poll.GetRewardPoolName()
-	if !ok {
-		return fmt.Errorf("reward pool not set for poll %s", poll.GetID().String())
-	}
-
-	rewardPool := v.rewarder.GetPool(ctx, rewardPoolName)
-
-	for _, voter := range poll.GetVoters() {
-		maintainerState, ok := v.nexus.GetChainMaintainerState(ctx, chain, voter)
-		if !ok {
-			continue // voter is no longer a chain maintainer, so recording the state is irrelevant
-		}
-
-		hasVoted := poll.HasVoted(voter)
-		hasVotedIncorrectly := hasVoted && !poll.HasVotedCorrectly(voter)
-
-		maintainerState.MarkMissingVote(!hasVoted)
-		maintainerState.MarkIncorrectVote(hasVotedIncorrectly)
-		funcs.MustNoErr(v.nexus.SetChainMaintainerState(ctx, maintainerState))
-
-		msg := fmt.Sprintf("marked voter %s behaviour", voter.String())
-		clog.Red("HandleCompletedPoll", msg)
-		v.keeper.Logger(ctx).Debug(msg,
-			"voter", voter.String(),
-			"missing_vote", !hasVoted,
-			"incorrect_vote", hasVotedIncorrectly,
-			"poll", poll.GetID().String(),
-		)
 
 		switch {
 		case hasVotedIncorrectly, !hasVoted:
@@ -157,7 +197,8 @@ func (v voteHandler) HandleCompletedPoll(ctx sdk.Context, poll vote.Poll) error 
 		}
 	}
 
-	md := mustGetMetadata(poll)
+	// Get vote events for result processing
+	voteEvents := poll.GetResult().(*types.VoteEvents)
 	if v.IsFalsyResult(voteEvents) {
 		events.Emit(ctx, &types.NoEventsConfirmed{
 			TxID:   md.TxID,

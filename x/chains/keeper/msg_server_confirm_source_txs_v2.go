@@ -107,7 +107,7 @@ func (s msgServer) ConfirmSourceTxsV2(c context.Context, req *types.ConfirmSourc
 				return nil, err
 			}
 		} else {
-			s.Logger(ctx).Info("Block already has pending confirm request", "block_hash", req.Batch.BlockHash)
+			s.Logger(ctx).Info("Block Confirmation is in processing", "block_hash", req.Batch.BlockHash.Hex())
 		}
 	}
 	return &types.ConfirmSourceTxsResponseV2{}, nil
@@ -115,7 +115,7 @@ func (s msgServer) ConfirmSourceTxsV2(c context.Context, req *types.ConfirmSourc
 
 func (s msgServer) startConfirmBlock(ctx sdk.Context, keeper types.ChainKeeper, chain nexus.Chain, batch *types.TrustedTxsByBlock) error {
 	//Store request
-	pollParticipants, err := s.initializePoll(ctx, chain, batch.BlockHash)
+	pollParticipants, err := s.initializeBlockConfirmPoll(ctx, chain, batch.BlockHash)
 	if err != nil {
 		s.Logger(ctx).Error("Failed to initialize poll", "error", err)
 		return err
@@ -132,7 +132,7 @@ func (s msgServer) startConfirmBlock(ctx sdk.Context, keeper types.ChainKeeper, 
 		ConfirmationHeight: keeper.GetRequiredConfirmationHeight(ctx),
 		PollParticipants:   pollParticipants,
 	})
-
+	keeper.EnqueueConfirmedEvent(ctx, types.NewEventID(batch.BlockHash, 0))
 	return nil
 }
 

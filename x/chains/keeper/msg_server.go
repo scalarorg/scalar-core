@@ -889,3 +889,33 @@ func (s msgServer) initializePoll(ctx sdk.Context, chain nexus.Chain, txID expor
 		Participants: snap.GetParticipantAddresses(),
 	}, err
 }
+
+func (s msgServer) initializeBlockConfirmPoll(ctx sdk.Context, chain nexus.Chain, blockHash exported.Hash) (vote.PollParticipants, error) {
+	keeper, err := s.ForChain(ctx, chain.Name)
+	if err != nil {
+		return vote.PollParticipants{}, err
+	}
+
+	params := keeper.GetParams(ctx)
+	snap, err := s.CreateSnapshot(ctx, chain)
+	if err != nil {
+		return vote.PollParticipants{}, err
+	}
+
+	pollID, err := s.voter.InitializePoll(
+		ctx,
+		vote.NewPollBuilder(types.ModuleName, params.VotingThreshold, snap, ctx.BlockHeight()+params.RevoteLockingPeriod).
+			MinVoterCount(params.MinVoterCount).
+			RewardPoolName(chain.Name.String()).
+			GracePeriod(keeper.GetParams(ctx).VotingGracePeriod).
+			ModuleMetadata(&types.BlockConfirmPollMetadata{
+				Chain:     chain.Name,
+				BlockHash: blockHash,
+			}),
+	)
+
+	return vote.PollParticipants{
+		PollID:       pollID,
+		Participants: snap.GetParticipantAddresses(),
+	}, err
+}
