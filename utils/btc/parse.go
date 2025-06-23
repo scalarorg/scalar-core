@@ -7,7 +7,7 @@ import (
 
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
-	"github.com/scalarorg/bitcoin-vault/ffi/go"
+	vault "github.com/scalarorg/bitcoin-vault/ffi/go"
 	"github.com/scalarorg/go-common/chain"
 	go_utils "github.com/scalarorg/go-common/types"
 )
@@ -35,6 +35,7 @@ type VaultInfo struct {
 	DestinationRecipientAddress []byte
 	DestinationTokenAddress     string //Hex encoded
 	Vout                        uint32
+	MsgTx                       *wire.MsgTx
 }
 
 func ParseTx(rawTx []byte) (*VaultInfo, error) {
@@ -73,5 +74,6 @@ func ParseTx(rawTx []byte) (*VaultInfo, error) {
 		DestinationRecipientAddress: output.DestinationRecipientAddress,
 		DestinationTokenAddress:     hex.EncodeToString(output.DestinationTokenAddress),
 		Vout:                        uint32(LockingOutputIndex),
+		MsgTx:                       &msgTx,
 	}, nil
 }

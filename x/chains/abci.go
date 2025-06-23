@@ -610,6 +610,11 @@ func handleNewBlockConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKe
 				continue
 			}
 
+			if txInfo.MsgTx.TxHash().String() != tx.Hash.String() {
+				ck.Logger(ctx).Error("tx hash mismatch", "expected", tx.Hash.String(), "actual", txInfo.MsgTx.TxHash().String())
+				continue
+			}
+
 			err = validateTxProof(txInfo.TxID, tx.TxIndex, tx.MerklePath, e.MerkleRoot)
 			if err != nil {
 				ck.Logger(ctx).Error("failed to validate tx proof", "error", err, "tx_hash", tx.Hash.Hex())

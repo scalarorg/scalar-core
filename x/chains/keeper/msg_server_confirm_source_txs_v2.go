@@ -71,6 +71,12 @@ func (s msgServer) ConfirmSourceTxsV2(c context.Context, req *types.ConfirmSourc
 				s.Logger(ctx).Error("failed to parse tx", "error", err)
 				continue
 			}
+
+			if txInfo.MsgTx.TxHash().String() != tx.Hash.String() {
+				s.Logger(ctx).Error("tx hash mismatch", "expected", tx.Hash.String(), "actual", txInfo.MsgTx.TxHash().String())
+				continue
+			}
+
 			err = validateTxProof(txInfo.TxID, tx.TxIndex, tx.MerklePath, block.MerkleRoot)
 			if err != nil {
 				s.Logger(ctx).Error("failed to validate tx proof", "error", err)
