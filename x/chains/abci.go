@@ -632,6 +632,7 @@ func handleNewBlockConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKe
 
 			sender, err := btc_utils.ScriptPubKeyToAddress(tx.PrevOutpointScriptPubkey, nwParams)
 			if err != nil {
+				clog.Greenf("tx.PrevOutpointScriptPubkey: %s", hex.EncodeToString(tx.PrevOutpointScriptPubkey))
 				ck.Logger(ctx).Error("Failed to get sender address", "error", err, "tx_hash", tx.Hash.Hex())
 				continue
 			}

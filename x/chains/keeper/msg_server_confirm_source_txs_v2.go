@@ -77,6 +77,9 @@ func (s msgServer) ConfirmSourceTxsV2(c context.Context, req *types.ConfirmSourc
 				continue
 			}
 
+			clog.Greenf("txInfo: %+v", txInfo)
+			clog.Greenf("tx.PrevOutpointScriptPubkey: %x", tx.PrevOutpointScriptPubkey)
+
 			sender, err := btc_utils.ScriptPubKeyToAddress(tx.PrevOutpointScriptPubkey, nwParams)
 			if err != nil {
 				s.Logger(ctx).Error("Failed to get sender address", "error", err)
