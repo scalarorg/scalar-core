@@ -227,11 +227,14 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 			event.GetID(), hex.EncodeToString(event.Hash[:]), tokenSentEvent.Vout, hex.EncodeToString(tokenSentEvent.ScriptPubkey), tokenSentEvent.Asset.Amount.Uint64(),
 		))
 		//Append utxo to Utxo snapshot
-		err = cov.AppendUtxo(ctx, tokenSentEvent.BlockHeight, event.Hash, uint32(tokenSentEvent.Vout), tokenSentEvent.ScriptPubkey, tokenSentEvent.Asset.Amount.Uint64())
-		if err != nil {
-			ctx.Logger().Error("failed appending utxo to utxo snapshot", "error", err)
-			return err
-		}
+
+		// TODO: un-comment this
+		
+		// err = cov.AppendUtxo(ctx, tokenSentEvent.BlockHeight, event.Hash, uint32(tokenSentEvent.Vout), tokenSentEvent.ScriptPubkey, tokenSentEvent.Asset.Amount.Uint64())
+		// if err != nil {
+		// 	ctx.Logger().Error("failed appending utxo to utxo snapshot", "error", err)
+		// 	return err
+		// }
 	}
 
 	clog.Bluef("[x/chains] [ABCI] Emit EventTokenSent: eventID: %s, txID: %s, vout: %d, scriptPubkey: %s, amountInSats: %d",

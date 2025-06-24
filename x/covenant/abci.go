@@ -627,10 +627,11 @@ func aggregatePsbtFromCommandBatch(
 
 	visited := map[string]bool{}
 
-	utxoSnapshot, ok := cov.GetUtxoSnapshot(ctx, group.UID)
-	if !ok {
-		return nil, fmt.Errorf("[abci/covenant]: utxo snapshot not found")
-	}
+	utxoSnapshot, _ := cov.GetUtxoSnapshot(ctx, group.UID)
+	// TODO: un-comment this
+	// if !ok {
+	// 	return nil, fmt.Errorf("[abci/covenant]: utxo snapshot not found")
+	// }
 
 	chainKeeper, err := b.ForChain(ctx, chainName)
 	if err != nil {
