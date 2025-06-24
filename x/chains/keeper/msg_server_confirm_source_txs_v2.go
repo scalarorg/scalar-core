@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"time"
@@ -11,8 +10,6 @@ import (
 	"github.com/scalarorg/scalar-core/utils/btc"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
-	"github.com/scalarorg/scalar-core/utils/slices"
-	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
 )
@@ -68,8 +65,9 @@ func (s msgServer) ConfirmSourceTxsV2(c context.Context, req *types.ConfirmSourc
 				s.Logger(ctx).Error("tx hash mismatch", "expected", tx.Hash.String(), "actual", txInfo.MsgTx.TxHash().String())
 				continue
 			}
-			err = validateTxProof(txInfo.TxID, tx.TxIndex, tx.MerklePath, block.MerkleRoot)
+			err = btc.ValidateTxProof(txInfo.TxID, tx.TxIndex, tx.MerklePath, block.MerkleRoot)
 			if err != nil {
+				clog.Greenf("BlockHash: %s, MerkleRoot: %s", block.BlockHash.Hex(), block.MerkleRoot.Hex())
 				s.Logger(ctx).Error("failed to validate tx proof", "error", err)
 				continue
 			}
@@ -130,17 +128,5 @@ func (s msgServer) startConfirmBlock(ctx sdk.Context, keeper types.ChainKeeper, 
 		PollParticipants:   pollParticipants,
 	})
 	keeper.EnqueueConfirmedEvent(ctx, types.NewEventID(batch.BlockHash, 0))
-	return nil
-}
-
-func validateTxProof(txId []byte, txIndex uint64, merklePath []exported.Hash, blockMerkleRoot exported.Hash) error {
-	merkleRoot := btc.GetMerkleRootFromPath(txId, txIndex, slices.Map(merklePath, func(p exported.Hash) []byte {
-		return p.Bytes()
-	}), true)
-
-	if !bytes.Equal(merkleRoot, blockMerkleRoot.Bytes()) {
-		return fmt.Errorf("merkle root mismatch: %s != %s", merkleRoot, blockMerkleRoot.Bytes())
-	}
-
 	return nil
 }

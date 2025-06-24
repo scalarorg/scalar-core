@@ -1,7 +1,13 @@
 package btc
 
 import (
+	"bytes"
 	"crypto/sha256"
+	"fmt"
+
+	"github.com/scalarorg/scalar-core/utils/clog"
+	"github.com/scalarorg/scalar-core/utils/slices"
+	"github.com/scalarorg/scalar-core/x/chains/exported"
 )
 
 func DoubleSha256(b []byte) []byte {
@@ -54,4 +60,23 @@ func GetMerkleRootFromPath(txid []byte, txIndex uint64, path [][]byte, reverse b
 		return ReverseBytes(txid)
 	}
 	return txid
+}
+
+func ValidateTxProof(txId []byte, txIndex uint64, merklePath []exported.Hash, blockMerkleRoot exported.Hash) error {
+	merkleRoot := GetMerkleRootFromPath(txId, txIndex, slices.Map(merklePath, func(p exported.Hash) []byte {
+		return p.Bytes()
+	}), true)
+
+	if !bytes.Equal(merkleRoot, blockMerkleRoot.Bytes()) {
+		clog.Redf("txId: %x, txIndex: %d, merkleRoot: %x, blockMerkleRoot: %x",
+			txId, txIndex, merkleRoot, blockMerkleRoot.Bytes())
+
+		for i, p := range merklePath {
+			clog.Redf("merklePath[%d]: %x", i, p.Bytes())
+		}
+
+		return fmt.Errorf("merkle root mismatch: %x != %x", merkleRoot, blockMerkleRoot.Bytes())
+	}
+
+	return nil
 }

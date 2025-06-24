@@ -1,7 +1,6 @@
 package chains
 
 import (
-	"bytes"
 	"encoding/hex"
 	"fmt"
 
@@ -618,8 +617,9 @@ func handleNewBlockConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKe
 				continue
 			}
 
-			err = validateTxProof(txInfo.TxID, tx.TxIndex, tx.MerklePath, e.MerkleRoot)
+			err = btc.ValidateTxProof(txInfo.TxID, tx.TxIndex, tx.MerklePath, e.MerkleRoot)
 			if err != nil {
+				clog.Greenf("BlockHash: %s, MerkleRoot: %s", e.BlockHash.Hex(), e.MerkleRoot.Hex())
 				ck.Logger(ctx).Error("failed to validate tx proof", "error", err, "tx_hash", tx.Hash.Hex())
 				continue
 			}
@@ -661,22 +661,6 @@ func handleNewBlockConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKe
 	return nil
 }
 
-func validateTxProof(txId []byte, txIndex uint64, merklePath []exported.Hash, blockMerkleRoot exported.Hash) error {
-	log.Info().Msgf("txId: %s, txIndex: %d, blockMerkleRoot: %s",
-		hex.EncodeToString(txId), txIndex, blockMerkleRoot.Hex())
-	for i, p := range merklePath {
-		log.Info().Msgf("merklePath[%d]: %s", i, p.Hex())
-	}
-	merkleRoot := btc.GetMerkleRootFromPath(txId, txIndex, slices.Map(merklePath, func(p exported.Hash) []byte {
-		return p.Bytes()
-	}), true)
-
-	if !bytes.Equal(merkleRoot, blockMerkleRoot.Bytes()) {
-		return fmt.Errorf("merkle root mismatch: %s != %s", hex.EncodeToString(merkleRoot), blockMerkleRoot.Hex())
-	}
-
-	return nil
-}
 func setMessageToNexus(ctx sdk.Context, n types.Nexus, event types.Event, asset *sdk.Coin) error {
 
 	sourceChain := funcs.MustOk(n.GetChain(ctx, event.Chain))
