@@ -10,35 +10,31 @@ func DoubleSha256(b []byte) []byte {
 	return second[:]
 }
 
-func reverseBytes(b []byte) []byte {
+func ReverseBytes(b []byte) []byte {
 	for i := 0; i < len(b)/2; i++ {
 		b[i], b[len(b)-1-i] = b[len(b)-1-i], b[i]
 	}
 	return b
 }
 
-func CalculateMerkleRoot(txHashes [][]byte) []byte {
-	if len(txHashes) == 0 {
+func CalculateMerkleRoot(hashes [][]byte) []byte {
+	if len(hashes) == 0 {
 		return nil
 	}
-	if len(txHashes) == 1 {
-		return txHashes[0]
-	}
-	// Double SHA256 each transaction hash
-	hashes := make([][]byte, len(txHashes))
-	for i, txHash := range txHashes {
-		hashes[i] = DoubleSha256(txHash)
+	if len(hashes) == 1 {
+		return hashes[0]
 	}
 	for len(hashes) > 1 {
-		nextLevel := make([][]byte, 0, (len(hashes)+1)/2)
+		var nextLevel [][]byte
 		for i := 0; i < len(hashes); i += 2 {
+			left := hashes[i]
+			var right []byte
 			if i+1 < len(hashes) {
-				combined := append(hashes[i], hashes[i+1]...)
-				nextLevel = append(nextLevel, DoubleSha256(combined))
+				right = hashes[i+1]
 			} else {
-				combined := append(hashes[i], hashes[i]...)
-				nextLevel = append(nextLevel, DoubleSha256(combined))
+				right = hashes[i]
 			}
+			nextLevel = append(nextLevel, DoubleSha256(append(left, right...)))
 		}
 		hashes = nextLevel
 	}
@@ -55,7 +51,7 @@ func GetMerkleRootFromPath(txid []byte, txIndex uint64, path [][]byte, reverse b
 		txIndex /= 2
 	}
 	if reverse {
-		return reverseBytes(txid)
+		return ReverseBytes(txid)
 	}
 	return txid
 }

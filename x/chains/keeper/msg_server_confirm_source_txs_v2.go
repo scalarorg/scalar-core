@@ -3,23 +3,15 @@ package keeper
 import (
 	"bytes"
 	"context"
-	"encoding/hex"
 	"fmt"
-	"log"
 	"time"
 
-	"github.com/btcsuite/btcd/txscript"
-	"github.com/btcsuite/btcd/wire"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	vault "github.com/scalarorg/bitcoin-vault/ffi/go"
 	btc_utils "github.com/scalarorg/go-common/btc"
-	"github.com/scalarorg/go-common/chain"
-	go_utils "github.com/scalarorg/go-common/types"
 	"github.com/scalarorg/scalar-core/utils/btc"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/utils/events"
 	"github.com/scalarorg/scalar-core/utils/slices"
-	btcVald "github.com/scalarorg/scalar-core/vald/xchain/btc"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	nexus "github.com/scalarorg/scalar-core/x/nexus/exported"
@@ -76,11 +68,7 @@ func (s msgServer) ConfirmSourceTxsV2(c context.Context, req *types.ConfirmSourc
 				s.Logger(ctx).Error("tx hash mismatch", "expected", tx.Hash.String(), "actual", txInfo.MsgTx.TxHash().String())
 				continue
 			}
-			txHashBytes := btc.DoubleSha256(tx.Raw)
-			clog.Greenf("Calculated tx hash: %s", hex.EncodeToString(txHashBytes))
-			clog.Greenf("Input tx hash: %s", hex.EncodeToString(tx.Hash[:]))
-			clog.Greenf("Block merkle root: %s", block.MerkleRoot.Hex())
-			err = validateTxProof(txHashBytes, tx.TxIndex, tx.MerklePath, block.MerkleRoot)
+			err = validateTxProof(txInfo.TxID, tx.TxIndex, tx.MerklePath, block.MerkleRoot)
 			if err != nil {
 				s.Logger(ctx).Error("failed to validate tx proof", "error", err)
 				continue
@@ -156,155 +144,3 @@ func validateTxProof(txId []byte, txIndex uint64, merklePath []exported.Hash, bl
 
 	return nil
 }
-
-// TODO: remove this function
-func (s msgServer) validateAndSaveTokenSent(ctx sdk.Context, keeper types.ChainKeeper, chain nexus.ChainName, tx *types.TrustedTx, block *types.BlockMetadata) error {
-	reader := bytes.NewReader(tx.Raw)
-	var msgTx wire.MsgTx
-	if err := msgTx.Deserialize(reader); err != nil {
-		log.Fatalf("Failed to deserialize tx: %v", err)
-	}
-
-	msgTxHash := msgTx.TxHash()
-
-	// in reverse byte order in case of btc
-	if msgTxHash.String() != tx.Hash.String() {
-		return fmt.Errorf("tx hash mismatch: %s != %s", msgTx.TxHash(), tx.Hash)
-	}
-
-	merkleRoot := btc.GetMerkleRootFromPath(msgTxHash.CloneBytes(), tx.TxIndex, slices.Map(tx.MerklePath, func(p exported.Hash) []byte {
-		return p.Bytes()
-	}), true)
-
-	if !bytes.Equal(merkleRoot, block.MerkleRoot.Bytes()) {
-		return fmt.Errorf("merkle root mismatch: %s != %s", merkleRoot, block.MerkleRoot.Bytes())
-	}
-
-	// TODO: validate block_hash_chain
-
-	// TODO: add checking when integrate with evm
-
-	chainParams := keeper.GetParams(ctx)
-
-	nwParams := chainParams.Metadata["params"]
-	if nwParams == "" {
-		return fmt.Errorf("params are required")
-	}
-
-	sender, err := btc_utils.ScriptPubKeyToAddress(tx.PrevOutpointScriptPubkey, nwParams)
-	if err != nil {
-		return err
-	}
-
-	tokenSent, err := s.createEventTokenSent(ctx, chain, &msgTx, tx.TxIndex, sender.String(), block.Height)
-	if err != nil {
-		return err
-	}
-
-	event := types.Event{
-		Chain: chain,
-		Hash:  tx.Hash,
-		Event: &types.Event_TokenSent{
-			TokenSent: tokenSent,
-		},
-		Index: uint64(tx.TxIndex),
-	}
-
-	if err := keeper.SetConfirmedEvent(ctx, event); err != nil {
-		return err
-	}
-
-	keeper.EnqueueConfirmedEvent(ctx, event.GetID())
-
-	clog.Greenf("Confirmed event: %s", event.GetID())
-
-	return nil
-}
-
-func (s msgServer) createEventTokenSent(ctx sdk.Context, eventChain nexus.ChainName, tx *wire.MsgTx, txIndex uint64, sender string, blockHeight uint64) (*types.EventTokenSent, error) {
-	if tx == nil {
-		return nil, fmt.Errorf("tx is nil")
-	}
-
-	if len(tx.TxOut) < btcVald.MinNumberOfOutputs {
-		return nil, btcVald.ErrInvalidTxOutCount
-	}
-
-	txHash := tx.TxHash()
-	txId := exported.HashFromBytes(txHash.CloneBytes())
-
-	eventId := types.NewEventID(txId, txIndex)
-
-	embeddedDataTxOut := tx.TxOut[btcVald.EmbeddedDataOutputIndex]
-	if embeddedDataTxOut == nil || embeddedDataTxOut.PkScript == nil || embeddedDataTxOut.PkScript[0] != txscript.OP_RETURN {
-		return nil, btcVald.ErrInvalidOpReturn
-	}
-
-	output, err := vault.ParseVaultEmbeddedData(embeddedDataTxOut.PkScript)
-	if err != nil || output == nil {
-		return nil, btcVald.ErrInvalidOpReturnData
-	}
-
-	if output.TransactionType != go_utils.TransactionTypeLocking {
-		return nil, btcVald.ErrInvalidTransactionType
-	}
-
-	var stakingAmount int64 = tx.TxOut[btcVald.LockingOutputIndex].Value
-	var scriptPubkey []byte = tx.TxOut[btcVald.LockingOutputIndex].PkScript
-	destinationChain := chain.NewChainInfoFromBytes(output.DestinationChain)
-	if destinationChain == nil {
-		return nil, btcVald.ErrInvalidDestinationChain
-	}
-
-	var destinationRecipientAddress types.Address
-	err = destinationRecipientAddress.Unmarshal(output.DestinationRecipientAddress)
-	if err != nil {
-		return nil, err
-	}
-
-	protocol, err := s.protocol.FindProtocolInfoByInternalAddress(ctx, eventChain, nexus.ChainName(destinationChain.ToBytes().String()), hex.EncodeToString(output.DestinationTokenAddress))
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.EventTokenSent{
-		EventID:            eventId,
-		Sender:             sender,
-		Chain:              eventChain,
-		TransferID:         nexus.TransferID(1),
-		DestinationChain:   nexus.ChainName(destinationChain.ToBytes().String()),
-		DestinationAddress: types.Address(destinationRecipientAddress).Hex(),
-		Asset:              sdk.NewCoin(protocol.Symbol, sdk.NewInt(stakingAmount)),
-		ScriptPubkey:       scriptPubkey,
-		Vout:               uint32(btcVald.LockingOutputIndex),
-		BlockHeight:        blockHeight,
-	}, nil
-}
-
-// ProcessConfirmedBlock handles the confirmation of a block and processes the stored batch
-// func (s msgServer) ProcessConfirmedBlock(ctx sdk.Context, keeper types.ChainKeeper, chain nexus.ChainName, blockHash exported.Hash) error {
-// 	// Find all pending confirm requests for this block hash
-// 	batches := keeper.FindPendingConfirmRequestsByBlockHash(ctx, blockHash)
-// 	if len(batches) == 0 {
-// 		s.Logger(ctx).Info("No pending batches found for block", "block_hash", blockHash)
-// 		return nil
-// 	}
-
-// 	s.Logger(ctx).Info("Processing confirmed block batches", "block_hash", blockHash, "batch_count", len(batches))
-
-// 	// Process all batches for this block
-// 	start := time.Now()
-// 	for pollID, batch := range batches {
-// 		if err := keeper.ProcessConfirmRequestBatch(ctx, batch, pollID); err != nil {
-// 			s.Logger(ctx).Error("Failed to process confirm request batch", "error", err, "block_hash", batch.BlockHash, "poll_id", pollID)
-// 			continue
-// 		}
-// 	}
-
-// 	s.Logger(ctx).Info("Processed confirmed block batches",
-// 		"time", time.Since(start),
-// 		"batch_count", len(batches),
-// 		"block_hash", blockHash)
-
-// 	return nil
-// }

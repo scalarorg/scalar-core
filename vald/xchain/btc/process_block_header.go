@@ -1,29 +1,14 @@
 package btc
 
 import (
-	"encoding/hex"
 	"fmt"
 
-	"github.com/btcsuite/btcd/btcjson"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/scalarorg/scalar-core/utils/btc"
 	"github.com/scalarorg/scalar-core/utils/clog"
 	"github.com/scalarorg/scalar-core/x/chains/exported"
 	"github.com/scalarorg/scalar-core/x/chains/types"
 	voteTypes "github.com/scalarorg/scalar-core/x/vote/types"
 )
-
-func (client *BtcClient) CalculateMerkleRoot(block *btcjson.GetBlockVerboseTxResult) ([]byte, error) {
-	txHashes := [][]byte{}
-	for _, tx := range block.Tx {
-		txHash, err := hex.DecodeString(tx.Hash)
-		if err != nil {
-			return nil, err
-		}
-		txHashes = append(txHashes, btc.DoubleSha256(txHash))
-	}
-	return btc.CalculateMerkleRoot(txHashes), nil
-}
 
 func (client *BtcClient) ProcessNewBlockConfirmation(event *types.ConfirmNewBlockStarted, proxy sdk.AccAddress) ([]sdk.Msg, error) {
 	result, err := client.GetBlockVerboseTx(event.BlockHash.String())
@@ -44,17 +29,10 @@ func (client *BtcClient) ProcessNewBlockConfirmation(event *types.ConfirmNewBloc
 		return nil, fmt.Errorf("block previous block hash does not match")
 	}
 
-	merkleRootBytes, err := client.CalculateMerkleRoot(block)
+	merkleRootHash, err := exported.HashFromHex(block.MerkleRoot)
 	if err != nil {
 		return nil, err
 	}
-	calculatedMerkleRoot := exported.HashFromBytes(merkleRootBytes)
-	clog.Greenf("Calculated merkle root: %s", calculatedMerkleRoot.Hex())
-	clog.Greenf("Block merkle root: %s", block.MerkleRoot)
-	// merkleRoot, err := exported.HashFromHex(block.MerkleRoot)
-	// if err != nil {
-	// 	return nil, err
-	// }
 
 	voteEvent := types.NewVoteEvents(event.Chain, types.Event{
 		Chain: event.Chain,
@@ -63,7 +41,7 @@ func (client *BtcClient) ProcessNewBlockConfirmation(event *types.ConfirmNewBloc
 			NewBlockConfirmed: &types.EventNewBlockConfirmed{
 				BlockHash:         event.BlockHash,
 				PreviousBlockHash: event.PreviousBlockHash,
-				MerkleRoot:        calculatedMerkleRoot,
+				MerkleRoot:        merkleRootHash,
 				BlockHeight:       uint64(block.Height),
 			},
 		},
