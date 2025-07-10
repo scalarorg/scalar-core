@@ -229,7 +229,7 @@ func handleTokenSent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n 
 		//Append utxo to Utxo snapshot
 
 		// TODO: un-comment this
-		
+
 		// err = cov.AppendUtxo(ctx, tokenSentEvent.BlockHeight, event.Hash, uint32(tokenSentEvent.Vout), tokenSentEvent.ScriptPubkey, tokenSentEvent.Asset.Amount.Uint64())
 		// if err != nil {
 		// 	ctx.Logger().Error("failed appending utxo to utxo snapshot", "error", err)
@@ -620,7 +620,7 @@ func handleNewBlockConfirmed(ctx sdk.Context, event types.Event, bk types.BaseKe
 				continue
 			}
 
-			err = btc.ValidateTxProof(txInfo.TxID, tx.TxIndex, tx.MerklePath, e.MerkleRoot)
+			err = btc.ValidateTxProof(txInfo.TxHash.CloneBytes(), tx.TxIndex, tx.MerklePath, e.MerkleRoot)
 			if err != nil {
 				clog.Greenf("BlockHash: %s, MerkleRoot: %s", e.BlockHash.Hex(), e.MerkleRoot.Hex())
 				ck.Logger(ctx).Error("failed to validate tx proof", "error", err, "tx_hash", tx.Hash.Hex())

@@ -65,7 +65,7 @@ func (s msgServer) ConfirmSourceTxsV2(c context.Context, req *types.ConfirmSourc
 				s.Logger(ctx).Error("tx hash mismatch", "expected", tx.Hash.String(), "actual", txInfo.MsgTx.TxHash().String())
 				continue
 			}
-			err = btc.ValidateTxProof(txInfo.TxID, tx.TxIndex, tx.MerklePath, block.MerkleRoot)
+			err = btc.ValidateTxProof(txInfo.TxHash.CloneBytes(), tx.TxIndex, tx.MerklePath, block.MerkleRoot)
 			if err != nil {
 				clog.Greenf("BlockHash: %s, MerkleRoot: %s", block.BlockHash.Hex(), block.MerkleRoot.Hex())
 				s.Logger(ctx).Error("failed to validate tx proof", "error", err)

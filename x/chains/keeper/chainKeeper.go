@@ -1196,8 +1196,12 @@ func (k ChainKeeper) ProcessConfirmRequestTx(ctx sdk.Context,
 		k.Logger(ctx).Error("params are required")
 	}
 
-	txHash := exported.HashFromBytes(txInfo.TxID)
-	eventId := types.NewEventID(txHash, txIndex)
+	// txHash := exported.HashFromBytes(txInfo.TxID)
+	reversedByte, err := exported.HashFromHex(txInfo.TxHash.String())
+	if err != nil {
+		return err
+	}
+	eventId := types.NewEventID(reversedByte, txIndex)
 
 	tokenSent := &types.EventTokenSent{
 		EventID:            eventId,
@@ -1214,7 +1218,7 @@ func (k ChainKeeper) ProcessConfirmRequestTx(ctx sdk.Context,
 	// Create a basic event for now - the detailed token sent event creation will be handled by the msgServer
 	event := types.Event{
 		Chain: k.GetName(),
-		Hash:  txHash,
+		Hash:  reversedByte,
 		Event: &types.Event_TokenSent{
 			TokenSent: tokenSent,
 		},

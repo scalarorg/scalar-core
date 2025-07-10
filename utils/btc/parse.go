@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 
+	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
 	vault "github.com/scalarorg/bitcoin-vault/ffi/go"
@@ -28,7 +29,7 @@ var (
 )
 
 type VaultInfo struct {
-	TxID                        []byte
+	TxHash                      chainhash.Hash
 	StakingAmount               int64
 	ScriptPubkey                []byte
 	DestinationChain            string
@@ -44,7 +45,7 @@ func ParseTx(rawTx []byte) (*VaultInfo, error) {
 	if err := msgTx.Deserialize(reader); err != nil {
 		return nil, err
 	}
-	txHash := msgTx.TxHash()
+
 	embeddedDataTxOut := msgTx.TxOut[EmbeddedDataOutputIndex]
 	if embeddedDataTxOut == nil || embeddedDataTxOut.PkScript == nil || embeddedDataTxOut.PkScript[0] != txscript.OP_RETURN {
 		return nil, ErrInvalidOpReturn
@@ -67,7 +68,7 @@ func ParseTx(rawTx []byte) (*VaultInfo, error) {
 	}
 
 	return &VaultInfo{
-		TxID:                        txHash.CloneBytes(),
+		TxHash:                      msgTx.TxHash(),
 		StakingAmount:               stakingAmount,
 		ScriptPubkey:                scriptPubkey,
 		DestinationChain:            destinationChain.ToBytes().String(),
