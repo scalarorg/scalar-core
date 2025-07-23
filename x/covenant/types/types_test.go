@@ -63,11 +63,11 @@ func TestAbiPack(t *testing.T) {
 	var payload2WithType types.RedeemTokenPayloadWithType
 	err = payload2WithType.AbiUnpack(bytes)
 	require.NoError(t, err)
-	t.Logf("payloadBytes: %x", payload2WithType)
+	fmt.Printf("payloadBytes: %v\n", payload2WithType)
 
 	payload1WithTypeBytes, err := payload1WithType.AbiPack()
 	require.NoError(t, err)
-	t.Logf("payloadBytes: %x", payload1WithTypeBytes)
+	fmt.Printf("payloadBytes: %x\n", payload1WithTypeBytes)
 	fmt.Println("--------------------------------------------")
 	params2 := types.RedeemCustodianPayload{}
 	err = params2.AbiUnpack(payload2Bytes[1:])
@@ -257,6 +257,18 @@ func TestRealUtxoReserve(t *testing.T) {
 	t.Logf("Snapshot: %s", string(bytes))
 }
 
+// CGO_LDFLAGS="-L./lib -lbitcoin_vault_ffi" CGO_CFLAGS="-I./lib" go test -timeout 10m -run ^TestUPCUnpack$ github.com/scalarorg/scalar-core/x/covenant/types -v -count=1
+func TestUPCUnpack(t *testing.T) {
+	data := "0170736274ff0100960200000001de476807425a9fda442f63c53130bf62773dd93dadba25840a5dfdced4c918160100000000fdffffff030000000000000000106a0e5343414c41520301817472616e737a8501000000000016001474e29d4022d44de324a6f5b95ec2fa46a3ba27c8e069f902000000002251206317353427ad7d2e0cee59e825fdd1598e70c08e8a0146f48ea9db206ad2fec3000000000001012b80f0fa02000000002251206317353427ad7d2e0cee59e825fdd1598e70c08e8a0146f48ea9db206ad2fec30103040000000041146f63a8d030a1857a7d054fbbfd06dddc30285154d785a977b0c33445ee3262bfac7a87f9f99577615b5ae427531c5f2290e7bd27bd120eabae4e162501d994d04076d5a7a02e851d0667e9bc01ed512241f67d36126d63ebdf298e6c34a4484dd59a016f98afd97ff26594f66ffeeb99a0e57bc33b30a5e23e7bd1129ec364423c6215c150929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac063d85693fdcf7e1d56c8240e96cbd468d4c580a29a6540a5305aa14fd1a3785904887e344db1e070ba2141b0240b484249216fb09b56f02bfcfd98e2582e4cbdad206f63a8d030a1857a7d054fbbfd06dddc30285154d785a977b0c33445ee3262bfad2015da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e1641488ac20594e78c0a2968210d9c1550d4ad31b03d5e4b9659cf2f67842483bb3c2bb7811ba20e2d226cfdaec93903c3f3b81a01a81b19137627cb26e621a0afb7bcd6efbcfffba20f0f3d9beaf7a3945bcaa147e041ae1d5ca029bde7e40d8251f0783d6ecbe8fb5ba53a2c0211615da913b3e87b4932b1e1b87d9667c28e7250aa0ed60b3a31095f541e16414882501ac7a87f9f99577615b5ae427531c5f2290e7bd27bd120eabae4e162501d994d0000000002116594e78c0a2968210d9c1550d4ad31b03d5e4b9659cf2f67842483bb3c2bb78112501ac7a87f9f99577615b5ae427531c5f2290e7bd27bd120eabae4e162501d994d00000000021166f63a8d030a1857a7d054fbbfd06dddc30285154d785a977b0c33445ee3262bf2501ac7a87f9f99577615b5ae427531c5f2290e7bd27bd120eabae4e162501d994d0000000002116e2d226cfdaec93903c3f3b81a01a81b19137627cb26e621a0afb7bcd6efbcfff2501ac7a87f9f99577615b5ae427531c5f2290e7bd27bd120eabae4e162501d994d0000000002116f0f3d9beaf7a3945bcaa147e041ae1d5ca029bde7e40d8251f0783d6ecbe8fb52501ac7a87f9f99577615b5ae427531c5f2290e7bd27bd120eabae4e162501d994d000000000011820801c615d9bb268053f1c0bde9e56f1506853321f90a012f511084d13fea58c6800000000"
+
+	hex, _ := hex.DecodeString(data)
+
+	var p types.RedeemTokenPayloadWithType
+	p.AbiUnpack(hex)
+
+	fmt.Printf("p: %x\n", p.RedeemUPCPayload.Psbt)
+}
+
 func reserveUtxos(t *testing.T, snapshot *types.UTXOSnapshot, requestId string, amount uint64) []*types.UTXO {
 	utxos, err := snapshot.ReserveUtxos(requestId, amount, QUORUM, VSIZE_LIMIT)
 	require.NoError(t, err)
@@ -275,73 +287,3 @@ func Base64ToHash(input string) chains.Hash {
 func HashToBase64(hash chains.Hash) string {
 	return base64.StdEncoding.EncodeToString(hash[:])
 }
-
-// func TestRedeemTokenParamsAbiPack(t *testing.T) {
-// 	mockCmdID := types.NewCommandID(bytes.Repeat([]byte("a"), 32))
-// 	mockCustodianGrUID := chains.Hash(bytes.Repeat([]byte("b"), 32))
-// 	mockAddress := "0x0000000000000000000000000000000000000000"
-// 	mockChainName := nexus.ChainName("bitcoin|4")
-// 	mokRequestAmount := big.NewInt(100_000)
-// 	mockSymbol := "BTC"
-// 	mockLockingScript := []byte("locking-script")
-// 	mockUtxos := []*types.UTXO{
-// 		{
-// 			TxID:         chains.Hash(bytes.Repeat([]byte{0x01}, 32)),
-// 			Vout:         0,
-// 			AmountInSats: 50_000,
-// 		},
-// 		{
-// 			TxID:         chains.Hash(bytes.Repeat([]byte{0x02}, 32)),
-// 			Vout:         0,
-// 			AmountInSats: 70_000,
-// 		},
-// 	}
-// 	payload := types.RedeemTokenPayload{
-// 		Amount:        mokRequestAmount.Uint64(),
-// 		LockingScript: mockLockingScript,
-// 		Utxos:         mockUtxos,
-// 		RequestId:     mockCmdID,
-// 	}
-// 	payloadBytes, err := payload.AbiPack()
-// 	require.NoError(t, err)
-// 	payload2 := types.RedeemTokenPayload{}
-// 	err = payload2.AbiUnpack(payloadBytes)
-// 	require.NoError(t, err)
-// 	require.Equal(t, payload, payload2)
-// 	t.Logf("Payload pack and unpack successfully")
-// 	params := types.RedeemTokenParams{
-// 		DestinationChain:   mockChainName.String(),
-// 		DestinationAddress: mockAddress,
-// 		Payload:            payload,
-// 		Symbol:             mockSymbol,
-// 		Amount:             mokRequestAmount.Uint64(),
-// 		CustodianGroupUID:  mockCustodianGrUID,
-// 		SessionSequence:    1,
-// 	}
-
-// 	packed, err := params.AbiPack()
-// 	t.Logf("packed: %x", packed)
-// 	require.NoError(t, err)
-
-// 	unpackedParams := types.RedeemTokenParams{}
-// 	err = unpackedParams.AbiUnpack(packed)
-// 	require.NoError(t, err)
-// 	t.Logf("unpackedParams: %+v", unpackedParams)
-// 	//require.Equal(t, params, unpackedParams)
-
-// 	// remove prefix
-// 	// _, prefix := unpackedParams.RawPayload[1:], unpackedParams.RawPayload[0:1]
-// 	// require.Equal(t, encode.ContractCallWithTokenPayloadType_CustodianOnly.Bytes(), prefix)
-
-// 	require.Equal(t, mockUtxos[0].TxID.Hex(), unpackedParams.Payload.Utxos[0].TxID.Hex())
-// 	require.Equal(t, mockUtxos[1].TxID.Hex(), unpackedParams.Payload.Utxos[1].TxID.Hex())
-// 	require.Equal(t, mockUtxos[0].Vout, unpackedParams.Payload.Utxos[0].Vout)
-// 	require.Equal(t, mockUtxos[1].Vout, unpackedParams.Payload.Utxos[1].Vout)
-// 	require.Equal(t, mockUtxos[0].AmountInSats, unpackedParams.Payload.Utxos[0].AmountInSats)
-// 	require.Equal(t, mockUtxos[1].AmountInSats, unpackedParams.Payload.Utxos[1].AmountInSats)
-// 	require.Equal(t, mockCmdID.Bytes(), unpackedParams.Payload.RequestId)
-// 	require.Equal(t, mockSymbol, unpackedParams.Symbol)
-// 	require.Equal(t, mokRequestAmount.Uint64(), unpackedParams.Amount)
-// 	require.Equal(t, strings.TrimPrefix(mockCustodianGrUID.Hex(), "0x"), hex.EncodeToString(unpackedParams.CustodianGroupUID[:]))
-// 	require.Equal(t, uint64(1), unpackedParams.SessionSequence)
-// }
