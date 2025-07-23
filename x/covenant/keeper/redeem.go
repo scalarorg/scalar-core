@@ -199,7 +199,11 @@ func (k Keeper) AppendUtxo(ctx sdk.Context, blockHeight uint64, txID exported.Ha
 
 		utxoSnapshot, ok := k.GetUtxoSnapshot(ctx, custodianGroup.UID)
 		if !ok {
-			return fmt.Errorf("utxo snapshot not found")
+			utxoSnapshot = &cov.UTXOSnapshot{
+				CustodianGroupUID: custodianGroup.UID,
+				BlockHeight:       0,
+				Utxos:             []*cov.UTXO{},
+			}
 		}
 		if utxoSnapshot.BlockHeight <= blockHeight {
 			utxoSnapshot.AppendUtxo(&cov.UTXO{
