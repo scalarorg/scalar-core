@@ -144,8 +144,10 @@ func validateEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n ty
 		// skip checks for non-gateway tx event
 		return nil
 	case *types.Event_RedeemToken:
+		destinationChainName = event.RedeemToken.DestinationChain
+		contractAddress = event.RedeemToken.DestinationContractAddress
 	case *types.Event_NewBlockConfirmed:
-		//destinationChainName = event.RedeemToken.DestinationChain
+
 		//TODO: need to validate
 		return nil
 	default:
