@@ -91,6 +91,18 @@ func handleConfirmedEventsForChain(ctx sdk.Context, chain nexus.Chain, bk types.
 
 func handleConfirmedEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n types.Nexus, m types.MultisigKeeper, p types.ProtocolKeeper, cov types.CovenantKeeper) error {
 	if err := validateEvent(ctx, event, bk, n); err != nil {
+		clog.Redf("[abci/chains] validateEvent failed with error: %+v", err)
+		clog.Redf("[abci/chains] event: %+v", event.Chain.String())
+		clog.Redf("[abci/chains] event: %+v", event.Hash.String())
+		clog.Redf("[abci/chains] event: %+v", event.Index)
+		clog.Redf("[abci/chains] event: %+v", event.GetRedeemToken())
+		redeemToken := event.GetRedeemToken()
+		clog.Greenf("[abci/chains] Amount: %+v", redeemToken.Amount)
+		clog.Greenf("[abci/chains] CustodianGroupId: %x", redeemToken.CustodianGroupId.Bytes())
+		clog.Greenf("[abci/chains] DestinationChain: %+v", redeemToken.DestinationChain)
+		clog.Greenf("[abci/chains] DestinationContractAddress: %+v", redeemToken.DestinationContractAddress)
+		clog.Greenf("[abci/chains] Sender: %+v", redeemToken.Sender)
+		clog.Greenf("[abci/chains] Amount: %+v", redeemToken.Amount)
 		return err
 	}
 	switch event.GetEvent().(type) {
@@ -143,7 +155,7 @@ func validateEvent(ctx sdk.Context, event types.Event, bk types.BaseKeeper, n ty
 	// skip if destination chain is not registered
 	destinationChain, ok := n.GetChain(ctx, destinationChainName)
 	if !ok {
-		return fmt.Errorf("destination chain not found")
+		return fmt.Errorf("destination chain not found, got: %s", destinationChainName)
 	}
 
 	// skip if destination chain is not activated
