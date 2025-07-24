@@ -7,6 +7,7 @@ import (
 	"math/big"
 	"strings"
 
+	"github.com/btcsuite/btcd/btcutil/psbt"
 	"github.com/rs/zerolog/log"
 	"github.com/scalarorg/scalar-core/utils"
 	chains "github.com/scalarorg/scalar-core/x/chains/exported"
@@ -213,6 +214,12 @@ func (p *RedeemUPCPayload) AbiPack() ([]byte, error) {
 }
 
 func (p *RedeemUPCPayload) AbiUnpack(data []byte) error {
+	_, err := psbt.NewFromRawBytes(
+		bytes.NewReader(data), false,
+	)
+	if err != nil {
+		return err
+	}
 	p.Psbt = data
 	return nil
 }
