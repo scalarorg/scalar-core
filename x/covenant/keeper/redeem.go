@@ -351,13 +351,19 @@ func (k Keeper) MarkReservedUtxo(ctx sdk.Context, uid exported.Hash, payload []b
 	if !ok {
 		return fmt.Errorf("utxo snapshot not found")
 	}
-	alreadySetReservation := utxoSnapshot.SetReservation(p)
-	if alreadySetReservation {
+	reservedAmount := utxoSnapshot.SetReservation(p)
+	if reservedAmount == p.Amount {
 		log.Info().Str("requestID", hex.EncodeToString(p.RequestId[:])).
 			Uint64("amount", p.Amount).
 			Msg("[UTXOSnapshot] Set new reservation to the utxo snapshot")
+		k.setUtxoSnapshot(ctx, utxoSnapshot)
+	} else {
+		log.Info().Str("requestID", hex.EncodeToString(p.RequestId[:])).
+			Uint64("amount", p.Amount).
+			Uint64("reservedAmount", reservedAmount).
+			Msg("[UTXOSnapshot] reserved amount is not equal to the request amount. Some utxos are not available")
+		return fmt.Errorf("reserved amount is not equal to the request amount. Some utxos are not available")
 	}
 
-	k.setUtxoSnapshot(ctx, utxoSnapshot)
 	return nil
 }

@@ -353,6 +353,21 @@ func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, 
 		return fmt.Errorf("invalid liquidity model, %s", protocolInfo.LiquidityModel.String())
 	}
 
+	var redeemTokenPayloadWithType covTypes.RedeemTokenPayloadWithType
+	err = redeemTokenPayloadWithType.AbiUnpack(e.Payload)
+	if err != nil {
+		return err
+	}
+
+	// RedeemCustodianOnlyV2 no need to mark utxo
+	if redeemTokenPayloadWithType.Type == covTypes.RedeemCustodianOnly {
+		err = cov.MarkReservedUtxo(ctx, e.CustodianGroupId, e.Payload)
+		if err != nil {
+			log.Error().Err(err).Msg("[x/chains] [ABCI] handleRedeemToken: failed to mark reserved utxo")
+			return err
+		}
+	}
+
 	keyID, err := pexported.FormatContractCallWithTokenToBTCKeyID(cusGr.BitcoinPubkey, protocolInfo.LiquidityModel)
 	if err != nil {
 		return err
@@ -369,7 +384,7 @@ func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, 
 		common.Hash(e.PayloadHash),
 		e.Amount,
 		token.GetDetails().Symbol,
-		event.GetRedeemToken().Payload,
+		e.Payload,
 	)
 
 	clog.Magentaf("[x/chains] ABCI created %s command for event: %+v", cmd.Type, cmd)
@@ -380,20 +395,6 @@ func handleRedeemToken(ctx sdk.Context, event types.Event, bk types.BaseKeeper, 
 		"eventID", event.GetID(),
 		"commandID", cmd.ID.Hex(),
 	)
-
-	var redeemTokenPayloadWithType covTypes.RedeemTokenPayloadWithType
-	err = redeemTokenPayloadWithType.AbiUnpack(e.Payload)
-	if err != nil {
-		return err
-	}
-
-	// RedeemCustodianOnlyV2 no need to mark utxo
-	if redeemTokenPayloadWithType.Type == covTypes.RedeemCustodianOnly {
-		err = cov.MarkReservedUtxo(ctx, e.CustodianGroupId, e.Payload)
-		if err != nil {
-			return err
-		}
-	}
 
 	approvedEvent := &types.EventRedeemTokenApproved{
 		Chain:            event.Chain,

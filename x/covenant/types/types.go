@@ -441,32 +441,59 @@ func (snapshot *UTXOSnapshot) ReserveUtxos(requestID string, amount uint64, quor
 // Return:
 // true if new reservation is set;
 // false if reservation already exists
-func (s *UTXOSnapshot) SetReservation(p *RedeemTokenPayloadWithType) bool {
+func (s *UTXOSnapshot) SetReservation(p *RedeemTokenPayloadWithType) uint64 {
 	reqId := hex.EncodeToString(p.RequestId[:])
+	reservedAmount := uint64(0)
+	newReservations := map[string]uint64{}
 	for _, reqUtxo := range p.Utxos {
 		reqUtxoId := reqUtxo.TxID.Hex()
 		for _, utxo := range s.Utxos {
 			if utxo.TxID.Hex() == reqUtxoId && utxo.Vout == reqUtxo.Vout {
+				key := fmt.Sprintf("%s:%d", reqUtxoId, reqUtxo.Vout)
+				alreadyReserved := false
 				for _, reservation := range utxo.Reservations {
 					if reservation.Request == reqId {
-						//Reservation already exists
-						return false
+						//Reservation already exists add the reserved amount
+						reservedAmount += reservation.Amount
+						alreadyReserved = true
+						break
 					}
 				}
-				reservation := &Reservation{
-					Request: reqId,
-					Amount:  reqUtxo.AmountInSats,
-				}
-				if utxo.Reservations == nil {
-					utxo.Reservations = []*Reservation{reservation}
-				} else {
+				if !alreadyReserved {
+					reservation := &Reservation{
+						Request: reqId,
+						Amount:  reqUtxo.AmountInSats,
+					}
+					reservedAmount += reservation.Amount
+					newReservations[key] = reservation.Amount
 					utxo.Reservations = append(utxo.Reservations, reservation)
+					// if utxo.Reservations == nil {
+					// 	utxo.Reservations = []*Reservation{reservation}
+					// } else {
+					// 	utxo.Reservations = append(utxo.Reservations, reservation)
+					// }
 				}
 				break
 			}
 		}
 	}
-	return true
+	if reservedAmount == p.Amount {
+		//All request utxos are available in the utxo snapshot,
+		//Update the utxo snapshot with the new reservations
+		for _, utxo := range s.Utxos {
+			key := fmt.Sprintf("%s:%d", utxo.TxID.Hex(), utxo.Vout)
+			if amount, ok := newReservations[key]; ok {
+				utxo.Reservations = append(utxo.Reservations, &Reservation{
+					Request: reqId,
+					Amount:  amount,
+				})
+			}
+		}
+	} else {
+		log.Info().Uint64("reservedAmount", reservedAmount).Uint64("p.Amount", p.Amount).
+			Msg("[UTXOSnapshot] reserved amount is not equal to the request amount. Some utxos are not available")
+	}
+	return reservedAmount
 }
 
 func (rs *UTXOSnapshot) GetHash() chains.Hash {
